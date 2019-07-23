@@ -1,0 +1,2 @@
+    |>MARK_OCCURRENCES:house<| :{
+    with (|>MARK_OCCURRENCES:hou^se<|) {

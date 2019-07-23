@@ -1,0 +1,29 @@
+false
+Usages of FUClass [7 occurrences]
+    RefactoringTest
+        Source Packages
+            fu
+                FUClass.java
+                    FUClass
+                        49: FUClass field;
+                        retunType
+                            51: public FUClass retunType(FUClass param) {
+                            51: public FUClass retunType(FUClass param) {
+                        55: java.util.List<FUClass> list;
+                        Inner
+                            57: class Inner<T extends FUClass> {
+                        method
+                            62: this.<FUClass>generics(this);
+                        generics
+                            65: public <T extends FUClass> T generics(T in) {
+true
+Usages of FUClass [7 occurrences]
+    RefactoringTest
+        FUClass.java
+            49: FUClass field;
+            51: public FUClass retunType(FUClass param) {
+            51: public FUClass retunType(FUClass param) {
+            55: java.util.List<FUClass> list;
+            57: class Inner<T extends FUClass> {
+            62: this.<FUClass>generics(this);
+            65: public <T extends FUClass> T generics(T in) {

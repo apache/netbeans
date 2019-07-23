@@ -1,0 +1,206 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_CLASS class
+token #3 WHITESPACE  
+token #4 PHP_STRING Label¡Bug
+token #5 WHITESPACE  
+token #6 PHP_CURLY_OPEN {
+token #7 PHP_CURLY_CLOSE }
+token #8 WHITESPACE  
+token #9 PHP_LINE_COMMENT //
+token #10 PHP_LINE_COMMENT  0xa1\n
+token #11 WHITESPACE \n
+token #12 PHP_CLASS class
+token #13 WHITESPACE  
+token #14 PHP_STRING LabelµBug
+token #15 WHITESPACE  
+token #16 PHP_CURLY_OPEN {
+token #17 PHP_CURLY_CLOSE }
+token #18 WHITESPACE  
+token #19 PHP_LINE_COMMENT //
+token #20 PHP_LINE_COMMENT  0xb5\n
+token #21 PHP_CLASS class
+token #22 WHITESPACE  
+token #23 PHP_STRING Label¶Bug
+token #24 WHITESPACE  
+token #25 PHP_CURLY_OPEN {
+token #26 PHP_CURLY_CLOSE }
+token #27 WHITESPACE  
+token #28 PHP_LINE_COMMENT //
+token #29 PHP_LINE_COMMENT  0xb6 Syntax Error
+token #30 PHP_LINE_COMMENT ?
+token #31 PHP_LINE_COMMENT \n
+token #32 PHP_CLASS class
+token #33 WHITESPACE  
+token #34 PHP_STRING Label·Bug
+token #35 WHITESPACE  
+token #36 PHP_CURLY_OPEN {
+token #37 PHP_CURLY_CLOSE }
+token #38 WHITESPACE  
+token #39 PHP_LINE_COMMENT //
+token #40 PHP_LINE_COMMENT  0xb7 Syntax Error
+token #41 PHP_LINE_COMMENT ?
+token #42 PHP_LINE_COMMENT \n
+token #43 PHP_CLASS class
+token #44 WHITESPACE  
+token #45 PHP_STRING Label¸Bug
+token #46 WHITESPACE  
+token #47 PHP_CURLY_OPEN {
+token #48 PHP_CURLY_CLOSE }
+token #49 WHITESPACE  
+token #50 PHP_LINE_COMMENT //
+token #51 PHP_LINE_COMMENT  0xb8 Syntax Error
+token #52 PHP_LINE_COMMENT ?
+token #53 PHP_LINE_COMMENT \n
+token #54 PHP_CLASS class
+token #55 WHITESPACE  
+token #56 PHP_STRING Label¹Bug
+token #57 WHITESPACE  
+token #58 PHP_CURLY_OPEN {
+token #59 PHP_CURLY_CLOSE }
+token #60 WHITESPACE  
+token #61 PHP_LINE_COMMENT //
+token #62 PHP_LINE_COMMENT  0xb9 Syntax Error
+token #63 PHP_LINE_COMMENT ?
+token #64 PHP_LINE_COMMENT \n
+token #65 PHP_CLASS class
+token #66 WHITESPACE  
+token #67 PHP_STRING LabelºBug
+token #68 WHITESPACE  
+token #69 PHP_CURLY_OPEN {
+token #70 PHP_CURLY_CLOSE }
+token #71 WHITESPACE  
+token #72 PHP_LINE_COMMENT //
+token #73 PHP_LINE_COMMENT  0xba\n
+token #74 PHP_CLASS class
+token #75 WHITESPACE  
+token #76 PHP_STRING Label»Bug
+token #77 WHITESPACE  
+token #78 PHP_CURLY_OPEN {
+token #79 PHP_CURLY_CLOSE }
+token #80 WHITESPACE  
+token #81 PHP_LINE_COMMENT //
+token #82 PHP_LINE_COMMENT  0xbb Syntax Error
+token #83 PHP_LINE_COMMENT ?
+token #84 PHP_LINE_COMMENT \n
+token #85 PHP_CLASS class
+token #86 WHITESPACE  
+token #87 PHP_STRING Label¼Bug
+token #88 WHITESPACE  
+token #89 PHP_CURLY_OPEN {
+token #90 PHP_CURLY_CLOSE }
+token #91 WHITESPACE  
+token #92 PHP_LINE_COMMENT //
+token #93 PHP_LINE_COMMENT  0xbc Syntax Error
+token #94 PHP_LINE_COMMENT ?
+token #95 PHP_LINE_COMMENT \n
+token #96 PHP_CLASS class
+token #97 WHITESPACE  
+token #98 PHP_STRING Label½Bug
+token #99 WHITESPACE  
+token #100 PHP_CURLY_OPEN {
+token #101 PHP_CURLY_CLOSE }
+token #102 WHITESPACE  
+token #103 PHP_LINE_COMMENT //
+token #104 PHP_LINE_COMMENT  0xbd Syntax Error
+token #105 PHP_LINE_COMMENT ?
+token #106 PHP_LINE_COMMENT \n
+token #107 PHP_CLASS class
+token #108 WHITESPACE  
+token #109 PHP_STRING Label¾Bug
+token #110 WHITESPACE  
+token #111 PHP_CURLY_OPEN {
+token #112 PHP_CURLY_CLOSE }
+token #113 WHITESPACE  
+token #114 PHP_LINE_COMMENT //
+token #115 PHP_LINE_COMMENT  0xbe Syntax Error
+token #116 PHP_LINE_COMMENT ?
+token #117 PHP_LINE_COMMENT \n
+token #118 PHP_CLASS class
+token #119 WHITESPACE  
+token #120 PHP_STRING Label¿Bug
+token #121 WHITESPACE  
+token #122 PHP_CURLY_OPEN {
+token #123 PHP_CURLY_CLOSE }
+token #124 WHITESPACE  
+token #125 PHP_LINE_COMMENT //
+token #126 PHP_LINE_COMMENT  0xbf Syntax Error
+token #127 PHP_LINE_COMMENT ?
+token #128 PHP_LINE_COMMENT \n
+token #129 PHP_CLASS class
+token #130 WHITESPACE  
+token #131 PHP_STRING LabelÀBug
+token #132 WHITESPACE  
+token #133 PHP_CURLY_OPEN {
+token #134 PHP_CURLY_CLOSE }
+token #135 WHITESPACE  
+token #136 PHP_LINE_COMMENT //
+token #137 PHP_LINE_COMMENT  0xc0\n
+token #138 PHP_CLASS class
+token #139 WHITESPACE  
+token #140 PHP_STRING LabelÁBug
+token #141 WHITESPACE  
+token #142 PHP_CURLY_OPEN {
+token #143 PHP_CURLY_CLOSE }
+token #144 WHITESPACE  
+token #145 PHP_LINE_COMMENT //
+token #146 PHP_LINE_COMMENT  0xc1\n
+token #147 WHITESPACE \n
+token #148 PHP_CLASS class
+token #149 WHITESPACE  
+token #150 PHP_STRING LabelÖBug
+token #151 WHITESPACE  
+token #152 PHP_CURLY_OPEN {
+token #153 PHP_CURLY_CLOSE }
+token #154 WHITESPACE  
+token #155 PHP_LINE_COMMENT //
+token #156 PHP_LINE_COMMENT  0xd6\n
+token #157 PHP_CLASS class
+token #158 WHITESPACE  
+token #159 PHP_STRING Label×Bug
+token #160 WHITESPACE  
+token #161 PHP_CURLY_OPEN {
+token #162 PHP_CURLY_CLOSE }
+token #163 WHITESPACE  
+token #164 PHP_LINE_COMMENT //
+token #165 PHP_LINE_COMMENT  0xd7 Syntax Error
+token #166 PHP_LINE_COMMENT ?
+token #167 PHP_LINE_COMMENT \n
+token #168 PHP_CLASS class
+token #169 WHITESPACE  
+token #170 PHP_STRING LabelØBug
+token #171 WHITESPACE  
+token #172 PHP_CURLY_OPEN {
+token #173 PHP_CURLY_CLOSE }
+token #174 WHITESPACE  
+token #175 PHP_LINE_COMMENT //
+token #176 PHP_LINE_COMMENT  0xd8\n
+token #177 WHITESPACE \n
+token #178 PHP_CLASS class
+token #179 WHITESPACE  
+token #180 PHP_STRING LabelöBug
+token #181 WHITESPACE  
+token #182 PHP_CURLY_OPEN {
+token #183 PHP_CURLY_CLOSE }
+token #184 WHITESPACE  
+token #185 PHP_LINE_COMMENT //
+token #186 PHP_LINE_COMMENT  0xf6\n
+token #187 PHP_CLASS class
+token #188 WHITESPACE  
+token #189 PHP_STRING Label÷Bug
+token #190 WHITESPACE  
+token #191 PHP_CURLY_OPEN {
+token #192 PHP_CURLY_CLOSE }
+token #193 WHITESPACE  
+token #194 PHP_LINE_COMMENT //
+token #195 PHP_LINE_COMMENT  0xf7\n
+token #196 PHP_CLASS class
+token #197 WHITESPACE  
+token #198 PHP_STRING LabeløBug
+token #199 WHITESPACE  
+token #200 PHP_CURLY_OPEN {
+token #201 PHP_CURLY_CLOSE }
+token #202 WHITESPACE  
+token #203 PHP_LINE_COMMENT //
+token #204 PHP_LINE_COMMENT  0xf8\n
+token #205 PHP_CLOSETAG ?>\n

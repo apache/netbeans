@@ -1,0 +1,6 @@
+Code completion result for source line:
+x.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      prop1: Number                   [PUBLIC]   issue246006_02.js
+FIELD      prop2: String                   [PUBLIC]   issue246006_02.js

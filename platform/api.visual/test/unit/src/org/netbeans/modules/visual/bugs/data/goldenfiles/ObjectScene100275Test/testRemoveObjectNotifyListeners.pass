@@ -1,0 +1,10 @@
+Added: theObject
+selectionChanged: [] -> [theObject]
+highlightingChanged: [] -> [theObject]
+hoverChanged: null -> theObject
+focusChanged: null -> theObject
+selectionChanged: [theObject] -> []
+highlightingChanged: [theObject] -> []
+hoverChanged: theObject -> null
+focusChanged: theObject -> null
+Removed: theObject

@@ -1,0 +1,5 @@
+Code completion result for source line:
+cons|t BAR = 25;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    const                                      null

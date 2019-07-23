@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:f^or<|() {
+ChildClass::|>MARK_OCCURRENCES:for<|();

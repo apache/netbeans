@@ -1,0 +1,6 @@
+Code completion result for source line:
+$this->|indexRet1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     baseRet1()                      [PUBLIC]   Base
+METHOD     indexRet1()                     [PUBLIC]   Index
+METHOD     interfRet1()                    [PUBLIC,   Interf

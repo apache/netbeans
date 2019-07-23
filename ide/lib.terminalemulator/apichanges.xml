@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+For details see:
+ - api.xml/apichanges.xml
+ - nbbuild/javadoctools/apichanges.dtd
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="Terminalemulator">Terminal Emulator API</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change id="ACT_-pkgprivate">
+        <api name="Terminalemulator"/>
+        <summary>Make ACT_ classes package private</summary>
+        <date day="15" month="3" year="2008"/>
+        <author login="ivan"/>
+        <compatibility binary="compatible"
+	               source="compatible"
+		       addition="no"
+		       deletion="no"
+		       modification="yes"/>
+        <description>
+	<pre>
+	These classes were protected _and_ final so they couldn't have been used
+	in any subclass which is why I'm taking the liberty of marking this
+	as a compatible change.
+	</pre>
+        </description>
+    </change>
+
+    <change id="Interp-public">
+        <api name="Terminalemulator"/>
+        <summary>Make Interp public</summary>
+        <date day="12" month="3" year="2008"/>
+        <author login="ivan"/>
+        <compatibility binary="compatible"
+	               source="compatible"
+		       addition="no"
+		       deletion="no"
+		       modification="yes"/>
+        <description>
+	<pre>
+	Interp as well as Term.setInterp() and getInterp() are now public.
+	</pre>
+        </description>
+    </change>
+
+    <change id="ops-so-si">
+        <api name="Terminalemulator"/>
+        <summary>Support for ASCII SO and SI</summary>
+        <date day="12" month="3" year="2008"/>
+        <author login="ivan"/>
+        <compatibility binary="compatible"
+	               source="compatible"
+		       addition="yes"
+		       deletion="no"
+		       modification="no"/>
+        <description>
+	<pre>
+	New methods of class Ops/Term: op_as(), op_ae().
+	</pre>
+        </description>
+    </change>
+
+    <change id="ops-esc-bel">
+        <api name="Terminalemulator"/>
+        <summary>Support for ASCII ESC ... BEL</summary>
+        <date day="12" month="3" year="2008"/>
+        <author login="ivan"/>
+        <compatibility binary="compatible"
+	               source="compatible"
+		       addition="yes"
+		       deletion="no"
+		       modification="no"/>
+        <description>
+	<pre>
+	New methods of class Ops/Term: op_icon_name(), op_win_title(), op_cwd().
+	</pre>
+        </description>
+    </change>
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Debugger Core API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Debugger Core APIs. Please ask on the 
+    <code>nbdev@netbeans.org</code>
+    mailing list if you have any questions about the details of a
+    change, or are wondering how to convert existing code to be compatible.
+</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.debugger/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

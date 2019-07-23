@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+<apidefs>
+   <apidef name="etable_outline">ETable and Outline APIs</apidef>
+   <!-- etc. -->
+</apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+
+    <change id="checkAtProtected">
+      <api name="etable_outline"/>
+      <summary>A protected checkAt() method added to Outline</summary>
+      <version major="1" minor="25"/>
+      <date day="1" month="2" year="2013"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Outline has a checkAt() method to perform a selection/deselection of
+           a check box on the given row and column.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.outline" name="Outline"/>
+      <issue number="223021"/>
+    </change>
+    <change id="fireQuickFilterChange">
+      <api name="etable_outline"/>
+      <summary>Ability to listen on changes of Quick Filter</summary>
+      <version major="1" minor="13"/>
+      <date day="2" month="3" year="2011"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>New property <a href="@TOP@/org/netbeans/swing/etable/ETable.html#PROP_QUICK_FILTER">PROP_QUICK_FILTER</a>
+        is fired when quick filter is changed.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETable"/>
+      <issue number="195883"/>
+    </change>
+    <change id="nested_comparator">
+      <api name="etable_outline"/>
+      <summary>Possibility to define comparator for sorting the rows</summary>
+      <version major="1" minor="3"/>
+      <date day="15" month="1" year="2009"/>
+      <author login="jrechtacek"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added methods <code>setNestedComparator(Comparator c)</code> and
+        <code>getNestedComparator ()</code> to allow to define own <code>java.util.Comparator</code>
+        for for sorting the rows belonging to same parent.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETableColumn"/>
+      <issue number="86793"/>
+    </change>
+    <change id="persist_sorting">
+      <api name="etable_outline"/>
+      <summary>Allow persist column sorting</summary>
+      <version major="1" minor="3"/>
+      <date day="9" month="1" year="2009"/>
+      <author login="jrechtacek"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added methods <code>setSorted(int rank, boolean ascending)</code>,
+        <code>setSortRank(int newRank)</code>, <code>setAscending(boolean ascending)</code>
+        and <code>setColumnSorted(ETableColumn etc, boolean ascending, int newRank)</code>
+        to allow persist column sorting.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETableColumn"/>
+      <class package="org.netbeans.swing.etable" name="ETableColumnModel"/>
+      <issue number="151294"/>
+    </change>
+    <change id="column_hiding">
+      <api name="etable_outline"/>
+      <summary>Add an option to turn column hiding off.</summary>
+      <version major="1" minor="1"/>
+      <date day="17" month="7" year="2008"/>
+      <author login="saubrecht"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added method <code>setColumnHidingAllowed(boolean)</code> to turn
+        column hiding on/off.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETable"/>
+    </change>
+    <change id="checkbox_rendering">
+      <api name="etable_outline"/>
+      <summary>Add a support for rendering of check-boxes in the tree column.</summary>
+      <version major="1" minor="4"/>
+      <date day="8" month="3" year="2009"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added <code>CheckRenderDataProvider</code> interface.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.outline" name="CheckRenderDataProvider"/>
+      <issue number="159546"/>
+    </change>
+    <change id="columns_clean">
+      <api name="etable_outline"/>
+      <summary>Add a way to clean all columns from the column model, including hidden ones.</summary>
+      <version major="1" minor="12"/>
+      <date day="3" month="3" year="2011"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added <code>ETableColumnModel.clean()</code> method.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETableColumnModel"/>
+      <issue number="195226"/>
+    </change>
+    <change id="column_selection_popup_or_dialog">
+      <api name="etable_outline"/>
+      <summary>Allow more detailed customization of whether popup menu or dialog
+      is displayed to select visible columns.</summary>
+      <version major="1" minor="17"/>
+      <date day="8" month="11" year="2011"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+        <p>Added enumeration <code>ETable.ColumnSelection</code> and methods: 
+           <code>ETable.setColumnSelectionOn(int mouseButton, ColumnSelection selection</code>,
+           <code>ETable.getColumnSelectionOn(int mouseButton)</code> and
+           <code>ETable.showColumnSelectionDialog()</code>.
+        </p>
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETable"/>
+      <issue number="200991"/>
+    </change>
+    <change id="row_mapping_enhanced">
+      <api name="etable_outline"/>
+      <summary>RowMapping is enhanced to cache the transformed value.</summary>
+      <version major="1" minor="19"/>
+      <date day="2" month="1" year="2012"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" binary="compatible" deprecation="no"/>
+      <description>
+          In order to make the row sorting faster and more robust, RowMapping
+          class is enhanced to cache the transformed value from the requested
+          column. A new constructor with ETable argument and method
+          getTransformedValue(int) are added. It prevents from altering of the
+          values during the sorting process.
+      </description>
+      <class package="org.netbeans.swing.etable" name="ETable"/>
+      <issue number="205828"/>
+    </change>
+
+</changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE changes.xml
+
+-->
+    <head>
+      <title>Change History for the ETable and Outline API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the ETable and Outline API.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.swing.outline"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -1,0 +1,24 @@
+Calling GenBeans.doIt
+Bean Tree:
+mycar <mycar> : Mycar
+	automatic <automatic> : boolean
+	wheels <wheels> : int
+	maxSpeed <max-speed> : double
+	occupancy <occupancy> : int
+	description <description> : java.lang.String
+
+Compiling
+Finished compiling: 0
+out: TestExtension2 - creating the DOM document
+out: TestExtension2 - creating the bean graph
+out: TestExtension2 - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <mycar vehicle-attr='98'>
+out: 	<wheels>4</wheels>
+out: 	<max-speed>185.0</max-speed>
+out: 	<occupancy>5</occupancy>
+out: 	<description>Audi A4</description>
+out: 	<automatic>true</automatic>
+out: </mycar>
+out: TestExtension2 - Mycar is a vehicle
+Finished running TestExtension2: 0

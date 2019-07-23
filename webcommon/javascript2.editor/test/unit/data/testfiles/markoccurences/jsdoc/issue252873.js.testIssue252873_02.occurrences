@@ -1,0 +1,3 @@
+ * @param {*} |>MARK_OCCURRENCES:variable<|
+Breeze.hasValue = function (|>MARK_OCCURRENCES:variable<|) {
+    return !Breeze.isUndefined(|>MARK_OCCURRENCES:variable<|) && |>MARK_OCCURRENCES:var^iable<| !== null;

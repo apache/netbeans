@@ -1,0 +1,9 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if moduleName?? && moduleName != "">
+module ${moduleName} {
+}
+</#if>

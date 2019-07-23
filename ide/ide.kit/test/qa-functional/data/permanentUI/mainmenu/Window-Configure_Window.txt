@@ -1,0 +1,11 @@
+Configure Window        > [ ] Maximize                z
+                          Float                       f
+                          Float Group                 g
+                          Minimize                    m
+                          Minimize Group              p
+                          Dock                        k
+                          Dock Group                  d
+                          Clone Document              l
+                          Split Document         >    S
+                          New Document Tab Group      b
+                          Collapse Document Tab Group c

@@ -1,0 +1,7 @@
+Code completion result for source line:
+StaticAccessTest::|publicStaticSAMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticSAMethod()          [STATIC]   StaticAccessTest
+VARIABLE   ? $publicStaticSAField          [STATIC]   StaticAccessTest
+CONSTANT   CONSTANT_SA 'CONSTANT_SA'       [PUBLIC]   StaticAccessTest
+CONSTANT   class \StaticAccessTest         [PUBLIC]   Magic Constant

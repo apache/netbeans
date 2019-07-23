@@ -1,0 +1,8 @@
+| Refactor |                        a (mnemonics)
+============
+Rename...                           R
+Move...                             M
+Copy...                             y
+Safely Delete...                    S
+=================================
+Inspect and Transform...

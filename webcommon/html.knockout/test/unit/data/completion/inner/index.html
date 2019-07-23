@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link
+href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,700,900"
+rel="stylesheet" />
+        <link href="styles/expenses.css" rel="stylesheet"/>
+        <style>
+            .jouda { color: red; }
+            .king { color: green; }
+        </style>
+        <script src="libs/knockout-2.2.1.js"></script>
+        <script>
+            function Bulici() {
+                this.pepa = new Clobrda("pepa");
+                this.lidickove = [ this.pepa, new Clobrda("jozin")];
+            }
+            function Clobrda(jmeno) {
+                this.jmeno = jmeno;
+                this.age = 1;
+            }
+            function init() {
+                ko.applyBindings(new Bulici());
+            }
+        </script>
+    </head>
+    <body onload="init();">
+        <span data-bind="foreach: lidickove ">
+            <span data-bind="with: jmeno">
+                <div data-bind="text: length"></div>
+            </span>
+        </span>
+    </body>
+</html>

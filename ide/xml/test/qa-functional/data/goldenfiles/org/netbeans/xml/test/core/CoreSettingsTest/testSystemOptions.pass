@@ -1,0 +1,41 @@
+========================================
+  className = org.netbeans.modules.xml.core.settings.CoreSettings
+  serializable = true
+bean info:
+  class = java.beans.GenericBeanInfo
+bean descriptor:
+  name = CoreSettings
+  displayName = CoreSettings
+  shortDescription = CoreSettings
+  hidden = false
+  customizer = java.beans.BeanDescriptor
+property:
+  name = autoParsingDelay
+  type = int
+  getter = getAutoParsingDelay
+  setter = setAutoParsingDelay
+  displayName = Automatic Parsing Delay
+  shortDescription = Delay before automatic XML parsing occurs, in milliseconds. Enter zero to disable parsing.
+  hidden = false
+  editor = null
+property:
+  name = defaultAction
+  type = java.lang.String
+  getter = getDefaultAction
+  setter = setDefaultAction
+  displayName = Default XML Action
+  shortDescription = Select the default action for XML objects.
+  hidden = false
+  editor = org.netbeans.modules.xml.core.settings.DefaultActionPropertyEditor
+property:
+  name = preferedShortEmptyElement
+  type = boolean
+  getter = isPreferedShortEmptyElement
+  setter = setPreferedShortEmptyElement
+  displayName = Short Empty Element
+  shortDescription = True: preferably generate short form for empty elements (e.g. <empty/>).
+  hidden = false
+  editor = null
+additional bean infos:
+========================================
+

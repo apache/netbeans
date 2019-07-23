@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="http://www.test.com/TestModel">
+<![CDATA[ function match(a,b) if (a > 0 && b < 7) <a> ]]>    
+    <a index='1'></a>
+<![CDATA[ function match(a,b) if (a > 0 && b < 7) <b> ]]>    
+    <b index='1'></b>
+<![CDATA[ function match(a,b) if (a > 0 && b < 7) <b> ]]>    
+    <c index='1'></c>
+<![CDATA[ function match(a,b) if (a > 0 && b < 7) <c/> ]]>    
+</test>

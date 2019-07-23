@@ -1,0 +1,2 @@
+[AddCastFix:...get(...):String]
+Change type of s to Object

@@ -1,0 +1,50 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<body>
+
+NetBeans is able to integrate multiple
+
+<a href="http://top/org/openide/text/doc-files/api.html"><em>editors</em></a>
+
+for different content types and mechanically access their content.
+
+<p>
+
+Using the <a href="doc-files/api.html"><b>Editor API</b></a>, it is
+possible to get access to the Swing-based editor which is being used
+to edit an open file of whatever content type. This would permit you
+to test what the user was doing with this file; mechanically retrieve
+and modify text from the open buffer; prevent certain areas of a
+textual file from being modified by the user; set annotations in the
+gutter; and so on.
+
+<p>
+
+This API also permits a module implementor to add a custom editor for
+some or all (probably textual) content types. Essentially, any editor
+implementation may be used which is capable of being embedded as a
+Swing EditorKit; handling guarded blocks; and handling breakpoints and
+the like (for Java source).
+
+</body>
+</html>

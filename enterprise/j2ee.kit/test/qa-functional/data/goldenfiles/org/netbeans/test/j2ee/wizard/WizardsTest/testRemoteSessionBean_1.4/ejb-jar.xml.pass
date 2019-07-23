@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+    <display-name>def EJB Mod1.4</display-name>
+    <enterprise-beans>
+        <session>
+            <display-name>LocalSessionSB</display-name>
+            <ejb-name>LocalSession</ejb-name>
+            <local-home>ejbs.local.LocalSessionLocalHome</local-home>
+            <local>ejbs.local.LocalSessionLocal</local>
+            <ejb-class>ejbs.local.LocalSession</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+        <session>
+            <display-name>RemoteSessionSB</display-name>
+            <ejb-name>RemoteSession</ejb-name>
+            <home>ejbs.remote.RemoteSessionRemoteHome</home>
+            <remote>ejbs.remote.RemoteSessionRemote</remote>
+            <ejb-class>ejbs.remote.RemoteSession</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+        </enterprise-beans>
+    <assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>LocalSession</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <container-transaction>
+            <method>
+                <ejb-name>RemoteSession</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        </assembly-descriptor>
+    </ejb-jar>

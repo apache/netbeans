@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="java.awt.Button" type="visual" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/awt/button.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/awt/button32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_java-awt-Button"
+               tooltip-key="HINT_java-awt-Button" />
+</palette_item>

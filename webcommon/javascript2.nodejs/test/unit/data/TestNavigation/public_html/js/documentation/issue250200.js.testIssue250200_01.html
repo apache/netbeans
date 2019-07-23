@@ -1,0 +1,26 @@
+<html><body>
+<pre>Code completion result for source line:
+ba.r|esolve();
+(QueryType=COMPLETION, prefixSearch=false, caseSensitive=true)
+------------------------------------
+METHOD     relative(from, to)              [PUBLIC]   path.js
+</pre><h2>Documentation:</h2><p>Solve the relative path from <code>from</code> to <code>to</code>.
+
+</p>
+<p>At times we have two absolute paths, and we need to derive the relative
+path from one to the other.  This is actually the reverse transform of
+<code>path.resolve</code>, which means we see that:
+
+</p>
+<pre><code>path.resolve(from, path.relative(from, to)) == path.resolve(to)</code></pre>
+<p>Examples:
+
+</p>
+<pre><code>path.relative(&#39;C:\\orandea\\test\\aaa&#39;, &#39;C:\\orandea\\impl\\bbb&#39;)
+// returns
+&#39;..\\..\\impl\\bbb&#39;
+
+path.relative(&#39;/data/orandea/test/aaa&#39;, &#39;/data/orandea/impl/bbb&#39;)
+// returns
+&#39;../../impl/bbb&#39;</code></pre>
+</body></html>

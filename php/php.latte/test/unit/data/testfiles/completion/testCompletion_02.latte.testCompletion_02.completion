@@ -1,0 +1,6 @@
+Code completion result for source line:
+{fo|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     for init; cond; exec                       Macro
+METHOD     foreach $array as $item                    Macro
+METHOD     form $name                                 Macro

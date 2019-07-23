@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: override.layer
+OpenIDE-Module-Layer: overridelayer/layer.xml
+OpenIDE-Module-Name: Override Layer Module
+OpenIDE-Module-Module-Dependencies: base.layer
+

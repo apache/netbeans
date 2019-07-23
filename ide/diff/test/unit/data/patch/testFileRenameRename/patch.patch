@@ -1,0 +1,30 @@
+diff --git a/NewClass.java b/NewClassRename1.java
+similarity index 89%
+rename from NewClass.java
+rename to NewClassRename1.java
+index 3f1dbc2..1f53e8d 100644
+--- a/NewClass.java
++++ b/NewClassRename1.java
+@@ -9,6 +9,6 @@
+  *
+  * @author ondra
+  */
+-public class NewClass {
++public class NewClassRename1 {
+     
+ }
+diff --git a/NewClass.java b/NewClassRename2.java
+similarity index 89%
+rename from NewClass.java
+rename to NewClassRename2.java
+index 3f1dbc2..1f53e8d 100644
+--- a/NewClass.java
++++ b/NewClassRename2.java
+@@ -9,6 +9,6 @@
+  *
+  * @author ondra
+  */
+-public class NewClass {
++public class NewClassRename2 {
+     
+ }

@@ -1,0 +1,8 @@
+Code completion result for source line:
+* @p|aram {int} One The first number to add
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @param {type} name description             JsDoc
+OTHER      @private                                   JsDoc
+OTHER      @property {type} name descript             JsDoc
+OTHER      @public                                    JsDoc

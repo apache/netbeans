@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="${project.encoding}"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<#list namespaces as namespace>
+       xmlns:${namespace.prefix}="${namespace.namespace}"
+</#list>
+
+<#if version??>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-${version}.xsd
+<#else>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.3.xsd
+</#if>
+<#list namespaces as namespace>
+    <#if namespace.hasSchemeLocation()>
+          ${namespace.namespace} ${namespace.namespace}/${namespace.fileName}
+    </#if>
+</#list>">
+
+</beans>

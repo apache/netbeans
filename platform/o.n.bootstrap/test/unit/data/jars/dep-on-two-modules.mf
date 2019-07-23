@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.baz/1
+OpenIDE-Module-Name: Depends on two modules
+OpenIDE-Module-Module-Dependencies: org.foo/1, org.bar/1
+

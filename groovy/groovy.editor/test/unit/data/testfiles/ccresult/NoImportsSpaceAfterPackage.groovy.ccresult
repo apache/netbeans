@@ -1,0 +1,10 @@
+package something
+
+import tester.AAA
+
+/**
+ *
+ */
+class Whatever {
+    AAA
+}

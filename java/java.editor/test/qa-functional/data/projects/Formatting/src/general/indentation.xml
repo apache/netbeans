@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : indentation.xml
+    Created on : September 18, 2008, 4:23 PM
+    Author     : jp159440
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+    <mail>
+        <from>sender@on.the.net</from>
+    </mail>
+</root>

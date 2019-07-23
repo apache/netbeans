@@ -1,0 +1,141 @@
+<testresult testFile='yieldFrom_03.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='18'>
+            <text>gg</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='19' end='20'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='21' end='22'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='25' end='30'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='31' end='32'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='32' end='33'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD_FROM' start='36' end='46'>
+            <text>yield from</text>
+        </token>
+        <token id='T_NEW' start='47' end='50'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='51' end='64'>
+            <text>ArrayIterator</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='64' end='65'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='65' end='66'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='66' end='67'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='67' end='68'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='69' end='70'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='70' end='71'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='72' end='73'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='73' end='74'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='74' end='75'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='75' end='76'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='79' end='84'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='85' end='86'>
+            <text>5</text>
+        </token>
+        <token id='T_SEMICOLON' start='86' end='87'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='88' end='89'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='90' end='90'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='90'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='89' isReference='false'>
+                <Identifier start='16' end='18' name='gg'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Block start='21' end='89' isCurly='true'>
+                    <ExpressionStatement start='25' end='33'>
+                        <YieldExpression start='25' end='32'>
+                            <Scalar start='31' end='32' type='INT' value='1'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='36' end='76'>
+                        <YieldFromExpression start='36' end='75'>
+                            <ClassInstanceCreation start='47' end='75' anonymous='false'>
+                                <ClassName start='51' end='64'>
+                                    <NamespaceName start='51' end='64' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='51' end='64' name='ArrayIterator'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                    <ArrayCreation start='65' end='74' type='NEW'>
+                                        <ArrayElement start='66' end='67'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='66' end='67' type='INT' value='2'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='69' end='70'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='69' end='70' type='INT' value='3'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='72' end='73'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='72' end='73' type='INT' value='4'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </YieldFromExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='79' end='87'>
+                        <YieldExpression start='79' end='86'>
+                            <Scalar start='85' end='86' type='INT' value='5'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

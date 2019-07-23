@@ -1,0 +1,377 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Registration</h2>
+        <p>
+            <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+                WARNING: Registration is one of the rough spots in GSF
+                which will need to be changed. This section describes the current
+                way to do it, which is definitely not a great solution.
+            </blockquote>
+        </p>
+        <p>
+            GSF is based on mime types. You register mime services for a particular mime type,
+            such as <code>text/x-ruby</code> or <code>text/javascript</code>. When you are
+            adding a new language, you should go and see if there is a common mime type
+            that is associated with your language, and if so use it. It doesn't really matter
+            what you choose, since GSF doesn't interpret it in any way, but by picking something
+            standard, other modules have a chance of using your editor services. For example,
+            in the property sheet code, used by the Visual Web Pack, some properties are associated
+            with JavaScript onclick handlers. This code just creates a <code>JEditorPane</code>
+            and sets the mime type to <code>text/javascript</code>. "Magically" this makes
+            syntax highlighting etc. in these customizers for JavaScript attributes work,
+            since GSF has registered editing services for this mimetype.
+        </p>
+        <p>
+            The first think you'll want to do is make sure there is a mime resolver for files
+            of the type you're trying to edit. This is described in detail in the
+            <a href="mime-resolver.html">Mime Resolver</a> document. There is nothing GSF
+            specific about this, but if you're trying to start writing a language support,
+            you'll want to begin there. Registering a mime resolver will tell the IDE how
+            to figure out the mime type of a file, but it doesn't create NetBeans DataLoaders
+            or DataObjects for these files. GSF does that, as soon as you register the mime
+            type with GSF. 
+        </p>
+        <h3>Layer Registration</h3>
+        <p>
+            To register your mime type with GSF, you'll want to modify your layer as follows:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="GsfPlugins"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="javascript"&gt;
+                &lt;file name="language.instance"&gt;
+                    &lt;attr name="instanceClass" stringvalue="org.netbeans.modules.javascript.editing.JsLanguage"/&gt;
+                &lt;/file&gt;
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            This tells GSF that it should "own" the mime type "text/javascript".
+            (<b>NOTE</b>: When you're describing mime types in the layer system, you must use nested
+            folders for the mimetype. You can NOT create a <code>name="text/javascript"</code> item; it must
+            be a folder named <code>text</code> with a folder named <code>javascript</code> inside it!).
+            Once you've done this, GSF will claim files of this mime type and register its own
+            editor kit with it, and so on.  (There is a way to use custom loaders with GSF if you
+            for example are trying to mix and match GSF with Schliemann or you have existing code
+            you are trying to integrate; that will be described later in this document.)
+        </p>
+        <h3>Build Modification</h3>
+        <p>
+            In addition, you also need to add the following target to your project's build file,
+            such that at build time, GSF gets a chance to interject some things into your layer file.
+            In earlier version, GSF would do this at runtime, by modifying your user directory
+            such that it would merge content into the layer file, but this has had several disadvantages.
+            An extra build step avoids this problem. It does however mean that when GSF changes incompatibly,
+            it cannot easily account for older module registrations. Until this issue is resolved, you
+            may have to regenerate your module when versions change.
+        </p>
+        <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">
+            &lt;target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate"&gt;
+                &lt;taskdef name="gsfjar" classname="org.netbeans.modules.gsf.GsfJar" classpath="${nb_all}/gsf.api/anttask/gsfanttask.jar:${nb_all}/nbbuild/nbantext.jar"/&gt;
+                &lt;gsfjar jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified"&gt;
+                    &lt;fileset dir="${build.classes.dir}"/&gt;
+                &lt;/gsfjar&gt;
+            &lt;/target&gt;
+        </pre>
+        <h3>The Language Configuration</h3>
+        <p>
+            In the above registration, we have named the <code>JsLanguage</code> class as the language
+            configuration object for this class. This <code>JsLanguage</code> object is just an instance
+            of the <code>GsfLanguage</code> interface. It's actually a subclass of the
+            <code>DefaultLanguageConfig</code> class in the GSF SPI package, which implements this
+            interface. 
+        </p>
+        <p>
+            The GSF language object defines key characteristics about your language.
+            The most important method you have to implement is
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    @NonNull Language <b>getLexerLanguage</b>();
+            </pre>
+            This is referring to the Lexer API's Language class.  GSF is built on top of the 
+            Lexer API. You must create a Lexer for your language. The Lexer API is already quite
+            well documented so I won't repeat it here (though I should include a documentation
+            reference link).
+        </p>
+        <p>
+            The first step is implementing a Lexer for your language, and returning its language
+            from your language configuration subclass. If you subclass <code>DefaultLanguageConfig</code>,
+            you are finally ready to just test things. You can now start the IDE, double on source files in
+            the file navigator, which should open them in the editor - and they should be properly
+            syntax highlighted! There is more information about the lexer aspects in the
+            <a href="lexing.html">lexing document</a>.
+        </p>
+        <h3>Lexer Registration and Colors</h3>
+        <p>
+            You also need to register the lexer language with NetBeans. This 
+            is described in the <a href="lexing.html#registration">lexing</a> document
+            in more detail.
+        </p>
+        <h3>Other Language Configuration settings</h3>
+        <p>
+            There are some other methods in the language configuration class you can override.
+            <table border="1" style="background: #ffffcc; border-collapse: collapse; border:solid 1px black">
+                <tr>
+                    <th>Method</th><th>Purpose</th>
+                </tr>
+                <tr>
+                    <td><pre>String getLineCommentPrefix()</pre></td>
+                    <td>
+                        If your language supports line comments, return the comment string here.
+                        For example, for Java and JavaScript it's <code>//</code>, and for Ruby it's <code>#</code>. 
+                        If you return non null from this method, GSF will enable the comment, uncomment
+                        and toggle comment actions, add them to your toolbar and implement an editor
+                        action which commments, uncomments and toggles comments in your source files.
+                    </td>
+                </tr>
+                <tr>
+                    <td><pre>boolean isIdentifierChar(char c)</pre></td>
+                    <td>This method lets you return whether a character is an identifier character
+                        in your language. This method will be used to for example automatically
+                        handle the case where the user double clicks in your editor; this should
+                        select a complete identifiers. By default in NetBeans you get the Java behavior,
+                        but in a language like JavaScript for example, <code>$</code> should also be
+                        included in the double click selection.<br/><br/>(Unfortunately, the current design 
+                        doesn't make it easy to handle more complicated scenarios like Ruby, where
+                        a <code>$</code> should only be accepted as a prefix of the identifier, and
+                        a <code>!</code> should only be accepted as a suffix. I plan to refine this
+                        approach a bit to handle this.
+                    </td>
+                </tr>
+            </table>
+        </p>
+        <p>
+            If you extend the <code>DefaultLanguageConfig</code> class, there are additional
+            methods you can subclass. I'll describe these after I introduce the other services
+            you can register with NetBeans.
+        </p>
+        <h3>Parsing</h3>
+        <p>
+            Most features in GSF will require parse information. This relies upon calling
+            your own implementation of the 
+            <a href="org/netbeans/modules/gsf/api/Parser.html">Parser</a> interface.
+            If you are subclassing the <code>DefaultLanguageConfig</code> class, just override
+            the <code>getParser()</code> method:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    @Override
+    public Parser getParser() {
+        return new JsParser();
+    }
+            </pre>
+            Alternatively, you can register this service directly in the layer:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="GsfPlugins"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="javascript"&gt;
+                ...
+                <b>&lt;file name="parser.instance"&gt;
+                    &lt;attr name="instanceClass" stringvalue="org.netbeans.modules.javascript.editing.JsParser"/&gt;
+                &lt;/file&gt;</b>
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+        </p>
+        <h3>Indexing</h3>
+        <p>
+            This is just like the parser registration. You need to implement the
+            <a href="org/netbeans/modules/gsf/api/Indexer.html">Indexer</a> interface, and
+            then register it, either via subclassing <code>DefaultLanguageConfig</code> and
+            overriding <code>getIndexer()</code>:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    @Override
+    public Parser getIndexer() {
+        return new JsIndexer();
+    }
+            </pre>
+            Alternatively, you can register this service directly in the layer:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="GsfPlugins"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="javascript"&gt;
+                ...
+                <b>&lt;file name="indexer.instance"&gt;
+                    &lt;attr name="instanceClass" stringvalue="org.netbeans.modules.javascript.editing.JsIndexer"/&gt;
+                &lt;/file&gt;</b>
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+        </p>
+        <h3>Other Services</h3>
+        <p>
+            You get the idea. You can override configuration functiosn in <code>DefaultLanguageConfig</code>,
+            or register services directly in the layer. Sometimes you can do a combination of things.
+            For example, in the Ruby plugin, most editing related services are implemented by and registered
+            in the Ruby Editing module. These are instantiated directly by the <code>RubyLanguage</code>
+            configuration class.  However, Ruby Quickfixes are implemented in a separate module, and therefore
+            the <code>HintsProvider</code> implementation for Ruby is registered via the layer in the
+            hint module.
+        </p>
+        <h3>Exceptions!</h3>
+        <p>
+            <span style="background: #ffcccc; color: black">HACK ALERT</span>:
+            There are two ugly exceptions to the ability to register services with the
+            <code>DefaultLanguageConfig</code>.  Two attributes <b>must</b> be initialized
+            via the layer instead:
+            <ol>
+                <li> Structure scanners</li>
+                <li> The <code>customEditorKit</code> attribute</li>
+            </ol>
+            Structure scanners are used to for example populate the navigator view.
+            The customEditorKit attribute will be described later in this document.
+            The problem with both of these attributes is that they are needed early during startup,
+            even during IDE sessions where file types of the given mimetype is never loaded!
+            There are implementation reasons for this. Currently, the way we hook into the navigator
+            API, we have to know when we first see the GSF language registrations whether a given
+            language supports navigation (in which case we'll modify the system file system to register
+            a GSF navigator view for this file type). Similarly, we need to know during GSF data loader
+            initialization whether GSF should be on the lookout for files of the given mime type; this
+            is only the case if <code>customEditorKit</code> is false.
+            Well, if GSF were to look for these attributes in the langauge configuration objects,
+            it would have to load and instantiate all the language configuration objects at startup!
+            That would mean initializing a WHOLE bunch of classes at startup, since language configuration
+            classes typically reference a bunch of other services. (I in fact DID try this, and ended
+            up failing the blacklisted class commit validation test, so I had to revert initialization 
+            of these two attributes to being layer-only).
+        </p>
+        
+        
+        <a name="UseCustomEditorKit"/>
+        <h3>Using Custom Loaders and Kits</h3>
+        <p>
+            Normally when you register a mime type with GSF, GSF will automatically handle
+            file type handling for you, by creating NetBeans implementations like DataObjects,
+            creating an EditorKit for these DataObjects, and so on.
+        </p>
+        <p>
+            However, there are cases where you have an existing EditorKit or DataLoader, and
+            you want to add GSF support selectively. To do that, you need to tell GSF
+            to back off. You do that with the <code>useCustomEditorKit</code> attribute, 
+            which you add as an attribute to the mime folder in the <code>GsfPlugins</code>
+            folder in the layer:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="GsfPlugins"&gt;
+        &lt;folder name="application"&gt;
+            &lt;folder name="x-httpd-eruby"&gt;
+                <b>&lt;attr name="useCustomEditorKit" boolvalue="true"/&gt;</b>
+                ...
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>            
+            
+            When GSF sees this, it will not add ANY editing services for you. 
+            You are now free to add these in yourself in your layer.
+            This is done by the HTML module for example, which had a lot of existing
+            legacy code we didn't want to rewrite (at least not yet).   HTML already
+            has DataObjects (which were subclassed in other modules), it had custom
+            code to handle formatting and code completion, and we wanted to keep these
+            classes using the old code for now. So, the HTML module specifies
+            <code>useCustomEditorKit</code>.
+        </p>
+        <p>
+            With the <code>useCustomEditorKit</code> attribute you can use your own
+            EditorKit implementation. There is a price to pay though. When you do
+            this, you need to manually register all the GSF implementations you <b>do</b>
+            want to use. For example, if you're providing a semantic highlighter, you
+            have to register the GSF highlighting factory in the Editors folder:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="Editors"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="html"&gt;
+                <i>Required for semantic highlighting:</i>
+                &lt;file name="org-netbeans-modules-gsfret-editor-semantic-HighlightsLayerFactoryImpl.instance"/&gt;
+            
+                <i>Required for code folding:</i>
+                &lt;folder name="FoldManager"&gt;
+                    &lt;file name="org-netbeans-modules-gsfret-editor-fold-GsfFoldManagerFactory.instance"/&gt;
+                &lt;/folder&gt;
+                &lt;folder name="SideBar"&gt;
+                    &lt;file name="org-netbeans-modules-editor-gsfret-GsfCodeFoldingSideBarFactory.instance"&gt;
+                        &lt;attr name="position" intvalue="1200"/&gt;
+                    &lt;/file&gt;
+                &lt;/folder&gt;
+                <i>Required for GSF go to declaration:</i>
+                &lt;folder name="HyperlinkProviders"&gt;
+                    &lt;file name="GsfHyperlinkProvider.instance"&gt;
+                        &lt;attr name="instanceClass" stringvalue="org.netbeans.modules.gsfret.editor.hyperlink.GsfHyperlinkProvider"/&gt;
+                        &lt;attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/&gt;
+                    &lt;/file&gt;
+                &lt;/folder&gt;
+                <i>Required for error status:</i>
+                &lt;folder name="UpToDateStatusProvider"&gt;
+                    &lt;file name="org-netbeans-modules-gsfret-hints-GsfUpToDateStateProviderFactory.instance"/&gt;
+                &lt;/folder&gt;
+                <i>Required for code completion:</i>
+                &lt;folder name="CompletionProviders"&gt;
+                    &lt;file name="org-netbeans-modules-gsfret-editor-completion-GsfCompletionProvider.instance"/&gt;
+                &lt;/folder&gt;
+            &lt;/folder&gt;
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            I may be missing some services here - like live code templates and mark occurrences.
+            If you <b>do</b> go this route, you should look at the <code>LanguageRegistry</code> class
+            in the GSF implementation to make sure you're picking up everything you intend to, to
+            make sure you have the right class names, with all the right attributes, etc.
+            <div style="background: #ccffcc; color: black; border: solid 1px black; padding: 10px">
+                I need to do something to make this more solid. Perhaps I can use .shadow or other forms of aliasing
+                such that all you need to do is reference a service by hand and the correct class name etc. is
+                used. I think I've seen this for actions (which are registered in one place, and just a shadow used
+                elsewhere to link to it) so it might work in this case if I switch to a logical name and use the
+                <code>instanceClass</code> attribute instead of the filename to designate the class to be instantiated.
+            </div>
+        </p>
+        <h3>Mixing and Matching APIs</h3>
+        <p>
+            You are free to use the NetBeans APIs directly.  For example, in addition to relying on GSF's code completion
+            provider, you can add an additional direct implementation of NetBeans' code completion API if you should
+            want to. You don't need to switch to a custom editor kit to do this.
+        </p>
+        <h3>Adding Actions</h3>
+        <p>
+            In NetBeans 6.5, there is a new API which lets you register editor actions (along with keybindings)
+            for arbitrary mime types. This means that you can extend the available actions for an editor type
+            from your modules. GSF used to have an API to help with this, but it's no longer necessary. To do this,
+            you just have to implement the editor <code>BaseAction</code> class, and register it in the Editors mime
+            folder:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+    &lt;folder name="Editors"&gt;
+        &lt;folder name="text"&gt;
+            &lt;folder name="x-ruby"&gt;
+                ...
+                <b>&lt;folder name="Actions"&gt;
+                    &lt;file name="org-netbeans-modules-ruby-ReflowParagraphAction.instance"/&gt;
+                &lt;/folder&gt;
+            &lt;/folder&gt;</b>
+        &lt;/folder&gt;
+    &lt;/folder&gt;
+            </pre>
+            From here, you can proceed to also create a <code>Popup</code> folder to add it to the context
+            menu for this file type, and/or register a keybinding for it via an XML file
+            referenced from the <code>Keybindings</code> folder.
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

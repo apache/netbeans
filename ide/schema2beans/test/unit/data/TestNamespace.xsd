@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://anything.org/extension"
+    xmlns:sns="http://anything.org/simple"
+    xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
+    xmlns:ext="http://anything.org/extension"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.0">
+
+
+<xsd:import namespace="http://anything.org/simple"
+            schemaLocation="simple.xsd"/>
+
+
+<xsd:element name="namespaceSample" type="ext:extTopLevelType">
+</xsd:element>
+
+<xsd:complexType name="extTopLevelType">
+
+    <xsd:sequence>
+        <xsd:element name="name"
+                     type="xsd:string"/>
+
+        <xsd:element name="config-property"
+                     type="ext:config-propertyType"
+                     maxOccurs="unbounded"/>
+
+	    <xsd:element name="more-info" type="sns:more-infoType"/>
+
+	  <xsd:element name="simple-config-property" type="sns:config-propertyType" minOccurs="0"/>
+
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="config-propertyType">
+    <xsd:sequence>
+        <xsd:element name="config-property-name"
+                     type="xsd:string"/>
+        <xsd:element name="config-property-type"
+                     type="xsd:string"/>
+        <xsd:element name="description"
+                     type="xsd:string"
+                     minOccurs="0"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+
+</xsd:schema>
+
+

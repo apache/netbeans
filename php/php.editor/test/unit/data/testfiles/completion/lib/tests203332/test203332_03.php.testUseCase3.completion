@@ -1,0 +1,6 @@
+Code completion result for source line:
+FrontendBookTable::getInstance()->|getName();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getInstance()                   [STATIC]   \Test_03\FrontendBookTable
+METHOD     getName()                       [PUBLIC]   \Test_03\BookTable
+METHOD     getTitle()                      [PUBLIC]   \Test_03\BookTable

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="foo">
+        <file name="test1">lala</file>
+        <file name="test2" url="test2"/>
+        <file name="test3">
+            <attr name="x" stringvalue="one"/>
+            <attr name="y" stringvalue="one too"/>
+        </file>
+        <file name="29356">
+            <attr name="a" methodvalue="org.netbeans.core.startup.layers.CacheManagerTestBaseHid.method"/>
+            <attr name="map1" methodvalue="org.netbeans.core.startup.layers.CacheManagerTestBaseHid.map1"/>
+            <attr name="map2" methodvalue="org.netbeans.core.startup.layers.CacheManagerTestBaseHid.map2"/>
+            <attr name="mapImage" methodvalue="org.netbeans.core.startup.layers.CacheManagerTestBaseHid.mapImage"/>
+            <attr name="mapDisplayName" methodvalue="org.netbeans.core.startup.layers.CacheManagerTestBaseHid.mapDisplayName"/>
+            <attr name="displayName" bundlevalue="org.netbeans.core.startup.layers.TestBundle#footext"/>
+            <attr name="iconBase" stringvalue="org/netbeans/core/startup/layers/data/icon.png"/>
+        </file>
+    </folder>
+    <folder name="baz">
+        <file name="thingy"/>
+    </folder>
+    <folder name="bug39210">
+        <file name="inline.txt">MyContent</file>
+    </folder>
+
+    <folder name="bug21204">
+        <file name="different-attr.txt">
+            <attr name="x" stringvalue="y" />
+        </file>
+        <file name="same-attr.txt">
+            <attr name="x" stringvalue="y" />
+        </file>
+    </folder>
+</filesystem>

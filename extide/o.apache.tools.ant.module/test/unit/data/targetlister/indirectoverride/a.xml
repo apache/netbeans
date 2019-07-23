@@ -1,0 +1,4 @@
+<project name="a">
+    <import file="b.xml"/>
+    <target name="x"/>
+</project>

@@ -1,0 +1,230 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <title>org.netbeans.spi.editor.lib2.typinghooks</title>
+  </head>
+  <body>
+
+  <p>
+  The Typing Hooks SPI allows modules to intercept various key typed events
+  handled by the editor infrastructure. Historically, this was possible by subclassing
+  editor actions such as <code>DefaultKeyTypedAction</code> or <code>InsertBrakeAction</code>
+  and overwriting their <code>performAction</code> method. This however is not very
+  flexible approach. It's main drawback is that modules can't easily intercept
+  key typed events handled in editors (eg. <code>EditorKit</code>s) that are provided
+  by other modules. The Typing Hooks SPI addresses these drawbacks while providing
+  semantically compatible functionality with what used to be possible by subclassing editor actions.
+  </p>
+
+  <p>
+  The editor actions superceded by Typing Hooks SPI are still available and the code
+  that uses them should still work. But they will be deprecated and eventually removed.
+  </p>
+
+
+  <h3>Keyboard input processing</h3>
+
+  <p>
+  Netbeans editor panes are ordinary <code>JTextComponent</code>s and therefore
+  they fully follow keyboard events processing scheme defined by Swing (please read
+  more about <i>Text Input</i> in <code>JTextComponent</code>'s javadoc). For the
+  purpose of understanding Typing Hooks SPI it is important to note that
+  the SPI interceptors are at the very end of the <code>KeyEvent</code> processing
+  pipeline, which means that some <code>KeyEvent</code>s may never reach
+  them. However, in a typical environment these events will not present
+  printable characters that could be inserted in an edited document. Typically they are
+  shortcuts bound to special actions in the editor's <code>Keymap</code> (newly
+  a pair of <code>InputMap</code>, <code>ActionMap</code>).
+  </p>
+
+  <p>
+  In general the SPI provides several different types of interceptors (interfaces)
+  that clients can implement and register for a document type (mimetype) of their
+  interest. Each interceptor type is meant to process different types of keyboard
+  input. The interceptor types currently available are listed below.
+  </p>
+
+  <ul>
+  <li><code>TypedTextInterceptor</code> - processes <code>KeyTyped</code> events
+  that would normally be processed by <code>DefaultKeyTypedAction</code> registered
+  for a given editor type. Any other <code>KeyEvent</code> that has an <code>Action</code> associated
+  in the editor pane's keymap will trigger that <code>Action</code> and will <b>not</b> reach
+  registered interceptors of this type.
+  </li>
+  <li><code>TypedBreakInterceptor</code> - processes <code>KeyTyped</code> events
+  that would normally result in inserting a line break in the edited document.
+  </li>
+  <li><code>DeletedTextInterceptor</code> - processes <code>KeyTyped</code> events
+  that would normally remove text from the edited document.
+  </li>
+  </ul>
+
+
+  <h3>Registering interceptors</h3>
+  
+  <p>
+  Interceptors are created by calling a factory implementation registered in
+  <code>MimeLookup</code>. For example an implementation of <code>TypedTextInterceptor</code>
+  can be plugged in by registering <code>TypedTextInterceptor.Factory</code> instance
+  for the appropriate mimetype in <code>MimeLookup</code>. The snippet below shows
+  how this registration could look.
+  </p>
+  
+  <pre>
+&lt;folder name="Editors"&gt;
+  &lt;folder name="text"&gt;
+    &lt;folder name="x-something"&gt;
+        &lt;file name="org-some-module-TTIFactory.instance" /&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+  </pre>
+
+  <p>
+  The <code>TTIFactory</code> class will simply return a new instance of
+  the module's implementation of <code>TypedTextInterceptor</code> interface from its
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/typinghooks/TypedTextInterceptor.Factory.html#createTypedTextInterceptor-org.netbeans.api.editor.mimelookup.MimePath-">createTypedTextInterceptor</a></code>
+  method. 
+  </p>
+
+  
+  <h3>Interceptors lifecycle</h3>
+
+  <p>
+  In general interceptors are created as they are needed. However, unlike in other editor SPIs where SPI
+  implementation objects are short lived and get all their information in the form of a context object
+  from the factory that created them, the interceptors are long lived objects that are created with a minimal
+  context and reused many times. The reason for this is mostly performance considerations. Typically
+  there are many keyboard events as users type and their processing has to be as fast as possible.
+  </p>
+
+  <p>
+  The interceptors are created for a document type or more precisely for a <code>MimePath</code>
+  of the document fragment, where a user is typing. This allows to call different interceptors
+  depending on where in the document a particular keyboard event happens. Therefore embedded
+  sections can use different interceptors than the main document.
+  </p>
+
+  <p>
+  The <code>MimePath</code> is the only context that the interceptor factory gets from
+  the infrastructure and it is the only context that it is supposed to pass to interceptor
+  instances that it creates. All the other information needed for a particular interceptor type
+  to do its job will be provided at the time when an event happens and the interceptor is called
+  to process it. This makes it possible to reuse one interceptor implementation many times
+  for processing different events in different documents.
+  </p>
+
+
+  <h3>Threading and synchronization</h3>
+
+  <p>
+  As explained earlier Netbeans editors follow swing concepts for handling keyboard
+  events. All keyboard events processing and editor actions invocation in swing
+  editors is done in the AWT thread, which means that events are processed in one
+  thread only and in the order as they happened. The same applies for interceptors
+  and Typing Hooks SPI in general.
+  </p>
+
+  <p>
+  In particular it is guaranteed that only one interceptor is used at a time and
+  it's always called from AWT thread. Therefore a typical interceptor does not have to use
+  any explicit synchronization code (unless it accesses a resource that
+  can be simultaneously accessed from other threads of course).
+  </p>
+
+  <p>
+  However, interceptor types may define a specific protocol, which determines how interceptors
+  of that type are chained, what methods are called first, if and what document locks are
+  acquired prior calling the interceptor, conditions when the event processing
+  can be interrupted, what happens with the rest of the queued interceptors, etc.
+  Please see documentation of each interceptor type interface for detailed information.
+  </p>
+
+
+  <h3><a name="usecases">Use cases</a></h3>
+  
+  <h4>Use case 1. - Automated indentation</h4>
+
+  <p>
+  Many languages need to automatically reindent lines as user types certain
+  statements. For example in java language the 'case' statements in a 'switch' block
+  should be aligned to the same column similarly as in the code snippet below.
+  The java editor helps users to do that by automatically indenting the lines that
+  contain 'case' statements as soon as a user types the double colon at the end of the statement.
+  </p>
+
+  <pre>
+    switch(price) {
+      case 100:
+        // do something cheap
+        break;
+
+      case 1000:
+        // do something more expensive
+        break;
+    }
+  </pre>
+
+  <p>
+  This can easily be done by implementing
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/typinghooks/TypedTextInterceptor.html">TypedTextInterceptor</a></code>
+  and its <code>afterInsert</code> method. The implementation can check the text
+  inserted in the document as a result of the key typed event processing and reindent
+  the line if its text matches required pattern.
+  </p>
+
+  <p>
+  Moreover, the <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation API</a>
+  provides an implementation of <code>TypedTextInterceptor</code>, which reindents lines that
+  match provided regular expressions. Please see <code><a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndenting</a></code>
+  class for more details.
+  </p>
+
+  <h4>Use case 2. - Pair characters completion</h4>
+  
+  <p>
+  It can safe a lot of typing if the editor correctly completes pair characters
+  such as <code>()</code>, <code>{}</code>, <code>""</code>, <code>''</code>, etc.
+  For example when one of the pair character is typed or deleted the editor
+  automatically adds or removes its couterpart. Additionally, the editor may wrap selected text in
+  the pair characters such as quotes <code>""</code> if one of them is typed (eg. in java producing a string literal).
+  </p>
+
+  <p>
+  These features can be implemented by providing specialized
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/typinghooks/TypedTextInterceptor.html">TypedTextInterceptor</a></code>
+  and
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/typinghooks/DeletedTextInterceptor.html">DeletedTextInterceptor</a></code>
+  implementations.
+  </p>
+  
+<!--
+  
+  
+  <h4>Other usecases</h4>
+-->
+  
+  </body>
+</html>

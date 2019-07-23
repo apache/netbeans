@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="recursive1" default="x">
+    <import file="./recursive2.xml"/>
+    <target name="x"/>
+</project>

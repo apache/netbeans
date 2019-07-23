@@ -1,0 +1,5 @@
+instruction[fx:include]
+simple-class[javafx.scene.control.Label]
+simple-class[javafx.scene.control.ListCell]
+simple-class[javafx.scene.control.ListView]
+simple-class[javafx.scene.shape.Line]

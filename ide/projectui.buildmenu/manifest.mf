@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.projectui.buildmenu/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/project/ui/buildmenu/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/project/ui/buildmenu/Bundle.properties
+OpenIDE-Module-Provides: BuildActions
+AutoUpdate-Show-In-Client: false
+

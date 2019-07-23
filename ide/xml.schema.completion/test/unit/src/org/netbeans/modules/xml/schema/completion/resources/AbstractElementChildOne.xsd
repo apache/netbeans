@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" 
+           xmlns="urn:child1"
+           xmlns:parent="urn:parent"
+           targetNamespace="urn:child1"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.w3.org/2001/XMLSchema XMLSchema.xsd
+                               urn:parent AbstractElementParent.xsd"
+           elementFormDefault="qualified" xml:lang="EN">
+
+    <xs:import namespace="urn:parent" schemaLocation="AbstractElementParent.xsd"/> 
+     
+    <xs:element name="child-one" substitutionGroup="parent:child" type="ChildOne"/>
+
+    <xs:complexType name="ChildOne">
+        <xs:complexContent>
+            <xs:extension base="parent:Child"/>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

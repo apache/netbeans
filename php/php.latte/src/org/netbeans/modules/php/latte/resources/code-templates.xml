@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.li" abbreviation="li" contexts="latte-code">
+        <code>
+<![CDATA[link ${Presenter}:${action}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.pli" abbreviation="pli" contexts="latte-code">
+        <code>
+<![CDATA[plink ${Presenter}:${action}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.ci" abbreviation="ci" contexts="latte-code">
+        <code>
+<![CDATA[continueIf ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.bi" abbreviation="bi" contexts="latte-code">
+        <code>
+<![CDATA[breakif ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.if" abbreviation="if" contexts="latte-code">
+        <code>
+<![CDATA[if ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.el" abbreviation="el" contexts="latte-code">
+        <code>
+<![CDATA[else]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.eif" abbreviation="eif" contexts="latte-code">
+        <code>
+<![CDATA[elseif ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.isv" abbreviation="isv" contexts="latte-code">
+        <code>
+<![CDATA[ifset ${var}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.isb" abbreviation="isb" contexts="latte-code">
+        <code>
+<![CDATA[ifset #${block}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.eis" abbreviation="eis" contexts="latte-code">
+        <code>
+<![CDATA[elseifset ${var}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.ic" abbreviation="ic" contexts="latte-code">
+        <code>
+<![CDATA[ifCurrent ${Presenter}:${action}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.for" abbreviation="for" contexts="latte-code">
+        <code>
+<![CDATA[for ${init}; ${cond}; ${exec}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.fore" abbreviation="fore" contexts="latte-code">
+        <code>
+<![CDATA[foreach ${array} as ${item}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.wh" abbreviation="wh" contexts="latte-code">
+        <code>
+<![CDATA[while ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.incf" abbreviation="incf" contexts="latte-code">
+        <code>
+<![CDATA[include '${file.latte}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.incb" abbreviation="incb" contexts="latte-code">
+        <code>
+<![CDATA[include #{block}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.ex" abbreviation="ex" contexts="latte-code">
+        <code>
+<![CDATA[extends '${file.latte}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.la" abbreviation="la" contexts="latte-code">
+        <code>
+<![CDATA[layout '${file.latte}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.co" abbreviation="co" contexts="latte-code">
+        <code>
+<![CDATA[control ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.ca" abbreviation="ca" contexts="latte-code">
+        <code>
+<![CDATA[cache ${key}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.sn" abbreviation="sn" contexts="latte-code">
+        <code>
+<![CDATA[snippet ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.bl" abbreviation="bl" contexts="latte-code">
+        <code>
+<![CDATA[block #${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.de" abbreviation="de" contexts="latte-code">
+        <code>
+<![CDATA[define #${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.inbl" abbreviation="inbl" contexts="latte-code">
+        <code>
+<![CDATA[includeblock '${file.latte}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.ct" abbreviation="ct" contexts="latte-code">
+        <code>
+<![CDATA[contentType ${type}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.st" abbreviation="st" contexts="latte-code">
+        <code>
+<![CDATA[status ${code}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.cap" abbreviation="cap" contexts="latte-code">
+        <code>
+<![CDATA[status ${code}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.as" abbreviation="as" contexts="latte-code">
+        <code>
+<![CDATA[assign]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.def" abbreviation="def" contexts="latte-code">
+        <code>
+<![CDATA[default ${name} = ${value}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.var" abbreviation="var" contexts="latte-code">
+        <code>
+<![CDATA[var ${name} = ${value}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.du" abbreviation="du" contexts="latte-code">
+        <code>
+<![CDATA[dump ${var}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.sy" abbreviation="sy" contexts="latte-code">
+        <code>
+<![CDATA[syntax ${mode}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.us" abbreviation="us" contexts="latte-code">
+        <code>
+<![CDATA[use ${Class}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.fo" abbreviation="fo" contexts="latte-code">
+        <code>
+<![CDATA[form ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.la" abbreviation="la" contexts="latte-code">
+        <code>
+<![CDATA[label ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.in" abbreviation="in" contexts="latte-code">
+        <code>
+<![CDATA[input ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.db" abbreviation="db" contexts="latte-code">
+        <code>
+<![CDATA[debugbreak ${cond}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.fi" abbreviation="fi" contexts="latte-code">
+        <code>
+<![CDATA[first]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.latte.codetemplates.la" abbreviation="la" contexts="latte-code">
+        <code>
+<![CDATA[last]]>
+        </code>
+    </codetemplate>
+</codetemplates>

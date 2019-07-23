@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.25"
+  author="mkleint@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture.
+            <hint>
+            What will be API for
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+ <answer id="arch-overall">
+  <ul>
+   <li>
+    <api group="java" name="MavenProjectAPI" type="export" category="friend">
+     <p> 
+      The Maven Project API provides some miscellaneous friend APIs and SPIs relating to 
+      Maven projects.
+     </p>
+    </api>
+   </li>
+  </ul>
+ </answer>
+
+
+
+
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it at
+            what circumstances and what will be the typical code to write
+            to use the module.
+        </question>
+-->
+ <answer id="arch-usecases">
+  <p>
+     API/SPI to be used by modules wanting to enhance the maven project's integration in the IDE. 
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-read" when="final">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and classify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+ <answer id="resources-read">
+    <api group="layer" name="MavenProjectCustomizer" type="export" category="official">
+     <p>
+       "Projects/org-netbeans-modules-maven/Customizer" folder's content is used to construct the project's customizer.
+       It's content is expected to be <code>ProjectCustomizer.CompositeCategoryProvider</code> instances.
+       The lookup passed to the panels contains an instance of <code>Project</code> and <code>org.netbeans.modules.maven.api.customizer.ModelHandle</code>
+       Please note that the latter is not part of any public APIs and you need friend dependency to make use of it.
+     </p>
+    </api>
+    <api group="layer" name="MavenLogicalViewProvider" type="export" category="official">
+     <p>
+       "Projects/org-netbeans-modules-maven/Nodes" folder's content is used to construct the project's child nodes.
+       It's content is expected to be <code>NodeFactory</code> instances.
+     </p>
+    </api>
+    <api group="layer" name="MavenLookup" type="export" category="official">
+     <p>
+       "Projects/org-netbeans-modules-maven/Lookup" folder's content is used to construct the project's additional lookup.
+       It's content is expected to be <code>LookupProvider</code> instances. Maven project provides <code>LookupMerger</code>s
+       for <code>Sources</code>, <code>PrivilegedTemplates</code>, <code>RecommendedTemplates</code> and other classes. Implementations added by 3rd parties
+       will be merged into a single instance in the project's lookup.
+     </p>
+    </api>
+    <api group="layer" name="MavenActions" type="export" category="official">
+     <p>
+       "Projects/org-netbeans-modules-maven/ProjectActions", 
+       "Projects/org-netbeans-modules-maven/DependenciesActions" and 
+       "Projects/org-netbeans-modules-maven/DependencyActions" folders' content is used to
+       add item's to node popup. To main project node, Dependencies node and node for single dependency.
+       It's content is expected to be <code>Action</code> instances.
+     </p>
+    </api>
+
+    <api group="layer" name="MavenArchetypes" type="export" category="official">
+     <p>
+       "Projects/org-netbeans-modules-maven/Archetypes" folder contains fileobjects
+       that represent archetypes. The archetypes are defined by the following file attributes:
+     </p>
+       <table>
+           <tbody>
+               <tr><td>groupId</td><td>mandatory</td><td></td></tr>
+               <tr><td>artifactId</td><td>mandatory</td><td></td></tr>
+               <tr><td>version</td><td>mandatory</td><td></td></tr>
+               <tr><td>repository</td><td>optional</td><td>url of the archetype's repository</td></tr>
+               <tr><td>nameBundleKey</td><td>optional</td><td>key in bundle file that holds localized name</td></tr>
+               <tr><td>descriptionBundleKey</td><td>optional</td><td>key in bundle file that holds localized description</td></tr>
+           </tbody>
+       </table>
+    </api>
+
+ </answer>
+
+
+ <answer id="exec-property">
+  <p>
+      <api category="devel" group="property" name="netbeans.ignore.jdk.bootclasspath" type="export">
+          The maven support recognizes special tag in <q>maven-compiler-plugin</q> configuration
+          that instructs the IDE to <em>not</em> put JDK libraries on a classpath. One can use:<pre>
+    &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+        &lt;configuration&gt;
+            &lt;compilerArguments&gt;
+                &lt;bootclasspath&gt;netbeans.ignore.jdk.bootclasspath&lt;/bootclasspath&gt;
+            &lt;/compilerArguments&gt;
+        &lt;/configuration&gt;
+    &lt;/plugin&gt;
+          </pre>
+          section in <code>pom.xml</code> to <em>suppress</em> the JDK libraries.
+      </api>
+  </p>
+  <p>
+      <api category="devel" group="systemproperty" name="org.netbeans.modules.maven.execute.AbstractOutputHandler.SLEEP_DELAY" type="export">
+          A system property can be used to change the default indexing sleep delay during builds,
+          in case reparsing starts too soon (wasting CPU) or too late (impeding editing).
+      </api>
+  </p>
+ </answer>
+ 
+ <answer id="resources-file">
+     <p>
+         <api category="stable" group="java.io.File" name="nbactions.xml" type="export">
+             <p>
+                NetBeans Maven support recognizes special file(s) that can be placed
+                next to a <code>pom.xml</code>. These files contain description of 
+                bindings between NetBeans UI actions (compile, run, debug, etc.) and
+                the actual Maven goals to execute.
+             </p>
+             <p>
+                 Primary name of the file is <code>nbactions.xml</code>. In
+                 addition to this, there can be other <code>nbactions-profile.xml</code>
+                 where profile is the name of a Maven profile. These files are
+                 active when such profile is choosen as a selected 
+                 project configuration. The sample format of the file follows:
+             </p>
+             <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;actions&gt;
+    &lt;action&gt;
+        &lt;actionName&gt;run&lt;/actionName&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;process-classes&lt;/goal&gt;
+            &lt;goal&gt;exec:java&lt;/goal&gt;
+        &lt;/goals&gt;
+    &lt;/action&gt;
+    &lt;action&gt;
+        &lt;actionName&gt;debug&lt;/actionName&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;process-classes&lt;/goal&gt;
+            &lt;goal&gt;exec:java&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;properties&gt;
+            &lt;jpda.listen&gt;maven&lt;/jpda.listen&gt;
+        &lt;/properties&gt;
+    &lt;/action&gt;
+    &lt;action&gt;
+        &lt;!-- this action is shown in 'Custom' submenu of project popup menu --&gt;
+        &lt;actionName&gt;CUSTOM-bck2brwsr-show&lt;/actionName&gt;
+        &lt;displayName&gt;Run in a Browser&lt;/displayName&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;clean&lt;/goal&gt;
+            &lt;goal&gt;package&lt;/goal&gt;
+            &lt;goal&gt;bck2brwsr:show&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;activatedProfiles&gt;
+            &lt;activatedProfile&gt;bck2brwsr&lt;/activatedProfile&gt;
+        &lt;/activatedProfiles&gt;
+        &lt;properties&gt;
+            &lt;skipTests&gt;true&lt;/skipTests&gt;
+        &lt;/properties&gt;
+    &lt;/action&gt;
+    &lt;!-- the profiles section is only useful in nbactions.xml 
+        and gets activated when profile of given id is choosen in the UI
+        --&gt;
+    &lt;profiles&gt;
+        &lt;profile&gt;
+            &lt;id&gt;bck2brwsr&lt;/id&gt;
+            &lt;!-- changes meaning of run action when bck2brwsr profile
+                 is selected
+            --&gt;
+            &lt;actions&gt;
+                &lt;action&gt;
+                    &lt;actionName&gt;run&lt;/actionName&gt;
+                    &lt;displayName&gt;Run in a Browser&lt;/displayName&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;clean&lt;/goal&gt;
+                        &lt;goal&gt;package&lt;/goal&gt;
+                        &lt;goal&gt;bck2brwsr:show&lt;/goal&gt;
+                    &lt;/goals&gt;
+                    &lt;activatedProfiles&gt;
+                        &lt;activatedProfile&gt;bck2brwsr&lt;/activatedProfile&gt;
+                    &lt;/activatedProfiles&gt;
+                    &lt;properties&gt;
+                        &lt;skipTests&gt;true&lt;/skipTests&gt;
+                    &lt;/properties&gt;
+                &lt;/action&gt;
+            &lt;/actions&gt;
+        &lt;/profile&gt;
+    &lt;/profiles&gt;
+&lt;/actions&gt;
+             </pre>
+             <p>
+             If an action is not found in currently selected &lt;profile&gt;
+             section, the system fallbacks to the main list of actions. In
+             the previous example, the debug action would be taken from main
+             list for all the profiles.    
+             </p>
+         </api>
+         <api category="stable" group="property" name="jpda.attach" type="export">
+             <p>
+             One can define following code in nbactions.xml file to start
+             a process during goal execution and attach a debugger to it
+             once the execution is over. Here is an example using
+             <a onclick="target='_blank'" href="https://github.com/simpligility/android-maven-plugin/pull/584">enhancement</a>
+             in the Maven Android plugin:
+             </p>
+<pre>
+&lt;action&gt;
+    &lt;actionName&gt;debug&lt;/actionName&gt;
+    &lt;goals&gt;
+        &lt;goal&gt;clean&lt;/goal&gt;
+        &lt;goal&gt;package&lt;/goal&gt;
+        &lt;goal&gt;android:deploy&lt;/goal&gt;
+        &lt;goal&gt;android:run&lt;/goal&gt;
+    &lt;/goals&gt;
+    &lt;properties&gt;
+        &lt;skipTests&gt;true&lt;/skipTests&gt;
+        &lt;android.run.debug&gt;${jpda.attach.port}&lt;/android.run.debug&gt;
+        &lt;jpda.attach&gt;true&lt;/jpda.attach&gt;
+    &lt;/properties&gt;
+&lt;/action&gt;
+</pre>             
+        <p>
+        Value of <code>jpda.attach</code> property can either be <code>true</code>
+        and in such case the IDE finds an empty port and sets values of 
+        <code>jpda.attach.port</code> and <code>jpda.attach.address</code> 
+        properties accordingly, or it can be directly specified
+        <code>address:port</code> or just port number to connect to.
+        </p>
+        </api>
+        <api category="stable" group="property" name="jpda.attach.trigger" type="export">
+             <p>
+             One can define following code in nbactions.xml file to start
+             a process during goal execution and attach a debugger to it
+             when the external process prints a text indicating it's ready for attaching debugger. 
+                 One example is debugging applications using <a href="https://software.intel.com/en-us/multi-os-engine">Multi-OS Engine</a>:
+             </p>
+<pre>
+    &lt;action&gt;
+        &lt;actionName&gt;debug&lt;/actionName&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;package&lt;/goal&gt;
+            &lt;goal&gt;moe:launch&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;properties&gt;
+            &lt;skipTests&gt;true&lt;/skipTests&gt;
+            &lt;moe.options&gt;debug:${jpda.attach.port}&lt;/moe.options&gt;
+            &lt;jpda.attach&gt;true&lt;/jpda.attach&gt;
+            &lt;jpda.attach.trigger&gt;JDWP will wait for debugger on port&lt;/jpda.attach.trigger&gt;
+        &lt;/properties&gt;
+        &lt;activatedProfiles&gt;
+            &lt;activatedProfile&gt;moe&lt;/activatedProfile&gt;
+        &lt;/activatedProfiles&gt;
+    &lt;/action&gt;
+</pre>             
+        <p>
+        Value of <code>jpda.attach.trigger</code> property is the expected text. 
+        </p>
+        </api>
+     </p>
+ </answer>
+
+</api-answers>

@@ -1,0 +1,6 @@
+Code completion result for source line:
+protected f|unction meth_bb() {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    final                                      null
+KEYWORD    function                                   null

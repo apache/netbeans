@@ -1,0 +1,317 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html><head>
+<title>Filesystems API</title>
+<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+</head><body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+Take a look at the
+
+<a href="../package-summary.html">Javadoc</a>,
+
+especially for
+
+<a href="../FileObject.html"><code>FileObject</code></a>.
+
+
+<h1>Contents</h1>
+
+<ul>
+
+<li><a href="#not-for">What This API is Not For</a>
+
+<li><a href="#basic-usage">Common Tasks</a>
+<ul>
+<li><a href="#finding">Finding files and folders</a>
+<li><a href="#create-delete-rename">Creating, deleting, and renaming files and folders</a>
+<li><a href="#read-write">Reading and writing files</a>
+<li><a href="#events">Listening on file events</a>
+<li><a href="#mime">MIME Type Resolution Process</a>
+</ul>
+
+<li><a href="#special">Special Filesystems</a>
+
+<li><a href="#diagram_fileobject"><code>FileObject</code> UML class diagram</a>
+
+</ul>
+
+
+<h1>Filesystems API</h1>
+
+<p>The Filesystems API permits module authors to <a href="#basic-usage">access</a> files in a uniform manner:
+e.g. you may be unaware of whether a "file object" you are using is a plain disk file, or a JAR entry.</p>
+
+<p>A <em>FileSystem</em> is a namespace for <em>FileObjects</em> - a FileSystem
+has a root folder, which is a FileObject, which may have child files and folders - 
+just like a file system on disk.  A FileSystem may or may not represent 
+actual files on disk; this API can be used to represent any hierarchical 
+storage of file-like data.
+
+
+<h2><a name="not-for">What This API is Not For</a></h2>
+
+This API pertains only to manipulating files on disk (or whatever
+storage mechanism a filesystem may use), and makes no reference to
+their contents nor to how they are being used elsewhere in NetBeans
+(beyond whether or not they are locked). If you are looking for
+information on how to create custom content types, use the editor,
+create Explorer nodes corresponding to files, etc., this API is not
+the primary document you should be reading.
+
+<p>From the perspective of the Filesystems API, all files consist of
+byte streams (albeit with MIME types). Usually, the functionality of
+this API will actually be used indirectly, via the
+
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html">Loaders API</a>,
+
+which abstracts away most of the details of files and presents data in
+terms of <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a>s,
+which typically represent the parsed content of a file and provide
+objects to programmatically access that content via 
+<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getCookie-java.lang.Class-">DataObject.getCookie()</a>.
+
+<h2><a name="basic-usage">Common Tasks</a></h2>
+
+Basic operations using the Filesystems API should be familiar,
+as they are similar to any file-access system.  <code>FileObjects</code>
+for a user's data on disk are typically a thin wrapper around 
+<code>java.io.File</code>;  elements of NetBeans' internal configuration
+are also <code>FileObjects</code>, these typically representing data
+actually stored in an XML file inside a module's jar.
+<p>
+There are a few differences from traditional file-access APIs, such as
+monitoring files/folders for changes.  This
+section gives examples of the more common tasks associated with using
+filesystems.
+
+
+<h3><a name="finding">Finding files and folders</a></h3>
+
+Normally, you will be looking for a file or folder by name, and will want to get the
+
+<a href="../FileObject.html"><code>FileObject</code></a>
+
+which represents it.
+
+<p>If you need to get a file object corresponding to a file on disk, use:
+
+<pre>
+fileObject = FileUtil.<a href="../FileUtil.html#toFileObject-java.io.File-">toFileObject</a>(new File("/some/path/to/file.txt"));
+</pre>
+
+<p><code>FileUtil</code> also has methods for working with archive (ZIP/JAR) entries. File objects corresponding
+to archive entries are read-only but otherwise behave much like disk files.</p>
+
+<p>
+To find all the folders and files directly contained in this
+folder, you may use:
+
+<pre>
+FileObject children[]=folder.<a href="../FileObject.html#getChildren--">getChildren</a>();
+</pre>
+
+Occasionally you may need to present a given file object as a URL; for example, to display it in
+a web browser. This is straightforward:
+
+<pre>
+URL url = <a href="../FileObject.html#getURL--">file.getURL()</a>;
+HtmlBrowser.URLDisplayer.getDefault().<a href="@org-openide-awt@/org/openide/awt/HtmlBrowser.URLDisplayer.html#showURL-java.net.URL-">showURL</a>(url);
+</pre>
+
+<h3><a name="create-delete-rename">Creating, deleting, and renaming files and folders</a></h3>
+
+This example creates a subfolder and then a new file within that
+subfolder:
+
+<pre>
+FileObject subfolder=folder.<a href="../FileObject.html#createFolder-java.lang.String-">createFolder</a>("sub");
+FileObject newfile=subfolder.<a href="../FileObject.html#createData-java.lang.String-java.lang.String-">createData</a>("NewSource", "java");
+</pre>
+
+<p>You can delete a file easily:</p>
+
+<pre>
+newfile.delete();
+</pre>
+
+If you want to rename a file, you must first take out a
+
+<a href="../FileLock.html">lock</a>
+
+on the file, to make sure that no one else is actively using the file
+at the same time. Then you may rename it:
+
+<pre>
+FileLock lock = null;
+try {
+    lock=newfile.<a href="../FileObject.html#lock--">lock</a>();
+} catch (<a href="../FileAlreadyLockedException.html">FileAlreadyLockedException</a> e) {
+    // Try again later; perhaps display a warning dialog.
+    return;
+}
+try {
+    newfile.<a href="../FileObject.html#rename-org.openide.filesystems.FileLock-java.lang.String-java.lang.String-">rename</a>(lock, "NewSrc", "java");
+} finally {
+    // Always put this in a finally block!
+    lock.<a href="../FileLock.html#releaseLock--">releaseLock</a>();
+}
+</pre>
+
+If you want to move a file into a different directory (or even file
+system), you cannot use <code>rename(...)</code>; the easiest way is
+to use a NetBeans helper method:
+
+<pre>
+FileObject someFile;
+FileObject whereTo;
+<a href="@TOP@/org/openide/filesystems/FileUtil.html#moveFile-org.openide.filesystems.FileObject-org.openide.filesystems.FileObject-java.lang.String-">FileUtil.moveFile</a>(someFile, whereTo, "YourSource");
+</pre>
+
+Note that in the current API set, it is neither possible nor
+necessary to lock folders (e.g. when creating new children), as
+normally locks are used to protect data files from conflicts between
+the Editor, the Explorer, and so on. If in the future there are
+thread-related problems associated with improper simultaneous access
+to the same folder,  support for folder
+locking could be added to the Filesystems API.
+
+<p>Similarly, there is no support currently for nonexclusive read
+locks - if you require exclusion of writers during a read, you must
+take out a regular write lock for the duration of the read. This is
+not normally necessary, since typically only the Editor will be
+reading and writing the contents of the file, and other file
+operations do not involve information which could be partially
+corrupted between threads. If necessary, the API includes
+facilities for
+
+<a href="@org-openide-util@/org/openide/util/Mutex.html">read-many/write-one locks</a>.
+
+<h3><a name="read-write">Reading and writing files</a></h3>
+
+Reading and writing the contents of a data file is straightforward:
+
+<pre>
+BufferedReader from=new BufferedReader(new InputStreamReader(someFile.<a href="../FileObject.html#getInputStream--">getInputStream</a>()));
+try {
+    String line;
+    while ((line=from.readLine()) != null) {
+        // do something with line
+} finally {
+    from.close();
+}
+
+FileLock lock;
+try {
+    lock=someFile.lock();
+} catch (FileAlreadyLockedException e) {
+    return;
+}
+try {
+    PrintWriter to=new PrintWriter(someFile.<a href="../FileObject.html#getOutputStream-org.openide.filesystems.FileLock-">getOutputStream</a>(lock));
+    try {
+        to.println("testing...");
+        to.println("1..2..3..");
+    } finally {
+        to.close();
+    }
+} finally {
+    lock.releaseLock();
+}
+</pre>
+
+<h3><a name="events">Listening on file events</a></h3>
+
+If you need to keep track of what is being done to a file by other
+components, you can monitor it using normal Java events:
+
+<pre>
+someFile.<a href="../FileObject.html#addFileChangeListener-org.openide.filesystems.FileChangeListener-">addFileChangeListener</a>(new <a href="../FileChangeAdapter.html">FileChangeAdapter</a>() {
+    public void <a href="../FileChangeAdapter.html#fileChanged-org.openide.filesystems.FileEvent-">fileChanged</a>(<a href="../FileEvent.html">FileEvent</a> ev) {
+        System.out.println("Contents changed.");
+    }
+    public void <a href="../FileChangeAdapter.html#fileAttributeChanged-org.openide.filesystems.FileAttributeEvent-">fileAttributeChanged</a>(<a href="../FileAttributeEvent.html">FileAttributeEvent</a> ev) {
+        System.out.println(ev.<a href="../FileAttributeEvent.html#getName--">getName</a>() + ": " + ev.<a href="../FileAttributeEvent.html#getOldValue--">getOldValue</a>() + " -> " + ev.<a href="../FileAttributeEvent.html#getNewValue--">getNewValue</a>());
+    }
+});
+</pre>
+
+All events affecting existing files are actually fired twice, once
+from the file itself and once from its containing folder, so you may
+just want to listen on the parent folder. Also, file creation events
+are fired on the folder only, of course:
+
+<pre>
+FileObject someFolder=someFile.<a href="../FileObject.html#getParent--">getParent</a>();
+someFolder.addFileChangeListener(new FileChangeAdapter() {
+    public void fileChanged(FileEvent ev) {
+        System.out.println("Contents of " + ev.<a href="../FileEvent.html#getFile--">getFile</a>() + " changed.");
+    }
+    public void <a href="../FileChangeAdapter.html#fileDataCreated-org.openide.filesystems.FileEvent-">fileDataCreated</a>(FileEvent ev) {
+        System.out.println("File " + ev.getFile() + " created.");
+    }
+});
+</pre>
+
+<h3><a name="mime">Determining MIME Content Type</a></h3>
+
+<p><code>FileObject.getMIMEType()</code> reports a basic MIME type for a file, which can used to classify it for
+editing and other purposes.</p>
+
+<p>If you need to influence the MIME type resolution process, you can register a <a
+href="../MIMEResolver.html"><code>MIMEResolver</code></a>.
+
+To simplify this process you can register a <code>MIMEResolver</code> declaratively.
+It is not only easier (no coding needed) but can be more efficient by
+sharing results among multiple declared resolvers.
+See the <a href="HOWTO-MIME.html">declarative MIME resolvers how-to</a> for more information about this.
+
+
+<h2><a name="special">Special Filesystems</a></h2>
+
+<p>Each file object resides on a <code>FileSystem</code> which handles a large tree of files. Normally you need
+not be aware of this, since the "Master Filesystem" module automatically handles creation of whatever
+<code>FileSystem</code>s are needed to represent any files on disk, as well as any ZIP/JAR entries for archives
+on disk (using <code>JarFileSystem</code>). It is possible to implement your own filesystem for specialized
+purposes (normally by subclassing <code>AbstractFileSystem</code> and perhaps registering a corresponding
+<code>URLMapper</code>).
+
+<p>The Filesystems API also includes a couple of special implementations which are used by the NetBeans core
+to assemble the system filesystem used for application configuration, and could also be used by module writers
+in some circumstances: <code>MultiFileSystem</code> and <code>XMLFileSystem</code>. See their Javadoc for more
+information.
+
+<div class="nonnormative">
+
+<h2><a name="diagram_fileobject">UML class diagram of <code>FileObject</code></a></h2>
+
+<img src="fileobject.gif" alt="FileObject UML">
+
+</div>
+
+<hr>@FOOTER@
+
+</body>
+</html>

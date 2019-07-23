@@ -1,0 +1,84 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${PACKAGE_NAME};
+
+<#if GENERATE_FIX??>
+import com.sun.source.util.TreePath;
+import org.netbeans.api.java.source.CompilationInfo;
+</#if>
+import org.netbeans.spi.editor.hints.ErrorDescription;
+<#if GENERATE_FIX??>
+import org.netbeans.spi.editor.hints.Fix;
+</#if>
+import org.netbeans.spi.java.hints.ConstraintVariableType;
+import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
+import org.netbeans.spi.java.hints.Hint;
+import org.netbeans.spi.java.hints.HintContext;
+<#if GENERATE_FIX??>
+import org.netbeans.spi.java.hints.JavaFix;
+</#if>
+import org.netbeans.spi.java.hints.TriggerPattern;
+import org.openide.util.NbBundle.Messages;
+
+@Hint(displayName="#DN_${CLASS_NAME}", description="#DESC_${CLASS_NAME}", category="general")
+@Messages({
+    "DN_${CLASS_NAME}=${DISPLAY_NAME}",
+    "DESC_${CLASS_NAME}=${DESCRIPTION}"
+})
+public class ${CLASS_NAME} {
+
+    @TriggerPattern(value = "$str.equals(\"\")", //Specify a pattern as needed
+                    constraints = @ConstraintVariableType(variable = "$str", type = "java.lang.String"))
+    @Messages("ERR_${CLASS_NAME}=${WARNING_MESSAGE}")
+    public static ErrorDescription computeWarning(HintContext ctx) {
+<#if GENERATE_FIX??>
+        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();
+        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_${CLASS_NAME}(), fix);
+<#else>
+        return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_${CLASS_NAME}());
+</#if>
+    }
+
+<#if GENERATE_FIX??>
+    private static final class FixImpl extends JavaFix {
+
+        public FixImpl(CompilationInfo info, TreePath tp) {
+            super(info, tp);
+        }
+
+        @Override
+        @Messages("FIX_${CLASS_NAME}=${FIX_MESSAGE}")
+        protected String getText() {
+            return Bundle.FIX_${CLASS_NAME}();
+        }
+
+        @Override
+        protected void performRewrite(TransformationContext ctx) {
+            //perform the required transformation
+        }
+    }
+</#if>
+}

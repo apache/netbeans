@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>MySQL Server Properties Dialog</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.db.mysql.ui.PropertiesDialog" name="org.netbeans.modules.db.mysql.ui.PropertiesDialog"></a></p>
+<div id="NBCSH5385"><!-- infolevel="all" infotype="General" --><a id="sthref797" name="sthref797"></a>
+<h1>MySQL Server Properties Dialog</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to set the properties for connecting to your MySQL database server. You open this dialog box by right-clicking the MySQL Server node in the Services window and choosing Properties. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1832">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Basic Properties tab</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Server host name</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">Enter the host name for the MySQL server. The default is <code dir="ltr">localhost</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Server port number</p>
+</td>
+<td align="left" headers="r4c1-t8 r1c2-t8">Enter the port number for the database. The default for the MySQL database server is <code dir="ltr">3306</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Administrator user name</p>
+</td>
+<td align="left" headers="r5c1-t8 r1c2-t8">Enter the Administrator user name for administrative access to the MySQL Server. You need administrative access to be able to create and remove databases.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Administrator password</p>
+</td>
+<td align="left" headers="r6c1-t8 r1c2-t8">Enter the password for the server administrator. A blank password can also be a valid password.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Save Password</p>
+</td>
+<td align="left" headers="r7c1-t8 r1c2-t8">Select if you want the IDE to remember your password. If selected, you will not be prompted for the user name and password on subsequent connections to the database and the Remember Password property is set to True. More</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t8" headers="r1c1-t8">
+<p>Admin Properties tab</p>
+</td>
+<td align="left" headers="r8c1-t8 r1c2-t8"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Path/URL to admin tool</p>
+</td>
+<td align="left" headers="r9c1-t8 r1c2-t8">Enter the full path or web URI to the tool you want to use to administer the MySQL server. Click Browse to locate the tool on your local file system.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Arguments</p>
+</td>
+<td align="left" headers="r10c1-t8 r1c2-t8">Enter any arguments for the admin tool command in this field.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Path to start command</p>
+</td>
+<td align="left" headers="r11c1-t8 r1c2-t8">Enter the location or browse for the MySQL start command. This is often the path to <code dir="ltr">mysqld</code> in the bin folder of the MySQL installation directory. You may need administrative access to run this program. If so, you can either run the IDE as a user with administrative rights, or if you are on Unix you can use <code dir="ltr">gksu</code>. To use <code dir="ltr">gksu</code>, make the start command <code dir="ltr">/usr/bin/gksu</code> (or wherever <code dir="ltr">gksu</code> is located on your system) and then make the path to <code dir="ltr">mysqld</code> the argument to the command.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Arguments</p>
+</td>
+<td align="left" headers="r12c1-t8 r1c2-t8">Enter any arguments for the start command in this field.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Path to stop command</p>
+</td>
+<td align="left" headers="r13c1-t8 r1c2-t8">Enter the location or browse for the MySQL stop command. This is often the path to mysqladmin in the bin folder of the MySQL installation directory. As with the start command, you may need administrative access to run this program. More &lt;&lt;links to "Path to the start command"</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t8" headers="r1c1-t8">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Arguments</p>
+</td>
+<td align="left" headers="r14c1-t8 r1c2-t8">Enter any arguments for the start command in this field. If the command is <code dir="ltr">mysqladmin</code> then the arguments are normally <code dir="ltr">-u root stop</code>.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5399" name="NBCSH5399"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1790">
+<param name="text" value="<html><u>&quot;Working and Connecting with Databases&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

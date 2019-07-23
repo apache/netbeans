@@ -1,0 +1,3 @@
+    var |>MARK_OCCURRENCES:test<| = {}
+    |>MARK_OCCURRENCES:test<|["myProperty"] = 20;
+    |>MARK_OCCURRENCES:te^st<|.anotherProperty = |>MARK_OCCURRENCES:test<|.myProperty;

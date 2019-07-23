@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.register
+OpenIDE-Module-Specification-Version: 11.12
+
+
+

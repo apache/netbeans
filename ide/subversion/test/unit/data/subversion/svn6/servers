@@ -1,0 +1,8 @@
+[groups]
+group1 = *.collab.net
+peterp = *.czech.sun.com
+
+[peterp]
+http-timeout = 60
+neon-debug-mask = 130
+

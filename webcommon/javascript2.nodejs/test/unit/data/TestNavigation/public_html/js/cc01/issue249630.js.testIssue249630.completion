@@ -1,0 +1,7 @@
+Code completion result for source line:
+rfnc.rinn.rda.getM|onth();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getMilliseconds(): Number       [PUBLIC]   JS Platform
+METHOD     getMinutes(): Number            [PUBLIC]   JS Platform
+METHOD     getMonth(): Number              [PUBLIC]   JS Platform

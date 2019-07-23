@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:prom<| = 'test';
+        text : |>MARK_OCCURRENCES:pro^m<|,

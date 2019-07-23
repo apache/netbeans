@@ -1,0 +1,103 @@
+<testresult testFile='arrayDereferencing_07.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='28'>
+            <text>functionCallWithParam</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='28' end='29'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='29' end='37'>
+            <text>$myClass</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='37' end='39'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='39' end='50'>
+            <text>giveMeArray</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='50' end='51'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='51' end='52'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='52' end='53'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='53' end='54'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='54' end='55'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='55' end='56'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='56' end='57'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='57' end='58'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='58' end='59'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='59' end='60'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='62' end='65'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='65' end='65'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='64'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='60'>
+                <FunctionInvocation start='7' end='59'>
+                    <FucntionName start='7' end='28'>
+                        <NamespaceName start='7' end='28' isCurrent='false' isGlobal='false'>
+                            <Identifier start='7' end='28' name='functionCallWithParam'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <DereferencedArrayAccess start='29' end='58'>
+                            <ArrayDimension start='55' end='58'>
+                                <Index>
+                                    <Scalar start='56' end='57' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                            <DereferencedArrayAccess start='29' end='55'>
+                                <ArrayDimension start='52' end='55'>
+                                    <Index>
+                                        <Scalar start='53' end='54' type='INT' value='0'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <MethodInvocation start='29' end='52'>
+                                    <Variable start='29' end='37' isDollared='true'>
+                                        <Identifier start='30' end='37' name='myClass'/>
+                                    </Variable>
+                                    <Method>
+                                        <FunctionInvocation start='39' end='52'>
+                                            <FucntionName start='39' end='50'>
+                                                <Variable start='39' end='50' isDollared='false'>
+                                                    <Identifier start='39' end='50' name='giveMeArray'/>
+                                                </Variable>
+                                            </FucntionName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </Method>
+                                </MethodInvocation>
+                            </DereferencedArrayAccess>
+                        </DereferencedArrayAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='62' end='64'/>
+        </Statements>
+    </Program>
+</testresult>

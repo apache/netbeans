@@ -1,0 +1,43 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+<#if sampleCode??>
+import java.io.IOException;
+</#if>
+import javax.faces.component.FacesComponent;
+import javax.faces.component.UIComponentBase;
+<#if sampleCode??>
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+</#if>
+
+/**
+ *
+ * @author ${user}
+ */
+@FacesComponent(createTag = true<#if tagName??>, tagName = "${tagName}"</#if><#if tagNamespace??>, namespace = "${tagNamespace}"</#if>)
+public class ${name} extends UIComponentBase {
+
+    @Override
+    public String getFamily() {
+        return <#if package??>"${package}"<#else>""</#if>;
+    }
+
+<#if sampleCode??>
+    @Override
+    public void encodeBegin(FacesContext context) throws IOException {
+        String value = (String) getAttributes().get("value");
+        if (value != null) {
+            ResponseWriter responseWriter = context.getResponseWriter();
+            responseWriter.write(value.toUpperCase());
+        }
+    }
+</#if>
+
+}

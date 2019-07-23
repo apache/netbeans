@@ -1,0 +1,4 @@
+$foo->bar;^
+---------
+HINT:Introduce Hint
+FIX:Create Field "public $bar;" in Class "Omg" (testIntroduceSuggestion.php)

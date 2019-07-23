@@ -1,0 +1,6 @@
+/* ---  DIRECT STYLES FOR TAGS ---*/
+@import url("main.css");
+h1, h2 > h3 {
+  color : #FE00AA;
+  background-image:uri("http://myweb.org/img.png");
+}

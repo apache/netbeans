@@ -1,0 +1,3 @@
+token #0 T_HTML [<a n:href=']
+token #1 T_LATTE [Presenter:foo]
+token #2 T_HTML ['>Test</a>]

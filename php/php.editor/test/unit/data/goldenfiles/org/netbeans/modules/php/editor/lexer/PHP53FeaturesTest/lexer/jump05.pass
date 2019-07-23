@@ -1,0 +1,97 @@
+token #0 T_INLINE_HTML --TEST--\njump 05: goto from loop (forward)\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $ar
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_ARRAY array
+token #8 PHP_TOKEN (
+token #9 PHP_CONSTANT_ENCAPSED_STRING "1"
+token #10 PHP_TOKEN ,
+token #11 PHP_CONSTANT_ENCAPSED_STRING "2"
+token #12 PHP_TOKEN ,
+token #13 PHP_CONSTANT_ENCAPSED_STRING "3"
+token #14 PHP_TOKEN )
+token #15 PHP_SEMICOLON ;
+token #16 WHITESPACE \n
+token #17 PHP_FOREACH foreach
+token #18 WHITESPACE  
+token #19 PHP_TOKEN (
+token #20 PHP_VARIABLE $ar
+token #21 WHITESPACE  
+token #22 PHP_AS as
+token #23 WHITESPACE  
+token #24 PHP_VARIABLE $val
+token #25 PHP_TOKEN )
+token #26 WHITESPACE  
+token #27 PHP_CURLY_OPEN {
+token #28 WHITESPACE \n\t
+token #29 PHP_SWITCH switch
+token #30 WHITESPACE  
+token #31 PHP_TOKEN (
+token #32 PHP_VARIABLE $val
+token #33 PHP_TOKEN )
+token #34 WHITESPACE  
+token #35 PHP_CURLY_OPEN {
+token #36 WHITESPACE \n\t\t
+token #37 PHP_CASE case
+token #38 WHITESPACE  
+token #39 PHP_CONSTANT_ENCAPSED_STRING "1"
+token #40 PHP_TOKEN :
+token #41 WHITESPACE \n\t\t\t
+token #42 PHP_ECHO echo
+token #43 WHITESPACE  
+token #44 PHP_CONSTANT_ENCAPSED_STRING "1: ok\n"
+token #45 PHP_SEMICOLON ;
+token #46 WHITESPACE \n\t\t\t
+token #47 PHP_BREAK break
+token #48 PHP_SEMICOLON ;
+token #49 WHITESPACE \n\t\t
+token #50 PHP_CASE case
+token #51 WHITESPACE  
+token #52 PHP_CONSTANT_ENCAPSED_STRING "2"
+token #53 PHP_TOKEN :
+token #54 WHITESPACE \n\t\t\t
+token #55 PHP_ECHO echo
+token #56 WHITESPACE  
+token #57 PHP_CONSTANT_ENCAPSED_STRING "2: ok\n"
+token #58 PHP_SEMICOLON ;
+token #59 WHITESPACE \n\t\t\t
+token #60 PHP_GOTO goto
+token #61 WHITESPACE  
+token #62 PHP_STRING L1
+token #63 PHP_SEMICOLON ;
+token #64 WHITESPACE \n\t\t
+token #65 PHP_CASE case
+token #66 WHITESPACE  
+token #67 PHP_CONSTANT_ENCAPSED_STRING "3"
+token #68 PHP_TOKEN :
+token #69 WHITESPACE \n\t\t\t
+token #70 PHP_ECHO echo
+token #71 WHITESPACE  
+token #72 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #73 PHP_SEMICOLON ;
+token #74 WHITESPACE \n\t\t\t
+token #75 PHP_BREAK break
+token #76 PHP_SEMICOLON ;
+token #77 WHITESPACE \n\t
+token #78 PHP_CURLY_CLOSE }
+token #79 WHITESPACE \n
+token #80 PHP_CURLY_CLOSE }
+token #81 WHITESPACE \n
+token #82 PHP_ECHO echo
+token #83 WHITESPACE  
+token #84 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #85 PHP_SEMICOLON ;
+token #86 WHITESPACE \n
+token #87 PHP_STRING L1
+token #88 PHP_TOKEN :
+token #89 WHITESPACE \n
+token #90 PHP_ECHO echo
+token #91 WHITESPACE  
+token #92 PHP_CONSTANT_ENCAPSED_STRING "3: ok\n"
+token #93 PHP_SEMICOLON ;
+token #94 WHITESPACE \n
+token #95 PHP_CLOSETAG ?>
+token #96 T_INLINE_HTML \n--EXPECT--\n1: ok\n2: ok\n3: ok\n

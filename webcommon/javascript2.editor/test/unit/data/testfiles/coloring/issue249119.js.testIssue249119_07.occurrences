@@ -1,0 +1,3 @@
+function myFunction2(|>MARK_OCCURRENCES:param<|) {
+    var f2 = |>MARK_OCCURRENCES:param<|.f || function () {}; // usage is correctly detected
+    var  a2 = |>MARK_OCCURRENCES:par^am<|.a || 1;  // usage is correctly detected

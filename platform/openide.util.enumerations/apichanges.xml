@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+<apidefs>
+    <apidef name="enum">Old Enumeration API</apidef>
+</apidefs>
+<changes>
+<change>
+     <api name="enum"/>
+     <summary>enum package deprecated and replaced by Enumerations factory class</summary>
+     <version major="4" minor="37"/>
+     <date day="7" month="6" year="2004"/>
+     <author login="jtulach"/>
+     <compatibility deprecation="yes" addition="yes" binary="compatible" source="compatible" semantic="compatible" deletion="no" modification="no"/>
+     <description>
+        enum is a keyword in JDK 1.5 and as such it should not be used. 
+        That is the reason why we had to deprecated our 
+        <code>org.openide.util.enum</code> package. We are providing 
+        replacements of the original classes in form of factory methods
+        <a href="@org-openide-util@/org/openide/util/Enumerations.html">org.openide.util.Enumerations</a>.
+     </description>
+     <package name="org.openide.util.enum" />
+     <issue number="41166"/>
+    </change>
+<change>
+      <api name="enum"/>
+      <summary>Default filter enumeration accepts any non-<code>null</code> value</summary>
+      <date day="19" month="10" year="2000"/>
+      <compatibility modification="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" addition="no" deletion="no"/>
+      <description>
+        <code>FilterEnumeration</code> is no longer abstract. The default
+        implementation accepts all <code>non-null</code> values.
+      </description>
+      <class package="org.openide.util.enum" name="FilterEnumeration"/>
+    </change>
+</changes>
+<htmlcontents>
+<head>
+<title>Change History for the Old Enumeration API</title>
+<link rel="stylesheet" href="prose.css" type="text/css"/>
+</head>
+<body>
+<p class="overviewlink">
+<a href="overview-summary.html">Overview</a>
+</p>
+<h1>Introduction</h1>
+<h2>What do the Dates Mean?</h2>
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+<ul>
+<li>The <code>release41</code> branch was made on Apr 03 '05 for use in the NetBeans 4.1 release.
+Specification versions: 6.0 begins after this point.</li>
+<li>The <code>release40</code> branch was made on Nov 01 '04 for use in the NetBeans 4.0 release.
+Specification versions: 5.0 begins after this point.</li>
+</ul>
+<hr/>
+<standard-changelists module-code-name="org.openide.util.enum"/>
+<hr/>
+<p>@FOOTER@</p>
+</body>
+</htmlcontents>
+</apichanges>

@@ -1,0 +1,26 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Component id="jPanel1" alignment="leading" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Component id="jPanel1" alignment="leading" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jPanel1">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="400" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="300" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

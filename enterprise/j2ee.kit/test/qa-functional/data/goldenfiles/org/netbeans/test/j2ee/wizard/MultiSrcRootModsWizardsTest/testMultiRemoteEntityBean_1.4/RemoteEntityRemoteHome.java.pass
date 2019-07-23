@@ -1,0 +1,24 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package multi.ejbs.entity.remote;
+
+import java.rmi.RemoteException;
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
+import javax.ejb.FinderException;
+
+/**
+ *
+ * @author jskrivanek
+ */
+public interface RemoteEntityRemoteHome extends EJBHome {
+    
+    multi.ejbs.entity.remote.RemoteEntityRemote findByPrimaryKey(java.lang.Long key) throws FinderException, RemoteException;
+    
+    multi.ejbs.entity.remote.RemoteEntityRemote create(java.lang.Long key) throws CreateException, RemoteException;
+
+}

@@ -1,0 +1,11 @@
+length
+hashCode#00#()
+clone#00#()
+equals#01#(Object)
+getClass#00#()
+notify#00#()
+notifyAll#00#()
+toString#00#()
+wait#00#()
+wait#01#(long)
+wait#02#(long,int)

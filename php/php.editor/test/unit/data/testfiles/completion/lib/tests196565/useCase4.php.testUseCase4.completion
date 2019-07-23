@@ -1,0 +1,5 @@
+Code completion result for source line:
+$c->|; // CC shows methods from SomeClass
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     create()                        [STATIC]   SomeClass
+METHOD     someFnc($param)                 [PUBLIC]   SomeClass

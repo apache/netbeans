@@ -1,0 +1,5 @@
+        $|>MARK_OCCURRENCES:f^oo<| = "omg";
+        $this->$|>MARK_OCCURRENCES:foo<|();
+        self::$|>MARK_OCCURRENCES:foo<|();
+        static::$|>MARK_OCCURRENCES:foo<|();
+        parent::$|>MARK_OCCURRENCES:foo<|();

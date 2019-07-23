@@ -1,0 +1,23 @@
+FUNCTION issue230709 [ANONYMOUS: false, DECLARED: true - issue230709, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Manager : OBJECT Manager [ANONYMOUS: false, DECLARED: true - Manager, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+        # PROPERTIES
+        method1 : FUNCTION method1 [ANONYMOUS: false, DECLARED: true - method1, MODIFIERS: PUBLIC, METHOD]
+                # RETURN TYPES
+                undefined, RESOLVED: true
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        method2 : FUNCTION method2 [ANONYMOUS: false, DECLARED: true - method2, MODIFIERS: PUBLIC, METHOD]
+                # RETURN TYPES
+                undefined, RESOLVED: true
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+MyApp   : OBJECT MyApp [ANONYMOUS: false, DECLARED: false - MyApp, MODIFIERS: PUBLIC, OBJECT]
+        # PROPERTIES
+        manager : OBJECT manager [ANONYMOUS: false, DECLARED: true - manager, MODIFIERS: PUBLIC, OBJECT]
+                # PROPERTIES
+                method2 : FUNCTION method2 [ANONYMOUS: false, DECLARED: false - method2, MODIFIERS: PUBLIC, METHOD]
+                        # PROPERTIES
+                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-application PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.0 J2EE Application 1.4//EN" "http://www.sun.com/software/appserver/dtds/sun-application_1_4-0.dtd">
+<sun-application>
+  <web>
+    <web-uri>Secure-WebModule.war</web-uri>
+    <context-root>/Secure-WebModule</context-root>
+  </web>
+  <security-role-mapping>
+    <role-name>USERS</role-name>
+    <group-name>bank_users</group-name>
+  </security-role-mapping>
+</sun-application>

@@ -1,0 +1,383 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Execution API</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css">
+</head>
+<body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+See the
+
+<a href="../package-summary.html"><code>org.openide.execution</code></a>
+
+package.
+
+<h1>Contents</h1>
+
+<ul>
+<li><a href="#io">Managing I/O</a>
+</ul>
+
+</ul>
+
+<h1>Execution API</h1>
+
+<p>
+The Execution API controls the execution of long-lived processes.
+XXX need new documentation for this module!
+</p>
+
+<p><code>ThreadDeath</code> may be thrown by the execution engine if
+the process is manually stopped (by the user or via its
+<code>ExecutorTask</code>), so if you catch this it is best not to
+print its stack trace. Also, the executed code within this method may
+invoke <code>System.exit</code> to end the application, without
+shutting down NetBeans.
+
+<p>
+A class running in
+an external process whose output you wish to capture should
+generally have its streams redirected to the Output Window, e.g. by
+using
+
+<a href="@JDK@/java/lang/Process.html#getInputStream--"><code>Process.getInputStream()</code></a>.
+
+The streams on the Output Window may be obtained from the execution
+engine (see below), using
+
+<a href="../ExecutorTask.html#getInputOutput--"><code>ExecutorTask.getInputOutput()</code></a>
+
+on the task returned from
+
+<a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...)</code></a>,
+
+and then
+
+<a href="@org-openide-io@/org/openide/windows/InputOutput.html#getOut--"><code>InputOutput.getOut()</code></a>
+
+and so on. Now you can just copy characters from one stream to the
+other.
+</p>
+
+<p>
+<em>Note</em> that
+exceptions or errors occurring during the actual execution of the
+process, once it has been successfully started, should be handled
+within the scope of the <code>ExecutorTask</code> and normally this
+just means printing the stack trace to the Output Window via an
+<code>InputOutput</code> handle.
+</p>
+
+<p>
+<a href="../NbProcessDescriptor.html"><code>NbProcessDescriptor</code></a>
+
+is an object representing the abstract command template. This class
+has a standard custom property editor which should be familiar to
+anyone who has used external execution, compilation, or debugging: it
+displays a dialog with a command name, some arguments in a panel, and
+an optional description key.
+
+<p>Typically both the command name and list of arguments are actually
+templates for the real thing, with embedded substitution codes; then
+the description key can explain to the user what the substitution
+codes mean.
+
+<p>The process descriptor itself does not include any information
+about <em>how</em> to substitute these codes, if there are
+any. Rather, it presents ways to create a running process from itself:
+
+<a href="../NbProcessDescriptor.html#exec--"><code>NbProcessDescriptor.exec()</code></a>
+
+simply runs the literally supplied string, assuming it does not need
+any substitutions; but
+
+<a href="../NbProcessDescriptor.html#exec-java.text.Format-"><code>NbProcessDescriptor.exec(Format)</code></a>
+
+applies a (textual) format to the command name and arguments list
+before invoking <code>Runtime.exec</code>. The format can in principle
+be any format you like.
+</p>
+
+<p>
+<a href="../NbClassPath.html"><code>NbClassPath</code></a>
+
+is an object used to represent a classpath, which is of course
+frequently used in Java-related applications, though implementors of
+executors unrelated to Java development will probably ignore it. Its
+main purpose is that it also has a custom property editor, making
+it convenient to use as a Bean property on service types such as
+executors.
+</p>
+
+<h3><a name="io">Managing I/O</a></h3>
+
+Typically, implementors of executors (or other external services such
+as compilation) will wish for any I/O via standard system streams
+(input, output, and error) to be redirected to the Output Window,
+rather than going to the NetBeans console (and logfile) where the user
+will not normally see it. In some cases, executed applications are
+also expected or permitted to invoke <code>System.exit</code> to
+terminate themselves, which should be prevented from terminating
+NetBeans itself.
+
+<p>NetBeans provides two forms of support for these considerations,
+which complement one another in that they cover both <em>dynamic</em>
+scope (code run within a certain thread group and time window) and
+quasi-<em>lexical</em> scope (code derived from a certain
+classloader). Both will accomplish automatic I/O redirection and
+trapping of exit calls; implementors may use either or both to ensure
+coverage of executed code.
+
+<p>First it is necessary to describe the
+
+<a href="@org-openide-io@/org/openide/windows/InputOutput.html"><code>InputOutput</code></a>
+
+interface which is common to both forms of support. This interface is
+essentially an abstract description of the public capabilities of an
+Output Window tab. Thus, a certain level of control is afforded to
+users of this interface in terms of managing selection of the tab,
+getting its various I/O streams and using them, controlling whether
+the two output streams are mixed together, etc.
+
+<p>There are three ways to get a useful <code>InputOutput</code>
+implementation:
+
+<ol>
+
+<li>You may use
+
+<a href="@org-openide-io@/org/openide/windows/IOProvider.html#getIO-java.lang.String-boolean-"><code>IOProvider.getIO(String,boolean)</code></a>
+
+to create an Output Window tab with a specified name and return its
+<code>InputOutput</code> representative. Or, try to reuse an existing tab of the same name, if there is one.
+
+<li>If
+
+<a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...,InputOutput)</code></a>
+
+is called and its third argument is <code>null</code>, this signifies
+that the engine itself should choose an appropriate Output Window tab,
+probably named after the supplied task name. The returned
+<code>ExecutorTask</code> will then already be using the proper
+<code>InputOutput</code>, and this may be retrieved if needed using
+
+<a href="../ExecutorTask.html#getInputOutput--"><code>ExecutorTask.getInputOutput()</code></a>.
+
+<li>You may use the constant
+
+<a href="@org-openide-io@/org/openide/windows/InputOutput.html#NULL"><code>InputOutput.NULL</code></a>
+
+to indicate that no I/O at all is desired for a task - that is, its I/O
+streams will be trapped, but writes will be discarded and reads will
+return end-of-file. This constant should be used if it is very clear
+that I/O will not be used and some overhead should be saved; or if the
+I/O is specifically not desired.
+
+</ol>
+
+<strong>Note</strong> that if you simply implement the
+<code>InputOutput</code> interface yourself, it will not be "magic"
+and the execution engine will not be able to use it for managing I/O,
+so there is probably no reason to ever do so. Specifically this means
+that there is currently no support in the APIs for running a task and
+automatically redirecting its I/O to streams of the implementor's
+choice; they may only be redirected to the Output Window.
+
+<p>Given an <code>InputOutput</code>, you can use it in either of the
+two ways given below, or both at the same time, and I/O streams will
+be trapped.
+
+<ol>
+
+<li><a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...)</code></a>
+
+is the primitive means for providing I/O services to a block of code
+using dynamic scope.
+(You may obtain the <code>ExecutionEngine</code> via
+
+<code>ExecutionEngine.<a href="../ExecutionEngine.html#getDefault--">getDefault</a>()</code>.)
+
+The supplied <code>Runnable</code> is run
+asynchronously in its own thread and thread group, i.e. well-isolated
+from the rest of NetBeans. Any uses of the system I/O streams within
+that thread group will automatically be trapped and redirected to the
+<code>InputOutput</code>. Note that code which creates new threads
+will normally create them in the same thread group as the calling
+code, so it is fine for there to be complex multithreaded code in the
+supplied runnable; it will all be handled. Runnable-spawned code which
+is destined for other thread groups will not be handled, however; for
+example,
+
+<a href="@org-openide-util@/org/openide/util/RequestProcessor.html#post-java.lang.Runnable-"><code>RequestProcessor.post(Runnable)</code></a>
+
+will execute code in NetBeans' main thread group, not the one created
+by the execution engine.
+
+<p>The supplied task name is optional and may be <code>null</code>. If
+it is supplied, it will be used as a display name that may show up
+e.g. in the Execution View, so that the user may see that the process
+is running and stop it if needed. If <code>null</code>, the task will
+not be visible to the user.
+
+<p>As mentioned above, you may pass an existing
+<code>InputOutput</code> to this method so as to ask the execution
+engine to use that I/O; or you may leave this argument
+<code>null</code> to request that a suitable I/O tab be created for
+you. In either case, the I/O tab actually in use will be available via
+<code>ExecutorTask.getInputOutput()</code>.
+
+<p>The task returned from the engine permits you to find its I/O
+implementation; let the runnable continue asynchronously; stop it at
+any time; or wait for it to finish (i.e. block) and get its return
+status. As far as return status goes, zero means success, nonzero
+numbers mean failure. The execution engine's default task
+implementation just considers natural termination of the
+<code>Runnable</code> to be success, and aborted tasks to have failed
+(and some unspecified nonzero number returned as the status). For some
+uses, such as execution of external applications which may return a
+meaningful exit status, you may need to create a special wrapper
+<code>ExecutorTask</code> implementation which provides the correct
+exit status (since the execution engine is not aware of such codes).
+
+<p>The dynamic scope of <code>execute(...)</code> also covers
+attempted uses of
+
+<a href="@JDK@/java/lang/System.html#exit-int-"><code>System.exit(int)</code></a>
+
+(or
+
+<a href="@JDK@/java/lang/Runtime.html#exit-int-"><code>Runtime.exit(int)</code></a>).
+
+If an exit is attempted within the task's dynamic scope (i.e. thread
+group), this is caught by the NetBeans security manager implementation,
+and the task is instead stopped (as if by
+
+<a href="../ExecutorTask.html#stop--"><code>ExecutorTask.stop()</code></a>).
+
+In practice this means that all living threads in the thread group
+will receive
+
+<a href="@JDK@/java/lang/ThreadDeath.html"><code>ThreadDeath</code></a>
+
+to stop them. So executor implementations should be prepared to have
+thread death thrown on them, and anyone catching
+<code>Throwable</code> should specifically consider whether the
+throwable is a thread death; in this case, the surrounding code should
+be stopped promptly, and there is no need to print a stack trace. The
+thread death may be thrown either because of an attempted exit call,
+or because of an explicit use of <code>ExecutorTask.stop()</code>.
+(Note that there is no way to recover the exit status which the
+attempted exit call used.)
+
+<li><a href="../NbClassLoader.html#NbClassLoader-org.openide.windows.InputOutput-"><code>new NbClassLoader(InputOutput)</code></a>
+
+creates a special classloader that is aware of an
+<code>InputOutput</code> obtained as above. Normally
+<code>NbClassLoader</code> is just used to load classes from the
+Repository. This constructor,
+however, is "magic" in that it will still load classes from the
+Repository (always giving preference to its parent
+class loader),
+
+but I/O calls quasi-lexically contained in such classes (i.e. made
+directly by such a class, or by other invoked code when such a class
+is on the stack) will be redirected to the supplied I/O.
+
+<p>Note that this works regardless of thread group, so that for
+example a runnable loaded from this classloader which is posted to the
+<code>RequestProcessor</code> will still use I/O redirection, unlike
+with <code>ExecutionEngine.execute(...)</code>.
+
+<p><code>NbClassLoader</code> does not specially handle
+<code>System.exit</code> calls since such code need not be in any
+particular thread group, so it does not make sense to try to stop some
+task. Rather, any code in the system which is outside the NetBeans
+standard trusted codebase which tries to exit the VM will receive a
+security exception. Note that this exception specifically does nothing
+in response to <code>printStackTrace()</code>, which is usually
+desirable because general-purpose exception catching code such as is
+common in executors just prints any received stack traces, whereas
+<code>System.exit</code> should simply end the task without triggering
+a noisy and confusing <code>SecurityException</code> trace.
+
+<p>The NetBeans trusted codebase
+specifies that Java platform code, code loaded from modules (including
+test modules), and code loaded from an <code>NbClassLoader</code> with
+the <code>InputOutput</code> constructor is to be trustworthy; other
+Filesystems code will typically fall outside of these codebases and so
+is subject to the security manager. Such "untrusted" code is probably
+restricted from security-sensitive calls (but do not count on it).
+Such code can still call
+
+<a href="@org-openide-util-ui@/org/openide/LifecycleManager.html#exit--"><code>LifecycleManager.exit()</code></a>
+
+to explicitly exit NetBeans.
+
+</ol>
+
+<p>Each of the three I/O streams from the generated process (created
+by <code>createProcess</code> which is described in detail above) are
+assigned to one of the I/O streams associated with the
+<code>InputOutput</code>. Each such pairing is implemented by a
+separate thread; this runs in the thread group created by the
+execution engine, since it was created by the runnable.
+
+<p>The external executor actually keeps track of the entire
+<code>ExecutorTask</code> provided by the execution engine, not just
+its <code>InputOutput</code>, since it cannot rely on the execution
+engine to kill the external process directly. (The execution engine
+normally just kills all threads in the thread group it created, in
+order to stop a task it created.) Rather, the internal runnable
+creates a <em>new</em> <code>ExecutorTask</code> which provides the
+additional needed behavior and returns it in proxy, while keeping the
+original for its own use.
+
+<p>The main trick involves program termination (from NetBeans). If the
+code calling <code>ProcessExecutor.execute</code> pays attention to
+its returned task and directly calls <code>ExecutorTask.stop</code> on
+this task, then there is no problem: this method is directly
+implemented to stop both the external process itself, and all I/O
+proxy threads. Stopping the process causes the <code>result</code>
+method to unblock and get an exit status, which also notifies task
+listeners that the task is finished; and when the last proxy thread
+stops, then the execution engine sees that the thread group is dead
+(no live threads remain in it) and so it also knows that its own task
+is finished, causing (among other things) that entry to disappear from
+the list of processes in the Execution View.
+
+<p><em>But</em> if the task is stopped from the Execution View
+(i.e. <code>stop</code> is called on the execution engine's own task,
+rather than the synthetic task from <code>ProcessExecutor</code>),
+then the synthetic task needs to be stopped as well. This is
+implemented by having the synthetic task attach a task listener to the
+original one; when the original one finishes, the synthetic one stops
+itself as well (and consequently shuts down the external process and
+the copy threads, if they have not been killed already).
+
+<hr>@FOOTER@
+</body>
+</html>

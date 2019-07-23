@@ -1,0 +1,59 @@
+<testresult testFile='ternaryOperator.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='8'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='9' end='10'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='11' end='20'>
+            <text>$newValue</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='21' end='22'>
+            <text>?</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='23' end='24'>
+            <text>:</text>
+        </token>
+        <token id='T_VARIABLE' start='25' end='38'>
+            <text>$defaultValue</text>
+        </token>
+        <token id='T_SEMICOLON' start='38' end='39'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='40' end='43'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='43' end='43'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='42'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='39'>
+                <Assignment start='6' end='38' operator='EQUAL'>
+                    <Variable start='6' end='8' isDollared='true'>
+                        <Identifier start='7' end='8' name='a'/>
+                    </Variable>
+                    <ConditionalExpression start='11' end='38'>
+                        <Condition>
+                            <Variable start='11' end='20' isDollared='true'>
+                                <Identifier start='12' end='20' name='newValue'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                        </Then>
+                        <Else>
+                            <Variable start='25' end='38' isDollared='true'>
+                                <Identifier start='26' end='38' name='defaultValue'/>
+                            </Variable>
+                        </Else>
+                    </ConditionalExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='40' end='42'/>
+        </Statements>
+    </Program>
+</testresult>

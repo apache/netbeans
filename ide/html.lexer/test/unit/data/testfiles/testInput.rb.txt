@@ -1,0 +1,23 @@
+.t.e.s.t. Script
+<p><script>foo bar</script></p>
+.e.o.f.
+
+.t.e.s.t. HTML Attributes
+<li style="foo">hello</li>
+<span onklikk="hello"/>
+.e.o.f.
+
+.t.e.s.t. JavaScript attributes
+<input onblur="foo"/>
+<input onclick = "hello"/>
+<input onclick='foo'/>
+<input onclick = 'bar' />
+.e.o.f.
+
+.t.e.s.t. Inlined CSS
+<input style="color: red"/>
+<input style = "color: green"/>
+<input style='color: yellow'/>
+<input style = 'color: fuchsia' />
+.e.o.f.
+

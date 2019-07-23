@@ -1,0 +1,47 @@
+{ 
+    
+    "elements": {       
+        "foo": {
+            "context": "*",
+            "description": "foolish element",
+            "doc": "an element for daily usage",
+            "doc_url": "org.foo/doc/foo",
+            "attributes": {
+                "one": null,
+                "cool": "boolean",
+                "id": "id",
+                "class": {
+                    "type": "css-class",
+                    "doc": "ble ble",
+                    "doc_url": "http://foo.org/elements/foo"
+                }
+            },
+            "elements": {
+                "infoo": {
+                }
+            }
+        },
+        "infoo2": {
+            "context": "foo"
+        },
+        "infoo3": {
+            "context": [
+                "infoo",
+                "infoo2"
+            ]
+        }
+    },
+    "attributes": {
+        "one": {
+            "context": "*",
+            "type": "boolean",
+            "description": "first class attr"
+        },
+        "two": {
+            "context": [
+                "infoo2",
+                "infoo3"
+            ]
+        }
+    }
+}

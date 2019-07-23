@@ -1,0 +1,4 @@
+Editor:CLASS:[PRIVATE]:ESCAPED{Editor}:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    openEdition:METHOD:[PUBLIC]:ESCAPED{openEdition}ESCAPED{(}ESCAPED{edition}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    welcome:METHOD:[PUBLIC]:ESCAPED{welcome}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

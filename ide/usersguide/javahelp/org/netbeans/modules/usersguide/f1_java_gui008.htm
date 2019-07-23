@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Event Handler Dialog</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="gui.csh.handlers" name="gui.csh.handlers"></a></p>
+<div id="NBCSH2287"><!-- infolevel="all" infotype="General" --><a id="sthref311" name="sthref311"></a>
+<h1>Event Handler Dialog</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to set source objects to trigger events to which one or more objects with event listeners react. You can also remove events using the Event Handler Dialog. Whenever you define an event handler, the code for the listener and the empty body of the handler method is generated. In addition, the default name is assigned to the event handler. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2614">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><b>Notes</b>:</p>
+<ul>
+<li>Note that you still must add the desired code for the new event handler in the Source Editor.</li>
+<li>
+<p>If multiple events are of the same type, you can use the same handler for all of them. For example, you could set both <code dir="ltr">focusGained</code> and <code dir="ltr">focusLost</code> to use the <code dir="ltr">button1FocusChange</code> handler since they are both of the type <code dir="ltr">java.awt.event.FocusEvent</code>. You can also use the same handler for the same event on multiple components. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2617">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+<li>
+<p>When you remove an event handler, the corresponding code block is also deleted. If more than one handler uses the same name and same block of code, deleting a single reference to the code does not delete the code itself. Only deleting all references will delete the corresponding code block, and a confirmation dialog box is displayed first. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2618">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+<li>If you remove an event but do not delete the event handler when prompted by the confirmation dialog box, an orphaned handler remains in the guarded text block. To delete the orphaned handler, you need to add another event handler of the same name, delete that event, and then agree to delete the handler in the confirmation dialog box.</li>
+</ul>
+<a id="NBCSH2288" name="NBCSH2288"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2578">
+<param name="text" value="<html><u>&quot;Working with the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

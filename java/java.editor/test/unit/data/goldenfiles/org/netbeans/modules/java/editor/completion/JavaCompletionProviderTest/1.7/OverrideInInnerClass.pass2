@@ -1,0 +1,20 @@
+package test;
+
+import java.awt.Graphics;
+import javax.swing.JFrame;
+
+public class Test {
+    
+    public Test() {}
+    
+    public static void main(String[] args) {
+        JFrame f = new JFrame() {
+
+            @Override
+            public void paint(Graphics arg0) {
+                super.paint(arg0);
+            }
+        };
+    }
+    
+}

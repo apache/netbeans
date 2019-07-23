@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.spi.editor.hints/0
+OpenIDE-Module-Implementation-Version: 7
+OpenIDE-Module-Layer: org/netbeans/modules/editor/hints/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/hints/resources/Bundle.properties
+OpenIDE-Module-Install: org/netbeans/modules/editor/hints/HintsModule.class
+AutoUpdate-Show-In-Client: false

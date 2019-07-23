@@ -1,0 +1,32 @@
+function |>METHOD:ChartP3<|(|>UNUSED:container<|) {
+
+    function |>METHOD:buildData<|(|>UNUSED:records<|) {
+        var |>LOCAL_VARIABLE_DECLARATION:indexOfBeta<| = getIndexOfLatestBeta();
+        |>GLOBAL:window<|.|>GLOBAL:console<|.log(|>LOCAL_VARIABLE:indexOfBeta<|);
+    }
+
+    function |>METHOD:getIndexOfLatestBeta<|() { // problem here
+        
+        return 1;
+    }
+    buildData()
+}
+
+var |>GLOBAL:TestObject<| = {
+    |>METHOD:myMethod1<| : function () {
+        return this.myMethod2();
+    },
+    |>METHOD:myMethod2<| : function () {
+        return "method2";
+    },
+    |>METHOD:myMethod3<| : function() {
+        return myMethod2();
+    }
+};
+
+|>GLOBAL:TestObject<|.__proto__.|>METHOD:myMethod2<| = function () {
+    return "myMethod2 from prototype";
+}
+
+|>GLOBAL:console<|.log(|>GLOBAL:TestObject<|.myMethod1());
+|>GLOBAL:console<|.log(|>GLOBAL:TestObject<|.myMethod3());

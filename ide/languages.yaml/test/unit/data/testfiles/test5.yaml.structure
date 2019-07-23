@@ -1,0 +1,27 @@
+name:ATTRIBUTE:[]:name:
+age:ATTRIBUTE:[]:age:
+spouse:ATTRIBUTE:[]:spouse:
+  age:ATTRIBUTE:[]:age:
+  name:ATTRIBUTE:[]:name:
+children:ATTRIBUTE:[]:children:
+  list item:ATTRIBUTE:[]:list item:
+    age:ATTRIBUTE:[]:age:
+    name:ATTRIBUTE:[]:name:
+    spouse:ATTRIBUTE:[]:spouse:
+      age:ATTRIBUTE:[]:age:
+      name:ATTRIBUTE:[]:name:
+      siblings:ATTRIBUTE:[]:siblings:
+        list item:ATTRIBUTE:[]:list item:
+          age:ATTRIBUTE:[]:age:
+          children:ATTRIBUTE:[]:children:
+          name:ATTRIBUTE:[]:name:
+          siblings:ATTRIBUTE:[]:siblings:
+          spouse:ATTRIBUTE:[]:spouse:
+  list item:ATTRIBUTE:[]:list item:
+    age:ATTRIBUTE:[]:age:
+    name:ATTRIBUTE:[]:name:
+siblings:ATTRIBUTE:[]:siblings:
+  list item:ATTRIBUTE:[]:list item:
+    age:ATTRIBUTE:[]:age:
+    name:ATTRIBUTE:[]:name:
+    siblings:ATTRIBUTE:[]:siblings:

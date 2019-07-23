@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="java.util.List" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/QueryListResult.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/QueryListResult32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.j2ee.resources.Bundle"
+               display-name-key="NAME_QueryListResult"
+               tooltip-key="HINT_QueryListResult" />
+</palette_item>

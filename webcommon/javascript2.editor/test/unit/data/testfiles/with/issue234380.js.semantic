@@ -1,0 +1,8 @@
+function |>METHOD:Player234380<|() {
+    this.|>FIELD:den<| = new Date();
+    with (this.|>FIELD:den<|) {
+        |>GLOBAL:window<|.console.log(getDate());
+    }
+} 
+
+new Player234380();

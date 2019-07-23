@@ -1,0 +1,10 @@
+package test;
+
+import java.util.Set;
+
+@Annotation(Set.class)
+public @interface Annotation {
+
+    public Class<java.util.Set> value();
+
+}

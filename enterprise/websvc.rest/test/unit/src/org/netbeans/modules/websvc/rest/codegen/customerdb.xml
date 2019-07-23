@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<application xmlns="http://research.sun.com/wadl/2006/10">
+    <resources base="http://localhost:8080/CustomerDB/resources/">
+        <resource path="/customers/">
+            <method name="GET" id="get">
+                <request>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="0" type="xs:int" style="query" name="start"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="10" type="xs:int" style="query" name="max"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="SELECT e FROM Customer e" type="xs:string" style="query" name="query"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST" id="post">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <resource path="{customerId}/">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:int" style="template" name="customerId"/>
+                <method name="GET" id="get">
+                    <request>
+                        <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    </request>
+                    <response>
+                        <representation mediaType="application/xml"/>
+                        <representation mediaType="application/json"/>
+                    </response>
+                </method>
+                <method name="PUT" id="put">
+                    <request>
+                        <representation mediaType="application/xml"/>
+                        <representation mediaType="application/json"/>
+                    </request>
+                </method>
+                <method name="DELETE" id="delete"/>
+                <resource path="discountCode/">
+                    <method name="GET" id="get">
+                        <request>
+                            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                        </request>
+                        <response>
+                            <representation mediaType="application/xml"/>
+                            <representation mediaType="application/json"/>
+                        </response>
+                    </method>
+                    <method name="PUT" id="put">
+                        <request>
+                            <representation mediaType="application/xml"/>
+                            <representation mediaType="application/json"/>
+                        </request>
+                    </method>
+                    <method name="DELETE" id="delete"/>
+                    <resource path="customerCollection/"/>
+                </resource>
+            </resource>
+        </resource>
+        <resource path="/discountCodes/">
+            <method name="GET" id="get">
+                <request>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="0" type="xs:int" style="query" name="start"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="10" type="xs:int" style="query" name="max"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="1" type="xs:int" style="query" name="expandLevel"/>
+                    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" default="SELECT e FROM DiscountCode e" type="xs:string" style="query" name="query"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method name="POST" id="post">
+                <request>
+                    <representation mediaType="application/xml"/>
+                    <representation mediaType="application/json"/>
+                </request>
+                <response>
+                    <representation mediaType="*/*"/>
+                </response>
+            </method>
+            <resource path="{discountCode}/">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="discountCode"/>
+            </resource>
+        </resource>
+    </resources>
+</application>

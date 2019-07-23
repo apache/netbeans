@@ -1,0 +1,21 @@
+Code completion result for source line:
+r.&t|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     tap(Closure)                               Object
+METHOD     times(Closure)                             void
+METHOD     toBigDecimal()                             BigDecimal
+METHOD     toBigInteger()                             BigInteger
+METHOD     toBinaryString(int)             [STATIC,   String
+METHOD     toDouble()                                 Double
+METHOD     toFloat()                                  Float
+METHOD     toHexString(int)                [STATIC,   String
+METHOD     toInteger()                                Integer
+METHOD     toLong()                                   Long
+METHOD     toOctalString(int)              [STATIC,   String
+METHOD     toString()                      [PUBLIC]   String
+METHOD     toString(int)                   [STATIC,   String
+METHOD     toString(int, int)              [STATIC,   String
+METHOD     toUnsignedLong(int)             [STATIC,   long
+METHOD     toUnsignedString(int)           [STATIC,   String
+METHOD     toUnsignedString(int, int)      [STATIC,   String

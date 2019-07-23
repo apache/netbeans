@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Standard Java SE Project Properties Dialog Box: Run</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.java.j2seproject.ui.customizer.CustomizerRun" name="org.netbeans.modules.java.j2seproject.ui.customizer.CustomizerRun"></a></p>
+<div id="NBCSH2131"><!-- infolevel="all" infotype="General" --><a id="sthref290" name="sthref290"></a>
+<h1>Standard Java SE Project Properties Dialog Box: Run</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to configure options for running your project. You can create several configurations and set the main class, program arguments, working directory for program execution, and VM options for each configuration. When running the application, you can easily switch the configuration in the drop-down list on the editor toolbar. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG373">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of runtime options for a standard project." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="39%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Configuration</p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">Creates a new runtime configuration and enter its name in the dialog box that appears when <b>New</b> is clicked.
+<p>All configurations are saved in the c<code dir="ltr">onfiguration_name</code><code dir="ltr">.properties</code> file in the <code dir="ltr">nbproject/configs</code> directory of your project. After a new configuration is created, it becomes available in the configuration drop-down list on the editor toolbar and you can switch configurations while running your project.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t19" headers="r1c1-t19">
+<p>Main Class</p>
+</td>
+<td align="left" headers="r3c1-t19 r1c2-t19">Specifies the main class for the application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG815">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>The <b>Browse</b> button only shows classes in the project's source folders. If you want to specify a class in one of the JAR files on the project's classpath, type the fully qualified class name in this field.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t19" headers="r1c1-t19">
+<p>Arguments</p>
+</td>
+<td align="left" headers="r4c1-t19 r1c2-t19">Adds arguments to pass to the main class during application execution. Note that arguments cannot be passed to individual files</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t19" headers="r1c1-t19">
+<p>Working Directory</p>
+</td>
+<td align="left" headers="r5c1-t19 r1c2-t19">Specifies a separate working directory that is used during application execution.
+<p>If no value is specified, the project directory is used by default as a working directory.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t19" headers="r1c1-t19">
+<p>VM Options</p>
+</td>
+<td align="left" headers="r6c1-t19 r1c2-t19">Specifies Java virtual machine options to be used for running the main class.
+<p>Separate options with a space. For more information about VM options, see <code dir="ltr">
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">
+<param name="text" value="<html><u>http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t19" headers="r1c1-t19">
+<p>Run with Java Web Start</p>
+</td>
+<td align="left" headers="r7c1-t19 r1c2-t19">Select this checkbox to run and debug the application using Java Web Start. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG403">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>This checkbox becomes available for selection after you enable Java Web Start on the <b>Application</b> &gt; <b>Web Start</b> panel of the Project Properties dialog box.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t19" headers="r1c1-t19">
+<p>Changing existing configurations</p>
+</td>
+<td align="left" headers="r8c1-t19 r1c2-t19">Changes the configuration currently selected in the <b>Configuration</b> field.
+<p>All changes you make to the default configuration propagate to all other configurations automatically. Any changes you make to a configuration other than the default configuration apply only to that non-default configuration</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2139" name="NBCSH2139"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>&quot;Sharing Libraries a Library with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

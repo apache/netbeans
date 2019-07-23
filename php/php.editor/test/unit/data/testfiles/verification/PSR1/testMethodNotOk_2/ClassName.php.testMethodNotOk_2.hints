@@ -1,0 +1,4 @@
+    function FooBar() {
+             ------
+HINT:PSR-1 Violation:
+Method names MUST be declared in camelCase().

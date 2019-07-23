@@ -1,0 +1,110 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+/*
+* Support js for ${generic_name}
+*/
+
+function ${generic_name}(uri_) {
+    this.uri = uri_;
+}
+
+${generic_name}.prototype = {
+
+   getUri : function() {
+      return this.uri;
+   },
+
+${rest_methods}
+
+   toString : function() {
+      var myObj = 
+         '{'+
+         '"@uri":"'+this.uri+'"'+
+         '}';
+      return myObj;
+   },
+
+   asString : function(param) {
+     if ( param == undefined ){
+         return '';
+     }
+     var result ='';
+     if ( !(param instanceof Array) ){
+	if ( 'object' == typeof(param)){
+            result = '{';
+	    var count =0;
+	    for( var prop in param ){
+		count++;
+	    }
+	    var i=0;
+	    for( var prop in param ){
+            	result=result+'"'+prop+'":'+this.asString(param[prop]);
+		if ( i<count-1 ){
+		    result = result +',';
+		}
+		i++;
+	    }
+            result = result +'}';
+	}
+	else {
+		result = '"'+param+'"';
+	}
+        return result;
+     }
+     else {
+        result = '[';
+          var j=0;
+          for( j=0; j<param.length;j++){
+                result=result+this.asString(param[j]);
+                if ( j!= param.length -1){
+                        result = result +',';
+                }
+        }
+        result = result +']';
+        return result;
+     }
+   }
+}
+
+function ${generic_name}Remote(uri_) {
+    this.uri = uri_;
+}
+
+${generic_name}Remote.prototype = {
+
+/* Default getJson_() method . Do not remove. */
+   getJson_ : function(uri_) {
+      return rjsSupport.get(this.uri+uri_, 'application/json');
+   },
+/* Default putJson_() method . Do not remove. */
+   putJson_ : function(uri_, content) {
+      return rjsSupport.put(this.uri+uri_, 'application/json', content);
+   },
+/* Default postJson_() method . Do not remove. */
+   postJson_ : function(uri_, content) {
+      return rjsSupport.post(this.uri+uri_, 'application/json', content);
+   },
+/* Default deleteJson_() method . Do not remove. */
+   deleteJson_ : function(uri_, content) {
+      return rjsSupport.delete_(this.uri+uri_, 'application/json', content);
+   },
+${stub_methods}
+}

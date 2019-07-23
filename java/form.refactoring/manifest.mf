@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.form.refactoring/0
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/form/refactoring/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+AutoUpdate-Show-In-Client: false

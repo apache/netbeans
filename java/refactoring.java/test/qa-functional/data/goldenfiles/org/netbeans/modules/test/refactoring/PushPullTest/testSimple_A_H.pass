@@ -1,0 +1,61 @@
+package pull_push;
+
+public class Base_H {
+
+    private abstract class ClassA {
+
+    }
+
+    private abstract class ClassB extends ClassA implements InterfaceA {
+
+        public int fact(int i) {
+            if (i > 0) {
+                return fact(i - 1) * i;
+            } else {
+                return 1;
+            }
+        }
+
+        public String getSequence(int i) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < i; j++) {
+                sb.append(j);
+                sb.append("-");
+            }
+            return sb.toString();
+        }
+
+        public abstract void method();
+    }
+
+    private class ClassC extends ClassB {
+
+        public void prinSomething() {
+            System.out.println("aaa");
+        }
+
+        public void method() {
+            System.out.println("method()");
+        }
+
+    }
+
+    private class ClassD extends ClassB {
+
+        public void prinSomething() {
+            System.out.println("aaa");
+        }
+
+        public void method() {
+            System.out.println("method()");
+        }
+
+    }
+
+    public interface InterfaceA {
+
+        public String getSequence(int i);
+        public void method();
+    }
+}
+

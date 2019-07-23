@@ -1,0 +1,1 @@
+    $.getJSON('json_txt.php', {|>MARK_OCCURRENCES:mon^_yr<|: mon_yr, period: period},

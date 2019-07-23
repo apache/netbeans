@@ -1,0 +1,42 @@
+<html><body>
+<pre>Code completion result for source line:
+$(document).a|
+(QueryType=COMPLETION, prefixSearch=false, caseSensitive=true)
+------------------------------------
+METHOD     addClass(className): jQuery     [PUBLIC]   <font color=#999999>jquery-api.xml</font>
+</pre><h2>Documentation:</h2><html>
+<head>
+</head>
+<body style='font-family: Arial; font-size: 11px'>
+<table style='width:100%; background-color:#1f6fb4; color:#ffffff; margin:0px; padding:3px;font-weight: bold; font-size: 12px'><tr>
+<td>.<a style='color: #ffffff' href='http://api.jquery.com/addClass/'>addClass</a>( className )</td>
+<td style='text-align: right;font-style: italic;'>Returns: <a style='color:#ffffff' href='http://api.jquery.com/Types/#'jQuery> jQuery</a></td>
+</tr></table><div style='margin: 6px'>
+Adds the specified class(es) to each of the set of matched elements.</div> 
+<table align='right' style='width:95%; background-color:#d1d1d1; padding:12px;margin-right:6px;'><tr><td><table width='100%' style='font-weight: bold;font-size: small; color:#666666'><tr>
+<td>.addClass( className )</td><td style='vertical-align: bottom; text-align: right;'>version added: <a style='color: #5db0e6' href='http://api.jquery.com/category/version/1.0/'>1.0</a></td></tr></table>
+<hr style='width: 100%; height: 2px'/><p style='font-size: small; margin-bottom:6px'><b>className</b>: One or more space-separated classes to be added to the class attribute of each matched element.</p><table width='100%' style='font-weight: bold;font-size: small; color:#666666'><tr>
+<td>.addClass( function(index, currentClass) )</td><td style='vertical-align: bottom; text-align: right;'>version added: <a style='color: #5db0e6' href='http://api.jquery.com/category/version/1.4/'>1.4</a></td></tr></table>
+<hr style='width: 100%; height: 2px'/><p style='font-size: small; margin-bottom:6px'><b>function(index, currentClass)</b>: A function returning one or more space-separated class names to be added to the existing class name(s). Receives the index position of the element in the set and the existing class name(s) as arguments. Within the function, <code>this</code> refers to the current element in the set.</p></td></tr></table><div style='margin: 6px'>
+
+    <p>It's important to note that this method does not replace a class. It simply adds the class, appending it to any which may already be assigned to the elements.</p>
+    <p>More than one class may be added at a time, separated by a space, to the set of matched elements, like so:</p>
+    <pre style='margin: 1em 0px; display: block; font-family: monospace;white-space: pre;background-color: #fefeca; padding:6px;'><code>
+$( "p" ).addClass( "myClass yourClass" );
+    </code></pre>
+    <p>This method is often used with <code>.removeClass()</code> to switch elements' classes from one to another, like so:</p>
+    <pre style='margin: 1em 0px; display: block; font-family: monospace;white-space: pre;background-color: #fefeca; padding:6px;'><code>
+$( "p" ).removeClass( "myClass noClass" ).addClass( "yourClass" );
+    </code></pre>
+    <p>Here, the <code>myClass</code> and <code>noClass</code> classes are removed from all paragraphs, while <code>yourClass</code> is added.</p>
+    <p>As of jQuery 1.4, the <code>.addClass()</code> method's argument can receive a function.</p>
+    <pre style='margin: 1em 0px; display: block; font-family: monospace;white-space: pre;background-color: #fefeca; padding:6px;'><code>
+$( "ul li" ).addClass(function( index ) {
+  return "item-" + index;
+});
+    </code></pre>
+    <p>Given an unordered list with two <code>&lt;li&gt;</code> elements, this example adds the class "item-0" to the first <code>&lt;li&gt;</code> and "item-1" to the second.</p>
+  </div> 
+</body>
+</html>
+</body></html>

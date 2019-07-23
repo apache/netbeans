@@ -1,0 +1,6 @@
+Code completion result for source line:
+function returnType01(object $arg): ob|ject {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ObjectClass                     [PUBLIC]   objectTypeHint.php
+------------------------------------
+KEYWORD    object                                     null

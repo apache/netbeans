@@ -1,0 +1,21 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package projecti18n;
+
+/**
+ *
+ * @author Admin
+ */
+public class Internationalize {
+    
+    String variable = java.util.ResourceBundle.getBundle("projecti18n/Bundle").getString("variable2");
+    String[] test = {java.util.ResourceBundle.getBundle("projecti18n/Bundle").getString("item1"), java.util.ResourceBundle.getBundle("projecti18n/Bundle").getString("item2"), java.util.ResourceBundle.getBundle("projecti18n/Bundle").getString("item3")}; 
+    
+    public void testInternational(String test){
+        System.out.println(java.util.ResourceBundle.getBundle("projecti18n/Bundle").getString("simple_wizard"));
+    }
+
+}

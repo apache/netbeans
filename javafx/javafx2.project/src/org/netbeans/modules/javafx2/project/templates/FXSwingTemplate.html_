@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>@NAME@</title>
+</head>
+<body>
+<h1>Applet: @NAME@</h1>
+<applet id="@NAME@" code="@NAME@.jar" width="@WIDTH@" height="@HEIGHT@">
+  <param name="jnlp_href" value="@NAME@_applet.jnlp" />
+</applet>
+</body>
+

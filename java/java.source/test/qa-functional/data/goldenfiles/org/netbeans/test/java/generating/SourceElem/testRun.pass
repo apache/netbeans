@@ -1,0 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package newpack;
+
+import java.awt.image.RGBImageFilter;
+import javax.swing.event.HyperlinkEvent;
+import static java.awt.Color.BLACK;
+import java.util.List;
+
+/**
+ *
+ * @author
+ */
+public class JavaTestSourceSourceElem {
+    
+}
+
+class TopLevel extends List {
+
+    public void method(String param1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    protected double variable;
+    {
+    }
+}
+

@@ -1,0 +1,6 @@
+[TAG(4):head][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(5):title][WHITESPACE(1): ][TEXT(12):Jade Example][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(4):link][BRACKET_LEFT_PAREN(1):(][ATTRIBUTE(3):rel][OPERATOR_ASSIGNMENT(1):=][JAVASCRIPT(12):"stylesheet"][OPERATOR_COMMA(1):,][WHITESPACE(1): ][ATTRIBUTE(4):href][OPERATOR_ASSIGNMENT(1):=][JAVASCRIPT(24):"/stylesheets/style.css"][BRACKET_RIGHT_PAREN(1):)][EOL(1):\n]
+[TAG(3):div][EOL(1):\n]
+[WHITESPACE(4):    ][COMMENT_DELIMITER(2)://][COMMENT(25): asdasdsadsa include aaaa][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_INCLUDE(7):include]

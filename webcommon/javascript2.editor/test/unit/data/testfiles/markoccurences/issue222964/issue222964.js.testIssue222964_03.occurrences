@@ -1,0 +1,5 @@
+window.|>MARK_OCCURRENCES:store<| = {
+|>MARK_OCCURRENCES:store<|.populate();  
+window.|>MARK_OCCURRENCES:store<|.populate();
+console.log(|>MARK_OCCURRENCES:store<|.address.street);
+console.log(window.|>MARK_OCCURRENCES:st^ore<|.address.street);

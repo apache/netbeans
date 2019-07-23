@@ -1,0 +1,16 @@
+(function () {
+        /**
+         * @public                  // this doesn't belong here
+         */
+        function |>METHOD:foo<|() {
+            return 'foo';
+        }
+
+        function |>METHOD,UNUSED:bar<|() {
+            return foo().length;    // "foo" has the global variable color
+        }
+
+        function |>METHOD,UNUSED:baz<|() {
+            return foo();           // this "foo" is fine
+        }
+    }());   

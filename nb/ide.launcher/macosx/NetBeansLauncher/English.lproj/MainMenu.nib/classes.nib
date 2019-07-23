@@ -1,0 +1,30 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {execute = id; openLog = id; }; 
+            CLASS = NBExecutor; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {fileMenu = NSMenu; preferences = NBPreferences; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {revertExpert = id; revertUser = id; setUserdir = id; }; 
+            CLASS = NBPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                debug = NSButton; 
+                extraParamsForm = NSFormCell; 
+                fontSize = NSPopUpButton; 
+                jdkHome = NSTextField; 
+                lookFeel = NSPopUpButton; 
+                quitImm = NSButton; 
+                runImm = NSButton; 
+                userDirectory = NSTextField; 
+                vmSizeForm = NSFormCell; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

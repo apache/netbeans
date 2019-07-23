@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: prov_baz
+OpenIDE-Module-Name: Provides baz
+OpenIDE-Module-Provides: baz

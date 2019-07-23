@@ -1,0 +1,3 @@
+if (|>GLOBAL:rowKeyCache<|[|>GLOBAL:sliceId<|] == undefined) {
+    |>GLOBAL:rowKeyCache<|[|>GLOBAL:sliceId<|] = |>GLOBAL:stamp<|.rowKey();
+}

@@ -1,0 +1,12 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+rootProject.name = '${name}'
+
+<#list subProjects as subProject>
+include ':${subProject.name}'
+</#list>
+
+<#list subProjects as subProject>
+<#if subProject.name != subProject.path>
+project(':${subProject.name}').projectDir = "$rootDir/${subProject.path}" as File
+</#if>
+</#list>

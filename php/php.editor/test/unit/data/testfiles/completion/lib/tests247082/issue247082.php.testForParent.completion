@@ -1,0 +1,11 @@
+Code completion result for source line:
+echo parent::|PARENT_CONST . PHP_EOL;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     parentProtectedTestInstance()   [PROTECTE  ParentA
+METHOD     parentProtectedTestStatic()     [PROTECTE  ParentA
+METHOD     parentTestInstance()            [PUBLIC]   ParentA
+METHOD     parentTestStatic()              [STATIC]   ParentA
+VARIABLE   ? $parentFieldStatic            [STATIC]   ParentA
+VARIABLE   ? $parentProtectedFieldStatic   [PROTECTE  ParentA
+CONSTANT   PARENT_CONST 'PARENT_CONST'     [PUBLIC]   ParentA
+CONSTANT   class \ParentA                  [PUBLIC]   Magic Constant

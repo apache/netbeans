@@ -1,0 +1,16 @@
+@namespace foo "http://netbeans.org";
+div{}
+/**CC
+f|
+"http://netbeans.org" foo
+foo
+*/
+
+foo|h1 { 
+/**CC
+color: |
+color blue
+color: blue
+*/
+
+}

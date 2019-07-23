@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<validation>
+  <element>
+    <name>/root-element/object-eight/child-object-one/property-one</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/non-zero-length-property</name>
+    <check>
+      <name>NonZeroLength Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/object-one/property-two</name>
+    <check>
+      <name>ZeroToMaxInteger Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/object-one/property-one</name>
+    <check>
+      <name>NonBlank Constraint</name>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/number-property</name>
+    <check>
+      <name>Number Constraint</name>
+    </check>
+    <check>
+      <name>IntegerGreaterThan Constraint</name>
+      <parameters>
+        <parameter>
+            <name>value</name>
+            <value>100</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/boolean-property</name>
+    <check>
+      <name>Boolean Constraint</name>
+    </check>   
+  </element>
+  <element>
+    <name>/root-element/enumeration-property</name>
+    <check>
+      <name>Enumeration Constraint</name>
+      <parameters>
+        <parameter>
+            <name>enumeration-value</name>
+            <value>red</value>
+            <value>green</value>
+            <value>blue</value>
+        </parameter>
+      </parameters>
+    </check>
+  </element>
+  <element>
+    <name>/root-element/range-property</name>
+    <check>
+      <name>Range Constraint</name>
+      <parameters>
+        <parameter>
+            <name>range-start</name>
+            <value>100</value>
+        </parameter>
+        <parameter>
+            <name>range-end</name>
+            <value>800</value>
+        </parameter>
+      </parameters>
+    </check>   
+    <check>
+      <name>Number Constraint</name>
+    </check>   
+  </element>
+</validation>

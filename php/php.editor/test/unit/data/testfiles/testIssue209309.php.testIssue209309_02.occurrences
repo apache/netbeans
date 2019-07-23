@@ -1,0 +1,2 @@
+    use \Foo\Bar as |>MARK_OCCURRENCES:O^mg<|;
+        function bar(|>MARK_OCCURRENCES:Omg<|\AliasedClassName $p, Cls $a) {}

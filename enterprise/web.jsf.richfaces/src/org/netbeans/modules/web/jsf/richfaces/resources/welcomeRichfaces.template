@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Richfaces Welcome Page</title>
+    </h:head>
+    <h:body>
+        <rich:panel header="Welcome to Richfaces">
+            RichFaces is an advanced UI component framework for easily integrating Ajax capabilities into business applications using JSF.  Check out the links below to lear more about using RichFaces in your application.
+            <ul>
+                <li><h:outputLink value="http://richfaces.org" >Richfaces Project Home Page</h:outputLink></li>
+                <li><h:outputLink value="http://showcase.richfaces.org" >Richfaces Showcase</h:outputLink></li>
+                <li><h:outputLink value="https://community.jboss.org/en/richfaces?view=discussions" >User Forum</h:outputLink></li>
+                <li><h:outputLink value="http://www.jboss.org/richfaces/docs" >Richfaces documentation...</h:outputLink>
+                    <ul>
+                        <li><h:outputLink value="http://docs.jboss.org/richfaces/latest_4_X/Developer_Guide/en-US/html_single/" >Development Guide</h:outputLink></li>
+                        <li><h:outputLink value="http://docs.jboss.org/richfaces/latest_4_X/Component_Reference/en-US/html/" >Component Reference</h:outputLink></li>
+                        <li><h:outputLink value="http://docs.jboss.org/richfaces/latest_4_X/vdldoc/" >Tag Library Docs</h:outputLink></li>
+                    </ul>
+                </li>
+            </ul>
+        </rich:panel>
+    </h:body>
+</html>

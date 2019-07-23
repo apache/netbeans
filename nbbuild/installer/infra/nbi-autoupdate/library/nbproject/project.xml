@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.installer.infra.autoupdate.lib</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>org.netbeans.installer</package>
+                <package>org.netbeans.installer.downloader</package>
+                <package>org.netbeans.installer.downloader.connector</package>
+                <package>org.netbeans.installer.downloader.dispatcher</package>
+                <package>org.netbeans.installer.downloader.dispatcher.impl</package>
+                <package>org.netbeans.installer.downloader.impl</package>
+                <package>org.netbeans.installer.downloader.queue</package>
+                <package>org.netbeans.installer.downloader.services</package>
+                <package>org.netbeans.installer.downloader.ui</package>
+                <package>org.netbeans.installer.product</package>
+                <package>org.netbeans.installer.product.components</package>
+                <package>org.netbeans.installer.product.filters</package>
+                <package>org.netbeans.installer.utils</package>
+                <package>org.netbeans.installer.utils.applications</package>
+                <package>org.netbeans.installer.utils.exceptions</package>
+                <package>org.netbeans.installer.utils.helper</package>
+                <package>org.netbeans.installer.utils.helper.swing</package>
+                <package>org.netbeans.installer.utils.progress</package>
+                <package>org.netbeans.installer.utils.system</package>
+                <package>org.netbeans.installer.utils.system.cleaner</package>
+                <package>org.netbeans.installer.utils.system.launchers</package>
+                <package>org.netbeans.installer.utils.system.launchers.impl</package>
+                <package>org.netbeans.installer.utils.system.shortcut</package>
+                <package>org.netbeans.installer.utils.system.unix.shell</package>
+                <package>org.netbeans.installer.utils.system.windows</package>
+                <package>org.netbeans.installer.utils.xml</package>
+                <package>org.netbeans.installer.utils.xml.visitors</package>
+                <package>org.netbeans.installer.wizard</package>
+                <package>org.netbeans.installer.wizard.components</package>
+                <package>org.netbeans.installer.wizard.components.actions</package>
+                <package>org.netbeans.installer.wizard.components.panels</package>
+                <package>org.netbeans.installer.wizard.components.panels.netbeans</package>
+                <package>org.netbeans.installer.wizard.components.sequences</package>
+                <package>org.netbeans.installer.wizard.containers</package>
+                <package>org.netbeans.installer.wizard.ui</package>
+                <package>org.netbeans.installer.wizard.utils</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/nbi-engine.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/nbi-engine.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

@@ -1,0 +1,766 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>High level functional description of a Terminal Emulator, Term</title>
+<LINK REL="Stylesheet" HREF="../../../../../prose.css" TYPE="text/css" TITLE="NetBeans OpenSource Style">
+
+</head>
+<body>
+
+<h1>
+High level functional description of an ANSI Terminal Emulator, Term
+<hr>
+</h1>
+
+<p><b>Author:</b>
+<p><i>
+<a href="mailto:ivan.solimanipour@eng.sun.com">Ivan Soleimanipour</a>,
+Sun Microsystems.
+</i>
+<hr>
+
+
+<p><b>Abstract:</b>
+A highly configurable ANSI terminal emulator.
+<br><b>Version:</b>
+4 of
+Wed Oct 24 2001
+<hr>
+<p><b>Table of contents:</b>
+<ul>
+<li> <a href="#motivation">Motivation</a>
+<li> <a href="#features">User visible and API Features (as implemented currently)</a>
+<li> <a href="#covenant">Covenant</a>
+<li> <a href="#rfe">RFE queue</a>
+<li> <a href="#performance">Performance</a>
+<li> <a href="#hypertext">Use as a hypertext widget</a>
+<li> <a href="#design_issues">Design issues</a>
+<li> <a href="#source_code">Source code and demos</a>
+	<ul>
+	<li> <a href="#demo_build">Build tool demo</a>
+	<li> <a href="#demo_telnet">Telnet demo</a>
+	</ul>
+</ul>
+
+<hr>
+
+<a name="motivation">
+<h2>
+Motivation
+</h2>
+The original impetus for Term was the need for a terminal
+emulator for use by adaptations of NetBeans for non-Java development.
+These tools need a proper terminal emulator in at least three areas:
+<ul>
+<li>
+  A window for program io, for programs being run under the debugger.
+  These programs will be traditional unix programs and may utilize
+  various levels of terminal manipulation, programs like 'more',
+  'top', 'vi' and 'ksh'.
+<li>
+  A window for the debugger (e.g. dbx) command io. The dbx command
+  interpreter is a ksh variant and as such allows input history editing
+  or execution of any unix program (like 'vi').
+<li>
+  A window for running alternative text editors, 'vi' or 'vim' under.
+  More on this later.
+</ul>
+
+The NetBeans community had expressed interest in such a component as a
+candidate for the NetBeans build and other output windows.
+The package was
+<a href=
+"http://www.netbeans.org/servlets/ReadMsg?msgId=141308&listName=contrib">
+contributed</a>
+to the NB source base circa Aug 2001.
+<p>
+
+A terminal emulator can also be used as a within-nb shell or telnet window.
+See the
+<a href="#demo_telnet">source code for a telnet demo</a>.
+
+<a name="features">
+<h2>
+User visible and API Features (as implemented currently)
+</h2>
+
+<ul>
+<li>
+  The base Term class handles "dumb" operations, putting characters
+  on a screen and forwarding keystrokes.
+
+<p><li>
+  ANSI operations for cursor control, line manipulation etc.
+<li>
+  ANSI color and other character attribute escape processing.
+  <br>
+  Not All sequences are implemented yet.
+  <p>
+  As references I used 
+  <a href="http://www.fh-jena.de/~gmueller/Kurs_halle/esc_vt100.html">
+  Robert Frees spec</a>
+  and
+  <a href="http://enterprise.aacc.cc.md.us/~rhs/ansi.html">
+  this
+  </a> 
+  as well as the DtTerm(3) man page from Solaris.
+  <p>
+  <li>
+  The interpretation of characters is done by an abstract
+  <a name="interpreter">interpreter</a>.
+
+  A set of classes are provided for
+  <a href="interpreter.html">interpreter construction</a>
+  using state machines.
+
+  The current default interpreter is a simple ANSI interpreter, polluted
+  with some DtTerm extensions.
+
+<p>
+<li>
+  Selection service in character, word and line modes modelled on xterm with
+  configurable word boundary detection.
+  <br>
+  This should work particularly well under X-windows with JDK1.4 where they
+  have fixed X-windows selections.
+<li>
+  Auto-scrolling for the selection when the mouse moves outside of the view.
+
+<p>
+<li>
+  History buffer and vertical scrolling.
+  The history can be traversed using a ...
+
+<li>
+  <list>LogicalLineVistor</list>
+  <br>
+  Provides access to whole history buffer contents and facilitates
+  searches and contents dumps etc. Suitable information and mechanisms are
+  provided for mapping a logical line to screen coordinates to facilitate
+  highlighting and resumption of search for example.
+
+<p>
+<li>
+  Horizontal scrolling.
+
+<p>
+<li>
+  Pluggable "line discipline".
+  <p>
+  Unlike other termulators Term does not
+  do things like line buffering, echoing, CR/LF processing and so on.
+  Since it is predominantly intended for use under Unix and since 
+  under Unix all this stuff is done by the kernel (accessed through
+  pty's) Term doesn't bother with any of this.
+  <p>
+  However, there is a mechanism analogous to SVR4 io streams, or 
+  pushable network stack elements, that allows customization of
+  character processing on other systems. A generic simple 
+  stream module, <list>LineDiscipline</list> is provided in this package.
+  <p>
+  Stream modules can be used for other purposes like recording of the io
+  to some history file or for testing purposes.
+
+<p>
+<li>
+  Mechanisms for dealing with resizing for interaction with ptys and
+  telnet protocols.
+
+<p>
+<li>
+  "editor and glyph support". The original Solaris Workshop used an
+  enhanced DtTerm (The CDE termulator widget) that provided for
+  improved interaction with vi and the rest of the IDE.
+  So does Term:
+  <ul>
+  <li>
+  Ability to render glyphs in a "glyph gutter".
+
+  <li>
+  Ability to convert mouse clicks to row/col coordinates and even
+  the underlying text. For use by "balloon evaluation" for example.
+
+  <li>
+  Colored per-line background stripes, independent of ANSI
+  color escapes and the selection feedback.
+  </ul>
+
+<p>
+<li>
+  Term interacts with the rest of the world using functions that send and
+  receive char arrays. A subclass, StreamTerm allows hooking up of 
+  java.io Streams. Other subclasses could be derived which connect the
+  Term to telnet clients or pty streams (which naturally requires JNI
+  code and is therefore not part of this package).
+
+<p>
+<li>
+  Choice of click-to-type or follow-mouse focus.
+<li>
+  Choice of XOR or Swing style selection feedback.
+
+<p>
+<li>
+  Handles Sun keyboard Cut, Copy, Paste keys. Since they _are_ available
+  as AWT key codes.
+<p>
+<li>
+  Methods for querying and setting cursor location. 
+  <br>
+  This can be used, for example, to ensure that a horizontal line
+  starts on column 0.
+
+<p>
+<li>
+Consuming key events.
+<br>
+Because of it's nature, Term, by default, consumes all of the keystrokes
+it gets and passes them through to the output stream.
+<p>
+A set of <list>KeyStrokes</list> may be registered with Term though to
+allow passing through of keystrokes of the clients choice.
+
+</ul>
+
+Note that there are two important differences between this widget and 
+traditional Java text widgets:
+<ul>
+<li>
+Because of the focus on cursor addressability it only works with
+fixed-width fonts. It will accept any font setting but will
+mutate it into a monospaced one. 
+<br>
+Although there is some discussion to relax this considering the dearth of
+monospaced unicode fonts.
+<p><li>
+It doesn't view documents; it's an input stream viewer.
+This leads to some 
+<a href="#interesting_design_issues">
+interesting design issues
+</a>
+.
+</ul>
+
+<p>
+The UI ... is just too simple to be worth a picture.
+<br>
+It's just a screen area where text appears and a Swing scrollbar
+in whatever is the current L&F.
+
+<p>
+This proposal comes with
+<a href="../package-summary.html">Javadoc API documentation</a>
+and a 
+<a href="properties.html">properties table</a>
+.
+
+<a name="covenant">
+<h2>
+Covenant
+</h2>
+(A covenant is a part of a property deed that puts restrictions on the use
+of the property on all future owners)
+<p>
+
+<ul>
+<li>
+  No additional dependencies. I would like Term to be usable outside
+  of NetBeans and therefore it should not depend on packages like
+  openide and so on.
+</ul>
+
+<a name="rfe">
+<h2>
+RFE queue
+</h2>
+These are things that are planned but not implemented yet.
+<ul>
+<p><li>
+Misc. terminal things like ...
+    <ul>
+    <li>
+    Control of cursor style.
+    <li>
+    Bell: audible/visible.
+    <li>
+    Margin warning.
+    </ul>
+<p><li>
+Resize tooltip so you can get your columns and rows just they way you want them.
+<p><li>
+Line re-breaking.
+<br>
+You average terminal emulator will keep line breaks (due to wrapping) 
+at the original column when the width of the emulator changes.
+It should be possible to re-break them as the width changes.
+
+<p><li>
+Accessibility.
+<br>
+This used to be an "issue" mainly because I hadn't learned much about it.
+
+Term will implement the Accessible interface. The class Accessible is
+really just a front gate to a whole host of other stuff that needs to
+be implemented.
+</ul>
+
+<a name="performance">
+<h2>
+Performance
+</h2>
+Term is made up of the two main subsystems:
+<dl>
+<dt>Buffer maintenance
+	<dd>
+	This is the process of processing input characters and adding
+	them to the buffer, advancing the position of the cursor, 
+	adding new lines at the bottom and taking away lines at the top.
+	<p>
+	The information is stored in a Vector of Lines. Each Line has a
+	an array of 'char's for character storage and an Array of 'int's 
+	for attribute storage. These two arrays grow together (which is
+	more efficient than having two separate Vectors or StringBuffers).
+	However the attribute array may be null if all the characters in the
+	line have no attributes.
+	<p>
+	In order to prevent needless copying, these buffers are directly
+	available to the paint functions.
+
+<p>
+<dt>Painting
+	<dd>
+	This is he process of drawing the view of the buffer unto a canvas.
+	On each refresh the _whole_ view is redrawn! Since Swing's
+	refresh manager already provides a double buffered image there is
+	no user visible flickering.
+	<p>
+	Lines w/o attributes are rendered using Graphics.drawChars() in
+	the double buffered image setup by default by Swing and AWT.
+	<p>
+	Lines with attributes are rendered a "run" at a time. A run is
+	a sequence of characters all of which have the same attributes.
+	<p>
+	There are also various adornments to be rendered, like the cursor,
+	slection highlight, glyphs and so on.
+	<dd>
+</dl>
+The following points may be made:
+<ul>
+<li>
+	Redrawing the whole screen at the slightest excuse seems like a
+	bad idea. But it's premature to do anyting about this yet since
+	Term interaction with JScrollPane has not yet been finalized.
+<li>
+	Regardlass of the the use of runs, use of attributes will always have a
+	slightly higher overhead in both buffer memory use and painting time.
+</ul>
+When measuring or comparing performance attention should be paid to the
+following:
+<dl>
+<a name="buffering">
+<dt>Buffering
+<dd>
+	A repaint request is posted on every call to Term.putChar() and
+	every call to Term.putChars(). Obviously things are going to go
+	through much faster if you buffer 1000 characters and send them
+	via putChars() instead of calling putChar() 1000 times. The
+	first implementation of LineDiscipline() actually made this mistake.
+
+<a name="batching">
+<dt>Batching of refreshes
+<dd>
+	The Swing (AWT?) repaint manager has it's own batching
+	which will compensate a bit for a high frequency of repaint
+	requests.
+<dd>
+
+<dt>Jump scrolling
+<dd>
+	If you 'cat' a large file into a termulator you can have you choice
+	of two extremes, seeing every line go by and waiting for it all
+	to go by or having the printing finish quickly and seeing
+	"jumps" in the output (while the history buffer retains everything).
+	<p>
+	These two alternatives are usually controlled by a property known as
+	"jump scrolling". Term doesn't have it but the effect can
+	be achieved by appropriately buffering the input and or internally
+	using paintImmediately().
+</dl>
+Having said all of this, in my experience with the current implementation, 
+painting completely dominates buffer maintenance, so when you're 
+comparing Term with something else make sure they have comparable
+refreshes/bytes-of-input.
+
+<a name="hypertext">
+<h2>
+Use as a hypertext widget
+</h2>
+Term has facilities that allow it to be used as a reasonable styled
+language and hypertext widget.
+<ul>
+<li>
+Styled text can be rendered using ANSI color and font escapes, or
+method calls, like <l>Term.setCharacterAttribute()</l>.
+One can even concieve of an
+<a href="#interpreter">Intepreter</a>
+that interprets HTML.
+
+<p><li>
+An "Active Region" can be delineated through extended character
+escapes or method calls (<l>Term.getRegionManager().beginRegion()</l>).
+Active regions may be nested and the region manager can map a given
+cursor (or pointer) position to the regions. This is the minimal
+functionlaity with which a client can associate user data and actions with
+active regions and highlight a region when a pointer passes over it,
+execute an action on a click, or pop up a menu.
+
+<p><li>
+History can be "anchored" so that the beginning of a "page" of hypertext 
+doesn't vanish even if it's length exceeds the history size.
+In other words,
+when anchored, the history is temporarily expanded to accomodate the page.
+</ul>
+
+
+<a name="design_issues">
+<h2>
+Design issues
+</h2>
+I've been working off of O'Reilly publishers "JAVA Swing" by Eckstein, Loy
+and Wood.
+Many of the issues here are in the context of that book.
+<p>
+The issues often have to do with my ignorance or lack of good guidelines on a
+subject and are really a plea for suggestions, education and discussion.
+<p>
+
+<dl>
+<dt>
+<b>
+Swing Model and UI Delegate
+</b>
+<dd>
+  In ch 28 it is said that a proper swing widget has to have a 
+  Model and a UI Delegate. Term currently has neither.
+  <p>
+
+  <dl>
+  <dt>
+  Why not a UIDelegate?
+  <dd>
+	Term used to have no "artwork" that needed to be drawn depending on a
+	specific look and feel. But now it has at least the following 
+	properties that could be construed as L&F specific:
+	
+	<dl>
+	<p><dt>selectionXOR<dd>
+	    You can control whether selections are done using Swing
+	    style (background highlighting) or using the more
+	    traditional XOR style.
+	    One could couch this as a L&F controllable setting with the XOR
+	    style going to the Motif L&F.
+	<p><dt>autoCopy<dd>
+	    On unix selections usually go to the primary selection. On
+	    windows they go into the clipboard and only if a Copy action
+	    was requested.
+	<p><dt>clickToType<dd>
+	    Windows users live in the ClickToType (focus) world.
+	    Unix people (i expect) prefer the "follow mouse" style
+	    of focus control.
+	</dl>
+
+	<p>
+	Also, term is a "composite" widget and it is unclear to me how
+	one implements UIDelegates for composites, or whether one is
+	even needed.
+
+  <p>
+  <a name="interesting_design_issues">
+  <dt>
+  Why not a Model?
+  </a>
+  <dd>
+	In any text rendering widget the model is typically a "document".
+	The equivalent of this in a termulator would be the history buffer,
+	or if no history, just the screen backing storage.
+	<p>
+	However, this is really an internal implementation and a terminal
+	really interacts with the external world through it's io lines,
+	so the model is conceptually a "connection". 
+	<p>
+	But a connection doesn't fit in with things like model-changed
+	events and such ... the data stored in the screen
+	backing store is ephemeral, it soon winks out of the history buffer.
+	So, I"m not exactly sure what a model would be for a termulator.
+	<p>
+	One candidate is the concept of sessions (A concept used in the
+	KDE 'konsole') where a single widget can multiplex between
+	multiple connections and the corresponding history buffers.
+	While such a feature should definitely be on the rfe list,
+	again, I'm not sure whether the Swing concept of a Model is
+	appropriate here.
+	<br>
+	To that end the current implementation has a Document class used
+	internally, but there's still a bit to go.
+  </dl>
+
+
+
+<p>
+<dt>
+<b>
+Working with JScrollPane
+</b>
+<dd>
+  Term is a composite and carries it's own scrollbar.
+  <br>
+  It is not JScrollPane-friendly.
+  <br>
+  Here's why ...
+  <p>
+  Initially it seems obvious that it should, like every other good Swing
+  component, implement Scrollable, work properly under a JScrollPane and
+  not contain it's own scrollbar, but this is not neccessarily a good idea.
+  <p>
+  Usually the size of a component refers to it's visible size.
+  But when the component is placed under a JScrollPane, it's size starts 
+  referring to it's "virtual" size over which the user scrolls.
+  While this makes complete sense for tables, lists, and text documents,
+  in the case of a terminal emulator we don't want this. We want size
+  to still govern the visible screen size!
+  <p> 
+  It is perhaps possible to design a Term that works under JScrollPane such
+  that resizes communicate the viewport size via TermListener.sizeChanged()
+  and setRows() sets the viewports size (this I actually can't figure how
+  to do). But this requires that Term discover that it's under a
+  JScrollPane and things become progressively more complex from there on.
+  <p>
+  Another argument can be made from a utility standpoint.
+  <br>
+  Most termulator applications (xterm) and widgets (DtTerm) have a property
+  that governs whether and where they have a scrollbar. It would be much more
+  convenient to retain this as a runtime controllable property of
+  Term itself (read <i>user option</i>) instead of
+  having the <i>container</i> of Term manage that;
+  create a JScrollPane, put Term under it etc. in response to user
+  option toggling.
+
+<p>
+<dt>
+<b>
+Reuse of and differences from standard Swing text components
+</b>
+<dd>
+  Why write a text rendering widget from scratch? Following are some reasons.
+  Some of them probably stem more from my ignorance of Swing or the NIH 
+  syndrome, but others I believe are fair justifications for a new component.
+
+  <ul>
+
+  <p>
+  <li>
+  Speed.
+  <br>
+  In my experience Swing text components just can't handle
+  the volumes of stuff coming into them that you typically get 
+  in consoles. 
+  <p>
+  I believe this is not so much because of the complex Document and Element
+  structures but due to the same reasons that could make Term slow, and
+  that is control over buffering and batching, or rather lack thereof.
+  Read the
+	<a href="#performance">section on performance</a> to see
+	what I mean.
+
+  <p>
+  <li>
+  The selection and the cursor are strongly tied together in Swing. With Term
+  the selection is independent of the cursor.
+
+  <p>
+  <li>
+  Swing provides a whole infrastructure for Actions, KeyMaps, undoing etc.
+  Which are neccessary for it's functioning as a document "editor". Term,
+  while internally maintaining a document and performing "edits" on it, is
+  not fundamentally an editor and can dispense with all of the above.
+
+  <p>
+  <li>
+  Swing uses offsets as opposed to cartesian coordinates. Since the 
+  bulk of the operations of terminal emulators involves cartesian
+  cursor motion and such, in order to reuse a Swing text component a
+  fair amount of machinery has to be added to convert between the two.
+  <br>
+  Some ideas I've tossed out:
+	<p>
+  <dl>
+	<dt>Pad lines with spaces
+	<dd>... so every "line" is 80 characters wide, making it easier
+	to do arithmetic. But then selection will absorb those spaces
+	which have to be thrown out etc.
+
+	<dt>Track line boundaries
+	<dd>
+	Using Positions for evey line? Expensive.
+	Tracking edits and maintaining my own map? Exspensive.
+
+	<dt>Use "Line" Elements.
+	<dd>Expensive but more importantly means we forego using Elements 
+	for more useful delineations.
+
+  </dl>
+
+  <p>
+  <li>
+  Swing Elements are very similar to Terms ActiveRegions.
+  They differ in the following respects though:
+  <ul>
+	<p>
+	<li>
+	Elements use Positions. While ActiveRegions use Coords.
+	Positions are "marks" and entail a fair amount of overhead,
+	while Coords are like offsets.
+	<p>
+	The offsets used by Term are actually valid as regions go out
+	of history. This because "absolute coordinates" are used where
+	each line put into Terms history gets a serial row number which
+	only grows. Term correctly handles the case where the 32-bit
+	absolute row number wraps. At a continuous rate of output of 
+	4000 lines/sec the wrapping will happenin about 4 days.
+
+	<p>
+	<li>
+	Elements and AttributeSets are tightly bound, while with Term
+	Character attributes are set completely independently of Active
+	Regions.
+
+	<p>
+	<li>
+	Elements are strictly nested. That is, there is no gap between 
+	the beginning of a branch Element and the beginning of it's first
+	child. ActiveRegions can be arranged more flexibly.
+  </ul>
+
+  <p>
+  <li>
+  CaretEvent gets fired everytime the cursor moves. Imagine what this does
+  to massive amounts of text being hurled at a terminal emulator, even
+  if no-one is listening.
+
+  <p>
+  <li>
+  Swings 'int offset' is "between" characters, while termulators work 
+  with coordinates "on" characters. I"m not sure that Position's BIAS
+  would help here. (This is perhaps a red herring since you can adopt
+  the convention that a caret's position implies a cursor on the character
+  following it).
+
+  </ul>
+
+<p>
+<dt>
+<b>
+Key tables
+</b>
+<dd>
+  (NOTE: This is not the same as Swings KeyMaps).
+  <br>
+  Term currently doesn't have a key map table. Most other termulators do.
+  The thing is I haven't yet seen the need. Lot of the usual type
+  of processing that key maps do seems to be absorbed by Swing and
+  AWT, so my initial hope was to just piggy-back on that. Same
+  thing for byte to char conversions.
+  <p>
+  There have been a few glitches like AWT converting a CR to a LF
+  that are currently being worked around in ad-hoc manner.
+</dl>
+
+<a name="source_code">
+<h2>
+Source code and demos
+</h2>
+</a>
+The source code for Term is in the NB CVS repository under 
+<pre>
+core/libsrc/org/netbeans/lib/terminalemulator.
+</pre>
+
+Two demo's are available:
+<br>
+(<b>Actually they are not!</b> I'm not sure whether it is appropriate
+to put them into the CVS repository).
+
+<a name="demo_build">
+<h3>
+Build tool demo
+</h3>
+<img src="snapshot.gif" alt="Snapshot of DemoBuild">
+<br>
+This is to showcase the capabilities of ActiveTerm and how it can be 
+used to annotate output, say from a build script.
+<p>
+A fair amount of the code has to do with the gui setup, javac Process
+setup and capture of it's output.
+Once the output is received it is processed line-by-line. A crude pattern
+is used to detect the first line of a javac error message and a new
+ActiveRegion is begun, while the previous one is ended. These active regions
+have their feedback attribute set which means that they will be highlighted
+as the mouse moves over them. Anyone who has had to decipher a
+wrapped compilation line and error line from 'make' would appreciate this.
+<p>
+The sourcefilename and line number are also extracted using simple patterns 
+and put in their own ActiveRegions as HTML-style links, which if clicked will
+bring up the right line # in some editor, or rather fake it using a popup.
+<p>
+The beginning of each error message is also tagged with a simple
+glyph in the glyph gutter. 
+<p>
+Please keep in mind that this is strictly a Term feature demo.
+I"m not advocating using glyphs to tag error messasges, or that textual
+pattern recognition should be used for detecting distinct error
+messages and their component, nor is capturing of Process output is as
+trivial as it seems here (if the demo had instead used 'make' you'd
+see some reordering of output because some comes from stdout and
+some comes from stderr).
+
+<a name="demo_telnet">
+<h3>
+Telnet demo
+</h3>
+For a telnet client it uses portions of 
+<a href="http://www.mud.de/se/jta/">
+The Java(tm) Telnet Application/Applet
+</a>
+by Matthias L. Jugel and Marcus Meisner.
+I haven't included that stuff here to save space but you only need
+<pre>
+de/mud/ternet/ScriptHandler.java
+de/mud/ternet/TelnetProtocolHandler.java
+de/mud/ternet/TelnetWrapper.java
+</pre>
+You'll have to tweak the settings in the Makefile and the 'telnet' wrapper
+script.
+
+
+</body>
+</html>

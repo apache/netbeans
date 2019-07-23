@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="testng-impl" default="default" basedir="..">
+    <target name="default">
+        <echo message="Default target is not set."/>
+    </target>
+
+    <target name="-init-env">
+        <condition property="run.jvmargs.prop" value="${run.jvmargs}" else="">
+            <isset property="run.jvmargs"/>
+        </condition>
+        <!-- IDE sets this when CoS off + CTRL+F6 -->
+        <property name="test.includes" value="**/*.java"/>
+        <condition property="test.name.arg" value="-testname ${test.class}" else="">
+            <isset property="test.class"/>
+        </condition>
+    </target>
+
+    <!-- Call testng ant task -->
+    <target name="-init-macrodef-testng">
+        <macrodef name="testng-ant">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <fileset id="mixed.tests" dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
+                    <filename name="@{testincludes}"/>
+                </fileset>
+                <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}"/>
+                <testng mode="mixed" classfilesetref="mixed.tests" workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}">
+                    <classpath>
+                        <pathelement path="${run.test.classpath}"/>
+                        <pathelement path="${j2ee.platform.classpath}"/>
+                        <pathelement path="${build.test.classes.dir}"/>
+                    </classpath>
+                    <propertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </propertyset>
+                    <jvmarg line="${run.jvmargs.prop}"/>
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                </testng>
+            </sequential>
+        </macrodef>
+        <macrodef name="testng-ant-xml">
+            <attribute name="testSuite" default="${build.dir}/generated/testng/temp-testng-customsuite.xml"/>
+            <sequential>
+                <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}"/>
+                <testng workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}">
+                    <classpath>
+                        <pathelement path="${run.test.classpath}"/>
+                        <pathelement path="${j2ee.platform.classpath}"/>
+                        <pathelement path="${build.test.classes.dir}"/>
+                    </classpath>
+                    <xmlfileset file="@{testSuite}"/>
+                    <propertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </propertyset>
+                    <jvmarg line="${run.jvmargs.prop}"/>
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                </testng>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="-init-macrodef-testng-debug">
+        <macrodef name="testng-debug">
+            <attribute default="${main.class}" name="classname"/>
+            <attribute default="${debug.classpath}" name="classpath"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java classname="@{classname}" dir="${work.dir}" fork="true">
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <jvmarg line="${debug-args-line}"/>
+                    <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="-Dfile.encoding=${runtime.encoding}"/>
+                    <redirector errorencoding="${runtime.encoding}" inputencoding="${runtime.encoding}" outputencoding="${runtime.encoding}"/>
+                    <jvmarg line="${run.jvmargs.prop}"/>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <!-- redefine project specific junit macros to run testng instead -->
+    <target name="-testng">
+        <!-- Java SE projects -->
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <testng-ant includes="@{includes}" excludes="@{excludes}" testincludes="@{testincludes}"/>
+            </sequential>
+        </macrodef>
+
+        <!-- Web Projects -->
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/web-project/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <testng-ant includes="@{includes}" excludes="@{excludes}" testincludes="@{testincludes}"/>
+            </sequential>
+        </macrodef>
+
+        <!-- EJB Projects -->
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2ee-ejbjarproject/2">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <testng-ant includes="@{includes}" excludes="@{excludes}" testincludes="@{testincludes}"/>
+            </sequential>
+        </macrodef>
+
+        <!-- Java EE application client projects -->
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/car-project/1">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <testng-ant includes="@{includes}" excludes="@{excludes}" testincludes="@{testincludes}"/>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="-reinit-tasks" depends="-init-env, -init-macrodef-testng, -init-macrodef-testng-debug, -testng" />
+
+    <target name="-run-testng-default" unless="testng.config">
+        <testng-ant/>
+    </target>
+
+    <target name="-run-testng-custom" if="testng.config">
+        <testng-ant-xml testSuite="${testng.config}"/>
+    </target>
+
+    <target name="run-testng" depends="compile-test, -init-macrodef-testng, -run-testng-default, -run-testng-custom"/>
+
+    <!-- DEBUG -->
+    <target name="debug-testng" depends="-init-env, init, compile-test-single, -debug-start-debugger-test, -debug-start-debuggee-testng"/>
+
+    <target depends="init,compile-test,-debug-start-debuggee-testng" if="have.tests" name="-debug-start-debuggee-test"/>
+
+    <target depends="init,compile-test" if="have.tests" name="-debug-start-debuggee-testng">
+        <condition property="valid.test.in">
+            <or>
+                <isset property="test.class"/>
+                <isset property="test.class.or.method"/>
+            </or>
+        </condition>
+        <fail unless="valid.test.in">Must select one file in the IDE or set test.class or testng.config</fail>
+        <delete dir="${build.test.results.dir}" quiet="true"/>
+        <mkdir dir="${build.test.results.dir}"/>
+        <property name="test.class.or.method" value="-testclass ${test.class}"/>
+        <testng-debug classname="org.testng.TestNG" classpath="${debug.test.classpath}:${j2ee.platform.classpath}">
+            <customize>
+                <syspropertyset>
+                    <propertyref prefix="test-sys-prop."/>
+                    <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                </syspropertyset>
+                <jvmarg value="-ea"/>
+                <arg line="-mixed"/>
+                <arg line="-d ${build.test.results.dir}"/>
+                <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                <arg line="${test.name.arg}"/>
+                <arg line="${test.class.or.method}"/>
+            </customize>
+        </testng-debug>
+    </target>
+
+</project>

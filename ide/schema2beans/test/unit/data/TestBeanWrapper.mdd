@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<metaDD>
+	<meta-element>
+		<dtd-name>namespaceSample</dtd-name>
+		<namespace>http://anything.org/extension</namespace>
+		<bean-name>NamespaceSample</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigProperty</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>MoreInfo</bean-name>
+		</meta-property>
+		<implements>namespacesample.NamespaceSampleInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>extTopLevelType</dtd-name>
+		<namespace>http://anything.org/extension</namespace>
+		<bean-name>ExtTopLevelType</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigProperty</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>MoreInfo</bean-name>
+		</meta-property>
+		<implements>namespacesample.ExtTopLevelTypeInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>string</dtd-name>
+		<namespace>http://www.w3.org/2001/XMLSchema</namespace>
+		<bean-name>String</bean-name>
+		<wrapper-class>java.lang.String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>config-propertyType</dtd-name>
+		<namespace>http://anything.org/extension</namespace>
+		<bean-name>ConfigPropertyType</bean-name>
+		<meta-property>
+			<bean-name>ConfigPropertyName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigPropertyType</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>Description</bean-name>
+		</meta-property>
+		<implements>namespacesample.ConfigPropertyTypeInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>more-infoType</dtd-name>
+		<namespace>http://anything.org/simple</namespace>
+		<bean-name>MoreInfoType</bean-name>
+		<meta-property>
+			<bean-name>ConfigProperty</bean-name>
+		</meta-property>
+		<implements>namespacesample.MoreInfoTypeInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>expanded-config-propertyType</dtd-name>
+		<namespace>http://anything.org/simple</namespace>
+		<bean-name>ExpandedConfigPropertyType</bean-name>
+		<meta-property>
+			<bean-name>ConfigPropertyName</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigPropertyType</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigPropertyValue</bean-name>
+		</meta-property>
+		<implements>namespacesample.ExpandedConfigPropertyTypeInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>topLevelType</dtd-name>
+		<namespace>http://anything.org/simple</namespace>
+		<bean-name>TopLevelType</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigProperty</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>MoreInfo</bean-name>
+		</meta-property>
+		<implements>namespacesample.TopLevelTypeInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>simple</dtd-name>
+		<namespace>http://anything.org/simple</namespace>
+		<bean-name>Simple</bean-name>
+		<meta-property>
+			<bean-name>Name</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>ConfigProperty</bean-name>
+		</meta-property>
+		<meta-property>
+			<bean-name>MoreInfo</bean-name>
+		</meta-property>
+		<implements>namespacesample.SimpleInterface, namespacesample.CommonBean</implements>
+	</meta-element>
+</metaDD>

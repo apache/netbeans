@@ -1,0 +1,3 @@
+services:
+    Ipsum: self(1)
+    arguments: [not(false)]

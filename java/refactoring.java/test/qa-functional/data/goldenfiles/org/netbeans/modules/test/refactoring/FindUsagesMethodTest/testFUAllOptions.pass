@@ -1,0 +1,13 @@
+Usages and Overriding Methods of <b>Iface.method</b> [7 occurrences]
+    RefactoringTest
+        SubClass.java
+            <font color=#0000e6>public</font>&nbsp;<font color=#0000e6>void</font>&nbsp;<b>method</b><font color=#000000>(</font><font color=#000000>)</font>&nbsp;<font color=#000000>{</font>
+        SuperClass.java
+            <font color=#0000e6>public</font>&nbsp;<font color=#0000e6>void</font>&nbsp;<b>method</b><font color=#000000>(</font><font color=#000000>)</font>&nbsp;<font color=#000000>{</font>
+        Test.java
+            <font color=#0000e6>public</font>&nbsp;<font color=#0000e6>void</font>&nbsp;<b>method</b><font color=#000000>(</font><font color=#000000>)</font>&nbsp;<font color=#000000>{</font>
+        User.java
+            <font color=#000000>(</font><font color=#000000>(</font><font color=#000000>Test</font><font color=#000000>)</font><font color=#0000e6>new</font>&nbsp;<font color=#000000>Object</font><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>)</font><font color=#000000>.</font><b>method</b><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>;</font>
+            <font color=#000000>i</font><font color=#000000>.</font><b>method</b><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>;</font>
+            <font color=#000000>t</font><font color=#000000>.</font><b>method</b><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>;</font>
+            <font color=#0000e6>new</font>&nbsp;<font color=#000000>Test</font><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>.</font><b>method</b><font color=#000000>(</font><font color=#000000>)</font><font color=#000000>;</font>

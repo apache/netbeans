@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-gsp">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/groovy/gsp/resources/GspFile16x16.png"/>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Templates">
+        <folder name="Groovy">
+            <file name="_view.gsp" url="GspTemplate.gsp">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.gsp.resources.Bundle"/>
+                <attr name="position" intvalue="120"/>
+                <attr name="templateCategory" stringvalue="groovy"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/groovy/gsp/resources/GspTemplate.html"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-gsp">
+
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-groovy-gsp-editor-bracesmatcher-GspBracesMacherFactory.instance">
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory"/>
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-groovy-gsp-editor-embedding-GroovyEmbeddingProvider$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+                </file>
+                <file name="org-netbeans-modules-groovy-gsp-editor-embedding-HtmlEmbeddingProvider$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+                </file>
+
+                <file name="org-netbeans-modules-groovy-gsp-editor-embedding-EmbeddedSectionsHighlighting$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+                <file name="org-netbeans-modules-csl-editor-semantic-HighlightsLayerFactoryImpl.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+                <file name="org-netbeans-modules-html-editor-coloring-EmbeddingHighlightsLayerFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+                <file name="org-netbeans-modules-csl-core-GsfParserFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.csl.core.GsfParserFactory.create"/>
+                </file>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.groovy.gsp.lexer.GspLexerLanguage.getLanguage"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-html-editor-completion-HtmlCompletionProvider.instance"/>
+                    <file name="org-netbeans-modules-csl-editor-completion-GsfCompletionProvider.instance"/>
+                    <!-- This doesn't work right because most of the templates don't start with characters
+                         that are identifiers
+                    <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance"/>
+                    -->
+                </folder>
+   
+                <folder name="FoldManager">
+                    <file name="org-netbeans-modules-csl-editor-fold-GsfFoldManagerFactory.instance">
+                	<attr name="position" intvalue="1000"/>
+            	    </file>
+                </folder>
+                <folder name="SideBar">
+                    <file name="org-netbeans-modules-csl-editor-GsfCodeFoldingSideBarFactory.instance">
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                </folder>
+
+                <folder name="HyperlinkProviders">
+                    <file name="GsfHyperlinkProvider.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.gsp.resources.Bundle"/>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.gsp.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.groovy.gsp.editor.GspKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.groovy.gsp.editor.GspKit"/>
+                    <attr name="beaninfo" boolvalue="false"/>
+                </file>
+            
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-groovy-gsp-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                            <file name="org-netbeans-modules-groovy-gsp-keybindings-mac.xml" url="DefaultKeyBindings-Mac.xml">
+                                <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="format">
+                        <attr name="position" intvalue="1480"/>
+                    </file>
+                
+                    <file name="SeparatorAfterGoToHelp.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1240"/>
+                    </file>
+                    
+                    <file name="SeparatorBeforeCut.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1960"/>
+                    </file>                    
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-gsp" url="GspExample"/>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.persistence.Query" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/Query.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/Query32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.j2ee.resources.Bundle"
+               display-name-key="NAME_Query"
+               tooltip-key="HINT_Query" />
+  <classpath>
+      <resource type="library" name="eclipselink" />
+  </classpath>
+</palette_item>

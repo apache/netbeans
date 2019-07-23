@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<bpel_20:process name="Invoke1parent"
+                 targetNamespace="http://www.seebeyond.com/eInsight/Invoke1parent"
+                 sbynpxp:end_YLoc="103.0"
+                 sbynpxp:start_YLoc="43.0"
+                 sbynpxp:linkStyle="angular"
+                 sbynpxp:start_XLoc="-11.0"
+                 sbynpxp:end_XLoc="688.0"
+                 xmlns:bpws="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+                 xmlns:tns="http://www.seebeyond.com/eInsight/Invoke1parent"
+                 xmlns:ns4="urn:Invoke1childTargetNamespace"
+                 xmlns:sbynpx="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/"
+                 xmlns:sbynruntime="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/runtime/"
+                 xmlns:ns0="urn:jmsservice"
+                 xmlns:sbynbpelex="http://sbynbpelextn.seebeyond.com/hawaii/5.0/SBYNBPELExtension/"
+                 xmlns:sbyntracing="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/tracing/"
+                 xmlns:sbyninc="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/incompleteModel"
+                 xmlns:slink="ServiceLinkTypes/SeeBeyond/eInsight/4ce091:1021c042b38:-7fe2"
+                 xmlns:ns1="http://webservices.Invoke1parent.com/websvc"
+                 xmlns:sbyncreation="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/creation"
+                 xmlns:sbynpxp="http://bpel.seebeyond.com/hawaii/5.0/privateExtension/presentation/"
+                 xmlns:cor="Correlation/SeeBeyond/eInsight/4ce091:1021c042b38:-7fe0"
+                 xmlns="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+                 xmlns:bpel_20="http://schemas.xmlsoap.org/ws/2004/03/business-process/"
+                 xmlns:ns3="https://webservices.Invoke1parent.com/websvc"
+                 xmlns:ns2="Invoke1parent"
+                 xmlns:sdt="SimpleDataTypes/SeeBeyond/eInsight/4ce091:1021c042b38:-7fe1">
+    <bpel_20:import namespace="Invoke1parent"
+                    location="Invoke1parent.wsdl"
+                    importType="http://schemas.xmlsoap.org/wsdl/"></bpel_20:import>
+    <bpel_20:import namespace="urn:Invoke1childTargetNamespace"
+                    location="Invoke1child.wsdl"
+                    importType="http://schemas.xmlsoap.org/wsdl/"></bpel_20:import>
+    <bpel_20:partnerLinks>
+        <bpel_20:partnerLink name="Invoke1parentServiceLink"
+                             partnerLinkType="ns2:Invoke1parentServiceLinkType"
+                             myRole="Server"/>
+        <bpel_20:partnerLink name="Invoke1childPartner"
+                             partnerLinkType="ns4:Invoke1childServiceLinkType"
+                             partnerRole="Invoke1childServerRole"/>
+        <partnerLink name="Invoke1parentServiceLink1"
+                     partnerLinkType="ns2:Invoke1parentServiceLinkType1"
+                     myRole="Server"/>
+    </bpel_20:partnerLinks>
+    <bpel_20:variables>
+        <bpel_20:variable name="MyRole_Invoke1parentOperation_Output"
+                          messageType="ns2:Invoke1parentMessage"
+                          sbyncreation:type="auto"></bpel_20:variable>
+        <bpel_20:variable name="Invoke1childContainer"
+                          messageType="ns4:Invoke1childMessage"></bpel_20:variable>
+        <bpel_20:variable name="MyRole_Invoke1parentOperation_Input"
+                          messageType="ns2:Invoke1parentMessage"
+                          sbyncreation:type="auto"></bpel_20:variable>
+        <variable name="Invoke1parentOperation1_Output"
+                  messageType="ns2:Invoke1parentMessage1"></variable>
+    </bpel_20:variables>
+    <correlationSets>
+        <correlationSet name="cSet1"
+                        properties="ns2:property "/>
+        <correlationSet name="cSet2"
+                        properties="ns4:Invoke1childProp "/>
+    </correlationSets>
+    <sequence>
+        <bpel_20:receive name="MyRole.Invoke1parentOperation.Receive"
+                         partnerLink="Invoke1parentServiceLink"
+                         portType="ns2:Invoke1parentPortType"
+                         operation="Invoke1parentOperation"
+                         variable="MyRole_Invoke1parentOperation_Output"
+                         createInstance="yes"
+                         sbynpxp:XLoc="22.0"
+                         sbynpxp:YLoc="37.0">
+            <correlations>
+                <correlation set="cSet1"
+                             initiate="yes"/>
+            </correlations>
+        </bpel_20:receive>
+        <bpel_20:assign name="Assign"
+                        sbynpxp:XLoc="134.0"
+                        sbynpxp:YLoc="77.0">
+            <copy>
+                <from>$MyRole_Invoke1parentOperation_Output.Invoke1parentPart/string</from>
+                <to>$Invoke1childContainer.Invoke1childPart/string</to>
+            </copy>
+        </bpel_20:assign>
+        <bpel_20:invoke name="Activity"
+                        partnerLink="Invoke1childPartner"
+                        portType="ns4:Invoke1childPortType"
+                        operation="Invoke1childOperation"
+                        inputVariable="Invoke1childContainer"
+                        outputVariable="Invoke1childContainer"
+                        sbynpxp:XLoc="232.0"
+                        sbynpxp:YLoc="92.0">
+            <correlations>
+                <correlation set="cSet1"
+                             initiate="no"
+                             pattern="response"/>
+                <correlation set="cSet2"
+                             initiate="yes"
+                             pattern="request"/>
+            </correlations>
+        </bpel_20:invoke>
+        <receive name="Invoke1parentOperation1"
+                 partnerLink="Invoke1parentServiceLink1"
+                 portType="ns2:Invoke1parentPortType1"
+                 operation="Invoke1parentOperation1"
+                 variable="Invoke1parentOperation1_Output"
+                 createInstance="no"
+                 sbynpxp:XLoc="446.0"
+                 sbynpxp:YLoc="95.0">
+            <correlations>
+                <correlation set="cSet2"
+                             initiate="no"/>
+            </correlations>
+        </receive>
+        <bpel_20:reply name="MyRole.Invoke1parentOperation.Reply"
+                       partnerLink="Invoke1parentServiceLink"
+                       portType="ns2:Invoke1parentPortType"
+                       operation="Invoke1parentOperation"
+                       variable="MyRole_Invoke1parentOperation_Output"
+                       sbynpxp:XLoc="573.0"
+                       sbynpxp:YLoc="91.0"></bpel_20:reply>
+    </sequence>
+</bpel_20:process>

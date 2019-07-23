@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Syntax Rules for Declarative Hints</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="text.x-javahints" name="text.x-javahints"></a></p>
+<div id="NBCSH3021"><!-- infolevel="all" infotype="General" --><a id="sthref388" name="sthref388"></a>
+<h1>Syntax Rules for Declarative Hints</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to identify common syntax errors or problems in source code. A hint displays in the Java Source Editor as a result of code inspection that the IDE automatically runs on the sources in focus. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG613">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The syntax rules for declarative hints tell the IDE what kind of code structures to look for and how to transform them.</p>
+<p>A rule format for a declarative hint is as follows:</p>
+<pre xml:space="preserve" dir="ltr">
+   &lt;source-pattern&gt; :: &lt;conditions&gt;
+=&gt; &lt;target-pattern&gt; :: &lt;conditions&gt;
+=&gt; &lt;target-pattern&gt; :: &lt;conditions&gt;
+;;
+</pre>
+<p>Thus, the hint:</p>
+<pre xml:space="preserve" dir="ltr">
+   $1 == null
+=&gt; null == $1 
+;; 
+</pre>
+<p>updates the following code:</p>
+<pre xml:space="preserve" dir="ltr">
+   if (a == null) {
+   System.err.println("a is null");
+   }
+</pre>
+<p>to</p>
+<pre xml:space="preserve" dir="ltr">
+   if (null == a) {
+   System.err.println("a is null");
+   }
+</pre>
+<p>This topic introduces the following components of a rule:</p>
+<ul>
+<li>Sources</li>
+<li>Conditions</li>
+<li>Targets</li>
+<li>Options</li>
+</ul>
+<p><b>Sources</b></p>
+<p>The source pattern in a declaration can be either a Java expression, statements, class, variable, or method.</p>
+<p>All references to classes in the source pattern must be resolvable: either fully qualified names or the custom import section must be used. For example,</p>
+<pre xml:space="preserve" dir="ltr">
+&lt;?
+    import java.util.LinkedList;
+    import java.util.ArrayList;
+?&gt;
+
+   new LinkedList()
+=&gt; new ArrayList()
+;;
+
+   LinkedList $0;
+=&gt; ArrayList $0;
+;;
+</pre>
+<p>Identifiers starting with the dollar sign (<code dir="ltr">$</code>) represent variables (for example, <code dir="ltr">java.util.Arrays.asList($param)</code>). In the source pattern, first occurrences of a variable are bound to an actual subtree that exists in the code. Second and following occurrences of the variable in the actual subtree are verified against the subtree that is bound to the variable. A source pattern occurs in the text only if the actual subtree matches the subtree that is bound to the variable.</p>
+<p>Identifiers starting and ending with the dollar sign (<code dir="ltr">$</code>) consume any number of tree nodes (for example, <code dir="ltr">java.util.Arrays.asList($params$)</code>).</p>
+<p><b>Conditions</b></p>
+<p>Both source and target patterns can specify additional conditions for a hint. Conditions must follow the: sign according to the syntax rules.</p>
+<p>Conditions have the following limitations:</p>
+<pre xml:space="preserve" dir="ltr">
+$1.isDirectory() :: $1 instanceof java.io.File
+=&gt; !$1.isFile()
+;;
+</pre>
+<p>Some condition examples are given here:</p>
+<ul>
+<li>
+<p>using a new variant of a deprecated method</p>
+<pre xml:space="preserve" dir="ltr">
+$component.show($v) :: $component instanceof java.awt.Component &amp;&amp; $v instanceof boolean
+=&gt; $component.setVisible($v)
+;; 
+</pre></li>
+<li>
+<p>adding a default parameter value</p>
+<pre xml:space="preserve" dir="ltr">
+$component.show() :: $component instanceof java.awt.Component
+=&gt; $component.setVisible(true)
+;;
+</pre></li>
+<li>
+<p>changing the method invocation chain to get correct results</p>
+<pre xml:space="preserve" dir="ltr">
+$file.toURL() :: $file instanceof java.io.File
+=&gt; $file.toURI().toURL()
+;;
+</pre></li>
+</ul>
+<p><b>Targets</b></p>
+<p>The syntax of a target pattern is similar to the syntax of a source pattern.</p>
+<p>Special form: <code dir="ltr">empty == remove</code></p>
+<p>Use the following variable types in both source and target patterns</p>
+
+<table summary="Descriptions of variable types in source and target patterns." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">Variable Types</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$[a-zA-Z0-9_]+</code></p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">Any expression</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$[a-zA-Z0-9_]+;</code></p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">Any statement</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$[a-zA-Z0-9_]+$</code></p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">Any number of subtrees (except statements)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$[a-zA-Z0-9_]+$;</code></p>
+</td>
+<td align="left" headers="r5c1-t22 r1c2-t22">Any number of statements</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$_</code></p></td>
+<td align="left" headers="r6c1-t22 r1c2-t22">For patterns undefined and for target patterns and conditions that are automatically bound to the current matched region</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t22" headers="r1c1-t22">
+<p><code dir="ltr">$$[a-zA-Z0-9_]+</code></p>
+</td>
+<td align="left" headers="r7c1-t22 r1c2-t22">Reserved, do not use</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Options</b></p>
+<p>Options allow for modifying and fine-tuning the behavior of a hint. The error or warning options allow specifying errors or warnings that are shown in the refactoring UI as appropriate. Suppress warnings allow addition of <code dir="ltr">@SuppressWarnings</code> keys.</p>
+<p>Examples of options are given here:</p>
+<ul>
+<li>
+<p>An error option: <code dir="ltr">&lt;!error="message"&gt;</code></p>
+<pre xml:space="preserve" dir="ltr">
+remove-from-parent 
+</pre>
+
+<table summary="Examples and descriptions of error options." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="*" />
+<col width="47%" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t23">Code</th>
+<th align="left" valign="bottom" id="r1c2-t23">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t23" headers="r1c1-t23"><code dir="ltr">int i;</code>
+<p><code dir="ltr">=&gt; /*remove-from-parent*/</code></p>
+<p><code dir="ltr">;;</code></p>
+</td>
+<td align="left" headers="r2c1-t23 r1c2-t23">Removes the int <code dir="ltr">i;</code> variable declaration from the surrounding block</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t23" headers="r1c1-t23"><code dir="ltr">float f;</code>
+<p><code dir="ltr">=&gt; &lt;!error="err"&gt;</code></p>
+<p><code dir="ltr">;;</code></p>
+</td>
+<td align="left" headers="r3c1-t23 r1c2-t23">Shows an error to the user when used from the Inspect and Transform dialog box. Does not remove the float <code dir="ltr">f;</code> variable declaration from the surrounding block</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t23" headers="r1c1-t23"><code dir="ltr">double d;</code>
+<p><code dir="ltr">=&gt; &lt;!error="err",remove-from-parent=true&gt;</code></p>
+<p><code dir="ltr">;;</code></p>
+</td>
+<td align="left" headers="r4c1-t23 r1c2-t23">Shows an error to the user (in the Inspect and Transform dialog box) and removes the <code dir="ltr">"double d;"</code> variable declaration from the surrounding block</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- --></li>
+<li>
+<p>A suppress warnings option: <code dir="ltr">&lt;!suppress-warnings=xxx&gt;"</code></p>
+<pre xml:space="preserve" dir="ltr">
+   $1.isDirectory 
+        :: $1 instanceof java.io.File
+;;
+</pre></li>
+</ul>
+<p><b>Note:</b> Before you start writing your own declarative hint, check that it does not exist yet in the complete list of hints available in the IDE at the Java Hints wiki page at <code dir="ltr">
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://wiki.netbeans.org/Java_Hints">
+<param name="text" value="<html><u>http://wiki.netbeans.org/Java_Hints</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</code>.</p>
+<a id="NBCSH3028" name="NBCSH3028"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG547">
+<param name="text" value="<html><u>&quot;Refactoring Java Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

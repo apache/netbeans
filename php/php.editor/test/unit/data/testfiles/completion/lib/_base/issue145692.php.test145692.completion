@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo $test145692Instance->tst->t|st;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Test145692 tst                  [PUBLIC]   Test145692

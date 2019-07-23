@@ -1,0 +1,207 @@
+# :title, :string, :limit => 255
+# :permalink, :string, :limit => 255
+# :excerpt, :text
+# :body, :text
+# :created_at, :datetime
+# :updated_at, :datetime
+# :published_at, :datetime
+welcome:
+  id: 1
+  site_id: 1
+  title: Welcome to Mephisto
+  permalink: welcome-to-mephisto
+  excerpt: welcome summary
+  excerpt_html: welcome summary
+  body: "quentin's \"welcome\" *description* <script>hi</script><a onclick=\"foo\" href=\"#\">linkage</a>"
+  body_html: "<p>quentin&#8217;s &#8220;welcome&#8221; <strong>description</strong> <script>hi</script><a onclick=\"foo\" href=\"#\">linkage</a></p>"
+  created_at: <%= 5.days.ago.utc.to_s(:db) %>
+  updated_at: <%= 5.days.ago.utc.to_s(:db) %>
+  published_at: <%= 3.days.ago.utc.to_s(:db) %>
+  comment_age: 30
+  user_id: 1
+  comments_count: 1
+  type: Article
+  filter: textile_filter
+  version: 2
+  updater_id: 1
+another:
+  id: 2
+  site_id: 1
+  title: Another Welcome to Mephisto
+  permalink: another-welcome-to-mephisto
+  body: another welcome description
+  body_html: another welcome description
+  created_at: <%= 4.days.ago.utc.to_s(:db) %>
+  updated_at: <%= 4.days.ago.utc.to_s(:db) %>
+  published_at: <%= 4.days.ago.utc.to_s(:db) %>
+  comment_age: 1
+  user_id: 3
+  type: Article
+welcome_comment:
+  id: 3
+  site_id: 1
+  article_id: 1
+  title: Welcome to Mephisto
+  permalink: welcome-to-mephisto
+  body: "rico's evil <script>hi</script> and <a onclick=\"foo\" href=\"#\">linkage</a>"
+  body_html: "<p>rico&#8217;s evil <script>hi</script> and <a onclick=\"foo\" href=\"#\">linkage</a></p>"
+  created_at: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= 3.days.ago.utc.to_s(:db) %>
+  type: Comment
+  author: rico
+  author_ip: 1dfasd
+  approved: true
+  filter: textile_filter
+future:
+  id: 5
+  site_id: 1
+  title: Article in the Future
+  body: future
+  permalink: article-in-the-future
+  excerpt: This is my own little blogging tool
+  excerpt_html: This is my own little blogging tool
+  created_at: <%= (4.days - 15.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (4.days - 15.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= (4.days - 15.minutes).from_now.to_s(:db) %>
+  comment_age: 30
+  user_id: 1
+  type: Article
+about:
+  id: 6
+  site_id: 1
+  title: About this page
+  permalink: about-this-page
+  excerpt: This is my own about page
+  excerpt_html: This is my own about page
+  body: This is my own about page
+  body_html: This is my own about page
+  created_at: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  comment_age: 2
+  user_id: 1
+  type: Article
+site_map:
+  id: 7
+  site_id: 1
+  title: The Site Map
+  permalink: the-site-map
+  excerpt: This is my own site map
+  excerpt_html: This is my own site map
+  body: This is my own site map
+  body_html: This is my own site map
+  created_at: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  comment_age: -1
+  user_id: 4
+  type: Article
+cupcake_welcome:
+  id: 8
+  site_id: 2
+  title: Welcome to Cupcake
+  permalink: welcome-to-cupcake
+  excerpt: welcome summary
+  excerpt_html: welcome summary
+  body: welcome description
+  body_html: welcome description
+  created_at: <%= 5.days.ago.utc.to_s(:db) %>
+  updated_at: <%= 5.days.ago.utc.to_s(:db) %>
+  published_at: <%= 3.days.ago.utc.to_s(:db) %>
+  comment_age: 30
+  user_id: 1
+  comments_count: 1
+  type: Article
+cupcake_welcome_comment:
+  id: 9
+  site_id: 2
+  article_id: 8
+  title: Welcome to Cupcake
+  permalink: welcome-to-cupcake
+  body: This blogging tool tastes like fudge.
+  body_html: This blogging tool tastes like fudge.
+  created_at: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= 3.days.ago.utc.to_s(:db) %>
+  type: Comment
+  author: rico
+  approved: true
+unwelcome_comment:
+  id: 10
+  site_id: 1
+  article_id: 1
+  title: Welcome to Mephisto
+  permalink: welcome-to-mephisto
+  body: This blogging tool sucks.
+  body_html: This blogging tool sucks.
+  created_at: <%= (2.days + 55.minutes).ago.utc.to_s(:db) %>
+  updated_at: <%= (2.days + 55.minutes).ago.utc.to_s(:db) %>
+  published_at: <%= 3.days.ago.utc.to_s(:db) %>
+  type: Comment
+  author: rico
+  author_ip: '127.0.0.1'
+draft:
+  id: 11
+  site_id: 1
+  title: Test Draft
+  permalink: test-draft
+  body: This is a test draft
+  body_html: This is a test draft
+  created_at: <%= 1.day.ago.utc.to_s(:db) %>
+  updated_at: <%= 1.day.ago.utc.to_s(:db) %>
+  comment_age: 30
+  user_id: 1
+  type: Article
+at_beginning_of_month:
+  id: 12
+  site_id: 1
+  title: At beginning of the month
+  permalink: at-beginning-of-the-month
+  body: Lalala
+  body_html: Lalala
+  created_at: <%= date = Time.now.utc.beginning_of_month.advance(:months => -2).to_s(:db) %>
+  updated_at: <%= date %>
+  published_at: <%= date %>
+  comment_age: 30
+  user_id: 1
+  type: Article
+at_middle_of_month:
+  id: 13
+  site_id: 1
+  title: At middle of the month
+  permalink: at-middle-of-the-month
+  body: Lalala
+  body_html: Lalala
+  created_at: <%= date = Time.now.utc.beginning_of_month.advance(:months => -1, :days => -15).to_s(:db) %>
+  updated_at: <%= date %>
+  published_at: <%= date %>
+  comment_age: 30
+  user_id: 1
+  type: Article
+at_end_of_month:
+  id: 14
+  site_id: 1
+  title: At end of the month
+  permalink: at-end-of-the-month
+  body: Lalala
+  body_html: Lalala
+  created_at: <%= date = (Time.now.utc.beginning_of_month.advance(:months => -1) -1).to_s(:db) %>
+  updated_at: <%= date %>
+  published_at: <%= date %>
+  comment_age: 30
+  user_id: 1
+  type: Article
+at_beginning_of_next_month:
+  id: 15
+  site_id: 1
+  title: At beginning of next month
+  permalink: at-beginning-of-next-month
+  body: Lalala
+  body_html: Lalala
+  created_at: <%= date = Time.now.utc.beginning_of_month.advance(:months => -1).to_s(:db) %>
+  updated_at: <%= date %>
+  published_at: <%= date %>
+  comment_age: 30
+  user_id: 1
+  type: Article

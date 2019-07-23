@@ -1,0 +1,10 @@
+Find All SubTypes of FindSubtype [5 occurrences]
+    RefactoringTest
+        Subtype1.java
+            48: public class Subtype1 extends FindSubtype{
+        Subtype2.java
+            50: class InnerClass extends FindSubtype {
+            54: Object o = new FindSubtype() {
+            60: class TopLevel extends FindSubtype {
+        SubtypeC.java
+            50: public class SubtypeC extends Subtype1 {

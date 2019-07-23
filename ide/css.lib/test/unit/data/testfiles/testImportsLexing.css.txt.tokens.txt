@@ -1,0 +1,35 @@
+.t.e.s.t. imports
+IMPORT_SYM      "@import"
+WS              " "
+URI             "url("anoher.css")"
+WS              " "
+IDENT           "screen"
+COMMA           ","
+WS              " "
+IDENT           "print"
+SEMI            ";"
+NL              "\n"
+IMPORT_SYM      "@import"
+WS              " "
+STRING          ""file://../third.css""
+SEMI            ";"
+NL              "\n"
+IMPORT_SYM      "@import"
+WS              " "
+STRING          ""nonexisting.css""
+SEMI            ";"
+NL              "\n"
+IMPORT_SYM      "@import"
+WS              " "
+STRING          ""http://fukala.net/resources/style.css""
+SEMI            ";"
+NL              "\n"
+IMPORT_SYM      "@import"
+WS              " "
+URI             "url(http://fukala.net/resources/style2.css)"
+SEMI            ";"
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

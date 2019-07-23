@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns="http://xml.netbeans.org/examples/targetNS"
+    targetNamespace="http://xml.netbeans.org/examples/testList"
+    xmlns="http://xml.netbeans.org/examples/targetNS"
+    elementFormDefault="qualified">
+
+    <xsd:complexType name="myComplexType">
+        <xsd:complexContent>
+            <xsd:extension base="xsd:anyType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+</xsd:schema>

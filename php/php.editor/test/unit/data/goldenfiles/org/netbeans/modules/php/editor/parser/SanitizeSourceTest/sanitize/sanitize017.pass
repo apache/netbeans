@@ -1,0 +1,86 @@
+<Program start='0' end='258'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='6' end='258' isReference='false'>
+            <Identifier start='15' end='35' name='cookies_for_everyone'/>
+            <FormalParameters>
+            </FormalParameters>
+            <Block start='38' end='258' isCurly='true'>
+                <ExpressionStatement start='44' end='98'>
+                    <Assignment start='44' end='97' operator='EQUAL'>
+                        <Variable start='44' end='61' isDollared='true'>
+                            <Identifier start='45' end='61' name='ingeniousMessage'/>
+                        </Variable>
+                        <Scalar start='64' end='97' type='STRING' value='"Not doing anything much, really"'/>
+                    </Assignment>
+                </ExpressionStatement>
+                <ForStatement start='103' end='157'>
+                    <Initializers>
+                        <Assignment start='108' end='114' operator='EQUAL'>
+                            <Variable start='108' end='110' isDollared='true'>
+                                <Identifier start='109' end='110' name='i'/>
+                            </Variable>
+                            <Scalar start='113' end='114' type='INT' value='1'/>
+                        </Assignment>
+                    </Initializers>
+                    <Conditions>
+                        <InfixExpression start='116' end='122' operator='RGREATER'>
+                            <Variable start='116' end='118' isDollared='true'>
+                                <Identifier start='117' end='118' name='i'/>
+                            </Variable>
+                            <Scalar start='121' end='122' type='INT' value='3'/>
+                        </InfixExpression>
+                    </Conditions>
+                    <Updaters>
+                        <PostfixExpression start='124' end='128' operator='INC'>
+                            <Variable start='124' end='126' isDollared='true'>
+                                <Identifier start='125' end='126' name='i'/>
+                            </Variable>
+                        </PostfixExpression>
+                    </Updaters>
+                    <Block start='130' end='157' isCurly='true'>
+                        <EchoStatement start='132' end='155'>
+                            <Variable start='137' end='154' isDollared='true'>
+                                <Identifier start='138' end='154' name='ingeniousMessage'/>
+                            </Variable>
+                        </EchoStatement>
+                    </Block>
+                </ForStatement>
+                <IfStatement start='162' end='256'>
+                    <Condition>
+                        <Variable start='166' end='170' isDollared='true'>
+                            <Identifier start='167' end='170' name='ppp'/>
+                        </Variable>
+                    </Condition>
+                    <Then>
+                        <Block start='172' end='256' isCurly='true'>
+                            <ClassDeclaration start='182' end='250' modifier='NONE'>
+                                <ClassName>
+                                    <Identifier start='188' end='191' name='PPP'/>
+                                </ClassName>
+                                <SuperClassName>
+                                </SuperClassName>
+                                <Interfaces>
+                                </Interfaces>
+                                <Block start='192' end='250' isCurly='true'>
+                                    <FieldsDeclaration start='206' end='220' modifier='private'>
+                                        <VariableNames>
+                                            <Variable start='214' end='219' isDollared='true'>
+                                                <Identifier start='215' end='219' name='name'/>
+                                            </Variable>
+                                        </VariableNames>
+                                        <InitialValues>
+                                        </InitialValues>
+                                    </FieldsDeclaration>
+                                </Block>
+                            </ClassDeclaration>
+                        </Block>
+                    </Then>
+                    <Else>
+                    </Else>
+                </IfStatement>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

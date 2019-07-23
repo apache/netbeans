@@ -1,0 +1,4 @@
+Code completion result for source line:
+function fi142091(iface14209|1 $p) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      iface142091                     [PUBLIC]   issue142091.php

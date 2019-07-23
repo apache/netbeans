@@ -1,0 +1,7 @@
+Code completion result for source line:
+return this.|note + this.author;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getDescription(): String        [PUBLIC]   issue223037.js
+FIELD      author: String                  [PUBLIC]   issue223037.js
+FIELD      note: String                    [PUBLIC]   issue223037.js

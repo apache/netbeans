@@ -1,0 +1,15 @@
+$global_var_lib1: 1;
+
+@mixin mixin1_lib1{
+}
+
+$global_var_lib2: 1;
+
+@mixin mixin2_lib1($arg) {
+    color: $arg;
+}
+
+#data {
+    background-color: $global_var_lib1;
+    @include mixin2_lib1;
+}

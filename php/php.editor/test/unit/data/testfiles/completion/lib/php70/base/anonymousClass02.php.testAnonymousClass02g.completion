@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->prop1 = $num|ber;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $number                     [PUBLIC]   anonymousClass02.php

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/examples/targetNS/PO"
+            xmlns:tns="http://xml.netbeans.org/examples/targetNS/PO"
+            elementFormDefault="qualified">
+    <xsd:include schemaLocation="include1.xsd"/>
+    <xsd:complexType name="DeliveryType">
+        <xsd:sequence>
+            <xsd:element name="address" type="tns:USAddress"/>
+            <xsd:element name="items" type="tns:Items"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="delivery" type="tns:DeliveryType"/>
+</xsd:schema>

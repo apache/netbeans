@@ -1,0 +1,4 @@
+class |>MARK_OCCURRENCES:ClsB<| implements IfaceA {
+        return new |>MARK_OCCURRENCES:ClsB<|();
+function create(IfaceA $a): |>MARK_OCCURRENCES:C^lsB<| {
+function create2(|>MARK_OCCURRENCES:ClsB<| $b): array {

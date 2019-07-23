@@ -1,0 +1,6 @@
+man02:CLASS:[PUBLIC]:ESCAPED{man02}:
+  address:CLASS:[PUBLIC]:ESCAPED{address}:
+    city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+    street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+  firstName:FIELD:[PUBLIC]:ESCAPED{firstName}<font color="#999999">ESCAPED{ : }String</font>:
+  secondName:FIELD:[PUBLIC]:ESCAPED{secondName}<font color="#999999">ESCAPED{ : }String</font>:

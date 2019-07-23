@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>web.xml Visual Editor: Message Destination References</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="dd_multiview_references_messageDestRefsNode" name="dd_multiview_references_messageDestRefsNode"></a></p>
+<div id="NBCSH3853"><!-- infolevel="all" infotype="General" --><a id="sthref521" name="sthref521"></a>
+<h1>web.xml Visual Editor: Message Destination References</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use the Message Destination References section to add, remove, and view the web application's message destination references. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The J2EE specification lets J2EE components refer to message destination objects by using logical names called message destination references. A message destination reference points to a message destination that can be defined in an EJB module, application client module, or web module.</p>
+<p>To declare a message destination reference, you must register it in the <code dir="ltr">web.xml</code> file. When you do this, you provide information needed by the server to use the resource reference.</p>
+<p>In the Visual Editor, click <b>References</b> at the top of the editor to open the References section, then click the Message Destination References header to open the Message Destination References section. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Click <b>Add</b> to define a message destination reference element with the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t18">Element</th>
+<th align="left" valign="bottom" id="r1c2-t18">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t18" headers="r1c1-t18">
+<p>Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t18 r1c2-t18">Specifies the reference's name, such as <code dir="ltr">myDataSource</code>. Note that the name of the message destination reference is relative to the <code dir="ltr">java:comp/env context</code>. For example, the name should be <code dir="ltr">jms/MyBidQueue</code> and not <code dir="ltr">java:comp/env/jms/MyBidQueue</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t18" headers="r1c1-t18">
+<p>Reference Type</p>
+</td>
+<td align="left" headers="r3c1-t18 r1c2-t18">Specifies the expected type of the referenced destination, either <code dir="ltr">java.jms.Queue</code> or <code dir="ltr">java.jms.Topic</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t18" headers="r1c1-t18">
+<p>Usage</p>
+</td>
+<td align="left" headers="r4c1-t18 r1c2-t18">Specifies what the message destination does to messages: consumes, produces, or both.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t18" headers="r1c1-t18">
+<p>Link to Message Destination</p>
+</td>
+<td align="left" headers="r5c1-t18 r1c2-t18">Name of the message destination.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t18" headers="r1c1-t18">
+<p>Description</p>
+</td>
+<td align="left" headers="r6c1-t18 r1c2-t18">Specifies a description for the reference.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3859" name="NBCSH3859"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2812">
+<param name="text" value="<html><u>&quot;About Deployment Descriptors&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1111">
+<param name="text" value="<html><u>&quot;Configuring a Web Application&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

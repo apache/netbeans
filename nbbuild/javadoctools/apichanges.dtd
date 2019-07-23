@@ -1,0 +1,211 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+Public ID: "-//NetBeans//DTD API changes list 1.0//EN"
+Describes format of NetBeans API changes list.
+-->
+
+<!-- List of styles: -->
+<!ENTITY % changeliststyles "
+  list-all-apis
+| incompat-by-date
+| compat-by-date
+| all-by-date
+| all-by-version
+| all-by-apis
+| all-by-class
+| details-by-date
+| details-by-api
+">
+
+<!ENTITY % xhtml PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "../external/xhtml1-dtds/xhtml1-strict.dtd">
+<!-- Override special to include date tags: -->
+<!ENTITY % special "br | span | bdo | object | img | map | date">
+<!-- Override lists to include change lists formatted in various ways: -->
+<!ENTITY % lists "ul | ol | dl | changelist">
+<!-- Override blocks to include standard-changelists: -->
+<!ENTITY % blocktext "pre | hr | blockquote | address | standard-changelists">
+<!-- Now include normal XHTML DTD: -->
+%xhtml;
+
+<!--
+Document element.
+-->
+<!ELEMENT apichanges (apidefs, changes, htmlcontents)>
+
+<!--
+HTML contents of the document, with substitutions.
+-->
+<!ELEMENT htmlcontents (head, body)>
+
+<!--
+List of API changes, in no particular order.
+-->
+<!ELEMENT changes (change)*>
+
+<!--
+One API change. Giving an ID is recommended as it permits external hyperlinking
+to the generated document (the ID will be used as an HTML anchor) - but if you
+have one (and only one) associated issue, that will be used as a default stable
+ID (format "issue-NNNNN"), or the version number will also be used as a default
+stable ID (format "version-N.NN"). Giving the date is technically optional but
+should be done for all new changes.
+-->
+<!ELEMENT change (api?, summary, version?, date?, author*, compatibility, description, class*, package*, issue*, branch*)>
+<!ATTLIST change
+          id ID #IMPLIED
+>
+
+<!--
+Information about a Java class that is affected (unqualified name and package).
+No inner classes please, outer only.
+-->
+<!ELEMENT class EMPTY>
+<!ATTLIST class
+          package CDATA #REQUIRED
+          name CDATA #REQUIRED
+          link (yes|no) "yes"
+>
+
+<!--
+An affected Java package name.
+-->
+<!ELEMENT package EMPTY>
+<!ATTLIST package
+          name CDATA #REQUIRED
+          link (yes|no) "yes"
+>
+
+<!--
+Date on which the change was made (in the trunk).
+-->
+<!ELEMENT date EMPTY>
+<!ATTLIST date
+          day (1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31) #REQUIRED
+          month (1|2|3|4|5|6|7|8|9|10|11|12) #REQUIRED
+          year (1998|1999|2000|2001|2002|2003|2004|2005|2006|2007|2008|2009|2010|2011|2012|2013|2014|2015|2016|2017|2018|2019|2020|2021|2022|2023|2024|2025) #REQUIRED
+>
+
+<!--
+Brief (one sentence) summary of the change.
+-->
+<!ELEMENT summary %Inline;>
+
+<!--
+The API specification version matching this change, if any.
+-->
+<!ELEMENT version EMPTY>
+<!ATTLIST version
+          major CDATA #REQUIRED
+          minor CDATA #REQUIRED
+          subminor CDATA #IMPLIED
+          subsubminor CDATA #IMPLIED
+>
+
+<!--
+A full textual description of the change, as freeform
+HTML. May include multiple paragraphs etc.
+-->
+<!ELEMENT description %Flow;>
+
+<!--
+The API group which this change falls under, for categorization.
+See <apidefs> for the list of choices.
+-->
+<!ELEMENT api EMPTY>
+<!ATTLIST api
+          name NMTOKEN #REQUIRED
+>
+
+<!--
+What branch the change was made on. By default changes are assumed
+to have occurred only on the trunk. If you make a change on a branch,
+you must say so and say when this was done.
+-->
+<!ELEMENT branch (date?, version?)>
+<!ATTLIST branch
+          name (boston|release31|release32|pilsen|release33|release34|sierra) #REQUIRED
+>
+
+<!--
+Mandatory information about compatibility and type of change.
+At least one of deprecation, addition, deletion, or modification
+must be set to "yes" (maybe more than one). You may specify
+whether source and/or binary and/or semantic compatibility has
+been retained; incompatible changes are listed prominently.
+There may be some HTML content inside the element describing
+details of compatibility or possibility of workarounds.
+-->
+<!ELEMENT compatibility %Flow;>
+<!ATTLIST compatibility
+          binary (compatible|incompatible) "compatible"
+          source (compatible|incompatible) "compatible"
+          semantic (compatible|incompatible) "compatible"
+          deprecation (yes|no) "no"
+          addition (yes|no) "no"
+          deletion (yes|no) "no"
+          modification (yes|no) "no"
+>
+
+<!--
+Optional note about the person(s) committing the change.
+Note that authors of changes are specified by (netbeans.org)
+login ID, not full name.
+-->
+<!ELEMENT author EMPTY>
+<!ATTLIST author
+          login CDATA #REQUIRED
+>
+
+<!--
+Optional issue(s) in IssueZilla justifying the change.
+-->
+<!ELEMENT issue EMPTY>
+<!ATTLIST issue
+          number CDATA #REQUIRED
+>
+
+<!--
+A list of changes, formatted in a predefined way.
+-->
+<!ELEMENT changelist EMPTY>
+<!ATTLIST changelist
+          style (%changeliststyles;) #REQUIRED
+>
+
+<!--
+The usually needed change lists.
+-->
+<!ELEMENT standard-changelists EMPTY>
+<!ATTLIST standard-changelists
+          module-code-name CDATA #REQUIRED
+>
+
+<!--
+Definitions of APIs available.
+Supply a code name for each and a display name as the element content.
+-->
+<!ELEMENT apidefs (apidef*)>
+<!ELEMENT apidef %Inline;>
+<!ATTLIST apidef
+          name NMTOKEN #REQUIRED
+>

@@ -1,0 +1,4 @@
+add#01#(String)
+add#02#(int,String)
+addAll#01#(Collection<? extends String>)
+addAll#02#(int,Collection<? extends String>)

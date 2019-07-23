@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Standard Java SE Project Properties Dialog Box: Web Start</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javawebstart.ui.customizer.JWSCustomizerPanel" name="org.netbeans.modules.javawebstart.ui.customizer.JWSCustomizerPanel"></a></p>
+<div id="NBCSH2151"><!-- infolevel="all" infotype="General" --><a id="sthref293" name="sthref293"></a>
+<h1>Standard Java SE Project Properties Dialog Box: Web Start</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to configure your application so that the application can be deployed using Java Web Start. Java Web Start enables users of your application to download and launch the application by clicking a link in a web browser. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG371">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The Web Start page has the following properties, which are used in the creation of the JNLP file. The JNLP file is used to launch the application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG403">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of configuration options for using Java Web Start." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="40%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">Element</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p>Enable Web Start</p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">Creates the necessary artifacts to make the application deployable with Java Web Start when you build the application. These artifacts can be found in the application's <code dir="ltr">dist</code> folder.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p>Icon</p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">Specifies the icon to be used to represent the application on the user's system, such as on the desktop.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p>Codebase</p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">Specifies a URL representing the location of the application.
+<p>This field is a represented by a combo box from which you can select <b>Local Execution</b>, <b>Web Deployment</b>, or <b>User Defined</b>. For <b>Local Execution</b> and <b>Web Deployment</b>, the URL is determined automatically for you.</p>
+<p>If you select <b>Web Deployment</b>, <code dir="ltr">$$codebase</code> is shown as the URL. When you run the application, the application is served by special servlet in which <code dir="ltr">$$codebase</code> is replaced with the real location of the application.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t22" headers="r1c1-t22">
+<p>Allow Offline</p>
+</td>
+<td align="left" headers="r5c1-t22 r1c2-t22">Enables the user to run the application without a network connection.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t22" headers="r1c1-t22">
+<p>Extension Resources</p>
+</td>
+<td align="left" headers="r6c1-t22 r1c2-t22">Specifies dependencies on the JNLP files of additional resources (APIs, libraries, or system properties) that should be used as part of your application when it loads through Java Web Start.
+<p>To specify an extension resource, enter the following attributes: Href, Name, and Version.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t22" headers="r1c1-t22">
+<p>Href</p>
+</td>
+<td align="left" headers="r7c1-t22 r1c2-t22">Specifies a URL to a JNLP file of the resource you want to add. For example, <code dir="ltr">http://somesite.org/mylib.jnlp</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t22" headers="r1c1-t22">
+<p>Name</p>
+</td>
+<td align="left" headers="r8c1-t22 r1c2-t22">(Optional) Specifies an arbitrary name of the extension resource.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t22" headers="r1c1-t22">
+<p>Version</p>
+</td>
+<td align="left" headers="r9c1-t22 r1c2-t22">(Optional) Specifies a version of the extension resource.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t22" headers="r1c1-t22">
+<p>Self-signed</p>
+</td>
+<td align="left" headers="r10c1-t22 r1c2-t22">Signs the application using a certificate that is generated when the project is built.
+<p>This certificate is not certified by any Certification Authority. Self-signing an application enables the application to do things such as write files to disk and access the network.</p>
+<p>If you select the Self-signed option, choose one of the following options that determine how to handle the signed and unsigned components in your Java Web Start applications and applets: <b>Enable Software Protections</b>, <b>Trusted Only</b>, or <b>Trusted Library</b>.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t22" headers="r1c1-t22">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Enable Software Protections</p>
+</td>
+<td align="left" headers="r11c1-t22 r1c2-t22">Displays a warning dialog box during loading of your Java Web Start application with mixed components (signed and unsigned).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t22" headers="r1c1-t22">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Trusted Only</p>
+</td>
+<td align="left" headers="r12c1-t22 r1c2-t22">Does not display a warning dialog and an application or applet that loads a jar file containing this attribute does not load any untrusted classes or resources. This measure prevents a signed application or applet from being re-purposed with unsigned components.
+<p>Use this attribute for applications and applets that do not require unsigned components. All classes and resources in the application or applet must be signed.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t22" headers="r1c1-t22">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Trusted Library</p>
+</td>
+<td align="left" headers="r13c1-t22 r1c2-t22">Allows unsigned components to be mixed with signed components (for example, signed libraries) without a warning dialog being displayed.
+<p>All classes and resources in a JAR file containing this manifest attribute must be signed. Trusted library code is loaded into a separate dedicated class loader which is unique to the application or applet. This ensures that the trusted library code cannot be replaced.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t22" headers="r1c1-t22">
+<p>Application Descriptor</p>
+</td>
+<td align="left" headers="r14c1-t22 r1c2-t22">Generates the JNLP file with the <code dir="ltr">application-desc</code> element.
+<p>The <code dir="ltr">application-desc</code> element points to the project's main class.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t22" headers="r1c1-t22">
+<p>Applet Descriptor</p>
+</td>
+<td align="left" headers="r15c1-t22 r1c2-t22">Generates the JNLP file with the <code dir="ltr">applet-desc</code> element.
+<p>The <code dir="ltr">applet-desc</code> element points to the applet that you specify in the Applet Class drop-down list. Click <b>Applet Parameters</b> to change the height and width of the applet and add new parameters.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t22" headers="r1c1-t22">
+<p>Component Descriptor</p>
+</td>
+<td align="left" headers="r16c1-t22 r1c2-t22">Allows the project to be called as a resource from the JNLP file of another application.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2167" name="NBCSH2167"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>&quot;Sharing Libraries a Library with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2791">
+<param name="text" value="<html><u>&quot;About Developing and Securing Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

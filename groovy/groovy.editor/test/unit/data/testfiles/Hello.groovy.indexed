@@ -1,0 +1,66 @@
+
+
+Document 0
+Searchable Keys:
+  class : FourthClass
+  class-ig : fourthclass
+  fqn : foo.FourthClass
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  class : Hello
+  class-ig : hello
+  fqn : foo.Hello
+  method : main(java.lang.String[]);void;08
+  method : run;java.lang.Object
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  class : Hello1
+  class-ig : hello1
+  ctor : Hello1;int
+  field : field1;int;00;true
+  field : greeting;java.lang.Object;00;true
+  field : name;java.lang.Object;00;true
+  field : privateField;java.lang.Object
+  field : protectedField;java.lang.Object;04
+  field : publicField;java.lang.Object;01
+  fqn : foo.Hello1
+  method : dynamicmethod;void
+  method : getField1;int
+  method : getGreeting;java.lang.Object
+  method : getName;java.lang.Object
+  method : main(java.lang.String[]);void;08
+  method : setField1(int);void
+  method : setGreeting(java.lang.Object);void
+  method : setName(java.lang.Object);void
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  class : SecondTestClass
+  class-ig : secondtestclass
+  ctor : SecondTestClass;String
+  ctor : SecondTestClass;int
+  fqn : foo.SecondTestClass
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  class : ThirdTestClass
+  class-ig : thirdtestclass
+  ctor : ThirdTestClass;String
+  ctor : ThirdTestClass;int
+  fqn : foo.ThirdTestClass
+
+Not Searchable Keys:

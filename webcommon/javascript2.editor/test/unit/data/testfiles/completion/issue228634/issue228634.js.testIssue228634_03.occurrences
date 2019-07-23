@@ -1,0 +1,3 @@
+    function |>MARK_OCCURRENCES:ret<|() {
+        |>MARK_OCCURRENCES:ret<|.testik = 7;
+    return |>MARK_OCCURRENCES:re^t<|;

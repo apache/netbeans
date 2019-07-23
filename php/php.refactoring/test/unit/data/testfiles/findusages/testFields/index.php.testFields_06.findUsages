@@ -1,0 +1,9 @@
+Display text: public $<b>pubField</b>;
+File name: index.php
+Name: $pubField
+Position: BEGIN: 92 END: 100
+
+Display text: $f-><b>pubField</b>;
+File name: index.php
+Name: $pubField
+Position: BEGIN: 257 END: 265

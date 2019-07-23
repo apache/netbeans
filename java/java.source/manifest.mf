@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.java.source
+OpenIDE-Module-Implementation-Version: 32
+OpenIDE-Module-Install: org/netbeans/modules/java/source/JBrowseModule.class
+OpenIDE-Module-Layer: org/netbeans/modules/java/source/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/source/Bundle.properties
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module-Provides: org.netbeans.modules.java.preprocessorbridge.spi.JavaSourceUtilImpl

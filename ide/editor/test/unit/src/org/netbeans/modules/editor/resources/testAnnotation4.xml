@@ -1,0 +1,11 @@
+<!DOCTYPE type PUBLIC '-//NetBeans//DTD annotation type 1.0//EN' 'http://www.netbeans.org/dtds/annotation-type-1_0.dtd'> 
+
+<type 
+	name='test-annotation-4'
+	description_key='HINT_TEST_ANNOTATION'
+	localizing_bundle='org.netbeans.modules.editor.Bundle'
+	visible='true' 
+	type='line'
+        severity='error'
+        custom_sidebar_color='0x000000'
+/> 

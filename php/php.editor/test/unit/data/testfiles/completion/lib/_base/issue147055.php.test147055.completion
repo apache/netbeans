@@ -1,0 +1,3 @@
+Code completion result for source line:
+$test147055 = $test147055->|foo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

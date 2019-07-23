@@ -1,0 +1,1 @@
+var myLib = new function |>MARK_OCCURRENCES:My^Lib<|() {

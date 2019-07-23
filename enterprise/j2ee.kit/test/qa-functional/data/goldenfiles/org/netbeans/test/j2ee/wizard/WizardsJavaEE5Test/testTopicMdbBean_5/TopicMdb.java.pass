@@ -1,0 +1,33 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package ejbs.mdb;
+
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+
+/**
+ *
+ * @author jskrivanek
+ */
+@MessageDriven(mappedName = "jms/TopicMdb", activationConfig = {
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
+    @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "durable"),
+    @ActivationConfigProperty(propertyName = "clientId", propertyValue = "jms/TopicMdb"),
+    @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "jms/TopicMdb")
+})
+public class TopicMdb implements MessageListener {
+    
+    public TopicMdb() {
+    }
+    
+    @Override
+    public void onMessage(Message message) {
+    }
+
+}

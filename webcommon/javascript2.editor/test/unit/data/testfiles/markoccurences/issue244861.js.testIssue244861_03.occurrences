@@ -1,0 +1,3 @@
+    var |>MARK_OCCURRENCES:self<| = this;    // in MyMethod
+    |>MARK_OCCURRENCES:sel^f<|.myField.doSomething(); // click on myField
+    |>MARK_OCCURRENCES:self<|.myField.doAgain(); // in myMethod

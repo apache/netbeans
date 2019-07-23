@@ -1,0 +1,2 @@
+    public static $|>MARK_OCCURRENCES:parentFieldStatic<| = 'parentFieldStatic';
+            echo parent::$|>MARK_OCCURRENCES:parentFi^eldStatic<| . PHP_EOL;

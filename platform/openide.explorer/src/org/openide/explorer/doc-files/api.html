@@ -1,0 +1,356 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Explorer API</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+The basic management of the Explorer resides in
+
+<a href="../package-summary.html"><code>org.openide.explorer</code></a>.
+
+Classes pertaining to the Property Sheet (which displays properties of
+explored nodes) may be found in
+
+<a href="../propertysheet/package-summary.html"><code>org.openide.explorer.propertysheet</code></a>.
+
+A set of standard Explorer Views is available in
+
+<a href="../view/package-summary.html"><code>org.openide.explorer.view</code></a>.
+
+<h1>Contents</h1>
+
+<ul>
+
+<li><a href="#overview">Overview of the Explorer</a>
+<ul>
+<li><a href="#intro-node">Explorer Views and Nodes</a>
+</ul>
+
+<li><a href="#use-expl">Using the Explorer</a>
+<ul>
+<li><a href="#show-expl">Displaying a new Explorer window</a>
+<li><a href="#show-prop">Displaying a Property Sheet</a>
+<li><a href="#node-aspect">Aspects of nodes affecting the Explorer</a>
+</ul>
+
+<li><a href="#cust-expl">Customizing the Explorer</a></li>
+
+<li><a href="#propsheet">The Property Sheet</a>
+<ul>
+    <li><a href="#customps">Customizing the Property Sheet</a></li>
+    <li><a href="#customeds">Property Editors</a></li>
+    </ul></li>
+    </li>
+</ul>
+
+<h1>Explorer API</h1>
+
+<h2><a name="overview">Overview of the Explorer</a></h2>
+
+Explorer views are UI components which render <em>nodes</em> - the most 
+prominent in NetBeans being the Project and Files tabs on the left side of
+the main window.  The Explorer API provides UI components to render nodes
+in trees, lists, combo boxes, menus, tree tables.  These components 
+handle things like cut/copy/paste, drag and drop, displaying popup menus
+for nodes, which contain the actions the clicked node provides from
+<code>getActions()</code>.
+<p>
+
+<h3><a name="intro-node">The Explorer and Nodes</a></h3>
+
+An Explorer view is solely a user-interface component: it has no particular 
+knowledge of <i>what</i> it is displaying.  Rather, it provides the 
+physical user interface for a hierarchy of Nodes, as described in the 
+<a href="@org-openide-nodes@/org/openide/nodes/doc-files/api.html">Nodes API</a>.
+
+<p>A given Explorer view instance will be some visual component (such as a
+Swing panel) displaying some representation of a Node and its children.
+The topmost node being displayed is said to
+be the <em>root</em> of the Explorer. 
+
+<p>The API permits you to use the prebuilt views, and also to <a href="customExplorerViews.html">create
+your own</a> if you need to.
+
+<h2><a name="use-expl">Using the Explorer API</a></h2>
+
+It is rather easy to use the Explorer API to just display an Explorer
+window of some type, browsing some set of nodes.
+
+<h3><a name="show-expl">Displaying a new Explorer window</a></h3>
+
+Probably the easiest way to show an Explorer window is just to call
+<a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#explore-org.openide.nodes.Node-"><code>NodeOperation.explore(...)</code></a>.
+
+This will simply show a node and its subtree (if any) in a new window
+using the normal tree-style Explorer view. It does not permit any
+customization of the UI, however - it creates a standard window with
+the usual buttons, etc.
+
+<p>If you want to use a special view, it is first necessary to
+understand the structure of a live Explorer instance:
+
+<ol>
+
+<li>There is a <em>topmost container</em>, an AWT/Swing container
+component of any sort, which must implement
+
+<a href="../ExplorerManager.Provider.html"><code>ExplorerManager.Provider</code></a>.
+Often in NetBeans it will be a subclass of <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent</a>.
+
+This topmost container does not really do anything; it just makes sure
+that an <code>ExplorerManager</code> can be found by its
+children. Follow the instructions in 
+
+<a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>,
+
+to create such a panel.
+<!-- XXX tboudreau - factor ExplorerPanel into some explorerhelper API that
+     depends on Winsys & Explorer - this is really silly -->
+
+The container that implements ExplorerManager.Provider may contain
+non-Explorer components - add whatever components you like to it, set
+layout appropriately.  When an Explorer view is added as a descendant
+of this panel, it will find this panel by searching the component 
+hierarchy.
+
+
+
+<a href="../ExplorerManager.html"><code>ExplorerManager</code></a>
+
+itself handles the control of the Explorer view or views it is
+attached to. It provides the external interface by which the selection
+of nodes, e.g., can be examined or set, and permits multiple views to
+be synchronized (for example, creating a master/detail view is very easy). 
+
+<li>Usually, actions provided by <a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>,
+will be attached to the component to make sure they are correctly enabled
+or disabled according to the current node selection. Follow the example in
+<a href="../ExplorerUtils.html"><code>ExplorerUtils</code></a>.
+
+
+
+<li>Most importantly, the Explorer views themselves are added as
+(possibly indirect) children to the topmost component. You do
+<em>not</em> need to do anything special to connect the views to the
+manager or to one another; when an explorer view is added to a container,
+it will find the nearest ExplorerManager in the component hierarchy
+(by searching for a parent component that implements ExplorerManager.Provider).
+<p>
+Once you have created an Explorer component, your code will not typically
+interact directly with it - rather it will call methods on its ExplorerManager
+to set selection, etc.</li>
+
+<li>Lastly you'll call <a href="../ExplorerManager.html#setRootContext-org.openide.nodes.Node-">ExplorerManager.setRootContext</a>
+to actually set what node the view will be displaying.
+</li>
+
+</ol>
+
+<a href="../view/package-summary.html"><code>org.openide.explorer.view</code></a>
+
+contains a number of prebuilt views which you may use. Of special note
+are the
+
+<a href="../view/BeanTreeView.html"><code>BeanTreeView</code></a>,
+
+which is the standard tree view used to implement the Explorer window
+proper;
+
+and
+
+<a href="../view/MenuView.html"><code>MenuView</code></a>,
+
+which is of interest because it actually implements a view using popup
+menus, rather than a static display. The best way to familiarize
+yourself with the standard views, and to test any custom view you
+might build, is probably to create an <code>ExplorerPanel</code> which
+adds some or all of them; the views will be automatically
+synchronized, which will be helpful in understanding how they behave.
+
+<h3><a name="show-prop">Displaying a Property Sheet</a></h3>
+
+Adding a <em>Property Sheet</em> (which just shows the properties of
+the selected node(s), and may allow editing of those properties) is
+quite easy - all you need to do is to add a
+
+<a href="../propertysheet/PropertySheetView.html"><code>PropertySheetView</code></a>
+
+to the container. It is an Explorer view which does not actually
+display any nodes, but rather displays a list of properties for the
+node or nodes which are selected according to the ExplorerManager.
+
+<p>Since views by default will share the same manager if they are
+added to the same manager-providing container, just adding a regular
+Explorer view and a Property Sheet to the same container will result
+in the Property Sheet being sensitive to the node selection in the
+regular view, which is usually the desired effect.
+
+<h3><a name="node-aspect">Aspects of Nodes affecting the Explorer</a></h3>
+
+Particular Explorer views are of course free to display the node
+hierarchy any way they wish; however, there are a few common aspects
+of the represented nodes which are likely to be visually mirrored:
+
+<ul>
+
+<li>The node's
+
+<a href="@JDK@/java/beans/FeatureDescriptor.html#getDisplayName--">display name</a>
+
+and
+
+<a href="@JDK@/java/beans/FeatureDescriptor.html#getShortDescription--">short description</a>
+
+ought to be used by views to display the node and provide (e.g.) tool tips.
+
+<li>The
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getIcon-int-">icon</a>
+
+is used in most views alongside the display name. Non-leaf nodes upon
+expansion will show the
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getOpenedIcon-int-">opened icon</a>.
+
+<li>Some or all of the node's
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getChildren--">children</a>
+
+are typically displayed (except of course if it is a
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#isLeaf--">leaf</a>).
+
+Normally they will be in the same order as
+the node itself
+
+<a href="@org-openide-nodes@/org/openide/nodes/Children.html#getNodes--">specifies</a>,
+
+though a view might provide special display characteristics for
+certain children lists such as
+
+<a href="@org-openide-nodes@/org/openide/nodes/Children.Keys.html"><code>Children.Keys</code></a>.
+
+Generally nodes may allow their children to be
+
+<a href="@org-openide-nodes@/org/openide/nodes/Index.html">reordered</a>.
+
+<li><a href="@org-openide-nodes@/org/openide/nodes/Node.html#getActions--"><code>Node.getActions()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getContextActions--"><code>Node.getContextActions()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getContextMenu--"><code>Node.getContextMenu()</code></a>,
+
+etc. are typically used to build an event-handling system for the
+visual representation of the nodes.
+
+<li>Standard actions are generally enabled on nodes in the Explorer,
+so that
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#hasCustomizer--"><code>Node.hasCustomizer()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--"><code>Node.getLookup().lookup(...)</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getNewTypes--"><code>Node.getNewTypes()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-"><code>Node.getPasteTypes(...)</code></a>,
+
+and so on affect other UI components (such as toolbars) which may hold
+action presenters.
+
+<li><a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPropertySets--"><code>Node.getPropertySets()</code></a>
+
+is of course used by the Property Sheet view.
+
+<li>Some views may provide in-place editing commands (not relying on
+system actions present in popup menus, e.g.) for moving nodes,
+renaming them in place, etc. - these will use the standard node hooks
+such as
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#canRename--"><code>Node.canRename()</code></a>,
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#cloneNode--"><code>Node.cloneNode()</code></a>,
+
+or
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCut--"><code>Node.clipboardCut()</code></a>.
+
+</ul>
+
+<h2><a name="cust-expl">Customizing the Explorer</a></h2>
+Though rarely necessary, the API allows you to create your own Explorer views,
+as described <a href="customExplorerViews.html">here</a>.
+
+<h2><a name="propsheet">The Property Sheet</a></h2>
+Older versions of NetBeans relied heavily on the Property Sheet as a primary
+element of the user interface.  However, this turned out not to be terribly
+user-friendly, and the Property Sheet is used considerably less today (it is
+no longer even displayed by default on startup).
+<p>
+Consider providing a custom UI where possible, rather than relying on the
+user having the Property Sheet visible to work with your module.
+
+<h3><a name="customps">Customizing the Property Sheet</a></h3>
+<P>
+<div class="nonnormative">
+The Property Sheet displays property sets in expandable
+categories inside a single tree, rather than using tabs as the old
+Property Sheet did.  However, there are some cases where tabs are
+desirable.  A mechanism exists by which an instance of
+<code>Node.PropertySet</code> can specify that it should be displayed in
+a tab:  It must return an internationalized string from
+<code>PropertySet.getValue(&quot;tabName&quot)</code>.  If multiple
+property sets belonging to a single node specify the same tab name
+in this manner, all of them will be included on a tab with the specified
+name<sup><font size="-2">*</font></sup>.
+<p>
+<blockquote>
+<sup><font size="-1">*</font></sup><font size="-1">
+Note that for this functionality to function properly, the
+NetBeans Window System must be installed.  Further information on how to
+work use this functionality in a stand-alone application can be found
+<a href="propertySheetReference.html#tabs">here</a>.
+</font></blockquote>
+</div>
+
+A number of system properties, UI manager keys and such also affect
+the way Property Sheets are displayed and behave.  A complete reference
+can be found <a href="propertySheetReference.html">here</a>.
+
+<h3><a name="customeds">Property Editors</a></h3>
+The NetBeans core installs a variety of property editors for standard JDK
+classes and some NetBeans classes.  A number of these can have their behavior
+altered by passing &quot;hints&quot; from <code>Node.Property</code> or
+<code>PropertyDescriptor</code>.  This is described in detail
+<a href="propertyViewCustomization.html">here</a>.
+
+<hr>@FOOTER@
+</body>
+</html>

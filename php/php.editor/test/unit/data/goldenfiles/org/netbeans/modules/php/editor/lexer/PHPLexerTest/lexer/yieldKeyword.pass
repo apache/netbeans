@@ -1,0 +1,57 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING xrange
+token #5 PHP_TOKEN (
+token #6 PHP_VARIABLE $start
+token #7 PHP_TOKEN ,
+token #8 WHITESPACE  
+token #9 PHP_VARIABLE $limit
+token #10 PHP_TOKEN ,
+token #11 WHITESPACE  
+token #12 PHP_VARIABLE $step
+token #13 WHITESPACE  
+token #14 PHP_OPERATOR =
+token #15 WHITESPACE  
+token #16 PHP_NUMBER 1
+token #17 PHP_TOKEN )
+token #18 WHITESPACE  
+token #19 PHP_CURLY_OPEN {
+token #20 WHITESPACE \n    
+token #21 PHP_FOR for
+token #22 WHITESPACE  
+token #23 PHP_TOKEN (
+token #24 PHP_VARIABLE $i
+token #25 WHITESPACE  
+token #26 PHP_OPERATOR =
+token #27 WHITESPACE  
+token #28 PHP_VARIABLE $start
+token #29 PHP_SEMICOLON ;
+token #30 WHITESPACE  
+token #31 PHP_VARIABLE $i
+token #32 WHITESPACE  
+token #33 PHP_OPERATOR <=
+token #34 WHITESPACE  
+token #35 PHP_VARIABLE $limit
+token #36 PHP_SEMICOLON ;
+token #37 WHITESPACE  
+token #38 PHP_VARIABLE $i
+token #39 WHITESPACE  
+token #40 PHP_OPERATOR +=
+token #41 WHITESPACE  
+token #42 PHP_VARIABLE $step
+token #43 PHP_TOKEN )
+token #44 WHITESPACE  
+token #45 PHP_CURLY_OPEN {
+token #46 WHITESPACE \n        
+token #47 PHP_YIELD yield
+token #48 WHITESPACE  
+token #49 PHP_VARIABLE $i
+token #50 PHP_SEMICOLON ;
+token #51 WHITESPACE \n    
+token #52 PHP_CURLY_CLOSE }
+token #53 WHITESPACE \n
+token #54 PHP_CURLY_CLOSE }
+token #55 WHITESPACE \n\n
+token #56 PHP_CLOSETAG ?>\n

@@ -1,0 +1,56 @@
+                if (true) { //HINT
+                ------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                    if (true) { //HINT
+                    ------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                while (true) { //HINT
+                ---------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                do { //HINT
+                -----------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                foreach ($array as $value) { //HINT
+                -----------------------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                for ($j = 0; $j < count($array); $j++) { //HINT
+                -----------------------------------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) { //HINT
+                ------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) { //HINT
+                ------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) { //HINT
+                ------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                while (true) {} //HINT
+                ----------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                while (true) {} //HINT
+                ----------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) {} //HINT
+                -------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) {} //HINT
+                -------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.
+                if (true) {} //HINT
+                -------------------
+HINT:Too Many Nested Blocks in Function Declaration
+- It is a good practice to introduce a new function rather than to use more nested blocks.

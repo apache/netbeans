@@ -1,0 +1,122 @@
+<?php
+	if (!$_SESSION['is_emailed_logged']) exit;
+
+	global $db, $CONFIG;
+
+	if ((int)$_GET['responder'] > 0){
+
+		if ($_POST['responder']){
+			$msg = str_replace("\r\n","<br />\r\n",wordwrap($_POST['msg'], 100, "\r\n", true));
+			$html = "<html>\r\n\t<head>\r\n\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n</head>\r\n\t<body>\r\n".$msg."\t</body>\r\n</html>";
+
+			if (Email('webmaster@macumbaonline.com', $_POST['email'], $_POST['titulo'], array('text/html' => $html))){
+				$db->Query('UPDATE `contact` SET `read`=1 WHERE `id`=%d AND `read`=0 LIMIT 1', $_POST['id']);
+
+				if ($db->Affected() == 1){
+					echo '<h3>Contato respondido com sucesso!</h3>';
+					$_GET['responder'] = $_POST['next'];
+				}
+
+			} else {
+				echo '<h3>Deu pal no email, vixe</h3>';
+			}
+		}
+
+		if ($_POST['deletar']){
+			$db->Query('UPDATE `contact` SET `read`=1 WHERE `id`=%d AND `read`=0 LIMIT 1', $_POST['id']);
+
+			if ($db->Affected() == 1){
+				echo '<h3>Contato deletado com sucesso!</h3>';
+				$_GET['responder'] = $_POST['next'];
+			}
+		}
+
+		$db->Query('SELECT `contact`.`id`,`users`.`email`,`contact`.`name`,`contact`.`mensagem`,DATE_FORMAT(`contact`.`date`,"%%d/%%m/%%Y") AS `data`
+								FROM `contact`
+								INNER JOIN `users` ON `users`.`id`=`contact`.`owner`
+								WHERE `contact`.`id`=%d AND `contact`.`read`=0 LIMIT 1', $_GET['responder']);
+
+		if ($db->NumberOfRows() == 1){
+			$r = $db->Result();
+			$db->Query('SELECT `id` FROM `contact` WHERE `id` > %d AND `read`=0 ORDER BY `id` ASC LIMIT 1', $_GET['responder']);
+			$next = $db->Result();
+			$next = $next['id'];
+?>
+		<p><a href="<?php echo $CONFIG['base_url']; ?>control/">Voltar pra lista</a></p>
+		<form action="" method="post">
+			<input type="hidden" name="id" value="<?php echo $r['id']; ?>" />
+			<input type="hidden" name="next" value="<?php echo $next; ?>" />
+			<table>
+				<tr>
+					<td style="text-align:right;width:120px;">Título:</td>
+					<td><input type="text" name="titulo" value="Resposta MacumbaOnline.com" /></td>
+				</tr>
+				<tr>
+					<td style="text-align:right;width:120px;">E-mail:</td>
+					<td><input type="text" name="email" value="<?php echo Show($r['email']); ?>" /></td>
+				</tr>
+				<tr>
+					<td style="text-align:right;width:120px;">Mensagem:</td>
+					<td>
+						<textarea style="width:100%;height:200px;" name="msg"><?php echo "Olá ",Show($r['name'], false, false, false),",\r\n\r\n","\r\n\r\n--Macumbeiro Online\r\n\r\nMensagem Original (",Show($r['data'], false, false, false),"):\r\n",Show($r['mensagem'], false, false, false); ?></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="submit" name="responder" value="Responder" /> <input type="submit" name="deletar" value="Deletar" /></td>
+				</tr>
+				<?php if ((int)$next > 0){ ?>
+				<tr>
+					<td colspan="2" style="text-align:right;"><a href="<?php echo $CONFIG['base_url'],'control/?responder=',$next; ?>">Próxima não respondida</a></td>
+				</tr>
+				<?php } ?>
+			</table>
+		</form>
+<?php
+		} else {
+			Redir($CONFIG['base_url'].'control/');
+		}
+	} else {
+		if ((int)$_GET['deletar'] > 0){
+			$db->Query('UPDATE `contact` SET `read`=1 WHERE `id`=%d', $_GET['deletar']);
+
+			if ($db->Affected() > 0){
+				echo '<h3>Contato deletado</h3>';
+			}
+		}
+
+		$db->Query('SELECT `id`,`name`,SUBSTRING(`mensagem`,1,120) AS `msg`,DATE_FORMAT(`date`,"%%d/%%m/%%Y") AS `data`
+								FROM `contact`
+								WHERE `read`=0
+								ORDER BY `date` ASC,`time` ASC');
+
+		if ($db->NumberOfRows() > 0){
+?>
+		<table>
+			<tr>
+				<td>Nome</td>
+				<td>Mensagem</td>
+				<td>Data</td>
+				<td>Ações</td>
+			</tr>
+<?php
+			while ($r = $db->Result(false)) {
+?>
+				<tr>
+					<td><?php echo Show($r['name']); ?></td>
+					<td><?php echo Show($r['msg']); ?></td>
+					<td><?php echo Show($r['data']); ?></td>
+					<td>
+						<a href="?responder=<?php echo $r['id']; ?>">Responder</a><br />
+						<a href="?deletar=<?php echo $r['id']; ?>" onclick="return false;">Deletar</a>
+					</td>
+				</tr>
+<?php
+			}
+?>
+		</table>
+<?php
+		} else {
+			echo '<h3>Nenhuma mensagem a ser respondida, yay!</h3>';
+		}
+	}
+?>

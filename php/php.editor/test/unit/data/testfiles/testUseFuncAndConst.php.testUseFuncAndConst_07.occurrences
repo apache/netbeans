@@ -1,0 +1,4 @@
+    const |>MARK_OCCURRENCES:FOO<| = 42;
+use const Name\Space\|>MARK_OCCURRENCES:FOO<|;
+use const Name\Space\|>MARK_OCCURRENCES:FOO<| as FOO2;
+echo |>MARK_OCCURRENCES:F^OO<|;

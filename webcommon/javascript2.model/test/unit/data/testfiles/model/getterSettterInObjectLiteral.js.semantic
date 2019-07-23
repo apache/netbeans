@@ -1,0 +1,23 @@
+var |>GLOBAL:Dog<| = {
+
+    |>METHOD:get<| |>FIELD:years<|() {return this.|>FIELD:old<|;},
+    |>METHOD:set<| |>FIELD:years<|(count){this.|>FIELD:old<| = count + 1;},
+    |>METHOD:getColor<| : function() {return this.color}
+            
+}
+
+var |>GLOBAL:o<| = {
+    |>FIELD:a<|: 7,
+    |>METHOD:get<| |>FIELD:b<|() {return this.|>FIELD:a<| + 1;},
+    |>METHOD:set<| |>FIELD:c<|(x) {this.|>FIELD:a<| = x / 2;}
+};
+
+
+|>GLOBAL:formatter<|.println('a: ' + |>GLOBAL:o<|.|>FIELD:a<|);
+|>GLOBAL:formatter<|.println('b: ' + |>GLOBAL:o<|.|>FIELD:b<|);
+|>GLOBAL:formatter<|.println("c is set to 50");
+|>GLOBAL:o<|.|>FIELD:c<| = 50;
+|>GLOBAL:formatter<|.println('a: ' + |>GLOBAL:o<|.k);
+|>GLOBAL:Dog<|.|>FIELD:years<| = 10;
+|>GLOBAL:formatter<|.println("The dos is old " + |>GLOBAL:Dog<|.|>FIELD:years<| + " years.");
+|>GLOBAL:formatter<|.println("Dog.old: " + |>GLOBAL:Dog<|.|>FIELD:old<|);

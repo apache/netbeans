@@ -1,0 +1,22 @@
+E
+
+<?xml version="1.0" encoding="UTF-8"?>
+<phpcs version="2.6.0">
+<file name="/home/gapon/Download/PHP_CodeSniffer-master/CodeSniffer/DocGenerators/Generator.php" errors="1" warnings="0" fixable="1">
+ <error line="31" column="56" source="PEAR.Classes.ClassDeclaration.OpenBraceNewLine" severity="5" fixable="1">Opening brace of a class must be on the line after the definition</error>
+</file>
+</phpcs>
+
+PHP CODE SNIFFER REPORT SUMMARY
+----------------------------------------------------------------------
+FILE                                                  ERRORS  WARNINGS
+----------------------------------------------------------------------
+...er-master/CodeSniffer/DocGenerators/Generator.php  1       0
+----------------------------------------------------------------------
+A TOTAL OF 1 ERROR AND 0 WARNINGS WERE FOUND IN 1 FILE
+----------------------------------------------------------------------
+PHPCBF CAN FIX 1 OF THESE SNIFF VIOLATIONS AUTOMATICALLY
+----------------------------------------------------------------------
+
+Time: 132ms; Memory: 6.5Mb
+

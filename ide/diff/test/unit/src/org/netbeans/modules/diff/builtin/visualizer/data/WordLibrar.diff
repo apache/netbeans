@@ -1,0 +1,70 @@
+*** WordLibrar0.java	2005-11-01 14:54:14.865623000 +0100
+--- WordLibrary.java	2005-11-01 15:19:32.889457000 +0100
+***************
+*** 6,11 ****
+--- 6,12 ----
+  public final class WordLibrary {
+  
+      private static final String[] WORD_LIST = {
++         "NEW",
+          "abstraction",
+          "ambiguous",
+          "arithmetic",
+***************
+*** 50,55 ****
+--- 51,58 ----
+          "hotjava",
+          "vertex",
+          "unsigned",
++         "NEW",        
++         "NEW2",
+          "traditional"};
+  
+      private static final String[] SCRAMBLED_WORD_LIST = {
+***************
+*** 97,103 ****
+          "ohjtvaa",
+          "evtrxe",
+          "nuisngde",
+!         "rtdatioialn"
+      };
+  
+      /**
+--- 100,106 ----
+          "ohjtvaa",
+          "evtrxe",
+          "nuisngde",
+!         "CHANGErtdatioialn"
+      };
+  
+      /**
+***************
+*** 111,118 ****
+       * @param idx index of required word
+       * @return word at that index in its natural form
+       */
+      public static String getWord(int idx) {
+!         return WORD_LIST[idx];
+      }
+  
+      /**
+--- 114,122 ----
+       * @param idx index of required word
+       * @return word at that index in its natural form
+       */
++     // NEW
+      public static String getWord(int idx) {
+!         return WORD_LIST[idx]; // CHANGE
+      }
+  
+      /**
+***************
+*** 129,135 ****
+       * @return the total number of plain/scrambled word pairs in the library
+       */
+      public static int getSize() {
+-         // DELETED;
+      }
+  
+      /**
+--- 133,138 ----

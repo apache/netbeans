@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.derby" spec="1.4"/>
+    <instanceof class="java.io.Externalizable"/>
+    <instanceof class="java.io.Serializable"/>
+    <instanceof class="java.lang.Object"/>
+    <instanceof class="org.netbeans.modules.derby.DerbyOptions"/>
+    <instanceof class="org.openide.options.SystemOption"/>
+    <instanceof class="org.openide.util.HelpCtx$Provider"/>
+    <instanceof class="org.openide.util.SharedClassObject"/>
+    <serialdata class="org.netbeans.modules.derby.DerbyOptions">
+        ACED00057372002F6F72672E6F70656E6964652E7574696C2E536861726564436C6173734F626A6563742457726974655265
+        706C616365126D9FDFDCC10F580300024C0005636C617A7A7400114C6A6176612F6C616E672F436C6173733B4C00046E616D
+        657400124C6A6176612F6C616E672F537472696E673B7870767200276F72672E6E65746265616E732E6D6F64756C65732E64
+        657262792E44657262794F7074696F6E730F4AB74F4F3FF68C0C0000787200206F72672E6F70656E6964652E6F7074696F6E
+        732E53797374656D4F7074696F6E07C081EB6EBC33D60C0000787200226F72672E6F70656E6964652E7574696C2E53686172
+        6564436C6173734F626A6563743ED64D168B4A70DB0C000078707400276F72672E6E65746265616E732E6D6F64756C65732E
+        64657262792E44657262794F7074696F6E737400086C6F636174696F6E7400052F74656D70737200116A6176612E6C616E67
+        2E426F6F6C65616ECD207280D59CFAEE0200015A000576616C756578700174000A73797374656D486F6D6574000F2F74656D
+        702F64617461626173657371007E000C7078
+    </serialdata>
+</settings>

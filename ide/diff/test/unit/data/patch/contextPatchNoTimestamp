@@ -1,0 +1,19 @@
+*** goldenFile1
+--- goldenFile2
+***************
+*** 1,7 ****
+  one
+  two
+  three
+! for
+  five
+  six
+  seven
+--- 1,7 ----
+  one
+  two
+  three
+! four
+  five
+  six
+  seven

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dir1/imported" default="whatever" basedir=".">
+    <import file="dir3/subimported.xml"/>
+    <target name="whatever"/>
+    <target name="subtarget1"/>
+    <target name="subtarget2"/>
+</project>

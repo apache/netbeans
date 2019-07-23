@@ -1,0 +1,5 @@
+Code completion result for source line:
+var module1 = require("app/mo|duleApp1");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       moduleApp1.js                              

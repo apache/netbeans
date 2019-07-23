@@ -1,0 +1,7 @@
+[WHITESPACE(1): ][TAG(6):script][BRACKET_LEFT_PAREN(1):(][ATTRIBUTE(4):type][OPERATOR_ASSIGNMENT(1):=][JAVASCRIPT(17):'text/javascript'][BRACKET_RIGHT_PAREN(1):)][PLAIN_TEXT_DELIMITER(1):.][EOL(1):\n]
+[JAVASCRIPT(154):      window.habitrpg
+      .controller('StaticAvatarCtrl', ['$scope', function($scope){
+        $scope.profile = window.env.user;
+      }])
+      
+      ]

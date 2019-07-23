@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>javahelp/org/netbeans/modules/usersguide/img/find_next.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/settings.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/reset_results.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/select_threads.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/open_snapshot.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/threadsview.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/takesnapshotcpu32.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_dump_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/runtime-window-hudson.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/vmtelemetry_view.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/selected.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/supervariable.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/localvariable.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_project_packages_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_static_methods.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/session.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/scaletofit.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/ref-collapse-tree.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_group_suspended_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/delete_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/field.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_project_packages.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/remove.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/gc_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filter.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filter.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/disabledbreakpoint.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/active.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/memory_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/services-window-wsm.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_dependies_packages.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/servers.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-warning_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_dependies_packages.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/threadgroup.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/ref-logical-view.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/exprarguments.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/javadoc-refsort.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-ok_witherrors_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/CallStackFrameGroup.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/jdbc_resources.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/runtime-window-bugtracking.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/breakpoint_nonline.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/fixedwatch.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filter_sql.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/refresh.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/detach.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/open-diff.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/warn.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/diff-next.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-ignored_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/currentframe.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/trash-icon.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/snapshot_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_anonymous_classes.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/stop-icon.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_system_threads_opt.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-ok_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/zoom_out_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/toggle_highlight.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/does_not_contain.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cssviewbyupdated.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/inactive.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/suspend_prop_sort_ord.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/javadoc-typesort.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_static_methods_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/telemetry_overview_wdw.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/currentthreadgroup.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-error_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/add_query.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/takesnapshotmem32.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/breakpoint.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cpu_gc.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/changecolumn.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-skipped_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filterhidenonpublic.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_delta_values.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/sample_icon2.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_inner_class_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/export_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/take_heap_dump.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/breakpoint_broken.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_non_public_methods.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cssnewproperty.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/reverse_calls.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/javadoc-showsource.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/watch.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/pause_live_results.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/hot_spots.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_delta_values.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/sortalpha.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_inner_class.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/sortposition.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/currentthread.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/navigate_back_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/rename_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/search_repo.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/newbreakpoint.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/callstack-framegroup.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/previous_bookmark.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/shift_line_right.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/take_thread_dump.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/start_macro_recording.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/arrow.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/open_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/contains.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filterhidestatic.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/get_clean.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/take_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/threads_classes_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/update_live_results_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/pause_live_results_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/toggle-selection.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_suspended_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_system_threads_option_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/zoomout.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/find_previous.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/toggle_bookmark.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/find_selection.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/hot_spots.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/newwatch.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/disablebreakpoint_nonline.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/locksview32.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/rerun-icon.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/next_bookmark.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/currentsession.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/insert.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/commit.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_suspend_table_opt.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/reverse_calls.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/shift_line_left.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/javadoc-alphasort.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/select_threads.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/call_stack_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/class_loader.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cpu_gc_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_non_public_methods.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/runningthread.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cssnewrule.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/stop_macro_recording.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/options.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/clock-icon.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/find.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/javadoc-listhtml.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/live_resultsview.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_fqn_option_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/match_case.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/index_vs_working.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test-rerun.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/update_live_results.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/classes.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/validate-xml.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_inherited_methods_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/suspend_property_sort_order_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/reg_expression.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/interface.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filter_items_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/newupdates.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_suspend_thrds_opt.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/scale_to_fit_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/saveview.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/breakpoint_stroke.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/head_vs_index.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/staticvariable.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/compare_snapshot.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/add_task2.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/add_category.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_anonymous_classes.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/elementstates.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/forward_calls.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/navigate_forward_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/zoom_in_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/repository.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/test_form.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/memory.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/cssviewbycategory.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/forward_calls.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/deselected.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/compare_snapshot.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/filterhidefields.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/connection_mode.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_suspended_threads_option_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/threads_classes.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_group_running_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/suspend_thread_brkpt.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_running_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/clear.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/show_inherited_methods.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/local_repo.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/head_vs_working.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/add_repo.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/task.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/saveas.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/delete_snapshot.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/zoomin.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/breakpoint_nonline_broken.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/export_snapshot.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/ref-expand-tree.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/xsl-transformation.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/diff-prev.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/rename_snapshot.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/check-xml.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/suspendedthread.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/edit_previous.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/thread_group_mixed_16.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/evaluate.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/heap_dump_icon.gif</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/gc.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/ref-file-view.png</file>
+        <file>javahelp/org/netbeans/modules/usersguide/img/reset_collected_results_icon.GIF</file>
+        <file>javahelp/org/netbeans/modules/usersguide/oracle.gif</file>
+        <file>src/org/netbeans/modules/usersguide/help.gif</file>
+        <file>demosrc/examples/colorpicker/ColorPreview.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

@@ -1,0 +1,7 @@
+Java EE
+    Enterprise Application
+    Enterprise Application with Existing Sources
+    EJB Module
+    EJB Module with Existing Sources
+    Enterprise Application Client
+    Enterprise Application Client with Existing Sources

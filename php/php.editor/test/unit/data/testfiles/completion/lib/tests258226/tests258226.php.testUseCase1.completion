@@ -1,0 +1,4 @@
+Code completion result for source line:
+$testInstance->testMethod()->|myA();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myA()                           [PUBLIC]   A

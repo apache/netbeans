@@ -1,0 +1,343 @@
+<testresult testFile='heredoc_006.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='69'>
+            <text>--TEST--\nbraced complex variable replacement test (heredoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='76' end='88'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='89' end='101'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='101' end='102'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='104' end='109'>
+            <text>print</text>
+        </token>
+        <token id='T_START_HEREDOC' start='110' end='126'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='126' end='150'>
+            <text>This is heredoc test #s </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='150' end='151'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='151' end='153'>
+            <text>$a</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='153' end='154'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='154' end='156'>
+            <text>, </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='156' end='157'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='157' end='159'>
+            <text>$b</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='159' end='160'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='160' end='162'>
+            <text>, </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='162' end='163'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='163' end='165'>
+            <text>$c</text>
+        </token>
+        <token id='T_OPEN_RECT' start='165' end='166'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='166' end='169'>
+            <text>&apos;c&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='169' end='170'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='170' end='171'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='171' end='177'>
+            <text>, and </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='177' end='178'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='178' end='180'>
+            <text>$d</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='180' end='182'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='182' end='183'>
+            <text>d</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='183' end='184'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='184' end='187'>
+            <text>.\n\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='187' end='199'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='199' end='200'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='202' end='204'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='205' end='206'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='207' end='223'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='223' end='247'>
+            <text>This is heredoc test #s </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='247' end='248'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='248' end='250'>
+            <text>$a</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='250' end='251'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='251' end='253'>
+            <text>, </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='253' end='254'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='254' end='256'>
+            <text>$b</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='256' end='257'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='257' end='259'>
+            <text>, </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='259' end='260'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='260' end='262'>
+            <text>$c</text>
+        </token>
+        <token id='T_OPEN_RECT' start='262' end='263'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='263' end='266'>
+            <text>&apos;c&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='266' end='267'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='267' end='268'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='268' end='274'>
+            <text>, and </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='274' end='275'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='275' end='277'>
+            <text>$d</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='277' end='279'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='279' end='280'>
+            <text>d</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='280' end='281'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='281' end='284'>
+            <text>.\n\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='284' end='296'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='296' end='297'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='299' end='304'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='305' end='306'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='306' end='307'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='307' end='309'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='309' end='310'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='310' end='311'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='311' end='312'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='314' end='317'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='317' end='408'>
+            <text>--EXPECT--\nThis is heredoc test #s 1, 2, 3, and 4.\nThis is heredoc test #s 1, 2, 3, and 4.\n</text>
+        </token>
+        <token id='EOF' start='408' end='408'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='408'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='69'/>
+            <ExpressionStatement start='76' end='102'>
+                <Include start='76' end='101' type='REQUIRE_ONCE'>
+                    <Scalar start='89' end='101' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='104' end='200'>
+                <FunctionInvocation start='104' end='199'>
+                    <FucntionName start='104' end='109'>
+                        <Identifier start='104' end='109' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='110' end='199' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='126' end='150' type='STRING' value='This is heredoc test #s '/>
+                                <ReflectionVariable start='150' end='154'>
+                                    <Variable start='151' end='153' isDollared='true'>
+                                        <Identifier start='152' end='153' name='a'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='154' end='156' type='STRING' value=', '/>
+                                <ReflectionVariable start='156' end='160'>
+                                    <Variable start='157' end='159' isDollared='true'>
+                                        <Identifier start='158' end='159' name='b'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                                <Scalar start='160' end='162' type='STRING' value=', '/>
+                                <ReflectionVariable start='162' end='171'>
+                                    <ArrayAccess start='163' end='170' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='165' end='170'>
+                                            <Index>
+                                                <Scalar start='166' end='169' type='STRING' value='&apos;c&apos;'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='163' end='165' isDollared='true'>
+                                                <Identifier start='164' end='165' name='c'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </ReflectionVariable>
+                                <Scalar start='171' end='177' type='STRING' value=', and '/>
+                                <ReflectionVariable start='177' end='184'>
+                                    <FieldAccess start='178' end='183'>
+                                        <Variable start='178' end='180' isDollared='true'>
+                                            <Identifier start='179' end='180' name='d'/>
+                                        </Variable>
+                                        <Field>
+                                            <Variable start='182' end='183' isDollared='false'>
+                                                <Identifier start='182' end='183' name='d'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                </ReflectionVariable>
+                                <Scalar start='184' end='187' type='STRING' value='.\n\n'/>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='202' end='297'>
+                <Assignment start='202' end='296' operator='EQUAL'>
+                    <Variable start='202' end='204' isDollared='true'>
+                        <Identifier start='203' end='204' name='x'/>
+                    </Variable>
+                    <Quote start='207' end='296' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='223' end='247' type='STRING' value='This is heredoc test #s '/>
+                            <ReflectionVariable start='247' end='251'>
+                                <Variable start='248' end='250' isDollared='true'>
+                                    <Identifier start='249' end='250' name='a'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='251' end='253' type='STRING' value=', '/>
+                            <ReflectionVariable start='253' end='257'>
+                                <Variable start='254' end='256' isDollared='true'>
+                                    <Identifier start='255' end='256' name='b'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='257' end='259' type='STRING' value=', '/>
+                            <ReflectionVariable start='259' end='268'>
+                                <ArrayAccess start='260' end='267' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='262' end='267'>
+                                        <Index>
+                                            <Scalar start='263' end='266' type='STRING' value='&apos;c&apos;'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='260' end='262' isDollared='true'>
+                                            <Identifier start='261' end='262' name='c'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </ReflectionVariable>
+                            <Scalar start='268' end='274' type='STRING' value=', and '/>
+                            <ReflectionVariable start='274' end='281'>
+                                <FieldAccess start='275' end='280'>
+                                    <Variable start='275' end='277' isDollared='true'>
+                                        <Identifier start='276' end='277' name='d'/>
+                                    </Variable>
+                                    <Field>
+                                        <Variable start='279' end='280' isDollared='false'>
+                                            <Identifier start='279' end='280' name='d'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </ReflectionVariable>
+                            <Scalar start='281' end='284' type='STRING' value='.\n\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='299' end='312'>
+                <FunctionInvocation start='299' end='311'>
+                    <FucntionName start='299' end='304'>
+                        <Identifier start='299' end='304' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='305' end='311' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='306' end='310'>
+                                    <Variable start='307' end='309' isDollared='true'>
+                                        <Identifier start='308' end='309' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='314' end='317'/>
+            <InLineHtml start='317' end='408'/>
+        </Statements>
+    </Program>
+</testresult>

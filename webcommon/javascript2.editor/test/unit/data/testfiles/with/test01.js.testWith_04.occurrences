@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:roman<| = new Man("Roman", "Php");
+|>MARK_OCCURRENCES:roman<|.getFirstName();
+with(|>MARK_OCCURRENCES:rom^an<|) {

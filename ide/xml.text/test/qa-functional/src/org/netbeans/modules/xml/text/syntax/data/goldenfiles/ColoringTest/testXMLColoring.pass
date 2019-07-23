@@ -1,0 +1,168 @@
+pi-start: <?
+pi-target: xml
+ws:  
+pi-content: version="1.0" encoding="UTF-8" standalone="no"
+pi-end: ?>
+text: 
+
+
+comment: <!-- Created by mschovanek on October 25, 2000, 3:49 PM -->
+text: 
+
+
+pi-start: <?
+pi-target: target
+ws:  
+pi-content: processing instruction data
+pi-end: ?>
+text: 
+
+
+doctype: <!DOCTYPE Books PUBLIC 
+value: "+//XML Test//EN"
+doctype:  
+value: "any.dtd"
+doctype:  [
+text: 
+    
+doctype: <!ELEMENT Books (Product+,Price?)*>
+text:          
+doctype: <!ELEMENT Product (#PCDATA|Descript)*>
+text: 
+    
+doctype: <!ELEMENT Price (#PCDATA)>
+text:                   
+doctype: <!ENTITY % states SYSTEM 
+value: "states.dtd"
+doctype: >
+text: 
+    
+ref: %states;
+text:                                     
+doctype: <!NOTATION eps SYSTEM 
+value: "ghg"
+doctype: >
+text: 
+    
+doctype: <!ENTITY % Y 
+value: "INCLUDE"
+doctype: >
+text:                      
+pi-start: <?
+pi-target: format
+ws:  
+pi-content: Bold!
+pi-end: ?>
+text: 
+    
+doctype: <!ELEMENT XMLwithDTD (#PCDATA|ANY)*>
+text:         
+comment: <!-- FULL ATTLIST -->
+text: 
+    
+doctype: <!NOTATION pdf SYSTEM 
+value: "xpdf"
+doctype: >
+text:                
+doctype: <!ELEMENT Image EMPTY>
+text: 
+    
+doctype: <!ATTLIST Image                             src       ENTITY      #REQUIRED
+      descr     CDATA       #IMPLIED            visible   CDATA       #FIXED      
+value: "true"
+doctype: 
+      format    (jpg | gif) #IMPLIED            os        (unix | os2)             
+value: "unix"
+doctype: 
+      entity    ENTITY      #IMPLIED            entities  ENTITIES    #IMPLIED
+      id        ID          #IMPLIED            idref     IDREF       #IMPLIED
+      idrefs    IDREFS      #IMPLIED            nmtoken   NMTOKEN     #IMPLIED
+      nmtokens  NMTOKENS    #IMPLIED            notation  NOTATION    (pdf|dvi) #IMPLIED>
+text: 
+    
+comment: <!-- GENERAL ENTITY -->
+text:                      
+doctype: <!ENTITY company 
+value: "Tisk &amp; spol."
+doctype: >
+text: 
+    
+doctype: <!ENTITY thorn 
+value: "&#222;"
+doctype: >
+text:                     
+comment: <!-- EXTERNAL ENTITY -->
+text: 
+    
+doctype: <!ENTITY extern SYSTEM 
+value: "externalEntity.xml"
+doctype: >
+comment: <!-- PARAMETR ENTITY -->
+text: 
+   
+doctype: <!ENTITY % sourceinfo 
+value: "lang   CDATA #REQUIRED cprght CDATA #IMPLIED"
+doctype: >
+doctype: 
+]>
+text: 
+
+
+pi-start: <?
+pi-target: target
+ws:  
+pi-content: processing instruction data
+pi-end: ?>
+text: 
+
+
+tag: <Books
+tag: >
+pi-start: <?
+pi-target: pi
+ws:  
+pi-content: data
+pi-end: ?>
+text: 
+  
+tag: <Product
+tag: >
+text: Product 1 - 
+ref: &#100;
+text:  
+ref: &gt;
+text:  
+ref: &#x99;
+text:   
+    
+tag: <Descript
+ws:  
+attribute: lang
+operator: =
+value: "x 
+ref: &lt;
+value:  
+ref: &#100;
+value:  value'''"
+tag: >
+text: text data made in 
+ref: &cz;
+tag: </Descript
+tag: >
+text: 
+    
+cdata-section: <![CDATA[CDATA <a a='"""&#x23;'><!----> <?t d?><!DOCTYPE Books PUBLIC "+//XML Test//EN" "any.dtd" [
+      ]></a>section data]]>
+text: 
+    `1234567890-=\qwertyuiop[]asdfghjkl;'zxcvbnm,./
+    ~!@#$%^*()_+|QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM?
+  
+tag: </Product
+tag: >
+text: 
+
+tag: </Books
+tag: >
+text: 
+
+

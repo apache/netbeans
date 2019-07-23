@@ -1,0 +1,2427 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<meta name="author" content="david.kaspar@sun.com">
+<link rel="stylesheet" href="../../../../../../prose.css" type="text/css">
+<title>netbeans.org : NetBeans Visual Library 2.0 - Documentation</title>
+<style type="text/css"><!--
+pre {
+    border: 1px solid black;
+    padding: 10px;
+    background-color: #FFD;
+}
+table.framed {
+    border: 2px solid black;
+    border-collapse: collapse;
+    border-spacing: 1px solid black;
+}
+table.framed th {
+    background-color: #FFD;
+    padding: 5px;
+    border: 2px solid black;
+    vertical-align: top;
+}
+table.framed td {
+    padding: 5px;
+    border: 1px solid black;
+    vertical-align: top;
+}
+code {
+    background-color: #FFD;
+    border: 1px solid #DD0;
+}
+--></style>
+</head>
+
+<body>
+
+<h1>Visual Library 2.0 - Documentation</h1>
+
+<h2><a name="Index">Index</a></h2>
+
+<ul>
+<li><a href="#Index">Index</a>
+<li><a href="#Installation">Installation</a>
+<li><a href="#Introduction">Introduction</a>
+<ul>
+<li><a href="#ExampleFirstScene">Example: First Scene</a>
+</ul>
+<li><a href="#Widget">Widget</a>
+<ul>
+<li><a href="#WidgetMethods">Widget Methods</a>
+<li><a href="#LabelWidget">LabelWidget</a>
+<li><a href="#ImageWidget">ImageWidget</a>
+<li><a href="#WidgetDependency">Widget Dependency</a>
+<li><a href="#ExampleIconNodeWidget">Example: Icon Node Widget</a>
+</ul>
+<li><a href="#Border">Border</a>
+<li><a href="#Scene">Scene</a>
+<ul>
+<li><a href="#SceneMethods">Scene Methods</a>
+<li><a href="#SceneListener">SceneListener</a>
+</ul>
+<li><a href="#CoordinationSystem">Coordination System</a>
+<li><a href="#Layout">Layout</a>
+<ul>
+<li><a href="#AbsoluteLayout">AbsoluteLayout</a>
+<li><a href="#FlowLayout">FlowLayout</a>
+<li><a href="#CardLayout">CardLayout</a>
+<li><a href="#OverlayLayout">OverlayLayout</a>
+</ul>
+<li><a href="#ValidationProcess">Validation Process</a>
+<ul>
+<li><a href="#Revalidation">Revalidation</a>
+<li><a href="#SceneValidation">Scene Validation</a>
+<li><a href="#Repainting">Repainting</a>
+<li><a href="#SceneLayout">SceneLayout</a>
+</ul>
+<li><a href="#WidgetAction">WidgetAction</a>
+<ul>
+<li><a href="#Assignment">Assignment</a>
+<li><a href="#ActionTools">Action Tools</a>
+<li><a href="#AWTEventProcessing">AWT Event Processing</a>
+<li><a href="#EventProcessingTypes">Event Processing Types</a>
+<li><a href="#ActionState">Action State</a>
+<li><a href="#ActionMapAction">ActionMapAction</a>
+<li><a href="#AcceptAction">AcceptAction</a>
+<li><a href="#AddRemoveControlPointAction">AddRemoveControlPointAction</a>
+<li><a href="#AlignWithMoveAction">AlignWithMoveAction</a>
+<li><a href="#AlignWithResizeAction">AlignWithResizeAction</a>
+<li><a href="#CycleFocusAction">CycleFocusAction</a>
+<li><a href="#ConnectAction">ConnectAction</a>
+<li><a href="#EditAction">EditAction</a>
+<li><a href="#HoverAction">HoverAction</a>
+<ul>
+<li><a href="#HoverActionVsObjectSceneHoverAction">HoverAction vs. ObjectSceneHoverAction</a>
+</ul>
+<li><a href="#InplaceEditorAction">InplaceEditorAction</a>
+<li><a href="#MoveAction">MoveAction</a>
+<li><a href="#MoveControlPointAction">MoveControlPointAction</a>
+<li><a href="#PanAction">PanAction</a>
+<li><a href="#PopupMenuAction">PopupMenuAction</a>
+<li><a href="#RectangularSelectAction">RectangularSelectAction</a>
+<li><a href="#ReconnectAction">ReconnectAction</a>
+<li><a href="#ResizeAction">ResizeAction</a>
+<li><a href="#SelectAction">SelectAction</a>
+<li><a href="#ZoomAction">ZoomAction</a>
+<li><a href="#ExampleUsingActions">Example: Using Actions</a>
+<li><a href="#OrderOfActions">Order of Actions</a>
+<li><a href="#ActionCreation">Action Creation</a>
+<li><a href="#Strategies">Strategies</a>
+</ul>
+<li><a href="#ConnectionWidget">ConnectionWidget</a>
+<ul>
+<li><a href="#Router">Router</a>
+<li><a href="#ConnectionWidgetLayout">ConnectionWidgetLayout</a>
+<li><a href="#RoutingPolicy">Routing Policy</a>
+<li><a href="#ConnectionWidgetMethods">ConnectionWidget Methods</a>
+</ul>
+<li><a href="#Anchor">Anchor</a>
+<ul>
+<li><a href="#FixedAnchor">FixedAnchor</a>
+<li><a href="#CenterAnchor">CenterAnchor</a>
+<li><a href="#RectangularAnchor">RectangularAnchor</a>
+<li><a href="#CircularAnchor">CircularAnchor</a>
+<li><a href="#DirectionalAnchor">DirectionalAnchor</a>
+<li><a href="#ProxyAnchor">ProxyAnchor</a>
+<li><a href="#AnchorDependency">Anchor Dependency</a>
+<li><a href="#ExampleConnectionWidgetWithAnchors">Example: ConnectionWidget with Anchors</a>
+<li><a href="#LoopEdge">Loop Edge</a>
+<li><a href="#ParallelEdges">Parallel Edges</a>
+</ul>
+<li><a href="#LayerWidget">LayerWidget</a>
+<ul>
+<li><a href="#ExampleLayers">Example: Layers</a>
+</ul>
+<li><a href="#ObjectScene">ObjectScene</a>
+<ul>
+<li><a href="#ObjectState">ObjectState</a>
+<li><a href="#ObjectSceneMethods">ObjectScene Methods</a>
+<li><a href="#ObjectSceneListener">ObjectSceneListener</a>
+<li><a href="#ObjectIdentityCode">Object Identity Code</a>
+</ul>
+<li><a href="#GraphSupport">Graph Support</a>
+<ul>
+<li><a href="#GraphUIBinding">Graph UI Binding</a>
+<li><a href="#ExampleGraphSceneUI">Example: GraphScene UI</a>
+<li><a href="#GraphSceneMethods">GraphScene Methods</a>
+<li><a href="#GraphPinSceneMethods">GraphPinScene Methods</a>
+<li><a href="#UniversalGraph">Universal Graph</a>
+<li><a href="#GraphLayout">Graph-oriented Layout</a>
+<li><a href="#GraphLayoutListener">GraphLayoutListener</a>
+<li><a href="#TreeGraphLayout">TreeGraphLayout</a>
+<li><a href="#GridGraphLayout">GridGraphLayout</a>
+</ul>
+<li><a href="#ComponentWidget">ComponentWidget</a>
+<li><a href="#ScrollableWidget">Scrollable Widget</a>
+<li><a href="#InplaceEditor">In-place Editor</a>
+<ul>
+<li><a href="#ExampleInplaceEditor">Example: In-place Editor</a>
+</ul>
+<li><a href="#LevelOfDetails">Level of Details</a>
+<li><a href="#LookFeel">Look and Feel</a>
+<li><a href="#Animator">Animator</a>
+<ul>
+<li><a href="#SceneAnimatorMethods">SceneAnimator Methods</a>
+<li><a href="#ExampleAnimator">Example: Animator</a>
+</ul>
+<li><a href="#CustomDevelopment">Custom Development</a>
+<ul>
+<li><a href="#CustomWidget">Custom Widget</a>
+<li><a href="#ExampleCircleWidget">Example: Circle Widget</a>
+<li><a href="#CustomAction">Custom Action</a>
+<li><a href="#CustomLayout">Custom Layout</a>
+<li><a href="#CustomBorder">Custom Border</a>
+<li><a href="#CustomAnchor">Custom Anchor</a>
+<li><a href="#CustomAnimator">Custom Animator</a>
+<li><a href="#CustomRouter">Custom Router</a>
+<li><a href="#CustomGraphLayout">Custom Graph-oriented Layout</a>
+</ul>
+<li><a href="#GeneralWidgets">General Widgets</a>
+<ul>
+<li><a href="#IconNodeWidget">IconNodeWidget</a>
+<li><a href="#ListWidget">ListWidget</a>
+</ul>
+<li><a href="#VMDplugin">VMD plug-in</a>
+<ul>
+<li><a href="#MinimizeAbility">Minimize Ability</a>
+</ul>
+<li><a href="#PrintingAndExportingScene">Printing and Exporting Scene</a>
+<ul>
+<li><a href="#ExportToPNG">Export to PNG</a>
+<li><a href="#ExportingWithoutOffscreenBuffer">Exporting without Offscreen Buffer</a>
+</ul>
+<li><a href="#Effects">Effects</a>
+<ul>
+<li><a href="#Convolution">Convolution</a>
+<li><a href="#Antialiasing">Antialiasing</a>
+</ul>
+<li><a href="#Serialization">Serialization</a>
+<ul>
+<li><a href="#ExampleNodesLocationSerialization">Example: Nodes Location Serialization</a>
+</ul>
+<li><a href="#VisualLibraryVsSwing">Visual Library vs. Swing</a>
+<li><a href="#Notes">Notes</a>
+</ul>
+
+<h2><a name="Abstract">Abstract</a></h2>
+<p>This is a documentation for the <strong>Visual Library 2.0 API</strong>. The library is a successor of the Graph Library 1.0. Its provides general-purpose (not graph-oriented only) visualization.
+
+<p>
+<strong>WWW:</strong> http://graph.netbeans.org<br>
+<strong>CVS:</strong> :pserver:anoncvs@cvs.netbeans.org:/cvs checkout graph<br>
+<strong>Issues:</strong> NetBeans Issuezilla - graph component
+
+<h2><a name="Installation">Installation</a></h2>
+
+<p>
+To install the library, just set a dependency on <strong>org.netbeans.api.visual</strong> module. The source code of Visual Library API is located at <strong>graph/lib</strong> directory in the NetBeans CVS repository.
+
+<h2><a name="Introduction">Introduction</a></h2>
+
+<p>
+The programming style is similar to Swing. You are building and modifying a tree of visual elements that are called <code>Widget</code>s. The root of the tree is represented by a <code>Scene</code> class which holds all visual data of the scene. Since neither Widget nor Scene is an AWT/Swing component you have to call <code>Scene.createView</code> method for creating a Swing component which renders the scene. The created JComponent could be used anywhere.
+
+<h3><a name="ExampleFirstScene">Example: First Scene</a></h3>
+
+<p>
+Following code creates an empty scene, creates a JComponent view of the scene and embeds it into a dialog with scrollable view.
+
+<pre>
+Scene scene = new Scene ();
+JComponent sceneView = scene.createView ();
+JScrollPane panel = new JScrollPane (sceneView);
+
+JDialog dia = new JDialog (new JDialog (), true);
+dia.add (panel, BorderLayout.CENTER);
+dia.setSize (800, 600);
+dia.setVisible (true);
+dia.dispose ();
+</pre>
+
+<h2><a name="Widget">Widget</a></h2>
+
+<p>
+Widget is a primitive visual element - similar to what JComponent is for Swing. It holds information about its location, boundary, preferred location/boundary, preferred/minimal/maximal sizes, layout, border, foreground, background, font, cursor, tooltip , accessible context, ...
+
+<p>
+Widget placement is defined by:
+<ul>
+<li>its location point that is specified relatively to its parent widget location and
+<li>its boundary rectangle that is specified relatively to the widget location.
+</ul>
+Note that the boundary is specified as a rectangle (and not as Swing-like Dimension). This allows to have baseline ability by the definition.
+
+<p>
+A widget placement is resolved by a layout associated to its parent widget. The placement is usually based on a preferred location and boundary. The preferred boundary can be set or calculated from the widget needs. Then it can be processed by preferred/minimum/maximum size. See <a href="#Layout">Layout</a> section for details.
+
+<p>
+
+<h3><a name="WidgetMethods">Widget Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>getScene
+<td>Returns a scene where the widget belongs. The scene instance is assigned in the constructor and could not be changed anymore.
+<tr>
+<td>getParentWidget<br>getChildren<br>addChild<br>removeChild<br>removeFromParent<br>addChildren<br>removeChildren<br>bringToFront<br>bringToBack
+<td>Methods for manipulation with the tree hierarchy of widgets.
+<tr>
+<td>getChildConstraint<br>setChildConstraint
+<td>Controls constraints assigned to child widgets. Used by Layouts similarly to Swing. See <a href="#Layout">Layout</a> section.
+<tr>
+<td>isEnabled<br>setEnabled
+<td>Controls whether events are processed by actions assigned to the widget or any of its children. If the widget is disabled, then events are not processed by children widgets too.
+<tr>
+<td>getActions()
+<td>Returns a default actions chain. See <a href="#WidgetAction">WidgetAction</a> section.
+<tr>
+<td>getActions(String tool)<br>createActions(String tool)
+<td>Returns (and optionally creates) a actions chain for an appropriate tool. See <a href="#ActionTools">Action Tools</a> section.
+<tr>
+<td>getLookup
+<td>Returns lookup. Not used right now - it will be used later for extending the Widget functionality when the API is stable and incompatible API changes are forbidden.
+<tr>
+<td>addDependency<br>removeDependency<br>getDependencies
+<td>Allows to assigned a <code>Widget.Dependency</code> listener to the widget for notifying about widget location or boundary changes. Widely used by Anchors. See: <a href="#WidgetDependency">Widget Dependency</a> section.
+<tr>
+<td>isVisible<br>setVisible
+<td>Controls visibility of the widget. If not visible, then the widget is not painted and do not process events. <code>True</code> by default.
+<tr>
+<td>isOpaque<br>setOpaque
+<td>Controls opacity of the widget. If opaque, then background is not painted. <code>False</code> by default.
+<tr>
+<td>getBackground<br>setBackground<br>getForeground<br>setForeground
+<td>Controls the background paint and foreground color. Solid white background and black foreground by default.
+<tr>
+<td>getFont<br>setFont
+<td>Controls the font. By default or if set to <code>null</code>, then <code>getFont</code> returns value of <code>Scene.getDefaultFont</code> method.
+<tr>
+<td>getBorder<br>setBorder
+<td>Controls the widget border. <code>EmptyBorder</code> by default. See <a href="#Border">Border</a> section.
+<tr>
+<td>getCursor<br>setCursor
+<td>Controls the widget cursor. <code>null</code> by default.
+<tr>
+<td>getLayout<br>setLayout
+<td>Controls the widget layout. The layout defines placement of children. <code>AbsoluteLayout</code> by default. See <a href="#Layout">Layout</a> section.
+<tr>
+<td>getMinimumSize<br>setMinimumSize<br>getMaximumSize<br>setMaximumSize<br>getPreferredSize<br>setPreferredSize
+<td>Controls minimum, maximum and preferred size. <code>Null</code> (means not set) by default. See <a href="#Layout">Layout</a> section.
+<tr>
+<td>getPreferredLocation<br>setPreferredLocation
+<td>Controls preferred location. Widely used when parent widget has <code>AbsoluteLayout</code>, then the preferred location is used as the evaluated location. See <a href="#Layout">Layout</a> section. <code>Null</code> (means not set) by default.
+<tr>
+<td>getPreferredBounds<br>setPreferredBounds<br>isPreferredBoundsSet
+<td>Controls preferred boundaries. Not set by default not set. <code>getPreferredBounds</code> method always returns non-null boundaries - if the preferred bounds are not set, then it automatically calculate the boundaries from boundaries of its children, assigned layout and internal boundaries. The returned boundaries are checked for minimum, maximum and preferred sizes. See <a href="#Layout">Layout</a> section.
+<tr>
+<td>isCheckClipping<br>setCheckClipping
+<td>Defines whether the clipping should be used for widget painting. <code>False</code> by default.
+<tr>
+<td>getToolTipText<br>setToolTipText
+<td>Controls the tool tip text.
+<tr>
+<td>getState<br>setState
+<td>Defines the widget state. <code>State.createNormal</code> by default. See <a href="#ObjectState">Object State</a> section.
+<tr>
+<td>convertLocalToScene<br>convertSceneToLocal
+<td>Converts local coordination system to scene coordination system and vice versa. See <a href="#CoordinationSystem">Coordination System</a> section.
+<tr>
+<td>getLocation
+<td>Returns evaluated widget location specified relatively to the parent widget coordination system. <code>[0,0]</code> by default. See <a href="#Layout">Layout</a> and <a href="#CoordinationSystem">Coordination System</a> section.
+<tr>
+<td>getBounds
+<td>Returns evaluated widget boundaries specified relatively to the widget (local) coordination system. <code>Null</code> by default. See <a href="#Layout">Layout</a> and <a href="#CoordinationSystem">Coordination System</a> section.
+<tr>
+<td>resolveBounds (Point location, Rectangle bounds)
+<td>Sets evaluated widget location and boundary. If location is <code>null</code>, then <code>[0,0]</code> is automatically used instead. If bounds are <code>null</code>, then return from <code>getPreferredBounds</code> is automatically used instead. This method should be called from implementation of <code>Layout.layout</code> method only. See <a href="#Layout">Layout</a> and <a href="#CoordinationSystem">Coordination System</a> section.
+<tr>
+<td>getClientArea
+<td>Returns boundary from <code>getBounds</code> without (means: decreased by) insets of a border assigned to the widget.
+<tr>
+<td>isHitAt
+<td>Returns whether the widget is "hit" at specified location in local coordination system. The "hit" usually means that there is a pixel at the location controlled/painted by the widget. Widely used for mouse event processing. E.g. A circle-shape widget has rectangular boundary but it is hit on at points that are located inside the circle area.
+<tr>
+<td>repaint
+<td>Schedules the widget for painting. Usually called from setters method of the Widget. Usually the developer should call setter methods and the setter methods should call <code>repaint</code> or <code>revalidate</code> (depends whether they affect widget location/boundary). See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>isValidated
+<td>Returns whether the widget is validated. See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>revalidate()
+<td>Schedules the widget for validation. Usually called from setter methods of the Widget. Usually the developer should call setter methods and the setter methods should call <code>repaint</code> or <code>revalidate</code> (depends whether they affect widget location/boundary). See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>revalidate(boolean repaintOnly)
+<td>Calls <code>repaint</code> or <code>revalidate</code> method based on <code>repaintOnly</code> parameter.
+<tr>
+<td>paint
+<td>Paints the widget using the <code>Graphics2D</code> instance acquired by <code>getGraphics</code> method. Usually you should not call this method directly. It is called automatically by the library. For repainting the widget, use <code>repaint</code> method instead.
+<tr>
+<td>protected getGraphics
+<td>Returns <code>Graphics2D</code> instance that could be used for painting and calculating internal boundary. It is non-null only when the scene has a JComponent view created and it is added into AWT components hierarchy (means: after JComponent.addNotify method call). See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected calculateClientArea
+<td>Returns calculated client area required by the widget itself without children. E.g. LabelWidget has the client area equal to the boundary of its label. Do not include children location and boundary - they are included automatically later. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected paintBackground
+<td>Paints the widget background only. Do not invoke painting of children in this method. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected paintBorder
+<td>Paints the widget border only. Do not invoke painting of children in this method. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected paintWidget
+<td>Paints the widget only. Do not invoke painting of children in this method. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected paintChildren
+<td>Paints the widget children. Default implementation of <code>Widget.paintChildren</code> method should to be called to for invoke painting of the children. You can also selectively call <code>paint</code> method on each child. Usually this is used for introducing painting effects on children. E.g. smooth alpha blending in <code>LevelOfDetailsWidget</code> or applying convolution in <code>ConvolveWidget</code>. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected notifyStateChanged
+<td>Called by <code>setState</code> method when the state is changed. This method should control the widget appearance based on the widget-specific state. E.g. change the background color based on the result of <code>ObjectState.isSelected</code> method. See <a href="#ObjectState">ObjectState</a> and <a href="#CustomWidget">Custom Widget</a> sections.
+<tr>
+<td>protected isRepaintRequiredForRevalidating
+<td>Returns whether the repaint of the whole widget (specified by the widget boundaries) has to be repainted during validation. Used for speed optimalization. By default return <code>true</code> for everything except Scene and LayerWidget. See <a href="#CustomWidget">Custom Widget</a> section.
+<tr>
+<td>protected notifyAdded<br>protected notifyRemoved
+<td>Called to notify that a widget is being show or hidden in the view. Within these methods, do not modify the tree hierarchy of scene.
+<tr>
+<td>protected getCursorAt(Point localLocation)
+<td>Called to get a cursor of a specified local location of the widget.
+</table>
+
+<p>
+
+<h3><a name="LabelWidget">LabelWidget</a></h3>
+
+<p>
+The <code>LabelWidget</code> represents a single line text. You can manipulate with the text using <code>getLabel</code> and <code>setLabel</code> methods or using a constructor parameter. The widget is not-opaque by default and uses foreground, background and font properties for rendering. The text could be aligned to the left (by default), right or center within the widget. The widget origin is a point on the left side of the baseline of the text.
+
+<p>
+Since version 2.1 the LabelWidget allows rendering vertical labels. It can be set by calling <code>LabelWidget.setOrientation</code> method. Default value is <code>LabelWidget.Orientation.NORMAL</code> which renders labels horizontally. The other value is <code>LabelWidget.Orientation.ROTATE_90</code> which makes the label to render vertically.
+
+<p>
+Since version 2.7 the LabelWidget allows to use glyph-vector for rendering. This allows accurate text rendering independently on a scene zoom-factor (no more clipped text while zooming onto a scene).
+
+<h3><a name="ImageWidget">ImageWidget</a></h3>
+
+<p>
+The <code>ImageWidget</code> represents an image. You can manipulate with the image using <code>getImage</code> and <code>setImage</code> methods or using a constructor parameter. The widget is not-opaque by default. The widget origin is top-left corner of the image.
+
+<p>
+The <code>ImageWidget</code> supports animated images. For proper work, do not load images using <code>Utilities.loadImage</code> because the method is producing static images. Instead use standard <code>Toolkit.createImage</code> method for loading.
+
+<h3><a name="WidgetDependency">Widget Dependency</a></h3>
+
+<p>
+Sometimes you want to listen on a widget move or resize changes. The listener is defined by <code>Widget.Dependency</code> interface. Listener could be (un)registered using <code>Widget.addDependency</code> and <code>Widget.removeDependency</code> methods.
+
+<p>
+Note 1: The <code>Widget.Dependency.revalidateDependency</code> method is not called directly from <code>Widget.resolveBounds</code> method. Instead it is called indirectly during widget or scene revalidation process (means from <code>Widget.revalidate</code> and <code>Scene.validate</code> method). See <a href="#ValidationProcess">Validation Process</a> and <a href="#Layout">Layout</a> sections for details.
+
+<p>
+Note 2: <code>Widget.Dependency.revalidateDependency</code> method is called to notify all dependent objects that the widget is scheduled for revalidation and therefore all dependent objects should schedule their revalidation using <code>dependentWidget.revalidate</code> method call too.
+<br>
+E.g.: An anchor depends on a widget where it is assigned. When <code>Widget.Dependency.revalidateDependency</code> is called, then the anchor clears its caches and invokes <code>Widget.revalidate</code> method on all <code>ConnectionWidget</code>s (resp. <code>Anchor.Entry</code>).
+<br>
+Therefore no bounds of any widget is valid at the time of the method call. The valid bounds can be obtained only in <code>Layout</code> interface:
+<ul>
+<li>At the time when <code>Layout.layout</code> method is called, initial bounds of all child widgets of the widget (where the layout is assigned) are resolved.
+<li>At the time when <code>Layout.justify</code> method is called, bounds of all parent widgets of the widget (where the layout is assigned) are resolved.
+<li>At the end of validation process, scene bounds are finally calculated.
+</ul>
+If you want to listen on scene boundary changes, the easiest way is to add scene-listener using <code>Scene.addSceneListener</code> method and put your code into <code>SceneListener.sceneValidated</code> method implementation.
+
+<h3><a name="ExampleIconNodeWidget">Example: Icon Node Widget</a></h3>
+
+<p>
+Following code creates the iconNode instance that has an image with a label.
+
+<pre>
+// create a scene
+Scene scene = new Scene ();
+// create the icon node widget
+Widget iconNode = new Widget (scene);
+// use a vertical layout
+iconNode.setLayout (LayoutFactory.createVerticalFlowLayout (LayoutFactory.SerialAlignment.CENTER, 4));
+// add a image child widget
+iconNode.addChild (new ImageWidget (scene, Utilities.loadImage ("path/to/my/image.png")));
+// add a label child widget
+iconNode.addChild (new LabelWidget (scene, "My Label"));
+// add it to the scene
+scene.addChild (iconNode);
+</pre>
+
+<h2><a name="Border">Border</a></h2>
+
+Each widget have a border. By default it has EmptyBorder. The border could be set using <code>Widget.setBorder</code> method. The border is always painted after the clearing the widget background and before the <code>Widget.paintWidget</code> and <code>Widget.paintChildren</code> methods. Therefore the border could be used for painting complex widget backgrounds. The border can be usually created using <code>BorderFactory.create*Border</code> methods. Single instance of border class could be shared and assigned to more widgets.
+
+There are following borders available:
+<ul>
+<li><b>EmptyBorder</b> - renders an empty border.
+<li><b>LineBorder</b> - renders a border with 1px wide stroke.
+<li><b>BevelBorder</b> - renders a bevel border.
+<li><b>ImageBorder</b> - renders a border using border-image.
+<li><b>RoundedBorder</b> - renders a rounded-rectangle border.
+<li><b>ResizeBorder</b> - renders a border with 8 dragging-points - usually used for 8-direction object resizing.
+<li><b>DashedBorder</b> - renders a border with dashed stroke optionally with 8 dragging-points.
+<li><b>SwingBorder</b> - renders a border using Border class from Swing.
+<li><b>CompositeBorder</b> - renders a border that is composed with specified borders.
+</ul>
+
+<h2><a name="Scene">Scene</a></h2>
+
+This widget represents a root node of the tree hierarchy of widgets. It controls the whole scene, its views, repainting and tree validation. It is extended by <code>ObjectScene</code>, <code>GraphScene</code>, <code>GraphPinScene</code> class which adds additional functionally for object-oriented and graph-oriented modeling.
+
+<code>Scene</code> class is derived from <code>Widget</code> class and contains additional methods.
+
+<p>
+
+<h3><a name="SceneMethods">Scene Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description</tr>
+<tr>
+<td>createView
+<td>Creates a single <code>JComponent</code>-based view of the scene. Could be called once only. The <code>JComponent</code> could be used anywhere in AWT/Swing. Scene and widgets starts to be validated/painted only when the view is created and added to the AWT/Swing components hierarchy (<code>JComponent.addNotify</code> is called).
+<tr>
+<td>getView
+<td>Returns the <code>JComponent</code> instance created by <code>createView</code>.
+<tr>
+<td>createSatelliteView
+<td>Creates a satellite view of the scene. It is showing an overview of the scene. In case the JComponent view is placed in a JScrollPane and the scene does not fit into the panel, then the satellite view paints an viewport rectangle which representing visible area. It also allows user to move with the actual viewport of the scene.
+<tr>
+<td>createBirdView
+<td>Creates a bird view of the scene. It is enough to create one bird view and reuse it all the time. The bird view is tracking mouse cursor and when the cursor is over visible area of the scene view, then an additional always-on-top window is shown and shows pointed part of the scene with specified zoom factor. The method returns <code>BirdViewController</code> which allows control over the bird view. When the bird view is enabled, then it consumes all events of the scene view.
+<tr>
+<td>getGraphics
+<td>Returns an instance of <code>Graphics2D</code> used by whole scene. The instance is the one that was available during the last JComponent.addNotify or JComponent.paint method call on the JComponent view.
+<tr>
+<td>paint(Graphics2D)
+<td>Paints the scene using <code>Graphics2D</code> instance. This method could be invoked in AWT-thread only.
+<tr>
+<td>isValidated
+<td>Returns <code>true</code> if it is validated as using <code>Widget.isValidated</code> and there is no region or widget scheduled for repainting. See <a href="#Layout">Layout</a> section.
+<tr>
+<td>validate
+<td>This method validates whole scene with all widgets. Usually it is called automatically e.g. at the end of event processing. See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>validate(Graphics2D)
+<td>This method validates whole scene with all widgets using specified Graphics2D. This is used for off-screen rendering when you do not have a main scene view created yet. Be aware that the scene is going to remain validated with specified font metrics after the method call. This may break scene layout when your main scene view is finally created and shown. See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>getMaximumBounds<br>setMaximumBounds
+<td>Controls the maximum bounds of the scene. By default it is <code>[-Integer.MAX_VALUE/2,-Integer.MAX_VALUE/2,Integer.MAX_VALUE,Integer.MAX_VALUE]</code>. This is used to limit the scene bounds e.g. to positive values only.
+<tr>
+<td>getZoomFactor<br>setZoomFactor
+<td>Controls the zoom factor of the scene.
+<tr>
+<td>getSceneAnimator
+<td>Returns a scene animator that controls animations on the scene. See <a href="#Animator">Animator</a> section.
+<tr>
+<td>getLookFeel<br>setLookFeel
+<td>Controls the scene look and feel. <code>LookFeel.createDefaultLookFeel</code> by default. See <a href="#LookFeel">Look and Feel</a> section.
+<tr>
+<td>getInputBindinds
+<td>Returns input bindings used by the scene. See <a href="#LookFeel">Look and Feel</a> section.
+<tr>
+<td>getActiveTool<br>setActiveTool
+<td>Controls the active action tool of the scene. See <a href="#ActionTools">Action Tools</a> section.
+<tr>
+<td>getKeyEventProcessingType<br>setKeyEventProcessingType
+<td>Controls the processing type used for key events. See <a href="#EventProcessingTypes">Event Processing Types</a> section.
+<tr>
+<td>getPriorActions
+<td>Returns a chain of prior actions. These actions are executed because any other action of the scene. See <a href="#AWTEventProcessing">AWT Event Processing</a> section.
+<tr>
+<td>getFocusedWidget<br>setFocusedWidget
+<td>Controls a focused widget of the scene. Only one widget could be focused at the same time. The focused widget could be used for key event processing. See <a href="#EventProcessingTypes">Event Processing Types</a> section.
+<tr>
+<td>addSceneListener<br>removeSceneListener
+<td>(Un)registers scene listener for notification about scene validation and repaint. See <a href="#SceneListener">SceneListener</a> section.
+<tr>
+<td>convertSceneToView<br>convertViewToScene
+<td>Converts location and boundary between scene coordination system and JComponent view coordination system. See <a href="#CoordinationSystem">Coordination System</a> section.
+<tr>
+<td>createWidgetHoverAction
+<td>Creates a widget-specific hover action. See <a href="#HoverAction">HoverAction</a> section.
+</table>
+
+<p>
+
+<h3><a name="SceneListener">SceneListener</a></h3>
+
+<p>
+This listener allows you to receive following events:
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description</tr>
+<tr>
+<td>sceneRepaint
+<td>Called when scene should be repainted.
+<tr>
+<td>sceneValidating
+<td>Called at the beginning of <code>Scene.validate</code> method when the scene is going to be validated. See <a href="#ValidationProcess">Validation Process</a> section.
+<tr>
+<td>sceneValidated
+<td>Called at the end of <code>Scene.validate</code> method when the scene is validated. See <a href="#ValidationProcess">Validation Process</a> section.
+</table>
+
+<p>
+This listener could be (un)registered using <code>Scene.addSceneListener</code> and <code>Scene.removeSceneListener</code> methods. Usually it is used by animators, scene layouts, Swing bindings and satellite views.
+
+<h2><a name="CoordinationSystem">Coordination System</a></h2>
+
+There are 3 coordination systems used in the library:
+
+<ul>
+<li><b>view</b> - the system that is used by a JComponent view and has [0,0] point at the top-left corner of the JComponent.
+<li><b>scene</b> - the system that is used by a scene. Scene can expand to negative coordinates too.
+<li><b>local</b> - the system that is used by a widget and has [0,0] point at the widget location. The widget location is specified to the location of its parent widget. The widget boundary are specified/used relatively to the widget location.
+</ul>
+
+<p>
+Converting from local to scene coordination system:
+<pre>
+Point Widget.convertLocalToScene (Widget widget, Point localSystemPoint) {
+    Point sceneSystemPoint = new Point (localSystemPoint);
+    while (widget != null  &amp;&amp;  widget != widget.getScene ()) {
+        sceneSystemPoint += widget.getLocation ();
+        widget = widget.getParentWidget ();
+    }
+    return sceneSystemPoint;
+}
+</pre>
+
+<p>
+Converting from scene to view coordination system:
+<pre>
+Point Scene.convertSceneToView (Scene scene, Point sceneSystemPoint) {
+    return new Point ((scene.getLocation () + sceneSystemPoint) * scene.getZoomFactor ());
+}
+</pre>
+
+<h2><a name="Layout">Layout</a></h2>
+
+<p>
+Each widget has a layout assigned (<code>AbsoluteLayout</code> by default). <code>Layout</code> interface cares about placement of children widgets of the widget where the layout is assigned. For details how layout is involved in the validation process, see <a href="#ValidationProcess">Validation Process</a> section. Almost all layouts implementations can be reused by more widgets at the same time.
+
+<p>
+Widget also keeps constraints assigned to children widgets. Layout can obtain a constraint using <code>Widget.getChildConstraint (childWidget)</code> method call.
+
+<p>
+Widget could be invisible too. In that case, the layout assigned to its parent widget must act like the invisible widget is not there. It means it must resolve location and bounds to value which does not affect the parent widget boundary. If it is not possible, then the location and the boundary of invisible child must be resolved as [0,0] and [0,0,0,0].
+
+<h3><a name="AbsoluteLayout">AbsoluteLayout</a></h3>
+
+<p>
+Created by: <code>LayoutFactory.createAbsoluteLayout</code>
+
+<p>
+Placement algorithm:
+<ul>
+<li>For each child widget of the widget:
+<li>It takes value of <code>childWidget.getPreferredLocation</code> and uses it as the evaluated childWidget location. If <code>null</code>, then it uses <code>[0,0]</code> point instead.
+<li>It takes value of <code>childWidget.getPreferredBounds</code> and uses it as the evaluated childWidget boundary. If <code>null</code>, then it uses <code>[0,0,0,0]</code> rectangle instead.
+</ul>
+
+<h3><a name="FlowLayout">FlowLayout</a></h3>
+
+<p>
+Created by: <code>LayoutFactory.createVerticalFlowLayout</code>, <code>LayoutFactory.createHorizontalFlowLayout</code>
+
+<p>
+This layout places children serially in vertical or horizontal line - one widget after another. It allows top-left, center, bottom-right and justify alignments and specifying gaps between children. It used <code>childWidget.getPreferredBounds</code> for resolving boundary. The layout will use the widest/highest boundaries for a cell dimension.
+
+<p>
+The layout allows to work with Number-class constraints. The Number constraint has to be a positive number assigned to a child widget. Then it represents a ratio in with the remaining space (height for VerticalFlowLayout and width for HorizontalFlowLayout) is split and assigned to a particular widget. See <code>test.layout.WeightFlowLayoutTest</code> for example.
+
+<h3><a name="CardLayout">CardLayout</a></h3>
+
+<p>
+Created by: <code>LayoutFactory.createCardLayout</code>
+
+<p>
+This layout has a single childWidget as active one. The active widget will be evaluated using <code>activeChildWidget.getPreferredLocation</code> (if <code>null</code>, then <code>[0,0]</code> point is used instead) and <code>activeChildWidget.getPreferredBounds</code>. The other children are evaluated with <code>[0,0,0,0]</code> rectangle as boundary and placed at the <strong>top-left</strong> corner of <code>activeChildWidget</code>.
+
+<p>
+For switching active child widget, use <code>LayoutFactory.setActiveCard (widget, newActiveChildWidget)</code> method.
+
+<h3><a name="OverlayLayout">OverlayLayout</a></h3>
+
+<p>
+Created by: <code>LayoutFactory.createOverlayLayout</code>
+
+<p>
+It finds the "minimal-encapsulation" (ME) boundary which contains all the children boundaries. Then it sets boundary of each child as the calculated ME one. The widget boundary is set to ME boundary too. During justification, the boundary of each child is sets to the boundary of the widget. Children are placed one over another - the last child is painted on top and receives events as the first child.
+
+<h2><a name="ValidationProcess">Validation Process</a></h2>
+
+<p>
+When any widget is added/removed in the tree hierarchy of a scene or a widget is changed the way that affects its placement or boundary, then the widget (and the scene too) has to be validated again.
+
+<p>
+The process is done in following steps:
+<ol>
+<li>Developer modifies a widget by directly (or indirectly) calling <code>Widget.revalidate</code> method. The method automatically schedules the widget for revalidation.
+<li>After all modifications, scene validation is invoked by calling <code>Scene.validate</code> method. Usually it is invoked automatically at the end of Swing event processing.
+<li>Validation process searches for invalid widgets.
+<li>All widget dependencies are notified about revalidation using <code>Widget.Dependency</code> interface.
+<li>Each modified widget evaluates its location and boundary using its layout.
+<li>Justification is invoked on each widget that need to justify its boundary using its layout.
+<li>If any new modification were introduced during the validation process, then the validation process is repeated again.
+</ol>
+
+<p>
+The process is described in details in next sub-sections.
+
+<h3><a name="Revalidation">Revalidation</a></h3>
+
+<p>
+Each Widget has two flags: <code>requiresFullValidation</code> (marks modified widget) and <code>requiresPartValidation</code> (used for back-tracing the tree from the root/scene widget down to all modified widgets). When a widget is asked to be scheduled for revalidation using <code>Widget.revalidate</code> method, then the widget is marked with requiresFullValidation and requiresPartValidation. All widgets upto the scene are marked as a requiresPartValidation. Now the scene can trace-down all modified widgets without storing their references. Each widget with requiresPartValidation flag also fires an event on its Widget.Dependency listeners because they could be affected by a change of some child widget.
+
+<h3><a name="SceneValidation">Scene Validation</a></h3>
+
+<p>
+When <code>Scene.validate</code> method is invoked, then it repeatedly validates scene until there is no modification - means <code>Scene.isValidated</code> returns <code>true</code>.
+
+<p>
+The validation process deep dives into the tree hierarchy and evaluates location and boundary using assigned layout of widgets that have requiresPartValidation set to true. Then it fires an event on all Widget.Dependency listeners for all children (recursively) of the widget with requiredFullValidation set to true.
+
+<p>
+Now all widgets are evaluated for new data. Because of used layout algorithms, it resolves boundary as the minimal "packed" boundary of the widget and its children - because each widget calculates its boundaries from its children boundary too.
+
+<p>
+In some cases you would like to extend boundary of some widgets e.g. when a widget with FlowLayout (with "justify" alignment) is a child of another widget with FlowLayout (with "justify" alignment). This can be done in this moment since all widgets are evaluated for minimal boundary and they can just expand. Therefore the validation process is deep-diving into the tree hierarchy (the depth is controlled by result of <code>Layout.requiresJustification</code> method of each widget. For each widget (from the root to the bottom) it reevaluates the boundary again and calculates children boundaries based on the widget boundary.
+
+<p>
+This 2-pass validation process allows to have similar layout support as Swing has.
+
+<h3><a name="Repainting">Repainting</a></h3>
+
+<p>
+When a widget is scheduled for repaint, then its current (before reevaluation) boundary in the view coordination system is scheduled for repaint and the widget itself is added into the list of widgets scheduled for repaint.
+
+<p>
+After the scene is validated completely, then all widgets in repaint-list are scheduled for repaint too. It takes their current (newly evaluated) view coordination system boundaries.
+
+<h3><a name="SceneLayout">SceneLayout</a></h3>
+
+<p>
+Layout (assigned to a widget) defines placement of its children widgets. But in some cases you would like to do a single-time layout based on different layout algorithm (it could be even high-level layout of graph-oriented data).
+
+<p>
+The possible solution could be to temporarily assign the desired layout to the widget and to start revalidation. The problem is that you cannot temporarily assign widget because you cannot assure when the layout and scene-validation will be invoked. Also you would not be able to invoke "initial" layout of a scene when the Scene is going to appear for the first time on the screen. It is because the JComponent is not initialized yet and therefore the scene is not validated yet and therefore widget boundaries (which are usually required by the layout algorithms) are not resolved yet too.
+
+<p>
+Therefore <code>SceneLayout</code> class has been introduced. When the SceneLayout is invoked by the developer, it starts listening on the scene to be validated (using <code>SceneListener</code>). When the <code>SceneListener.sceneValidated</code> method is called then the listener is removed and <code>SceneLayout.performLayout</code> method is invoked.
+
+<p>
+There is a <code>LayoutFactory.createDevolveWidgetLayout</code> method that creates a SceneLayout with <code>performLayout</code> method implementation which temporarily sets the desired layout and invokes the specified layout at the end of scene validation process. This allows you use a <code>LayerWidget</code> with default AbsoluteLayout, so the widgets inside will be able to freely move using <code>MoveAction</code> and from time to time (e.g. started by user action) the layer widget will be layout using the specified temporary layout to organize the layer.
+
+<h2><a name="WidgetAction">WidgetAction</a></h2>
+
+<p>
+The widgets are visual elements that just know where they are on the scene and how to draw themself. By default they do not know how to behave. For defining the behavior there are <code>WidgetAction</code>.
+
+<p>
+You can create various actions usually using <code>ActionFactory.create*Action</code> methods. For example: <code>ActionFactory.createMoveAction</code> method creates an action which allows user to move a widget (where the action is assigned to).
+
+<p>
+Factory methods usually requires some parameters. There are two kinds of parameters: <strong>Decorator</strong>s and <strong>Provider</strong>s. Decorator is used for specifying the visual appearance of objects temporarily created by an action. E.g. RectangularSelectAction has <code>RectangularSelectDecorator</code> for acquiring the widget that will represent actual selection rectangle. Provider is used for specifying the custom behavior of an action. E.g. EditAction has <code>EditProvider</code> with <code>edit</code> method which is called when an user double-clicks on a widget where the action assigned to. It is upto the <code>EditProvider</code> implementation whether it invokes an editor or run an application or does something totally different. Usually there are default implementations of the decorators and providers available in <code>ActionFactory</code> class.
+
+<p>
+Usually single instance of a particular action could be reused and assigned to more Widgets at the same time.
+
+<h3><a name="Assignment">Assignment</a></h3>
+
+<p>
+Actions could be grouped into <strong>chain</strong>s. The chain is an action that distributes the user-events to appropriate actions that are stored inside. Each Widget has its own chain that can be acquired by calling <code>Widget.getActions</code> method. Chain allows to manage and query the list of its actions using <code>addAction</code>, <code>removeAction</code>, <code>getActions</code> methods.
+
+<h3><a name="ActionTools">Action Tools</a></h3>
+
+<p>
+Sometimes you would like to have a scene which will behave differently based on a <code>scene state</code>. E.g. you have a toolbar with modes: "Select" (when active then user can only select object), "Connect" (when active then user can only create connection between objects), "Move" (when active then user can only move objects in a scene), ...
+
+<p>
+For this purpose there are <strong>action tools</strong>. A scene has a single active action tool specified. It is <code>null</code> by default and could be changed by <code>Scene.setActiveTool</code> method. The active tool specified as a <code>String</code> used for the tool identification. Each widget has <code>Widget.createActions (String tool)</code> method for creating an action chain for the specified tool. When a chain is created for particular tool, then you can use <code>Widget.getActions (String tool)</code> for faster access to the chain.
+
+<h3><a name="AWTEventProcessing">AWT Event Processing</a></h3>
+
+<p>
+Each mouse/keyboard/drag'n'drop/focus event that comes from the AWT has to be processed. The processing it done by walking through the tree hierarchy of widgets. For mouse events, the widget boundaries and <code>Widget.isHitAt</code> methods are used for checking before dispatching the event. The AWT-event is converted into the library-specific event (which is very similar to AWT event. The library-specific event has <code>event.getPoint</code> method which location in local coordination system of the widget where an appropriate action is attached to. For each valid widget, all default actions (from <code>Widget.getActions ()</code>) are processed. The processing continues until an event is consumed by an action.
+
+<p>
+The walk through process for a widget is done by:
+<ol>
+<li>Take the widget (start it with Scene first) and check its boundary.
+<li>If the event is a mouse-event and mouse-cursor is NOT inside boundary, then return back.
+<li>Process the event for each its child widget (start from the last child to the first child) for the widget.
+<li>If the event is consumed by any of the children then stop processing the event and return back.
+<li>Check if <code>Widget.isHitAt (mouseCursor)</code> method returns true. If so, then process the event with default action chain of the widget and then optionally with an action chain appropriate for the tool returned by <code>Scene.getActiveTool</code> method.
+<li>If event is consumed then stop processing the event.
+<li>Return back.
+</ol>
+
+<p>
+There is the <code>Scene.getPriorActions</code> code which returns an actions chain. All actions in this prior chain are processing an AWT event before any other actions used in the scene. If any of these prior actions consumes the event, the event processing is stopped. A prior action cannot lock even processing for itself. For example: see <code>test.tool.CtrlKeySwitchToolTest</code> example which is switching active tool of a scene based on a state of Ctrl key.
+
+<p>
+The <code>Widget.isEnabled</code> controls whether events can be processed by actions assigned to the widget or its children. The same behavior implemented for all types of events.
+
+<p>
+It is important to have correct order of actions assigned to a widget because some actions requires locking. Usually the "locking" actions are the one that requires mouse-dragging e.g. MoveAction, ResizeAction, ConnectAction, ... Usually it is enough to put HoverAction and SelectAction as the first two actions and others.
+
+<p>
+Actions usually require various parameters including for their creation e.g. <code>LayerWidget</code>. See <a href="#LayerWidget">LayerWidget</a> section for details.
+
+<p>
+
+<h3><a name="ActionState">Action State</a></h3>
+
+<p>
+The action is processing library-specific events and returns the event status at the end. Based on the status the library decides whether the event is consumed, locked, ... There are following statuses:
+
+<ul>
+<li><code>WidgetAction.State.REJECTED</code> - The event is not processed by the action. Event-processing has to continue.
+<li><code>WidgetAction.State.CONSUMED</code> - The event is processed and consumed by the action. Event-processing is stopped.
+<li><code>WidgetAction.State.CHAIN_ONLY</code> - The event is processed and consumed by the action. The rest of actions in the same action chain should be invoked too and then the event-processing is stopped.
+<li><code>WidgetAction.State.createLocked (Widget, WidgetAction)</code> - The event is processed and consumed by the action. The next AWT event has to be processed by the specified <code>WidgetAction</code> and it has to take the specified <code>Widget</code> as a parameter. Only when the next AWT event is not consumed by the specified action, then the whole-tree event-processing (described in <a href="#AWTEventProcessing">AWT Event Processing</a> section) is invoked. This is used for locking event-processing by a specific action during processing multiple-events user-actions like moving (MoveAction), starting new connection (ConnectAction), ...
+</ul>
+
+<h3><a name="EventProcessingTypes">Event Processing Types</a></h3>
+
+<p>
+All Swing events are processed by all widgets by default. Key-events has to processed differently because they do not contain a "location" information. Therefore all widgets would have to process those events.
+
+<p>
+Key events are usually not desired to be processed by all widgets. Therefore you can specify a type of event processing using <code>Scene.setKeyEventProcessingType</code> method. There are following types specified by <code>EventProcessingType</code> enum:
+
+<ul>
+<li><code>ALL_WIDGETS</code> - by default - Has the same behavior as the other events processing described previously.
+<li><code>FOCUSED_WIDGET_AND_ITS_PARENTS</code> - Based on the focused widget where a key event is processed by a focused widget and then its parents up to the root of the widget hierarchy. The scene has always a focused widget (if not specified or set to <code>null</code>, then the scene itself is taken as focused).
+<li><code>FOCUSED_WIDGET_AND_ITS_CHILDREN</code> - Based on the focused widget where a key event is processed by a focused widget and then by all its children.
+<li><code>FOCUSED_WIDGET_AND_ITS_CHILDREN_AND_ITS_PARENTS</code> - Combines FOCUSED_WIDGET_AND_ITS_CHILDREN and FOCUSED_WIDGET_AND_ITS_PARENTS types.
+</ul>
+
+<p>
+The focused widget is set by <code>Scene.setFocusedWidget</code> method. This method is not called automatically and it has to be called by a developer. Anyway there are a few places which are calling it automatically when:
+
+<ul>
+<li>You call <code>ObjectScene.setFocusedObject</code> method to set an focused object. It automatically sets its related widget as focused one.
+<li>You call <code>ObjectScene.setSelectedObjects</code> method to set selection objects. The first one is automatically set as a focused object too using <code>ObjectScene.setFocusedObject</code> method.
+<li>You are using <code>CycleFocusAction</code> in your <code>ObjectScene</code>.
+</ul>
+
+<h3><a name="ActionMapAction">ActionMapAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createActionMapAction ()</code>, <code>ActionFactory.createActionMapAction (InputMap, ActionMap)</code>
+
+<p>
+The action handles key events and popup menu creation. The keys and actions are obtained from specified InputMap and ActionMap parameters. The method without parameters uses the InputMap and ActionMap assigned to a JComponent view of a scene.
+
+<h3><a name="AcceptAction">AcceptAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createAcceptAction (AcceptProvider)</code>
+
+<p>
+The action allows to handle D'n'D drop operation. <code>AcceptProvider.isAcceptable</code> method is called for resolving whether the drop can happen and <code>AcceptProvider.accept</code> is called for handling the drop operation.
+
+<h3><a name="AddRemoveControlPointAction">AddRemoveControlPointAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createAddRemoveControlPointAction</code>
+
+<p>
+The action allows user to add a control point by double-clicking on path or remove control point by double-clicking on it. The action has <code>routingPolicy</code> which is automatically set to <code>ConnectionWidget</code> to prevent discarding of user changes by router assigned to the connection widget. For fixing moving-anchor problem use <code>FreeRectangularAnchor</code>.
+
+<h3><a name="AlignWithMoveAction">AlignWithMoveAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createAlignWithMoveAction (AlignWithMoveDecorator, AlignWithWidgetCollector)</code>
+
+<p>
+The action is similar to MoveAction but it allows snapping feature similar to <strong>Form Editor</strong> module. The <code>AlignWithMoveDecorator</code> supplies a graphic for snapping lines and the <code>AlignWithWidgetCollector</code> gathers all widgets that the snapping has to be checked against.
+
+<p>
+The outerBounds boolean parameter allows to specify whether client area or bounds of widgets is going to be checked.
+
+<h3><a name="AlignWithResizeAction">AlignWithResizeAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createAlignWithResizeAction (AlignWithMoveDecorator, AlignWithWidgetCollector)</code>
+
+<p>
+The action is similar to <code>ResizeAction</code> but it allows snapping feature similar to <strong>Form Editor</strong> module. The <code>AlignWithMoveDecorator</code> supplies a graphic for snapping lines and the <code>AlignWithWidgetCollector</code> gathers all widgets that the snapping has to be checked against.
+
+<p>
+The outerBounds boolean parameter allows to specify whether client area or bounds of widgets is going to be checked.
+
+<h3><a name="CycleFocusAction">CycleFocusAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createCycleFocusAction(CycleFocusProvider)</code>
+
+<p>
+The action is usually assigned to the scene widget and allows cycling focus using "Tab" key. The behavior of the cycling is defined by <code>CycleFocusProvider</code> interface which has two methods for cycling forward and backward.
+
+<p>
+If the action is created using <code>ActionFactory.createCycleObjectSceneFocusAction</code> method then using "Tab" key a focused object is cycling through all objects on an object scene. It is using the <code>ObjectScene.getIdentityCode</code> method for resolving the order of objects on a scene. For details, see <a href="#ObjectIdentityCode">Object Identity Code</a> section.
+
+
+<h3><a name="ConnectAction">ConnectAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createConnectAction (ConnectDecorator, ConnectProvider)</code>
+
+<p>
+The action should be assigned to the widget from which a connection should be created. The <code>ConnectDecorator</code> supplies the graphics for the guiding connection line. The <code>ConnectProvider</code> handles a connection creation and the connection source and target checking.
+
+<h3><a name="EditAction">EditAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createEditAction (EditProvider)</code>
+
+<p>
+The action allows to handle double-clicking on assigned widget. <code>EditProvider</code> handles the edit.
+
+<h3><a name="HoverAction">HoverAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createHoverAction (HoverProvider)</code> or <code>ActionFactory.createHoverAction (TwoStatedHoverProvider)</code>
+
+<p>
+The action allows to handle "hovering" effect when a mouse is hovering a widget where the action is assigned to. The first method invokes <code>HoverProvider</code> always when a mouse-cursor moves over assigned widget. The <code>TwoStatedHoverProvider</code> allows handling of an old and a new hovered-widget and provides <code>unsetHovering (Widget)</code> and <code>setHovering (Widget)</code> methods.
+
+<p>
+Because there is no Widget-related focus event generated by the library, therefore the hover action is not unsetting the hover after the mouse cursor leaves the related widget space. For fixing this, the same instance of the hover action has to be assigned to the Scene instance too.
+This will tell the library that when you are over a widget with hover actions assigned, then it is set into hovered state. When there is no widget (with hover actions assigned) under mouse cursor, then the scene itself is in hovered state and therefore the unsetHovering method is called in the previous widget.
+
+<p>
+There is a <code>Scene.createWidgetHoverAction</code> method which creates a widget-specific hover action. The actual hovered widget is held by the <code>Scene</code> instance and it only calls <code>Widget.setState</code> method with an appropriate parameter.
+
+<p>
+There is also <code>ObjectScene.createObjectHoverAction</code> method which creates an object-specific hover action. The hovering is based actual hovered object (not a hovered widget) in the ObjectScene instance. It means the mouse cursor is changed against widget that are representing objects in <code>ObjectScene</code>. The actual hovered object is held by <code>ObjectScene</code> instance. See <a href="#ObjectScene">ObjectScene</a> section.
+
+
+<h4><a name="HoverActionVsObjectSceneHoverAction">HoverAction vs. ObjectSceneHoverAction</a></h4>
+
+A regular <code>HoverAction</code> (with your own implementation of <code>HoverProvider</code> or <code>TwoStatedHoverProvider</code> interfaces) and <code>ObjectHoverAction</code> can be used exclusively only.
+
+<p>
+How to use <code>HoverAction</code>:
+<ul>
+<li>Implement your own <code>HoverProvider</code> or <code>TwoStateProvider</code>.
+<li>Create an <code>HoverAction</code> from it.
+<li>Then assign the action to the scene (for reseting hover) and to all widgets that can be hovered.
+<li>If a mouse-cursor is own a widget which HoverAction assigned, then the widgetHovered method is called with particular widget as argument.
+</ul>
+
+<p>
+How to use <code>ObjectSceneHoverAction</code>:
+<ul>
+<li>You do not have to implement anything. You use an action created by the <code>ObjectScene.createObjectHoverAction</code> method.
+<li>This action should be assigned to the widgets of objects (in an <code>ObjectScene</code>) that can be hovered.
+<li>Note that you should not assign it to a scene - it is done automatically. If a mouse-cursor is over a widget which <code>ObjectHoverAction</code> assigned, then the <code>ObjectScene.hoveredObjectM</code> property is changed to an object which belongs to the widget and all widgets registered for the object are called using <code>Widget.notifyStateChanged</code> method where the new <code>ObjectState</code> is passed as an argument. Each widget itself is defining how it will change its apperance based on the provided <code>ObjectState</code>.
+</ul>
+
+<h3><a name="InplaceEditorAction">InplaceEditorAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createInplaceEditorAction (InplaceEditorProvider)</code>
+
+<p>
+The action is a specialized case of EditAction. <code>InplaceEditorProvider</code> is called to supply the in-place editor represented as a Swing JComponent. The editor can be controlled using <code>InplaceEditorProvider.EditorController</code> interface. There is also <code>ActionFactory.createTextFieldInplaceEditorAction (TextFieldInplaceEditor)</code> method that allows text in-place editor using <code>JTextField</code>.
+
+<p>
+Using <code>ActionFactory.getInplaceEditorController</code> method you can obtain an <code>EditorController</code> for a specific action. The <code>EditorController</code> allows e.g. to programatically open in-place editor using <code>EditorController.openEditor</code> method.
+
+<p>
+The action also allows to specify an expansion directions using <code>InplaceEditorProvider.getExpansionDirections</code> method. Everytime an editor component is changed, it should call <code>InplaceEditorProvider.EditorController.notifyEditorComponentBoundsChanged</code> method to invoke recalculation of editor placement based on the initial bounds and expansion directions. Expansion direction of for built-in text-field based in-place editor there is an additional <code>ActionFactory.createTextFieldInplaceEditorAction (TextFieldInplaceEditor,EnumSet&lt;InplaceEditorProvider.ExpansionDirection&gt;)</code> factory method created. In this case the initial bounds of the editor component are resolved as the bounds of the related widget.
+
+<h3><a name="MoveAction">MoveAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createMoveAction (MoveStrategy, MoveProvider)</code>
+
+<p>
+When the action is assigned to a widget, it allows to drag/move the widget. The movement is done by calling <code>Widget.setPreferredLocation</code>. It usually requires to have <strong>AbsoluteLayout</strong> to be set on the parent widget. <code>MoveStrategy</code> allows processing of the new suggested location and therefore supplying snap-to-grid or lock axis movement strategy. The <code>MoveProvider</code> interface allows to define behavior of movement e.g. you can move another widget than the widget that has the MoveAction assigned. There are built-in strategies and providers in <code>ActionFactory</code> too. For more details, see <a href="#Strategies">Strategies</a> section.
+
+<h3><a name="MoveControlPointAction">MoveControlPointAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createMoveControlPointAction (MoveControlPointProvider)</code>
+
+<p>
+The action allows to move control points of a ConnectionWidget. There are built-in providers in <code>ActionFactory</code> too.
+
+<h3><a name="PanAction">PanAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createPanAction ()</code>, <code>ActionFactory.createWheelPanAction ()</code>
+
+<p>
+The action allows to scroll the view using mouse movement while mouse-middle-button is pressed. It requires to have JComponent view placed into a JScrollPane. This action is usually assigned to a Scene only.
+
+<p>
+The <code>WheelPanAction</code> allows to scroll ascene view using mouse-wheel. Then no key modifier is pressed, then the view is scrolled vertically. If shift key is held, then the view is scrolled horizontally.
+
+<h3><a name="PopupMenuAction">PopupMenuAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createPopupMenuAction (PopupMenuProvider)</code>
+
+<p>
+The action allows to invoke popup-menu that is supplied by the provider.
+
+<h3><a name="RectangularSelectAction">RectangularSelectAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createRectangularSelectAction (ObjectScene, LayerWidget)</code>
+
+<p>
+The action allows to handle object-selection using a rectangle that is created by dragging the widget where the action is supplied. This action is usually assigned to an <code>ObjectScene</code> or <code>LayerWidget</code>. See <a href="#ObjectScene">ObjectScene</a> section.
+
+<h3><a name="ReconnectAction">ReconnectAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createReconnectAction (ReconnectDecorator, ReconnectProvider)</code>
+
+<p>
+The action should be assigned to the <code>ConnectionWidget</code> and allows reconnecting its source and target. <code>ReconnectDecorator</code> supplies the graphics of temporary reconnecting line. <code>ReconnectProvider</code> handles the reconnection and the connection source and target checking.
+
+<h3><a name="ResizeAction">ResizeAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createResizeAction (ResizeStrategy, ResizeControlPointResolver, ResizeProvider)</code>
+
+<p>
+It is similar to MoveAction but used <code>Widget.setPreferredBounds</code>. Also there are <code>ResizeStrategy</code> and <code>ResizeProvider</code> interfaces. There are built-in providers in <code>ActionFactory</code> class too. For more details, see <a href="#Strategies">Strategies</a> section.
+
+<p>
+<code>ResizeControlPointResolver</code> allows customization of control points for resize action - resolves what kind of resizing is available at particular location of related widget.
+
+<h3><a name="SelectAction">SelectAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createSelectAction (SelectProvider)</code>
+
+<p>
+The action allows to handle the single-click. It is similar to EditAction. It also allowed to condition the selection and allows using "aimed" object state.
+
+<h3><a name="ZoomAction">ZoomAction</a></h3>
+
+<p>
+Created by: <code>ActionFactory.createZoomAction (zoomFactorMultiplier, animated)</code>, <code>ActionFactory.createCenteredZoomAction (zoomFactorMultiplier)</code>, <code>ActionFactory.createMouseCenteredZoomAction (zoomFactorMultiplier)</code>
+
+<p>
+The action allows to zoom the view using scrolling mouse-middle-button. The action is usually assigned to a Scene only. For correct functionality of the action, the JComponent has to be put into scrollable panel like JScrollPane.
+
+<p>
+While the <code>CenteredZoomAction</code> is zooming, a view is still centered to the center of the view. While the <code>MouseCenteredZoomAction</code> is zooming, a view is still centered to mouse cursor.
+
+<h3><a name="ExampleUsingActions">Example: Using Actions</a></h3>
+
+<p>
+Following example allows zooming and panning and allows to have a <code>IconNodeWidget</code> moving and widget-specific hovering.
+
+<pre>
+Scene scene = new Scene (); // has AbsoluteLayout by default
+IconNodeWidget iconNode = new IconNodeWidget (scene);
+iconNode.setImage (Utilities.loadImage ("path/to/my/image.png"));
+iconNode.setLabel ("MyIconNode");
+scene.addChild (iconNode);
+
+scene.getActions ().addAction (ActionFactory.createCenteredZoomAction (1.1));
+scene.getActions ().addAction (ActionFactory.createPanAction ());
+
+// assign HoverAction - the actual hovered widget is held by the scene
+iconNode.getActions ().addAction (scene.createWidgetHoverAction ());
+
+// MoveAction has to be after the hover action
+// otherwise MoveAction will always consume the event and HoverAction will never be invoked
+iconNode.getActions ().addAction (ActionFactory.createMoveAction ()); 
+</pre>
+
+<h3><a name="OrderOfActions">Order of Actions</a></h3>
+
+<p>
+The actions are created with a specific invocation for users. For example: The MoveAction is invoked by pressing mouse button on a widget. Then the action consumes all the events until the mouse button is released. Therefore you have to be aware of the order of the actions that you are assigning to the widget.
+
+<p>
+Here is usually order when a select, in-place editor, hover, move actions.
+
+<pre>
+WidgetAction.Chain actions = nodeWidget.getActions ();
+
+// creates an in-place editor action
+// opens the in-place editor when user double-clicks on the node widget
+// this action consumes only double-click events
+actions.addAction (ActionFactory.createTextFieldInplaceEditor (...));
+
+// creates a object-based select action
+// just selects the node when mouse-button is pressed on the node widget
+// this action does not consume any event
+actions.addAction (myObjectScene.createSelectAction ());
+
+// creates a move action
+// this action moves the node widget
+// this action consumes all events when the mouse is dragged
+// (means: while the mouse button is pressed on the node widget)
+actions.addAction (ActionFactory.createMoveAction ());
+
+// creates a object-based hover action
+// this action controls the hover state of the node (and node widget)
+// this action consumes all events while the mouse is over the node widget
+// (means: almost everytime) - therefore use it as the last action.
+actions.addAction (myObjectScene.createObjectHoverAction ());
+</pre>
+
+<p>
+If you would like to use the connect action together with move action, you have to use the extended connect action. It is because the connect action is invoked exactly the same way as the move action and therefore the invocation is clashing. This means that the action, which is added first, locks the event processing to itself and the second action will not be invoked at any time. This could be prevented by making two different invocation. This is defined by the extended connect action. The extended connect action is invoked only if the <strong>Ctrl</strong> key is pressed while you are pressing the mouse button and then dragging the mouse. Now these two action invocations are clashing and you can use them both. Also in this case the order of the actions does not matter.
+
+<h3><a name="ActionCreation">Action Creation</a></h3>
+
+<p>
+There are various methods where instances of actions can be created. Usually it done by a method in the <code>ActionFactory</code> class. These actions are generic.
+
+<p>
+The <code>Scene</code> class has a <code>createWidgetHoverAction</code> method for creating a widget specific hover action. Call this method after you have assigned all actions to the scene (since this action is internally added to the actions chain of the scene and the nature of the action is that it consumes all events while a mouse cursor is over the scene which usually happens all the time).
+
+<p>
+The <code>ObjectScene</code> class has a few methods for creating object-specific actions that controls selection, hovering, ... They are defined on the object scene since they are tightly coupled with the object scene. The select action created by object scene also sets the focused object.
+
+<p>
+In the future, methods that are defined on a scene and object scene could be moved to the <code>ActionFactory</code> class too.
+
+<h3><a name="Strategies">Strategies</a></h3>
+
+<p>
+Sometimes you want to restrict the widget movement or resizing. For that purpose there is a <code>MoveStrategy</code> or <code>ResizeStrategy</code> interfaces which implementations could be passed as an argument to <code>ActionFactory.createMoveAction</code> and <code>ActionFactory.createResizeAction</code> methods.
+
+<p>
+The interfaces contains a single method which is called when a new location or boundary is going to be set. The suggested value is passed to the method as argument and developer has to implement the logic and return the location or boundary which is going to be set.
+
+<p>
+Following code shows a few examples for strategies:
+
+<pre>
+public final class SnapTo16x16GridMoveStrategy implements MoveStrategy {
+    public Point locationSuggested (Widget widget, Point originalLocation, Point suggestedLocation) {
+        return new Point (suggestedLocation.x - suggestedLocation.x % 16, suggestedLocation.y - suggestedLocation.y % 16);
+    }
+}
+public final class PositiveCoordinatesOnlyMoveStrategy implements MoveStrategy {
+    public Point locationSuggested (Widget widget, Point originalLocation, Point suggestedLocation) {
+        return new Point (Math.max (suggestedLocation.x, 0), Math.max (suggestedLocation.y, 0));
+    }
+}
+</pre>
+
+<h2><a name="ConnectionWidget">ConnectionWidget</a></h2>
+
+<p>
+This widget represents a connection/path between source and target point. The source and target point is defined by <code>Anchor</code>. The path is defined by <strong>control points</strong> which are resolved by assigned <code>Router</code>. By default it is <code>DirectRouter</code> which routes the path as a straight line between the source and target point. The source and target points are not specified directly but by using anchors.
+
+<p>
+The <code>ConnectionWidget</code> has properties for setting source and target point shapes, control points shape, ability to calculate which segment of path or control point is hit by a specific point, ...
+
+<p>
+Line color is defined by the <code>foregroundColor</code> property.<br>
+Note: If you are changing a state of a ConnectionWidget (e.g. using it as a representation of an object in ObjectScene, GraphScene or GraphPinScene classes, then the ConnectionWidget.notifyStateChanged method is automatically called. See <a href="#ObjectScene">ObjectScene</a> section for details. The built-in implementation of this method overrides value of <code>foregroundColor</code> property based on a new state of the widget (the particular color is resolved by the LookFeel of the scene).
+
+<p>
+Also there is the <code>lineColor</code> property. By default it is <code>null</code>. If it is non-null value, then it overrides the object-state-based behavior of the ConnectionWidget. Therefore the lineColor value to be written foregroundColor property and uses as strictly defined color of the line.
+
+<p>
+A connection can have assigned a source and a target <code>AnchorShape</code> and a end-point and control-point <code>PointShape</code>. Source AnchorShape is used for defining a shape of a source point. Target anchor shape is used for defining a shape of a target point. An end point shape is used defining a shape of first or last control point. A control point shape is used for defining a shape of other control points except first and last. There are 4 predefined anchor shapes: <code>AnchorShape.NONE</code>, <code>AnchorShape.TRIANGLE_HOLLOW</code>, <code>AnchorShape.TRIANGLE_FILLED</code>, <code>AnchorShape.TRIANGLE_OUT</code>. Other built-in anchor shapes can be created by <code>AnchorShapeFactory</code> class. There are 2 predefined point shapes: <code>PointShape.SQUARE_FILLED_BIG</code>, <code>PointShape.SQUARE_FILLED_SMALL</code>. Other built-in point shapes can be created using <code>PointShapeFactory</code> class.
+
+<p>
+There is a <code>controlPointsCursor</code> property which defines a mouse cursor when the mouse is over a visible control point.
+
+<p>
+There is a <code>controlPointCutDistance</code> property. If set to positive number (by default 0), then the connection path is cut at each control point to make smoother corners. The smooth corners are not used during calculation whether a mouse-cursor hits the path.
+
+<h3><a name="Router">Router</a></h3>
+
+<p>
+<code>Router</code> cares about creating paths. There are following built-in implementations:
+
+<ul>
+<li><code>RouterFactory.createDirectRouter</code> creates a straight line between the source and the target anchor.
+<li><code>RouterFactory.createOrthogonalSeachRouter (CollisionsCollector)</code> creates an orthogonal path that tries to avoid overlapping areas specified by the <code>CollisionsCollector</code>. There is a built-in implementation <code>RouterFactory.createWidgetsCollisionCollector (LayerWidget...)</code> which collects all validated children widgets of the specified layer widgets and for each it gets the widget boundary and claims it as a vertical and horizontal collision. In case of ConnectionWidget, it takes the path (defined by its control points) and claims all horizontal and vertical segments as appropriate collisions.
+<li><code>RouterFactory.createOrthogonalSeachRouter (ConnectionWidgetCollisionsCollector)</code> creates an orthogonal path similarly as the previous case but the <code>ConnectionWidgetCollisionsCollector</code> gets a context of currently routed connection widget.
+<li><code>RouterFactory.createFreeRouter</code> is similar to <code>DirectRouter</code> but it modifies only the first and last point of the route. The "middle" control points stay the same. This effect is used by <code>AddRemoveControlPointAction</code> to maintain the control points created by user. From now this router is no longer useful, since it can be replaced by more flexible way: use any router that you like and set "Update-end-points-only" routing policy to the ConnectionWidget.
+</ul>
+
+<h3><a name="ConnectionWidgetLayout">ConnectionWidgetLayout</a></h3>
+
+<p>
+<code>ConnectionWidget</code> allows developer to attach children widgets too. Those children could be attached relatively to the path using constraints. The constraint could be set using <code>ConnectionWidget.setConstraint</code> method for each child widget. If a child widget has non-null preferred location then this preferred location will be added to the relative location.
+
+<p>
+See <code>test.connectionlabels.ConnectionLabelsTest</code> for details.
+
+<h3><a name="RoutingPolicy">Routing Policy</a></h3>
+
+Since version 2.9, the ConnectionWidget class has additional <code>routingPolicy</code> property. It ease management of control points changed by users. There are 4 values:
+<ol>
+<li><code>ALWAYS_ROUTE</code> - This is default value. The router is always invoked when a ConnectionWidget is changed and needs to be re-routed.
+<li><code>UPDATE_END_POINTS_ONLY</code> - The router is not invoked. Instead location of the first and the last control points are changed/updated to location computed by source and target anchors.
+<li><code>DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED</code> - The router is not invoked until the first or the last control points is moved (means it has different location from one computed by source or target anchor).
+<li><code>DISABLE_ROUTING</code> - The router is not invoked. The control points are freezed at the same locations.
+</ol>
+
+These routing policy are very useful when you are using modifying control points:
+<ul>
+<li>You can specify <code>routingPolicy</code> value to factory method of <code>AddRemoveControlPointAction</code> and <code>MoveControlPointAction</code>. If not null, then the value is automatically set to a ConnectionWidget which control points are modified by the action. Usually <code>UPDATE_END_POINT_ONLY</code> is used.
+<li>Some graph-oriented layout algorithms are resolving not only location of nodes on a scene but also routes path of edges. Then you can use <code>UPDATE_END_POINT_ONLY</code> or <code>DISABLE_ROUTING_UNTIL_END_POINT_IS_MOVED</code> to prevent discard of paths routed by the graph-oriented layout.
+
+For usages, see <code>test.routing.ActionsWithRoutingPolicyTest</code> and <code>test.routing.RoutingPolicyTest</code> examples.
+
+<h3><a name="ConnectionWidgetMethods">ConnectionWidget Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>getStroke<br>setStroke
+<td>Controls a stroke that is used for painting the line.
+<tr>
+<td>getLineColor<br>setLineColor
+<td>Controls line color. If not set, then the line color is obtained from LookFeel of the scene.
+<tr>
+<td>isPaintControlPoints<br>setPaintControlPoints
+<td>Controls whether control-points has to be painted too.
+<tr>
+<td>getSourceAnchor<br>setSourceAnchor
+<td>Manipulates with the source anchor. This method calls: <code>Anchor.removeEntry</code> and <code>Anchor.addEntry</code> methods to register the usage on anchor (uses <code>ConnectionWidget.getSourceAnchorEntry</code> as an entry for registration).
+<tr>
+<td>getTargetAnchor<br>setTargetAnchor
+<td>Manipulates with the target anchor. This method calls: <code>Anchor.removeEntry</code> and <code>Anchor.addEntry</code> methods to register the usage on anchor (uses <code>ConnectionWidget.getTargetAnchorEntry</code> as an entry for registration).
+<tr>
+<td>getSourceAnchorEntry<br>getTargetAnchorEntry
+<td>Returns source and target entry of the connection widget.
+<tr>
+<td>getSourceAnchorShape<br>setSourceAnchorShape<br>getTargetAnchorShape<br>setTargetAnchorShape
+<td>Controls a shape of source and target anchor. Shape is defined by a <code>AnchorShape</code> interface.
+<tr>
+<td>getControlPointShape<br>setControlPointShape
+<td>Controls a shape of control points. Shape is defined by <code>PointShape</code> interface. The control points are painted only if <code>isPaintControlPoints</code> returns true.
+<tr>
+<td>getEndPointShape<br>setEndPointShape
+<td>Controls a shape of end points (source and target). Shape is defined by <code>PointShape</code> interface. The end points are painted only if <code>isPaintControlPoints</code> returns true.
+<tr>
+<td>getControlPointCutDistance<br>setControlPointCutDistance
+<td>Controls a cut distance where the line cut with half-angle line at every control point. See <code>test.widget.ConnectionWidgetCutDistanceTest</code> example.
+<tr>
+<td>getRouter<br>setRouter
+<td>Controls a router assigned to the connection widget. The routers is calculating a path and sets a new one using <code>setControlPoints</code> method.
+<tr>
+<td>getRoutingPolicy<br>setRoutingPolicy
+<td>Controls a routing policy assigned to the connection widget. It controls whether and how control points are re-routed. For details, see <a href="#RoutingPolicy">Routing Policy</a> section.
+<tr>
+<td>getControlPoints()<br>setControlPoints(List&lt;Point>controlPoints,boolean sceneLocations)<br>getControlPoint(int index)
+<td>Manipulates with control points. If the <code>sceneLocations</code> is <code>true</code> then the <code>controlPoints</code> are recalculated relatively to the connection widget location otherwise controlPoints are taken as they are (and therefore they are taken as local locations). This method is usually called by the assigned router.
+<tr>
+<td>setConstraint (childWidget, alignment, placementInPercentage)
+<td>This method sets a constraint to a child widget (of the connection widget). It uses the specified alignment. The placement is resolved by the placementInPercentage parameter: 0.0f is the source anchor location, 1.0f is the target anchor location.
+<tr>
+<td>setConstraint (childWidget, alignment, placementAtDistance)
+<td>This method sets a constraint to the child widget (of the connection widget). It uses the specified alignment. The placement is resolved by the placementAtDistance (in pixels) parameter: &lt;=0 is the source anchor location; if &gt;=path-length means the target anchor location.
+<tr>
+<td>removeConstraint (childWidget)
+<td>This method removes a constraint for the child Widget.
+<tr>
+<td>calculateRouting
+<td>This method forces path re-routing. It is called automatically and developer does not have to call it.
+<tr>
+<td>isValidated
+<td>Return <code>true</code> if the widget is validated and its path is routed.
+<tr>
+<td>isRouted
+<td>Return <code>true</code> if the widget has its path routed.
+<tr>
+<td>reroute
+<td>Schedules connection widget for routing its path.
+<tr>
+<td>getFirstControlPoint<br>getLastControlPoint
+<td>Returns local location of first or last control point.
+<tr>
+<td>getSourceAnchorShapeRotation<br>getTargetAnchorShapeRotation
+<td>Returns an angle of source or target anchor shape in radians. The rotation is calculated as a angle between first/last path segment to the x-axis counter-clockwise. It usually used by <code>AnchorShape</code> for painting.
+<tr>
+<td>isHitAt(localLocation)
+<td>Checks whether the specified location hits (is a part of) the widget.
+<tr>
+<td>isFirstControlPointHitAt(localLocation)
+<td>Checks whether the specified location hits (is a part of) the first control point of the widget. The checked area is specified by the end-point radius.
+<tr>
+<td>isLastControlPointHitAt(localLocation)
+<td>Checks whether the specified location hits (is a part of) the last control point of the widget. The checked area is specified by the end-point radius.
+<tr>
+<td>getControlPointHitAt(localLocation)
+<td>Checks whether the specified location hits (is part of) of a control point of the widget. The checked area is specified by the control-point radius. If hit, then it returns the control point index.
+</table>
+
+<p>
+
+<h2><a name="Anchor">Anchor</a></h2>
+
+<p>
+Anchors are resolving the proper location of the point that they represent. Usually <code>Anchor</code> is attached to a <code>Widget</code> and listens on its placement changes using <code>Widget.Dependency</code> interface. If the widget is changed, then the anchor notifies (using <code>Anchor.Entry.revalidateEntry</code> method) all connection widgets that are using the anchor. Then all affect connection widgets schedule routing their paths. Anchor has possibility to use a widget reference or reference point of the opposite anchor that is assigned to the same connection widget. Anchor (set as the source anchor) has the target anchor as its opposite anchor and vice versa.
+
+<h3><a name="FixedAnchor">FixedAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createFixedAnchor (Point)</code> method creates an anchor with fixed location that is not changed.
+
+<h3><a name="CenterAnchor">CenterAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createCenterAnchor (Widget)</code> method creates an anchor which follows the center of the widget.
+
+<h3><a name="RectangularAnchor">RectangularAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createRectangularAnchor (Widget)</code> method creates an anchor which resolves the point as a point on the widget boundary that the closest a widget of opposite anchor (assigned to the connection widget).
+
+<h3><a name="CircularAnchor">CircularAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createCircularAnchor (Widget, int radius)</code> method creates an anchor which resolves the point as a point on a circle with radius around the widget center that the closest a widget of opposite anchor (assigned to the connection widget).
+
+<h3><a name="DirectionalAnchor">DirectionalAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createDirectionalAnchor (Widget, DirectionalAnchorKind directions)</code> method creates an anchor which resolves the point as a point at the north-south-west-east center of side of the widget boundary that the closest a widget of opposite anchor (assigned to the connection widget).
+
+<h3><a name="ProxyAnchor">ProxyAnchor</a></h3>
+
+<p>
+<code>AnchorFactory.createProxyAnchor (StateModel, Anchor...)</code> method creates an anchor that contains an array of anchor and forwards the point resolving to the single active anchor. The active anchor is defined by the index stored in the <code>StateModel</code> class. This is used in <strong>VMD</strong> plug-in for handling pin-anchors - there the pin could be hidden in a node and then the anchor placement resolving has to be forward from the pin to the anchor assigned to the node.
+
+<h3><a name="AnchorDependency">Anchor Dependency</a></h3>
+
+<p>
+Anchor is dependent on the related widget which is specified using a constructor parameter. The anchor automatically listen on the widget whether it is not changed. If the widget changes then anchor notifies all registered <code>Anchor.Entry</code> interface implementation (usually <code>ConnectionWidget.getSourceAnchorEntry</code> or <code>ConnectionWidget.getTargetAnchorEntry</code>). These entries are notifying connection widgets to schedule routing of their paths because the location of the anchor could be changed.
+
+<p>
+Each time the connection widget sets its new source or target anchor. It also removes from old and adds to new <code>Anchor</code> an appropriate <code>Anchor.Entry</code>. A list of entries can be obtained using <code>Anchor.getEntries</code> method.
+
+<p>
+This anchor dependency approach allows to have a <code>ProxyAnchor</code> that delegates the computation to one of its anchors. This mechanism is used for <strong>Minimize</strong> ability in <strong>VMD</strong> plug-in. See <a href="#MinimizeAbility">Minimize Ability</a> section for details.
+
+<h3><a name="ExampleConnectionWidgetWithAnchors">Example: ConnectionWidget with Anchors</a></h3>
+
+<p>
+The following code shows how to create a connection widget with 2 anchors - source anchor is <code>RectangularAnchor</code> bound to the <code>w1</code> widget and target anchor is <code>FixedAnchor</code> with a fixed location at scene origin <code>[0,0]</code>. A shape of target anchor will be filled-triangle.
+
+<pre>
+ConnectionWidget c = new ConnectionWidget (scene);
+c.setSourceAnchor (AnchorFactory.createRectangularAnchor (w1));
+c.setTargetAnchor (AnchorFactory.createFixedAnchor (new Point (0, 0)));
+c.setTargetAnchorShape (AnchorShape.TRIANGLE_FILLED);
+</pre>
+
+<h3><a name="LoopEdge">Loop Edge</a></h3>
+
+<p>
+The loop connection is a connection where the source and the target has the same anchor/widget. The visualization of such connection should be a small loop attached to the widget. For making this you have to have:
+<ul>
+<li>source and target anchor that computes different locations or
+<li>Router that computes a loop path.
+</ul>
+
+<p>
+The only built-in anchor implementation that is creating an anchor that generates different locations for source and target is <code>VMDNodeAnchor</code> class. You have to create a new instance for each Widget where the anchor has to be assigned. The best is to use it with <code>OrthogonalSearchRouter</code> that will create a small orthogonal "loop" path.
+
+<h3><a name="ParallelEdges">Parallel Edges</a></h3>
+
+<p>
+The structures used in the library supports parallel edges. Be aware of anchor used for source and target of connection widget. Almost all implementations are calculating the same location for the same widget where the anchor is attached too. The only built-in implementation that could be used for this visualization is <code>VMDNodeAnchor</code>.
+
+<h2><a name="LayerWidget">LayerWidget</a></h2>
+
+<p>
+This widget represents a glass-pane - similarly to <code>JGlassPane</code> from Swing. It is transparent by default. Usually a set of <code>LayerWidget</code>s are used in a widget that does not have any layout assigned. Then all layers are placed one over another which could be used for various optimalizations.
+
+<p>
+For example <strong>scene layers</strong>: You have a scene with <code>AbsoluteLayout</code> and you will add <code>LayerWidget</code> with <code>AbsoluteLayout</code> as the scene children. This allows to have independent panels.
+
+<p>
+Usually following scene layers are used:
+
+<ul>
+<li><strong>backgroundLayer</strong> for temporary background interaction widgets - like rectangular selection
+<li><strong>mainLayer</strong> for main widgets,
+<li><strong>connectionLayer</strong> for connections to speed up the scene validation when connection as dependent on placement of widgets in <strong>mainLayer</strong> - in that case the scene validation is done in a single pass
+<li><strong>interactionLayer</strong> for temporary foreground interaction widgets created by decorators of interactive actions like ConnectAction or AlignWithMoveAction, ...
+</ul>
+
+<h3><a name="ExampleLayers">Example: Layers</a></h3>
+
+<p>
+Following code creates a scene with two layers: <strong>mainLayer</strong> for objects, <strong>connectionLayer</strong> for connections. This is usual implementation when there are <code>ConnectionWidget</code>s used in a scene. Because during validation the mainLayer is calculated completely first and then the connectionLayer is calculated completely. This allow the mentioned 1-pass calculation. If connection widgets would be in single mainLayer together with the main objects, then it can happen that <code>w1</code> and <code>w2</code> are calculated after <code>c</code> and therefore <code>c</code> would have to be calculated again. This means that at the end the connection widgets could be calculated <strong>twice</strong>. With the 2 layers approach it is always <strong>once</strong>.
+
+<pre>
+Scene scene = new Scene ();
+LayerWidget mainLayer = new LayerWidget (scene);
+scene.addChild (mainLayer);
+LayerWidget connectionLayer = new LayerWidget (scene);
+scene.addChild (connectionLayer);
+
+Widget w1 = new LabelWidget (scene, "Source");
+mainLayer.addChild (w1);
+Widget w2 = new LabelWidget (scene, "Target");
+mainLayer.addChild (w2);
+
+ConnectionWidget c = new ConnectionWidget (scene);
+c.setSourceAnchor (AnchorFactory.createRectangularAnchor (w1));
+c.setTargetAnchor (AnchorFactory.createRectangularAnchor (w2));
+connectionLayer.addChild (c);
+</pre>
+
+<h2><a name="ObjectScene">ObjectScene</a></h2>
+
+The tree of widgets is usually not enough for modeling. You would like to work with objects, control selection of objects, ... Everything is based on objects in a model. Scene on the other hand works with Widgets. Therefore there is an <code>ObjectScene</code> class. It manages the mapping between objects and widgets and allows object-oriented access to the scene including selection, highlighting (something like secondary selection), hovering, ... Each object can be mapped to multiple widgets.
+
+<p>
+The <code>ObjectScene</code> does not create any widget or object. All objects and their widget peers has to be created by developer, placed in the tree hierarchy of widgets and then registered using <code>ObjectScene.addObject (Object, Widget...)</code> method.
+
+<p>
+Internally objects are stored in <code>Map</code>, therefore <code>equals</code> method is used for comparing and identification. It is recommended to use objects which <code>equals</code> method implemented as <code>return object == this;</code>. Especially do not use <code>Array</code>s, <code>List</code>s, <code>Set</code>s, <code>Map</code>s, ... because:
+
+<pre>
+ObjectScene scene = new ObjectScene ();
+Map m1 = new HashMap ();
+// registers "m1" instance
+scene.addObject (m1);
+Map m2 = new HashMap ();
+// the m2 object is already in the scene because "m1.equals (m2)" is true
+scene.isObject (m2); // return true
+scene.addObject (m2); // ERROR - already added
+</pre>
+
+<h3><a name="ObjectState">ObjectState</a></h3>
+
+<p>
+Each widget at scene has its state (defined with <code>ObjectState</code> class). A state represents whether a widget has: selected, highlighted, widgetHovered, objectHovered, widgetFocused, objectFocused and aimed flags set. The default value is result of <code>ObjectScene.createNormal</code> method which does not have any flags raised.
+
+<p>
+The state is stored at each widget. You can manipulate with it using <code>Widget.getState</code> and <code>Widget.setState</code> method. <code>Widget.notifyStateChanged</code> method is called after any state change on the widget. This allows to define state-specific behavior directly inside the widget implementation class.
+
+<p>
+<code>ObjectScene</code> class manages similar states for its objects. The state is changed automatically when the selection, highlighting or hovering is changed in ObjectScene using <code>ObjectScene.setSelectedObjects</code>, <code>ObjectScene.setHoveredObject</code>, ... methods. When the state of an object is changed then the state of its widget peer is changed according to the object-state-change too. You can obtain the state of an object using <code>ObjectScene.getObjectState</code> method. When the state of a widget is changed, it does not affect the state of particular object.
+
+<h3><a name="ObjectSceneMethods">ObjectScene Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>addObject (Object, Widget...)
+<td>Registers an object with mapping to its widget peers. Widget array cannot contain <code>null</code> value. For backward compatibility the widgets array could be also a single <code>null</code> value array. Then it be takes as empty widgets array.
+<tr>
+<td>removeObject (Object)
+<td>Unregisters an object.
+<tr>
+<td>getObjects ()
+<td>Returns a set of objects in the scene.
+<tr>
+<td>isObject (Object)
+<td>Returns whether the specified object is registered.
+<tr>
+<td>getSelectedObjects ()<br>setSelectedObjects (Set)
+<td>Controls the set of selected objects. The object state is propagated to a widget related to the object.
+<tr>
+<td>getHighlightedObjects ()<br>setHighlightedObjects (Set)
+<td>Controls the set of highlighted objects. The object state is propagated to a widget related to the object.
+<tr>
+<td>getHoveredObject ()<br>setHoveredObject (Object)
+<td>Controls a hovered object of the scene. Usually there is no need to call it. The object state is propagated to a widget related to the object. There could be only one focused object set at the same time.
+<tr>
+<td>getFocusedObject ()<br>setFocusedObject (Object)
+<td>Controls a focused object of the scene. The object state is propagated to a widget related to the object. There could be only one focused object set at the same time.
+<tr>
+<td>addObjectSceneListener(listener,eventTypes)<br>removeObjectSceneListener(listener,eventTypes)
+<td>Registers and unregisters an object scene listener for a specified event types. See <a href="#ObjectSceneListener">ObjectSceneListener</a> section for details.
+<tr>
+<td>createSelectAction ()
+<td>Creates a object-specific select action. Usually assigned to a widget peer of an object which should be selected by user. The selected object is also set as focused object.
+<tr>
+<td>createObjectHoverAction ()
+<td>Creates object-specific hover action. This action controls the hovered object on a scene. It opposite to the widget-specific hover action.
+<tr>
+<td>findWidget (Object)
+<td>Finds a widget peer for an object. It return a single widget only which is the first widget parameter passed to the <code>ObjectScene.addObject</code> method.
+<tr>
+<td>findWidgets (Object)
+<td>Finds a list of all widget peers registered to an object.
+<tr>
+<td>findObject (Widget)
+<td>Finds an object for a widget peer.
+<tr>
+<td>findStoredObject (Object templateObject)
+<td>Returns the stored instance of an object where <code>storedObject.equals (templateObject)</code>.
+<tr>
+<td>getObjectState (Object)
+<td>Returns an object state for a specified object. See <a href="#ObjectState">ObjectState</a> section.
+<tr>
+<td>userSelectionSuggested (Set)
+<td>This method is called from select action (created by <code>ObjectScene.createSelectAction</code> method) and <code>RectangularSelectProvider</code> (created by <code>ActionFactory.createObjectSceneRectangularSelectProvider</code> method). It allows you to filter the selection done by an user. Default implementation of this method just calls <code>setSelectedObjects</code> method with the specified <code>Set</code> as a parameter.
+<tr>
+<td>getIdentityCode (Object)
+<td>This method is called to get identity code for a specified object. The identity code is used for resolving an order of objects since objects are not sorted in an object scene. The method is meant to be overridden to provide. Default implementation just returns a system identity hash code of each object. See <a href="#ObjectIdentityCode">Object Identity Code</a> section.
+</table>
+
+<p>
+
+<h3><a name="ObjectSceneListener">ObjectSceneListener</a></h3>
+
+<p>
+The ObjectScene allows to listen on a changed done inside. There are following event types:
+<ul>
+<li>ObjectSceneEventType.OBJECT_ADDED
+<li>ObjectSceneEventType.OBJECT_REMOVED
+<li>ObjectSceneEventType.OBJECT_STATE_CHANGED
+<li>ObjectSceneEventType.OBJECT_SELECTION_CHANGED
+<li>ObjectSceneEventType.OBJECT_HIGHLIGHTING_CHANGED
+<li>ObjectSceneEventType.OBJECT_HOVER_CHANGED
+<li>ObjectSceneEventType.OBJECT_FOCUS_CHANGED
+</ul>
+
+<p>
+The listener could be (un)registered using <code>ObjectScene.add/removeObjectSceneListener(ObjectSceneListener,ObjectSceneEventType...)</code> methods. The listener is registered for a specified event types only. This is due to performance and API reasons. There is a single listener used for all event types to prevent heavy addition of <code>add/remove*Listener</code> methods in <code>Scene</code>-derived classes. Also the implementation of an event processing has to as fast as possible - especially processing objectAdded, objectRemoved and objectStateChanged.
+
+<p>
+ObjectSceneListener could be reused for more object scenes. There is a ObjectSceneEvent instance passed as the first parameter of every listener method. You can acquire ObjectScene instance by calling <code>ObjectSceneEvent.getObjectScene()</code> method.
+
+<h3><a name="ObjectIdentityCode">Object Identity Code</a></h3>
+
+<p>
+Objects in an object scene are not sorted - they are kept in an unsorted set. Therefore there is a <code>ObjectScene.getIdentityCode</code> method meant to be overridden, which defines an order of those objects. The order is defined the way that an identity code must exist for each object and it must be unique in an object scene. The identity code is represented by Comparable interface and therefore it can be used for sorting and comparing.
+
+<p>
+The method is meant to be overridden to provider more accurate ordering identity code. Default implementation is returning an system identity hash-code of an object. If you are using Comparable-implementing classes for objects in an object scene, then they can represents/define identity code automatically and you can use directly as a return value of the <code>getIdentityCode</code> method.
+
+<h2><a name="GraphSupport">Graph Support</a></h2>
+
+<p>
+The library has support for graph-oriented modeling. There are two models supported:
+<ul>
+<li><b>GraphScene</b> manages a model with <strong>nodes</strong> and <strong>edges</strong>. Edge could be connected to a source and target node only.
+<li><b>GraphPinScene</b> manages a model with <strong>nodes</strong>, <strong>pins</strong> and <strong>edges</strong>. A pin is always attached to a node. Edge could be connected to a source and a target pin only.
+</ul>
+
+<p>
+Both are using generics and therefore developers can specify their classes that represents nodes, pins and edges. Following code contains examples for specifying the classes:
+
+<pre>
+// GraphScene class is abstract, it has to be extended to supply UI therefore MyGraphScene is used
+// MyNode class is used for node object. MyEdge class is used for edge object.
+GraphScene&lt;MyNode, MyEdge&gt; graph1 = new MyGraphScene&lt;MyNode, MyEdge&gt; ();
+graph1.addNode (new MyNode ());
+graph1.addEdge (new MyEdge ());
+
+// String class is used for node, pin and edge object.
+GraphPinScene&lt;String, String, String&gt; graph2 = new GraphPinScene&lt;String, String, String&gt; ();
+graph2.addNode ("node1");
+graph2.addPin ("node1", "pin1");
+graph2.addEdge ("edge1");
+
+graph2.addEdge ("pin1"); // ERROR - see next paragraph for explanation
+</pre>
+
+<p>
+Both classes are derived from <code>ObjectScene</code> and therefore inherits its functionality. Also the same rule for object identification (using <code>equals</code> method) is applied. All nodes, pins and edges are objects and therefore each of them has to have unique identification across all nodes, pins and edges.
+
+<h3><a name="GraphUIBinding">Graph UI Binding</a></h3>
+
+<p>
+Both class are using the similar approach for binding objects with widgets. When a node or an edge is added using <code>GraphScene.addNode</code> or <code>GraphScene.addEdge</code> method, then appropriate <code>protected GraphScene.attachNodeWidget (Node)</code> or <code>protected GraphScene.attachEdgeWidget (Edge)</code> method is called. These methods are meant to be implemented by a developer to supply the graphics. These methods are responsible for:
+<ul>
+<li>creating a widget peer for the specified node or edge,
+<li>add the created widget into the tree hierarchy of widgets and
+<li>return the widget instance, so the GraphScene class can use it for mapping.
+</ul>
+The methods can return <code>null</code> too - that would mean that object does not have a widget peer and therefore it is a non-visual object.
+
+<p>
+Optionally the developer can override default implementation of <code>protected detachNodeWidget (Node, Widget)</code> and <code>protected detachEdgeWidget (Edge, Widget)</code> method. These methods are responsible for removing the graphics. Default implementation just removes the widget peer from its parent widget.
+
+<p>
+Edges can have source node assigned using <code>GraphScene.setEdgeSource</code> method. When source is changed then <code>protected GraphScene.setEdgeSourceAnchor</code> method is called. The method is meant to be implemented by a developer to supply the graphics for applying the source node change. Usually it sets an anchor (related to the new source node) as a source anchor of a connection widget that represents the edge. Similarly it is done for target node of an edge with <code>GraphScene.setEdgeTarget</code> and <code>protected GraphScene.setEdgeTargetAnchor</code> methods.
+
+<p>
+Now the UI is managed and implemented in a developer's class which derives from <code>GraphScene</code>. Therefore a developer does not have to care about the UI at all once the class is implemented and can just use the class using graph-oriented model approach.
+
+<p>
+The <code>GraphPinScene</code> is similar - it just contains methods related to pins.
+
+<h3><a name="ExampleGraphSceneUI">Example: GraphScene UI</a></h3>
+
+<p>
+The following code shows how to create a <code>GraphScene</code> with a node (represented as a <code>String</code> in a model and as a <code>IconNodeWidget</code> in a scene) and a edge (represented as a <code>String</code> in a model and as a <code>ConnectionWidget</code> in a scene). Nodes and edges will react on selection and hovering - the UI behavior of object-state is defined in <code>IconNodeWidget</code> and <code>ConnectionWidget</code> directly in their <code>notifyStateChanged</code> methods.
+
+<pre>
+public class MyGraphScene extends GraphScene&lt;String, String&gt; {
+
+    private Widget mainLayer;
+    private Widget connectionLayer;
+
+    private WidgetAction moveAction = ActionFactory.createMoveAction ();
+
+    public MyGraphScene () {
+        mainLayer = new Widget (this);
+        addChild (mainLayer);
+        connectionLayer = new Widget (this);
+        addChild (connectionLayer);
+    }
+
+    protected Widget attachNodeWidget (String node) {
+        IconNodeWidget widget = new IconNodeWidget (this);
+        widget.setLabel ("Node: " + node);
+
+        WidgetAction.Chain actions = widget.getActions ();
+        actions.addAction (createObjectHoverAction ());
+        actions.addAction (createSelectAction ());
+        actions.addAction (moveAction);
+
+        mainLayer.addChild (widget);
+        return widget;
+    }
+
+    protected Widget attachEdgeWidget (String edge) {
+        ConnectionWidget widget = new ConnectionWidget (this);
+        widget.setTargetAnchorShape (AnchorShape.TRIANGLE_FILLED);
+
+        WidgetAction.Chain actions = widget.getActions ();
+        actions.addAction (createObjectHoverAction ());
+        actions.addAction (createSelectAction ());
+
+        connectionLayer.addChild (widget);
+        return widget;
+    }
+
+    protected void attachEdgeSourceAnchor (String edge, String oldSourceNode, String sourceNode) {
+        ConnectionWidget edgeWidget = (ConnectionWidget) findWidget (edge);
+        Widget sourceNodeWidget = findWidget (sourceNode);
+        Anchor sourceAnchor = AnchorFactory.createRectangularAnchor (sourceNodeWidget);
+        edgeWidget.setSourceAnchor (sourceAnchor);
+    }
+
+    protected void attachEdgeTargetAnchor (String edge, String oldTargetNode, String targetNode) {
+        ConnectionWidget edgeWidget = (ConnectionWidget) findWidget (edge);
+        Widget targetNodeWidget = findWidget (targetNode);
+        Anchor targetAnchor = AnchorFactory.createRectangularAnchor (targetNodeWidget);
+        edgeWidget.setTargetAnchor (targetAnchor);
+    }
+
+}
+</pre>
+
+<h3><a name="GraphSceneMethods">GraphScene Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>addNode (Node)<br>addEdge (Edge)
+<td>Adds a node or an edge to the scene. The <code>attachNodeWidget</code> or <code>attachEdgeWidget</code> is called before the object and its widget peer is really registered. After the registration <code>notifyNodeAdded</code> or <code>notifyEdgeAdded</code> method is called.
+<tr>
+<td>removeNode (Node)<br>removeEdge (Edge)<br>removeNodeWithEdges (Node)
+<td>Removes a node or an edge from the scene. The <code>detachNodeWidget</code> or <code>detachEdgeWidget</code> is called after the unregistering. While removing an edge, <code>setEdgeSource (edge, null)</code> and <code>setTargetSource (edge, null)</code> are called first. <code>removeNodeWithEdges</code> method removes all connected edges before removing the node.
+<tr>
+<td>removeNodeWithEdges (Node)<br>removePinWithEdges (Pin)
+<td>Similar to <code>removeNode</code> and <code>removePin</code> methods but also removes all edges that are connected to them.
+<tr>
+<td>getNodes<br>getEdges
+<td>Returns a collection of registered nodes or edges.
+<tr>
+<td>setEdgeSource (Edge, Node)<br>setEdgeTarget (Edge, Node)
+<td>Sets a source or a target to the edge. <code>attachEdgeSourceAnchor</code> or <code>attachEdgeTargetAnchor</code> method is called after the change is registered.
+<tr>
+<td>getEdgeSource<br>getEdgeTarget
+<td>Returns a source or target node of the edge.
+<tr>
+<td>findNodeEdges (Node, allowOutputEdges, allowInputEdges)
+<td>Returns a collection of edges connected to the node. If <code>allowOutputEdges</code> is <code>true</code> then the collection contains edges where the node is as a source. If <code>allowInputEdges</code> is <code>true</code> then the collection contains edges where the node is as a target.
+<tr>
+<td>findEdgesBetween (sourceNode, targetNode)
+<td>Returns a collection of edges that are connected to the <code>sourceNode</code> and the <code>targetNode</code>.
+<tr>
+<td>isNode (object)<br>isEdge(object)
+<td>Returns whether an object is registered as a node or an edge.
+<tr>
+<td>protected attachNodeWidget (Node)<br>protected attachEdgeWidget (Edge)
+<td>There methods are meant to be overridden to create a widget peer for a node or an edge. The method is responsible for creating a widget peer, adding it into the tree hierarchy of widgets and returning it from the method. This method is called at the beginning of <code>addNode</code> or <code>addEdge</code> method. It is not mandatory to create a widget - <code>null</code> can be returned too.
+<tr>
+<td>protected attachEdgeSourceAnchor (Edge, oldSourceNode, newSourceNode)<br>protected attachEdgeTargetAnchor (Edge, oldTargetNode, newTargetNode)
+<td>These methods are responsible to set a proper anchor to a widget (usually <code>ConnectionWidget</code>) peer of the edge. The anchor is usually related to a widget peer of the <code>newSourceNode</code> or the <code>newTargetNode</code>. This method is called at the end of <code>setEdgeSource</code> or <code>setEdgeTarget</code> method - the source and the target is registered already. It is not mandatory to assign an anchor - it can do nothing too.
+<tr>
+<td>protected detachNodeWidget (Node, Widget)<br>protected detachEdgeWidget (Edge, Widget)
+<td>These methods are called to at the end of <code>removeNode</code> or <code>removeEdge</code> methods - objects are unregistered already. Default implementation just removes the widget peer from its parent widget.
+<tr>
+<td>protected notifyNodeAdded (Node, Widget)<br>protected notifyEdgeAdded (Edge, Widget)
+<td>Called at the end of <code>addNode</code> or <code>addEdge</code> methods - objects are registered already.
+</table>
+
+<p>
+
+<h3><a name="GraphPinSceneMethods">GraphPinScene Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>addNode (Node)<br>addPin (Node, Pin)<br>addEdge (Edge)
+<td>Adds a node, a pin or an edge to the scene. The <code>attachNodeWidget</code>, <code>attachPinWidget</code> or <code>attachEdgeWidget</code> is called before the object and its widget peer is really registered. After the registration <code>notifyNodeAdded</code>, <code>notifyPinAdded</code> or <code>notifyEdgeAdded</code> is called. Adding a pin requires to specify the node where the pin is attached to. There is no possibility to change it later.
+<tr>
+<td>removeNode (Node)<br>removePin (Pin)<br>removeEdge (Edge)
+<td>Removes a node, a pin or an edge from the scene. The <code>detachNodeWidget</code>, <code>detachPinWidget</code> or <code>detachEdgeWidget</code> is called after the unregistering. While removing an edge, <code>setEdgeSource (edge, null)</code> and <code>setTargetSource (edge, null)</code> are called first. While removing a node, all attached pins are removed first using "removePin" method.
+<tr>
+<td>getNodes<br>getPins<br>getEdges
+<td>Returns a collection of registered nodes, pins or edges.
+<tr>
+<td>getPinNode
+<td>Returns a node where the pin is attached to.
+<tr>
+<td>getNodePins
+<td>Returns a collection of pins that are attached to the node.
+<tr>
+<td>setEdgeSource (Edge, Pin)<br>setEdgeTarget (Edge, Pin)
+<td>Sets a source or a target to the edge. <code>attachEdgeSourceAnchor</code> or <code>attachEdgeTargetAnchor</code> is called after the change is registered.
+<tr>
+<td>getEdgeSource<br>getEdgeTarget
+<td>Returns a source or target pin of the edge.
+<tr>
+<td>findPinEdges (Pin, allowOutputEdges, allowInputEdges)
+<td>Returns a collection of edges connected to the pin. If <code>allowOutputEdges</code> is <code>true</code> then the collection contains edges where the pin is as a source. If <code>allowInputEdges</code> is <code>true</code> then the collection contains edges where the pin is as a target.
+<tr>
+<td>findEdgesBetween (sourcePin, targetPin)
+<td>Returns a collection of edges that are connected to the <code>sourcePin</code> and the <code>targetPin</code>.
+<tr>
+<td>isNode (object)<br>isPin (object)<br>isEdge (object)
+<td>Returns whether an object is registered as a node, a pin or an edge.
+<tr>
+<td>protected attachNodeWidget (Node)<br>protected attachPinWidget (Pin)<br>protected attachEdgeWidget (Edge)
+<td>These methods are meant to be overridden to create a widget peer for a node, a pin or an edge. The method is responsible for creating a widget peer, adding it into the tree hierarchy of widgets and returning it from the method. This method is called at the beginning of <code>addNode</code>, <code>addPin</code> or <code>addEdge</code> method. It is not mandatory to create a widget - <code>null</code> can be returned too.
+<tr>
+<td>protected attachEdgeSourceAnchor (Edge, oldSourcePin, newSourcePin)<br>protected attachEdgeTargetAnchor (Edge, oldTargetPin, newTargetPin)
+<td>These methods are responsible to set a proper anchor to a widget (usually <code>ConnectionWidget</code>) peer of the edge. The anchor is usually related the <code>newSourcePin</code> or <code>newTargetPin</code>. This method is called at the end of <code>setEdgeSource</code> or <code>setEdgeTarget</code> method - the source and the target is registered already. It is not mandatory to assign an anchor - it can do nothing too.
+<tr>
+<td>protected detachNodeWidget (Node, Widget)<br>protected detachPinWidget (Pin, Widget)<br>protected detachEdgeWidget (Edge, Widget)
+<td>These methods are called to at the end of <code>removeNode</code>, <code>removePin</code> or <code>removeEdge</code> methods - objects are unregistered already. Default implementation just removes the widget peer from its parent widget.
+<tr>
+<td>protected notifyNodeAdded (Node, Widget)<br>protected notifyPinAdded (Pin, Widget)<br>protected notifyEdgeAdded (Edge, Widget)
+<td>Called at the end of <code>addNode</code>, <code>addPin</code> or <code>addEdge</code> methods - objects are registered already.
+</table>
+
+<p>
+
+<h2><a name="UniversalGraph">Universal Graph</a></h2>
+
+<p>
+Part of the graph support is graph-oriented layout of nodes in a scene. Since the library contains two independent graph-oriented models, there is also a universal graph which unifies them and provides a read-only nodes-edges view on them. The universal graph is represented with <code>UniversalGraph</code> abstract class and contains methods: <code>getNodes</code>, <code>getEdges</code>, <code>findNodeEdges</code>, <code>getEdgeSource</code>, <code>getEdgeTarget</code>. These methods provides read-only access to the model.
+
+<p>
+Even thought the UniversalGraph class is abstract, it does not have to be implemented by a developer. The library creates them automatically.
+
+<h2><a name="GraphLayout">Graph-oriented Layout</a></h2>
+
+<p>
+All graph-oriented layout algorithms are implemented by classes based on <code>GraphLayout</code> class. The class contains <code>layoutGraph(GraphScene)</code> and <code>layoutGraph(GraphPinScene)</code> method for invoking the layout on a particular scene. These methods just converts the scene into an universal graph and calls <code>performGraphLayout(UniversalGraph)></code> method which should implement and perform a particular graph-oriented layout.
+
+<p>
+The <code>layoutGraph</code> method is performing the graph-oriented layout immediately. If the method is called before the scene validation, the algorithm may calculate with obsolete or uninitialized data. Therefore the <code>SceneLayout</code> should be used. Following example should how to invoke the layout correctly:
+
+<pre>
+GraphScene scene = ...;
+// instantiate particular layout e.g.: "new GridGraphLayout ();"
+GraphLayout layout = ...; 
+SceneLayout sceneLayout = LayoutFactory.createSceneGraphLayout (scene, layout);
+// schedules the graph-oriented layout after the scene validation
+// it just schedules it but does not perform immediatelly
+sceneLayout.invokeLayout ();
+// or you can call "sceneLayout.invokeLayoutImmediatelly ();"
+// to schedule the layout and force immediate scene validation
+// so the layout will be performed in the "invokeLayoutImmediatelly" method
+</pre>
+
+<p>
+Similarly there is a <code>layoutNodes</code> method which could be used to resolve location of a sub-set of nodes on a scene. The <code>UnsupportedOperationException</code> could be throws from <code>performLayoutNodes</code> then the implementation does not support it.
+
+<p>
+The graph layout has <code>animated</code> which specifies whether a new node location is set directly to the widget or if a animation is used.
+
+<p>
+When implementing your own GraphLayout, you have to use <code>GraphLayout.setResolvedNodeLocation</code> method call for setting node location.
+
+<h3><a name="GraphLayoutListener">GraphLayoutListener</a></h3>
+
+<p>
+The <code>GraphLayout</code> has possibility to attach a <code>GraphLayoutListener</code> which allows notification about: <code>graphLayoutStarted</code> (called when graph layout is started), <code>nodeLocationChanged</code> (called when a node location is changed, <code>graphLayoutFinished</code> (called when graph layout is finished).
+
+<h3><a name="TreeGraphLayout">TreeGraphLayout</a></h3>
+
+<p>
+The algorithm organizes nodes in to a tree. Nodes that are not in the tree (defined by a root node and connecting edges) are resolved at [0,0] location.
+
+<p>
+The layout can be created using <code>GraphLayoutFactory.createTreeGraphLayout</code> factory method.
+For proper work, you have to specify a root node using <code>GraphLayoutSupport.setTreeGraphLayoutRootNode</code> method. See <code>test.graphlayout.TreeGraphLayoutTest</code> example for usages.
+
+<p>
+Using <code>GraphLayoutSupport.setTreeGraphLayoutProperties</code> method you can set all parameters of the tree graph layout that has been specified in the factory method.
+
+<h3><a name="GridGraphLayout">GridGraphLayout</a></h3>
+
+<p>
+The algorithm organizes nodes in to a grid.
+
+<p>
+You can call <code>setChecker</code> method to enable checker style. If a parameter is true, that the layout uses only half of nodes on a grid like single color on a chess board.
+
+<p>
+You can define horizontal and vertical gaps between nodes using the <code>setGaps</code> method.
+
+<h2><a name="ComponentWidget">ComponentWidget</a></h2>
+
+<p>
+Widgets are not implemented as AWT/Swing components and the library will never have a full replacement for them. Therefore there is a possibility to integrate Swing components together with the scene. You have to create an instance of <code>ComponentWidget</code> class and pass your AWT/Swing <code>Component</code> there as a parameter. When the widget is added to the tree, then the component will be shown in the JComponent view. When the widget is removed from the tree, then the component will be removed from the JComponent view.
+
+<p>
+The component widget resolves it bounds as <code>preferred-size-of-Component / zoomFactor</code>. The size of <code>Component</code> is still the same in JComponent view - independent on zoom factor. Bounds of a component widget depends on zoom factor.
+
+<h2><a name="ScrollableWidget">Scrollable Widget</a></h2>
+
+<p>
+The library contains two implementation of scrollable widget:
+<ul>
+<li><code>ScrollWidget</code> which is created using widgets only.
+<li><code>SwingScrollWidget</code> which is created using widgets and Swing <code>JScrollBar</code>s.
+</ul>
+
+<p>
+In both implementations you can used <code>getView</code> and <code>setView</code> methods for supplying the inner view widget that should be scrolled.
+
+<p>
+By default the scrollable widget takes the bounds of the inner view widget. If you want to have it scrollable, you have to limit the bounds of the scroll widget using <code>Widget.setPreferredBounds</code>, <code>Widget.setMaximumSize</code> or <code>Widget.setPreferredSize</code> method.
+
+<h2><a name="InplaceEditor">In-place Editor</a></h2>
+
+<p>
+For using in-place editor ability, you have to have an <code>InplaceEditorProvider</code> interface implemented first. Then you can create an action using <code>ActionFactory.createInplaceEditorAction (InplaceEditorProvider)</code> method. Then you can add the action to a widget where the in-place editor should be available. When an user double-clicks on the widget, the action is invoked and the provider is asked for creating in-place-editor <code>Component</code>. The editor is invoked by pressing <b>Enter</b> key too.
+
+<p>
+The library contains a pre-defined <code>JTextField</code>-based editor. An action can be created using <code>ActionFactory.createInplaceEditorAction (TextFieldInplaceEditor)</code> method. The <code>TextFieldInplaceEditor</code> interface defines the initial text and how to set the text.
+
+<p>
+If you want to open in-place editor programatically, you have to have particular in-place editor action. Then using <code>ActionFactory.getInplaceEditorController</code> method you can get <code>EditorController</code> instance which allows you to open the editor using <code>EditorController.openEditor(Widget)</code> method.
+
+<p>
+The editor component boundary is resolved from the bounds of a widget where the in-place editor action is assigned. Then the bounds are processed by <code>InplaceEditorProvider.getInitialEditorComponentBounds</code> method. Then the boundary is expanded/collapsed based on expansion directions returned by <code>InplaceEditorProvider.getExpansionDirection</code> method.
+
+<p>
+Everytime a <code>InplaceEditorProvider.EditorController.notifyEditorComponentBoundsChanged</code> method is called, then the boundary is recalculated again.
+
+<h3><a name="ExampleInplaceEditor">Example: In-place Editor</a></h3>
+
+<p>
+Following code creates an editable label widget:
+
+<pre>
+final LabelWidget label = new LabelWidget (scene, "Text");
+label.getActions ().addAction (ActionFactory.createInplaceEditorAction (
+    new TextFieldInplaceEditor () {
+        public boolean isEnabled (Widget widget) {
+            return true;
+        }
+        public String getText (Widget widget) {
+            return ((LabelWidget) widget).getLabel ();
+        }
+        public void setText (Widget widget, String text) {
+            ((LabelWidget) widget).setLabel (text);
+        }
+    }
+), EnumSet.&lt;InplaceEditorProvider.ExpansionDirection>of (InplaceEditorProvider.ExpansionDirection.RIGHT));
+scene.addChild (label);
+</pre>
+
+<h2><a name="LevelOfDetails">Level of Details</a></h2>
+
+<p>
+The <code>LevelOfDetailsWidget</code> allows level-of-details feature based on 4 following parameters: <strong>hardMinimalZoom</strong>, <strong>softMinimalZoom</strong>, <strong>softMaximalZoom</strong>, <strong>hardMaximalZoom</strong>.
+
+<p>
+Following table describes whether children widgets of the <code>LevelOfDetailsWidget</code> are visible or not - based on the zoom factor of a scene:
+
+<table class="framed">
+<tr><th>zoom factor</th><td> hardMinimalZoom or less </td><td> between </td><td> softMinimalZoom to softMaximalZoom </td><td> between </td><td> hardMaximalZoom or more</td></tr>
+<tr><th>children are</th><td> <i>invisible</i> </td><td> partly visible </td><td> <b>visible</b> </td><td> partly visible </td><td> <i>invisible</i></td></tr>
+</table>
+
+<p>
+The partial visibility is done by alpha blending.
+
+<h2><a name="LookFeel">Look and Feel</a></h2>
+
+<p>
+The library contains a preliminary look&amp;feel support defined by <code>LookFeel</code> abstract class. Almost every method is dependent on <code>ObjectState</code> parameter. Usually the interface should be used in <code>Widget.notifyStateChanged</code> method implementation. The <code>Scene.getLookFeel</code> and <code>Scene.setLookFeel</code> methods allows manipulation with a look&amp;feel assigned to a scene. The default <code>LookFeel</code> implementation can be obtained using <code>LookFeel.createDefaultLookFeel</code> method.
+
+<p>
+There is also an InputBindings class which is assigned to a scene. It allows to manage action-related scene options e.g. <code>InputEvent</code> modifier of zoom actions used in the scene.
+
+<h2><a name="Animator">Animator</a></h2>
+
+<p>
+The library supports various 500ms-long animations. The animations are available on <code>SceneAnimator</code> class acquired by <code>Scene.getSceneAnimator</code> method call.
+
+<p>
+Supported animations:
+<ul>
+<li>preferredLocation
+<li>preferredBounds
+<li>zoomFactor
+<li>backgroundColor
+<li>foregroundColor
+</ul>
+
+<p>
+
+<h3><a name="SceneAnimatorMethods">SceneAnimator Methods</a></h3>
+
+<p>
+
+<table class="framed">
+<tr><th>Method<th>Description
+<tr>
+<td>getScene
+<td>Returns a related scene instance.
+<tr>
+<td>isAnimatingPreferredLocation (Widget)
+<td>Checks whether preferredLocation property of the widget is animated.
+<tr>
+<td>animatePreferredLocation (Widget, Point targetLocation)
+<td>Starts preferredLocation animation for the widget.
+<tr>
+<td>isAnimatingPreferredBounds (Widget)
+<td>Checks whether preferredBounds property of the widget is animated.
+<tr>
+<td>animatePreferredBounds (Widget, Rectangle targetBounds)
+<td>Starts preferredBounds animation for the widget.
+<tr>
+<td>isAnimatingZoomFactor ()
+<td>Checks whether the zoomFactor property is animated.
+<tr>
+<td>animateZoomFactor (double targetZoomFactor)
+<td>Starts zoomFactor animation.
+<tr>
+<td>getTargetZoomFactor ()
+<td>Returns a target zoom factor of animation.
+<tr>
+<td>isAnimatingBackgroundColor (Widget)
+<td>Checks whether backgroundColor property of the widget is animated.
+<tr>
+<td>animateBackgroundColor (Widget, Color targetBackgroundColor)
+<td>Starts backgroundColor animation for the widget.
+<tr>
+<td>isAnimatingForegroundColor (Widget)
+<td>Checks whether foregroundColor property of the widget is animated.
+<tr>
+<td>animateForegroundColor (Widget, Color targetForegroundColor)
+<td>Starts foregroundColor animation for the widget.
+<tr>
+<td>getPreferredLocationAnimator
+<td>Returns the preferred location animator which controls animation of preferred location of all widgets in the scene.
+<tr>
+<td>getPreferredBoundsAnimator
+<td>Returns the preferred bounds animator which controls animation of preferred bounds of all widgets in the scene.
+<tr>
+<td>getZoomAnimator
+<td>Returns the zoom animator of the scene.
+<tr>
+<td>getColorAnimator
+<td>Returns the color animator which controls backgorund and foreground animation of all widgets in the scene.
+</table>
+
+<p>
+Each animation is done by an <code>Animator</code> interface implementation. The <code>Animator</code> allows to listen
+to important events of an animator <strong>started</strong>, <strong>finished</strong>, <strong>reset</strong>, <strong>pre-tick</strong> and <strong>post-tick</strong> events using <code>AnimatorListener</code> interface.
+Instances of built-in animators can be obtained using getters of the <code>SceneAnimator</code> class.
+
+<p>
+
+<h3><a name="ExampleAnimator">Example: Animator</a></h3>
+
+<p>
+Following code sets a widget to <code>[100,100]</code> without animation and smoothly moves the widget to <code>[300,300]</code>.
+
+<pre>
+Scene scene = new Scene ();
+LayerWidget layer = new LayerWidget (scene);
+scene.addChild (layer);
+
+LabelWidget label = new LabelWidget (scene, "Label");
+layer.addChild (label);
+
+// non-animated move
+label.setPreferredLocation (new Point (100, 100));
+
+// animated move
+scene.getSceneAnimator ().animatePreferredLocation (label, new Point (300, 300));
+</pre>
+
+<h2><a name="CustomDevelopment">Custom Development</a></h2>
+
+<p>
+The library can be extended on various places.
+
+<h3><a name="CustomWidget">Custom Widget</a></h3>
+
+<p>
+A custom widget can be created by extending <code>Widget</code> class. For proper work you have to implement at least:
+<ul>
+<li><code>calculateClientArea</code> method for resolving client-area (widget boundary without border insets) required by the widget itself. <code>Graphics2D</code> instance can be acquired by <code>getGraphics</code> method.
+<li><code>paintWidget</code> method for painting the widget. <code>Graphics2D</code> instance can be acquired by <code>getGraphics</code> method with local coordination system - means: the <code>[0,0]</code> of the instance corresponds to <code>[0,0]</code> of the <code>Widget.getBounds</code>.
+<li>optionally <code>notifyStateChanged</code> method for specifying widget-state related UI.
+</ul>
+
+<h3><a name="ExampleCircleWidget">Example: CircleWidget</a></h3>
+
+<p>
+Following example create a new custom widget that renders a circle:
+<pre>
+public class CircleWidget extends Widget {
+    private int r;
+    public CustomWidgetTest (Scene scene, int radius) {
+        super (scene);
+        r = radius;
+    }
+    protected Rectangle calculateClientArea () {
+        return new Rectangle (- r, - r, 2 * r + 1, 2 * r + 1);
+    }
+    protected void paintWidget () {
+        Graphics2D g = getGraphics ();
+        g.setColor (getForeground ());
+        g.drawOval (- r, - r, 2 * r, 2 * r);
+    }
+}
+</pre>
+
+<p>
+See that the <code>CircleWidget.paint</code> is not using <code>getLocation()</code> method since the graphics is automatically translated to a point where the [0,0] means the origin of the widget. Therefore the drawing area reserved for the widget is exactly the same as the one returned  from the <code>CircleWidget.calculateClientArea</code>.
+
+<h3><a name="CustomAction">Custom Action</a></h3>
+
+<p>
+Custom action can be created by implementing <code>WidgetAction</code> interface. There is a <code>WidgetAction.Adapter</code> class similar to Swing adapters - all methods return <code>State.REJECTED</code> status.
+
+<p>
+There is a <code>WidgetAction.LockedAction</code> abstract class. There all methods return <code>State.createLocked (widget, this)</code> or <code>State.REJECTED</code> depending on the result of <code>isLocked</code> abstract method call. This is used by actions which requires to lock the event processing for themselves - e.g. MoveAction, ConnectAction, ...
+
+<h3><a name="CustomLayout">Custom Layout</a></h3>
+
+<p>
+Custom layout can be created by implementing <code>Layout</code> interface.
+
+<p>
+The <code>layout (widget)</code> method should implement layout algorithm of children of the widget. It has to calculate the children boundaries based on <code>childWidget.getPreferredLocation</code> and <code>childWidget.getPreferredBounds</code> methods and optional constraints. Do not use values from <code>Widget.getLocation</code> and <code>Widget.getBounds</code> methods because there are not resolved yet. At the end it has to set evaluated children locations and bounds using <code>Widget.resolveBounds</code> methods.
+
+<p>
+The <code>justify (widget)</code> method should implement justification of children of the widget. It has to justify location and boundary of the children based the specified Widget boundary. Now you can use theWidget.getBounds method because the widget is resolved already. Justification is invoked only when <code>requiresJustification</code> method returns <code>true</code>. This method is called after calling <code>layout</code> method.
+
+<h3><a name="CustomBorder">Custom Border</a></h3>
+
+<p>
+Custom border can be created by implementing <code>Border</code> interface. Border insets are added to the client-area of a widget where the border is assigned. <code>paint</code> method has to paint the borders within the specified boundary. If <code>isOpaque</code> returns <code>true</code> then the border is responsible for painting every single pixel of the area specified by insets. Also only widget client-area will be painted by background paint. If <code>isOpaque</code> returns false then whole widget boundary will be painted by background paint (if the widget is opaque also) first and then the border will be called for painting.
+
+<h3><a name="CustomAnchor">Custom Anchor</a></h3>
+
+<p>
+Custom anchor can be created by implementing <code>Anchor</code> abstract class. <code>compute</code> method is responsible for computing the actual location of an anchor for the specified <code>ConnectionWidget</code>. For computation, you can use all widget properties (including getLocation and getBounds) and <code>Anchor.getOppositeSceneLocation</code> method. You have to return a <code>Result</code> object that specifies the computed anchor location and the supported directions for orthogonal routing.
+
+<p>
+For connection widget there are also <code>AnchorShape</code> and <code>PointShape</code> interfaces that can be implemented and used for defining a shape of anchor and control points of a connection widget.
+
+<p>
+AnchorShape.getCutDistance method allows you to specify how far a line path of a connection should be cut. This is e.g. important for a hollow triangle shape. It requires that a line is not painted to the target point. It requires to paint it just to the edge to the triangle.
+
+<h3><a name="CustomAnimator">Custom Animator</a></h3>
+
+<p>
+Custom animator could be implemented by extending <code>Animator</code> class. For creating an instance you need a <code>SceneAnimator</code> instance which can be acquired by calling <code>Scene.getSceneAnimator</code> method. For starting an animation, you have to call <code>start</code> method. For checking whether the animation is still running, call <code>isRunning</code> method. The animation algorithm has to be implemented in <code>tick (double progress)</code> method. The <code>progress</code> parameter value is in &lt;0.0,1.0&gt; interval where 0.0 is start (time=0ms) and 1.0 is end (time=500ms).
+
+<h3><a name="CustomRouter">Custom Router</a></h3>
+
+<p>
+Custom router could be implemented by implementing <code>Router</code> interface. It has <code>routeConnection</code> method that is called for performing the routing. The routing could be done based on various information - usually based on:
+<ul>
+<li><code>connectionWidget.getSourceAnchor ().compute(connectionWidget.getSourceAnchorEntry ()).getAnchorSceneLocation ()</code>
+<li><code>connectionWidget.getTargetAnchor ().compute(connectionWidget.getTargetAnchorEntry ()).getAnchorSceneLocation ()</code>
+<li>optionally by location and bounds of widgets in scene e.g. in case of object collision detection.
+</ul>
+
+<h3><a name="CustomGraphLayout">Custom Graph-oriented Layout</a></h3>
+
+<p>
+A custom graph-oriented could be implemented by extending <code>GraphLayout</code> abstract class. The particular algorithms should be implemented in the <code>performGraphLayout</code> method which is invoked from layoutGraph methods only. The <code>performGraphLayout</code> takes a single parameter of an universal graph on which the layout should be performed.
+
+<p>
+The node location is set using <code>GraphLayout.setResolvedNodeLocation(UniversalGraph graph, Node node, Point newLocation)</code> method. This method sets/animates node to a new location and invokes callback on all registered listeners.
+
+<p>
+Following example should how to implement setting of a resolve location to a particular node:
+
+<pre>
+UniversalGraph&lt;MyNode,?&gt; graph = ...; // the graph from the "performGraphLayout" method
+MyNode node = ...;
+Point resolvedNodeLocation = ...;
+setResolvedNodeLocation (graph, node, resolvedNodeLocation); // performs the setting
+</pre>
+
+<p>
+
+<h2><a name="GeneralWidgets">General Widgets</a></h2>
+
+<p>
+All general-purpose widgets are located in api.widget.general package.
+
+<h3><a name="IconNodeWidget">IconNodeWidget</a></h3>
+
+<p>
+The <code>IconNodeWidget</code> class represents an image with a label. It has a specific look defined in the notifyStateChanged method. You can specify the alignment (horizontal or vertical) of the image and the label. It is using a vertical/horizontal flow layout. You can set an image and a label using <code>setImage</code> and <code>setLabel</code> method. You can obtain the image and the label widgets using <code>getImageWidget</code> and <code>getLabelWidget</code> methods. This could be used for adding actions to the particular parts like InplaceEditor to the label.
+
+<h3><a name="ListWidget">ListWidget</a></h3>
+
+<p>
+This is an experimental widget which is not included into the public API packages. If you want to use them you have to set up an implementation dependency on <strong>org.netbeans.api.visual</strong>. Implementation dependency means that you have available all classes in the library. The <code>ListWidget</code> is included in <code>org.netbeans.modules.visual.experimental.widget.general</code> package. Please, do not use implementation dependency. If you need to use it, then use it only for classes in <code>org.netbeans.modules.visual.experimental</code> package or below.
+
+<p>
+The <code>ListWidget</code> class represents a list and can hold multiple <code>ListItemWidget</code>s. This class is not stabilized yet and could be changed in the future.
+
+<h2><a name="VMDplugin">VMD plug-in</a></h2>
+
+<p>
+The VMD plug-in used by the Visual Mobile Designer in NetBeans Mobility Pack. The package contains complex UI implementation for visualization of graphs using <strong>node</strong>, <strong>pin</strong> and <strong>edge</strong> objects. The plug-in is placed in <strong>vmd</strong> package. The API of this package is <strong>not stable</strong> and could be changed in the future.
+
+<p>
+The scene is held by <code>VMDGraphScene</code> class. A node is represented by <code>VMDNodeWidget</code>. An edge is represented by <code>ConnectionWidget</code>. A pin is represented by <code>VMDPinWidget</code>.
+
+<p>
+<code>VMDGraphScene</code> contains 4 layers: <strong>background</strong> (for rectangular selection), <strong>main</strong> (for nodes and pins), <strong>connection</strong> (for edges), <strong>interaction</strong> (for interaction like ConnectAction). <strong>VMDNodeWidget</strong> has nodeName, nodeType, nodeImage and glyphs properties. <code>VMDPinWidget</code> has pinName and glyphs properties. An edge is using <strong>OrthogonalSearchRouter</strong> and tries to not overlap valid objects in main and connection layers. Pin could be added to a node using <code>attachPinWidget</code> only, otherwise they are not registered correctly - <strong>do not use</strong> <code>VMDNodeWidget.addChild</code> method.
+
+<p>
+The <code>VMDNodeWidget</code> allows to specify the order and categories of pins shown in the list. It is done using <code>VMDNodeWidget.sort</code> method. By default there are no categories and pins are sorted in the order where the have been attached to the node using <code>VMDNodeWidget.attachPinWidget</code>.
+
+<p>
+The <code>VMDGraphScene.layoutGraph</code> method layouts nodes on a scene using <code>GridGraphLayout</code> class. After calling the method, you have to call <code>Scene.validate</code> method manually to trigger the scene validation and therefore graph-oriented layout of a scene.
+
+<p>
+The VMDColorScheme class defines a UI of VMD widgets. There are two implementations available using <code>VMDFactory.createOriginalColorScheme</code>, <code>VMDFactory.createNetBeans60ColorScheme</code> method calls. The color scheme can be used as a parameter in widget constructors.
+
+<h3><a name="MinimizeAbility">Minimize Ability</a></h3>
+
+<p>
+<strong>Question</strong>: Common problem of visualization is: What to do, when a scene become a little bit complicated because of many objects and connections between them?<br>
+<strong>Answer</strong>: The answer is simple: Reduce the complexity, hide unimportant and expose important objects.
+
+<p>
+A pattern for implementing this behavior is described in <code>test.expand</code> package in examples module. It just adds all the widgets that should be expanded/collapsed into a widget. When the details widget has to be collapsed, then set its <code>preferredBounds</code> property to <code>new Rectangle()</code>. When it has to be expanded, then set its <code>preferredBounds</code> property to <code>null</code>.
+
+<p>
+<code>VMDNodeWidget</code> has ability to control minimize mode using <code>isMinimized</code>, <code>setMinimized</code> and <code>toogleMinimized</code> methods. When a node is minimized then the header is shown only and all pins are hidden.
+
+<p>
+When an edge is attach to a pin and the node is going to be minimized, the pin is going to hidden and therefore the anchor of the pin has to be reattached to the anchor of the node. This is done automatically when you will:
+<ul>
+<li>Create an anchor for a pin widget.
+<li>Call <code>VMDNodeWidget.createAnchorPin (Anchor)</code> on an appropriate instance of node widget.
+<li>Use the returned anchor while setting an appropriate source and target of a connection widget.
+</ul>
+
+<p>
+The <code>createAnchorPin</code> creates a proxy anchor that is driven by a minimized state of the node and automatically switches/uses the node or the pin anchor as the active anchor.
+
+<h2><a name="PrintingAndExportingScene">Printing and Exporting Scene</a></h2>
+
+<p>
+There is <code>Scene.paint (Graphics2D)</code> method that renders the scene into the specified <code>Graphics2D</code> instance. The instance could be taken from any device e.g. screen, printer, <code>BufferedImage</code>, PDF file writer, ...
+
+<p>
+Be aware that it is completely different <code>Graphics2D</code> instance than the instance which is used for rendering the scene into the main view and which is used for calculating the scene (especially <code>FontMetrics</code>). Therefore fonts could be "broken", so they will not fit exactly as in the main view.
+
+<h3><a name="ExportToPNG">Export to PNG</a></h3>
+
+<p>
+Following code shows how to export the scene into PNG file.
+
+<pre>
+Scene scene = ...;
+
+BufferedImage bi = new BufferedImage (dim.width, dim.height, BufferedImage.TYPE_4BYTE_ABGR);
+Graphics2D graphics = bi.createGraphics ();
+scene.paint (graphics);
+graphics.dispose ();
+
+JFileChooser chooser = new JFileChooser ();
+chooser.setDialogTitle ("Export Scene As ..."));
+chooser.setDialogType (JFileChooser.SAVE_DIALOG);
+chooser.setMultiSelectionEnabled (false);
+chooser.setFileSelectionMode (JFileChooser.FILES_ONLY);
+chooser.setFileFilter (new FileFilter() {
+    public boolean accept (File file) {
+        if (file.isDirectory ())
+        return true;
+        return file.getName ().toLowerCase ().endsWith (".png"); // NOI18N
+    }
+    public String getDescription () {
+        return "Portable Network Graphics (.png)"; // NOI18N
+    }
+});
+if (chooser.showSaveDialog (view) != JFileChooser.APPROVE_OPTION)
+    return;
+
+File file = chooser.getSelectedFile ();
+if (! file.getName ().toLowerCase ().endsWith (".png")) // NOI18N
+    file = new File (file.getParentFile (), file.getName () + ".png"); // NOI18N
+if (file.exists ()) {
+    DialogDescriptor descriptor = new DialogDescriptor (
+            "File (" + file.getAbsolutePath () + ") already exists. Do you want to overwrite it?",
+            "File Exists", true, DialogDescriptor.YES_NO_OPTION, DialogDescriptor.NO_OPTION, null);
+    DialogDisplayer.getDefault ().createDialog (descriptor).setVisible (true);
+    if (descriptor.getValue () != DialogDescriptor.YES_OPTION)
+        return;
+}
+
+try {
+    ImageIO.write (bi, "png", file); // NOI18N
+} catch (IOException e) {
+    ErrorManager.getDefault ().notify (e);
+}
+</pre>
+
+<h3><a name="ExportingWithoutOffscreenBuffer">Exporting without Offscreen Buffer</a></h3>
+
+<p>
+The previous code uses a <strong>BufferedImage</strong> for storing the image in the memory. When the scene is big, it could happen that the image does not fit into the memory. Therefore you have to use your <code>Graphics2D</code> instance and <code>Scene.paint (Graphics2D)</code> method for exporting the scene on-the-fly e.g. PDF writer, SVG file writer or meta graphics file writer.
+
+<h2><a name="Effects">Effects</a></h2>
+
+<h3><a name="Convolution">Convolution</a></h3>
+
+<p>
+The library contains <code>ConvolveWidget</code> which takes a <code>ConvolveOp</code> parameter and uses it for processing its children. Therefore you can create effects like <strong>blur</strong> or <strong>drop-shadow</strong>.
+
+<p>
+The <code>ConvolveWidget</code> is using <code>BufferedImage</code> as a off-screen image where the children widgets are rendered first and then the image is rendered to the scene. Because of the off-screen image it can <strong>significantly increase memory consumption</strong>. It reallocates the off-screen image only when the image is not able to contain all children. You can free the off-screen image manually using <code>ConvolveWidget.clearCache</code> method.
+
+<p>
+The widget automatically assigns an <code>EmptyBorder</code> with appropriate size based on the size of kernel on ConvolveOp parameter.
+
+<h3><a name="Antialiasing">Antialiasing</a></h3>
+
+<p>
+There is no API for enabling antialiasing. Anyway it can be implemented by overriding <code>Scene.paintChildren</code> method. See following code.
+
+<pre>
+class MyScene extends Scene {
+    public void paintChildren () {
+        Object anti = getGraphics ().getRenderingHint (RenderingHints.KEY_ANTIALIASING);
+        Object textAnti = getGraphics ().getRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING);
+
+        getGraphics ().setRenderingHint (
+                RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        getGraphics ().setRenderingHint (
+                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        super.paintChildren ();
+
+        getGraphics ().setRenderingHint (RenderingHints.KEY_ANTIALIASING, anti);
+        getGraphics ().setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, textAnti);
+    }
+}
+</pre>
+
+<p>
+The same could be done for any class derived from a Widget class too.
+
+<h2><a name="Serialization">Serialization</a></h2>
+
+<p>
+ By default there is not (de)serialization support because the library cannot know which data should be serialized. Especially when you are integrating the library with an external data-model.
+
+<p>
+For example: During serialization of external data-model, the external model is created from the data in the XML file. Then you are able recreate almost whole scene. Usually the only missing thing is locations of nodes and control-points of edges (in graph-oriented model). In this case these locations are the only serialized data related to the library.
+
+<p>
+On the other hand, when users are using <code>GraphScene</code> as the only/main model in the application then they would like to store whole the scene. Also the serialization format is various - XML, JavaBinarySerialization, ...
+
+<p>
+It is hard to create, reused or integrate universal description language for it. Instead, there is no support for serialization in the library and has to be done by developer.
+
+<h3><a name="ExampleNodesLocationSerialization">Example: Nodes Location Serialization</a></h3>
+
+<p>
+Following code is (de)serializing a scene. This is usually used when you have an external model and you are using GraphPinScene for holding visual data. The most of the visual data can be recreated from an external model. The only stored data are locations of nodes.
+
+<pre>
+public class SceneDataSerializer {
+
+    private static final String SCENE_NODE = "Scene"; // NOI18N
+    private static final String VERSION_ATTR = "version"; // NOI18N
+    private static final String NODE_NODE = "Node"; // NOI18N
+    private static final String NODEID_ATTR = "nodeID"; // NOI18N
+    private static final String X_NODE = "x"; // NOI18N
+    private static final String Y_NODE = "y"; // NOI18N
+
+    private static final String VERSION_VALUE_1 = "1"; // NOI18N
+
+    // creates an sceneXMLNode that has to be placed to the XML file then
+    public Node serializeData (GraphPinScene&lt;String, String, String> scene, Document file) {
+        Node sceneXMLNode = file.createElement (SCENE_NODE);
+        setAttribute (file, sceneXMLNode, VERSION_ATTR, VERSION_VALUE_1); // NOI18N
+
+        for (String node : scene.getNodes ()) {
+                Widget widget = scene.findWidget (node);
+                if (widget != null) {
+                    Point location = widget.getPreferredLocation ();
+                    if (location != null) {
+                        Node dataXMLNode = file.createElement (NODE_NODE);
+                        setAttribute (file, dataXMLNode, NODEID_ATTR, node);
+                        setAttribute (file, dataXMLNode, X_NODE, Integer.toString (location.x));
+                        setAttribute (file, dataXMLNode, Y_NODE, Integer.toString (location.y));
+                        node.appendChild (dataXMLNode);
+                    }
+                }
+            }
+        }
+
+        return node;
+    }
+
+    // Returns true if deserialization is successfull
+    // sceneXMLNode has to be found in the XML file first
+    public boolean deserializeData (final GraphPinScene&lt;String, String, String> scene, final Node sceneXMLNode) {
+        if (! VERSION_VALUE_1.equals (getAttributeValue (data, VERSION_ATTR)))
+            return false;
+
+        SwingUtilities.invokeLater (new Runnable() {
+            public void run () {
+                deserializeDataVersion1 (scene, sceneXMLNode);
+                scene.validate ();
+            }
+        });
+
+        return true;
+    }
+
+    private void deserializeDataVersion1 (GraphPinScene&lt;String, String, String> scene, Node data) {
+        for (Node node : getChildNode (data)) {
+            if (NODE_NODE.equals (node.getNodeName ())) {
+                String nodeID = getAttributeValue (node, NODEID_ATTR));
+                int x = Integer.parseInt (getAttributeValue (node, X_NODE));
+                int y = Integer.parseInt (getAttributeValue (node, Y_NODE));
+                Widget widget = scene.findWidget (nodeID);
+                if (widget != null)
+                    widget.setPreferredLocation (new Point (x, y));
+            }
+        }
+    }
+
+    private static String getAttributeValue (Node node, String attr) {
+        try {
+            if (node != null) {
+                NamedNodeMap map = node.getAttributes ();
+                if (map != null) {
+                    node = map.getNamedItem (attr);
+                    if (node != null)
+                        return node.getNodeValue ();
+                }
+            }
+        } catch (DOMException e) {
+            Debug.warning (e);
+        }
+        return null;
+    }
+
+    private static void setAttribute (Document xml, Node node, String name, String value) {
+        NamedNodeMap map = node.getAttributes ();
+        Attr attribute = xml.createAttribute (name);
+        attribute.setValue (value);
+        map.setNamedItem (attribute);
+    }
+
+    private static Node[] getChildNode (Node node) {
+        NodeList childNodes = node.getChildNodes ();
+        Node[] nodes = new Node[childNodes != null ? childNodes.getLength () : 0];
+        for (int i = 0; i &lt; nodes.length; i++)
+            nodes[i] = childNodes.item (i);
+        return nodes;
+    }
+
+}
+</pre>
+
+<h2><a name="VisualLibraryVsSwing">Visual Library vs. Swing</a></h2>
+
+<p>
+
+<table class="framed">
+<tr><th colspan="2">Object / Feature / Method
+<tr><th>Swing<th>Visual Library
+<tr>
+<td>JComponent
+<td>Widget
+<tr>
+<td>JDialog, JFrame
+<td>Scene
+<tr>
+<td>EventListener
+<td>WidgetAction
+</table>
+
+<p>
+
+<h2><a name="Notes">Notes</a></h2>
+
+<p>
+For preventing deadlocks, use AWT-thread when manipulating with the library structures.
+
+<hr>
+If you have any comments, suggestions, or missing feature or documentation, please, send an email to <a href="mailto:users@graph.netbeans.org">users@graph.netbeans.org</a>.
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+FormatToken{kind=SOURCE_START, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=0, text=switch, id=KEYWORD_SWITCH}
+FormatToken{kind=AFTER_SWITCH_KEYWORD, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=6, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=7, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=8, text=tagName, id=IDENTIFIER}
+FormatToken{kind=BEFORE_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=15, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=16, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=17, text={, id=BRACKET_LEFT_CURLY}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=18, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=19, text=  , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=21, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=25, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=26, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=27, text=XXX, id=STRING}
+FormatToken{kind=TEXT, offset=30, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=31, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=32, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=33, text=       , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=40, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=44, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=45, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=46, text=THEAD, id=STRING}
+FormatToken{kind=TEXT, offset=51, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=52, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=53, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=54, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=55, text=    , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=59, text=default, id=KEYWORD_DEFAULT}
+FormatToken{kind=TEXT, offset=66, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=67, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=68, text=         , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=77, text=depth, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=82, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=83, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=84, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=85, text=undefined, id=IDENTIFIER}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=94, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=95, text=       , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=102, text=}, id=BRACKET_RIGHT_CURLY}
+FormatToken{kind=AFTER_END_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=103, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=104, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=105, text=     , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=110, text=switch, id=KEYWORD_SWITCH}
+FormatToken{kind=AFTER_SWITCH_KEYWORD, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=116, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=117, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=118, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_LEFT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=119, text=tagName, id=IDENTIFIER}
+FormatToken{kind=BEFORE_RIGHT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=126, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=BEFORE_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=127, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=128, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=129, text={, id=BRACKET_LEFT_CURLY}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=130, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=131, text=  , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=133, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=137, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=138, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=139, text=XXX, id=STRING}
+FormatToken{kind=TEXT, offset=142, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=143, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=144, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=145, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=146, text=    , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=150, text=default, id=KEYWORD_DEFAULT}
+FormatToken{kind=TEXT, offset=157, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=158, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=159, text=         , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=168, text=depth, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=173, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=174, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=175, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=176, text=undefined, id=IDENTIFIER}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=185, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=186, text=       , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=193, text=}, id=BRACKET_RIGHT_CURLY}
+FormatToken{kind=AFTER_END_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=194, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=195, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=196, text=
+, id=EOL}
+FormatToken{kind=TEXT, offset=197, text=switch, id=KEYWORD_SWITCH}
+FormatToken{kind=AFTER_SWITCH_KEYWORD, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=203, text=   , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=206, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=207, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=208, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_LEFT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=209, text=tagName, id=IDENTIFIER}
+FormatToken{kind=BEFORE_RIGHT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=216, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=217, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=218, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=219, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=220, text={, id=BRACKET_LEFT_CURLY}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=221, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=222, text=  , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=224, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=228, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=229, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=230, text=XXX, id=STRING}
+FormatToken{kind=TEXT, offset=233, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=234, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=235, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=236, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=237, text=    , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=241, text=default, id=KEYWORD_DEFAULT}
+FormatToken{kind=TEXT, offset=248, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=249, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=250, text=         , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=259, text=depth, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=264, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=265, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=266, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=267, text=undefined, id=IDENTIFIER}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=276, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=277, text=       , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=284, text=}, id=BRACKET_RIGHT_CURLY}
+FormatToken{kind=AFTER_END_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=285, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=286, text=
+, id=EOL}
+FormatToken{kind=TEXT, offset=287, text=switch, id=KEYWORD_SWITCH}
+FormatToken{kind=AFTER_SWITCH_KEYWORD, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=293, text=   , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=296, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=297, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_LEFT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=298, text=call, id=IDENTIFIER}
+FormatToken{kind=BEFORE_FUNCTION_CALL, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=302, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=TEXT, offset=303, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=BEFORE_RIGHT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=304, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=BEFORE_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=305, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=306, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=307, text={, id=BRACKET_LEFT_CURLY}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=308, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=309, text=  , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=311, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=315, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=316, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=317, text=XXX, id=STRING}
+FormatToken{kind=TEXT, offset=320, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=321, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=322, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=323, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=324, text=     , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=329, text=default, id=KEYWORD_DEFAULT}
+FormatToken{kind=TEXT, offset=336, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=337, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=338, text=         , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=347, text=depth, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=352, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=353, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=354, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=355, text=undefined, id=IDENTIFIER}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=364, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=365, text=       , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=372, text=}, id=BRACKET_RIGHT_CURLY}
+FormatToken{kind=AFTER_END_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=373, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=374, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=375, text=    , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=379, text=switch, id=KEYWORD_SWITCH}
+FormatToken{kind=AFTER_SWITCH_KEYWORD, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=385, text=   , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=388, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=389, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=AFTER_LEFT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=390, text=a, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=391, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_BINARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=BEFORE_BINARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=392, text=+, id=OPERATOR_PLUS}
+FormatToken{kind=AFTER_BINARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BINARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=393, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=394, text=b, id=IDENTIFIER}
+FormatToken{kind=BEFORE_RIGHT_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=395, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=BEFORE_DOT, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=396, text=., id=OPERATOR_DOT}
+FormatToken{kind=AFTER_DOT, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=397, text=test, id=IDENTIFIER}
+FormatToken{kind=BEFORE_FUNCTION_CALL, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=401, text=(, id=BRACKET_LEFT_PAREN}
+FormatToken{kind=TEXT, offset=402, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=BEFORE_SWITCH_PARENTHESIS, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=403, text=), id=BRACKET_RIGHT_PAREN}
+FormatToken{kind=WHITESPACE, offset=404, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_SWITCH_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=405, text={, id=BRACKET_LEFT_CURLY}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=406, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=407, text=    , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=411, text=case, id=KEYWORD_CASE}
+FormatToken{kind=WHITESPACE, offset=415, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=416, text=', id=STRING_BEGIN}
+FormatToken{kind=TEXT, offset=417, text=XXX, id=STRING}
+FormatToken{kind=TEXT, offset=420, text=', id=STRING_END}
+FormatToken{kind=TEXT, offset=421, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=422, text=
+, id=EOL}
+FormatToken{kind=EOL, offset=423, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=424, text=        , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=432, text=default, id=KEYWORD_DEFAULT}
+FormatToken{kind=TEXT, offset=439, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_CASE, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=440, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=441, text=            , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=453, text=depth, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=458, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=459, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=460, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=461, text=undefined, id=IDENTIFIER}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=470, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=471, text=        , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=479, text=}, id=BRACKET_RIGHT_CURLY}
+FormatToken{kind=AFTER_END_BRACE, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=480, text=
+, id=EOL}

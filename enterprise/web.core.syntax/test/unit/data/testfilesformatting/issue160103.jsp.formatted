@@ -1,0 +1,13 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<html>
+    <head>
+        <script type="text/javascript">
+            function i18nAsirra() {
+                document.getElementById("asirra_InstructionsTextId").innerHTML = "<fmt:message key="captcha.asirra.please.select" />";
+            }
+        </script>
+    </head>
+    <body onload="i18nAsirra()">
+
+    </body>
+</html>

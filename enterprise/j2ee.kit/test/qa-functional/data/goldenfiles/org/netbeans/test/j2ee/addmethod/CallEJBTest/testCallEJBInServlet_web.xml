@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <servlet>
+        <servlet-name>TestingServlet</servlet-name>
+        <servlet-class>test.TestingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TestingServlet</servlet-name>
+        <url-pattern>/TestingServlet</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>
+            index.jsp
+        </welcome-file>
+    </welcome-file-list>
+    <ejb-local-ref>
+        <ejb-ref-name>TestingSessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local-home>test.TestingSessionLocalHome</local-home>
+        <local>test.TestingSessionLocal</local>
+        <ejb-link>TestingEntApp-EJBModule.jar#TestingSessionBean</ejb-link>
+    </ejb-local-ref>
+</web-app>

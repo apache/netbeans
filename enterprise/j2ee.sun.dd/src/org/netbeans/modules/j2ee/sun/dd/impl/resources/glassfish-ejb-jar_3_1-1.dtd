@@ -1,0 +1,1186 @@
+<!--
+
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2010 Oracle and/or its affiliates. All rights reserved.
+
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License").  You
+    may not use this file except in compliance with the License.  You can
+    obtain a copy of the License at
+    https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
+    or packager/legal/LICENSE.txt.  See the License for the specific
+    language governing permissions and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at packager/legal/LICENSE.txt.
+
+    GPL Classpath Exception:
+    Oracle designates this particular file as subject to the "Classpath"
+    exception as provided by Oracle in the GPL Version 2 section of the License
+    file that accompanied this code.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license."  If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above.  However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+
+-->
+
+<!--
+  XML DTD for Sun Application Server specific EJB jar module 
+  deployment descriptor. This is a companion DTD for ejb-jar_3_1.xsd
+
+  It must include a DOCTYPE of the following form:
+
+  <!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN" "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd">
+
+-->
+
+<!--
+This is the root element of the ejb module descriptor document.
+-->
+<!ELEMENT glassfish-ejb-jar (security-role-mapping*, enterprise-beans, compatibility?, disable-nonportable-jndi-names?, keep-state?, version-identifier?) >
+
+<!-- 
+System unique object id. Automatically generated and updated at deployment/redeployment 
+-->
+<!ELEMENT unique-id (#PCDATA)>
+
+<!--
+This is the root element describing all the runtime of an ejb-jar in the application.
+-->
+<!ELEMENT enterprise-beans (name?, unique-id?, ejb*, pm-descriptors?, cmp-resource?,
+	message-destination*, webservice-description*, property*)>
+
+<!--
+This is the element describing runtime bindings for a single ejb.
+
+Properties applicable to all types of beans:
+     ejb-name, ejb-ref*, jndi-name, resource-ref*, resource-env-ref*, message-destination-ref*, pass-by-reference?, 
+     ior-security-config?, gen-classes?, service-ref*
+
+Additional properties applicable to a stateless session bean:
+    bean-pool, webservice-endpoint
+
+Additional properties applicable to a stateful session bean:
+    bean-cache, webservice-endpoint, checkpointed-methods?, checkpoint-at-end-of-method?
+
+Additional properties applicable to an entity bean:
+   is-read-only-bean?, refresh-period-in-seconds?, cmp?, commit-option?, bean-cache?, bean-pool?, flush-at-end-of-method?
+
+Additional properties applicable to a message-driven bean:
+   mdb-resource-adapter?, mdb-connection-factory?, jms-durable-subscription-name?, 
+   jms-max-messages-load?, bean-pool?
+   ( In case of MDB, jndi-name is the jndi name of the associated jms destination )
+-->
+
+<!ELEMENT ejb (ejb-name, jndi-name?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, pass-by-reference?, 
+               cmp?, principal?, mdb-connection-factory?, jms-durable-subscription-name?, 
+               jms-max-messages-load?, ior-security-config?, is-read-only-bean?, 
+               refresh-period-in-seconds?, commit-option?, cmt-timeout-in-seconds?, use-thread-pool-id?, gen-classes?, 
+               bean-pool?, bean-cache?, mdb-resource-adapter?, webservice-endpoint*, flush-at-end-of-method?, checkpointed-methods?, checkpoint-at-end-of-method?, per-request-load-balancing?)>
+
+<!-- 
+This attribute is only applicable for stateful session bean 
+-->
+<!ATTLIST ejb availability-enabled CDATA #IMPLIED>
+
+<!--
+The text in this element matches the ejb-name of the ejb to which it refers in ejb-jar.xml.
+
+Used in ejb, method
+-->
+<!ELEMENT ejb-name (#PCDATA)>
+
+<!--
+The text in this element is a true/false flag for read only beans.
+-->
+<!ELEMENT is-read-only-bean (#PCDATA)>
+
+<!--
+This element contains a true/false flag that controls the per-request load balancing
+behavior of EJB 2.x/3.x Remote client invocations on a stateless session bean. If set
+to true, per-request load balancing is enabled for the associated stateless session
+bean.  If set to false or not set, per-request load balancing is not enabled. 
+-->
+<!ELEMENT per-request-load-balancing (#PCDATA)>
+
+<!--
+This is the root element which binds an ejb reference to a jndi name.
+It is used for both ejb remote reference and ejb local reference.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+
+<!--
+The ejb ref name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+This element describes runtime information for a CMP EntityBean object for 
+EJB1.1 and EJB2.0 beans.  
+-->
+<!ELEMENT cmp (mapping-properties?, is-one-one-cmp?, one-one-finders?, prefetch-disabled?)>
+
+<!--
+This contains the location of the persistence vendor specific O/R mapping file
+-->
+<!ELEMENT mapping-properties (#PCDATA)>
+
+<!--
+This element in deprecated. It has been left in the DTD for validation purposes.
+Any value will be ignored by the runtime.
+-->
+<!ELEMENT is-one-one-cmp (#PCDATA)>
+
+<!--
+This root element contains the finders for CMP 1.1.
+-->
+<!ELEMENT one-one-finders (finder+ )>
+
+<!--
+This element allows to selectively disable relationship prefetching for finders of a bean.
+Used in: cmp
+-->
+<!ELEMENT prefetch-disabled (query-method+)>
+
+<!--
+Used in: prefetch-disabled
+-->
+<!ELEMENT query-method (method-name, method-params)>
+
+<!--
+This root element contains the finder for CMP 1.1 with a method-name and query parameters
+-->
+<!ELEMENT finder (method-name, query-params?, query-filter?, query-variables?,  query-ordering?)>
+
+<!--
+The method-name element contains a name of an enterprise bean method
+or the asterisk (*) character. The asterisk is used when the element
+denotes all the methods of an enterprise bean's component and home
+interfaces.
+
+Used in: method, finder, query-method, java-method
+-->
+<!ELEMENT method-name (#PCDATA)>
+
+
+<!--
+This contains the query parameters for CMP 1.1 finder
+-->
+<!ELEMENT query-params (#PCDATA)>
+
+<!--
+This optional element contains the query filter for CMP 1.1 finder
+-->
+<!ELEMENT query-filter (#PCDATA)>
+
+<!--
+This optional element contains variables in query expression for CMP 1.1 finder
+-->
+<!ELEMENT query-variables (#PCDATA)>
+
+<!--
+This optional element contains the ordering specification for CMP 1.1 finder.
+-->
+
+<!ELEMENT query-ordering (#PCDATA)>
+
+<!--
+This element identifies the database and the policy for processing CMP beans
+storage. The jndi-name element identifies either the persistence-manager-
+factory-resource or the jdbc-resource as defined in the server configuration.
+-->
+<!ELEMENT cmp-resource (jndi-name, default-resource-principal?, property*,
+        create-tables-at-deploy?, drop-tables-at-undeploy?,
+        database-vendor-name?, schema-generator-properties?)>
+
+<!--
+This element contains the override properties for the schema generation 
+from CMP beans in this module.
+-->
+<!ELEMENT schema-generator-properties (property*) >
+
+<!--
+This element specifies whether automatic creation of tables for the CMP beans 
+is done at module deployment. Acceptable values are true or false
+-->
+<!ELEMENT create-tables-at-deploy ( #PCDATA )>
+
+<!--
+This element specifies whether automatic dropping of tables for the CMP beans 
+is done at module undeployment. Acceptabel values are true of false
+-->
+<!ELEMENT drop-tables-at-undeploy ( #PCDATA )>
+
+<!--
+This element specifies the database vendor name for ddl files generated at
+module deployment. Default is SQL92.
+-->
+<!ELEMENT database-vendor-name ( #PCDATA )>
+
+<!--
+This element specifies the connection factory associated with a message-driven bean.
+-->
+<!ELEMENT mdb-connection-factory (jndi-name, default-resource-principal?)>
+
+<!--
+This node holds information about a logical message destination
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+This node holds the name of a logical message destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+message-destination-ref is used to directly bind a message destination reference
+to the jndi-name of a Queue,Topic, or some other physical destination. It should
+only be used when the corresponding message destination reference does not
+specify a message-destination-link to a logical message-destination.
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+name of a message-destination reference.
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
+
+<!--
+Specifies the name of a durable subscription associated with a message-driven bean's 
+destination.  Required for a Topic destination, if subscription-durability is set to 
+Durable (in ejb-jar.xml)
+-->
+<!ELEMENT jms-durable-subscription-name (#PCDATA)>
+
+<!--
+A string value specifies the maximum number of messages to load into a JMS session 
+at one time for a message-driven bean to serve. If not specified, the default is 1.
+-->
+<!ELEMENT jms-max-messages-load (#PCDATA)>
+
+<!--
+This element contains all the generated class names for a bean.
+-->
+<!ELEMENT gen-classes ( remote-impl?, local-impl?, remote-home-impl?, local-home-impl? )>
+
+<!--
+This contains the fully qualified class name of the generated EJBObject impl class. 
+-->
+<!ELEMENT remote-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBLocalObject impl class. 
+-->
+<!ELEMENT local-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBHome impl class. 
+-->
+<!ELEMENT remote-home-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBLocalHome impl class. 
+-->
+<!ELEMENT local-home-impl (#PCDATA)>
+
+<!--
+This contains the bean cache properties. Used only for entity beans and stateful session beans
+-->
+<!ELEMENT bean-cache (max-cache-size?, resize-quantity?, is-cache-overflow-allowed?, cache-idle-timeout-in-seconds?, removal-timeout-in-seconds?, victim-selection-policy?)>
+
+<!--
+max-cache-size defines the maximum number of beans in the cache. Should be greater than 1.
+Default is 512.
+-->
+<!ELEMENT max-cache-size (#PCDATA)>
+
+<!--
+is-cache-overflow-allowed is a boolean which indicates if the cache size is a hard limit or not. 
+Default is true i.e there is no hard limit. max-cache-size is a hint to the cache implementation.
+-->
+<!ELEMENT is-cache-overflow-allowed (#PCDATA)>
+
+<!--
+cache-idle-timeout-in-seconds specifies the maximum time that a stateful session bean or 
+entity bean is allowed to be idle in the cache. After this time, the bean is passivated 
+to backup store. This is a hint to server. Default value for cache-idle-timeout-in-seconds 
+is 600 seconds.
+-->
+<!ELEMENT cache-idle-timeout-in-seconds (#PCDATA)>
+
+
+<!--
+The amount of time that the bean remains passivated (i.e. idle in the backup store) is 
+controlled by removal-timeout-in-seconds parameter.  Note that if a bean was not accessed beyond 
+removal-timeout-in-seconds, then it will be removed from the backup store and hence will not 
+be accessible to the client. The Default value for removal-timeout-in-seconds is 60min.
+-->
+<!ELEMENT removal-timeout-in-seconds (#PCDATA)>
+
+<!--
+victim-selection-policy specifies the algorithm to use to pick victims. 
+Possible values are FIFO | LRU | NRU. Default is NRU, which is actually 
+pseudo-random selection policy.
+-->
+<!ELEMENT victim-selection-policy (#PCDATA)>
+
+<!--
+Support backward compatibility with AS7.1
+Now deprecated in 8.1 and later releases 
+Use checkpoint-at-end-of-method element instead
+
+The methods should be separated by semicolons. 
+The param list should separated by commas.  
+All method param types should be full qualified.
+Variable name is allowed for the param type.
+No return type or exception type.
+Example:
+foo(java.lang.String, a.b.c d); bar(java.lang.String s)
+
+Used in: ejb
+-->
+<!ELEMENT checkpointed-methods (#PCDATA)>
+
+<!--
+The equivalent element of checkpointed-methods for 8.1 and later releases
+
+Used in: ejb
+-->
+<!ELEMENT checkpoint-at-end-of-method (method+)>
+
+<!--
+bean-pool is a root element containing the bean pool properties. Used
+for stateless session bean, entity bean, and message-driven bean pools.
+-->
+<!ELEMENT bean-pool (steady-pool-size?, resize-quantity?, max-pool-size?, pool-idle-timeout-in-seconds?, max-wait-time-in-millis?)>
+
+<!--
+steady-pool-size specified the initial and minimum number of beans that must be maintained in the pool. 
+Valid values are from 0 to MAX_INTEGER. 
+-->
+<!ELEMENT steady-pool-size (#PCDATA)>
+
+<!--
+resize-quantity specifies the number of beans to be created or deleted when the pool 
+or cache is being serviced by the server. Valid values are from 0 to MAX_INTEGER and 
+subject to maximum size limit).  Default is 16.
+-->
+<!ELEMENT resize-quantity (#PCDATA)>
+
+<!--
+max-pool-size speifies the maximum pool size. Valid values are from 0 to MAX_INTEGER. 
+Default is 64.
+-->
+<!ELEMENT max-pool-size (#PCDATA)>
+
+<!--
+pool-idle-timeout-in-seconds specifies the maximum time that a stateless session bean or 
+message-driven bean is allowed to be idle in the pool. After this time, the bean is 
+passivated to backup store.  This is a hint to server. Default value for 
+pool-idle-timeout-in-seconds is 600 seconds.
+-->
+<!ELEMENT pool-idle-timeout-in-seconds (#PCDATA)>
+
+<!--
+A string field whose valid values are either "B", or "C". Default is "B" 
+-->
+<!ELEMENT commit-option (#PCDATA)>
+
+<!--
+Specifies the timeout for transactions started by the container. This value must be greater than zero, else it will be ignored by the container.
+-->
+<!ELEMENT cmt-timeout-in-seconds (#PCDATA)>
+
+<!--
+Specifes the thread pool that will be used to process any invocation on this ejb
+-->
+<!ELEMENT use-thread-pool-id (#PCDATA)>
+
+<!--
+Specifies the maximum time that the caller is willing to wait to get a bean from the pool.
+Wait time is infinite, if the value specified is 0. Deprecated.
+-->
+<!ELEMENT max-wait-time-in-millis (#PCDATA)>
+
+<!--
+refresh-period-in-seconds specifies the rate at which the read-only-bean must be refreshed 
+from the data source. 0 (never refreshed) and positive (refreshed at specified intervals).
+Specified value is a hint to the container.  Default is 600 seconds.
+-->
+<!ELEMENT refresh-period-in-seconds (#PCDATA)>
+
+<!--
+Specifies the jndi name string.
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!--
+This node describes a username on the platform.
+-->
+<!ELEMENT principal (name)>
+
+<!-- 
+security-role-mapping element maps the user principal or group 
+to a different principal on the server. 
+-->
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)> 
+
+<!-- 
+role-name specifies an accepted role 
+-->
+<!ELEMENT role-name (#PCDATA)> 
+
+<!-- 
+principal-name specifies a valid principal 
+-->
+<!ELEMENT principal-name (#PCDATA)> 
+<!ATTLIST principal-name class-name CDATA #IMPLIED>
+
+<!-- 
+group-name specifies a valid group name 
+-->
+<!ELEMENT group-name (#PCDATA)> 
+
+<!--
+The name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+resource-env-ref holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+resource-ref node holds all the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  (res-ref-name, jndi-name, default-resource-principal?)>
+
+<!--
+user name and password to be used when none are specified while accesing a resource
+-->
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+ior-security-config element describes the security configuration information for the IOR.
+-->  
+<!ELEMENT ior-security-config ( transport-config? , as-context?, sas-context?  )> 
+
+<!--
+transport-config is the root element for security between the end points
+-->
+<!ELEMENT transport-config ( integrity, confidentiality, establish-trust-in-target, establish-trust-in-client )> 
+
+<!--
+integrity element indicates if the server (target) supports integrity protected messages. 
+The valid values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT integrity ( #PCDATA)>
+
+<!--
+confidentiality element indicates if the server (target) supports privacy protected 
+messages. The values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT confidentiality ( #PCDATA)>
+
+<!--
+establish-trust-in-target element indicates if the target is capable of authenticating to a client. 
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT establish-trust-in-target ( #PCDATA)>
+
+<!--
+establish-trust-in-client element indicates if the target is capable of authenticating a client. The
+values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+as-context (CSIv2 authentication service) is the element describing the authentication 
+mechanism that will be used to authenticate the client. If specified it will be the 
+username-password mechanism.
+-->  
+<!ELEMENT as-context ( auth-method, realm, required )> 
+
+<!--
+required element specifies if the authentication method specified is required
+to be used for client authentication. If so the EstablishTrustInClient bit
+will be set in the target_requires field of the AS_Context. The element value
+is either true or false. 
+-->  
+<!ELEMENT required ( #PCDATA )> 
+
+<!--
+auth-method element describes the authentication method.
+For CSIv2, the only supported value is USERNAME_PASSWORD.
+For EJB web service endpoint, supported values are BASIC and CLIENT-CERT.
+-->  
+<!ELEMENT auth-method ( #PCDATA )> 
+
+<!--
+realm element describes the realm in which the user is authenticated. Must be 
+a valid realm that is registered in server configuration.
+-->  
+<!ELEMENT realm ( #PCDATA )> 
+
+<!--
+sas-context (related to CSIv2 security attribute service) element describes 
+the sas-context fields.
+-->  
+<!ELEMENT sas-context ( caller-propagation )> 
+
+<!--
+caller-propagation element indicates if the target will accept propagated caller identities
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT caller-propagation ( #PCDATA) >
+
+<!-- 
+pass-by-reference elements controls use of Pass by Reference semantics.  
+EJB spec requires pass by value, which will be the default mode of operation. 
+This can be set to true for non-compliant operation and possibly higher 
+performance. For a stand-alone server, this can be used. By setting a similarly 
+named element at glassfish-application.xml, it can apply to all the enclosed 
+ejb modules. Allowed values are true and false. Default will be false.
+ -->
+<!ELEMENT pass-by-reference (#PCDATA)>
+
+<!--
+PM descriptors contain one or more pm descriptors, but only one of them must
+be in use at any given time. If not specified, the Sun CMP is used.
+-->
+<!ELEMENT pm-descriptors ( pm-descriptor+, pm-inuse)>
+
+<!--
+pm-descriptor describes the pluggable vendor implementation for the CMP 
+support of the CMP entity beans in this module.
+-->
+<!ELEMENT pm-descriptor ( pm-identifier, pm-version, pm-config?, pm-class-generator?, pm-mapping-factory?)>
+
+<!--
+pm-identifier element identifies the vendor who provides the CMP implementation
+-->
+<!ELEMENT pm-identifier (#PCDATA)>
+
+<!--
+pm-version further specifies which version of PM vendor product to be used
+-->
+<!ELEMENT pm-version (#PCDATA)>
+
+<!--
+pm-config specifies the vendor specific config file to be used
+-->
+<!ELEMENT pm-config (#PCDATA)>
+
+<!--
+pm-class-generator specifies the vendor specific class generator to be used
+at the module deploymant time. This is the name of the class specific to this 
+vendor.
+-->
+<!ELEMENT pm-class-generator (#PCDATA)>
+
+<!--
+pm-mapping-factory specifies the vendor specific mapping factory
+This is the name of the class specific to a vendor.
+-->
+<!ELEMENT pm-mapping-factory (#PCDATA)>
+
+<!--
+pm-inuse specifies which CMP vendor is used.
+-->
+<!ELEMENT pm-inuse (pm-identifier, pm-version)>
+
+
+<!--
+This holds the runtime configuration properties of the message-driven bean 
+in its operation environment.  For example, this may include information 
+about the name of a physical JMS destination etc.
+Defined this way to match the activation-config on the standard
+deployment descriptor for message-driven bean.
+-->
+<!ELEMENT activation-config ( description?, activation-config-property+ ) >
+
+<!--
+provide an element description
+
+Used in activation-config, method
+-->
+<!ELEMENT description (#PCDATA)>
+
+<!--
+This hold a particular activation config propery name-value pair
+-->
+<!ELEMENT activation-config-property ( 
+  activation-config-property-name, activation-config-property-value ) >
+
+<!--
+This holds the name of a runtime activation-config property
+-->
+<!ELEMENT activation-config-property-name ( #PCDATA ) >
+
+<!--
+This holds the value of a runtime activation-config property
+-->
+<!ELEMENT activation-config-property-value ( #PCDATA ) >
+
+<!--
+This node holds the module ID of the resource adapter that
+is responsible for delivering messages to the message-driven
+bean, as well as the runtime configuration information for
+the mdb.
+-->
+<!ELEMENT mdb-resource-adapter ( resource-adapter-mid, activation-config? )>
+
+<!--
+This node holds the module ID of the resource adapter that is responsible 
+for delivering messages to the message-driven bean.
+-->
+<!ELEMENT resource-adapter-mid ( #PCDATA ) >
+
+<!-- 
+Generic name-value pairs property
+-->
+<!ELEMENT property ( name, value ) >
+
+<!--
+This text nodes holds a value string.
+-->
+<!ELEMENT value (#PCDATA)>
+
+<!--
+This declares the list of methods that would be allowed to be flushed at the 
+completion of the method. Applicable to entity beans with container managed 
+persistence
+
+Used in: ejb
+-->
+<!ELEMENT flush-at-end-of-method (method+)>
+
+
+<!--
+Used in: flush-at-end-of-method, checkpoint-at-end-of-method, prefetch-disabled
+-->
+<!ELEMENT method (description?, ejb-name?, method-name, method-intf?, method-params?)>
+
+
+<!--
+The method-intf element allows a method element to differentiate
+between the methods with the same name and signature that are multiply
+defined across the component and home interfaces (e.g., in both an
+enterprise bean's remote and local interfaces; in both an enterprise bean's
+home and remote interfaces, etc.)
+
+The method-intf element must be one of the following:
+	<method-intf>Home</method-intf>
+	<method-intf>Remote</method-intf>
+	<method-intf>LocalHome</method-intf>
+	<method-intf>Local</method-intf>
+
+Used in: method
+-->
+<!ELEMENT method-intf (#PCDATA)>
+
+
+<!--
+The method-params element contains a list of the fully-qualified Java
+type names of the method parameters.
+
+Used in: method, query-method, java-method
+-->
+<!ELEMENT method-params (method-param*)>
+
+
+<!--
+The method-param element contains the fully-qualified Java type name
+of a method parameter.
+
+Used in: method-params
+-->
+<!ELEMENT method-param (#PCDATA)>
+
+
+<!--
+  			W E B   S E R V I C E S 
+-->
+<!--
+Information about a web service endpoint.
+
+The optional message-security-binding element is used to customize the
+webservice-endpoint to provider binding; either by binding the
+webservice-endpoint to a specific provider or by providing a
+definition of the message security requirements to be enforced by the
+provider.
+
+When login-config is specified, a default message-security provider
+is not applied to the endpoint.
+-->
+<!ELEMENT webservice-endpoint ( port-component-name, endpoint-address-uri?, (login-config | message-security-binding)?, transport-guarantee?, service-qname?, tie-class?, servlet-impl-class?, debugging-enabled? )>
+
+<!--
+Unique name of a port component within a module
+-->
+<!ELEMENT port-component-name ( #PCDATA )>
+
+<!--
+Relative path combined with web server root to form fully qualified
+endpoint address for a web service endpoint.  For servlet endpoints, this
+value is relative to the servlet's web application context root.  In
+all cases, this value must be a fixed pattern(i.e. no "*" allowed).
+If the web service endpoint is a servlet that only implements a single
+endpoint has only one url-pattern, it is not necessary to set 
+this value since the container can derive it from web.xml.
+-->
+<!ELEMENT endpoint-address-uri ( #PCDATA )>
+
+<!--
+The name of tie implementation class for a port-component.  This is
+not specified by the deployer.  It is derived during deployment.
+-->
+<!ELEMENT tie-class (#PCDATA)>
+
+<!-- 
+The service-qname element declares the specific WSDL service
+element that is being refered to.  It is not set by the deployer.
+It is derived during deployment.
+-->
+<!ELEMENT service-qname (namespaceURI, localpart)>
+
+<!--
+The localpart element indicates the local part of a QNAME.
+-->
+<!ELEMENT localpart (#PCDATA)>
+
+<!--
+The namespaceURI element indicates a URI.
+-->
+<!ELEMENT namespaceURI (#PCDATA)>
+
+<!-- 
+Optional authentication configuration for an EJB web service endpoint.
+Not needed for servet web service endpoints.  Their security configuration
+is contained in the standard web application descriptor.
+-->
+<!ELEMENT login-config ( auth-method, realm? )>
+
+<!--
+Name of application-written servlet impl class contained in deployed war.
+This is not set by the deployer.  It is derived by the container
+during deployment.
+-->
+<!ELEMENT servlet-impl-class (#PCDATA)>
+
+<!--
+Specify whether or not the debugging servlet should be enabled for this 
+Web Service endpoint. 
+
+Supported values : "true" to debug the endpoint
+-->
+<!ELEMENT debugging-enabled (#PCDATA)>
+
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+<!ELEMENT service-ref ( service-ref-name, port-info*, call-property*, wsdl-override?, service-impl-class?, service-qname? )>
+
+<!--
+Coded name (relative to java:comp/env) for a service-reference
+-->
+<!ELEMENT service-ref-name ( #PCDATA )>
+
+<!--
+Name of generated service implementation class. This is not set by the 
+deployer. It is derived during deployment.
+-->
+<!ELEMENT service-impl-class ( #PCDATA )>
+
+<!-- 
+Information for a port within a service-reference.
+
+Either service-endpoint-interface or wsdl-port or both
+(service-endpoint-interface and wsdl-port) should be specified.  
+
+If both are specified, wsdl-port represents the
+port the container should choose for container-managed port selection.
+
+The same wsdl-port value must not appear in
+more than one port-info entry within the same service-ref.
+
+If a particular service-endpoint-interface is using container-managed port
+selection, it must not appear in more than one port-info entry
+within the same service-ref.
+
+The optional message-security-binding element is used to customize the
+port to provider binding; either by binding the port to a specific provider
+or by providing a definition of the message security requirements to be
+enforced by the provider.
+
+-->
+<!ELEMENT port-info ( service-endpoint-interface?, wsdl-port?, stub-property*, call-property*, message-security-binding? )>
+
+<!--
+Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+
+<!--
+Specifies that the communication between client and server should 
+be NONE, INTEGRAL, or CONFIDENTIAL. NONE means that the application 
+does not require any transport guarantees. A value of INTEGRAL means 
+that the application requires that the data sent between the client 
+and server be sent in such a way that it can't be changed in transit. 
+CONFIDENTIAL means that the application requires that the data be 
+transmitted in a fashion that prevents other entities from observing 
+the contents of the transmission. In most cases, the presence of the 
+INTEGRAL or CONFIDENTIAL flag will indicate that the use of SSL is 
+required.
+-->
+<!ELEMENT transport-guarantee ( #PCDATA )>
+
+
+<!-- 
+Port used in port-info.  
+-->
+<!ELEMENT wsdl-port ( namespaceURI, localpart )>
+
+<!-- 
+JAXRPC property values that should be set on a stub before it's returned to 
+to the web service client.  The property names can be any properties supported
+by the JAXRPC Stub implementation. See javadoc for javax.xml.rpc.Stub
+-->
+<!ELEMENT stub-property ( name, value )>
+
+<!-- 
+JAXRPC property values that should be set on a Call object before it's 
+returned to the web service client.  The property names can be any 
+properties supported by the JAXRPC Call implementation.  See javadoc
+for javax.xml.rpc.Call
+-->
+<!ELEMENT call-property ( name, value )>
+
+<!-- 
+Runtime information about a web service.  
+
+wsdl-publish-location is optionally used to specify 
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+
+-->
+<!ELEMENT webservice-description ( webservice-description-name, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl 
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!--
+The message-layer entity is used to define the value of the
+auth-layer attribute of message-security-config elements.
+
+Used in: message-security-config
+-->
+<!ENTITY % message-layer    "(SOAP)">
+
+<!--
+The message-security-binding element is used to customize the
+webservice-endpoint or port to provider binding; either by binding the
+webservice-endpoint or port to a specific provider or by providing a
+definition of the message security requirements to be enforced by the
+provider.
+
+These elements are typically NOT created as a result of the
+deployment of an application. They need only be created when the
+deployer or system administrator chooses to customize the 
+webservice-endpoint or port to provider binding.
+
+The optional (repeating) message-security sub-element is used 
+to accomplish the latter; in which case the specified 
+message-security requirements override any defined with the
+provider.
+
+The auth-layer attribute identifies the message layer at which the
+message-security requirements are to be enforced.
+
+The optional provider-id attribute identifies the provider-config 
+and thus the authentication provider that is to be used to satisfy 
+the application specific message security requirements. If a value for 
+the provider-id attribute is not specified, and a default
+provider is defined for the message layer, then it is used. 
+if a value for the provider-id attribute is not specified, and a
+default provider is not defined at the layer, the authentication
+requirements defined in the message-security-binding are not
+enforced. 
+ 
+Default:
+Used in: webservice-endpoint, port-info
+-->
+<!ELEMENT message-security-binding ( message-security* )>
+<!ATTLIST message-security-binding
+          auth-layer  %message-layer; #REQUIRED
+          provider-id CDATA           #IMPLIED >
+
+<!--
+The message-security element describes message security requirements
+that pertain to the request and response messages of the containing 
+endpoint, or port
+
+When contained within a webservice-endpoint this element describes 
+the message security requirements that pertain to the request and 
+response messages of the containing endpoint. When contained within a 
+port-info of a service-ref this element describes the message security
+requirements of the port of the referenced service.
+
+The one or more contained message elements define the methods or operations
+of the containing application, endpoint, or referenced service to which 
+the message security requirements apply.
+
+Multiple message-security elements occur within a containing
+element when it is necessary to define different message
+security requirements for different messages within the encompassing
+context. In such circumstances, the peer elements should not overlap
+in the messages they pertain to. If there is any overlap in the
+identified messages, no message security requirements apply to
+the messages for which more than one message-security element apply.
+
+Also, no message security requirements apply to any messages of
+the encompassing context that are not identified by a message element. 
+ 
+Default:
+Used in: webservice-endpoint, and port-info
+-->
+<!ELEMENT message-security ( message+, request-protection?, response-protection? )>
+
+<!--
+The message element identifies the methods or operations to which
+the message security requirements apply.
+
+The identified methods or operations are methods or operations of
+the resource identified by the context in which the message-security
+element is defined (e.g. the the resource identified by the
+service-qname of the containing webservice-endpoint or service-ref).
+
+An empty message element indicates that the security requirements
+apply to all the methods or operations of the identified resource.
+
+When operation-name is specified, the security
+requirements defined in the containing message-security 
+element apply to all the operations of the endpoint 
+with the specified (and potentially overloaded) operation name.
+
+Default: 
+Used in: message-security
+-->
+<!ELEMENT message ( java-method? | operation-name? )>
+
+<!--
+The java-method element is used to identify a method (or methods
+in the case of an overloaded method-name) of the java class 
+indicated by the context in which the java-method is contained.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT java-method ( method-name, method-params? )>
+
+<!--
+The operation-name element is used to identify the WSDL name of an
+operation of a web service.
+
+Default: 
+Used in: message
+-->
+<!ELEMENT operation-name ( #PCDATA )>
+
+<!--
+The request-protection element describes the authentication requirements
+that apply to a request.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent request-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * request-protection ( content-auth-policy* )
+ *
+ * If the request-protection element contains one or more
+ * content-auth-policy sub-elements, they define the authentication
+ * requirements to be applied to the identified request content. If multiple
+ * content-auth-policy sub-elements are defined, a request sender must
+ * satisfy the requirements independently, and in the specified order.  
+ *
+ * The content-auth-policy element would be used to associate authentication
+ * requirements with the parts of the request or response object identified
+ * by the contained method-params or part-name-list sub-elements.
+ *
+ * The content-auth-policy element would be defined as follows:
+ * 
+ * content-auth-policy ( method-params | part-name-list )
+ * ATTLIST content-auth-policy 
+ *         auth-source (sender | content) #IMPLIED
+ *	   auth-recipient (before-content | after-content) #IMPLIED
+ * 
+ * The part-name-list and part-name elements would be defined as follows:
+ *
+ * part-name-list ( part-name* )
+ * part-name ( #PCDATA )
+ *
+-->
+<!ELEMENT request-protection EMPTY >
+<!ATTLIST request-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+The response-protection element describes the authentication requirements
+that apply to a response.
+
+The auth-source attribute defines a requirement for message layer
+sender authentication (e.g. username password) or content authentication 
+(e.g. digital signature).
+
+The auth-recipient attribute defines a requirement for message
+layer authentication of the reciever of a message to its sender (e.g. by 
+XML encryption).
+
+The before-content attribute value indicates that recipient
+authentication (e.g. encryption) is to occur before any 
+content authentication (e.g. encrypt then sign) with respect
+to the target of the containing auth-policy.
+
+An absent response-protection element is the recommended shorthand
+for a request-protection element with unspecified values for both the
+auth-source and auth-recipient attributes.
+
+Default: 
+Used in: message-security
+
+ * Expected evolution to support partial message protection:
+ *
+ * response-protection ( content-auth-policy* )
+ *
+ * see request-protection element for more details
+ *
+-->
+<!ELEMENT response-protection EMPTY >
+<!ATTLIST response-protection
+          auth-source (sender | content) #IMPLIED
+	  auth-recipient (before-content | after-content) #IMPLIED>
+
+<!--
+Specifies the Enterprise Server release with which to be backward compatible
+in terms of JAR visibility requirements for applications.
+The current allowed value is v2, which refers to GlassFish version 2 or
+Enterprise Server version 9.1 or 9.1.1. The Java EE 6 platform specification
+imposes stricter requirements than Java EE 5 did on which JAR files can be 
+visible to various modules. Setting this element to v2
+removes these Java EE 6 restrictions.
+-->
+<!ELEMENT compatibility (#PCDATA)>
+
+<!--
+The disable-nonportable-jndi-names element indicates whether the GlassFish-
+specific, nonportable jndi names for EJB are disabled.  Acceptable values
+are true and false.  The default value is false.
+-->
+<!ELEMENT disable-nonportable-jndi-names (#PCDATA)>
+
+<!--
+The keep-state element indicates whether the state information should be 
+preserved across redeployment.
+-->
+<!ELEMENT keep-state (#PCDATA)>
+
+<!--
+The version-identifier element contains the version information. The value is
+ retrieved at deployment.
+-->
+<!ELEMENT version-identifier (#PCDATA)>

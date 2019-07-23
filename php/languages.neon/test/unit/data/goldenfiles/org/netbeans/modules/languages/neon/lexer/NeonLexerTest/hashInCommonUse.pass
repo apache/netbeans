@@ -1,0 +1,21 @@
+token #0 NEON_BLOCK services
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE \n
+token #3 NEON_WHITESPACE         
+token #4 NEON_BLOCK compone#ntsFactory
+token #5 NEON_INTERPUNCTION :
+token #6 NEON_WHITESPACE \n
+token #7 NEON_WHITESPACE                 
+token #8 NEON_VALUED_BLOCK class
+token #9 NEON_INTERPUNCTION :
+token #10 NEON_WHITESPACE  
+token #11 NEON_LITERAL Component#sFactory
+token #12 NEON_WHITESPACE \n
+token #13 NEON_WHITESPACE                 
+token #14 NEON_VALUED_BLOCK arguments
+token #15 NEON_INTERPUNCTION :
+token #16 NEON_WHITESPACE  
+token #17 NEON_INTERPUNCTION [
+token #18 NEON_REFERENCE @#component
+token #19 NEON_INTERPUNCTION ]
+token #20 NEON_WHITESPACE \n

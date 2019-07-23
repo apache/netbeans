@@ -1,0 +1,5 @@
+Other                   > Exception Reporter         E
+                          Javadoc                    J
+                          C/C++ Documentation
+                          Analyze Stack
+                          Macro Expansion            x

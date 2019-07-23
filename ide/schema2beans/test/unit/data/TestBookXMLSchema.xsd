@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="book">
+	<xsd:complexType>
+	  <xsd:sequence>
+		<xsd:element name="index" minOccurs="1" maxOccurs="unbounded">
+		  <xsd:complexType>
+			<xsd:sequence>
+			  <xsd:element name="word" type="xsd:string"/>
+			  <xsd:element name="ref" minOccurs="1" maxOccurs="unbounded">
+				<xsd:complexType>
+				  <xsd:sequence>
+					<xsd:element name="page" type="xsd:int" default="1"/>
+					<xsd:element name="line" type="xsd:int"/>
+					<xsd:element name="rating" type="xsd:float" nillable='true'/>
+					<xsd:element name="groupRating" type="xsd:float"/>
+				  </xsd:sequence>
+				</xsd:complexType>
+			  </xsd:element>
+			</xsd:sequence>
+		  </xsd:complexType>
+		</xsd:element>
+		<xsd:element name="chapter" minOccurs="1" maxOccurs="unbounded">
+		  <xsd:complexType>
+			<xsd:sequence>
+			  <xsd:element name="comment" minOccurs='0' maxOccurs='1' type='xsd:string'/>
+			  <xsd:element name="paragraph" minOccurs="0" maxOccurs="unbounded" type="xsd:string"/>
+			  <xsd:element name="comment" minOccurs='0' maxOccurs='1' type='xsd:string'/>
+			</xsd:sequence>
+		  </xsd:complexType>
+		</xsd:element>
+		<xsd:element name="summary" minOccurs='0' maxOccurs='1' type='xsd:string'/>
+		<xsd:element name="good">
+		</xsd:element>
+		<xsd:element name="available">
+		</xsd:element>
+		<xsd:element name="extra">
+		  <xsd:complexType>
+			<xsd:sequence>
+			  <xsd:choice>
+				<xsd:element name="size-cm" type="dimensions"/>
+				<xsd:element name="size-inches" type="dimensions"/>
+				<xsd:element name="size" type="dimensions"/>
+			  </xsd:choice>
+			  <xsd:element name="color" minOccurs='0' maxOccurs='1' type='xsd:string'/>
+			  <xsd:choice>
+				<xsd:element name="weight-lb" type="xsd:float"/>
+				<xsd:element name="weight-kg" type="xsd:float"/>
+			  </xsd:choice>
+			</xsd:sequence>
+		  </xsd:complexType>
+		</xsd:element>
+	  </xsd:sequence>
+	</xsd:complexType>
+  </xsd:element>
+
+  <!-- Represent 2x4 ("two by four") -->
+  <xsd:simpleType name="dimensions">
+    <xsd:restriction base="xsd:string">
+	  <xsd:pattern value="\d+x\d+"/>
+	</xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

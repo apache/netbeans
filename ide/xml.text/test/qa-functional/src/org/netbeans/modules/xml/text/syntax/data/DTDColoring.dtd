@@ -1,0 +1,29 @@
+<?xml encoding="UTF-8" ?>                                       <!-- Created by mschovanek on October 23, 2000, 4:56 PM -->
+<!ELEMENT Books (Product+,Image?, Custom?)*>                    <!ELEMENT Product (#PCDATA|Descript)*>
+<!ELEMENT Descript (#PCDATA)><!ELEMENT Custom ANY>              <!ATTLIST Books owner CDATA #IMPLIED idow ID #IMPLIED >
+<!ATTLIST Price isbn  CDATA #IMPLIED id ID #IMPLIED>            <!ATTLIST Product isbn CDATA #IMPLIED id ID #IMPLIED>
+<!ELEMENT Price (#PCDATA)>                                      <!-- FULL ATTLIST -->
+<!NOTATION pdf SYSTEM "xpdf">                                   <!NOTATION dvi SYSTEM "gv">
+<!ELEMENT Image EMPTY>
+<!ATTLIST Image 
+  src       ENTITY      #REQUIRED                               descr     CDATA       #IMPLIED
+  visible   CDATA       #FIXED      "true"                      format    (jpg | gif) #IMPLIED
+  os        (unix | os2)             "unix"                     entity    ENTITY      #IMPLIED
+  entities  ENTITIES    #IMPLIED                                id        ID          #IMPLIED
+  idref     IDREF       #IMPLIED                                idrefs    IDREFS      #IMPLIED
+  nmtoken   NMTOKEN     #IMPLIED                                nmtokens  NMTOKENS    #IMPLIED
+  notation  NOTATION    (pdf|dvi) #IMPLIED>
+<!-- GENERAL ENTITY -->                                         <!ENTITY company "Tisk &amp; spol.">
+<!ENTITY thorn '&#222;'>                                        <!-- EXTERNAL ENTITY -->
+<!ENTITY extern SYSTEM "externalEntity.xml">                    <!-- PARAMETR ENTITY -->
+<!ENTITY % sourceinfo "lang   CDATA #REQUIRED cprght CDATA #IMPLIED">   <!ATTLIST Descript %sourceinfo;>
+<!-- EXTERNAL PARAMETR ENTITY -->                               <!ENTITY % states SYSTEM "states.dtd">
+%states;                                                        <!-- UNPARSED ENTITY -->
+<!ENTITY image1 SYSTEM "http://'''.../ora.gif" NDATA GIF89a>       <!NOTATION GIF89a PUBLIC "-//CS//GIF 89a//EN">
+<!NOTATION eps SYSTEM '"""gv'>         <!ENTITY % X "INCLUDE">     <!ENTITY % Y "IGNORE">
+<![%X; [<!ENTITY notice "X = INCLUDE"><!ELEMENT x-include (#PCDATA)>]]>
+<![%Y; [<!ENTITY notice "Y = INCLUDE"><!ELEMENT y-include (#PCDATA)>]]> 
+<![ INCLUDE [<!ELEMENT inc-level-1 (#PCDATA)><![ INCLUDE [<!ELEMENT inc-level-2 (#PCDATA)>]]>
+    <![ IGNORE  [<!ELEMENT ign-in-include (#PCDATA)>]]>]]>
+<![ IGNORE [<!ELEMENT ign_level_1 (#PCDATA)><![ INCLUDE [<!ELEMENT inc-in-ignore (#PCDATA)>]]> ]]>
+<?test end?> <!--ENTITY amp "&#38";-->

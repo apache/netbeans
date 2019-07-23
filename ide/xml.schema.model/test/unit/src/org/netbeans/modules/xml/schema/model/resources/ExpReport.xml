@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Vladislav Gavrielov (Altova) -->
+<?xmlspysps ExpReport.sps?>
+<expense-report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ExpReport.xsd" currency="USD" detailed="false" total-sum="556.9">
+	<Person>
+		<First>Fred</First>
+		<Last>Landis</Last>
+		<Title>Project Manager</Title>
+		<Phone>123-456-7890</Phone>
+		<Email>f.landis@nanonull.com</Email>
+	</Person>
+	<expense-item type="Lodging" expto="Sales">
+		<Date>2003-01-01</Date>
+		<expense>122.11</expense>
+	</expense-item>
+	<expense-item type="Lodging" expto="Development">
+		<Date>2003-01-02</Date>
+		<expense>122.12</expense>
+		<description>Played penny arcade</description>
+	</expense-item>
+	<expense-item type="Lodging" expto="Marketing">
+		<Date>2003-01-02</Date>
+		<expense>299.45</expense>
+		<description>Treated Clients</description>
+	</expense-item>
+	<expense-item type="Entertainment" expto="Development">
+		<Date>2003-01-02</Date>
+		<expense>13.22</expense>
+		<Misc misctype="TeamBuilding"/>
+		<description>Bought signed &quot;XMLSPY Handbook&quot; from Larry Kim</description>
+	</expense-item>
+</expense-report>

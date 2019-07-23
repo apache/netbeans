@@ -1,0 +1,9 @@
+Display text: public static function <b>getDefaultSize</b>() {
+File name: Kitchen.php
+Name: getDefaultSize
+Position: BEGIN: 146 END: 160
+
+Display text: echo Kitchen::<b>getDefaultSize</b>();
+File name: index.php
+Name: getDefaultSize
+Position: BEGIN: 190 END: 204

@@ -1,0 +1,5 @@
+root:ROOT(0-38)
+   <table>(0-7/37)[RR];S:root
+      <tr>(12-16/29)[RO!]unresolved_tag ;S:root,table
+         <a>(25-28/29)[RR]unexpected_tag missing_required_end_tag ;S:root,table,tr
+   </table>(29-37)[RR!];S:root,table,tr,a

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="typesDocumentation" targetNamespace="http://j2ee.netbeans.org/wsdl/goodWSDLImportedSchema"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodWSDLImportedSchema" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:ns1="http://xml.netbeans.org/schema/newXMLSchema">
+    <documentation/>
+    <types>
+        <documentation/>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/typesDocumentation" xmlns:ns1="http://xml.netbeans.org/schema/newXMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/typesDocumentation">
+            
+        </xsd:schema>
+    </types>
+    <types />
+    
+</definitions>

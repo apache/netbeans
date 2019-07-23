@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Debugging: Threads Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="NetbeansDebuggerThreadNode" name="NetbeansDebuggerThreadNode"></a></p>
+<div id="NBCSH2713"><!-- infolevel="all" infotype="General" --><a id="sthref355" name="sthref355"></a>
+<h1>Debugging: Threads Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Threads window lists all threads in the current debugging session. You open the Threads window by choosing <b>Window &gt; Debugging &gt; Threads</b>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG896">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The information given for each thread is the thread name, state and if the thread is suspended. One thread is the current thread. By default, the current thread is the thread in the current session from which the debugger gained control. When you select a different current session, the Threads window is updated to show the threads for that session.</p>
+<a id="NBCSH2714" name="NBCSH2714"></a>
+<p><b>Thread States</b></p>
+<p>The Debugger has the following thread states:</p>
+
+<table summary="Descriptions of thread states." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="32%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t27">State</th>
+<th align="left" valign="bottom" id="r1c2-t27">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t27" headers="r1c1-t27">
+<p>Monitor</p>
+</td>
+<td align="left" headers="r2c1-t27 r1c2-t27">Thread is waiting on a Java monitor.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t27" headers="r1c1-t27">
+<p>Not Started</p>
+</td>
+<td align="left" headers="r3c1-t27 r1c2-t27">Thread has not yet been started.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t27" headers="r1c1-t27">
+<p>Running</p>
+</td>
+<td align="left" headers="r4c1-t27 r1c2-t27">Thread is runnable.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t27" headers="r1c1-t27">
+<p>Sleeping</p>
+</td>
+<td align="left" headers="r5c1-t27 r1c2-t27">Thread is sleeping. <code dir="ltr">Thread.sleep()</code> was called.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t27" headers="r1c1-t27">
+<p>Unknown</p>
+</td>
+<td align="left" headers="r6c1-t27 r1c2-t27">Thread status is unknown.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t27" headers="r1c1-t27">
+<p>Wait / Suspended</p>
+</td>
+<td align="left" headers="r7c1-t27 r1c2-t27">Thread is waiting. O<code dir="ltr">bject.wait()</code> was called.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t27" headers="r1c1-t27">
+<p>Zomibie</p>
+</td>
+<td align="left" headers="r8c1-t27 r1c2-t27">Thread has completed execution.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2722" name="NBCSH2722"></a>
+<p><b>Icons</b></p>
+<p>The Threads window displays the following thread icons:</p>
+
+<table summary="Descriptions of Threads window icons." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t28">Element</th>
+<th align="left" valign="bottom" id="r1c2-t28">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t28" headers="r1c1-t28">
+<p><img width="16" height="16" src="img/currentthreadgroup.gif" alt="Current Thread Group icon." title="Current Thread Group icon." /></p></td>
+<td align="left" headers="r2c1-t28 r1c2-t28">The thread group that contains the current thread</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t28" headers="r1c1-t28">
+<p><img width="16" height="16" src="img/threadgroup.gif" alt="Thread Group icon" title="Thread Group icon" /></p></td>
+<td align="left" headers="r3c1-t28 r1c2-t28">A thread group that does not contain the current thread</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t28" headers="r1c1-t28">
+<p><img width="16" height="16" src="img/currentthread.gif" alt="Current Thread icon." title="Current Thread icon." /></p></td>
+<td align="left" headers="r4c1-t28 r1c2-t28">The current thread</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t28" headers="r1c1-t28">
+<p><img width="16" height="16" src="img/runningthread.gif" alt="Running Thread icon" title="Running Thread icon" /></p></td>
+<td align="left" headers="r5c1-t28 r1c2-t28">A thread that is running and is not current</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t28" headers="r1c1-t28">
+<p><img width="16" height="16" src="img/suspendedthread.gif" alt="Suspended Thread icon." title="Suspended Thread icon." /></p></td>
+<td align="left" headers="r6c1-t28 r1c2-t28">A thread that is suspended and is not current</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2728" name="NBCSH2728"></a>
+<p><b>Actions</b></p>
+<p>The Threads window has the following commands in the context menus:</p>
+
+<table summary="Descriptions of context menu commands in Threads window." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="31%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t29">Element</th>
+<th align="left" valign="bottom" id="r1c2-t29">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t29" headers="r1c1-t29">
+<p>Make Current</p>
+</td>
+<td align="left" headers="r2c1-t29 r1c2-t29">Makes the selected thread the current thread. This command is equivalent to double-clicking the thread</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t29" headers="r1c1-t29">
+<p>Resume</p>
+</td>
+<td align="left" headers="r3c1-t29 r1c2-t29">Resumes execution of the selected thread.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t29" headers="r1c1-t29">
+<p>Suspend</p>
+</td>
+<td align="left" headers="r4c1-t29 r1c2-t29">Suspends execution of the selected thread.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t29" headers="r1c1-t29">
+<p>Interrupt</p>
+</td>
+<td align="left" headers="r5c1-t29 r1c2-t29">Interrupts execution of the selected thread.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t29" headers="r1c1-t29">
+<p>Go to Source</p>
+</td>
+<td align="left" headers="r6c1-t29 r1c2-t29">Shows the source code for the newest frame on the selected thread's stack.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t29" headers="r1c1-t29">
+<p>List Option</p>
+</td>
+<td align="left" headers="r7c1-t29 r1c2-t29">Enables you to customize the display of the Threads window, including adding and removing columns of information, reordering the columns, and sorting the columns. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2393">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2735" name="NBCSH2735"></a>
+<p><b>Properties</b></p>
+<p>By default, all thread properties are displayed directly in the Threads window, except for the Suspended property. To display the Suspended property in the Threads window, click <img width="17" height="18" src="img/changecolumn.gif" alt="Change Column icon." title="Change Column icon." /> in the upper right corner of the window, or right-click in the window and choose <b>List Options</b> &gt; <b>Change Visible Columns</b> and then select <b>Suspended</b> in the dialog box.</p>
+<p>If a thread is suspended (for example because a breakpoint was reached during the debugging session), the checkbox for that thread is selected in the Suspended column. Deselecting the Suspended checkbox causes the thread to resume.</p>
+<a id="NBCSH2736" name="NBCSH2736"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG824">
+<param name="text" value="<html><u>&quot;Choosing Current Context in the Debugger&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1534">
+<param name="text" value="<html><u>&quot;About Developing PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

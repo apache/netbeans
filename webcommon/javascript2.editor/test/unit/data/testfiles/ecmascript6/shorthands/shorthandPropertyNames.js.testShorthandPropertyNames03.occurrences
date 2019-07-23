@@ -1,0 +1,3 @@
+o.c.|>MARK_OCCURRENCES:third<| = "3th";
+console.log(o.c.|>MARK_OCCURRENCES:third<|);     // 3th
+console.log(c.|>MARK_OCCURRENCES:t^hird<|);       // 3th 

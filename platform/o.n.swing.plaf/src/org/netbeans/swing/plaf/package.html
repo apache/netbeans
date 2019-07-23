@@ -1,0 +1,108 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html><head><title>The NetBeans look and feel customization library</title></head><body>
+
+This library installs custom values into UIDefaults, such as colors, borders and UI class names, which
+various components in NetBeans use to provide a customized or native appearance.
+<p>
+NetBeans provides a number of custom components, such as the tabbed containers in its main window;
+other components may look for custom colors - for example, the property sheet will look for a custom color
+in UIDefaults to use for its margin and the background color of property set entries, in order that it may
+be customized to match the UI specification for different platforms/look and feels.
+<p>
+This library centralizes the installation and setup of such custom values.  It also:
+<ul>
+<li>Handles the setup of custom font sizes for look and feels (other than GTK, which
+gets its font sizes from the operating system theme), by replacing the font entries in UIDefaults with those
+of the requested font size</li>
+<li>Allows UIDefaults values to be guaranteed to be present for look and feels (GTK) which do not
+provide them, to enable older code that depends on such values being there (as they were for all look
+and feels until JDK 1.4) to work without modification</li>
+<li>Handles loading of a theme file for those look and feels (Metal) that support MetalTheme</li>
+<li>Installs per-look-and-feel customizations needed to ensure a harmonious, native appearance on a
+      given look and feel</li>
+<li>Contains custom implementations of things like ToolbarUI for some platforms on which 
+      NetBeans does not use the standard JDK implementation (GTK and Aqua).</li>
+</ul>
+
+<h4>Usage</h4>
+An application using NetBeans tab control, window system, property sheet or some other component
+of NetBeans, which wants to guarantee that the same colors and styles are used in their application as in
+NetBeans, needs simply to call <code>org.netbeans.swing.plaf.Startup.run()</code> early in its startup
+sequence, as <code>org.netbeans.core.Main</code> does.
+<p>
+A look and feel or application author who wishes to provide custom values for some thing can provide
+an implementation of <code>org.netbeans.swing.plaf.LFCustoms</code>, and place it in UIManager under
+a key which contains the unique ID of the look and feel.  See the documentation for LFCustoms for further
+details of how to do this.
+<p>
+Another option is simply to provide values for the (quite self-explanatory) keys defined as static fields
+of the LFCustoms class.  The advantage to providing an implementation of LFCustoms is simply that those
+values would not be loaded unless requested; either approach is equivalent.
+<p>
+Also, if a look and feel is designed to be an improvement on an existing platform-specific look and 
+feel (such as JGoodies for Windows or QuaQua for Apple), it may simply provide the appropriate existing
+LFCustoms subclass name in UIDefaults, in accordance with the following:
+<p>
+<table>
+<tr>
+<th>Look and feel</th>
+<th>UIManager key</th>
+<th>Class name</th>
+</tr>
+
+
+<tr>
+<td>Metal look and feel</td>
+<td>Nb.MetalLFCustoms</td>
+<td>org.netbeans.swing.plaf.metal.MetalLFCustoms</td>
+</tr>
+    
+<tr>
+<td>Windows classic look and feel</td>
+<td>Nb.WindowsLFCustoms</td>
+<td>org.netbeans.swing.plaf.winclassic.WindowsLFCustoms</td>
+</tr>
+    
+<tr>
+<td>Windows XP look and feel</td>
+<td>Nb.WindowsXPLFCustoms</td>
+<td>org.netbeans.swing.plaf.winxp.XPLFCustoms</td>
+</tr>
+
+<tr>
+<td>Aqua look and feel (Mac)</td>
+<td>Nb.AquaLFCustoms</td>
+<td>org.netbeans.swing.plaf.aqua.AquaLFCustoms</td>
+</tr>
+
+<tr>
+<td>GTK Look and Feel (Linux &amp; Solaris) - JDK 1.5 and up</td>    
+<td>Nb.GTKLFCustoms</td>
+<td>org.netbeans.swing.plaf.gtk.GtkLFCustoms</td>
+</tr>
+</table>
+
+For details on the specific requirements and design of this library, see its
+<a href="../../../../architecture-summary.html">arch questions and answers</a>.
+
+</body>
+</html> 

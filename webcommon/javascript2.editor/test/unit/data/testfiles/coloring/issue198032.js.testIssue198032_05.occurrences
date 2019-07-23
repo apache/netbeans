@@ -1,0 +1,2 @@
+        this.|>MARK_OCCURRENCES:lev^el2_1<| = function(){
+    formatter.println("calling level4.level2_1(): " + level4.|>MARK_OCCURRENCES:level2_1<|());

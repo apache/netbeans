@@ -1,0 +1,7 @@
+Code completion result for source line:
+formatter.|println("town: " + object.town);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     addIndent(param)                [PUBLIC]   typeInferenceNew.js
+METHOD     println(param)                  [PUBLIC]   typeInferenceNew.js
+METHOD     removeIndent(param)             [PUBLIC]   typeInferenceNew.js

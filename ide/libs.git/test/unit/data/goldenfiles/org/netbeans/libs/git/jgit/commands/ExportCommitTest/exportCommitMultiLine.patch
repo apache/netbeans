@@ -1,0 +1,22 @@
+From {0} Mon Sep 17 00:00:00 2001
+From: {1}
+Date: {2}
+
+first
+second
+third
+
+diff --git a/file b/file
+index b1b7161..d03681f 100644
+--- a/file
++++ b/file
+@@ -1 +1 @@
+-init
++modification 1
+diff --git a/file2 b/file2
+index b1b7161..4e5e8f2 100644
+--- a/file2
++++ b/file2
+@@ -1 +1 @@
+-init
++modification 2

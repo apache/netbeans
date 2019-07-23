@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Tasks: Create Task Repository Dialog Box: Bugzilla</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.bugzilla.repository.BugzillaRepositoryController" name="org.netbeans.modules.bugzilla.repository.BugzillaRepositoryController"></a></p>
+<div id="NBCSH405"><!-- infolevel="all" infotype="General" --><a id="sthref30" name="sthref30"></a>
+<h1>Tasks: Create Task Repository Dialog Box: Bugzilla</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Create Task Repository dialog box enables you to specify the connection details for a task repository. After you create a task repository, a node for the repository appears under the Task Repositories node in the Services window and the Repositories section of the Tasks window. You can view, submit and resolve taskss in the IDE. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG360">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>To register a Bugzilla task repository, specify the following properties.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t37">Property</th>
+<th align="left" valign="bottom" id="r1c2-t37">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t37" headers="r1c1-t37">
+<p>Connector</p>
+</td>
+<td align="left" headers="r2c1-t37 r1c2-t37">Select Bugzilla from the dropdown list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t37" headers="r1c1-t37">
+<p>Name</p>
+</td>
+<td align="left" headers="r3c1-t37 r1c2-t37">The name of the repository as it will be displayed in the IDE under the Task Repositories node in the Services window and the Repositories section of the Tasks window. The name will also be listed in the drop down menu when you open the Find Tasks tab from the Services window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t37" headers="r1c1-t37">
+<p>Task Repository URL</p>
+</td>
+<td align="left" headers="r4c1-t37 r1c2-t37">Specify the URL for the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t37" headers="r1c1-t37">
+<p>Username</p>
+</td>
+<td align="left" headers="r5c1-t37 r1c2-t37">Specify the username that is registered with the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t37" headers="r1c1-t37">
+<p>Password</p>
+</td>
+<td align="left" headers="r6c1-t37 r1c2-t37">Specify the password that is registered with the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t37" headers="r1c1-t37">
+<p>Use HTTP Authentication</p>
+</td>
+<td align="left" headers="r7c1-t37 r1c2-t37">Select if the task repository requires authentication. If selected, you need to specify the username and password. Click Validate to connect to the repository and check that the authentication details are correct.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t37" headers="r1c1-t37">
+<p>Enable Local Usernames</p>
+</td>
+<td align="left" headers="r8c1-t37 r1c2-t37">When selected, the IDE uses the user name (e.g., without <code dir="ltr">@mydomain.com</code>) instead of an email address when submitting tasks.
+<p>When authorizing and identifying users, some task repositories are configured to use a registered user name as the user id and some are configured to use an email address. Select this option when the repository is configured to use a user name.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t37" headers="r1c1-t37">
+<p>Validate</p>
+</td>
+<td align="left" headers="r9c1-t37 r1c2-t37">Click to validate that the specified username and password are correct.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH414" name="NBCSH414"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2532">
+<param name="text" value="<html><u>&quot;Working with Tasks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,4 @@
+Test:METHOD:[PRIVATE]:ESCAPED{Test}ESCAPED{(}ESCAPED{$scope}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  $scope:PARAMETER:[PUBLIC]:ESCAPED{$scope}:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+  desc:METHOD:[PRIVATE]:ESCAPED{desc}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{name}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

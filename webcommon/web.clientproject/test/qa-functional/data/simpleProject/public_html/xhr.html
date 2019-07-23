@@ -1,0 +1,28 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="linebp.js"></script>
+    </head>
+    <body>
+        <script>
+            function test() {
+                var request = new XMLHttpRequest();
+                request.open("GET", "lines/data", true);
+                request.onreadystatechange = function() {
+                };
+                request.send();
+                test2("dummy/data.json");
+            }
+
+            test();
+
+        </script>
+        <div>TODO write content</div>
+    </body>
+</html>

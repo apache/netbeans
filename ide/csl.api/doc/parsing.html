@@ -1,0 +1,87 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Parsing</h2>
+        <blockquote style="background-color: #ffdddd; color: black; padding: 20px; border: solid 1px black">
+            NOTE: There is a new Parsing API underway. This will be something
+            equivalent to the Lexer API, but applied to parsing. The plan is for GSF
+            to remove its own Parser registration and interfaces and replace it with
+            the standard Parser API. This will allow embedding and coordination
+            not just among GSF-based languages, but for all languages that implement
+            the parsing API (such as Java, and C/C++, which are not GSF based).
+        </blockquote>
+        <p>
+            You need to implement the
+            <a href="org/netbeans/modules/gsf/api/Parser.html">Parser</a> interface,
+            and <a href="registration.html">register</a> it with GSF.
+            Once you've done that, your Parser will be called whenever some feature
+            needs a parse tree, and one isn't available or up to date already.
+        </p>
+        <p>
+            Typically, you'll probably just wrap an existing parser here -
+            for Ruby we're using the JRuby parser, for JavaScript we're using
+            Rhino, for Groovy we're using groovyc, etc. However, you can
+            obviously write a parser from scratch as well - I think that's the
+            approach the PHP editor team has taken (though I'm not sure of the
+            details).
+        </p>
+        <p>
+            The key thing is that you parse the file, and then return a ParserResult
+            from your Parser.  The ParserResult is typically going to be your
+            <b>own</b> subclass of <code>ParserResult</code> where you store
+            additional state, such as your own AST (abstract syntax tree).
+            Then, when you're implementing the various features, you're
+            handed back your own <code>ParserResult</code>, you can cast it
+            to your own result class and pull out the AST which you can then
+            use to do semantic code analysis.
+        </p>
+        <h3>Error Recovery</h3>
+        <p>
+            One of the trickiest part about wrapping an existing parser, is handling
+            error recovery.  Most parsers aren't used to having to deal with
+            erroneous source - well, they can abort with an error message.
+            In the IDE however, parsing broken source is the norm. If the
+            user is trying to do code completion, the source code may look like
+            this:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+            def foo(bar)
+               bar.|
+            end
+            </pre>
+            the user is trying to complete methods on the bar symbol - but obviously
+            the source is currently broken. Your parser needs to be able to handle
+            this scenario!
+        </p>
+        <p>
+            There are a number of strategies for attacking this problem. You
+            can take a look at the RubyParser and the JsParser implementations
+            for Ruby and JavaScript for some inspiration.
+        </p>
+        <h3>Incremental Parsing</h3>
+        <p>
+          GSF supports incremental parsing. This is described in the separate
+          <a href="incremental-parsing.html">incremental parsing</a> document.
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="Web Services Manager " default="createWsJars" basedir=".">
+    <description>
+        A script to wscompile and wsimport WSDL files.
+
+        run-wscompile - runs the wscompile ant task for the JAX-RPC proxy client
+        run-wsimport - runs the wsimport ant task for the JAX-WS proxy client
+
+        Creates the directories ${websvc.home}/${serviceName}/jaxrpc.
+        Creates build and src directories.
+        Uses "wscompile" to compile the WSDL and place all generated .class and .java files into  build and src directories respectively.
+        Creates the "jar" file from the ".class" files.
+        Deletes "build" and "src" directories.
+
+        Creates the directories ${websvc.home}/${serviceName}/jaxws.
+        Creates build and src directories.
+        Uses "wsimport" to compile the WSDL and place all generated .class and .java files into  build and src directories respectively.
+        Creates the "jar" file from the ".class" files.
+        Deletes "build" and "src" directories.
+
+        Copies the wsdl file into ${websvc.home}/${serviceName}/websvc.
+
+    </description>
+
+    <target name="wsimport-jar" depends="-run-wsimport, -create-proxy-jars" description="Generates web service proxy jars using wsimport"/>
+    <target name="wscompile-jar" depends="-run-wscompile, -create-proxy-jars" description="Generates web service proxy jars using wscompile"/>
+
+    <target name="-init-user">
+        <property file="${user.properties.file}"/>
+        <condition property="is-jdk-1.5">
+            <equals arg1="${ant.java.version}" arg2="1.5"/>
+        </condition>
+    </target>
+
+    <target name="-init-wscompile" depends="-init-user">
+        <property name="jxrpc.base" value="${websvc.home}/${serviceDirName}/jaxrpc"/>
+        <mkdir dir="${jxrpc.base}/build"/>
+        <mkdir dir="${jxrpc.base}/src"/>
+    </target>
+
+    <target name="-init-wsimport" depends="-init-user">
+        <property name="jaxws.base" value="${websvc.home}/${serviceDirName}/jaxws"/>
+        <mkdir dir="${jaxws.base}/build"/>
+        <mkdir dir="${jaxws.base}/src"/>
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath path="${java.home}/../lib/tools.jar:${libs.jaxb.classpath}:${libs.jaxws21.classpath}"/>
+        </taskdef>
+    </target>
+
+    <target name="-set-wsimport-base" if="jaxws.base">
+        <property name="jar.base" value="${jaxws.base}"/>
+    </target>
+
+    <target name="-set-wscompile-base" if="jxrpc.base">
+        <property name="jar.base" value="${jxrpc.base}"/>
+    </target>
+
+    <target name="-run-wscompile" depends="-init-wscompile, -init-user">
+        <taskdef name="wscompile" classname="com.sun.xml.rpc.tools.ant.Wscompile" classpath="${java.home}/../lib/tools.jar:${libs.jaxrpc16.classpath}"/>
+        <wscompile
+            gen="true"
+            base="${jxrpc.base}/build"
+            mapping="${jxrpc.base}/../catalog/mapping.xml"
+            sourcebase="${jxrpc.base}/src"
+            debug="true"
+            config="${config.file}"
+            HTTPproxy="${proxy.server}"
+            classpath="${java.home}/../lib/tools.jar:${libs.jaxrpc16.classpath}" fork="true"/>
+
+        <!-- ensure source level 1.4 -->
+        <delete dir="${jxrpc.base}/build"/>
+        <mkdir dir="${jxrpc.base}/build"/>
+        <javac srcdir="${jxrpc.base}/src"
+               destdir="${jxrpc.base}/build"
+               classpath="${java.home}/../lib/tools.jar:${libs.jaxrpc16.classpath}"
+               debug="on" source="1.4" fork="true">
+        </javac>
+    </target>
+
+    <target name="-run-wsimport" depends="-init-wsimport, -init-user">
+        <wsimport sourcedestdir="${jaxws.base}/src"
+                  extension="true"
+                  package="${packageName}"
+                  destdir="${jaxws.base}/build"
+                  wsdl="${wsdlFileName}" xendorsed="true" fork="true" catalog="${catalog.file}" verbose="true">
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsimport>
+    </target>
+
+    <target name="-create-proxy-jars" depends="-set-wsimport-base, -set-wscompile-base">
+        <!-- jar the sources -->
+        <jar jarfile="${jar.base}/${serviceName}-src.jar">
+            <fileset dir="${jar.base}/src"/>
+        </jar>
+
+        <!-- jar the compiled classes -->
+        <jar jarfile="${jar.base}/${serviceName}.jar"
+             basedir="${jar.base}/build"/>
+
+        <delete failonerror="false" dir="${jar.base}/build"/>
+        <delete failonerror="false" dir="${jar.base}/src"/>
+    </target>
+
+</project>

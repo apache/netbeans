@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>DTD Grammar Documentation</title>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+</head>
+
+<!-- REMOVED -->
+<body>
+
+<hr />
+<h2>Element Index</h2>
+<ul><li><tt><a href="#Books">Books</a></tt></li>
+<li><tt><a href="#Custom">Custom</a></tt></li>
+<li><tt><a href="#Descript">Descript</a></tt></li>
+<li><tt><a href="#Image">Image</a></tt></li>
+<li><tt><a href="#Price">Price</a></tt></li>
+<li><tt><a href="#Product">Product</a></tt></li>
+<li><tt><a href="#inc-level-1">inc-level-1</a></tt></li>
+<li><tt><a href="#inc-level-2">inc-level-2</a></tt></li>
+<li><tt><a href="#x-include">x-include</a></tt></li>
+</ul>
+
+<hr />
+<h2>Element Details</h2>
+
+
+<hr />
+<h2><a name="Books"></a>Books</h2>
+<div><i>Doc comment for Books declaration:</i><p />
+A set of books.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA owner</tt></li>
+<li><tt>#IMPLIED ID idow</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#Product">Product</a>+, <a href="#Price">Price</a>?, <a href="#Image">Image</a>?, <a href="#Custom">Custom</a>?)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+
+
+<hr />
+<h2><a name="Product"></a>Product</h2>
+<div><i>Doc comment for Product declaration:</i><p />
+Book's description.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA isbn</tt></li>
+<li><tt>#IMPLIED ID id</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA&nbsp;| <a href="#Descript">Descript</a>)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#Books">Books</a></tt></p>
+
+
+<hr />
+<h2><a name="Descript"></a>Descript</h2>
+<div><i>Doc comment for Descript declaration:</i><p />
+More detail book's description.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA lang</tt></li>
+<li><tt>#IMPLIED CDATA cprght</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#Product">Product</a></tt></p>
+
+
+<hr />
+<h2><a name="Custom"></a>Custom</h2>
+<div><i>Doc comment for Custom declaration:</i><p />
+Field intended for custom purpose.</div>
+<p><b>Element Content Model</b></p>
+<p><tt>ANY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#Books">Books</a></tt></p>
+
+
+<hr />
+<h2><a name="Price"></a>Price</h2>
+<div><i>Doc comment for Price declaration:</i><p />
+Book's price..</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA isbn</tt></li>
+<li><tt>#IMPLIED ID id</tt></li>
+<li><tt>#IMPLIED CDATA bla</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#Books">Books</a></tt></p>
+
+
+<hr />
+<h2><a name="Image"></a>Image</h2>
+
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED ENTITY src</tt></li>
+<li><tt>#IMPLIED CDATA descr</tt></li>
+<li><tt>#FIXED CDATA visible = true</tt></li>
+<li><tt>#IMPLIED ENUMERATION ( jpg | gif ) format</tt></li>
+<li><tt>#DEFAULT ENUMERATION ( unix | os2 ) os = unix</tt></li>
+<li><tt>#IMPLIED ENTITY entity</tt></li>
+<li><tt>#IMPLIED ENTITIES entities</tt></li>
+<li><tt>#IMPLIED ID id</tt></li>
+<li><tt>#IMPLIED IDREF idref</tt></li>
+<li><tt>#IMPLIED IDREFS idrefs</tt></li>
+<li><tt>#IMPLIED NMTOKEN nmtoken</tt></li>
+<li><tt>#IMPLIED NMTOKENS nmtokens</tt></li>
+<li><tt>#IMPLIED NOTATION notation</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#Books">Books</a></tt></p>
+
+
+<hr />
+<h2><a name="x-include"></a>x-include</h2>
+
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+
+
+<hr />
+<h2><a name="inc-level-1"></a>inc-level-1</h2>
+
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+
+
+<hr />
+<h2><a name="inc-level-2"></a>inc-level-2</h2>
+
+<p><b>Element Content Model</b></p>
+<p><tt>(#PCDATA)*</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+</body></html>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+->|a    // Auto-completion is fine at this point
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     fn()                            [PUBLIC]   C
+VARIABLE   A a                             [PUBLIC]   B

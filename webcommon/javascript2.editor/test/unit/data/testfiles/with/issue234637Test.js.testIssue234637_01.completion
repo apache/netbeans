@@ -1,0 +1,6 @@
+Code completion result for source line:
+({id: x|});
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      xProperty: String               [PUBLIC]   issue234637A.js
+FIELD      xyProperty: Number              [PUBLIC]   issue234637A.js

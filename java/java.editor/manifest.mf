@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.java.editor/1
+OpenIDE-Module-Implementation-Version: 12
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/editor/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/java/editor/resources/layer.xml
+AutoUpdate-Show-In-Client: false

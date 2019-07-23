@@ -1,0 +1,91 @@
+lock
+
+var
+var/log
+var/log/messages.log
+var/log/uigestures
+
+var/cache
+var/cache/lastModified
+var/cache/lastModified/all-checksum.txt
+var/cache/all-manifest.dat
+var/cache/all-layers.dat
+var/cache/localeVariants
+var/cache/all-ergonomics.dat
+var/cache/all-local-layers.dat
+var/cache/all-modules.dat
+
+var/cache/bugtracking
+
+
+config
+config/Preferences
+config/Preferences/org
+config/Preferences/org/netbeans
+config/Preferences/org/netbeans/modules
+config/Preferences/org/netbeans/modules/project
+config/Preferences/org/netbeans/modules/project/ant.properties
+config/Preferences/org/netbeans/modules/uihandler.properties
+config/Preferences/org/netbeans/modules/welcome.properties
+config/Preferences/org/netbeans/modules/mercurial.properties
+
+# for some silly reason:
+#  org.netbeans.modules.j2ee.sun.ide.j2ee.PluginProperties.getPropertiesFile(PluginProperties.java:147)
+#  org.netbeans.modules.j2ee.sun.ide.j2ee.PluginProperties.<init>(PluginProperties.java:114)
+#  org.netbeans.modules.j2ee.sun.ide.j2ee.PluginProperties.getDefault(PluginProperties.java:105)
+#  org.netbeans.modules.j2ee.sun.ide.j2ee.PluginProperties.configureDefaultServerInstance(PluginProperties.java:213)
+#  org.netbeans.modules.j2ee.sun.ide.Installer.createGlassFishV1(Installer.java:82)
+config/J2EE
+config/J2EE/platform.properties
+config/Preferences/org/netbeans/modules/j2ee
+config/Preferences/org/netbeans/modules/j2ee/sun
+config/Preferences/org/netbeans/modules/j2ee/sun/appsrv81.properties
+
+# why is this happening?
+var/cache/index
+var/cache/index/0.11
+
+# issue 144293
+build.properties
+config/org-netbeans-api-project-libraries
+config/org-netbeans-api-project-libraries/libraries-timestamps.properties
+
+# issue 144352
+config/org-netbeans-modules-visualweb-complib
+config/org-netbeans-modules-visualweb-ejb
+
+# issue 144355
+var/cache/cvscache
+var/cache/mercurialcache
+
+# issue 152889
+config/Databases
+config/Databases/JDBCDrivers
+config/Databases/JDBCDrivers/org_apache_derby_jdbc_ClientDriver.xml
+config/Databases/JDBCDrivers/org_apache_derby_jdbc_EmbeddedDriver.xml
+config/Preferences/org/netbeans/modules/derby.properties
+config/Databases/Connections
+config/Databases/Connections/jdbc_derby___localhost_1527_samp.xml
+config/Databases/Connections/jdbc_derby___localhost_1527_trav.xml
+config/Preferences/org/netbeans/modules/db
+config/Preferences/org/netbeans/modules/db/mysql.properties
+config/Databases/Connections/jdbc_derby___localhost_1527_vir_.xml
+config/Preferences/org/netbeans/modules/visualweb
+config/Preferences/org/netbeans/modules/visualweb/dataconnectivity.properties
+config/Services
+config/Services/org-netbeans-modules-db-explorer-DatabaseOption.settings
+
+# JavaFX samples module needs to refer to external zip files
+# discovered at runtime inside the sdk, using the absolute path
+config/javafx
+config/javafx/samples
+config/javafx/samples/sdksamples.xml
+
+# JNA native binaries
+var/cache/jna
+var/cache/jna/libjnidispatch.so
+var/cache/jna/libjnidispatch.jnilib
+var/cache/jna/jnidispatch.dll
+
+# issue 230387
+config/Preferences/org/netbeans/core.properties

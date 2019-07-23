@@ -1,0 +1,21 @@
+/** Implementation of the MyLib Library */
+var |>GLOBAL:MyLib<| = new function |>METHOD,UNUSED:MyLib<|() {};
+
+/** @constructor
+ *  @returns {MyLib.ObjA} description */
+|>GLOBAL:MyLib<|.|>METHOD:ObjA<| = function (|>UNUSED:arg<|) {
+    /** JsDoc for MyLib.ObjA.aproperty
+     * @type {number|string} */
+    this.|>FIELD:aproperty<| = undefined;
+};
+   
+/**
+ * Constructs MyLib.ObjA
+ * @returns {MyLib.ObjA}
+ */
+|>GLOBAL:MyLib<|.|>METHOD:objA<| = function () {
+};
+
+/** @type MyLib.ObjA */
+var |>GLOBAL:a1<| = |>GLOBAL:MyLib<|.objA();
+var |>GLOBAL:res<| = |>GLOBAL:a1<|.|>FIELD:aproperty<|.toLocaleString();   

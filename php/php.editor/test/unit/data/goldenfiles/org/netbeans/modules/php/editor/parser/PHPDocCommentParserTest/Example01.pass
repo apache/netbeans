@@ -1,0 +1,19 @@
+<PHPDocBlock start='3' end='435'>
+    <Tags>
+        <PHPDocVarTypeTag start='225' end='285' kind='param'>
+            <Variable>
+                <PHPDocNode start='243' end='251' value='$request'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='233' end='242' value='sfRequest' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+        <PHPDocTypeTag start='291' end='375' kind='return'>
+            <Types>
+                <PHPDocTypeNode start='299' end='305' value='string' isArray='false'/>
+            </Types>
+        </PHPDocTypeTag>
+        <PHPDocTag start='381' end='419' kind='throws'/>
+        <PHPDocTag start='425' end='438' kind='see'/>
+    </Tags>
+</PHPDocBlock>

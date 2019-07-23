@@ -1,0 +1,4 @@
+OVERRIDE YES
+
+PUBLIC "-//W3C//DTD HTML 3.2 Final//EN" html32.dtd
+PUBLIC "ISO 8879-1986//ENTITIES Added Latin 1//EN//HTML" lat1.ent

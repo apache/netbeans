@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="testInstanceDefinitions">
+        <file name="a.instance">
+            <attr name="instanceClass" stringvalue="org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+        </file>
+        <file name="b.instance">
+            <attr name="instanceClass" stringvalue="org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+            <attr name="instanceOf" stringvalue="java.lang.Runnable, org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+        </file>
+        <file name="c.instance">
+            <attr name="instanceCreate" methodvalue="org.openide.loaders.InstanceDataObjectTest$TestDefinitions.create"/>
+            <attr name="instanceOf" stringvalue="java.lang.Runnable,org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+        </file>
+        <file name="d.instance">
+            <attr name="instanceCreate" newvalue="org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+            <attr name="instanceOf" stringvalue="java.lang.Runnable,org.openide.loaders.InstanceDataObjectTest$TestDefinitions"/>
+        </file>
+        <!--not recommended-->
+        <file name="e.instance">
+            <attr name="instanceCreate" methodvalue="org.openide.loaders.InstanceDataObjectTest$TestDefinitions.create"/>
+        </file>
+        <file name="org-openide-loaders-InstanceDataObjectTest$TestDefinitions.instance"/>
+        <!--deprecated-->
+        <file name="hu[org-openide-loaders-InstanceDataObjectTest$TestDefinitions].instance"/>
+        <file name="s.instance">
+            <attr name="instanceCreate" newvalue="org.openide.loaders.InstanceDataObjectSynchronizedTest$TestSync"/>
+        </file>
+    </folder>
+</filesystem>

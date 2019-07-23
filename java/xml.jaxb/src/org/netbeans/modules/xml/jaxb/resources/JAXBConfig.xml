@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="./JAXBBuild.xsl" ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<schemas xmlns="http://xml.netbeans.org/schema/JAXBWizConfig"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation='http://xml.netbeans.org/schema/JAXBWizConfig JAXBWizConfig.xsd'
+           destdir="build\generated\jaxb"
+           projectName="javaApp1-impl">
+    <schema type="-xmlschema" name="schema1" package="ABC">
+        <xjc-options>
+            <xjc-option name="nv" value="false"/>
+            <xjc-option name="readOnly=" value="false"/>
+            <xjc-option name="npa" value="false"/>
+            <xjc-option name="verbose" value="false"/>
+            <xjc-option name="quiet" value="false"/>
+        </xjc-options>
+        <schema-sources>
+            <schema-source location="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"
+                   origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.xsd"/>
+        </schema-sources>
+        <bindings>
+            <binding location="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.bnd"/> 
+            <binding location="src\META-INF\jaxb\XmlQosPmUtilSchema1.bnd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema1.bnd"/> 
+        </bindings>                   
+        <catalog location="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd"
+                   origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.bnd"/>                    
+    </schema>
+    <schema type="-xmlschema" name="schemaw" package="ggg">
+        <xjc-options>
+            <xjc-option name="nv" value="false"/>
+            <xjc-option name="readOnly=" value="false"/>
+            <xjc-option name="npa" value="false"/>
+            <xjc-option name="verbose" value="false"/>
+            <xjc-option name="quiet" value="false"/>            
+        </xjc-options> 
+        <schema-sources>
+            <schema-source location="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"
+                        origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.xsd"/> 
+            <schema-source location="src\META-INF\jaxb\XmlVodafoneTroubleTicketSchema.xsd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlVodafoneTroubleTicketSchema.xsd"/> 
+        </schema-sources>
+    </schema>
+</schemas>

@@ -1,0 +1,6 @@
+Code completion result for source line:
+var myObject1 = new myObject().m|ethod1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     method1(): Number               [PUBLIC]   issue230736.js
+METHOD     method2(): String               [PUBLIC]   issue230736.js

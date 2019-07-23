@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title></title>
+        <script language="javascript">
+            function foo() {
+                alert('foo');
+            }
+        </script>
+        <script language="javascript">
+            function foo() {
+                alert('foo');
+            }</script>
+
+    </head>
+    <body>
+
+        <script language="javascript">
+            function foo() {
+                alert('foo');
+            }
+        </script>
+
+    </body>
+</html>
+

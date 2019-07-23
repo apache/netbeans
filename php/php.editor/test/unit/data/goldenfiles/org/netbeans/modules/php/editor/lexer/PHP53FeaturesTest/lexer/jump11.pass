@@ -1,0 +1,77 @@
+token #0 T_INLINE_HTML --TEST--\njump 08: goto inside switch in constructor\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_CLASS class
+token #4 WHITESPACE  
+token #5 PHP_STRING foobar
+token #6 WHITESPACE  
+token #7 PHP_CURLY_OPEN {
+token #8 WHITESPACE \n    
+token #9 PHP_PUBLIC public
+token #10 WHITESPACE  
+token #11 PHP_FUNCTION function
+token #12 WHITESPACE  
+token #13 PHP_STRING __construct
+token #14 PHP_TOKEN (
+token #15 PHP_TOKEN )
+token #16 WHITESPACE  
+token #17 PHP_CURLY_OPEN {
+token #18 WHITESPACE \n        
+token #19 PHP_SWITCH switch
+token #20 WHITESPACE  
+token #21 PHP_TOKEN (
+token #22 PHP_NUMBER 1
+token #23 PHP_TOKEN )
+token #24 WHITESPACE  
+token #25 PHP_CURLY_OPEN {
+token #26 WHITESPACE             \n            
+token #27 PHP_DEFAULT default
+token #28 PHP_TOKEN :
+token #29 WHITESPACE \n                
+token #30 PHP_GOTO goto
+token #31 WHITESPACE  
+token #32 PHP_STRING b
+token #33 PHP_SEMICOLON ;
+token #34 WHITESPACE \n                
+token #35 PHP_STRING a
+token #36 PHP_TOKEN :
+token #37 WHITESPACE \n                    
+token #38 PHP_PRINT print
+token #39 WHITESPACE  
+token #40 PHP_CONSTANT_ENCAPSED_STRING "ok!\n"
+token #41 PHP_SEMICOLON ;
+token #42 WHITESPACE \n                    
+token #43 PHP_BREAK break
+token #44 PHP_SEMICOLON ;
+token #45 WHITESPACE                \n                
+token #46 PHP_STRING b
+token #47 PHP_TOKEN :
+token #48 WHITESPACE \n                    
+token #49 PHP_PRINT print
+token #50 WHITESPACE  
+token #51 PHP_CONSTANT_ENCAPSED_STRING "ok!\n"
+token #52 PHP_SEMICOLON ;
+token #53 WHITESPACE \n                    
+token #54 PHP_GOTO goto
+token #55 WHITESPACE  
+token #56 PHP_STRING a
+token #57 PHP_SEMICOLON ;
+token #58 WHITESPACE \n        
+token #59 PHP_CURLY_CLOSE }
+token #60 WHITESPACE         \n        
+token #61 PHP_PRINT print
+token #62 WHITESPACE  
+token #63 PHP_CONSTANT_ENCAPSED_STRING "ok!\n"
+token #64 PHP_SEMICOLON ;
+token #65 WHITESPACE \n    
+token #66 PHP_CURLY_CLOSE }
+token #67 WHITESPACE \n
+token #68 PHP_CURLY_CLOSE }
+token #69 WHITESPACE \n\n
+token #70 PHP_NEW new
+token #71 WHITESPACE  
+token #72 PHP_STRING foobar
+token #73 PHP_SEMICOLON ;
+token #74 WHITESPACE \n
+token #75 PHP_CLOSETAG ?>
+token #76 T_INLINE_HTML \n--EXPECT--\nok!\nok!\nok!\n

@@ -1,0 +1,6 @@
+Code completion result for source line:
+self::|BBB;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   AAA "aaa"                       [PUBLIC]   A135618
+CONSTANT   BBB "bbb"                       [PUBLIC]   B135618
+CONSTANT   class \B135618                  [PUBLIC]   Magic Constant

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence">
+  <persistence-unit name="em" transaction-type="JTA">
+    <jta-data-source>jdbc/__default</jta-data-source>
+    <properties>
+      <property name="ddl-generation" value="createtables"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="em2" transaction-type="JTA">
+    <jta-data-source>jdbc/__default</jta-data-source>
+    <properties>
+      <property name="ddl-generation" value="createtables"/>
+    </properties>
+  </persistence-unit>
+</persistence>

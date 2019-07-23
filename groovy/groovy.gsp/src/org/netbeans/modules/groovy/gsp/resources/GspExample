@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<%@page import=\"org.grails.bookmarks.*\" %>
+<html>
+  <!-- HTML style comment -->
+  %{-- GSP style comment --}%
+  <%-- JSP style comment --%>
+
+  <body>
+    <ul>
+      <g:each it="books">
+        <li>${it.title} (${it.author.name})</li>
+      </g:each>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+:somedummyfile:
+org.foo.Interface
+:java.lang.Runnable:
+org.foo.impl.Runnable1
+:java.util.Comparator:
+#some comment
+org.foo.impl.Comparator1
+#position=10
+#som comment2
+:java.util.Iterator:
+org.foo.impl.Iterator1
+:org.foo.Interface:
+# Some header info, maybe.
+
+# Our first impl here
+org.foo.impl.Implementation1
+

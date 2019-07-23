@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo
+OpenIDE-Module-Name: Interface & Impl #1
+

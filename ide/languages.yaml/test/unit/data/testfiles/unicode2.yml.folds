@@ -1,0 +1,7 @@
+  # Fixtures for the images table.
+  
++ monkey:
+-   name: 猿
++ donkey:
+-   name: 猿
+  

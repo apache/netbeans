@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+<ul data-bind="foreach: { data: categories, as: 'category' }">
+    <li>
+        <ul data-bind="foreach: { data: items, as: 'item' }">
+            <li>
+                <span data-bind="text: category.name"></span>:
+                <span data-bind="text: "></span>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<script>
+    var viewModel = {
+        categories: [
+            { name: 'Fruit', items: [ 'Apple', 'Orange', 'Banana' ] },
+            { name: 'Vegetables', items: [ 'Celery', 'Corn', 'Spinach' ] }
+        ]
+    };
+    ko.applyBindings(viewModel);
+</script>
+    </body>
+</html>

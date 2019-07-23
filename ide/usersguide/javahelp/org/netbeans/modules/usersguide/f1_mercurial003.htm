@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Mercurial: Export Diff Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.mercurial.ui.diff.ExportDiff" name="org.netbeans.modules.mercurial.ui.diff.ExportDiff"></a></p>
+<div id="NBCSH1178"><!-- infolevel="all" infotype="General" --><a id="sthref129" name="sthref129"></a>
+<h1>Mercurial: Export Diff Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Mercurial Export Diff dialog box enables you to export all the diffs for modified files within a given changeset. You can also use the dialog to attach the diffs to an existing issue in your repository's issue tracker. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG336">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t4">Menu Item</th>
+<th align="left" valign="bottom" id="r1c2-t4">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t4" headers="r1c1-t4">
+<p>Choose from Revisions</p>
+</td>
+<td align="left" headers="r2c1-t4 r1c2-t4">Select a revision from the drop-down field. Revisions are displayed containing revision numbers and corresponding changeset IDs in parentheses. Revisions are listed according to date (i.e., the most current revision is displayed by default).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t4" headers="r1c1-t4">
+<p>Details</p>
+</td>
+<td align="left" headers="r3c1-t4 r1c2-t4">The following read-only fields list information that will be associated with the exported diffs.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t4" headers="r1c1-t4">
+<p>Description</p>
+</td>
+<td align="left" headers="r4c1-t4 r1c2-t4">The description associated with the changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t4" headers="r1c1-t4">
+<p>Author</p>
+</td>
+<td align="left" headers="r5c1-t4 r1c2-t4">The author associated with the changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t4" headers="r1c1-t4">
+<p>Date</p>
+</td>
+<td align="left" headers="r6c1-t4 r1c2-t4">The date the changeset was created (i.e., pushed to the repository).</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Specify whether you want to output the diffs to a file on your computer, or attach them to an existing issue. Select one of the two options:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t5">Option</th>
+<th align="left" valign="bottom" id="r1c2-t5">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t5" headers="r1c1-t5">
+<p>Save as File</p>
+</td>
+<td align="left" headers="r2c1-t5 r1c2-t5">Specify the name and location of the output file that will be generated from performing the export. Click Browse to open an explorer allowing you to navigate to a specific location on your computer.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t5" headers="r1c1-t5">
+<p>Attach to Issue</p>
+</td>
+<td align="left" headers="r3c1-t5 r1c2-t5">To attach the diffs to an existing issue, you need to specify your repository's issue tracker and the issue ID. You can also indicate a description of the diff by typing a message in Patch Description.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t5" headers="r1c1-t5">
+<p>Issue Tracker</p>
+</td>
+<td align="left" headers="r4c1-t5 r1c2-t5">Select the issue tracker for your project from the drop-down list. The drop-down provides you with a list of all issue trackers registered with the IDE. If the issue tracker for your project is not registered, click the New button to register the issue tracker.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t5" headers="r1c1-t5">
+<p>Issue</p>
+</td>
+<td align="left" headers="r5c1-t5 r1c2-t5">Specify the issue ID. You can do this by typing in the ID, or part of the description.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1188" name="NBCSH1188"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG318">
+<param name="text" value="<html><u>&quot;Versioning Applications with Mercurial&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

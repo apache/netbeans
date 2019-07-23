@@ -1,0 +1,84 @@
+<testresult testFile='shortArraysStaticScalar_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='6' end='14'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='15' end='18'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='19' end='25'>
+            <text>$param</text>
+        </token>
+        <token id='T_EQUAL' start='26' end='27'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='28' end='29'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='29' end='30'>
+            <text>2</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='31' end='33'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='34' end='39'>
+            <text>"bar"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='39' end='40'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='40' end='41'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='42' end='43'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='45' end='46'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='47' end='50'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='50' end='50'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='49'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='6' end='46' isReference='false'>
+                <Identifier start='15' end='18' name='foo'/>
+                <FormalParameters>
+                    <FormalParameter start='19' end='40' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='19' end='25' isDollared='true'>
+                                <Identifier start='20' end='25' name='param'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <ArrayCreation start='28' end='40' type='NEW'>
+                                <ArrayElement start='29' end='39'>
+                                    <Key>
+                                        <Scalar start='29' end='30' type='INT' value='2'/>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='34' end='39' type='STRING' value='"bar"'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='42' end='46' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+            <EmptyStatement start='47' end='49'/>
+        </Statements>
+    </Program>
+</testresult>

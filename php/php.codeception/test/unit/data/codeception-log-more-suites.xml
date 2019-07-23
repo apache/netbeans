@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="functional" tests="4" assertions="23" failures="0" errors="0" time="0.267902">
+    <testcase name="About" file="/home/junichi11/NetBeansProjects/yii2-codeception/tests/codeception/functional/AboutCept.php" feature="ensure that about works" assertions="1" time="0.027862"/>
+    <testcase name="Contact" file="/home/junichi11/NetBeansProjects/yii2-codeception/tests/codeception/functional/ContactCept.php" feature="ensure that contact works" assertions="14" time="0.130678"/>
+    <testcase name="Home" file="/home/junichi11/NetBeansProjects/yii2-codeception/tests/codeception/functional/HomeCept.php" feature="ensure that home page works" assertions="3" time="0.017483"/>
+    <testcase name="Login" file="/home/junichi11/NetBeansProjects/yii2-codeception/tests/codeception/functional/LoginCept.php" feature="ensure that login works" assertions="5" time="0.091879"/>
+  </testsuite>
+  <testsuite name="unit" tests="4" assertions="2" failures="2" errors="1" time="0.174654">
+    <testcase name="testExec" class="App\FizzBuzz2Test" file="/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php" feature="test exec" assertions="0" time="0.055962"/>
+    <testcase name="testFailure" class="App\FizzBuzz2Test" file="/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php" feature="test failure" assertions="1" time="0.113672">
+      <failure type="PHPUnit_Framework_ExpectationFailedException">App\FizzBuzz2Test::testFailure
+Failed asserting that two objects are equal.
+--- Expected
++++ Actual
+@@ @@
+ App\FizzBuzz Object (
+     'start' =&gt; 0
+-    'end' =&gt; 200
++    'end' =&gt; 300
+ )
+
+/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php:33
+</failure>
+    </testcase>
+    <testcase name="testFailure2" class="App\FizzBuzz2Test" file="/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php" feature="test failure2" assertions="1" time="0.002331">
+      <failure type="PHPUnit_Framework_ExpectationFailedException">App\FizzBuzz2Test::testFailure2
+Failed asserting that 2 matches expected 1.
+
+/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php:37
+</failure>
+    </testcase>
+    <testcase name="testError" class="App\FizzBuzz2Test" file="/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php" feature="test error" assertions="0" time="0.002690">
+      <error type="PHPUnit_Framework_ExceptionWrapper">App\FizzBuzz2Test::testError
+Exception: my exception
+
+/home/junichi11/NetBeansProjects/codeception/tests/unit/App/FizzBuzz2Test.php:42
+</error>
+    </testcase>
+  </testsuite>
+  <testsuite name="acceptance" tests="1" assertions="2" failures="1" errors="0" time="0.018758">
+    <testcase name="Welcome" file="/home/junichi11/NetBeansProjects/codeception/tests/acceptance/WelcomeCept.php" feature="ensure that frontpage works" assertions="2" time="0.018758">
+      <failure type="PHPUnit_Framework_ExpectationFailedException">ensure that frontpage works (WelcomeCept)
+Failed asserting that   &lt;bold&gt;/&lt;/bold&gt;
+--&gt; &lt;info&gt;&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Home&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+        &lt;/body&gt;
+&lt;/html&gt;
+&lt;/info&gt;
+--&gt; contains "welcome".
+
+/home/junichi11/NetBeansProjects/codeception/tests/_support/_generated/AcceptanceTesterActions.php:257
+/home/junichi11/NetBeansProjects/codeception/tests/acceptance/WelcomeCept.php:6
+</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

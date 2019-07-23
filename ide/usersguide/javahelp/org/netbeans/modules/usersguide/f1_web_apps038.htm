@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Web Application Wizard: Frameworks</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.project.ui.wizards.PanelSupportedFrameworks" name="org.netbeans.modules.web.project.ui.wizards.PanelSupportedFrameworks"></a></p>
+<div id="NBCSH4076"><!-- infolevel="all" infotype="General" --><a id="sthref540" name="sthref540"></a>
+<h1>New Web Application Wizard: Frameworks</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to choose one or more frameworks that you want to use to provide a structure for your web application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1039">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t46">Element</th>
+<th align="left" valign="bottom" id="r1c2-t46">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t46" headers="r1c1-t46">
+<p>JavaServer Faces</p>
+</td>
+<td align="left" headers="r2c1-t46 r1c2-t46">Specifies that you want the IDE to provide the JSF libraries, create a JSF index page for your project and generate the necessary elements in the <code dir="ltr">web.xml</code> configuration file. For details, see <code dir="ltr">
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">
+<param name="text" value="<html><u>http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</code>.
+<p>If you select the JavaServer Faces checkbox, you can set the JSF servlet URL pattern and preferred page language in the Configuration tab. In the Libraries tab, you can specify which registered libraries to use. You can also create a new library and choose whether libraries can be appended.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t46" headers="r1c1-t46">
+<p>Spring Web MVC</p>
+</td>
+<td align="left" headers="r3c1-t46 r1c2-t46">Specifies that you want the IDE to provide the Spring libraries and create the following files for your application:
+<ul>
+<li>web/WEB-INF/applicationContext.xml</li>
+<li>web/WEB-INF/[dispatcher]-servlet.xml</li>
+<li>web/WEB-INF/redirect.jsp</li>
+<li>web/WEB-INF/jsp/index.jsp</li>
+</ul>
+<p>If you select the Spring Web MVC checkbox, you can set the default dispatcher name and mapping.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t46" headers="r1c1-t46">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Libraries</p>
+</td>
+<td align="left" headers="r4c1-t46 r1c2-t46">Select a Spring library from the drop-down list and whether whether JSTLs will be included in the project..</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t46" headers="r1c1-t46">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Configuration</p>
+</td>
+<td align="left" headers="r5c1-t46 r1c2-t46">In the Configuration tab you can set the default dispatcher name and mapping.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t46" headers="r1c1-t46">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dispatcher Name</p>
+</td>
+<td align="left" headers="r6c1-t46 r1c2-t46">Type a name for the default Spring dispatcher servlet.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t46" headers="r1c1-t46">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dispatcher Mapping</p>
+</td>
+<td align="left" headers="r7c1-t46 r1c2-t46">Specify the mapping of the dispatcher. The default is set to <code dir="ltr">*.htm</code>
+<p>Dispatcher mappings are based on the Java Servlet Specification Section SRV.11.2. In the web application deployment descriptor, the following syntax is used to define standard mappings:</p>
+<ul>
+<li>A string beginning with a '/' character and ending with a '/*' postfix is used for path mapping.</li>
+<li>A string beginning with a '*.' prefix is used as an extension mapping.</li>
+<li>A string containing only the '/' character indicates the default servlet of the application. In this case the servlet path is the requested URI minus the context path and the path info is <code dir="ltr">null</code>.</li>
+<li>All other strings are used for exact matches only.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t46" headers="r1c1-t46">
+<p>Struts</p>
+</td>
+<td align="left" headers="r8c1-t46 r1c2-t46">Specifies that you want the IDE to provide the Struts libraries and create the following files for your application:
+<ul>
+<li><code dir="ltr">welcomeStruts.jsp</code></li>
+<li><code dir="ltr">struts-config.xml</code></li>
+<li><code dir="ltr">tiles-defs.xml</code></li>
+<li><code dir="ltr">validator-rules.xml</code></li>
+<li><code dir="ltr">ApplicationResource.properties</code></li>
+</ul>
+<p>For details, see <code dir="ltr">
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://struts.apache.org/">
+<param name="text" value="<html><u>http://struts.apache.org/</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</code>.</p>
+<p>If you select the Struts checkbox, you can set the servlet name and URL pattern. You can also set the application resource and specify whether the IDE adds Struts TLDs.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t46" headers="r1c1-t46">
+<p>Hibernate</p>
+</td>
+<td align="left" headers="r9c1-t46 r1c2-t46">Specifies that you want the IDE to provide the Hibernate libraries and create the Hibernate configuration file hibernate.cfg.xml for your project.
+<p>For details, see <code dir="ltr">
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.hibernate.org/">
+<param name="text" value="<html><u>http://www.hibernate.org/</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</code>.</p>
+<p>If you select the Hibernate checkbox, you need to provide the database connection for the project by selecting a connection from the drop-down list. The drop-down list contains the database connections registered with the IDE in the Services window. If the desired database connection is not listed, select New Database Connection from the list to create a new connection. When you select the database connection the IDE automatically determines the appropriate database dialect.</p>
+<p>The IDE uses the information you supply in this dialog to generate the Hibernate configuration file.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you click <b>Finish</b>, the project is created in your file system and opened in the IDE. You can view its logical structure in the Projects window and its file structure in the Files window.</p>
+<a id="NBCSH4085" name="NBCSH4085"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1138">
+<param name="text" value="<html><u>&quot;Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

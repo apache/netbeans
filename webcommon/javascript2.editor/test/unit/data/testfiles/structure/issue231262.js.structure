@@ -1,0 +1,10 @@
+pp:CLASS:[PUBLIC]:ESCAPED{pp}:
+  m:CLASS:[PUBLIC]:ESCAPED{m}:
+    Building:CONSTRUCTOR:[PUBLIC]:ESCAPED{Building}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }pp.m.Building</font>:
+      buildingId:FIELD:[PUBLIC]:ESCAPED{buildingId}<font color="#999999">ESCAPED{ : }Number</font>:
+      floors:FIELD:[PUBLIC]:ESCAPED{floors}<font color="#999999">ESCAPED{ : }Array.<xx.m.Floor></font>:
+      locationCode:FIELD:[PUBLIC]:ESCAPED{locationCode}<font color="#999999">ESCAPED{ : }String</font>:
+      prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+        getOrganizationUnitTitle:METHOD:[PUBLIC]:ESCAPED{getOrganizationUnitTitle}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+        getTitleWithoutOrganizationUnit:METHOD:[PUBLIC]:ESCAPED{getTitleWithoutOrganizationUnit}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+      title:FIELD:[PUBLIC]:ESCAPED{title}<font color="#999999">ESCAPED{ : }String</font>:

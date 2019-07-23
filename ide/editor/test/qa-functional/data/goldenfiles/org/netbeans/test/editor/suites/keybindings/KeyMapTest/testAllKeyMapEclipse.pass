@@ -1,0 +1,317 @@
+Edit|Clear Document Bookmarks
+Edit|Copy
+Edit|Cut
+Edit|Delete Next Character
+Edit|File Hierarchy
+  Alt+F12
+Edit|File Members
+  Ctrl+O
+Edit|Find Next Occurrence
+  Ctrl+K
+Edit|Find Previous Occurrence
+  Ctrl+Shift+K
+Edit|Find Selection
+Edit|Find in Projects...
+  Ctrl+H
+Edit|Find...
+  FIND
+Edit|Go to Line...
+  Ctrl+L
+Edit|Go to Symbol...
+Edit|Go to Type...
+  Ctrl+Shift+T
+Edit|Hierarchy
+  Ctrl+T
+Edit|Members
+  Ctrl+Shift+F12
+Edit|Next Bookmark
+Edit|Paste
+Edit|Previous Bookmark
+  Shift+F2
+Edit|Quick Search
+  Ctrl+I
+Edit|Redo
+Edit|Replace
+Edit|Replace in Projects...
+  Ctrl+Shift+H
+Edit|Start Macro Recording
+Edit|Stop Macro Recording
+Edit|Toggle Bookmark
+  Ctrl+F2
+Edit|Undo
+Editor Macros|cast-to-String
+Editor Macros|debug-var
+Editor Macros|quote-word
+Go To|Go to Declaration
+  F3
+Go To|Go to Javadoc
+Go To|Go to Line...
+  Ctrl+L
+Go To|Go to Source
+Go To|Go to Super Implementation
+Other|Back
+  Alt+LEFT
+Other|Complete Line
+Other|Complete Line and Create New Line
+Other|Copy Selection else Line down
+  Ctrl+Alt+DOWN
+Other|Copy Selection else Line up
+  Ctrl+Alt+UP
+Other|Cut from Insertion Point to Line Begining
+Other|Cut from Insertion Point to Line End
+Other|Delete Line
+  Ctrl+D
+Other|Delete Next Word
+  Ctrl+DELETE
+Other|Delete Preceding Characters in Line
+Other|Delete Previous Character
+  BACK_SPACE
+  Shift+BACK_SPACE
+Other|Delete Previous Word
+  Ctrl+BACK_SPACE
+Other|Delete Selection
+Other|Delete Tab
+  Shift+TAB
+Other|Extend Selection Back
+  Ctrl+Shift+LEFT
+Other|Extend Selection Backward
+  Shift+LEFT
+Other|Extend Selection Down
+  Shift+DOWN
+Other|Extend Selection Forward
+  Shift+RIGHT
+Other|Extend Selection Up
+  Shift+UP
+Other|Extend Selection to Beginning of Document
+  Ctrl+Shift+HOME
+Other|Extend Selection to Beginning of Line
+Other|Extend Selection to Beginning of Text on Line
+  Shift+HOME
+Other|Extend Selection to Beginning of Word
+Other|Extend Selection to End of Document
+  Ctrl+Shift+END
+Other|Extend Selection to End of Line
+  Shift+END
+Other|Extend Selection to End of Word
+Other|Extend Selection to First Non-whitespace Char
+Other|Extend Selection to Last Non-whitespace Char
+Other|Extend Selection to Matching Brace
+  Ctrl+Shift+OPEN_BRACKET
+Other|Extend Selection to Next Page
+  Shift+PAGE_DOWN
+Other|Extend Selection to Next Word
+  Ctrl+Shift+RIGHT
+Other|Extend Selection to Previous Page
+  Shift+PAGE_UP
+Other|Fast Import
+  Ctrl+Shift+M
+Other|Forward
+  Alt+RIGHT
+Other|Go to First Non-whitespace Char
+Other|Go to Last Non-whitespace Char
+Other|Incremental Search Backward
+  Ctrl+Shift+J
+Other|Incremental Search Forward
+  Ctrl+J
+Other|Inplace Refactoring
+  Ctrl+R
+Other|Insert Code
+  Alt+Shift+S
+Other|Insert Current Date and Time
+Other|Insert Newline
+  ENTER
+Other|Insert Tab
+  TAB
+Other|Insertion Point Backward
+  LEFT
+  KP_LEFT
+Other|Insertion Point Down
+  DOWN
+  KP_DOWN
+Other|Insertion Point Forward
+  RIGHT
+  KP_RIGHT
+Other|Insertion Point Up
+  KP_UP
+  UP
+Other|Insertion Point to Beginning of Document
+  Ctrl+HOME
+Other|Insertion Point to Beginning of Line
+Other|Insertion Point to Beginning of Text on Line
+  HOME
+Other|Insertion Point to Beginning of Word
+Other|Insertion Point to End of Document
+  Ctrl+END
+Other|Insertion Point to End of Line
+  END
+Other|Insertion Point to End of Word
+Other|Insertion Point to Matching Brace
+  Ctrl+Shift+P
+Other|Insertion Point to Next Word
+  Ctrl+RIGHT
+Other|Insertion Point to Previous Word
+  Ctrl+LEFT
+Other|Last edit
+  Ctrl+Q
+Other|Move Insertion Point to Bottom
+  Alt+Shift+PAGE_DOWN
+Other|Move Insertion Point to Center
+  Alt+Shift+INSERT
+Other|Move Insertion Point to Top
+  Alt+Shift+PAGE_UP
+Other|Move Selection else Line down
+  Alt+DOWN
+Other|Move Selection else Line up
+  Alt+UP
+Other|Navigate to Next Occurrence
+Other|Navigate to Next Occurrence
+Other|Navigate to Next Occurrence
+Other|Navigate to Previous Occurrence
+Other|Navigate to Previous Occurrence
+Other|Navigate to Previous Occurrence
+Other|Page Down
+  PAGE_DOWN
+Other|Page Up
+  PAGE_UP
+Other|Paste Formatted
+  Ctrl+Shift+V
+Other|Re-indent Current Line or Selection
+Other|Remove Trailing Spaces
+Other|Replace Variable With its Getter
+  Alt+U G
+Other|Replace Variable With its Setter
+  Alt+U S
+Other|Replace Variable With its is* Method
+  Alt+U I
+Other|Scroll Down
+  Ctrl+UP
+Other|Scroll Insertion Point to Bottom
+Other|Scroll Insertion Point to Center
+Other|Scroll Insertion Point to Top
+Other|Scroll Up
+  Ctrl+DOWN
+Other|Select All
+  Ctrl+A
+Other|Select Identifier
+  Alt+Shift+J
+Other|Select Line
+Other|Select Next Element
+  Alt+Shift+PERIOD
+Other|Select Previous Element
+  Alt+Shift+COMMA
+Other|Select Word
+Other|Show All Code Completion Popup
+  Ctrl+Alt+SPACE
+  Ctrl+Alt+BACK_SLASH
+Other|Show Code Completion Popup
+  Ctrl+BACK_SLASH
+  Ctrl+SPACE
+Other|Show Code Completion Tip Popup
+  F2
+Other|Show Documentation Popup
+  Ctrl+Shift+SPACE
+  Ctrl+Shift+BACK_SLASH
+Other|Show Popup Menu
+  Shift+F10
+Other|Split Line
+  Ctrl+ENTER
+Other|Start New Line
+  Shift+ENTER
+Other|Switch Capitalization of Identifier
+Other|Switch Case
+  Ctrl+U S
+Other|To Lowercase
+  Ctrl+Shift+Y
+Other|To Uppercase
+  Ctrl+Shift+X
+Other|Toggle Comment
+  Ctrl+SLASH
+Other|Toggle Highlight Search
+  Alt+Shift+H
+Other|Toggle Line Numbers
+Other|Toggle Toolbar
+Other|Toggle Typing Mode
+  INSERT
+Refactor|Change Method Parameters...
+Refactor|Convert Anonymous to Member...
+Refactor|Copy...
+Refactor|Encapsulate Fields...
+Refactor|Extract Interface...
+Refactor|Extract Superclass...
+Refactor|Find Usages
+  Ctrl+Alt+H
+Refactor|Introduce Constant...
+Refactor|Introduce Field...
+Refactor|Introduce Method...
+Refactor|Introduce Variable...
+Refactor|Move...
+  Ctrl+M
+Refactor|Pull Up...
+Refactor|Push Down...
+Refactor|Redo
+Refactor|Rename...
+  Ctrl+R
+Refactor|Safely Delete...
+  Alt+DELETE
+Refactor|Undo
+Refactor|Use Supertype Where Possible...
+Source|Analyze Javadoc
+Source|Comment
+Source|Fix Code...
+  Ctrl+1
+Source|Fix Imports
+  Ctrl+Shift+O
+Source|Format
+  Ctrl+Shift+F
+Source|Next Error in Editor
+Source|Next Matching Word
+  Alt+SLASH
+Source|Previous Matching Word
+Source|Shift Line Left
+  Alt+Shift+LEFT
+Source|Shift Line Right
+  Alt+Shift+RIGHT
+Source|Uncomment
+Tools|Go to File...
+  Ctrl+Shift+R
+Tools|Javadoc Index Search
+  Shift+F1
+Tools|Javadoc References
+View|Collapse All
+  Ctrl+Shift+MINUS
+  Ctrl+Shift+SUBTRACT
+View|Collapse All Java Code
+View|Collapse All Javadoc
+View|Collapse Fold
+  Ctrl+MINUS
+  Ctrl+SUBTRACT
+View|Expand All
+  Ctrl+MULTIPLY
+  Ctrl+Shift+EQUALS
+  Ctrl+Shift+ADD
+  Ctrl+Shift+PLUS
+View|Expand All Java Code
+View|Expand All Javadoc
+View|Expand Fold
+  Ctrl+ADD
+  Ctrl+PLUS
+  Ctrl+EQUALS
+Window|Analyzer
+Window|Call Hierarchy
+Window|Clone Document
+Window|Close All Documents
+  Ctrl+Shift+W
+  Ctrl+Shift+F4
+Window|Close Other Documents
+Window|Close Window
+  Ctrl+W
+  Ctrl+F4
+Window|Declaration View
+Window|Editor
+  F12
+Window|Find Usages Results
+  Alt+Shift+U
+Window|Javadoc View
+Window|Navigator
+  Ctrl+7
+Window|Refactoring Preview

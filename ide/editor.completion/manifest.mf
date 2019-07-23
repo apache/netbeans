@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.completion/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/completion/Bundle.properties
+OpenIDE-Module-Install: org/netbeans/modules/editor/completion/CompletionModule.class
+OpenIDE-Module-Layer: org/netbeans/modules/editor/completion/resources/layer.xml
+OpenIDE-Module-Implementation-Version: 2
+AutoUpdate-Show-In-Client: false

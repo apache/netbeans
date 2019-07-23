@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Debugging: Sessions Window</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="NetbeansDebuggerSessionNode" name="NetbeansDebuggerSessionNode"></a></p>
+<div id="NBCSH2687"><!-- infolevel="all" infotype="General" --><a id="sthref353" name="sthref353"></a>
+<h1>Debugging: Sessions Window</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to view the debugging sessions currently running in the IDE. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG881">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<a id="NBCSH2688" name="NBCSH2688"></a>
+<p><b>Session States</b></p>
+<p>There are three session states.</p>
+
+<table summary="Descriptions of session states." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="34%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">State</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p>Starting</p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">The program is being started. You cannot pause, resume, or single-step the application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p>Running</p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">The application being debugged has been started and is executing instructions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p>Stopped</p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">The application is suspended because it hit a breakpoint or because you either paused the application or performed a step command (Step Into, Step Over, Step Out, or Run to Cursor).</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2692" name="NBCSH2692"></a>
+<p><b>Icons</b></p>
+<p>Icons are displayed to the left of the session name.</p>
+
+<table summary="Descriptions of Session window icons." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="34%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t23">Element</th>
+<th align="left" valign="bottom" id="r1c2-t23">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t23" headers="r1c1-t23">
+<p><img width="16" height="16" src="img/currentsession.gif" alt="Current session icon." title="Current session icon." /></p></td>
+<td align="left" headers="r2c1-t23 r1c2-t23">The current session.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t23" headers="r1c1-t23">
+<p><img width="16" height="16" src="img/session.gif" alt="Session icon." title="Session icon." /></p></td>
+<td align="left" headers="r3c1-t23 r1c2-t23">A session other than the current session.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2695" name="NBCSH2695"></a>
+<p><b>Actions</b></p>
+<p>The Sessions window has the following commands in the context menu:</p>
+
+<table summary="Descriptions of Sessions window commands." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="33%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t24">Element</th>
+<th align="left" valign="bottom" id="r1c2-t24">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t24" headers="r1c1-t24">
+<p>Scope</p>
+</td>
+<td align="left" headers="r2c1-t24 r1c2-t24">Determines the threads affected.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t24" headers="r1c1-t24">
+<p>Language</p>
+</td>
+<td align="left" headers="r3c1-t24 r1c2-t24">Determines the programming language.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t24" headers="r1c1-t24">
+<p>Make Current</p>
+</td>
+<td align="left" headers="r4c1-t24 r1c2-t24">Makes the selected session the current session.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t24" headers="r1c1-t24">
+<p>Finish</p>
+</td>
+<td align="left" headers="r5c1-t24 r1c2-t24">Terminates the selected process and removes the session. If the process is attached, the process is disconnected without being terminated.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t24" headers="r1c1-t24">
+<p>Finish All</p>
+</td>
+<td align="left" headers="r6c1-t24 r1c2-t24">Terminates all debugging sessions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t24" headers="r1c1-t24">
+<p>List Options</p>
+</td>
+<td align="left" headers="r7c1-t24 r1c2-t24">Enables you to customize the display of the Sessions window, including adding and removing columns of information, reordering the columns, and sorting the columns. See Customizing a Debugger Window for more information.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2702" name="NBCSH2702"></a>
+<p><b>Properties</b></p>
+<p>By default, all properties are also displayed directly in the Sessions window, except for the Host Name property. To display the Host Name property in the Sessions window, click the <img width="17" height="18" src="img/changecolumn.gif" alt="Change column icon." title="Change column icon." /> icon in the upper right corner of the window, or right-click in the window and choose <b>List Options</b> &gt; <b>Change Visible Columns</b> and then select <b>Host Name</b> in the dialog box.</p>
+<p>The Sessions window has the following properties:</p>
+
+<table summary="Descriptions of Sessions window properties." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="35%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t25">Element</th>
+<th align="left" valign="bottom" id="r1c2-t25">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t25" headers="r1c1-t25">
+<p>Name</p>
+</td>
+<td align="left" headers="r2c1-t25 r1c2-t25">Specifies the name used to identify the session. The session name is usually the same as the program name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t25" headers="r1c1-t25">
+<p>Host Name</p>
+</td>
+<td align="left" headers="r3c1-t25 r1c2-t25">Specifies the name of the host on which the process is running.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t25" headers="r1c1-t25">
+<p>Language</p>
+</td>
+<td align="left" headers="r4c1-t25 r1c2-t25">Specifies the programming language of the program being debugged.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t25" headers="r1c1-t25">
+<p>State</p>
+</td>
+<td align="left" headers="r5c1-t25 r1c2-t25">Specifies the state of the process associated with the session.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2707" name="NBCSH2707"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG824">
+<param name="text" value="<html><u>&quot;Choosing Current Context in the Debugger&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG863">
+<param name="text" value="<html><u>&quot;Managing Debugging Sessions&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG822">
+<param name="text" value="<html><u>&quot;Using the Debugger Windows&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

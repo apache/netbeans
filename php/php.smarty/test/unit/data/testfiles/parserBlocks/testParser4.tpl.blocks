@@ -1,0 +1,17 @@
+Detected parser blocks in the file:
+
+{assign <15:41> -  var=var value=value}
+
+{null <68:72> - $var}
+
+{setfilter <48:57> - }
+ |
+ -- {/setfilter <79:89> - }
+
+{include <103:128> -  file="myfile.tpl"}
+
+{if <1:8> -  true}
+ |
+ -- {else <92:96> - }
+ |
+ -- {/if <131:134> - }

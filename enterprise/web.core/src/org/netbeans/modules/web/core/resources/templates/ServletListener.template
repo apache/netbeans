@@ -1,0 +1,22 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+<#if classAnnotation??>
+import javax.servlet.annotation.WebListener;
+
+</#if>
+/**
+ * Web application lifecycle listener.
+ * @author ${user}
+ */
+<#if classAnnotation??>
+${classAnnotation}
+</#if>
+public class ${name} {
+}

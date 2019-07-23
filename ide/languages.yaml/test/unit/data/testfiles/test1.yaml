@@ -1,0 +1,40 @@
+JFrame:
+    title: frame.title
+    content:
+        - JPanel:
+            content:
+                - JBSeparator: {name: sepName, text: header.name}
+                - JLabel: {name: fNameLabel, text: label.firstName}
+                - JTextField: {name: fNameField, onFocus: onFirstNameFocus, onFocusLost: onFirstNameFocusLost}
+                - JLabel: {name: lNameLabel, text: label.lastName}
+                - JTextField: {name: lNameField, onKeyPressed: onLastNameKeyPressed, onKeyReleased: onLastNameKeyReleased}
+                - JLabel: {name: titleLabel, text: label.title}
+                - JTextField: {name: titleField, onKeyTyped: onTitleKeyTyped}
+                - JLabel: {name: dfLabel, text: label.displayFormat}
+                - JComboBox: {name: dfCombo}
+                - JLabel: {name: nickLabel, text: label.nickname}
+                - JTextField: {name: nickField}
+                - JBSeparator: {name: sepList, text: header.list}
+                - JLabel: {name: labelEmail, text: label.email}
+                - JTextField: {name: fieldEmail}                
+                - JList: {name: textArea}
+                - JButton: {name: addButton, text: button.add, actionCommand: add}
+                - JButton: {name: deleteButton, text: button.delete, actionCommand: delete}
+                - JButton: {name: editButton, text: button.edit, onAction: edit}
+                - JButton: {name: advancedButton, text: button.advanced, actionCommand: advanced}
+                - JButton: {name: okButton, text: button.ok, onAction: save}
+                - JButton: {name: cancelButton, text: button.cancel, onAction: cancel}
+            layout: |
+                [pref]       [grow,100px]              [grow]               [pref]             
+                sepName+*              
+                >fNameLabel  fNameField=1  >lNameLabel lNameField+2=1
+                >titleLabel  titleField=1  >nickLabel  nickField+2=1
+                >dfLabel     dfCombo+*
+                sepList+*
+                >labelEmail  fieldEmail+3                                    addButton+1+4=3      
+                textArea+4+3                                                 editButton=3         [grow]
+                                                                             deleteButton=3
+                                                                             advancedButton=3                          
+                                  
+                >okButton+*=2,cancelButton=2
+

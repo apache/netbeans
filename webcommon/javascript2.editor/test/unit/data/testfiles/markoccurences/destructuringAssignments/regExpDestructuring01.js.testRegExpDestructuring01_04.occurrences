@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:parsedURL<| = /^(\w+)\:\/\/([^\/]+)\/(.*)$/.exec(url);
+console.log(|>MARK_OCCURRENCES:parsedURL<|); // ["https://netbeans.org/bugzilla/show_bug.cgi?id=242387", "https", "netbeans.org", "bugzilla/show_bug.cgi?id=242387", index: 0, input: "https://netbeans.org/bugzilla/show_bug.cgi?id=242387"]
+var [, protocol, fullhost, fullpath] = |>MARK_OCCURRENCES:par^sedURL<|;

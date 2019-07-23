@@ -1,0 +1,6 @@
+Usages of SubtypeC [3 occurrences]
+    RefactoringTest
+        SubtypeC.java
+            45: * SubtypeC
+            53: * field in class SubtypeC
+            57: // inline comment with class SubtypeC

@@ -1,0 +1,2 @@
+var [, protocol, fullhost, |>MARK_OCCURRENCES:fullp^ath<|] = parsedURL;
+console.log(|>MARK_OCCURRENCES:fullpath<|); // bugzilla/show_bug.cgi?id=242387

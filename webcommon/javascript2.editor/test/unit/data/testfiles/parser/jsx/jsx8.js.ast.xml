@@ -1,0 +1,67 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='125'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='125'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='test' start='0' end='125'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='13'>
+        <name>test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='test' kind='NORMAL' start='0' end='125'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <!-- FunctionNode Body -->
+        <Block start='16' end='123'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='26' end='123'>
+            <JsxElementNode name='Test' start='45' end='112'>
+              <!-- JSX Element Attributes -->
+              <!-- JSX Element Children -->
+              <BinaryNode type='ADD' start='53' end='103'>
+                <!-- BinaryNode lhs -->
+                <BinaryNode type='ADD' start='53' end='102'>
+                  <!-- BinaryNode lhs -->
+                  <StringLiteralNode value='template' start='53' end='61'/>
+                  <!-- BinaryNode rhs -->
+                  <RuntimeNode start='66' end='102'>
+                    <BinaryNode type='ASSIGN' start='64' end='102'>
+                      <isAssignment/>
+                      <!-- BinaryNode lhs -->
+                      <IdentNode start='64' end='65'>
+                        <name>x</name>
+                      </IdentNode>
+                      <!-- BinaryNode rhs -->
+                      <JsxElementNode name='Inner' start='68' end='102'>
+                        <!-- JSX Element Attributes -->
+                        <JsxAttributeNode name='a' start='75' end='83'>
+                          <!-- JSX Attribute Value -->
+                          <StringLiteralNode value='ok' start='79' end='81'/>
+                        </JsxAttributeNode>
+                        <!-- JSX Element Children -->
+                        <StringLiteralNode value='inner text' start='84' end='84'/>
+                      </JsxElementNode>
+                    </BinaryNode>
+                  </RuntimeNode>
+                </BinaryNode>
+                <!-- BinaryNode rhs -->
+                <StringLiteralNode value='' start='103' end='103'/>
+              </BinaryNode>
+            </JsxElementNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

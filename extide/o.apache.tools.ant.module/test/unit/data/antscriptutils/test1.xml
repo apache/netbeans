@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Normal Ant script. -->
+<project name="test1" default="main" basedir=".">
+    <target name="main"/>
+    <target name="-internal1"/>
+    <target name="other"/>
+    <target name="another"/>
+</project>

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.actions/1
+OpenIDE-Module-Layer: org/netbeans/modules/editor/actions/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/actions/Bundle.properties
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module-Provides: org.netbeans.modules.editor.actions

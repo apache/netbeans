@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.barwing
+Bundle-Version: 1.2
+Import-Package: javax.swing
+
+

@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>History View</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.localhistory.ui.view.LHHistoryTab" name="org.netbeans.modules.localhistory.ui.view.LHHistoryTab"></a></p>
+<div id="NBCSH679"><!-- infolevel="all" infotype="General" --><a id="sthref60" name="sthref60"></a>
+<h1>History View</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The History View shows the history of changes of the relevant file. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG339">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You can adjust the size of the Diff Viewer panes by dragging the divider between them. Click the pointing up black arrow on the left of the divider once to expand the lower pane, click the same arrow again to collapse the upper pane. Click the pointing down black arrow on the left of the divider once to expand the upper pane, click the same arrow again to collapse the lower pane.</p>
+<p>The History View window contains the following elements:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t66">Element</th>
+<th align="left" valign="bottom" id="r1c2-t66">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t66" headers="r1c1-t66">
+<p>Toolbar</p>
+</td>
+<td align="left" headers="r2c1-t66 r1c2-t66">The history toolbar is at the top of the History View window. You can toggle the display of the toolbar by choosing View &gt; Show Editor Toolbar from the main menu.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <img width="16" height="16" src="img/diff-next.png" alt="Next icon" title="Next icon" /> Next</p>
+</td>
+<td align="left" headers="r3c1-t66 r1c2-t66">Highlights the next difference found between versions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <img width="16" height="16" src="img/diff-prev.png" alt="Previous icon" title="Previous icon" /> Previous</p>
+</td>
+<td align="left" headers="r4c1-t66 r1c2-t66">Highlights the previous difference found between versions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <img width="16" height="16" src="img/refresh.png" alt="Refresh icon" title="Refresh icon" /> Refresh</p>
+</td>
+<td align="left" headers="r5c1-t66 r1c2-t66">Refreshes the contents of the view, fetching the latest history information for the file(s).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Filter (drop-down list)</p>
+</td>
+<td align="left" headers="r6c1-t66 r1c2-t66">Displays only those revisions that match the criteria you selected (All, VCS, Local, User, or Message).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Compare Mode (drop-down list)</p>
+</td>
+<td align="left" headers="r7c1-t66 r1c2-t66">Displays differences between the selected file version and its previous or current version.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <img width="16" height="16" src="img/options.png" alt="Options icon" title="Options icon" /> Options</p>
+</td>
+<td align="left" headers="r8c1-t66 r1c2-t66">Displays the Versioning tab of the Options dialog box to configure history and VCS-specific parameters in the IDE.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Search Git/Mercurial/Subversion History (shortcut link)</p>
+</td>
+<td align="left" headers="r9c1-t66 r1c2-t66">Displays the Show History tab for browsing and searching information in VCS repository files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t66" headers="r1c1-t66">
+<p>Diff Viewer</p>
+</td>
+<td align="left" headers="r10c1-t66 r1c2-t66">The Diff Viewer is divided into two panes:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Upper pane</p>
+</td>
+<td align="left" headers="r11c1-t66 r1c2-t66">Contains a table that enables you to view a summary of a file's evolution by the date and time stamps. A stamp is applied whenever a file is saved in the IDE or committed to a VCS repository.
+<p>Multiple selection of any two revisions in the table displays them compared in the Diff Viewer in the lower pane. You can right-click a multiple selection of revisions to invoke a context menu. The actions in the menu vary depending on the specific system (the IDE's History, Git, Mercury, or Subversion).</p>
+<p>The table features the following columns and components:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date</p>
+</td>
+<td align="left" headers="r12c1-t66 r1c2-t66">Displays the creation date and time of the revision in the history. The file versions are listed according to the date, with the most current version displayed on top. They can be sorted by clicking the Date column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Revision</p>
+</td>
+<td align="left" headers="r13c1-t66 r1c2-t66">Displays the local label for a file tracked in the IDE local history or a revision identifier for a version-controlled file. The revisions can be sorted by clicking the Revision column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User</p>
+</td>
+<td align="left" headers="r14c1-t66 r1c2-t66">Displays the name of the person who created and authored the version. The users can be sorted by clicking the User column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message</p>
+</td>
+<td align="left" headers="r15c1-t66 r1c2-t66">Lists any message associated with the file. The messages can be sorted by clicking the Message column header. To add a message to a specific file version, click on the version row beneath the Message column and type in a message directly.
+<p>You can call commands from the table directly on versions using the right-click menu:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Revert from History</p>
+</td>
+<td align="left" headers="r16c1-t66 r1c2-t66">Reverts your current file to the selected version. Applicable to files tracked in the IDE local history.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delete from History</p>
+</td>
+<td align="left" headers="r17c1-t66 r1c2-t66">Deletes the selected version from the Local History repository. Applicable to files tracked in the IDE local history.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View</p>
+</td>
+<td align="left" headers="r18c1-t66 r1c2-t66">Displays the selected revision in the source editor in a separate tab. Applicable to version-controlled files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show Annotations</p>
+</td>
+<td align="left" headers="r19c1-t66 r1c2-t66">Displays annotated source of the selected revision in a separate tab. Applicable to version-controlled files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r20c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show only rows where</p>
+</td>
+<td align="left" headers="r20c1-t66 r1c2-t66">Filters versions in accordance with the filter specified (Revision/User/Message ==, Revision/User/Message &lt;&gt;, Revision/User/Message &gt;, Revision/User/Message &lt;, Revision/User/Message &gt;=, Revision/User/Message &lt;=, No Filter). Available in the Revision, User, and Message columns.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r21c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Load next 30 days</p>
+</td>
+<td align="left" headers="r21c1-t66 r1c2-t66">Enables you to find out if there is any revision available beyond the specified time scope that ranges from the date specified in the same row on the right till the current date. Unavailable if either Always Load All is selected in the right-click menu or the <b>Load all revisions</b> option is selected in the History Versioing System in the Versioning tab of the Miscellaneous category in the Options window.
+<p>You can use the right-click menu to call the following commands from the cells of the row:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r22c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Load Next 30 days</p>
+</td>
+<td align="left" headers="r22c1-t66 r1c2-t66">Retrieves the revisions made to the IDE's history and a versioning control system for the period of 30 days counted from the most recent loaded date.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r23c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Load All</p>
+</td>
+<td align="left" headers="r23c1-t66 r1c2-t66">Retrieves all revisions made to the IDE's history and a versioning control system from the beginning.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r24c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Always Load All</p>
+</td>
+<td align="left" headers="r24c1-t66 r1c2-t66">When selected the IDE always retrieves all the revisions available in both the IDE's history and a versioning control system into the Upper pane.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r25c1-t66" headers="r1c1-t66">
+<p>Show only rows where</p>
+</td>
+<td align="left" headers="r25c1-t66 r1c2-t66">Filters versions in accordance with the filter specified (Revision/User/Message ==, Revision/User/Message &lt;&gt;, Revision/User/Message &gt;, Revision/User/Message &lt;, Revision/User/Message &gt;=, Revision/User/Message &lt;=, No Filter). Available in the Revision, User, and Message columns.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r26c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Lower pane</p>
+</td>
+<td align="left" headers="r26c1-t66 r1c2-t66">Enables you to compare revisions of a file in the following two modes:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r27c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Graphical</p>
+</td>
+<td align="left" headers="r27c1-t66 r1c2-t66">Displays the differences between the files being compared side by side using color coding.
+<p>The Diff Viewer provides the following UI components:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r28c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blue</p>
+</td>
+<td align="left" headers="r28c1-t66 r1c2-t66">Indicates lines that have been changed since the earlier revision.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r29c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Green</p>
+</td>
+<td align="left" headers="r29c1-t66 r1c2-t66">Indicates lines that have been added since the earlier revision.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r30c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Red</p>
+</td>
+<td align="left" headers="r30c1-t66 r1c2-t66">Indicates lines that have been removed since the earlier revision.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r31c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="14" height="12" src="img/insert.png" alt="Replace icon" title="Replace icon" /> Replace</p>
+</td>
+<td align="left" headers="r31c1-t66 r1c2-t66">Inserts the highlighted text from the previous revision into the current revision.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r32c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="15" height="15" src="img/arrow.png" alt="Move All icon" title="Move All icon" /> Move All</p>
+</td>
+<td align="left" headers="r32c1-t66 r1c2-t66">Reverts the file's current version to the state of the selected previous version.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r33c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img width="9" height="10" src="img/remove.png" alt="Remove icon" title="Remove icon" /> Remove</p>
+</td>
+<td align="left" headers="r33c1-t66 r1c2-t66">Removes the highlighted text from the current version so that it mirrors the previous version.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r34c1-t66" headers="r1c1-t66">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Textual</p>
+</td>
+<td align="left" headers="r34c1-t66 r1c2-t66">Displays the collection of differences between the compared files in text.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH713" name="NBCSH713"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG337">
+<param name="text" value="<html><u>&quot;About Local History&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

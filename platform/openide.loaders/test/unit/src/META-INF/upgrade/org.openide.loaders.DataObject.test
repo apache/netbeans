@@ -1,0 +1,20 @@
+%%TestCase convert-1
+package test;
+
+import org.openide.loaders.DataObject;
+
+public class Test {
+     String t(DataObject od) {
+         return od.getCookie(String.class);
+     }
+}
+%%=>
+package test;
+
+import org.openide.loaders.DataObject;
+
+public class Test {
+     String t(DataObject od) {
+         return od.getLookup().lookup(String.class);
+     }
+}

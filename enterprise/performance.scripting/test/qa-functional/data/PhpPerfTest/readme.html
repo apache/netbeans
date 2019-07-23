@@ -1,0 +1,158 @@
+<!-- 
+    Document   : readme.html
+    Created on : 7.4.2008, 17:23:48
+    Author     : Tomas Kianicka
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="web/css/default.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        
+        
+        <div id="wrapper">
+            <!-- Common Header for our site -->
+            <div id="header">
+                <div id="logo">
+                    <h1><a>Air Alliance</a></h1>
+                    <h2><a>NetBeans PHP Sample Application</a></h2>
+                    
+                </div>
+                
+            </div>            <!-- end div#header -->
+            <div id="page">
+                <div id="content">
+                    <div id="welcome">
+                        
+                        <h1>Air Alliance Sample Application - Readme</h1>
+                        <h2>NetBeans PHP Sample Application</h2>
+                        
+                        <p><b>Author:</b> Frank Jennings</p>
+                        
+                        <h2>What is AirAlliance?</h2>
+                        <p>AirAlliance is an imaginary airlines company that lets you book tickets through their web site.
+                        This PHP application is created to highlight PHP features supported by NetBeans IDE.</p>
+                        
+                        <h2>This sample demonstrates the following features:</h2>
+                        <ul>
+                            <li>Session Management</li>
+                            <li><abbr title="Database">DB</abbr> Interaction</li>
+                            <li><abbr title="Object Oriented Programming">OOP</abbr> Concepts</li>
+                        </ul>
+                        
+                        <h2>Requirements</h2>
+                        Follow these before you run the sample:
+                        <ul>
+                            <li>Install NetBeans 6.1 IDE with PHP support</li>
+                            <li>Install and configure PHP Runtime</li>
+                            <li>Install and configure MySQL database</li>
+                        </ul>
+                        
+                        <h2>What is included?</h2>
+                        <ul>
+                            <li>NetBeans <code>PHP Application</code> Project</li>
+                            <li>Database SQL Script - Use this script to populate tables and sample records</li>
+                            <li>Additional Stylesheet</li>
+                        </ul>
+                        
+                        <h2>Before the start</h2>
+                        <ul>
+                            <li>If you want to try the sample out, follow <a href="#getting_started">Getting Started</a> guidelines.</li>
+                            <li>In case of you want to try debugging features of the NetBeans IDE, 
+                            follow the <a href="#debugging">Debugging</a> guidelines.</li>
+                        </ul>
+                        
+                        <h2 id="getting_started">Getting Started</h2>
+                        <ol>
+                            <li>
+                                Firstly, we set database authentication in <code>conf/conf.php</code>,
+                                which is stored in Air Alliance Project directory. <br>
+                                Just update login and password
+                                fields in the configuration file, so they are the same as MySQL ones.
+                            </li>
+                            <li>
+                                Secondly, we create the database and populate it with data:
+                                <ol type="a">
+                                    <li>Create new MySQL database named <code>AirAlliance</code> in phpMyAdmin.</li>
+                                    <li>Run <code>sql/aadb_dump.sql</code> script stored in Air Alliance Project directory.
+                                    The script creates tables and fills them with sample data.</li>
+                                </ol>
+                            </li>
+                            <li>Then we set project properties to deploy project successfully to PHP document directory:
+                                <ol type="a">
+                                    <li>Right-click on the <code>AirAlliance</code> project node and select <code>Properties</code>.</li>
+                                    <li>Check the option <code>Copy files from Sources Folder to another location</code>.</li>
+                                    <li>In <code>Copy to Folder</code> field specify the path of your PHP documents directory (htdocs).</li>
+                                    <li>Specify the <code>Project URL</code> to be appropriate with your settings from previous field and 
+                                    also with PHP Server setup.</li>
+                                    <li>Confirm the settings.</li>
+                                </ol>
+                            </li>
+                            <li>
+                                Finally, we can run the project. Right-click the project node again and select <code>Run Project</code>.
+                                The sample PHP application should open in the Web brower.
+                            </li>
+                            <li>Click View Itinerary link in the right pane. You should see some records shown from the database.</li>
+                            <li>Play futher with the sample:)</li>
+                        </ol>
+                        
+                        <h2 id="debugging">Debugging</h2>
+                        <ol>
+                            There steps should enable you the debugging option at the sample project, <b>if you already have PHP debugger
+                            installed and configured</b>.<br>
+                            For demonstrating the PHP debugger in NetBeans we have to put the sample project to the PHP documents directory (htdocs):
+                            <li>Create new <code>Air Alliance Sample Application</code> with following settings:</li>
+                            <li>Set the Project Folder to your PHP documents (htdocs) directory, for example: 
+                            <code>...\Apache2.2\htdocs\AirAlliance\</code></li>
+                            <li>In project properies (Right-click the project node and select <code>Properties</code>.) set the <code>Project URL</code>
+                            to be appropriate with previous setting, for example: <code>http://localhost/AirAlliance/web/</code></li>
+                            <li>To debug, right-click the project node and select <code>Debug Project</code>.</li>
+                        </ol>
+                        
+                        <h2>Project folder's structure</h2>
+                        <ul>
+                            <li><b>classes</b> - Contains some helper classes highlighting Object Oriented Programming.</li>
+                            <li><b>conf</b> - Contains the PHP file (Conf.php) from where you can edit the DB Connection settings.</li>
+                            <li><b>css</b> -Contains the stylesheet used for the website.</li>
+                            <li><b>include</b> - Conains header/footer/navigation PHP files for the web site.</li>
+                        </ul>
+                        
+                        <!--body ends-->
+                    </div>
+                    
+                    <!-- end div#welcome -->			
+                    
+                </div>
+                <!-- end div#content -->
+                <div id="sidebar">
+                    <ul>
+                        <!-- Common Navigation Panel for our site -->
+                        <li id="submenu">
+                            <h2>External links</h2>
+                            
+                            <ul>
+                                <li><a href="http://www.netbeans.org">NetBeans Homepage</a></li>
+                                <li><a href="http://blogs.sun.com/phantom/">Author's blog</a></li>
+                            </ul>
+                        </li>                        <!-- end navigation -->
+                        
+                    </ul>
+                </div>
+                <!-- end div#sidebar -->
+
+                <div style="clear: both; height: 1px"></div>
+            </div>
+            <!-- Common footer for our site -->
+            <div id="footer">
+                <p id="legal">Created by Frank Jennings</p>
+                
+            </div>
+            
+        </div>
+        <!-- end div#wrapper -->
+        
+    </body>
+</html>

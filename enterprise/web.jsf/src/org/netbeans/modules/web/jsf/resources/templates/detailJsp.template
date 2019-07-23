@@ -1,0 +1,40 @@
+<%@page contentType="text/html"%>
+<%@page pageEncoding="__ENCODING__"%>
+<%@taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<f:view>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=__ENCODING__" />
+            <title>__ENTITY_NAME__ Detail</title>
+            __LINK_TO_SS__
+        </head>
+        <body>
+        <h:panelGroup id="messagePanel" layout="block">
+            <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+        </h:panelGroup>
+        <h1>__ENTITY_NAME__ Detail</h1>
+        <h:form>
+            <h:panelGrid columns="2">
+                __FORM_BODY__
+                __TABLE_BODY__
+            </h:panelGrid>
+            <br />
+            <h:commandLink action="#{__FIELD_NAME__.__REMOVE_VALUE__}" value="Destroy">
+                <f:param name="jsfcrud.current__ENTITY_NAME__" value="#{jsfcrud_class['__JSF_UTIL_CLASS__'].jsfcrud_method['getAsConvertedString'][__MANAGED_BEAN_NAME__.__FIELD_NAME__][__MANAGED_BEAN_NAME__.converter].jsfcrud_invoke}" />
+            </h:commandLink>
+            <br />
+            <br />
+            <h:commandLink action="#{__FIELD_NAME__.editSetup}" value="Edit">
+                <f:param name="jsfcrud.current__ENTITY_NAME__" value="#{jsfcrud_class['__JSF_UTIL_CLASS__'].jsfcrud_method['getAsConvertedString'][__MANAGED_BEAN_NAME__.__FIELD_NAME__][__MANAGED_BEAN_NAME__.converter].jsfcrud_invoke}" />
+            </h:commandLink>
+            <br />
+            <h:commandLink action="#{__FIELD_NAME__.createSetup}" value="New __ENTITY_NAME__" />
+            <br />
+            <h:commandLink action="#{__FIELD_NAME__.listSetup}" value="Show All __ENTITY_NAME__ Items"/>
+            <br />
+            __LINK_TO_INDEX__
+        </h:form>
+        </body>
+    </html>
+</f:view>

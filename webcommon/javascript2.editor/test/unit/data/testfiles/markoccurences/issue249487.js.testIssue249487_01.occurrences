@@ -1,0 +1,4 @@
+    this.|>MARK_OCCURRENCES:iArg<| = 10;
+    myEventArgs(this.|>MARK_OCCURRENCES:iArg<|);
+    console.log(this.|>MARK_OCCURRENCES:iA^rg<|);
+console.log(test.|>MARK_OCCURRENCES:iArg<|);

@@ -1,0 +1,2 @@
+public function myFoo(?string $string, int $int): ?\Foo{
+}

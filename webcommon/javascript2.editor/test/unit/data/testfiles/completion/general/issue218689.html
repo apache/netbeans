@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>TODO write content</div>
+
+        <script>
+            var A = function() {
+                this.value = 1;
+            };
+            A.prototype.constructor = A;
+            A.prototype.test = function() {
+
+            };
+            var B = function() {
+               A.call(this);
+            };
+            B.prototype = new A;
+            B.prototype.constructor = B;
+            B.prototype.test = function() {
+                A.prototype.test.call(this);
+            };
+            var b = new B();
+            b.v
+
+        </script></body>
+</html>

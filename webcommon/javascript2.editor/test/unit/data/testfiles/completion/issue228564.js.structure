@@ -1,0 +1,5 @@
+x:METHOD:[PUBLIC]:ESCAPED{x}ESCAPED{(}ESCAPED{a}ESCAPED{)}<font color="#999999">ESCAPED{ : }x.ret</font>:
+  ret:METHOD:[PRIVATE]:ESCAPED{ret}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }xESCAPED{|}x.t</font>:
+    testik:FIELD:[PUBLIC, STATIC]:ESCAPED{testik}<font color="#999999">ESCAPED{ : }Number</font>:
+  t:VARIABLE:[PRIVATE]:ESCAPED{t}:
+y:METHOD:[PUBLIC]:ESCAPED{y}ESCAPED{(}ESCAPED{a}ESCAPED{)}<font color="#999999">ESCAPED{ : }x.ret</font>:

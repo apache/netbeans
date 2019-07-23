@@ -1,0 +1,6 @@
+Code completion result for source line:
+UVS3::myStatic3()::myStatic2()::|myStatic1()::MAX;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myStatic1()                     [STATIC]   UVS1
+VARIABLE   UVS1 $INSTANCE                  [STATIC]   UVS1
+CONSTANT   MAX 99                          [PUBLIC]   UVS1

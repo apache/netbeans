@@ -1,0 +1,6 @@
+Code completion result for source line:
+wn.|create();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     create()                        [PUBLIC]   test249439.js
+METHOD     printed(): undefined            [PUBLIC]   testModule.js

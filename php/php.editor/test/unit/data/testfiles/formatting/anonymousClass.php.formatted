@@ -1,0 +1,33 @@
+<?php
+
+var_dump(new class($i) {
+
+    public function __construct($i) {
+        $this->i = $i;
+    }
+});
+
+(new class extends BaseClass {
+
+    public function main() {
+        
+    }
+})->main();
+
+class MyClass extends BaseClass {
+
+    private function getInstance() {
+        return new class() extends MyClass implements MyInterface {
+
+            public function test() {
+                
+            }
+        };
+    }
+
+}
+
+$anonClass = new class {
+
+    use Foo;
+};

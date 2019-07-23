@@ -1,0 +1,41 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+  <head>
+    <title>Task List API</title>
+  </head>
+
+<body>
+<p>Task List is a window that shows problems or tasks - error/warnings/todos etc - associated with
+files and folder under selected scope. The scope is either currently edited file, main project
+or all opened projects.</p>
+
+<p>The tasks are produced by task scanners. There are two types of scanners:
+    <ul>
+        <li><a href="@TOP@/org/netbeans/spi/tasklist/FileTaskScanner.html"/>FileTaskScanner</a> - creates tasks when polled by the Task List framework.</li>
+        <li><a href="@TOP@/org/netbeans/spi/tasklist/PushTaskScanner.html"/>PushTaskScanner</a> - can push new tasks into the Task List framework whenever necessary. It should be
+            used when the tasks are calculated asynchronously or when the computation of tasks may be too long.</li>
+    </ul>
+</p>
+
+</body>
+</html>

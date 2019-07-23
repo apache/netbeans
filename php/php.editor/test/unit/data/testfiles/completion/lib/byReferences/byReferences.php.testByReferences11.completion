@@ -1,0 +1,3 @@
+Code completion result for source line:
+function my_sort6(&|$data) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

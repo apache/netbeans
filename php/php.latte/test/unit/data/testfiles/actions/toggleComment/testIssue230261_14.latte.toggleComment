@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Foo</title>
+    </head>
+<img src="{basdsada as $field}" />
+<div n:syntax="asp">
+    <!--<img src="<%basdsada as $field%>" ^/>-->
+</div>
+</html>

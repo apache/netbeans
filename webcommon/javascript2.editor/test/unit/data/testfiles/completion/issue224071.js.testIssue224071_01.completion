@@ -1,0 +1,7 @@
+Code completion result for source line:
+a.|t
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      b: Player.Bar                   [PUBLIC]   issue224071.js
+FIELD      name: String                    [PUBLIC]   issue224071.js
+FIELD      t                               [PUBLIC]   issue224071.js

@@ -1,0 +1,27 @@
+    public function interfaceMethod(string $test): void {
+                                            ----
+HINT:Variable $test seems to be unused in its scope
+    public function parentMethod(string $param1, int $param2): string {
+                                                      ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope
+    public function test($param1, string $param2): void {
+                                          ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope
+    public function test1($param1, $param2) {
+                                    ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope
+    public function test2($param1, $param2) {
+                                    ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope
+        $anon = function($anonParam) {
+                          ---------
+HINT:Variable $anon seems to be unused in its scope
+HINT:Variable $anonParam seems to be unused in its scope
+    public function test3($param1, $param2) {
+                                    ------
+HINT:Variable $param1 seems to be unused in its scope
+HINT:Variable $param2 seems to be unused in its scope

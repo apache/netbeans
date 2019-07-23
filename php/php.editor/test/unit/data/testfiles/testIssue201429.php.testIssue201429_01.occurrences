@@ -1,0 +1,3 @@
+     * @param type $|>MARK_OCCURRENCES:keyClosure<| closure returning the key
+    protected static function test($|>MARK_OCCURRENCES:keyC^losure<|) {
+        $key = $|>MARK_OCCURRENCES:keyClosure<|($row->KEY); // <-- not highlighted

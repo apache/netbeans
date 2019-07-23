@@ -1,0 +1,13 @@
+applet#java.applet
+awt#java.awt
+beans#java.beans
+io#java.io
+lang#java.lang
+math#java.math
+net#java.net
+nio#java.nio
+rmi#java.rmi
+security#java.security
+sql#java.sql
+text#java.text
+util#java.util

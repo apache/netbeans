@@ -1,0 +1,14 @@
+package test;
+
+import java.util.AbstractList;
+
+public class Test extends AbstractList {
+    
+    public Test() {}
+    
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+}

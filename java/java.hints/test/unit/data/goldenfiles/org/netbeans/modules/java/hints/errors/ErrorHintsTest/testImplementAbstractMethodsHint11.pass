@@ -1,0 +1,18 @@
+package org.netbeans.test.java.hints;
+
+import java.util.Comparator;
+
+public class ImplementAbstractMethods11 {
+    
+    private void test() {
+        a(new Comparator() {
+
+            public int compare(Object t, Object t1) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
+    }
+    
+    private void a(Comparator c) {}
+    
+}

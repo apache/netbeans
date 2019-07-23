@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/openide/nodes/defaultNode32.png</file>
+        <file>src/org/openide/nodes/wait.gif</file>
+        <file>src/org/openide/nodes/beans.gif</file>
+        <file>src/org/openide/nodes/doc-files/nodes.gif</file>
+        <file>src/org/openide/nodes/doc-files/properties.gif</file>
+        <file>src/org/openide/nodes/doc-files/events.gif</file>
+        <file>src/org/openide/nodes/doc-files/children.gif</file>
+        <file>src/org/openide/nodes/doc-files/ordering.gif</file>
+        <file>src/org/openide/nodes/defaultNode.png</file>
+        <file>test/unit/src/org/openide/nodes/data/a32.png</file>
+        <file>test/unit/src/org/openide/nodes/data/a.gif</file>
+        <file>test/unit/src/org/openide/nodes/data/a32.gif</file>
+        <file>test/unit/src/org/openide/nodes/data/aOpen32.gif</file>
+        <file>test/unit/src/org/openide/nodes/data/aOpen.png</file>
+        <file>test/unit/src/org/openide/nodes/data/a.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

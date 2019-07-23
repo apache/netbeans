@@ -1,0 +1,6 @@
+{
+    "name": "me/project",
+    "config": {
+        "vendor-dir": "libs"
+    }
+}

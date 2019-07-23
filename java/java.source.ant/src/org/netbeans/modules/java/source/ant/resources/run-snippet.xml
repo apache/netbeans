@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="{0} (run)" default="run" basedir=".">
+    <target name="-init-paths">        
+        <translate-classpath classpath="${classpath}" targetProperty="classpath-translated" />
+        <translate-classpath classpath="${modulepath}" targetProperty="modulepath-translated" moduleOriented="true" />
+        <property name="run.jvmargs" value="" />
+        <property name="work.dir" value="${basedir}"/>
+        <property name="application.args" value="" />
+        <property name="java.failonerror" value="true"/>
+    </target>
+    <target if="named.module.internal" depends="-init-paths" name="-init-macrodef-java-with-modules">
+        <macrodef name="call-java">
+            <attribute default="${module.name}" name="modulename"/>
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${modulepath-translated}" name="modulepath"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java module="@{modulename}" classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <modulepath>
+                        <pathelement path="@{modulepath}"/>
+                        <pathelement location="${module.root}"/>
+                    </modulepath>
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target if="unnamed.module.internal" depends="-init-paths" name="-init-macrodef-java-with-unnamed-module">
+        <macrodef name="call-java">
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${modulepath-translated}" name="modulepath"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <modulepath>
+                        <path path="@{modulepath}"/>
+                    </modulepath>
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="-init-macrodef-java-without-modules" depends="-init-paths" unless="modules.supported.internal">
+        <macrodef name="call-java">
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-macrodef-java-with-modules,-init-macrodef-java-with-unnamed-module,-init-macrodef-java-without-modules" name="run">
+        <call-java>
+            <customize>
+                <arg line="${application.args}"/>
+            </customize>
+        </call-java>
+    </target>
+</project>

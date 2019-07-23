@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.JTextArea" type="visual" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/text_area_16.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/text_area_32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_javax-swing-JTextArea"
+               tooltip-key="HINT_javax-swing-JTextArea" />
+</palette_item>

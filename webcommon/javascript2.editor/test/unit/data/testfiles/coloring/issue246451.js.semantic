@@ -1,0 +1,24 @@
+
+function |>METHOD:test<|() {
+    this.|>FIELD:data<| = 10;
+    this.|>FIELD:data2<| = [];
+    this.context.|>FIELD:data<| = 10;
+    this.context.|>FIELD:data2<| = [];
+}
+
+
+
+|>GLOBAL:angular<|.module("synergy.handlers", ["synergy.utils"])
+        .factory("SynergyHandlers", ["SynergyUtils", function (|>UNUSED:SynergyUtils<|) {
+
+                var |>CLASS:Synergy<| = {|>CLASS:control<|: {}};
+                Synergy.control.|>METHOD:ArchiveDataFilter<| = function (|>UNUSED:allData<|) {
+
+                    var |>CLASS,UNUSED:filteredAssignments<| = {};
+                    this.allData.|>FIELD:issues<| = []; // resolved as unknown global variable
+                    var |>LOCAL_VARIABLE_DECLARATION,UNUSED:self<| = this;
+
+                };
+
+                return Synergy.control;
+            }]);

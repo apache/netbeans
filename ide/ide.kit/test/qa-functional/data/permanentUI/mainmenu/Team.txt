@@ -1,0 +1,11 @@
+| Team |           m (mnemonics)
+=========
+Shelve Changes       >   S
+Git                  >   G
+Mercurial            >   M
+Subversion           >   S
+===================
+History              >   T
+Find Tasks...            F
+Report Task...           K
+Create Build Job...      J

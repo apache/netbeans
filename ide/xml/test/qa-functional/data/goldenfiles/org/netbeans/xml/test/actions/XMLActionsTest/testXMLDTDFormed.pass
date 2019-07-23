@@ -1,0 +1,44 @@
+XML checking started.
+
+Checking filename
+The content of elements must consist of well-formed character data or markup. [22] 
+XML checking finished.
+
+
+XML checking started.
+
+Checking filename
+XML checking finished.
+
+
+XML validation started.
+
+Checking filename
+cvc-elt.1: Cannot find the declaration of element 'collection'. [11] 
+XML validation finished.
+
+
+XML validation started.
+
+Checking filename
+Referenced entity at "filename
+Attribute "jmeno" must be declared for element type "title". [17] 
+Attribute "calories" is required and must be specified for element type "nutrition". [28] 
+XML validation finished.
+
+
+XML validation started.
+
+Checking filename
+Referenced entity at "filename
+Attribute "calories" is required and must be specified for element type "nutrition". [28] 
+XML validation finished.
+
+
+XML validation started.
+
+Checking filename
+Referenced entity at "filename
+XML validation finished.
+
+

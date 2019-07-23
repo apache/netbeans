@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:nam^e<| = name;
+        console.log(this.|>MARK_OCCURRENCES:name<|);

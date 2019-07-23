@@ -1,0 +1,14 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Copyright (c) ${date?date?string("yyyy")} ${project.organization!user}.
+${licensePrefix}All rights reserved. This program and the accompanying materials
+${licensePrefix}are made available under the terms of the Eclipse Public License v1.0
+${licensePrefix}which accompanies this distribution, and is available at
+${licensePrefix}http://www.eclipse.org/legal/epl-v10.html
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Contributors:
+${licensePrefix}   ${project.organization!user} - initial API and implementation and/or initial documentation
+<#if licenseLast??>
+${licenseLast}
+</#if>

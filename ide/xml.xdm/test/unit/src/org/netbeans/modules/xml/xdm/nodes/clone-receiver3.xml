@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<r:root xmlns:r="namespaceROOT">
+    <m:middle xmlns:m="namespaceMiddle" xmlns:b1="namespaceB" xmlns:a2="namespaceA">
+    </m:middle>
+</r:root>

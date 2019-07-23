@@ -1,0 +1,9 @@
+Code completion result for source line:
+Singleton1.in|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+FIELD      instance                        [STATIC,   Singleton1

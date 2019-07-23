@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    This is a part of IDE default keymap, which contains Java-specific
+    actions. Because of cluster separation, those actions cannot be specified
+    in the IDE Defaults module.
+    
+    Place all further Java-specific chnages to eclipse keymap here.
+-->
+<folder name="Eclipse">
+    <file name="SO-Q T.shadow">
+        <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowHierarchyAction.instance"/>
+    </file>
+    <file name="SO-Q J.shadow">
+        <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-java-navigation-actions-JavadocAction.instance"/>
+    </file>
+    <file name="DO-H.shadow">
+        <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-refactoring-java-callhierarchy-CallHierarchyAction.instance"/>
+    </file>
+    <file name="D-F3.shadow">
+        <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowMembersAtCaretAction.instance"/>
+    </file>
+    <file name="F4.shadow">
+        <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowHierarchyAtCaretAction.instance"/>
+    </file>
+    <file name="SO-C.shadow">
+        <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-java-api-ui-ChangeParametersAction.instance"/>
+    </file>
+    <file name="SO-I.shadow">
+        <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-java-api-ui-InlineAction.instance"/>
+    </file>
+</folder>

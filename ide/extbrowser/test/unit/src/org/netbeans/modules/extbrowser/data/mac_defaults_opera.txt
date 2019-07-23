@@ -1,0 +1,253 @@
+{
+    LSHandlers =     (
+                {
+            LSHandlerRoleAll = "com.operasoftware.opera";
+            LSHandlerURLScheme = http;
+        },
+                {
+            LSHandlerRoleAll = "com.operasoftware.opera";
+            LSHandlerURLScheme = https;
+        },
+                {
+            LSHandlerContentType = "public.html";
+            LSHandlerRoleAll = "com.operasoftware.opera";
+        },
+                {
+            LSHandlerContentType = "public.url";
+            LSHandlerRoleViewer = "com.google.chrome";
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = aim;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = irc;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = xmpp;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = jabber;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = gtalk;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = msn;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = msim;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = yahoo;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = ymsgr;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = twitterreply;
+        },
+                {
+            LSHandlerRoleAll = "com.adiumx.adiumx";
+            LSHandlerURLScheme = adiumxtra;
+        },
+                {
+            LSHandlerContentType = "public.plain-text";
+            LSHandlerIgnoreCreator = 1;
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = mf;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentType = "public.rss";
+            LSHandlerRoleAll = "com.apple.safari";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.safari";
+            LSHandlerURLScheme = feed;
+        },
+                {
+            LSHandlerContentType = "public.xml";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = properties;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentType = "public.jpeg";
+            LSHandlerRoleAll = "cx.c3.xee";
+        },
+                {
+            LSHandlerContentType = "public.png";
+            LSHandlerRoleAll = "cx.c3.xee";
+        },
+                {
+            LSHandlerContentTag = desc;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = wsdl;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = clusters;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = pom;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.facetime";
+            LSHandlerURLScheme = facetime;
+        },
+                {
+            LSHandlerContentType = "com.apple.ical.backup";
+            LSHandlerRoleAll = "com.apple.ical";
+        },
+                {
+            LSHandlerContentTag = icalevent;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "com.apple.ical";
+        },
+                {
+            LSHandlerContentTag = icaltodo;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "com.apple.ical";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.ical";
+            LSHandlerURLScheme = webcal;
+        },
+                {
+            LSHandlerContentTag = jsp;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.dt.xcode";
+            LSHandlerURLScheme = "svn+ssh";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.dt.xcode";
+            LSHandlerURLScheme = git;
+        },
+                {
+            LSHandlerContentTag = coffee;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = xpi;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.mozilla.firefox";
+        },
+                {
+            LSHandlerContentType = "public.json";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerRoleAll = "com.apple.dt.xcode";
+            LSHandlerURLScheme = "git+ssh";
+        },
+                {
+            LSHandlerContentTag = css;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerIgnoreCreator = 1;
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentType = "com.sun.java-source";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = license;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentType = "public.avi";
+            LSHandlerRoleAll = "org.videolan.vlc";
+        },
+                {
+            LSHandlerContentType = "org.openxmlformats.wordprocessingml.document";
+            LSHandlerRoleAll = "org.libreoffice.script";
+        },
+                {
+            LSHandlerContentType = "org.openxmlformats.presentationml.presentation";
+            LSHandlerRoleAll = "org.libreoffice.script";
+        },
+                {
+            LSHandlerContentType = "com.microsoft.word.doc";
+            LSHandlerRoleAll = "org.libreoffice.script";
+        },
+                {
+            LSHandlerRoleAll = "com.google.chrome";
+            LSHandlerURLScheme = mailto;
+        },
+                {
+            LSHandlerContentType = "com.apple.disk-image-dart";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = md;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = yaml;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = tdump;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = rej;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = xsd;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerContentTag = xsl;
+            LSHandlerContentTagClass = "public.filename-extension";
+            LSHandlerRoleAll = "org.fraise.fraise";
+        },
+                {
+            LSHandlerRoleAll = "com.yorufukurouproject.yorufukurou";
+            LSHandlerURLScheme = yorufukurou;
+        },
+                {
+            LSHandlerContentType = "public.xhtml";
+            LSHandlerRoleAll = "com.operasoftware.opera";
+        },
+                {
+            LSHandlerRoleAll = "org.mozilla.firefox";
+            LSHandlerURLScheme = ftp;
+        }
+    );
+}

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="CHANGEME/nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="multiview_api">MultiView API</apidef>
+        <apidef name="multiview_spi">MultiView SPI</apidef>
+        <apidef name="multiview_text">MultiView Text SPI</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+    <change id="Multiview.AddRemoveTabsAtRuntime">
+        <api name="multiview_api"/>
+        <summary>Add/Remove MultiView elements to an existing MultiView TopComponent at runtime.</summary>
+        <version major="1" minor="38"/>
+        <date day="5" month="12" year="2013"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes" semantic="compatible"/>
+        <description>
+	    It is possible to add/remove multiview elements at runtime.
+        </description>
+        <class package="org.netbeans.core.api.multiview" name="MultiViewHandler"/>
+        <issue number="239088"/>
+    </change>
+    <change id="Multiview.Spliting">
+        <summary>MultiView TopComponent spliting</summary>
+        <version major="1" minor="35"/>
+        <date day="17" month="4" year="2013"/>
+        <author login="theofanis"/>
+        <compatibility addition="yes" semantic="incompatible"/>
+        <description>
+	    Should a MultiViewElement allow spliting? Some applications
+	    may need that, some don't. There is a
+	    <a href="architecture-summary.html#branding-MultiViewElement.Spliting.Enabled">
+		branding API</a> to control such behavior now.
+        </description>
+        <issue number="228448"/>
+    </change>
+    <change id="validate.icon">
+        <api name="multiview_spi"/>
+        <summary>Validate icons</summary>
+        <version major="1" minor="28"/>
+        <date day="9" month="12" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="compatible" source="incompatible">
+            A code specifying icon that does not exist may no longer compile.
+        </compatibility>
+        <description>
+            The processor for <a href="@TOP@org/netbeans/core/spi/multiview/MultiViewElement.Registration.html">
+            MultiViewElement.Registration</a> now checks validity of
+            provided <code>iconBase</code> (not on JDK6 due to bug in <code>javac</code>).
+            Also the attribute was made optional.
+        </description>
+        <class package="org.netbeans.core.spi.multiview" name="MultiViewElement"/>
+        <issue number="204174"/>
+    </change>
+    <change id="tab.switching.action.in.popup">
+        <api name="multiview_api"/>
+        <summary>Tab switching action in popup</summary>
+        <version major="1" minor="25"/>
+        <date day="18" month="7" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="incompatible"/>
+        <description>
+            Toolbar can be <a href="@TOP@architecture-summary.html#preferences-multiview.toolbarVisible">
+            hidden completely</a>. To compensate that new
+            tab switching action is available in popup of multi view 
+            components by default.
+        </description>
+        <issue number="199545"/>
+    </change>
+    <change id="MultiViewEditorElement">
+        <api name="multiview_text"/>
+        <summary>MultiViewEditorElement</summary>
+        <version major="1" minor="24"/>
+        <date day="1" month="6" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            Common support class for integrating multi view and text 
+            infrastructure.
+        </description>
+        <class package="org.netbeans.core.spi.multiview.text" name="MultiViewEditorElement"/>
+        <issue number="196810"/>
+    </change>
+    <change id="MultiViews.create.mimetype">
+        <api name="multiview_api"/>
+        <summary>MultiViews.create for MIME type</summary>
+        <version major="1" minor="24"/>
+        <date day="1" month="6" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            New factory methods to create multiview components for a given
+            mime type.
+        </description>
+        <class package="org.netbeans.core.api.multiview" name="MultiViews"/>
+        <issue number="196810"/>
+    </change>
+    <change id="MultiViewElement.Registration">
+        <api name="multiview_spi"/>
+        <summary>@MultiViewElement.Registration</summary>
+        <version major="1" minor="24"/>
+        <date day="1" month="6" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            Declarative way to register 
+            <a href="@TOP@org/netbeans/core/spi/multiview/MultiViewElement.html">
+            MultiViewElement</a> via 
+            <a href="@TOP@org/netbeans/core/spi/multiview/MultiViewElement.Registration.html">
+            Registration</a> annotation.
+        </description>
+        <class package="org.netbeans.core.spi.multiview" name="MultiViewElement"/>
+        <issue number="196810"/>
+    </change>
+    <change>
+        <api name="multiview_spi"/>
+        <summary>Added marker interface SourceViewMarker to identify elements with sourcecode.</summary>
+        <version major="1" minor="10"/>
+        <date day="14" month="9" year="2007"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+Adding a marker interface for <code>MultiViewDescription</code> instances that allows to identify them
+ as containing source code. The associated <code>MultiViewElement</code>'s visual representation
+ is assumed to implement <code>CloneableEditorSupport.Pane</code> interface.
+        </description>
+        <class package="org.netbeans.core.spi.multiview" name="SourceViewMarker"/>
+        <issue number="68912"/>
+    </change>
+    <change>
+        <api name="multiview_spi"/>
+        <summary>Added factory methods to create multiview component</summary>
+        <version major="1" minor="1"/>
+        <date day="4" month="5" year="2004"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>Additional factory methods to MultiViewFactory added: createCloneableMultiView()
+        The existing createMultiView() is now guaranteed not to return CloneableTopComponent instance.
+        Please note that editors can only be embedded in cloneanle multiview component.
+        </description>
+        <class package="org.netbeans.core.spi.multiview" name="MultiViewFactory"/>
+        <issue number="42646"/>
+    </change>
+  </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the MultiView API/SPI</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the MultiView API/SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.core.multiview"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="HelloService" 
+    targetNamespace="urn:HelloService/wsdl" 
+    xmlns:tns="urn:HelloService/wsdl" 
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  
+  <types>
+      <documentation>testing remove documentation</documentation>
+       <schema targetNamespace="urn:HelloService/wsdl"
+              xmlns="http://www.w3.org/2001/XMLSchema">
+       </schema>
+  </types>    
+  <message name="HelloServiceSEI_sayHello">
+    <part name="String_1" type="xsd:string"/>
+    <part name="String_2" type="xsd:string"/>
+  </message>
+  <message name="HelloServiceSEI_sayHelloResponse">
+    <part name="result" type="xsd:string"/>
+  </message>
+  <portType name="HelloServiceSEI">
+    <operation name="sayHello" parameterOrder="String_1 String_2">
+      <input message="tns:HelloServiceSEI_sayHello"/>
+      <output message="tns:HelloServiceSEI_sayHelloResponse"/>
+    </operation>
+  </portType>
+  <binding name="HelloServiceSEIBinding" type="tns:HelloServiceSEI">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+    <operation name="sayHello">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal" namespace="urn:HelloService/wsdl"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="urn:HelloService/wsdl"/>
+      </output>
+      <fault>
+        <soap:fault use="literal" namespace="urn:HelloService/wsdl"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="HelloService">
+    <port name="HelloServiceSEIPort" binding="tns:HelloServiceSEIBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+    </port>
+  </service>
+</definitions>

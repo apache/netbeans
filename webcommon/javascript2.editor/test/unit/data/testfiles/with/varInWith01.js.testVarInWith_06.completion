@@ -1,0 +1,6 @@
+Code completion result for source line:
+console.log(myDataVarInWith.|kolik);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      kolik: Number                   [PUBLIC]   varInWith01.js
+FIELD      typ: String                     [PUBLIC]   varInWith01.js

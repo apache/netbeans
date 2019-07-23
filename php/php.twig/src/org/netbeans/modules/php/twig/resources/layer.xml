@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+Contributor(s): Sebastian Hörl
+ -->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="OptionsExport">
+        <folder name="PHP">
+            <file name="Twig">
+                <attr name="include" stringvalue="config/Preferences/org/netbeans/modules/php/twig/twig-options.properties"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.twig.resources.Bundle#LBL_TwigExportName"/>
+                <attr name="position" intvalue="600"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-twig">
+
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.php.twig.editor.TwigEditorKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.php.twig.editor.TwigEditorKit"/>
+                    <attr name="beaninfo" boolvalue="false"/>
+                </file>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.twig.editor.lexer.TwigTopTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="highlighting.xml" url="highlighting.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="FoldManager">
+                    <file name="org-netbeans-modules-csl-editor-fold-GsfFoldManagerFactory.instance">
+                	<attr name="position" intvalue="1100"/>
+                    </file>
+                </folder>
+
+                <folder name="SideBar">
+                    <file name="org-netbeans-modules-csl-editor-GsfCodeFoldingSideBarFactory.instance">
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                </folder>
+
+                <file name="org-netbeans-modules-csl-core-EmbeddingIndexerFactoryImpl.instance">
+                    <attr methodvalue="org.netbeans.modules.csl.core.EmbeddingIndexerFactoryImpl.create" name="instanceCreate"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory"/>
+                </file>
+
+                <folder name="RefactoringActions">
+                    <file name="org-netbeans-modules-html-editor-refactoring-actions-ExtractInlinedStyleAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-html-editor-refactoring-actions-ExtractInlinedStyleAction.instance"/>
+                        <attr name="position" intvalue="430"/>
+                    </file>
+                </folder>
+
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-html-editor-completion-HtmlCompletionProvider.instance"/>
+                    <file name="org-netbeans-modules-csl-editor-completion-GsfCompletionProvider.instance"/>
+                    <file name="org-netbeans-modules-html-editor-completion-HtmlPaletteCompletionProvider.instance"/>
+                    <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance"/>
+                </folder>
+
+                <file name="org-netbeans-modules-html-editor-coloring-EmbeddingHighlightsLayerFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+                <file name="org-netbeans-modules-csl-core-GsfParserFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.csl.core.GsfParserFactory.create"/>
+                </file>
+
+                <file name="org-netbeans-modules-javascript2-editor-embedding-JsEmbeddingProvider$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+                </file>
+                <file name="org-netbeans-modules-html-editor-HtmlCaretAwareSourceTask$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+                </file>
+
+                <folder name="UpToDateStatusProvider">
+                    <file name="org-netbeans-modules-csl-hints-GsfUpToDateStateProviderFactory.instance"/>
+                </folder>
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-php-twig-editor-braces-TwigBracesMatcher$Factory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+                <folder name="HyperlinkProviders">
+                    <file name="GsfHyperlinkProvider.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-php-twig-editor-format-TwigIndentTask$Factory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.editor.indent.spi.IndentTask$Factory"/>
+                </file>
+                <file name="org-netbeans-modules-csl-editor-semantic-HighlightsLayerFactoryImpl.instance"/>
+                <folder name="CodeTemplateProcessorFactories">
+                    <file name="org-netbeans-modules-csl-editor-codetemplates-GsfCodeTemplateProcessor$Factory.instance"/>
+                </folder>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-csl-editor-codetemplates-GsfCodeTemplateFilter$Factory.instance"/>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="generate-code">
+                        <attr name="position" intvalue="1480"/>
+                    </file>
+                    <file name="org-netbeans-modules-refactoring-api-ui-RSMEditorAction.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
+                        <attr name="position" intvalue="1290"/>
+                    </file>
+
+                    <folder name="goto">
+                        <attr intvalue="500" name="position"/>
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.csl.core.Bundle#generate-goto-popup"/>
+                        <file name="org-netbeans-modules-php-twig-editor-actions-GoToActionOrViewAction.shadow">
+                            <attr name="originalFile" stringvalue="Editors/text/x-php5/Actions/org-netbeans-modules-php-project-ui-actions-GoToActionOrViewAction.instance"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="goto">
+                            <attr intvalue="600" name="position"/>
+                        </file>
+                    </folder>
+
+                    <file name="SeparatorBeforeCut.instance">
+                        <attr intvalue="1200" name="position"/>
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+
+                    <file name="format">
+                        <attr intvalue="750" name="position"/>
+                    </file>
+
+                    <file name="SeparatorAfterFormat.instance">
+                        <attr intvalue="780" name="position"/>
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <file name="generate-fold-popup">
+                        <attr name="position" intvalue="4200"/>
+                    </file>
+                </folder>
+
+            </folder>
+
+            <folder name="x-twig-block">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.twig.resources.Bundle#Editors/text/x-twig-block"/>
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.twig.editor.lexer.TwigBlockTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-php-twig-editor-codetemplate-TwigCodeTemplateFilter$Factory.instance"/>
+                </folder>
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-php-twig-resources-codetemplates.xml" url="code-templates.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance"/>
+                </folder>
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-php-twig-editor-braces-TwigBracesMatcher$Factory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-twig-variable">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.twig.resources.Bundle#Editors/text/x-twig-variable"/>
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.twig.editor.lexer.TwigVariableTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-php-twig-editor-codetemplate-TwigCodeTemplateFilter$Factory.instance"/>
+                </folder>
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-php-twig-resources-codetemplates.xml" url="code-templates.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance"/>
+                </folder>
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-php-twig-editor-braces-TwigBracesMatcher$Factory.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-twig">
+                <!-- keep for language annotation-->
+                <attr name="iconBase" stringvalue="org/netbeans/modules/php/twig/resources/twig-icon.png"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-twig" url="example.html.twig"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="CodeCompletion">
+                <folder name="text">
+                    <folder name="x-twig">
+                        <file name="TwigCodeCompletion.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.twig.editor.ui.options.CodeCompletionPanel.getCustomizerFactory"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="TwigSpecificCustomCustomizer.instance">
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.php.twig.editor.ui.options.CodeCompletionPanel$CustomCustomizerImpl"/>
+                            <attr name="position" intvalue="110"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="Scripting">
+            <file name="TwigTemplate.html.twig" url="TwigTemplate.html.twig">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/twig/resources/twig-icon.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.twig.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="500"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Refactoring">
+            <file name="org-netbeans-modules-html-editor-refactoring-actions-ExtractInlinedStyleAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.html.editor.refactoring.actions.HtmlRefactoringActionsFactory.extractInlinedStyleAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Palettes">
+        <folder name="Twig">
+            <attr name="paletteDefaultVisible" boolvalue="false"/>
+            <file name="HTML.shadow">
+                <attr name="originalFile" stringvalue="HTMLPalette/HTML"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="HTML_Forms.shadow">
+                <attr name="originalFile" stringvalue="HTMLPalette/HTML_Forms"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

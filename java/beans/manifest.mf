@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.beans/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/beans/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/beans/resources/mf-layer.xml
+OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker

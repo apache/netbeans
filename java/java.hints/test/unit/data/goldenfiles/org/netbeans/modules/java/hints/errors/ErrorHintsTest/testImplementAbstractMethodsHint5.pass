@@ -1,0 +1,30 @@
+/*
+ * ImplementAbstractMethod1.java
+ *
+ * Created on March 12, 2005, 7:22 PM
+ */
+
+package org.netbeans.test.java.hints;
+
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import javax.swing.text.BadLocationException;
+
+/**
+ *
+ * @author lahvac
+ */
+public class ImplementAbstractMethods5 extends AbstractClass3 {
+    
+    /** Creates a new instance of ImplementAbstractMethod1 */
+    public ImplementAbstractMethods5() {
+    }
+    @Override
+    public String[] test(Map<String, List<String>> l) throws IOException, BadLocationException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+}

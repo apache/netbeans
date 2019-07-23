@@ -1,0 +1,9 @@
+
+{% macro foo() %}foo{% endmacro %}
+
+{{ 'a' }}
+{{ 'a'|upper }}
+{{ ('a')|upper }}
+{{ -1|upper }}
+{{ _self.foo() }}
+{{ (_self).foo() }}

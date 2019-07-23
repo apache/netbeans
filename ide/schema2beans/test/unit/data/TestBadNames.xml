@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<bad-names>
+  <el class="c" package="p">
+	<property>-9</property>
+  </el>
+</bad-names>

@@ -1,0 +1,28 @@
+<PHPDocBlock start='3' end='312'>
+    <Tags>
+        <PHPDocVarTypeTag start='125' end='169' kind='property'>
+            <Variable>
+                <PHPDocNode start='142' end='153' value='$id_cliente'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='135' end='141' value='string' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+        <PHPDocVarTypeTag start='173' end='204' kind='property'>
+            <Variable>
+                <PHPDocNode start='191' end='204' value='$id_profissao'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='183' end='190' value='integer' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+        <PHPDocVarTypeTag start='208' end='314' kind='property'>
+            <Variable>
+                <PHPDocNode start='225' end='238' value='$renda_mensal'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='218' end='224' value='string' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+    </Tags>
+</PHPDocBlock>

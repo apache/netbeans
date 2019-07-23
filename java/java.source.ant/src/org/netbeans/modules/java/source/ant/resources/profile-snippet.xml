@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="{0} (profile)" default="profile" basedir=".">
+    <target name="-profile-check" if="netbeans.home">
+        <condition property="profiler.configured">
+            <or>
+                <contains string="${run.jvmargs.ide}" substring="-agentpath:" casesensitive="true"/>
+                <contains string="${run.jvmargs.ide}" substring="-javaagent:" casesensitive="true"/>
+            </or>
+        </condition>
+    </target>
+    <target name="-init-paths">
+        <translate-classpath classpath="${classpath}" targetProperty="classpath-translated" />
+        <translate-classpath classpath="${modulepath}" targetProperty="modulepath-translated" moduleOriented="true" />
+        <property name="run.jvmargs" value="" />
+        <property name="run.jvmargs.ide" value="" />
+        <property name="work.dir" value="${basedir}"/>
+        <property name="application.args" value="" />
+        <property name="java.failonerror" value="true"/>
+    </target>
+    <target if="named.module.internal" depends="-init-paths" name="-init-macrodef-profile-with-modules">
+        <macrodef name="profile">
+            <attribute default="${module.name}" name="modulename"/>
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${modulepath-translated}" name="modulepath"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <startprofiler/>
+                <java module="@{modulename}" classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <modulepath>
+                        <pathelement path="@{modulepath}"/>
+                        <pathelement location="${module.root}"/>
+                    </modulepath>
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <jvmarg line="${run.jvmargs.ide}"/>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target if="unnamed.module.internal" depends="-init-paths" name="-init-macrodef-profile-with-unnamed-module">
+        <macrodef name="profile">
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${modulepath-translated}" name="modulepath"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <startprofiler/>
+                <java classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <modulepath>
+                        <path path="@{modulepath}"/>
+                    </modulepath>
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <jvmarg line="${run.jvmargs.ide}"/>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-paths" unless="modules.supported.internal" name="-init-macrodef-profile-without-modules">
+        <macrodef name="profile">
+            <attribute default="${classname}" name="classname"/>
+            <attribute default="${classpath-translated}" name="classpath"/>
+            <attribute default="jvm" name="jvm"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <startprofiler/>
+                <java classname="@{classname}" dir="${work.dir}" failonerror="${java.failonerror}" fork="true" jvm="${platform.java}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <jvmarg value="-Dfile.encoding=${encoding}"/>
+                    <redirector errorencoding="${encoding}" inputencoding="${encoding}" outputencoding="${encoding}"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <jvmarg line="${run.jvmargs.ide}"/>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper from="run-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="profile" depends="-profile-check,-init-macrodef-profile-with-modules,-init-macrodef-profile-with-unnamed-module,-init-macrodef-profile-without-modules" if="profiler.configured">
+        <profile>
+            <customize>
+                <arg line="${application.args}"/>
+            </customize>
+        </profile>
+    </target>
+</project>

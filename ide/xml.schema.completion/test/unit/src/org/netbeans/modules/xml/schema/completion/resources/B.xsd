@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/TNSB"
+            xmlns:tns="http://xml.netbeans.org/schema/TNSB"
+            elementFormDefault="qualified">
+    <xsd:element name="rootB1">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="B11"/>
+                <xsd:element name="B12"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrB11" type="xsd:string"/>
+            <xsd:attribute name="attrB12" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="rootB2">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="B21"/>
+                <xsd:element name="B22"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrB21" type="xsd:string"/>
+            <xsd:attribute name="attrB22" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="BType">
+        <xsd:sequence>
+            <xsd:element name="B1"/>
+            <xsd:element name="B2"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

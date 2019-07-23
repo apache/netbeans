@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="-deploy-ant" basedir=".">
+    <target name="-deploy-ant" if="deploy.ant.enabled">
+        <fail message="Deploy is not supported for the current target server"/>
+    </target>
+    <target name="-undeploy-ant" if="deploy.ant.enabled">
+        <fail message="Undeploy is not supported for the current target server"/>
+    </target>
+</project>

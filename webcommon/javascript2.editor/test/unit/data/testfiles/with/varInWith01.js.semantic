@@ -1,0 +1,17 @@
+var |>GLOBAL:MyContext<| = {};
+|>GLOBAL:MyContext<|.|>CLASS:okno<| = {
+    |>CLASS:truhlik<|: {
+        |>FIELD:typ<|: "kvetinac",
+        |>FIELD:kolik<|: 10
+    },
+    |>FIELD:material<|:"sklo"
+};
+
+
+with (|>GLOBAL:MyContext<|.okno) {
+    |>GLOBAL:console<|.log(truhlik);
+    var |>GLOBAL:myDataVarInWith<| = truhlik;
+}
+  
+|>GLOBAL:console<|.log(|>GLOBAL:myDataVarInWith<|);
+|>GLOBAL:console<|.log(|>GLOBAL:myDataVarInWith<|.kolik);

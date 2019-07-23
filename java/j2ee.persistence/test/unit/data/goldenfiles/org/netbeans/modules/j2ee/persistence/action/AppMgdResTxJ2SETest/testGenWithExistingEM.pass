@@ -1,0 +1,22 @@
+package org.netbeans.test;
+
+import java.util.*;
+import javax.persistence.EntityManager;
+
+public class Test {
+
+    private EntityManager myEm;
+
+    public void create(Object object) {
+        myEm.getTransaction().begin();
+        try {
+            myEm.persist(object);
+            myEm.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            myEm.getTransaction().rollback();
+        } finally {
+            myEm.close();
+        }
+    }
+}

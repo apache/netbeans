@@ -1,0 +1,4 @@
+                  Recover            > Strip      S
+                                       Backout    B
+                                       Rollback   R
+                                       Verify     V

@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+The root element for the JNLP file.
+-->
+
+<!ELEMENT jnlp (information+, security?, resources*, (application-desc |
+applet-desc | component-desc | installer-desc))>
+
+<!--
+The spec attribute of the jnlp element specifies what versions of the
+JNLP specification a particular JNLP file works with. The default value
+is "1.0+".
+-->
+
+
+<!ATTLIST jnlp spec CDATA #IMPLIED>
+
+<!--
+The version attribute of the jnlp element specifies the version of the
+application being launched, as well as the version of the JNLP file
+itself.
+-->
+
+
+<!ATTLIST jnlp version CDATA #IMPLIED>
+
+<!--
+The codebase attribute of the jnlp element specifies the codebase for
+the application. This is also used as the base URL for all relative URLs
+in href attributes.
+-->
+
+
+<!ATTLIST jnlp codebase CDATA #IMPLIED>
+
+<!--
+The href attribute of the jnlp element contains the location of the JNLP
+file as a URL.
+-->
+
+
+<!ATTLIST jnlp href CDATA #IMPLIED>
+
+
+<!--
+The information element contains various descriptive information about
+the application being launched.
+-->
+
+
+<!ELEMENT information (title?, vendor?, homepage?, description*, icon*,
+offline-allowed?)>
+
+<!--
+The locale attribute of the information element specifies the locale for
+which this information element should be used. 
+-->
+
+
+<!ATTLIST information locale CDATA #IMPLIED>
+
+<!-- 
+The title element contains the name of the application.
+-->
+
+
+<!ELEMENT title (#PCDATA)>
+
+<!-- 
+The vendor element contains the name of the vendor.
+-->
+
+
+<!ELEMENT vendor (#PCDATA)>
+
+<!--
+The homepage element contains a href to the homepage for the
+application.
+-->
+
+
+<!ELEMENT homepage EMPTY>
+
+<!--
+The href attribute of the homepage element specifies the URL for the
+homepage.
+-->
+
+
+<!ATTLIST homepage href CDATA #REQUIRED>
+
+
+
+<!--
+The description element contains a description of the application. 
+-->
+
+
+<!ELEMENT description (#PCDATA)>
+
+
+<!-- 
+The kind attribute for the description element indicates the use of a
+description element. The values are: i) one-line, for a one-line
+description, ii) short, for a one paragraph description, and iii)
+tooltip, for a tool-tip description. Longer descriptions should be put
+on a separate web page and referred to using the homepage element.
+-->
+
+
+<!ATTLIST description kind (one-line | short | tooltip) #IMPLIED>
+
+<!-- 
+The icon element describes an image for an application.
+-->
+
+
+<!ELEMENT icon EMPTY>
+
+<!-- 
+The href attribute of an icon contains a URL to a location on the web
+containing an image file for an icon. The file must be in either JPEG or
+GIF format.
+-->
+
+<!ATTLIST icon href CDATA #REQUIRED>
+
+<!-- 
+The version attribute of an icon contains a string describing the
+version of the image that is requested.
+-->
+
+<!ATTLIST icon version CDATA #IMPLIED>
+
+<!--
+The width attribute of the icon element describes the width of the icon
+in pixels.
+-->
+
+
+<!ATTLIST icon width CDATA #IMPLIED>
+
+<!--
+The height attribute of the icon element describes the height of the
+icon in pixels.
+-->
+
+
+<!ATTLIST icon height CDATA #IMPLIED>
+
+<!--
+The kind attribute of the icon element describes the use of the icon.
+-->
+
+
+<!ATTLIST icon kind (default | selected | disabled | rollover)
+"default">
+
+<!--
+The depth attribute of the icon element describes the color depth of the
+image in bits-per-pixel. Common values will be 8, 16, or 24.
+-->
+
+
+<!ATTLIST icon depth CDATA #IMPLIED>
+
+
+
+<!--
+The size attribute of an icon element indicates the size of an icon file
+in bytes.
+-->
+
+
+<!ATTLIST icon size CDATA #IMPLIED>
+
+<!--
+The offline-allowed element indicates if the application can be launched
+offline. Default value (i.e., if the element is not specified) is
+online.
+-->
+
+
+<!ELEMENT offline-allowed EMPTY>
+
+<!--
+The security element describes the security requirements of the
+application.
+-->
+
+
+<!ELEMENT security (all-permissions?, j2ee-application-client-permissions?)>
+
+<!--
+The all-permissions element indicates that the application needs full
+access the the local system and network.
+-->
+
+
+<!ELEMENT all-permissions EMPTY>
+
+<!--
+The j2ee-application-client-permissions element indicates that the
+application needs the set of permissions defined for a J2EE application
+client.
+-->
+
+
+<!ELEMENT j2ee-application-client-permissions EMPTY>
+
+<!-- 
+The resources element contains an ordered set of resources that
+constitutes an application.
+-->
+
+
+<!ELEMENT resources (j2se | jar | nativelib | extension | property |
+package)*>
+
+
+<!--
+The os attribute of the resources element specifies for which operating
+system this element should be considered.
+-->
+
+
+<!ATTLIST resources os CDATA #IMPLIED>
+
+<!--
+The arch attribute of the resources element specifies for what platform
+this element should be considered. 
+-->
+
+
+<!ATTLIST resources arch CDATA #IMPLIED>
+
+<!--
+The locale attribute of the resources element specifies for which
+locales this element should be considered. 
+-->
+
+
+<!ATTLIST resources locale CDATA #IMPLIED>
+
+<!-- 
+The j2se element describes a supported JRE version and an optional
+resources element to be used by the particular JRE.
+-->
+
+
+<!ELEMENT j2se (resources*)>
+
+<!--
+The version attribute of the j2se element describes the versions of the
+JRE that this application is supported on.
+-->
+
+
+<!ATTLIST j2se version CDATA #REQUIRED>
+
+<!-- 
+The href attribute of the j2se element specifies the location where the
+JRE should be downloaded from.
+-->
+
+
+<!ATTLIST j2se href CDATA #IMPLIED>
+
+<!-- 
+The initial-heap-size attribute of the j2se element specifies the
+initial size of the object heap.
+-->
+
+
+<!ATTLIST j2se initial-heap-size CDATA #IMPLIED>
+
+
+<!-- 
+The max-heap-size attribute of the j2se element specifies the preferred
+maximum size of the object heap.
+-->
+
+
+<!ATTLIST j2se max-heap-size CDATA #IMPLIED>
+
+<!--
+The jar element describes a jar file resource.
+-->
+
+
+<!ELEMENT jar EMPTY>
+
+<!--
+The href attribute of the jar element contains the location of a jar
+file as a URL.
+-->
+
+
+<!ATTLIST jar href CDATA #REQUIRED>
+
+<!--
+The version attribute of a jar element describes the version of a
+particular JAR file that is requested.
+-->
+
+
+<!ATTLIST jar version CDATA #IMPLIED>
+
+<!--
+The main attribute of a jar element indicates whether this element
+contains the main class.
+-->
+
+
+<!ATTLIST jar main (true|false) "false">
+
+<!--
+The download attribute of a jar element indicates if this element must
+be downloaded before an application is launched (eager), or not (lazy).
+-->
+
+
+<!ATTLIST jar download (eager | lazy) "eager">
+
+<!--
+The size attribute of a jar element indicates the size of a JAR file in
+bytes.
+-->
+
+
+<!ATTLIST jar size CDATA #IMPLIED>
+
+
+<!--
+The part attribute of a jar element describes the name of the group it
+belongs too.
+-->
+
+
+<!ATTLIST jar part CDATA #IMPLIED>
+
+<!--
+The nativelib element describes a resource containing native files.
+-->
+
+
+<!ELEMENT nativelib EMPTY>
+
+<!--
+The href attribute of a nativelib element contains the location of a
+nativelib file as a URL.
+-->
+
+
+<!ATTLIST nativelib href CDATA #REQUIRED>
+
+<!--
+The version attribute of a nativelib element describes the version of a
+particular nativelib file that is requested.
+-->
+
+
+<!ATTLIST nativelib version CDATA #IMPLIED>
+
+<!--
+The download attribute of a nativelib element indicates if this element
+must be downloaded before an application is launched (eager), or not
+(lazy).
+-->
+
+
+<!ATTLIST nativelib download (eager | lazy) "eager">
+
+<!--
+The size attribute of a nativelib element indicates the size of a
+nativelib file in bytes.
+-->
+
+
+<!ATTLIST nativelib size CDATA #IMPLIED>
+
+<!--
+The part attribute of a nativelib element describes the name of the part
+it belongs to.
+-->
+
+
+<!ATTLIST nativelib part CDATA #IMPLIED>
+
+<!-- 
+The extension element describes an extension that is required in order
+to run the application.
+-->
+
+
+<!ELEMENT extension (ext-download*)>
+
+
+<!--
+The version attribute of an extension element specifies the version of
+the extension requested.
+-->
+
+
+<!ATTLIST extension version CDATA #IMPLIED>
+
+<!-- 
+The name attribute of an extension element specifies the name of the
+extension.
+-->
+
+
+<!ATTLIST extension name CDATA #IMPLIED>
+
+<!-- 
+The href attribute of an  extension element specifies the location of
+the extension.
+-->
+
+
+<!ATTLIST extension href CDATA #REQUIRED>
+
+<!-- 
+The ext-download element defines how parts of the extension are
+downloaded.
+-->
+
+
+<!ELEMENT ext-download EMPTY>
+
+<!-- 
+The ext-part attribute of an ext-download element describes the name of
+a part in the extension.
+-->
+
+
+<!ATTLIST ext-download ext-part CDATA #REQUIRED>
+
+<!-- 
+The download attribute of an ext-download element describes if the
+resource may be lazily downloaded.
+-->
+
+
+<!ATTLIST ext-download download (lazy|eager) "eager">
+
+<!--
+The part attribute of an ext-download element describes the name of the
+part it belongs to in the current JNLP file.
+-->
+
+
+<!ATTLIST ext-download part CDATA #IMPLIED>
+
+<!--
+The property element describes a name/value pair that is available to
+the launched application as a system property.
+-->
+
+
+<!ELEMENT property EMPTY>
+
+
+<!--
+The name attribute of the property element describes the name of a
+system property.
+-->
+
+
+<!ATTLIST property name CDATA #REQUIRED>
+
+<!--
+The value element describes the value of a system property.
+-->
+
+
+<!ATTLIST property value CDATA #REQUIRED>
+
+<!--
+The package element defines a relationship between a Java package or
+class name and a part.
+-->
+
+
+<!ELEMENT package EMPTY>
+
+<!--
+The name attribute of the package element describes the name of a
+package or class.
+-->
+
+
+<!ATTLIST package name CDATA #REQUIRED>
+
+<!--
+The part attribute of the package element describes the part that
+contains the specified package or class.
+-->
+
+
+<!ATTLIST package part CDATA #REQUIRED>
+
+<!--
+The recursive attribute of the package element indicates if all sub-
+packages of this particular package is also included.
+-->
+
+
+<!ATTLIST package recursive (true|false) "false">
+
+<!--
+The application-desc element describes how to launch a Java-based
+application. It contains information about the main class and arguments.
+-->
+
+
+<!ELEMENT application-desc (argument*)>
+
+<!-- 
+The main-class attribute of the application-desc element describes the
+main class of an application.
+-->
+
+
+<!ATTLIST application-desc main-class CDATA #IMPLIED>
+
+
+<!--
+The argument elements describe the ordered set of arguments to an
+application. These arguments will be passed into the main method of the
+application's main class.
+-->
+
+
+<!ELEMENT argument (#PCDATA)>
+
+<!--
+The applet-desc element describes how to launch a Java Technology-based
+Applet. It contains information about, e.g., the main class, size, and
+parameters.
+-->
+
+
+<!ELEMENT applet-desc (param*)>
+
+<!--
+The documentbase attribute of the applet-desc element describes the
+documentbase for the applet as a URL.
+-->
+
+
+<!ATTLIST applet-desc documentbase CDATA #IMPLIED>
+
+<!--
+The main-class attribute of the applet-desc element describes the name
+of the main Applet class.
+-->
+
+
+<!ATTLIST applet-desc main-class CDATA #REQUIRED>
+
+<!--
+The name attribute of the applet-desc element describes the name of the
+Applet.
+-->
+
+
+<!ATTLIST applet-desc name CDATA #REQUIRED>
+
+<!--
+The width attribute of the applet-desc element describes the width of
+the Applet in pixels.
+-->
+
+
+<!ATTLIST applet-desc width CDATA #REQUIRED>
+
+<!--
+The height attribute of the applet-desc element describes the height of
+the Applet in pixels.
+-->
+
+
+<!ATTLIST applet-desc height CDATA #REQUIRED>
+
+<!-- 
+The param element describes a parameter to an Applet.
+-->
+
+
+<!ELEMENT param EMPTY>
+
+
+<!--
+The name attribute of the param element describes the name of a
+parameter.
+-->
+
+
+<!ATTLIST param name CDATA #REQUIRED>
+
+<!--
+The value attribute of the param element describes the value of a
+parameter.
+-->
+
+
+<!ATTLIST param value CDATA #REQUIRED>
+<!-- 
+The component-desc element specifies a component extension.
+-->
+
+
+<!ELEMENT component-desc EMPTY>
+
+<!-- 
+The installer-desc element specifies an installer extension.
+-->
+
+
+<!ELEMENT installer-desc EMPTY>
+
+<!-- 
+The main-class attribute of the installer-desc element describes the
+main class for the installer/uninstaller.
+-->
+
+
+<!ATTLIST installer-desc main-class CDATA #IMPLIED>
+
+

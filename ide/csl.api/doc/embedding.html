@@ -1,0 +1,162 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Embedding</h2>
+        <p>
+            GSF supports language embedding - supporting nested languages, like
+            JavaScript and CSS support inside HTML files, Ruby support (and JavaScript
+            and CSS support) inside ERb/RHTML files, and so on.
+        </p>
+        <p>
+            At the lexical level, the Lexer API already supports embedding;
+            you can nest languages to an arbitrarily deep level. GSF adds this to other features
+            based on parsing. This is achieved through two mechanisms:
+            <ol>
+                <li>
+                    Language plugins can register
+                    <a href="org/netbeans/modules/gsf/api/EmbeddingModel.html">EmbeddingModel</a> implementations
+                    which describe how to generate a "virtual source" for a given destination language
+                    from a given source language. For example, there is an embedding model which
+                    expresses the JavaScript virtual source corresponding to a given JSP file. 
+                    It's this virtual source that is parsed by the JavaScript parser.
+                </li>
+                <li>
+                    All GSF language plugins need to be well aware that the source they parse
+                    may not be the same as the document in the editor, and in particular, they
+                    must ALWAYS translate offsets from AST offsets to Lexical offsets before
+                    attempting to look at the document contents, and vice versa.
+                    This is made easy because the embedding model provides conversion methods
+                    which take one offset type and provide the other.
+                </li>    
+            </ol>
+            This document explains the concept of virtual sources.
+        </p>
+        <p>
+            Say you have this source RHTML file.
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+&lt;p&gt;
+&lt;script type="text/javascript" src="javascripts/effects.js"&gt;&lt;/script&gt;
+&lt;style&gt;body { background: red }&lt;/style&gt;
+&lt;script&gt;var x = &lt;% foo() %&gt;;&lt;/script&gt;
+&lt;span&gt;Hello&lt;/span&gt;
+&lt;script&gt;
+function f() { alert(x.toString()); }
+&lt;/script&gt;
+&lt;input type="submit" onclick="f()"/&gt;
+            </pre>
+            In GSF, you will involve several source models here. It will create a separate "virtual source" for each of these
+            languages: CSS, JavaScript, Ruby.
+        </p>
+        <p>
+            The JavaScript virtual source (which is passed to the JavaScript parser) looks something like this:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+__netbeans_import__('javascripts/effects.js');
+var x = __UNDEFINED__;
+function f() { alert(x.toString()); }
+;function(){
+f()
+}
+            </pre>
+            The virtual source translator from RHTML to JavaScript replaced the server call &lt;% foo %&gt; with __UNDEFINED, and the
+            onclick handlers have been translated into anonymous functions (such that writing "return this" etc. in an event handler
+            makes sense from an ast perspective, you can only return inside functions).
+        </p>
+        <p>
+            Similarly, the Ruby embedding model (RHTML to Ruby) will create this:
+            
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+class ActionView::Base
+_buf='';;_buf &lt;&lt; '&lt;p&gt;
+&lt;script type="text/javascript" src="javascripts/effects.js"&gt;&lt;/script&gt;
+&lt;style&gt;body { background: red }&lt;/style&gt;
+&lt;script&gt;var x = ';
+foo() ;_buf &lt;&lt; ';&lt;/script&gt;
+&lt;span&gt;Hello&lt;/span&gt;
+&lt;script&gt;
+function f() { alert(x.toString()); }
+&lt;/script&gt;
+&lt;input type="submit" onclick="f()"/&gt;
+';
+end
+            </pre>
+            In both cases, some of the code is coming from the original source, some is generated (e.g. the class <code>ActionView::Base</code>
+            part above, and the <code>netbeans_import</code> to record JavaScript file inclusion and functions to contain event handlers). Some
+            source is removed - typically embedded source that isn't relevant for this language -- such as all the markup.
+        </p>
+        <p>
+            These blocks of code are maintained by each embedding model, which has a set of code blocks with corresponding offsets
+            in the generated source and in the original source.  You get a map like this:
+            <pre style="background: #ffffcc; color: black; border: solid 1px black; padding: 5px">    
+codeBlocks=
+CodeBlockData[
+ RHTML(0,0)="",
+ RUBY(0,31)="class ActionView::Base
+_buf='';"], 
+
+CodeBlockData[
+ RHTML(0,130)="&lt;p&gt;
+&lt;script type="text/javascript" src="javascripts/effects.js"&gt;&lt;/script&gt;
+&lt;style&gt;body { background: red }&lt;/style&gt;
+&lt;script&gt;var x = ",
+ RUBY(31,174)=";_buf &lt;&lt; '&lt;p&gt;
+&lt;script type="text/javascript" src="javascripts/effects.js"&gt;&lt;/script&gt;
+&lt;style&gt;body { background: red }&lt;/style&gt;
+&lt;script&gt;var x = ';
+"], 
+
+CodeBlockData[
+ RHTML(132,139)=" foo() ",
+ RUBY(174,181)=" foo() "], 
+ 
+CodeBlockData[
+ RHTML(141,266)=";&lt;/script&gt;
+&lt;span&gt;Hello&lt;/span&gt;
+&lt;script&gt;
+function f() { alert(x.toString()); }
+&lt;/script&gt;
+&lt;input type="submit" onclick="f()"/&gt;
+
+",
+ RUBY(181,319)=";_buf &lt;&lt; ';&lt;/script&gt;
+&lt;span&gt;Hello&lt;/span&gt;
+&lt;script&gt;
+function f() { alert(x.toString()); }
+&lt;/script&gt;
+&lt;input type="submit" onclick="f()"/&gt;
+
+';
+"]
+            </pre>
+        </p>
+        <p>
+            In GSF, a virtual source translator can return a collection of models which is used when you don't create a single
+            "synthesized" model like we do here - e.g. the multiple &lt;script&gt; blocks in JavaScript get merged into one. For CSS, the
+            theory is that each style="foo:bar" block would generate its own model - these are all completely independent and don't
+            have to (and shouldn't) be parsed together. Thus, for CSS you get a series of models, but there is a special method
+            which returns the specific virtual source corresponding to a given offset.
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>
+

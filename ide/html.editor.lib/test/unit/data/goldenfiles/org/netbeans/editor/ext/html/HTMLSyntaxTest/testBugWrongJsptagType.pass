@@ -1,0 +1,9 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<NL>' [0, 1]; text; 1; -; HTMLTokenContext
+'<' [1, 1]; tag-open-symbol; 14; tag; HTMLTokenContext
+'a' [2, 1]; open-tag; 4; tag; HTMLTokenContext
+' ' [3, 1]; ws; 2; -; HTMLTokenContext
+'>' [4, 1]; tag-close-symbol; 15; tag; HTMLTokenContext
+'<NL>' [5, 1]; text; 1; -; HTMLTokenContext

@@ -1,0 +1,11 @@
+|>METHOD:DEFAULTS<|: &DEFAULTS
+    |>METHOD:created_on<|: <%= 3.weeks.ago.to_s(:db) %>
+
+|>METHOD:first<|:
+  |>METHOD:name<|: Smurf
+  |>METHOD:<<<|: *DEFAULTS
+
+|>METHOD:second<|:
+  |>METHOD:name<|: Fraggle
+  |>METHOD:<<<|: *DEFAULTS
+

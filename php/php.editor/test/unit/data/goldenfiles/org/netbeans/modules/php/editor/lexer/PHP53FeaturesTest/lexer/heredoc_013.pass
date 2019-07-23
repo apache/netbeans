@@ -1,0 +1,29 @@
+token #0 T_INLINE_HTML --TEST--\nHeredoc with double quotes and wrong prefix\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $test
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_CONSTANT_ENCAPSED_STRING "foo"
+token #8 PHP_SEMICOLON ;
+token #9 WHITESPACE \n
+token #10 PHP_VARIABLE $var
+token #11 WHITESPACE  
+token #12 PHP_OPERATOR =
+token #13 WHITESPACE  
+token #14 PHP_STRING prefix
+token #15 PHP_HEREDOC_TAG_START <<<"MYLABEL"\n
+token #16 PHP_ENCAPSED_AND_WHITESPACE test: 
+token #17 PHP_VARIABLE $test
+token #18 PHP_CONSTANT_ENCAPSED_STRING \n
+token #19 PHP_HEREDOC_TAG_END MYLABEL
+token #20 PHP_SEMICOLON ;
+token #21 WHITESPACE \n
+token #22 PHP_ECHO echo
+token #23 WHITESPACE  
+token #24 PHP_VARIABLE $var
+token #25 PHP_SEMICOLON ;
+token #26 WHITESPACE \n
+token #27 PHP_CLOSETAG ?>
+token #28 T_INLINE_HTML \n--EXPECTF--\nParse error: syntax error, unexpected T_START_HEREDOC in %sheredoc_013.php on line %d\n

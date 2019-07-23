@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <codetemplate abbreviation="ab"><code><![CDATA[abstract ]]></code></codetemplate>
+    <codetemplate abbreviation="as"><code><![CDATA[assert ]]></code></codetemplate>
+    <codetemplate abbreviation="bo"><code><![CDATA[boolean ]]></code></codetemplate> 
+    <codetemplate abbreviation="br"><code><![CDATA[break]]></code></codetemplate> 
+    <codetemplate abbreviation="ca"><code><![CDATA[catch (]]></code></codetemplate> 
+    <codetemplate abbreviation="cl"><code><![CDATA[class ]]></code></codetemplate> 
+    <codetemplate abbreviation="cn"><code><![CDATA[continue]]></code></codetemplate>
+    <codetemplate abbreviation="co"><code><![CDATA[contains]]></code></codetemplate> 
+    <codetemplate abbreviation="df"><code><![CDATA[default:]]></code></codetemplate>
+    <codetemplate abbreviation="d"><code><![CDATA[def ]]></code></codetemplate> 
+    <codetemplate abbreviation="ea"><code><![CDATA[each]]></code></codetemplate>
+    <codetemplate abbreviation="eal"><code><![CDATA[eachLine]]></code></codetemplate>
+    <codetemplate abbreviation="eq"><code><![CDATA[equals]]></code></codetemplate> 
+    <codetemplate abbreviation="ex"><code><![CDATA[extends ]]></code></codetemplate> 
+    <codetemplate abbreviation="fa"><code><![CDATA[false]]></code></codetemplate> 
+    <codetemplate abbreviation="fi"><code><![CDATA[final ]]></code></codetemplate>
+    <codetemplate abbreviation="fia"><code><![CDATA[findAll]]></code></codetemplate> 
+    <codetemplate abbreviation="fl"><code><![CDATA[float ]]></code></codetemplate> 
+    <codetemplate abbreviation="fy"><code><![CDATA[finally ]]></code></codetemplate> 
+    <codetemplate abbreviation="ie"><code><![CDATA[interface ]]></code></codetemplate> 
+    <codetemplate abbreviation="imps"><code><![CDATA[implements Serializable]]></code></codetemplate>
+    <codetemplate abbreviation="im"><code><![CDATA[implements ]]></code></codetemplate> 
+    <codetemplate abbreviation="iof"><code><![CDATA[instanceof ]]></code></codetemplate> 
+    <codetemplate abbreviation="ir"><code><![CDATA[import ]]></code></codetemplate> 
+    <codetemplate abbreviation="le"><code><![CDATA[length]]></code></codetemplate> 
+    <codetemplate abbreviation="pe"><code><![CDATA[protected ]]></code></codetemplate> 
+    <codetemplate abbreviation="pr"><code><![CDATA[private ]]></code></codetemplate> 
+    <codetemplate abbreviation="pri"><code><![CDATA[println ]]></code></codetemplate>
+    <codetemplate abbreviation="psf"><code><![CDATA[private static final ]]></code></codetemplate> 
+    <codetemplate abbreviation="psfi"><code><![CDATA[private static final int ]]></code></codetemplate> 
+    <codetemplate abbreviation="psfs"><code><![CDATA[private static final String ]]></code></codetemplate> 
+    <codetemplate abbreviation="psfb"><code><![CDATA[private static final boolean ]]></code></codetemplate> 
+    <codetemplate abbreviation="pst"><code><![CDATA[printStackTrace();]]></code></codetemplate> 
+    <codetemplate abbreviation="pu"><code><![CDATA[public ]]></code></codetemplate> 
+    <codetemplate abbreviation="re"><code><![CDATA[return ]]></code></codetemplate> 
+    <codetemplate abbreviation="red"><code><![CDATA[redirect]]></code></codetemplate>
+    <codetemplate abbreviation="st"><code><![CDATA[static ]]></code></codetemplate> 
+    <codetemplate abbreviation="sw"><code><![CDATA[switch (]]></code></codetemplate> 
+    <codetemplate abbreviation="sy"><code><![CDATA[synchronized ]]></code></codetemplate> 
+    <codetemplate abbreviation="tds"><code><![CDATA[Thread.dumpStack();]]></code></codetemplate> 
+    <codetemplate abbreviation="th"><code><![CDATA[throws ]]></code></codetemplate> 
+    <codetemplate abbreviation="ti"><code><![CDATA[times { ]]></code></codetemplate>
+    <codetemplate abbreviation="tw"><code><![CDATA[throw ]]></code></codetemplate> 
+    <codetemplate abbreviation="twn"><code><![CDATA[throw new ]]></code></codetemplate> 
+    <codetemplate abbreviation="wh"><code><![CDATA[while (]]></code></codetemplate> 
+
+    <codetemplate abbreviation="En"><code><![CDATA[Enumeration]]></code></codetemplate> 
+    <codetemplate abbreviation="Ex"><code><![CDATA[Exception]]></code></codetemplate> 
+    <codetemplate abbreviation="Ob"><code><![CDATA[Object]]></code></codetemplate> 
+    <codetemplate abbreviation="Psf"><code><![CDATA[public static final ]]></code></codetemplate> 
+    <codetemplate abbreviation="Psfi"><code><![CDATA[public static final int ]]></code></codetemplate> 
+    <codetemplate abbreviation="Psfs"><code><![CDATA[public static final String ]]></code></codetemplate> 
+    <codetemplate abbreviation="Psfb"><code><![CDATA[public static final boolean ]]></code></codetemplate> 
+    <codetemplate abbreviation="St"><code><![CDATA[String]]></code></codetemplate> 
+
+    <codetemplate abbreviation="forc" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[for (${IT_TYPE rightSideType type="java.util.Iterator" default="Iterator" editable=false} ${IT newVarName default="it"} = ${COL instanceof="java.util.Collection" default="col"}.iterator(); ${IT}.hasNext();) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${IT}.next();
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="forl" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${LIST instanceof="java.util.List" default="lst"}.size(); ${IDX}++) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${LIST}.get(${IDX});
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="forv" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${VECTOR instanceof="java.util.Vector" default="vct"}.size(); ${IDX}++) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${VECTOR}.elementAt(${IDX});
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="fore" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[for (${TYPE iterableElementType default="Object" editable=false} ${ELEM newVarName default="elem" ordering=2} : ${ITER iterable default="col" ordering=1}) {
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="forst" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[for (${STR_TOK type="java.util.StringTokenizer" default="StringTokenizer" editable=false} ${TOKENIZER newVarName} = new ${STR_TOK}(${STRING instanceof="java.lang.String"}); ${TOKENIZER}.hasMoreTokens();) {
+    String ${TOKEN default="token"} = ${TOKENIZER}.nextToken();
+    ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="inst" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[if (${EXP instanceof="java.lang.Object" default="exp"} instanceof ${TYPE default="Object"}) {
+   ${TYPE} ${VAR newVarName default="obj"} = (${TYPE})${EXP};
+   ${cursor}
+}
+]]>
+        </code>
+   </codetemplate>
+    <codetemplate abbreviation="whilen" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[while(${ENUM instanceof="java.util.Enumeration" default="en"}.hasMoreElements()) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${ENUM}.nextElement();
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="whileit" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[while(${IT instanceof="java.util.Iterator" default="it"}.hasNext()) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${IT}.next();
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="iff" contexts="BLOCK,CASE" descriptionId="CT_iff">
+        <code>
+<![CDATA[if (${EXP instanceof="java.lang.Boolean" default="exp"}) {
+   ${selection line}${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="ifelse" contexts="BLOCK,CASE" descriptionId="CT_ifelse">
+        <code>
+<![CDATA[if (${EXP instanceof="java.lang.Boolean" default="exp"}) {
+   ${selection line}${cursor}
+} else {
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="whilexp" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[while (${EXP instanceof="java.lang.Boolean" default="exp"}) { 
+   ${selection line}${cursor} 
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="runn" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[${RUNN_TYPE type="java.lang.Runnable" default="Runnable" editable=false} ${RUNN newVarName default="r"} = new ${RUNN_TYPE}() {
+   public void run() {
+       ${selection line}${cursor}
+   }
+};
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="trycatch" contexts="BLOCK,CASE">
+        <code>
+<![CDATA[try {
+   ${selection line}${cursor}
+} catch (${EX_TYPE uncaughtExceptionType default="Exception"} ${EX newVarName default="e"}) {
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="newo">
+        <code>
+        <![CDATA[${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});]]>
+        </code>
+    </codetemplate>
+
+</codetemplates>

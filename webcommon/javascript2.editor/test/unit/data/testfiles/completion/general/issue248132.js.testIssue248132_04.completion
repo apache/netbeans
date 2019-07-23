@@ -1,0 +1,5 @@
+Code completion result for source line:
+var w2 = window.Wo|rker;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     Worker                          [PUBLIC,   JS Platform

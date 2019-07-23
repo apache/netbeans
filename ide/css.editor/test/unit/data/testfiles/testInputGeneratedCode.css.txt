@@ -1,0 +1,34 @@
+.t.e.s.t. templatingless source code
+h1 {
+    color: red;
+}
+.e.o.f.
+
+.t.e.s.t. templated source code
+h1 {
+    color: @@@;
+}
+.e.o.f.
+
+.t.e.s.t. templated source code
+h1 {
+    @@@: red;
+}
+.e.o.f.
+
+#.t.e.s.t. templated source code
+#h1 {
+#    col@@@r: red;
+#}
+#.e.o.f.
+
+#.t.e.s.t. templated source code
+#h1 {
+#    co@@@@@@r: red;
+#}
+#.e.o.f.
+
+.t.e.s.t. templated source code
+@@@ h2 @@@ h4 {
+}
+.e.o.f.

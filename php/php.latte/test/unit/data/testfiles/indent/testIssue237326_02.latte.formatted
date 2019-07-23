@@ -1,0 +1,7 @@
+<a href="#">
+    {ifset $create}
+        {_"Create category"}
+    {else}
+        {_"Edit category"}
+    {/ifset}
+</a>

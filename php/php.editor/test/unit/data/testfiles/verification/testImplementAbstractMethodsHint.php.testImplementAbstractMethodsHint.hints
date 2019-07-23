@@ -1,0 +1,10 @@
+class ExtendingClass extends AbstractClass {
+      --------------
+HINT:\ExtendingClass is not abstract and does not override abstract method  abstractFoo() in \AbstractClass
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class
+class ImplementingClass implements InterfaceName {
+      -----------------
+HINT:\ImplementingClass is not abstract and does not override abstract method  abstractBar() in \InterfaceName
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class

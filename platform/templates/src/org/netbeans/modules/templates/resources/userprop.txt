@@ -1,0 +1,8 @@
+#
+# Here, or in other properties files in this directory, you can define
+# various properties that you want to make available to the template
+# processor while creating various templates.
+#
+
+# uncomment the next line and specify your user name to be used in new templates
+#user=Your Name <your.name at your.org>

@@ -1,0 +1,10 @@
+Code completion result for source line:
+} catch(|\Test\Sub\ExceptionType1|\Test\Sub\ExceptionType2 $e) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test                            [PUBLIC]   null
+------------------------------------
+PACKAGE    Sub                             [PUBLIC]   Test
+CLASS      Exception                       [PUBLIC]   exceptions.php
+CLASS      ExceptionType1                  [PUBLIC]   Test\Sub
+CLASS      ExceptionType2                  [PUBLIC]   Test\Sub
+CLASS      ExceptionType3                  [PUBLIC]   Test\Sub

@@ -1,0 +1,4 @@
+|>GLOBAL:foo22<| = "fasfdas"; 
+function |>METHOD:test<|(foo, bar){
+          |>GLOBAL:foobar<| = (typeof |>GLOBAL:foo22<| == "undefined") ? bar : foo;
+}

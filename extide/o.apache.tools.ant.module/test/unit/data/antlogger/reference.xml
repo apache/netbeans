@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="reference" default="run" basedir=".">
+    <target name="run">
+        <path id="p" path="reference.xml"/>
+    </target>
+</project>

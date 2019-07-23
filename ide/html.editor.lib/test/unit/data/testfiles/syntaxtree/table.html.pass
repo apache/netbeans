@@ -1,0 +1,12 @@
+root:ROOT(0-111)
+   <table>(0-7/110)[RR];S:root
+      <tr>(12-16/34)[RO];S:root,table
+         <td>(25-29/34)[RO];S:root,table,tr
+      <tr>(34-38/92)[RO];S:root,table,tr,td
+         <td>(47-51/60)[RO];S:root,table,tr
+         <td>(60-64/69)[RO];S:root,table,tr,td
+         </td>(64-69)[RO];S:root,table,tr,td
+         <td>(78-82/87)[RO];S:root,table,tr
+      </tr>(87-92)[RO!];S:root,table,tr,td
+      <tr>(97-101/102)[RO!]unresolved_tag ;S:root,table
+   </table>(102-110)[RR!];S:root,table,tr

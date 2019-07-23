@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary indentification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/Node00_Node02-XMLfig.dtd
+
+--><!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE Node02-XMLfig SYSTEM "Node00_Node02-XMLfig.dtd">
+
+    <Node02-XMLfig>
+    ...
+    </Node02-XMLfig>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT Node13 EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT Node08 (#PCDATA|Node13)*>
+<!ATTLIST Node08
+    Node11 CDATA #IMPLIED
+    Node10 CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT Node02-XMLfig (#PCDATA|Node08)*>
+<!ATTLIST Node02-XMLfig
+    Node05 CDATA #IMPLIED
+    Node04 CDATA #IMPLIED
+  >
+

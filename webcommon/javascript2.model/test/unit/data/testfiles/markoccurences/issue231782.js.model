@@ -1,0 +1,25 @@
+FUNCTION issue231782 [ANONYMOUS: false, DECLARED: true - issue231782, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Test    : OBJECT Test [ANONYMOUS: false, DECLARED: true - Test, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+        # PROPERTIES
+        debug   : FUNCTION debug [ANONYMOUS: false, DECLARED: true - debug, MODIFIERS: PUBLIC, METHOD]
+                # RETURN TYPES
+                undefined, RESOLVED: true
+                # PARAMETERS
+                OBJECT b [ANONYMOUS: false, DECLARED: true - b, MODIFIERS: PUBLIC, PARAMETER]
+                OBJECT c [ANONYMOUS: false, DECLARED: true - c, MODIFIERS: PUBLIC, PARAMETER]
+                # PROPERTIES
+                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                d         : OBJECT d [ANONYMOUS: false, DECLARED: true - d, MODIFIERS: PRIVATE, VARIABLE]
+        options : OBJECT options [ANONYMOUS: false, DECLARED: false - options, MODIFIERS: PUBLIC, OBJECT]
+                # PROPERTIES
+                debug : OBJECT debug [ANONYMOUS: false, DECLARED: false - debug, MODIFIERS: PUBLIC, PROPERTY]
+console : OBJECT console [ANONYMOUS: false, DECLARED: false - console, MODIFIERS: PUBLIC, OBJECT]
+        # PROPERTIES
+        log : FUNCTION log [ANONYMOUS: false, DECLARED: false - log, MODIFIERS: PUBLIC, METHOD]
+            # PARAMETERS
+            OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+            # PROPERTIES
+            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

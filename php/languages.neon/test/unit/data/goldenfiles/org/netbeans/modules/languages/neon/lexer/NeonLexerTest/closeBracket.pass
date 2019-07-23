@@ -1,0 +1,7 @@
+token #0 NEON_VALUED_BLOCK foo
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE  
+token #3 NEON_LITERAL bar
+token #4 NEON_WHITESPACE  
+token #5 NEON_COMMENT #here can be a ) bracket
+token #6 NEON_WHITESPACE \n

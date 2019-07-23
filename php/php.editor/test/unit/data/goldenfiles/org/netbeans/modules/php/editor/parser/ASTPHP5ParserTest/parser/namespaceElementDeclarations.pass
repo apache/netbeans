@@ -1,0 +1,60 @@
+<testresult testFile='namespaceElementDeclarations.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='6' end='15'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='16' end='17'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='17' end='18'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='19' end='24'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='25' end='26'>
+            <text>C</text>
+        </token>
+        <token id='T_EQUAL' start='27' end='28'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='29' end='30'>
+            <text>5</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='31'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='32' end='34'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='34' end='36'>
+            <text> \n</text>
+        </token>
+        <token id='EOF' start='36' end='36'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='35'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='6' end='35' isBracketed='false'>
+                <NamespaceName start='16' end='17' isCurrent='false' isGlobal='false'>
+                    <Identifier start='16' end='17' name='A'/>
+                </NamespaceName>
+                <Block start='18' end='35' isCurly='true'>
+                    <GlobalConstantDeclaration start='19' end='31'>
+                        <Names>
+                            <Identifier start='25' end='26' name='C'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='29' end='30' type='INT' value='5'/>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <EmptyStatement start='32' end='34'/>
+                    <InLineHtml start='34' end='35'/>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

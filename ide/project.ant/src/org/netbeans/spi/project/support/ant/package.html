@@ -1,0 +1,146 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+Principal package for implementing typical Ant-based projects.
+
+<p>A typical project based on Ant follows a standard pattern of having a project
+folder containing:</p>
+
+<dl>
+
+<dt><code>build.xml</code></dt>
+
+<dd><p>A top-level editable build script.</p></dd>
+
+<dt>various folders such as <code>src</code></dt>
+
+<dd><p>Development files.</p></dd>
+
+<dt>various folders such as <code>build</code></dt>
+
+<dd><p>Build products. Not sharable in a VCS.</p></dd>
+
+<dt><code>nbproject/build-impl.xml</code></dt>
+
+<dd><p>Main logic for the build; regenerated from <code>nbproject/project.xml</code>
+but sharable.</p></dd>
+
+<dt><code>nbproject/project.xml</code></dt>
+
+<dd><p>General project metadata, including a declaration of the type of project,
+its name, some structural parameters relating to the build, a list of
+subprojects, etc.</p></dd>
+
+<dt><code>nbproject/project.properties</code></dt>
+
+<dd><p>Sharable build configuration for the project.</p></dd>
+
+<dt><code>nbproject/private/private.xml</code></dt>
+
+<dd><p>Per-user (or per-checkout) project metadata, if any.</p></dd>
+
+<dt><code>nbproject/private/private.properties</code></dt>
+
+<dd><p>Per-user build configuration for the project.</p></dd>
+
+<dt><code>nbproject/private/cache</code></dt>
+
+<dd><p>Cache directory containing disposable files that might speed up various
+operations.</p></dd>
+
+</dl>
+
+<p>Note that since Ant is not aware of the NetBeans Filesystems API, all these
+files must be physically present on disk, not e.g. in an archive or remote
+filesystem.</p>
+
+<p>There may also be a file named <code>build.properties</code> located in the
+NetBeans user directory which can supply additional definitions needed for a
+build: e.g. the locations of Java platforms and libraries. A typical
+<code>build-impl.xml</code> loads property definitions from this global
+properties file as well as the project's
+<code>nbproject/project.properties</code> and
+<code>nbproject/private/private.properties</code>.</p>
+
+<p>The basic operations commonly performed on an Ant-based project are:</p>
+
+<ul>
+
+<li><p>Creation from wizard, including <code>build.xml</code>.</p></li>
+
+<li><p>Loading metadata from disk.</p></li>
+
+<li><p>Modifying metadata and build properties in memory, and subsequently saving
+to disk.</p></li>
+
+<li><p>Regenerating <code>nbproject/build-impl.xml</code>, typically based on
+transforming <code>nbproject/project.xml</code> with an XSLT stylesheet.</p></li>
+
+<li><p>Running a build target of a well-known name in <code>build.xml</code>
+using Ant.</p></li>
+
+<li><p>Enumerating important build outputs ("artifacts").</p></li>
+
+<li><p>Adding dependencies on "subprojects" by getting information about their artifacts
+and storing references to them.</p></li>
+
+<li><p>Interpreting values of Ant properties found on disk, to be used in
+providing information to the IDE about various development files (e.g. when
+implementing queries).</p></li>
+
+</ul>
+
+<p>A new category of Ant-based project can be registered in the system by
+adding an implementation of
+{@link org.netbeans.spi.project.support.ant.AntBasedProjectType} to the default
+lookup. This will get an instance of
+{@link org.netbeans.spi.project.support.ant.AntProjectHelper} for every project
+it creates; the helper does a lot of the work required to interact with the file
+structure outlined above.</p>
+
+<p>To run Ant targets, use
+<a href="@org-apache-tools-ant-module@/org/apache/tools/ant/module/api/support/ActionUtils.html"><code>ActionUtils</code></a>.</p>
+
+<p>{@link org.netbeans.spi.project.support.ant.ReferenceHelper}s can also be
+created by an Ant-based project and used to manage references to subprojects and
+their artifacts in a high-level manner.</p>
+
+<p>{@link org.netbeans.spi.project.support.ant.ProjectGenerator} provides the
+easiest way to create a new Ant-based project on disk. Use
+{@link org.netbeans.spi.project.support.ant.GeneratedFilesHelper} to make
+build scripts and
+{@link org.netbeans.spi.project.support.ant.ProjectXmlSavedHook} to be told when
+to recreate them.</p>
+
+<p>To allow third-party extensions to build scripts, use {@link org.netbeans.spi.project.ant.AntBuildExtenderImplementation} and
+{@link org.netbeans.spi.project.support.ant.AntBuildExtenderFactory}.
+</p>
+
+<p>{@link org.netbeans.spi.project.support.ant.EditableProperties} is a
+VCS-friendly alternative to {@link java.util.Properties}.
+{@link org.netbeans.spi.project.support.ant.PropertyUtils} also provides various
+methods for working with Ant concepts such as relative file paths, property
+substitution, etc.</p>
+  
+</body>
+</html>

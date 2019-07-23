@@ -1,0 +1,346 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+infocmp
+	-C	termcap Compatibility
+	-1	1 entry per line
+
+term interp inheritance
+-----------------------
+Term.setEmulation()/InterpKit doesn't know about the "Proto" variations.
+
+InterpDumb "dumb"
+	InterpProtoANSI
+		InterpANSI "ansi"
+		InterpProtoANSIX
+			InterpDtTerm "dtterm"
+			InterpXTerm "xterm"
+
+dtterm is usually lacking on stock Linux systems so to install it
+- wget http://catb.org/terminfo/termtypes.ti.gz
+- by hand extract dtterm.ti from termtypes.ti
+- tic -o . dtterm.ti
+- copy ./d/dtterm to /usr/share/terminfo/d
+
+"standard"s
+-----------
+ANSI:
+http://en.wikipedia.org/wiki/ANSI_escape_code
+http://www.ecma-international.org/publications/standards/Ecma-048.htm
+
+XTERM:
+http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+
+DtTerm:
+http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51_HTML/MAN/MAN5/0200____.HTM
+http://www.s-gms.ms.edus.si/cgi-bin/man-cgi?dtterm+5
+
+legend
+------
+S: appears in "standard"
+T: appears in termcap/infocmp -C (on either solaris _or_ linux)
+N: Not supported
+-: Not supported
+?: Unknown
+Y1: In wiki ansi but not part of infocmp ansi
+
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\CR		CR (Carriage Return) ^M	cr		cr		-	?	S	ST	ST	dumb
+\LF		LF (Line Feed) ^J	sf,do		cud1, ind	-	?	S	ST	ST	dumb
+\BS		BS (Back Space) ^H	kb,le		cub1		-	?	S	ST	ST	dumb
+\HT		HT (tab) ^I		-		ht		-	?	S	ST	ST	dumb
+\BEL		BEL (Bell)		-		bel		-	-	S	ST	ST	dumb
+
+
+# The following "code selection" sequences come from ECMA-35, not ECMA-48
+\SI ^O		SI/LS0 (Shift In/Map G0 into GL)
+					ae				-	-	S-	ST	S-	protoansi
+\SO ^N		SO/LS1 (Shift Out/Map G1 into GL)
+					as				-	-	S-	ST	S-	protoansi
+\ESCn		LS2 (Map G2 into GL)							S-	S-	S-	protoansi
+\ESCo		LS3 (Map G3 into GL)							S-	S-	S-	protoansi
+
+\ESC(%c		SCS (%c -> G0)													SCS is a dtterm std mnemonic, ECMA-35 use G*D*
+		ascii			ae,s0ds,sgr	rmacs,sgr0	B	-	ST	S-	ST	protoansi	\ESC( ) * + are part of ECMA-35, not ECMA-48
+		line			as,sgr		smacs		0	-	S-	S-	ST	protoansi
+
+\ESC)%c		SCS (%c -> G1)		s1ds (B-only)					ST	S-	S-	protoansi
+\ESC*%c		SCS (%c -> G2)		s2ds (B-only)					ST	S-	S-	protoansi
+\ESC+%c		SCS (%c -> G3)		s3ds (B-only)					ST	S-	S-	protoansi
+		ascii			-				B	-	ST	S-	S-	protoansi
+		line			-				0	-	S-	S-	S-	protoansi
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\ESC7		DECSC (Save Cursor)	sc		sc		-		--	ST	ST	ansix
+\ESC8		DECRC (Restore Cursor)	rc		rc		-		--	ST	ST	ansix
+\ESCD		IND (Index)		-				?	?	--	S-	S-	ansix
+\ESCH		HTS (Horiz Tab Set)	st		hts		-	-	ST	ST	ST	N -> xterm?
+\ESCM		RI (Reverse Index/LF)	sr		ri		?	?	S	ST	ST	protoansi
+
+\ESCN%c		SS3 (Single Shift select G2)				-	-	S-	S-	S-	N
+\ESCO%c		SS3 (Single Shift select G3)				S-	S-	ST	N
+					K2 %c=E				-	-	??	--	ST	N
+					kd %c=B				-	-	??	--	ST	N
+					kh %c=H				-	-	??	--	ST	N
+					kl %c=D				-	-	??	--	ST	N
+					kr %c=C				-	-	??	--	ST	N
+					ku %c=A				-	-	??	--	ST	N
+
+\ESCc		RIS (Reset to Initial State)
+					-		rs1		-	-	S-	S-	S-	protoansi	full reset
+\ESC>		DECPNM (normal keypad)	is		rmkx		-	-	?-	ST	ST	protoansix
+\ESC=		DECPAM (application keypad)
+					ks				-	-	?-	S-	ST	protoansix
+
+\ESC F		S7C1T (Select 7bit C1 Ctl Chars)
+					is				-	-	?-	ST	S-	N
+\ESC G		S8C1T (Select 8bit C1 Ctl Chars)
+					is				-	-	?-	ST	S-	N
+
+\ESCn		LS2 (Map G2 into GL)	-				-	-	?	S?	?	N
+\ESCo		LS2 (Map G3 into GL)	-				-	-	?	S?	?	N
+
+\ESC[s		PSCP (Save Cursor Pos)	-				-	-	--	--	S-	N	ansi.sys see \ESC7
+\ESC[u		PRCP (Restore Cursor Pos)-				-	-	--	--	S-	N	ansi.sys see \ESC8
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\ESC[%dA	CUU (CUrsor Up)		up (ku, UP)	cuu		01N	Y	ST	ST	ST	protoansi
+\ESC[%dB	CUD (CUrsor Down)	do (DO, kd)	cud		01N 	Y	ST	ST	ST	protoansi
+\ESC[%dC	CUF (CUrsor Forward)	nd (kr, RI)	cuf		01N	-	ST	ST	ST	protoansi
+\ESC[%dD	CUB (CUrsor Back)	le (LE)		cub		?		ST	ST	ST	protoansi	op_bc()
+
+\ESC[%dE	CNL (CUrsor Next Line)	-				01N	?	S-	--	S-	N
+\ESC[%dF	CPL (CUrsor Prev Line)	-				01N	?	S-	S-	S-	N
+\ESC[%dG	CHA (Cursor Horiz Abs.)	-		hpa		N		ST	S-	ST	protoansi
+
+\ESC[%d;%dH	CUP (CUrsor Position)	cm (ho, kh)	cup		?		ST	ST	ST	protoansi
+
+\ESC[%dI	CHT <tab forward>	ta		ht?		N	?	ST	--	ST	protoansi
+
+\ESC[%dJ	ED (Erase in Display)	cd (cl)		ed, clear	012		ST	ST 	ST	protoansi
+\ESC[%dK	EL (Erase in Line)	ce		el		012 		ST	ST	ST	protoansi
+
+\ESC[%dL	IL (Insert Lines)	al (AL, kI) 	il		? 		ST	ST	ST	protoansi
+\ESC[%dM	DL (Delete Lines)	dl		dl		01N		ST	ST	ST	protoansi
+\ESC[%dP	DCH (Delete CHaracters)	dc (DC)		dch		01N		ST	ST 	ST	protoansi
+
+\ESC[%dS	SU (Scroll Up)		SF (nw)		indn		01N	Y	ST	S-	ST	N surely this is implemented? use AL/DL instead
+\ESC[%dT	SD (Scroll Down)	SR		rin		01N	Y	ST	S-	ST	N surely this is implemented? use AL/DL instead
+\ESC[%dX	ECH (Erase CHaracters)	ec		ech		?		ST	S-	ST	protoansi
+\ESC[%dZ	CBT <tab back>		bt		cbt		N	?	ST	--	ST	protoansi
+\ESC[%d@	ICH (Insert Character)	ic		ich		01N	-	ST	ST 	ST	protoansi
+
+\ESC[%db	REP (REPeat last graphic char)					-	S?	--	S?	N	exercised by 'alsamixer'
+\ESC[%dd	VPA (Vertical Position Absolute)	vpa		N	-	ST	S-	ST	protoansi
+															exercised by 'alsamixer'
+\ESC[%d;%df	HVP (Horiz Vert Pos)	-				?	?	S-	S-	S-	N	same as CUP
+
+\ESC[3g		TBC (TaB Clear)		ct		tbc		03	- 	ST	ST 	ST	N
+
+\ESC[4h		SM/IRM (Insert Mode)	im		smir		4	- 	ST	ST	ST	protoansi
+\ESC[4l		RM/IRM (Replace Mode)	ei		rmir		4	- 	ST	ST	ST	protoansi
+
+\ESC[%di	MC (Media Copy)		-		mc0, mc4	1,4,5,10,11	S-	--	S-	ansi	ACT_PRINT	term debugging
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\ESC[m		SG (Set Graphics)	se (ue)				normal	 	S?	S-	S	ansi, dtterm, xterm
+
+\ESC[0m		SG (Set Graphics)	me				normal  	S?	S-	S	ansi, dtterm, xterm
+\ESC[1m		SG (Set Graphics)	md		bold		bold	 	S?	S-	S	ansi, dtterm, xterm
+
+\ESC[2m		SG (Set Graphics)	so				faint	 	S?	ST	--	ansi, dtterm
+\ESC[3m		SG (Set Graphics)	-				italic	 	S-	--	--	N -> ansi
+\ESC[4m		SG (Set Graphics)	us		smul		underline 	S?	ST	S?	ansi, dtterm, xterm
+\ESC[5m		SG (Set Graphics)	mb		blink		blink Slow 	S?	S-	S?	N	bold under xterm
+\ESC[6m		SG (Set Graphics)	-				blink Fast 	S?	--	--	N
+\ESC[7m		SG (Set Graphics)	mr (so)		smso		inverse	 	S?	ST	ST	ansi, dtterm, xterm
+\ESC[8m		SG (Set Graphics)	-				hidden	 	S?	S-	S?	ansi, dtterm, xterm
+\ESC[9m		SG (Set Graphics)	-				strike	 	S?	--	--	N
+
+\ESC[10m	SG (Set Graphics)	-				primary ft	S?	--	--	ansi
+\ESC[11-19m	SG (Set Graphics)	-				alt ft	 	S?	--	--	ansi
+
+\ESC[20m	SG (Set Graphics)	-				fraktur	 	S?	--	--	N
+\ESC[21m	SG (Set Graphics)	-				underline *2	S?	--	--	N
+
+# inverse of 2-9
+\ESC[22m	SG (Set Graphics)	ue				no bold/faint	S?	ST	ST	ansi, dtterm, xterm
+\ESC[23m	SG (Set Graphics)	-				no italic/fktur	S?	-?	-?	ansi
+\ESC[24m	SG (Set Graphics)	-		rmul		no underline	S?	S?	S?	ansi, dtterm, xterm
+\ESC[25m	SG (Set Graphics)	-				no blink	S?	S?	S?	ansi, dtterm, xterm
+\ESC[26m	SG (Set Graphics)	-				prop space	S-	--	--	N
+\ESC[27m	SG (Set Graphics)	-		rmso		no inverse	S?	S?	S?	ansi, dtterm, xterm
+\ESC[28m	SG (Set Graphics)	-				no hidden	S?	S?	S?	ansi, dtterm, xterm
+\ESC[29m	SG (Set Graphics)	-				no strike	S?	--	--	N
+
+\ESC[30-37m	SG (Set Graphics)	-				fg color	S?	S-	S?	ansi, dtterm, xterm
+
+\ESC[38m	SG (Set Graphics)	-				256 fg color	S-	--	--	N
+
+\ESC[39m	SG (Set Graphics)	-		op		dflt fg color	S?	S-	S?	ansi, dtterm, xterm
+
+\ESC[40-47m	SG (Set Graphics)	-				bg color	S?	S-	S?	ansi, dtterm, xterm
+
+\ESC[48m	SG (Set Graphics)	-				256 bg color	S?	--	--	N
+
+\ESC[49m	SG (Set Graphics)	-		op		dflt fg color	S?	S-	S?	ansi, dtterm, xterm
+
+\ESC[50-65m	SG (Set Graphics)	-				misc.		S-	--	--	N	misc rare ANSI stuff
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\ESC[5n		DSR (Device Status Report)				56	?	S-	S-	S-	protoansi
+\ESC[6n		DSR CPR (Cursor Position Report)	u7		56	?	S-	S-	S-	protoansi [really?]
+
+\ESC[%d;%dr	DECSTBM			cs		csr		?	?	-T	ST 	ST	protoansi	ACT_MARGIN
+
+\ESC[t		-			-				?	?	--	?-	?-	dtterm	ACT_GLYPH
+\ESC[t		-			-				?	?	--	S-	S-	N	(window manipulation xterm/dtterm 1-21)
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+\ESC[?1h	SM/DECCKM (Enable cursor key mode)
+					ks				-	-	??	S-	ST	protoansix
+\ESC[?5h	SM/DECSCNM (Enable reverse video)
+					vb				?	?	?-	ST	ST	N	used for flashing
+\ESC[?7h	SM/DECAWM (Enable Auto Wrap)
+					is		smam		-	-	?-	ST	S-	N
+\ESC[?12h	SM (Start blinking cursor)
+					vs				-	-	??	--	ST	N
+\ESC[?25h	SM/DECTCEM (Show cursor)
+					ve,vs				-	-	??	S-	ST	N
+\ESC[?25h	SM/DECTCEM (Enable cursor visible)
+					ve,vs		cvvis				-~	ST	ST	protoansix
+\ESC[?1034h	set 8th bit on meta key?		smm				??	??	??	N
+\ESC[?1049h	~DECSC			ti		smcup		-	-	?-	--	ST	N
+					mm				-	-	?-	--	ST	N
+
+
+\ESC[?1l	RM/DECCKM (Disable cursor key mode)
+					is		rmkx		-	-	??	ST	ST	protoansix
+\ESC[?3l	RM/DECCOLM (disable 132 col mode)
+					is				-	-	??	S-	ST	N
+\ESC[?4l	RM/DECSCLM (Disable smooth scrolling)
+					is				-	-	??	S-	?T	N
+\ESC[?5l	RM/DECSCNM (Disable reverse video)
+					vb				?	?	??	ST	ST	N	used for flashing
+\ESC[?12l	RM (Reset Mode) DECRST	ve, vs						-~	S-	ST	protoansix
+\ESC[?25l	RM/DECTCEM (Disable cursor visible)
+					vi		civis				-~	ST	ST	protoansix
+\ESC[?45l	disable reverse autowrap
+					is				-	-	??	ST	--	N
+\ESC[?1034l	don't set 8th bit on meta key?
+					mo		rmm		-	-	??	--	ST	N
+\ESC[?1049l	~DECRC			te		rmcup		-	-	??	--	ST	N -> xterm?
+
+
+\ESC[?%dr	DEC private restore	ve/vs				same as h/l	--	S-	S-	protoansix
+\ESC[?%ds	DEC private save	ve/vs				same as h/l	--	S-	S-	protoansix
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+
+\ESC[!p		DECSTR			is		is2		?	?	--	S-	ST	protoanisx	op_soft_reset()
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+
+\ESC[>%dT	reset title feature	-		-		-	?	--	--	S-	N -> xterm
+\ESC[>%dc	secondary DA 		-		-		-	?	--	--	S-	xterm		request terminal id
+\ESC[>%dm	alter key sequences	-		-		-	?	--	--	S-	N -> xterm
+\ESC[>%dn	disable key sequences	-		-		-	?	--	--	S-	N -> xterm
+\ESC[>%dp	cursor hiding		-		-		-	?	--	--	S-	N -> xterm
+\ESC[>%dt	set/reset title modes	-		-		-	?	--	--	S-	N -> xterm
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+
+\ESC]%d;%sBEL										--	S-	S-	protoanisx	set text parameters
+									0		--	S-	S-	protoanisx	set window  title +
+																set icon name
+									1		--	S-	S-	protoanisx	set icon name
+									2		--	S-	S-	protoanisx	set window  title
+									3		--	S-	--	protoansix [ -> dtterm ]
+\ESC]10;%s;%sBEL							10		--	--	--	protoanisx	"nbterm" hyperlink
+																cwd and persist
+
+\ESC]%d;%s\ESC\  									--	--	S-	xterm		set text parameters
+									0		--	--	S-	xterm		set window  title +
+																set icon name
+									1		--	--	S-	xterm		set icon name
+									2		--	--	S-	xterm		set window  title
+									3		--	--	S-	N [ -> xterm ]	set X property
+\ESC]10;%s;%s\ESC\  							10		--	--	--	xterm		"nbterm" hyperlink
+
+\ESC]l%s\ESC\										--	S-	--	dtterm		set window  title
+\ESC]I%s\ESC\										--	S-	--	N		set icon image file
+\ESC]L%s\ESC\										--	S-	--	dtterm		set icon name
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Alternative Character Sets
+==========================
+
+ACS's understood by curses (extracted from ncurses.h)
+
+UNICODE:
+http://en.wikipedia.org/wiki/Box-drawing_character
+
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+----------------------------------------------------------------------------------------------------------------------------------------
+ACS_RARROW      '+'									020	-	-	N
+ACS_LARROW      ','									021	-	-	N
+ACS_UARROW      '-'									030	-	-	N
+ACS_DARROW      '.'									031 ^Y	-	-	N
+ACS_BLOCK       '0'									333	-	-	N
+
+# The following sequences correspond to http://vt100.net/docs/vt220-rm/table2-4.html
+ACS_DIAMOND     '`'									004	'`'	'`'	ansi+protoansix
+ACS_CKBOARD     'a'									261	'a'	'a'	ansi+protoansix
+?		'b'	HT								-	-	-	N
+?		'c'	FF								-	-	-	N
+?		'd'	CR								-	-	-	N
+?		'e'	LF								-	-	-	N
+ACS_DEGREE      'f'									370	'f'	'f'	ansi+protoansix
+ACS_PLMINUS     'g'									361	'g'	'g'	ansi+protoansix
+ACS_BOARD       'h'	or NL								260	-	-	ansi+protoansix
+ACS_LANTERN     'i'	or VT								-	-	'i'	ansi+protoansix
+ACS_LRCORNER    'j'									331	'j'	'j'	ansi+protoansix
+ACS_URCORNER    'k'									277	'k'	'k'	ansi+protoansix
+ACS_ULCORNER    'l'									332	'l'	'l'	ansi+protoansix
+ACS_LLCORNER    'm'									300	'm'	'm'	ansi+protoansix
+ACS_PLUS        'n'									305	'n'	'n'	ansi+protoansix
+
+ACS_S1          'o'									176 ~	'o'	'o'	ansi+protoansix	-> '\u2500'
+ACS_S3          'p'									304	'p'	'p'	N		-> '\u2500'
+ACS_HLINE       'q'	or S5								304	'q'	'q'	ansi+protoansix	-> '\u2500'
+ACS_S7          'r'									304	'r'	'r'	N		-> '\u2500'
+ACS_S9          's'									137 _	's'	's'	ansi+protoansix	-> '\u2500'
+
+ACS_LTEE        't'									303	't'	't'	ansi+protoansix
+ACS_RTEE        'u'									264	'u'	'u'	ansi+protoansix
+ACS_BTEE        'v'									301	'v'	'v'	ansi+protoansix
+ACS_TTEE        'w'									302	'w'	'w'	ansi+protoansix
+ACS_VLINE       'x'									263	'x'	'x'	ansi+protoansix
+ACS_LEQUAL      'y'									363	'y'	'y'	ansi+protoansix
+ACS_GEQUAL      'z'									362	'z'	'z'	ansi+protoansix
+ACS_PI          '{'									343	'{'	'{'	ansi+protoansix
+ACS_NEQUAL      '|'									330	'|'	'|'	ansi+protoansix
+ACS_STERLING    '}'									234	'}'	'}'	ansi+protoansix
+ACS_BULLET      '~'									376	'~'	'~'	ansi+protoansix
+----------------------------------------------------------------------------------------------------------------------------------------
+sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+
+

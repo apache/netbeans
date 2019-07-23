@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.spi.java.hints
+OpenIDE-Module-Implementation-Version: 13
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/hints/spiimpl/Bundle.properties
+

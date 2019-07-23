@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->test|Bnon();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testAnon()                      [PUBLIC]   {}
+METHOD     testBnon()                      [PRIVATE]  {}

@@ -1,0 +1,9 @@
+FUNCTION property01 [ANONYMOUS: false, DECLARED: true - property01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+fruit : OBJECT fruit [ANONYMOUS: false, DECLARED: true - fruit, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+      # PROPERTIES
+      color   : OBJECT color [ANONYMOUS: false, DECLARED: true - color, MODIFIERS: PUBLIC, PROPERTY]
+      quality : OBJECT quality [ANONYMOUS: false, DECLARED: true - quality, MODIFIERS: PUBLIC, PROPERTY]
+      size    : OBJECT size [ANONYMOUS: false, DECLARED: true - size, MODIFIERS: PUBLIC, PROPERTY]

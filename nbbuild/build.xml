@@ -1,0 +1,2172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="nbbuild" default="build-nozip" basedir=".">
+
+  <fail message="Please build using Ant 1.8.0 or higher.">
+    <condition>
+      <not>
+        <antversion atleast="1.8.0"/>
+      </not>
+    </condition>
+  </fail>
+
+  <import file="default.xml"/>
+
+  <!-- To make people happy who want to do `ant clean all': -->
+  <target name="all" depends="build,commit-validation" description="Build the IDE and run basic validation tests."/>
+
+  <target name="all-nozip" depends="build-nozip,commit-validation" description="Build the IDE (no ZIP file, unpacked) and run basic validation tests."/>
+
+  <target name="bootstrap" description="Bootstrap NetBeans-specific Ant extensions."
+          depends="-jdk-init,-load-build-properties">
+    <fail message="You need to run on JDK 8+ to build NetBeans; java.home=${java.home}">
+        <condition>
+            <matches pattern="^1\.[01234567].*" string="${java.version}"/>
+        </condition>
+    </fail>
+    <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
+        <condition>
+            <not>
+                <or>
+                    <isset property="have-jdk-1.8"/>
+                    <isset property="have-jdk-1.9"/>
+                </or>
+            </not>
+        </condition>
+    </fail>
+
+    <property name="build.ant.classes.dir" location="${nb.build.dir}/antclasses"/>
+    <mkdir dir="${build.ant.classes.dir}"/>
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
+        <classpath>
+            <pathelement location="${ant.core.lib}"/>
+        </classpath>
+        <include name="org/netbeans/nbbuild/HgExec.java"/>
+        <include name="org/netbeans/nbbuild/ValidateHgConfiguration.java"/>
+        <include name="org/netbeans/nbbuild/extlibs/DeregisterExternalHook.java"/>
+        <include name="org/netbeans/nbbuild/extlibs/DownloadBinaries.java"/>
+        <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
+    <taskdef name="validate-hg-configuration" classname="org.netbeans.nbbuild.ValidateHgConfiguration" classpath="${build.ant.classes.dir}"/>
+    <validate-hg-configuration root=".."/>
+    <taskdef name="deregisterexternalhook" classname="org.netbeans.nbbuild.extlibs.DeregisterExternalHook" classpath="${build.ant.classes.dir}"/>
+    <deregisterexternalhook root=".."/>
+    <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>
+    <property name="have-downloadbinaries-task" value="true" />
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <manifest dir="${nb_all}">
+            <include name="nbbuild/external/binaries-list"/>
+            <include name="platform/libs.junit4/external/binaries-list"/>
+            <include name="platform/javahelp/external/binaries-list"/>
+        </manifest>
+    </downloadbinaries>
+    <!--
+    nb-extra-files denotes directories/files, that are not packed for
+    distribution. The clusters are only used for local development/testing.
+    The files must not be included in distribution zip and also need to be
+    excluded from license analysis
+    -->
+    <property name="nb-extra-files" value="test/**,extra/**"/>
+
+    <echo message="Bootstrapping NetBeans-specific Ant extensions..."/>
+    <path id="bootstrap-cp">
+     <pathelement location="${ant.core.lib}"/>
+     <fileset dir="..">
+        <!-- For JavaHelp indexing and link checking: -->
+        <include name="platform/javahelp/external/jhall*.jar"/>
+      </fileset>
+    </path>
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
+      <classpath refid="bootstrap-cp"/>
+      <compilerarg line="-Xlint -Xlint:-serial"/>
+    </javac>
+    <jar jarfile="${nbantext.jar}">
+      <fileset dir="${build.ant.classes.dir}"/>
+      <fileset dir="antsrc">
+        <exclude name="**/*.java"/>
+        <exclude name="**/package.html"/>
+        <exclude name="package-list"/>
+      </fileset>
+      <zipfileset dir="${nb_all}" includes="LICENSE" fullpath="META-INF/LICENSE"/>
+      <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
+    </jar>
+    <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+  </target>
+
+  <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
+    <echo>Downloading external binaries (*/external/ directories)...</echo>
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <manifest dir="${nb_all}">
+            <include name="**/external/binaries-list"/>
+        </manifest>
+    </downloadbinaries>
+    <property name="ext.binaries.downloaded" value="true"/>
+  </target>
+
+  <target name="download-selected-extbins" unless="ext.binaries.downloaded" depends="init-module-list">
+    <echo>Downloading external binaries (*/external/ directories) for cluster.config=${cluster.config}...</echo>
+    <pathconvert property="modules.binaries-list" pathsep=",">
+        <path>
+            <dirset dir="${nb_all}" includes="nbbuild,${allmodules}"/>
+        </path>
+        <map from="${nb_all}/" to=""/>
+        <globmapper from="*" to="*/external/binaries-list"/>
+    </pathconvert>
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <manifest dir="${nb_all}" includes="${modules.binaries-list}"/>
+    </downloadbinaries>
+  </target>
+
+  <target name="-check-vanilla-javac" depends="bootstrap">
+    <condition property="vanilla.javac.exists">
+      <and>
+        <available file="${nb_all}/nbbuild/external/vanilla-javac-api.jar" />
+        <available file="${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
+      </and>
+    </condition>
+  </target>
+
+  <target name="prepare-vanilla-javac" depends="-check-vanilla-javac" unless="vanilla.javac.exists">
+    <delete dir="${nb_all}/nbbuild/build/langtools" />
+    <mkdir dir="${nb_all}/nbbuild/build/langtools" />
+    <unzip src="${nb_all}/nbbuild/external/langtools-9.zip" dest="${nb_all}/nbbuild/build/langtools">
+        <cutdirsmapper dirs="1"/>
+    </unzip>
+    <ant antfile="${nb_all}/nbbuild/build/langtools/make/build.xml" dir="${nb_all}/nbbuild/build/langtools/" target="generate-sources">
+        <property name="langtools.jdk.home" value="${java.home}" />
+    </ant>
+    <mkdir dir="${nb_all}/nbbuild/build/langtools/build/nb" />
+    <javac srcdir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes:${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes:${nb_all}/nbbuild/build/langtools/build/gensrc/jdk.compiler"
+           destdir="${nb_all}/nbbuild/build/langtools/build/nb"
+           excludes="**/module-info.java,com/sun/tools/javac/main/JavacToolProvider.java,com/sun/tools/jdeps/**,com/sun/tools/jdeprscan/**,com/sun/tools/javap/Main.java,jdk/javadoc/internal/tool/JavadocToolProvider.java,com/sun/tools/doclets/standard/Standard.java" source="1.8" target="1.8"/>
+    <copy todir="${nb_all}/nbbuild/build/langtools/build/nb">
+        <fileset dir="${nb_all}/nbbuild/build/langtools/src/java.compiler/share/classes" includes="**/*.properties"/>
+        <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.compiler/share/classes" includes="**/*.properties"/>
+        <fileset dir="${nb_all}/nbbuild/build/langtools/src/jdk.jdeps/share/classes" includes="**/*.properties"/>
+    </copy>
+    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-api.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" includes="javax/**,com/sun/source/**" />
+    <jar destfile="${nb_all}/nbbuild/external/vanilla-javac-impl.jar" basedir="${nb_all}/nbbuild/build/langtools/build/nb" excludes="javax/**,com/sun/source/**,com/sun/javadoc/**" />
+  </target>
+
+  <target name="init-module-list" depends="bootstrap,init-tasks,prepare-vanilla-javac">
+    <!-- Define modules. -->
+    <checkmoduleconfigs nbroot=".."/>
+    <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>
+    <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
+  </target>
+
+  <target name="init" depends="init-module-list,set-buildnumber">
+    <fail message="You need to have some modules checked out to build NetBeans. For example, try running the 'checkout' target.">
+        <condition>
+            <not>
+                <available file="../platform/core.startup/"/>
+            </not>
+        </condition>
+    </fail>
+    <taskdef name="nbmerge" classname="org.netbeans.nbbuild.NbMerge" classpath="${nbantext.jar}"/>
+    <taskdef name="getdependsclusters" classname="org.netbeans.nbbuild.GetDependsClusters" classpath="${nbantext.jar}"/>
+    <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat" classpath="${nbantext.jar}"/>
+
+    <!-- Set up automatic all-* targets: -->
+    <taskdef name="insert-module-all-targets" classname="org.netbeans.nbbuild.InsertModuleAllTargets" classpath="${nbantext.jar}"/>
+    <property name="verify.checkout" value="true"/> 
+    <property name="init.use.clusters" value="true"/> 
+    <insert-module-all-targets checkModules="${verify.checkout}" useclusters="${init.use.clusters}"/>
+  </target>
+  
+  <target name="all-installer" description="Dummy target for build system compatibility"/>
+
+  <target name="update" depends="init" description="Downloads binaries from an update center">
+      <subant-junit target="update" failonerror="true">
+          <buildpath path="${modules.sorted}"/>
+      </subant-junit>
+
+      <antcall target="finish-build"/>
+  </target>
+
+  <!-- build NBMs for selected modules -->
+  <target name="build-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
+      <mkdir dir="nbms" />
+      <property name="base.nbm.target.dir" location="nbms" />
+      <property name="nbms.fail.on.error" value="true"/>
+      <subant-junit target="nbm" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
+          <buildpath path="${modules.sorted}"/>
+          <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="nbm.always.create" value="true" />
+      </subant-junit>
+  </target>
+
+  <target name="build-nonsigned-nbms" depends="init,download-selected-extbins" description="Build all NBMs, all modules have to be built before proceed">
+      <mkdir dir="nbms" />
+      <property name="base.nbm.target.dir" location="nbms" />
+      <property name="nbms.fail.on.error" value="true"/>
+      <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
+          <buildpath path="${modules.sorted}"/>
+          <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+      </subant-junit>
+  </target>
+
+  <target name="fix-dependencies" depends="init">
+      <pathconvert property="modules.fullpath" >
+          <path>
+              <dirset dir="${nb_all}" includes="${allmodules}" />
+          </path>
+          <mapper type="identity" />
+      </pathconvert>
+
+      <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
+
+      <subant-junit target="fix-dependencies" failonerror="true">
+          <buildpath path="${modules.sorted}"/>
+      </subant-junit>
+  </target>
+
+  <property name="jnlp.signjar.keystore" location="${nb.build.dir}/default.keystore" />
+  <available property="jnlp.signjar.keystore.exists" file="${jnlp.signjar.keystore}" />
+  <target name="jnlp-generate-keystore" depends="init" unless="jnlp.signjar.keystore.exists" >
+    <property name="jnlp.signjar.alias" value="jnlp" />
+    <property name="jnlp.signjar.password" value="netbeans" />
+    <property name="jnlp.signjar.vendor" value="CN=NetBeans, OU=NetBeans, O=netbeans.org, C=US" />
+    
+    <mkdir dir="${jnlp.signjar.keystore}/../" />
+    <echo message="Going to create default keystore in ${jnlp.signjar.keystore}" />
+    <genkey 
+        alias="${jnlp.signjar.alias}"
+        keystore="${jnlp.signjar.keystore}"
+        storepass="${jnlp.signjar.password}"
+        dname="${jnlp.signjar.vendor}"
+    />
+  </target>
+
+  <target name="build-jnlp" depends="init,jnlp-generate-keystore" description="Create a JNLP distribution.">
+      <fail message="Please build using Ant 1.8.4 or higher.">
+        <condition>
+          <not>
+            <antversion atleast="1.8.4"/>
+          </not>
+        </condition>
+      </fail>
+      <property name="jnlp.dest.dir" location="${nb.build.dir}/jnlp" />
+      <mkdir dir="${jnlp.dest.dir}" />
+      <makeurl property="jnlp.codebase" file="${jnlp.dest.dir}"/> <!-- fallback value unless otherwise configured -->
+      <property name="jnlp.fail.on.error" value="true"/>
+      <pathconvert property="jnlp.modules.fullpath">
+          <path>
+              <dirset dir="${nb_all}" includes="${config.jnlp.stable}"/>
+          </path>
+          <mapper type="identity"/>
+      </pathconvert>
+      <sortsuitemodules unsortedmodules="${jnlp.modules.fullpath}" sortedmodulesproperty="jnlp.modules.sorted"/>
+      <subant-junit target="jnlp" failonerror="${jnlp.fail.on.error}" report="${nb.build.dir}/build-all-jnlp.xml">
+          <buildpath path="${jnlp.modules.sorted}"/>
+      </subant-junit>
+      <taskdef name="verifyjnlp" classname="org.netbeans.nbbuild.VerifyJNLP" classpath="${nbantext.jar}"/>
+      <verifyjnlp report="${nb.build.dir}/verify-jnlp.xml" failonerror="jnlp.fail.on.error">
+          <fileset dir="${jnlp.dest.dir}" includes="*.jnlp"/>
+      </verifyjnlp>
+  </target>
+  
+  <target name="build-javadoc" depends="javadoc"/>
+
+  <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
+      <ant dir="javadoctools" target="build-javadoc"/>
+  </target>
+
+  <!-- build source zips for selected modules - useful for populating maven repository only-->
+  <target name="build-source-zips" depends="init" description="Builds source zips for maven repository inclusion.">
+      <property name="netbeans.zipped.sources.dir" location="${nb.build.dir}/source-zips" />
+      
+      <subant-junit target="sources-zip" failonerror="true">
+          <buildpath path="${modules.sorted}"/>
+      </subant-junit>
+  </target>
+  
+      
+  <target name="check-javahelpbin" depends="init" description="Validate intermodule links in helpsets.">
+      <taskdef name="checkhelpsetsbin" classname="org.netbeans.nbbuild.CheckHelpSetsBin">
+        <classpath>
+          <pathelement location="${nbantext.jar}"/>
+            <fileset dir="${nb_all}/javahelp/external">
+              <include name="jh*.jar"/>
+            </fileset>
+        </classpath>
+      </taskdef>
+      <checkhelpsetsbin>
+        <fileset dir="netbeans">
+          <include name="*/modules/*.jar"/>
+        </fileset>
+      </checkhelpsetsbin>
+  </target>
+
+  <target name="build-messaging" depends="init">
+    <echo message="Starting a build for NetBeans (build ${buildnum}, config '${cluster.config}') ..."/>
+    <echo message="Selected modules: ${modules}"/>
+    <echo message="OS: ${os.name} ${os.version}  Locale: ${user.language}_${user.region}"/>
+    <echo message="Java: ${nbjdk.home}"/>
+  </target>
+  
+  <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
+  <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
+
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="-check-nb-cluster" depends="init">
+       <condition property="has.nb.cluster">
+           <contains string="${nb.clusters.list}" substring="nb.cluster.nb" />
+       </condition>
+  </target>
+  <target name="finish-build" depends="finish-build-platform,finish-build-nb"/>
+  <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
+    <copy file="../platform/o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
+    </fixcrlf>
+  </target>
+  <target name="-shall-build-nb-windows-launchers" depends="init,-check-nb-cluster">
+      <condition property="shall.build.windows.launchers">
+          <and>
+              <istrue value="${do.build.windows.launchers}"/>
+              <istrue value="${has.nb.cluster}"/>
+          </and>
+      </condition>
+  </target>
+  
+  <target name="-build-nb-windows-launchers" depends="-shall-build-nb-windows-launchers" if="shall.build.windows.launchers">
+    <exec executable="make" dir="../nb/ide.launcher/windows">
+        <arg value="-f"/>
+        <arg value="Makefile.mingw"/>
+    </exec>
+    <copy todir="${netbeans.dest.dir}/bin" overwrite="true">
+        <fileset dir="../nb/ide.launcher/windows" includes="netbeans*.exe"/>
+    </copy>
+  </target>
+  
+  <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
+    </downloadbinaries>
+
+    <mkdir dir="${netbeans.dest.dir}/bin" />
+    <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
+  </target>
+
+  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+    <loadproperties srcFile="${clusters.list.file}" />
+
+    <mkdir dir="${netbeans.dest.dir}/bin" />
+    <copy file="../nb/ide.launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
+    <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
+    <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
+
+    <mkdir dir="${netbeans.dest.dir}/etc" />
+    <copy file="../nb/ide.launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <copy file="../nb/ide.launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+
+    <mkdir dir="${nb.build.dir}/license-temp" />
+    <concat destfile="${nb.build.dir}/license-temp/LICENSE.txt">
+        <filelist dir="${nb_all}/nbbuild" files="license-dialog-stub.txt" />
+        <filelist dir="${netbeans.dest.dir}" files="LICENSE" />
+    </concat>
+
+    <jar destfile="${netbeans.dest.dir}/nb/core/org-netbeans-upgrader.jar"
+         update="true"
+         compress="${build.package.compress}" >
+        <zipfileset dir="${nb.build.dir}/license-temp" prefix="org/netbeans/license" />
+    </jar>
+    <echo message="${netbeans.dest.dir}/${nb.cluster.platform.dir}/lib/nbexec" />
+    <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
+      <include name="etc/netbeans.conf" />
+      <include name="etc/netbeans.clusters" />
+      <include name="bin/netbeans" />
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
+    </fixcrlf>
+    <mkdir dir="${nb.build.dir}"/>
+    <hgid property="hg.id" file=".."/>
+    <echo file="${nb.build.dir}/build_info">NetBeans dev build
+------------------
+Number:   ${buildnumber}
+Date:     ${buildday}
+Branding:
+Branch:   trunk
+Tag:
+Hg ID:    ${hg.id}
+</echo>
+    <mkdir dir="${netbeans.dest.dir}/${nb.cluster.nb.dir}"/>
+    <copy file="${nb.build.dir}/build_info" tofile="${netbeans.dest.dir}/${nb.cluster.nb.dir}/build_info" failonerror="true"/>
+  </target>
+
+  <target name="add-junit" if="add.junit" description="Add the JUnit plugin to the build (if -Dadd.junit=true).">
+      <ant dir="../libs.junit4" inheritall="false">
+          <property name="cluster" location="${netbeans.dest.dir}/${nb.cluster.platform.dir}"/>
+      </ant>
+      <ant dir="../junitlib" inheritall="false">
+          <property name="cluster" location="${netbeans.dest.dir}/${nb.cluster.java.dir}"/>
+          <property name="nb.cluster.platform" value="libs.junit4"/>
+          <property name="nb.cluster.stableuc" value=""/>
+          <property name="nb.cluster.experimental" value=""/>
+          <property name="do.not.recurse" value="true"/>
+      </ant>
+  </target>
+  <target name="clean-junit">
+      <delete dir="../libs.junit4/build" verbose="true"/>
+      <delete dir="../junitlib/build" verbose="true"/>
+      <delete verbose="true">
+          <fileset dir="${netbeans.dest.dir}">
+              <include name="*/config/Modules/org-netbeans-libs-junit4.xml"/>
+              <include name="*/config/Modules/org-netbeans-modules-junitlib.xml"/>
+              <include name="*/modules/org-netbeans-libs-junit4.jar"/>
+              <include name="*/modules/org-netbeans-modules-junitlib.jar"/>
+              <include name="*/update_tracking/org-netbeans-libs-junit4.xml"/>
+              <include name="*/update_tracking/org-netbeans-modules-junitlib.xml"/>
+              <include name="*/modules/ext/junit*"/>
+              <include name="*/docs/junit*"/>
+          </fileset>
+      </delete>
+  </target>
+  <target name="build" depends="build-nozip"
+          description="Create a complete build including a ZIP distribution (but do not try it).">
+    <delete file="NetBeans-${buildnum}.zip"/>
+    <delete file="NetBeans-${buildnum}-build-extra-data.zip"/>
+    <delete file="NetBeans-${buildnum}-javadoc-web.zip"/> <!-- XXX why? -->
+    <delete file="NetBeans-${buildnum}-javadoc.zip"/> <!-- XXX why? -->
+
+    <antcall target="zip-cluster-config" inheritall="true"/>
+  </target>
+
+  <target name="delete-and-merge" depends="merge-delete,merge" />   
+
+  <target name="merge-delete" depends="init">
+    <delete dir="${netbeans.dest}" />
+  </target>
+  
+  <target name="merge" depends="build-messaging">
+    <mkdir dir="${netbeans.dest.dir}"/>
+    <nbmerge failonerror="${stop.when.broken.modules}" 
+             dest="${netbeans.dest}" 
+             topdir=".." 
+             fixedmodules="${fixedmodules}" 
+             modules="${modules}"
+             builtmodulesproperty="${built.modules.property}" 
+             targetprefix="all-" 
+             mergedependentmodules="${merge.dependent.modules}" >
+    </nbmerge>
+  </target>
+
+  <target name="build-basic" description="Build the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="build" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="permit.jdk9.builds" value="true"/>
+      </ant>
+  </target>
+
+  <target name="test-basic" description="Test the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="test" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="test.type" value="test-unit"/>
+          <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
+      </ant>
+  </target>
+
+  <target name="-build-platform" depends="init">
+      <delete file="${netbeans.dest.dir}/nb.cluster.platform.built"/>
+      <delete file="${netbeans.dest.dir}/nb.cluster.harness.built"/>
+      <run-depend-build clusters-to-build="nb.cluster.platform,nb.cluster.harness"/>
+  </target>
+  
+  <target name="build-platform" description="Build the NetBeans Platform (platform and harness clusters).">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="-build-platform" inheritAll="false">
+          <property name="cluster.config" value="platform"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
+      </ant>
+  </target>
+
+  <target name="test-platform" description="Test the NetBeans Platform modules.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="test" inheritAll="false">
+          <property name="cluster.config" value="platform"/>
+          <property name="test.type" value="test-unit"/>
+          <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
+      </ant>
+  </target>
+  
+  <target name="build-cluster" depends="init">
+    <run-depend-build clusters-to-build="${cluster-name}"/>
+  </target>
+
+  <macrodef name="run-depend-build">
+    <attribute name="clusters-to-build"/>
+    <sequential>
+      <repeat target="build-one-cluster" name="one.cluster.name" values="@{clusters-to-build}" /> 
+    </sequential>
+  </macrodef>
+
+  <target name="build-clusters" depends="init">
+     <run-depend-build clusters-to-build="${nb.clusters.list}"/> 
+  </target>
+
+  <target name="build-one-cluster-dependencies-check">
+    <condition property="${one.cluster.name}-hasNoDependencies">
+      <equals arg1="${one.cluster.dependencies}" arg2="" trim="true"/>
+    </condition>
+    <resolve name="test.prop" value="${one.cluster.name}-hasNoDependencies"/>
+  </target>
+
+  <target name="build-one-cluster-dependencies" 
+          depends="build-one-cluster-dependencies-check"
+          unless="${one.cluster.name}-hasNoDependencies">
+    <run-depend-build clusters-to-build="${one.cluster.dependencies}"/> 
+  </target>
+
+  <target name="build-one-cluster-check">
+    <condition property="${one.cluster.name}-is-built">
+      <available file="${netbeans.dest.dir}/${one.cluster.name}.built"/>
+    </condition>
+    <resolve name="test1.prop" value="${one.cluster.name}-is-built"/>
+  </target>
+
+  <target name="build-one-cluster" unless="${one.cluster.name}-is-built" depends="build-one-cluster-check">
+    <echo message="Building ${one.cluster.name} modules"/>
+    <resolve name="one-cluster-modules" value="${one.cluster.name}"/>
+    <resolve name="one-cluster-dependencies" value="${one.cluster.name}.depends"/>
+    <echo>${one-cluster-modules}</echo>
+    <echo>Dependencies: ${one-cluster-dependencies}</echo>
+    <insert-module-all-targets/> <!-- we are in a subproject, so need to reinsert the targets... XXX <antcall> and thus <repeat> apparently reparses the Ant script from disk! -->
+    <antcall target="build-one-cluster-dependencies" inheritAll="false">
+      <param name="one.cluster.dependencies" value="${one-cluster-dependencies}"/>
+      <param name="one.cluster.name" value="${one.cluster.name}"/>
+      <param name="ext.binaries.downloaded" value="true"/>
+    </antcall>
+    <mkdir dir="${netbeans.dest.dir}"/>
+    <nbmerge failonerror="${stop.when.broken.modules}" 
+             dest="${netbeans.dest.dir}" 
+             topdir="${nb_all}" 
+             fixedmodules="${one-cluster-modules}"
+             builtmodulesproperty="${built.modules.property}" 
+             targetprefix="all-" 
+             mergedependentmodules="false">
+    </nbmerge>
+    <touch file="${netbeans.dest.dir}/${one.cluster.name}.built"/>
+  </target>
+
+  <target name="zip-cluster-config" depends="init">
+    <property name="zip.dir" location="."/>
+    <mkdir dir="${zip.dir}"/>
+    <property name="zip.name" location="${zip.dir}/NetBeans-${buildnum}-${cluster.config}.zip"/>
+    <resolvelist name="nb.clusters.dirs" list="${nb.clusters.list}">
+        <mapper type="glob" from="*" to="*.dir"/>
+    </resolvelist>
+    <pathconvert property="nb.clusters.includes" pathsep=",">
+        <dirset dir="${netbeans.dest.dir}" includes="${nb.clusters.dirs},etc,bin"/>
+        <mapper type="regexp" from=".*/([^/\\]*)" to="\1/"/>
+    </pathconvert>
+    <taskdef name="find-executables" classname="org.netbeans.nbbuild.FindExecutables" classpath="${nbantext.jar}"/>
+    <find-executables allmodules="${allmodules}" exeincludeproperty="nb.clusters.exe.includes"/>
+    <!-- package the zip file -->
+    <echo>${netbeans.dest.dir}</echo>
+    <zip destfile="${zip.name}" update="true" duplicate="preserve">
+      <zipfileset dir="${netbeans.dest.dir}" filemode="755" prefix="${netbeans.dest}"
+        includes="bin/netbeans,${nb.clusters.exe.includes}"
+      />
+      <zipfileset
+        dir="${netbeans.dest.dir}" prefix="${netbeans.dest}"
+        includes="${nb.clusters.includes}" excludes="${nb-extra-files}"
+      />
+      <zipfileset
+        dir="${netbeans.dest.dir}" prefix="${netbeans.dest}">
+            <include name="*.txt"/>
+            <include name="*.css"/>
+            <include name="*.html"/>
+            <include name="DEPENDENCIES"/>
+            <include name="LICENSE"/>
+            <include name="NOTICE"/>
+            <include name="licenses/**"/>
+      </zipfileset>
+    </zip>
+  </target>
+
+  <target name="build-nozip-ml" depends="init-module-list" description="Build the Multilanguage IDE but do not create a final ZIP file.">
+    <subant target="netbeans-ml" buildpath="${modules.fullpath}">
+        <property name="netbeans.dest.dir" value="${netbeans.dest.dir}"/>
+    </subant>
+  </target>
+  
+  <target name="build-zip-ml" depends="bootstrap,set-buildnumber,check-locales-set,build-nozip-ml"
+          description="Create a compleate multilanguage build including a ZIP distributions">
+      <fail message="Property locales must be set to reasonable value" unless="locales.is.set"/>
+      <echo message="nb.clusters.list is ${nb.clusters.list}"/>
+      <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat"
+               classpath="${nbantext.jar}"/>
+      <property name="buildnum" value="dev-${buildnumber}"/>
+      <repeat target="pack-one-cluster-ml" name="one.cluster.name.ml" values="${nb.clusters.list}"/>
+  </target>
+  
+  <target name="pack-one-cluster-ml" if="one.cluster.name.ml">
+      <resolve name="one.cluster.dir.ml.pre" value="${one.cluster.name.ml}.dir"/>
+      <pathconvert property="one.cluster.dir.ml" setonempty="false">
+          <path path="${one.cluster.dir.ml.pre}"/>
+          <chainedmapper>
+          <filtermapper>
+              <replacestring from="," to="_"/>
+              <replacestring from="-" to="_"/>
+              <replacestring from="." to="_"/>
+          </filtermapper>
+          <flattenmapper/>
+          </chainedmapper>
+      </pathconvert>
+      <echo message="one.cluster.name.ml is ${one.cluster.name.ml}" level="verbose"/>
+      <echo message="one.cluster.dir.ml is ${one.cluster.dir.ml}" level="verbose"/>
+      <echo message="one.cluster.dir.ml.pre is ${one.cluster.dir.ml.pre}" level="verbose"/>
+      <mkdir dir="${nb.build.dir}/ml"/>
+      <delete file="${nb.build.dir}/ml/NetBeans-${one.cluster.dir.ml}-${buildnum}.zip"/>
+      <repeat target="pack-one-locale-for-cluster" name="one.locale" values="${locales}"/>
+  </target>
+
+  <target name="pack-one-locale-for-cluster" if="one.locale">
+      <echo message="cluster-locale is ${one.cluster.dir.ml}-${one.locale}" level="verbose"/>
+      <zip destfile="${nb.build.dir}/ml/NetBeans-${one.cluster.dir.ml}-${buildnum}.zip" update="true" duplicate="preserve">
+          <zipfileset dir="${netbeans.dest.dir}/${one.cluster.dir.ml.pre}" prefix="${netbeans.dest}">
+              <include name="**/locale/*_${one.locale}.*"/>
+          </zipfileset>
+      </zip>    
+  </target>
+
+  <target name="check-locales-set">
+      <condition property="locales.is.set" value="true">
+          <and>
+              <isset property="locales"/>
+              <length string="${locales}" when="ge" length="2" trim="yes"/>
+          </and>
+      </condition>
+  </target>
+
+  <target name="build-nbms-ml" depends="bootstrap,set-buildnumber,init-tasks">
+      <taskdef name="repeat" classname="org.netbeans.nbbuild.Repeat"
+               classpath="${nbantext.jar}"/>
+      <property name="buildnum" value="dev-${buildnumber}"/>
+      <mkdir dir="${nb.build.dir}/ml/nbms"/>
+      <property name="netbeans.dest.dir.ml" location="${nb.build.dir}/ml/nbms"/>
+      <delete dir="${nb.build.dir}/ml/nbms"/>
+      <mkdir dir="${nb.build.dir}/ml/nbms"/>
+      <copy todir="${nb.build.dir}/ml/nbms">
+          <fileset dir="${nb.build.dir}/ml">
+              <include name="NetBeans-*-${buildnum}.zip"/>
+          </fileset>
+      </copy>
+      <pathconvert property="dlocales" setonempty="false">
+          <path path="${locales}"/>
+          <chainedmapper>
+          <filtermapper>
+              <replacestring from="," to="_"/>
+              <replacestring from="-" to="_"/>
+          </filtermapper>
+          <flattenmapper/>
+          </chainedmapper>
+      </pathconvert>
+      <tstamp>
+      	  <format property="spec.version" pattern="yyyy.M.d.kmm" locale="en" />
+      </tstamp>
+      <echo level="verbose" message="dlocales is ${dlocales}"/>
+      <echo level="verbose" message="locales is ${locales}"/>
+      <echo level="verbose" message="spec.version is ${spec.version}"/>
+      <delete file="${nb.build.dir}/ml/cluster-nbms-ml.properties"/>
+      <repeat target="build-one-nbm-ml" name="one.cluster.name.ml" values="${nb.clusters.list}"/>
+      <antcall target="build-one-nbm-ml" inheritall="false">
+          <param name="is.kit" value="true"/>
+          <param name="locales" value="${locales}"/>
+          <param name="dlocales" value="${dlocales}"/>
+          <param name="one.cluster.name.ml" value="nb.cluster.nb"/>
+          <param name="nb.cluster.nb" value="${nb.cluster.nb}"/>
+          <param name="nb.clusters.list" value="${nb.clusters.list}"/>
+          <param name="spec.version" value="${spec.version}"/>
+          <param name="netbeans.dest.dir.ml" value="${netbeans.dest.dir.ml}"/>
+          <param name="buildnumber" value="${buildnumber}"/>
+      </antcall>
+      <taskdef name="makeupdatedesc" classname="org.netbeans.nbbuild.MakeUpdateDesc"
+               classpath="${nbantext.jar}"/>
+      <property name="use.license.url.in.catalog" value="true"/>
+      <makeupdatedesc desc="nbms/catalog.xml" distbase="." uselicenseurl="${use.license.url.in.catalog}">
+          <fileset dir="nbms">
+              <include name="*.nbm"/>
+              <include name="*.jar"/>
+          </fileset>
+      </makeupdatedesc>
+  </target>
+
+  <target name="-check-ml-nbm-props">
+      <condition property="run.ml.nbm.build" value="true">
+          <and>
+              <isset property="locales"/>
+              <isset property="dlocales"/>
+              <isset property="one.cluster.name.ml"/>
+              <isset property="nb.clusters.list"/>
+              <isset property="spec.version"/>
+              <isset property="netbeans.dest.dir.ml"/>
+              <isset property="buildnumber"/>
+          </and>
+      </condition>
+  </target>
+  
+  <target name="-unpack-cluster-ml-zipfile" unless="is.kit">
+      <unzip dest="${netbeans.dest.dir.ml}" src="${nb.build.dir}/ml/NetBeans-${cluster.package.dir}-${buildnum}.zip">
+          <mapper type="glob" from="netbeans/*" to="${one.cluster.dir.ml}/*"/>
+      </unzip>
+  </target>
+  
+  <target name="-create-cluster-ml-nbm-metadata" unless="is.kit">
+      <echo file="${nb.build.dir}/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
+OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
+OpenIDE-Module-Specification-Version: ${spec.version}
+</echo>
+      <echo file="${nb.build.dir}/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties">
+OpenIDE-Module-Name=NetBeans 6.0 ${one.cluster.dir.ml} cluster localization (${locales})
+OpenIDE-Module-Display-Category=Localization
+OpenIDE-Module-Short-Description=NetBeans 6.0 ${one.cluster.dir.ml} cluster localization (${locales})
+OpenIDE-Module-Long-Description=Delivers ${locales} localization for all modules in ${one.cluster.dir.ml} cluster of NetBeans 6.0
+</echo>
+  </target>
+  
+    <target name="-create-kit-ml-nbm-metadata" if="is.kit">
+      <echo file="${nb.build.dir}/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
+OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
+OpenIDE-Module-Specification-Version: ${spec.version}
+OpenIDE-Module-Module-Dependencies: ${kit.deps}
+</echo>
+       <echo file="${nb.build.dir}/ml/nbms/classes/${code.name.base.slashes}/Bundle.properties">
+OpenIDE-Module-Name=NetBeans 6.0 ${locales} localization kit
+OpenIDE-Module-Display-Category=Localization
+OpenIDE-Module-Short-Description=NetBeans 6.0 ${locales} localization kit
+OpenIDE-Module-Long-Description=Delivers ${locales} localization of whole NetBeans 6.0
+</echo>
+  </target>
+
+  <target name="build-one-nbm-ml" depends="init-tasks,-check-ml-nbm-props" if="run.ml.nbm.build">
+      <property file="${nb.build.dir}/ml/cluster-nbms-ml.properties"/>
+      <echo level="verbose" message="kit.deps is ${kit.deps}"/>
+      <echo level="verbose" message="locales is ${locales}"/>
+      <echo level="verbose" message="dlocales is ${dlocales}"/>
+      <echo level="verbose" message="nb.clusters.list is ${nb.clusters.list}"/>
+      <echo level="verbose" message="netbeans.dest.dir.ml is ${netbeans.dest.dir.ml}"/>
+      <echo level="verbose" message="spec.version is ${spec.version}"/>
+
+      <resolve name="one.cluster.dir.ml" value="${one.cluster.name.ml}.dir"/>
+      <pathconvert property="cluster.package.dir" setonempty="false">
+          <path path="${one.cluster.dir.ml}"/>
+          <chainedmapper>
+          <filtermapper>
+              <replacestring from="," to="_"/>
+              <replacestring from="-" to="_"/>
+              <replacestring from="." to="_"/>
+          </filtermapper>
+          <flattenmapper/>
+          </chainedmapper>
+      </pathconvert>
+      <delete dir="${nb.build.dir}/ml/nbms"/>
+      <delete dir="${netbeans.dest.dir.ml}"/>
+      <mkdir dir="${netbeans.dest.dir.ml}"/>
+      <antcall target="-unpack-cluster-ml-zipfile"/>
+      <property name="cluster" location="${netbeans.dest.dir.ml}/${one.cluster.dir.ml}"/>
+      <condition property="code.name.base" value="org.netbeans.localization.${cluster.package.dir}.${dlocales}">
+          <not>
+              <isset property="is.kit"/>
+          </not>
+      </condition>
+      <condition property="code.name.base" value="org.netbeans.localization.kit.${cluster.package.dir}.${dlocales}">
+          <isset property="is.kit"/>
+      </condition>
+
+      <pathconvert property="code.name.base.slashes" setonempty="false">
+          <path path="${code.name.base}"/>
+          <chainedmapper>
+              <flattenmapper/>
+              <filtermapper>
+                  <replacestring from="." to="/"/>
+              </filtermapper>
+          </chainedmapper>
+      </pathconvert>
+      <pathconvert property="code.name.base.dashes" setonempty="false">
+          <path path="${code.name.base}"/>
+          <chainedmapper>
+              <flattenmapper/>
+              <filtermapper>
+                  <replacestring from="." to="-"/>
+              </filtermapper>
+          </chainedmapper>
+      </pathconvert>
+      <property name="public.packages" value="${code.name.base}.*"/>
+      <property name="code.name" value="${code.name.base}/1"/>
+      <mkdir dir="${nb.build.dir}/ml/nbms/classes/${code.name.base.slashes}"/>
+      <mkdir dir="${nb.build.dir}/ml/nbms/tmp"/>
+      <antcall target="-create-cluster-ml-nbm-metadata"/>
+      <antcall target="-create-kit-ml-nbm-metadata"/>
+      <property name="is.autoload" value="false"/>
+      <property name="is.eager" value="false"/>
+      <condition property="module.jar.dir" value="modules">
+          <!-- set module.jar.dir property only when building kit NBM - leads to
+               AutoUpdate-Show-In-Client manifest attribute is set to true -->
+          <isset property="is.kit"/>
+      </condition>
+      <property name="module.jar" value="modules/${code.name.base.dashes}.jar"/>
+      <mkdir dir="${cluster}/modules"/>
+      <jarwithmoduleattributes jarfile="${cluster}/${module.jar}"
+          compress="${build.package.compress}" 
+          index="${build.package.index}" 
+          manifest="${nb.build.dir}/ml/nbms/tmp/manifest.mf">
+          <fileset dir="${nb.build.dir}/ml/nbms/classes"/>
+      </jarwithmoduleattributes>
+      <createmodulexml xmldir="${cluster}/config/Modules">
+          <enabled dir="${cluster}">
+              <include name="${module.jar}"/>
+          </enabled>
+      </createmodulexml>
+      <patternset id="module.files">
+          <!-- include name="${module.jar}"/ -->
+          <include name="**/*.jar"/>
+          <include name="config/Modules/${code.name.base.dashes}.xml"/>
+      </patternset>
+
+      <property name="module.files.toString" refid="module.files"/>
+      <echo level="verbose">Basic matching module files (${code.name.base.dashes}): ${module.files.toString}</echo>
+      <genlist outputfiledir="${cluster}" module="${module.jar}">
+          <fileset dir="${cluster}">
+              <patternset refid="module.files"/>
+          </fileset>
+      </genlist>
+      <property name="license.file.override" location="${nb.build.dir}/ml/nbms/license"/>
+      <property name="extra.license.files" value=""/>
+      <taskdef name="releasefileslicense" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesLicense" classpath="${nbantext.jar}"/>
+      <releasefileslicense license="${license.file.override}" standardlicense="${nb_all}/nbbuild/standard-nbm-license.txt" extralicensefiles="${extra.license.files}"/>
+      <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${nbantext.jar}"/>
+      <property name="nbm_alias" value="nb_ide"/>
+      <makenbm file="${nb.build.dir}/ml/${code.name.base.dashes}.nbm"
+               productdir="${cluster}"
+               module="${module.jar}"
+               homepage="http://translatedfiles.netbeans.org/"
+               distribution="http://translatedfiles.netbeans.org/"
+               needsrestart="true"
+               global="true"
+               targetcluster="${one.cluster.dir.ml}"
+               releasedate=""
+               moduleauthor="">
+          <license file="${license.file.override}"/>
+          <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}"/>
+      </makenbm>
+      <move todir="nbms" file="${nb.build.dir}/ml/${code.name.base.dashes}.nbm"/>
+      <property file="${nb.build.dir}/ml/cluster-nbms-ml.properties"/>
+      <condition property="new.kit.deps" value="${code.name} &gt; ${spec.version}">
+          <and>
+              <not>
+                  <isset property="kit.deps"/>
+              </not>
+              <not>
+                  <isset property="is.kit"/>
+              </not>
+          </and>
+      </condition>
+      <condition property="new.kit.deps" value="${kit.deps},${code.name} &gt; ${spec.version}">
+          <and>
+              <isset property="kit.deps"/>
+              <not>
+                  <isset property="is.kit"/>
+              </not>
+          </and>
+      </condition>
+      <condition property="new.kit.deps" value="${kit.deps}">
+          <isset property="is.kit"/>
+      </condition>
+      <propertyfile file="${nb.build.dir}/ml/cluster-nbms-ml.properties">
+          <entry key="kit.deps" value="${new.kit.deps}"/>
+      </propertyfile>
+  </target>
+
+  <target name="create-rpms-proto">
+    <mkdir dir="${nb.build.dir}/rpms"/>
+    <repeat target="create-one-rpm-proto" name="one.cluster.name" values="${clusters.list}" /> 
+  </target>
+    
+  <target name="create-one-rpm-proto">
+    <taskdef name="setcluster" classname="org.netbeans.nbbuild.SetCluster" classpath="${nbantext.jar}"/>
+    <loadproperties srcFile="cluster.properties" />
+    <loadproperties srcFile="cluster-description.properties" />
+    <setcluster cluster="${one.cluster.name}" name="one.cluster.dir" />
+    <mkdir dir="${nb.build.dir}/rpms"/>
+    
+    <resolve name="pkg.name" value="${one.cluster.name}.pkg.name"/>
+    <resolve name="pkg.version" value="${one.cluster.name}.pkg.version"/>
+    <resolve name="pkg.desc" value="${one.cluster.name}.pkg.desc"/>
+    <resolve name="pkg.vendor" value="${one.cluster.name}.pkg.vendor"/>
+    <resolve name="pkg.email" value="${one.cluster.name}.pkg.email"/>
+    <resolve name="pkg.rpm.name" value="${one.cluster.name}.pkg.rpm.name"/>
+    <resolve name="pkg.rpm.requires" value="${one.cluster.name}.pkg.rpm.requires"/>
+    <resolve name="pkg.rpm.group" value="${one.cluster.name}.pkg.rpm.group"/>
+    <resolve name="pkg.rpm.url" value="${one.cluster.name}.pkg.rpm.url"/>
+    <resolve name="pkg.rpm.copyright" value="${one.cluster.name}.pkg.rpm.copyright"/>
+    <resolve name="pkg.rpm.map" value="${one.cluster.name}.pkg.rpm.map"/>
+    <resolve name="pkg.rpm.prefix" value="${one.cluster.name}.pkg.rpm.prefix"/>
+    
+    <echo file="${nb.build.dir}/rpms/${pkg.rpm.name}.spec">
+%define global_product_version ${pkg.version}
+%define global_product_release 00
+%define _prefix ${pkg.rpm.prefix}
+Version: %{global_product_version}
+Release: %{global_product_release}
+Group: ${pkg.rpm.group}
+Copyright: ${pkg.rpm.copyright}
+Vendor: ${pkg.vendor}
+URL: ${pkg.rpm.url}
+Prefix: %_prefix
+AutoReqProv: no
+Name: ${pkg.rpm.name}
+Summary: ${pkg.name}
+%description 
+${pkg.desc}
+
+%files
+
+%erpm_map ${pkg.rpm.map} nb_destdir
+
+%dir ${pkg.rpm.map}
+
+${pkg.rpm.map}/${one.cluster.dir}</echo>
+  </target>
+
+  <target name="create-svr4s-proto">
+    <mkdir dir="${nb.build.dir}/rpms"/>
+    <repeat target="create-one-svr4-proto" name="one.cluster.name" values="${clusters.list}" /> 
+  </target>
+
+  <target name="create-one-svr4-proto">
+    <taskdef name="setcluster" classname="org.netbeans.nbbuild.SetCluster" classpath="${nbantext.jar}"/>
+    <loadproperties srcFile="cluster.properties" />
+    <loadproperties srcFile="cluster-description.properties" />
+    <setcluster cluster="${one.cluster.name}" name="one.cluster.dir" />
+    <mkdir dir="${nb.build.dir}/svr4s"/>
+    
+    <resolve name="pkg.name" value="${one.cluster.name}.pkg.name"/>
+    <resolve name="pkg.version" value="${one.cluster.name}.pkg.version"/>
+    <resolve name="pkg.desc" value="${one.cluster.name}.pkg.desc"/>
+    <resolve name="pkg.vendor" value="${one.cluster.name}.pkg.vendor"/>
+    <resolve name="pkg.email" value="${one.cluster.name}.pkg.email"/>
+    <resolve name="pkg.svr4.pkg" value="${one.cluster.name}.pkg.svr4.pkg"/>
+    <resolve name="pkg.svr4.maxinst" value="${one.cluster.name}.pkg.svr4.maxinst"/>
+    <resolve name="pkg.svr4.sunw_pkgvers" value="${one.cluster.name}.pkg.svr4.sunw_pkgvers"/>
+    <resolve name="pkg.svr4.hotline" value="${one.cluster.name}.pkg.svr4.hotline"/>
+    <resolve name="pkg.svr4.classes" value="${one.cluster.name}.pkg.svr4.classes"/>
+    <resolve name="pkg.svr4.basedir" value="${one.cluster.name}.pkg.svr4.basedir"/>
+    <resolve name="pkg.svr4.pkginst" value="${one.cluster.name}.pkg.svr4.pkginst"/>
+    <resolve name="pkg.svr4.category" value="${one.cluster.name}.pkg.svr4.category"/>
+<echo file="${nb.build.dir}/svr4s/${pkg.svr4.pkg}.spec">
+PKG=${pkg.svr4.pkg}
+NAME=${pkg.name}
+ARCH=sparc
+VERSION=${pkg.version}
+MAXINST=${pkg.svr4.maxinst}
+CATEGORY=${pkg.svr4.category}
+SUNW_PKGVERS=${pkg.svr4.sunw_pkgvers}
+DESC=${pkg.desc}
+VENDOR=${pkg.vendor}
+HOTLINE=${pkg.svr4.hotline}
+EMAIL=${pkg.email}
+CLASSES=${pkg.svr4.classes}
+BASEDIR=${pkg.svr4.basedir}
+PKGINST=${pkg.svr4.pkginst}</echo>
+  </target>
+    
+    <target name="-testuserdir-delete-init" depends="-load-build-properties">
+      <property name="test.user.dir.lock" location="${test.user.dir}/lock"/>
+      <available property="app.running" file="${test.user.dir.lock}"/>
+    </target>
+    <target name="-testuserdir-delete-ok" depends="-testuserdir-delete-init" unless="app.running">
+      <delete dir="${test.user.dir}"/>
+    </target>
+    <target name="-testuserdir-delete-fail" depends="-testuserdir-delete-init" if="app.running">
+      <!-- #66799: best to warn about this condition... -->
+      <fail>Will not delete ${test.user.dir} because ${test.user.dir.lock} still exists; kill any running process and delete lock file if necessary</fail>
+    </target>
+  <target name="testuserdir-delete" depends="-testuserdir-delete-ok,-testuserdir-delete-fail" description="Clean temporary testing user directory."/>
+
+  <target name="check-for-build"  >
+    <available property="have-build" file="${netbeans.dest.dir}/bin/netbeans"/>
+  </target>
+  <target name="maybe-build-nozip" depends="check-for-build" unless="have-build">
+    <ant dir="${basedir}" target="build-nozip"/>
+  </target>
+
+  <target name="tryme-setup-debug-args" if="debug.port" >
+    <property name="debug.pause" value="y" />
+    <property name="debug.server" value="y" />
+    <property name="tryme.debug.args" value="-J-agentlib:jdwp=transport=dt_socket,suspend=${debug.pause},server=${debug.server},address=${debug.port}" />
+  </target>
+          
+  <target name="tryme-debug" depends="-jdk-presetdef-nbjpdastart" description="Start IDE in debugger. May only be called from within IDE.">
+    <echo>Searching for JARs in ${netbeans.dest.dir}, this may take a moment...</echo>
+    <nbjpdastart name="NetBeans" addressproperty="debug.port" transport="dt_socket">
+      <classpath>
+        <fileset dir="${netbeans.dest.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+    </nbjpdastart>
+    <property name="debug.server" value="n"/>
+    <antcall target="tryme"/>
+  </target>
+
+  <target name="-profile-check" if="netbeans.home">
+      <condition property="profiler.configured">
+          <or>
+              <contains string="${run.args.ide}" substring="-agentpath:" casesensitive="true"/>
+              <contains string="${run.args.ide}" substring="-javaagent:" casesensitive="true"/>
+          </or>
+      </condition>
+  </target>
+  
+  <target name="-tryme-profile-pre72" depends="-jdk-presetdef-nbprofiledirect" if="profiler.info.jvmargs.agent" description="Start IDE in profiler (pre72 compatibility mode). May only be called from within IDE.">
+    <property name="profiler.roots.path" value="profiler.roots.all" />
+    <fileset id="profiler.roots.all" dir="${netbeans.dest.dir}">
+        <include name="**/*.jar"/>
+    </fileset>
+    <nbprofiledirect 
+        jvmargsprefix="-J" 
+        jvmargsproperty="profiler.jvmargs" 
+        mainclass="org.netbeans.Main"
+    >
+      <classpath>
+        <fileset dir="${netbeans.dest.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+      </classpath>
+      <rootspath>
+          <fileset refid="${profiler.roots.path}" />
+      </rootspath>
+    </nbprofiledirect>
+  </target>
+  
+  <target name="tryme-profile" depends="-profile-check,-tryme-profile-pre72" if="profiler.configured" unless="profiler.info.jvmargs.agent" description="Start IDE in profiler. May only be called from within IDE.">
+    <startprofiler/>
+    <property name="tryme.debug.args" value="-J-Dorg.osgi.framework.bootdelegation=org.netbeans.lib.profiler,org.netbeans.lib.profiler.*" />
+    <antcall target="tryme"/>
+  </target>
+  
+  <target name="tryme" depends="-load-build-properties,tryme-setup-debug-args,-jdk-init"
+          description="Try running the IDE interactively.
+It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode" 
+   >
+    <script language="javascript">
+        v = ''
+        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
+        while (i.hasNext()) {
+            e = i.next()
+            if (e.getKey().startsWith('tryme.arg.')) {
+                v += ' ' + e.getValue()
+            }
+        }
+        project.setNewProperty('tryme.args', v)
+    </script>
+    <property name="tryme.jdkhome" value="${nbjdk.home}"/>
+    <property name="tryme.debug.args" value="" />
+    <property environment="env"/>
+    <condition property="run.env.display" value="${env.NBDISPLAY}" else="${env.DISPLAY}">
+	<isset property="env.NBDISPLAY"/>
+    </condition>
+    
+    <!-- architecture of jvm on which app will run -->
+    <condition property="jvm.arch.string" value="64" else="">
+      <available file="${nbjdk.home}\jre\lib\amd64" />
+    </condition>
+
+    <condition property="tryme.launcher.prefix" value="${netbeans.dest.dir}/bin/netbeans" else="${netbeans.dest.dir}/platform/lib/nbexec">
+      <available file="${netbeans.dest.dir}/nb/.lastModified" />
+    </condition>
+    <property name="run.args.ide" value=""/>
+    <exec osfamily="windows" executable="${tryme.launcher.prefix}${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
+      <arg value="--jdkhome"/>
+      <arg file="${tryme.jdkhome}"/>
+      <arg value="--userdir"/>
+      <arg file="${test.user.dir}"/>
+      <arg line="${tryme.args}"/>
+      <arg line="${tryme.debug.args}" />
+      <arg line="${run.args.ide}"/>
+    </exec>
+    <exec osfamily="unix" executable="sh" failonerror="yes" dir="${java.io.tmpdir}">
+      <arg value="${tryme.launcher.prefix}"/>
+      <arg value="--jdkhome"/>
+      <arg file="${tryme.jdkhome}"/>
+      <arg value="--userdir"/>
+      <arg file="${test.user.dir}"/>
+      <arg line="${tryme.args}"/>
+      <arg line="${tryme.debug.args}" />
+      <arg line="${run.args.ide}"/>
+      <env key="DISPLAY" value="${run.env.display}"/>
+    </exec>
+  </target>
+
+  <target name="move-ide-nbms" depends="init">
+    <property name="nbms.source.location" location="nbms"/>
+    <property name="nbms.target.location" location="ide_nbms"/>
+    <mkdir dir="${nbms.target.location}"/>
+
+    <resolvelist name="nb.clusters.names" list="${clusters.config.full.list}">
+        <mapper type="glob" from="*" to="*.dir"/>
+    </resolvelist>
+    <echo message="dirs: ${nb.clusters.names}"/>
+
+    <repeat target="-move-cluster-nbms" name="nb.cluster.name" values="${nb.clusters.names}"/>
+  </target>
+
+  <target name="-move-cluster-nbms">
+    <echo message="one cluster: ${nb.cluster.name}"/>
+    <echo message="source: ${nbms.target.location}"/>
+    <move todir="${nbms.target.location}">
+      <fileset dir="${nbms.source.location}">
+         <include name="${nb.cluster.name}/"/>
+      </fileset>
+    </move>
+  </target>
+  
+  <target name="all-l10n-kits" depends="l10n-kit">
+  </target>
+  
+  <target name="l10n-kit" depends="bootstrap,set-buildnumber,init-tasks" description="Builds the L10N kit">
+    <taskdef name="l10n" classname="org.netbeans.nbbuild.L10nTask"
+             classpath="${nbantext.jar}"/>
+    <property name="l10n.kit" location="${nb.build.dir}/l10n.zip"/>
+    <property name="nbms.location" location="nbms"/>
+    <property name="locales" value=""/>
+    <l10n nbmsdir="${nbms.location}" tmpdir="tmp" patternsFile="l10n.patterns" kitFile="${l10n.kit}" locales="${locales}"/>
+  </target>
+  
+  <target name="hg-l10n-kit">
+    <property name="l10n.kit" location="${nb.build.dir}/l10n.zip"/>
+    <zip destfile="${l10n.kit}">
+        <fileset dir="${nb_all}" includesfile="${nb_all}/installer/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/nbi/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/ide.branding/l10n.list"/>
+    </zip>
+  </target>
+
+    <target name="clean-untracked-files" depends="bootstrap" description="Removes files from clusters which are not listed as belonging to any NBM.">
+        <taskdef name="ducf" classname="org.netbeans.nbbuild.DeleteUnreferencedClusterFiles" classpath="${nbantext.jar}"/>
+        <ducf report="${nb.build.dir}/ducf.xml">
+            <clusters dir="${netbeans.dest.dir}">
+                <include name="*"/>
+            </clusters>
+            <selection excludes="build_info"/>
+        </ducf>
+    </target>
+    
+    <target name="-init-clean">
+        <property name="nbbuild.warn.missing.autodeps" value="verbose"/>
+    </target>
+    
+  <target name="-cleanall" depends="init-module-list,init-tasks">
+    <taskdef name="cleanall" classname="org.netbeans.nbbuild.CleanAll" classpath="${nbantext.jar}"/>
+    <cleanall topdir=".." 
+              modules="${allmodules}" 
+              targetname="clean"
+              resolvedependencies="${resolve.clean.dependencies}"
+              deptargetprefix="all-"
+              failonerror="${stop.when.clean.error}" />
+  </target>
+
+  <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
+      <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
+      <property name="vanilla.javac.exists" value="true"/>
+      <try-else first="-hg-clean" second="-real-clean"/>
+  </target>
+
+  <target name="-clean-external">
+    <subant target="clean">
+      <fileset dir="..">
+        <include name="*/external/build.xml"/>
+        <include name="contrib/*/external/build.xml"/>
+        <include name="otherlicenses/*/external/build.xml"/>
+      </fileset>
+    </subant>
+    <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" clean="true">
+        <manifest dir="${nb_all}">
+            <include name="*/external/binaries-list"/>
+            <include name="contrib/*/external/binaries-list"/>
+            <include name="otherlicenses/*/external/binaries-list"/>
+        </manifest>
+    </downloadbinaries>
+  </target>
+
+  <target name="-real-clean" depends="-cleanall,localclean,-clean-external">
+    <echo message="Cleaning old builds..."/>
+    <delete>
+      <fileset dir=".">
+        <include name="NetBeans-*.log"/>
+        <include name="NetBeans-*.zip"/>
+      </fileset>
+    </delete>
+    <echo message="Cleaning scan cache..."/>
+    <delete>
+        <fileset dir="${java.io.tmpdir}" includes="nb-scan-cache-*-standard.ser,nb-scan-cache-*-full.ser"/>
+    </delete>
+    <!-- This step must be last (tries to delete nbantext.jar): -->
+    <delete dir="${nb.build.dir}" quiet="true"/>
+  </target>
+
+  <target name="clean-cluster-flags" unless="do-not-rebuild-clusters">
+    <mkdir dir="${netbeans.dest.dir}"/>
+    <delete includeEmptyDirs="true">
+      <fileset dir="${netbeans.dest.dir}">
+        <include name="*.built"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="localclean" depends="clean-cluster-flags">
+    <delete dir="${test.user.dir}"/>
+    <delete includeEmptyDirs="true">
+      <fileset dir="${nb.build.dir}" erroronmissingdir="false" defaultexcludes="false">
+        <exclude name="nbantext.jar"/>
+      </fileset>
+    </delete>
+    <delete file="moduledefs-tmp.properties"/>
+    <delete dir="nbms" />
+    <delete dir="${netbeans.dest.dir}"/>
+  </target>
+
+  <target name="-hg-clean">
+    <fail message="Not running in a Mercurial checkout.">
+      <condition>
+        <not>
+          <available type="dir" file="../.hg"/>
+        </not>
+      </condition>
+    </fail>
+    <taskdef name="hgexec" classname="org.netbeans.nbbuild.HgExec" classpath="${nbantext.jar}"/>
+    <antcall target="-do-hg-clean">
+      <!-- <include name="."/> does not seem to work in a dirset -->
+      <param name="basedir" location=".."/>
+    </antcall>
+    <subant target="-do-hg-clean" genericantfile="build.xml">
+      <dirset dir="..">
+        <include name="contrib"/>
+        <include name="otherlicenses"/>
+      </dirset>
+    </subant>
+    <delete>
+      <fileset dir="nbproject">
+        <include name="private/scan-cache-*"/>
+      </fileset>
+    </delete>
+  </target>
+  <target name="-do-hg-clean">
+    <echo>Cleaning untracked files in ${basedir}...</echo>
+    <hgexec failonerror="yes" outputproperty="hg.unknown.files">
+      <arg value="--cwd"/>
+      <arg file="."/>
+      <arg value="--config"/>
+      <arg value="defaults.status="/>
+      <arg value="status"/>
+      <arg value="--unknown"/>
+      <arg value="--no-status"/>
+    </hgexec>
+    <fail message="Will not run clean; checkout contains unknown and not ignored files (did you forget to hg add?):&#10;${hg.unknown.files}">
+        <condition>
+            <not>
+                <equals arg1="${hg.unknown.files}" arg2=""/>
+            </not>
+        </condition>
+    </fail>
+    <hgexec failonerror="yes">
+      <arg value="--cwd"/>
+      <arg file="."/>
+      <arg value="--config"/>
+      <arg value="extensions.purge="/>
+      <arg value="clean"/>
+      <arg value="--all"/>
+      <arg value="--exclude"/>
+      <!-- Do not use **/nbproject/private/ as this will match some test/{results,work} dirs: -->
+      <arg value="glob:{*/nbproject/private/**,*/*/nbproject/private/**,**/user.build.properties}"/>
+    </hgexec>
+  </target>
+
+  <target name="rebuild-cluster" depends="init" description="Builds only one cluster with dependencies ; takes e.g. '-Drebuild.cluster.name=nb.cluster.java' as parameter">
+    <delete file="netbeans/${rebuild.cluster.name}.built" failonerror="false"/>
+    <condition property="rebuild.cluster.name" value="nb.cluster.${name}">
+        <isset property="name"/>
+    </condition>
+    <fail unless="rebuild.cluster.name" message="You need to specify e.g.: -Dname=java"/>
+    <antcall target="build-one-cluster">
+      <param name="one.cluster.name" value="${rebuild.cluster.name}"/>
+    </antcall>
+  </target>
+
+    <target name="-localtest-macrodef">
+        <macrodef name="localtest">
+            <element name="test" implicit="true"/>
+            <sequential>
+                <mkdir dir="${nb.build.dir}/test/unit/classes"/>
+                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.7">
+                    <classpath path="${test.unit.cp}"/>
+                    <compilerarg line="-Xlint -Xlint:-serial"/>
+                </javac>
+                <copy todir="${nb.build.dir}/test/unit/classes">
+                    <fileset dir="test/unit/src" excludes="**/*.java"/>
+                </copy>
+                <mkdir dir="${nb.build.dir}/test/unit/results"/>
+                <property name="junit.vm.args" value=""/>
+                <junit showoutput="true" fork="true" tempdir="${nb.build.dir}/test/unit/results" filtertrace="false" includeantruntime="false">
+                    <test/>
+                    <classpath>
+                        <pathelement path="${test.unit.cp}"/>
+                        <pathelement location="${nb.build.dir}/test/unit/classes"/>
+                    </classpath>
+                    <sysproperty key="nb_all" file=".."/>
+                    <sysproperty key="netbeans.dest.dir.work" file="${netbeans.dest.dir}"/>
+                    <sysproperty key="nbjunit.workdir" file="${nb.build.dir}/test/unit/work"/>
+                    <syspropertyset>
+                        <propertyref prefix="test-unit-sys-prop."/>
+                        <mapper type="glob" from="test-unit-sys-prop.*" to="*"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${junit.vm.args}"/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="localtest" depends="bootstrap,-localtest-macrodef">
+        <property name="includes" value="**/*Test.class"/>
+        <localtest>
+            <batchtest todir="${nb.build.dir}/test/unit/results">
+                <fileset dir="${nb.build.dir}/test/unit/classes" includes="${includes}"/>
+            </batchtest>
+        </localtest>
+    </target>
+    <target name="localtest-single" depends="bootstrap,-localtest-macrodef,-localtest-single-nomethod,-localtest-single-method"/>
+    <target name="-localtest-single-nomethod" unless="method">
+        <localtest>
+            <test name="${test.class}" todir="${nb.build.dir}/test/unit/results"/>
+        </localtest>
+    </target>
+    <target name="-localtest-single-method" if="method">
+        <localtest>
+            <test name="${test.class}" methods="${method}" todir="${nb.build.dir}/test/unit/results"/>
+        </localtest>
+    </target>
+    <target name="localtest-single-nb-debug" depends="bootstrap,-jdk-presetdef-nbjpdastart">
+        <nbjpdastart addressproperty="jpda.address" name="nbbuild" transport="dt_socket">
+            <classpath>
+                <pathelement path="${test.unit.cp}"/>
+                <pathelement location="${nb.build.dir}/test/unit/classes"/>
+            </classpath>
+        </nbjpdastart>
+        <antcall target="localtest-single">
+            <param name="junit.vm.args" value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
+        </antcall>
+    </target>
+
+  <target name="clean-cluster" description="Clean only one cluster - takes clean.cluster.name as parameters">
+    <fail message="specify -Dclean.cluster.name= property" unless="clean.cluster.name"/>
+    <resolve name="modules.to.clean" value="${clean.cluster.name}"/>
+    <antcall target="cleanall" inheritAll="false">
+      <param name="allmodules" value="${modules.to.clean}"/>
+    </antcall>
+    <delete file="netbeans/${clean.cluster.name}.built" failonerror="false"/>
+  </target>
+
+
+<!-- This section contains properties and targets used to build -->
+<!-- Solaris packages.                                          -->
+
+  <property name="solpkg-pkgproto" value="pkgproto"/>
+  <property name="solpkg-pkgmk" value="pkgmk"/>
+  <property name="solpkg-proto-file" value="prototype"/>
+  <property name="solpkg-actual-dir" value="to-be-specified"/>
+  <property name="solpkg-pkg-dir" value="to-be-specified"/>
+  <property name="solpkg-pkg-dest-dir" value="to-be-specified"/>
+
+  <!-- You can run this target to create the prototype file and create -->
+  <!-- the package, or if you need to modify the prototype file before -->
+  <!-- building the package, you can run the two subtargets            -->
+  <!-- separately.                                                     -->
+  <target name="solpkg-build" depends="solpkg-pkgproto,solpkg-pkgmk"
+          description="Generate a prototype file and create a Solaris package."/>
+
+  <!-- This creates the pkg prototype file for a given directory and -->
+  <!-- its files.                                                    -->
+  <target name="solpkg-pkgproto"
+          description="Generate a prototype file.">
+    <exec executable="rm" failonerror="yes">
+      <arg value="-rf"/>
+      <arg value="${solpkg-proto-file}"/>
+    </exec>
+    <exec executable="${solpkg-pkgproto}" output="${solpkg-proto-file}" 
+          failonerror="yes">
+      <arg value="${solpkg-actual-dir}=${solpkg-pkg-dir}"/>
+    </exec>
+  </target>
+
+  <!-- This creates the Solaris pkg for a given prototype file, pkginfo -->
+  <!-- file, and directory.                                             -->
+  <target name="solpkg-pkgmk"
+          description="Create a Solaris package.">
+    <exec executable="${solpkg-pkgmk}" failonerror="yes">
+      <arg value="-o"/>
+      <arg value="-f"/>
+      <arg value="${solpkg-proto-file}"/>
+      <arg value="-r"/>
+      <arg value="${solpkg-actual-dir}"/>
+      <arg value="-d"/>
+      <arg value="${solpkg-pkg-dest-dir}"/>
+    </exec>
+  </target>
+
+<!-- End of Solaris package section. -->
+
+
+<!-- Localized builds -->
+  <target name="all-dutch" depends="set-dutch-locale,all"/>
+  <target name="all-russian" depends="set-russian-locale,all"/>
+  <target name="all-french" depends="set-french-locale,all"/>
+  <target name="all-ja-zh" depends="set-ja-zh_CN-locales,all"/>
+  
+  <target name="set-ja-zh_CN-locales">
+        <property name="locales" value="ja,zh_CN"/>
+        <property name="locjar.locales" value="${locales}"/>
+        <property name="locmakenbm.locales"   value="${locales}"/>
+        <property name="locjhindexer.locales" value="${locales}"/>
+        <property name="localized.build.locales" value="${locales}"/>
+  </target>
+  
+  <target name="set-dutch-locale">
+        <property name="locales" value="nl"/>
+        <property name="locjar.locales" value="${locales}"/>
+        <property name="locmakenbm.locales"   value="${locales}"/>
+        <property name="locjhindexer.locales" value="${locales}"/>
+        <property name="localized.build.locales" value="${locales}"/>
+  </target>
+
+  <target name="set-russian-locale">
+        <property name="locales" value="ru"/>
+        <property name="locjar.locales" value="${locales}"/>
+        <property name="locmakenbm.locales"   value="${locales}"/>
+        <property name="locjhindexer.locales" value="${locales}"/>
+        <property name="localized.build.locales" value="${locales}"/>
+  </target>
+
+  <target name="set-french-locale">
+        <property name="locales" value="fr"/>
+        <property name="locjar.locales" value="${locales}"/>
+        <property name="locmakenbm.locales"   value="${locales}"/>
+        <property name="locjhindexer.locales" value="${locales}"/>
+        <property name="localized.build.locales" value="${locales}"/>
+  </target>
+  
+<!-- end of localized builds -->
+
+
+  <target name="print-selected-modules" depends="init-module-list" description="Prints list of modules to build in selected cluster config.">
+    <echo message="modules=${allmodules}"/>
+  </target>
+
+  <target name="check-commit-validation">
+    <condition property="run.validation" >
+        <and>
+          <or>
+            <not>
+              <isset property="nb.run.validation"/>
+            </not>
+            <istrue value="${nb.run.validation}"/>
+          </or>
+        </and>
+    </condition>
+  </target>
+  
+  <target 
+    name="commit-validation" 
+    depends="commitValidation,no-commit-validation" 
+    description="Runs tests to validate IDE before commit."
+  />
+
+  <target name="all-commitValidation" description="dummy target for build error recognition facility"/>
+  
+  <!-- keep this target name at least for a while for backward compat -jglick -->
+  <target name="commitValidation" depends="all-commitValidation,check-commit-validation" if="run.validation">
+    <property name="build.test.results.dir" location="${nb.build.dir}/test/commit-validation/results"/>
+    <property name="test.type" value="test"/>
+    <delete dir="${build.test.results.dir}"/>
+    <mkdir dir="${build.test.results.dir}"/>
+
+    <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
+    <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list" path="modules.fullpath" dir="${nb_all}" ignoremissing="true">
+       <mapper type="regexp" from="(.*)" to="validation.\1"/>
+    </resolvelist>
+    <echo message="Run commit validation on: ${nb.clusters.validation.list}"/>
+    <subant target="${test.type}" >
+        <property name="test.config" value="commit"/>
+        <property name="continue.after.failing.tests" value="true"/>
+        <property name="build.test.unit.results.dir" location="${build.test.results.dir}"/>
+        <property name="build.test.qa-functional.results.dir" location="${build.test.results.dir}"/>
+        <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+        <property name="test-qa-functional-sys-prop.ignore.random.failures" value="true"/>
+        <dirset dir=".." includes="${nb.clusters.validation.list}"/>
+    </subant>
+    
+    <pathconvert property="failed.tests" pathsep="${line.separator}">
+        <fileset dir="${build.test.results.dir}">
+            <include name="TEST-*.xml"/>
+            <not>
+                <and>
+                    <contains text='errors="0"'/>
+                    <contains text='failures="0"'/>
+                </and>
+            </not>
+        </fileset>
+    </pathconvert>
+    <junitreport todir="${build.test.results.dir}">
+            <fileset dir="${build.test.results.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${build.test.results.dir}/html"/>
+    </junitreport>
+    <echo message="Report generated to ${build.test.results.dir}/html/index.html"/>
+    <fail message="There were failed tests:${line.separator}${failed.tests} ${line.separator}${line.separator}Test report html: ${build.test.results.dir}/html/index.html">
+        <condition>
+            <not>
+                <or>
+                    <equals arg1="${failed.tests}" arg2=""/>
+                    <equals arg1="${continue.after.failing.tests}" arg2="true"/>
+                </or>
+            </not>
+        </condition>
+    </fail>
+  </target>
+
+  <target name="no-commit-validation" depends="check-commit-validation" unless="run.validation">
+    <echo>
+        *** WARNING ***
+        You may not commit any changes into the repository without running the commit validation test suite.
+        For more information: http://www.netbeans.org/community/guidelines/commit.html
+    </echo>
+  </target>
+
+    <target name="verify-all-libs-and-licenses" depends="bootstrap,download-all-extbins" description="Verify the contents of third-party libraries and licenses.">
+        <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
+    </target>
+
+    <target name="verify-libs-and-licenses" depends="bootstrap,download-selected-extbins" description="Verify the contents of third-party libraries and licenses in the selected configuration.">
+        <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
+    </target>
+
+    <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
+        
+        <delete dir="${netbeans.dest.dir}/licenses" />
+        <mkdir dir="${netbeans.dest.dir}/licenses" />
+
+        <createlicensesummary licenseStub="${nb_all}/LICENSE" 
+                              noticeStub="notice-stub.txt" 
+                              report="${nb.build.dir}/createlicensesummary.xml" 
+                              nball=".." 
+                              build="${netbeans.dest.dir}" 
+                              license="${netbeans.dest.dir}/LICENSE"
+                              licenseTargetDir="${netbeans.dest.dir}/licenses"
+                              notice="${nb.build.dir}/notice-temp"
+                              binary="true"
+                              excludes="${nb-extra-files}"
+        />
+        
+        <concat destfile="${netbeans.dest.dir}/NOTICE">
+          <fileset file="${nb.build.dir}/notice-temp" />
+          <fileset dir="${nb_all}"
+                   includes="*/notice.txt" />
+          <filterchain>
+              <tokenfilter>
+                  <filetokenizer />
+                  <replaceregex pattern="(\r?\n)(\r?\n)(\r?\n)+"
+                                replace="\1\1\1"
+                                flags="g" />
+             </tokenfilter>
+          </filterchain>
+        </concat>
+        <dirset id="source.dirset" dir="${nb_all}"
+                includes="${allmodules}"
+        />
+        <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+        <createdependencies refid="source.dirset"  dependencies="${netbeans.dest.dir}/DEPENDENCIES"/>
+    </target>
+
+    <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
+    </target>
+
+  <target name="build-source-config"
+    depends="init,set-buildnumber,-check-nb-cluster"
+    description="Packages sources needed to compile one cluster.config">
+    <property name="buildnum" value="${buildnumber}"/>
+    <echo message="Packaging sources of ${cluster.config} modules"/>
+
+    <resolve name="harness-modules" value="nb.cluster.harness"/>
+    
+    <mkdir dir="${nb.build.dir}"/>
+    <condition property="build.source.config.add.ide" else="" value=",nb/ide.launcher">
+        <isset property="has.nb.cluster" />
+    </condition>
+    <dirset id="source.dirset" dir="${nb_all}"
+            includes="${allmodules},${harness-modules},nbbuild${build.source.config.add.ide},nbi,libs.antlr3.devel,libs.junit4"
+            excludes="nbi/engine/lib,nbi/infra/build/jvm,nbi/infra/sandbox,nbi/infra/server,nbi/infra/utils"
+    />
+    <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
+      <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
+    </pathconvert>
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
+        <manifest dir="${nb_all}">
+            <include name="libs.antlr3.devel/external/binaries-list"/>
+        </manifest>
+    </downloadbinaries>
+    <createlicensesummary licenseStub="${nb_all}/LICENSE"
+                          noticeStub="notice-stub.txt"
+                          report="${nb.build.dir}/createlicensesummary.xml"
+                          nball=".."
+                          build="${netbeans.build.dir}"
+                          license="${nb.build.dir}/LICENSE"
+                          licenseTargetDir="${nb.build.dir}/licenses"
+                          notice="${nb.build.dir}/NOTICE"
+                          binary="false"
+    />
+    <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+    <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
+    <concat destfile="${nb.build.dir}/cluster.properties">
+        <fileset file="${nb_all}/nbbuild/cluster.properties" />
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="cluster.config=.*" replace="cluster.config=${cluster.config}" />
+            </tokenfilter>
+        </filterchain>
+    </concat>
+    <condition property="source.zip.readme" else="${nb_all}/README.md"
+                                            value="${nb_all}/README.md">
+        <isset property="has.nb.cluster" />
+    </condition>
+    <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
+      <zipfileset dir="${nb_all}" includes="${source.dirs}">
+          <!--exclude all build directories and external jars/zips in the top level directory:-->
+          <exclude name="*/build/"/>
+          <exclude name="*/external/*.jar"/>
+          <exclude name="*/external/*.zip"/>
+          <!--exclude all build directories and external jars/zips in the cluster directories,
+              but keep nbi/infra/build, which is a directory with sources:-->
+          <exclude name="[^n]*/*/build/"/>
+          <exclude name="nb/*/build/"/>
+          <exclude name="*/*/external/*.jar"/>
+          <exclude name="*/*/external/*.zip"/>
+          <exclude name="nbbuild/netbeans/**"/>
+          <exclude name="nbbuild/cluster.properties" />
+      </zipfileset>
+      <zipfileset dir="${nb_all}">
+          <include name="build.xml"/>
+      </zipfileset>
+      <zipfileset file="${nb.build.dir}/cluster.properties" fullpath="nbbuild/cluster.properties" />
+      <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
+      <zipfileset file="${nb.build.dir}/NOTICE" />
+      <zipfileset file="${nb.build.dir}/LICENSE" />
+      <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
+      <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
+    </zip>
+  </target>
+
+  <target name="generate-golden-files-init" depends="init,bootstrap" >
+    <property name="generated.files.dir" location="${nb.build.dir}/generated" />
+    <mkdir dir="${generated.files.dir}" />
+  </target>
+  <target name="generate-golden-files" depends="generate-golden-files-init" description="Generate summaries of module dependencies.">
+    <property name="deps.max.friends" value="20"/>
+    
+    <taskdef name="deps" classname="org.netbeans.nbbuild.ModuleDependencies" classpath="${nbantext.jar}"/>
+    
+    <deps>
+      <inputpattern dir="${netbeans.dest.dir}"/>
+      <output type="group-dependencies" file="${generated.files.dir}/cluster-deps.txt" />
+      <output type="group-implementation-dependencies" file="${generated.files.dir}/cluster-impl-deps.txt" />
+      <output type="modules" file="${generated.files.dir}/modules.txt" />
+      <output type="disabled-autoloads" file="${generated.files.dir}/disabled-autoloads.txt"/>
+      <output type="dependencies" file="${generated.files.dir}/deps.txt" />
+      <output type="implementation-dependencies" file="${generated.files.dir}/impl-deps.txt" />
+      <output type="public-packages" file="${generated.files.dir}/public-packages.txt" />
+      <output type="shared-packages" file="${generated.files.dir}/shared-packages.txt" />
+      <output type="friend-packages" file="${generated.files.dir}/friend-packages.txt" />
+      <output type="group-friend-packages" file="${generated.files.dir}/group-friend-packages.txt" />
+      <output type="kits" file="${generated.files.dir}/kits.txt" />
+      <output type="kit-dependencies" file="${generated.files.dir}/kit-deps.txt" />
+      <output type="plugins" file="${generated.files.dir}/plugins.txt"/>
+      <output type="reverse-dependencies" file="${generated.files.dir}/reverse-deps.txt"/>
+    </deps>
+
+    <taskdef name="test-deps" classname="org.netbeans.nbbuild.ModuleTestDependencies" classpath="${nbantext.jar}"/>
+    <test-deps output="${generated.files.dir}/test-deps.txt" reverseOutput="${generated.files.dir}/reverse-test-deps.txt"/>
+  </target>
+  
+  <target name="generate-files-layout" depends="generate-golden-files-init" description="Generate summary of installed files.">
+    <taskdef name="generate-files-layout" classname="org.netbeans.nbbuild.GenerateFilesLayout" classpath="${nbantext.jar}"/>
+    <property name="check.files.layout.generated" location="${generated.files.dir}/files-layout.txt" />
+  
+    <property name="check-file-layout-root" location="${netbeans.dest.dir}" />
+    <generate-files-layout output="${check.files.layout.generated}">
+      <files dir="${check-file-layout-root}" casesensitive="yes" >
+        <exclude name="bin/"/>
+        <exclude name="etc/"/>
+        <exclude name="mobility*/emulators-inst/wtk22_*.zip"/> <!-- XXX #110820 -->
+        <exclude name="*/.lastModified"/>
+      </files>
+    </generate-files-layout>
+  </target>
+
+  <target name="index-layer-paths" depends="generate-golden-files-init" description="Create index of layer paths.">
+      <property name="build" location="netbeans"/>
+      <fail message="You must create a build first.">
+          <condition>
+              <not>
+                  <available file="${build}" type="dir"/>
+              </not>
+          </condition>
+      </fail>
+      <taskdef name="layerindex" classname="org.netbeans.nbbuild.LayerIndex" classpath="${nbantext.jar}"/>
+      <layerindex output="${generated.files.dir}/layers.txt" serviceoutput="${generated.files.dir}/services.txt">
+          <modules dir="${build}">
+              <include name="**/*.jar"/>
+          </modules>
+      </layerindex>
+  </target>
+
+  <target name="summarize-hgmail" depends="generate-golden-files-init" description="Create summary of .hgmail coverage.">
+      <taskdef name="summarize-hgmail" classname="org.netbeans.nbbuild.SummarizeHgmail" classpath="${nbantext.jar}"/>
+      <summarize-hgmail output="${generated.files.dir}/hgmail-summary.txt">
+          <hgmails dir="${nb_all}">
+              <include name=".hgmail"/>
+              <include name="*/.hgmail"/>
+          </hgmails>
+      </summarize-hgmail>
+  </target>
+
+  <target name="display-l10n-list-matches" description="Show which files are actually matched by an l10n.list in some module.">
+    <property name="nbroot" location=".."/>
+    <input addproperty="module">Select a top-level module (e.g. "java") to display results for:</input>
+    <property name="listfile" location="${nbroot}/${module}/l10n.list"/>
+    <echo>${listfile}:1: Matches follow... (click on hyperlinks from IDE!)</echo>
+    <echo>(warning: 'exclude' directives not honored here yet)</echo><!-- XXX use filtersets or something to fix -->
+    <apply parallel="false" executable="sh">
+        <arg value="-c"/>
+        <arg value="echo $0:1"/>
+        <fileset dir="${nbroot}" includesfile="${listfile}"/>
+    </apply>
+  </target>
+  
+  <target name="increment-spec-versions" depends="bootstrap,init-module-list" description="Increment all standard module specification versions. Pass -Dbranch=true if not on the trunk.">
+    <property name="branch" value="false"/>
+    <taskdef name="incrspecvers" classname="org.netbeans.nbbuild.IncrementSpecificationVersions" classpath="${nbantext.jar}"/>
+    <incrspecvers nbroot=".." modules="${allmodules}" branch="${branch}"/>
+  </target>
+
+  <target name="init-test-dist" depends="init">
+      <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="test.modules.sorted" sorttests="true"/>
+  </target>
+  <target name="build-test-dist" depends="init-test-dist" description="Build test distribution">
+      <!-- if is 'false' it will ignore compilation error in subant  -->
+     <property name= "test.fail.on.error" value="true"/>
+      <subant-junit buildpath="${test.modules.sorted}" target="test-build" failonerror="${test.fail.on.error}" report="${nb.build.dir}/build-all-tests.xml"/>
+      <!-- adding performance tests to BTD -->
+      <!-- #178009: disabling; has various non-platform dependencies which break BTD in some cluster configs; anyway should be made a normal module!
+      <subant-junit buildpath="${nb_all}${file.separator}performance" target="test-build" failonerror="${test.fail.on.error}" report="${nb.build.dir}/build-performance-tests.xml"/>
+      -->
+      <!-- copy templates -->
+      <copy todir="${test.dist.dir}">
+          <fileset dir="testdist/release"/>
+      </copy>
+      <jar jarfile="${test.dist.dir}/tasks.jar">
+          <fileset dir="${build.ant.classes.dir}">
+              <include name="org/netbeans/nbbuild/testdist/"/>
+          </fileset>
+      </jar>
+      <zip basedir="${test.dist.dir}" destfile="${nb.build.dir}/testdist.zip"/>
+  </target>      
+
+  <target name="gen-sigtests" depends="init-module-list"
+    description="Generates snaphost of API of all modules"
+  >
+    <echo message="Generating signature files for ${cluster.config} modules"/>
+    <property name="sigtest.basedir" location="${nb.build.dir}/sigtest/snapshot"/>
+    <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/generate"/>
+    
+    <subant target="gen-sigtest" buildpath="${modules.fullpath}" failonerror="false">
+      <property name="sigtest.basedir" value="${sigtest.basedir}"/>
+      <property name="sigtest.output.dir" location="${sigtest.output.dir}"/>
+    </subant>
+  </target>
+
+  <target name="gen-sigtests-release" depends="init"
+    description="Generates signature files into stable API modules directories"
+  >
+    <echo message="Generating signature files into stable API modules directories"/>
+
+    <subant target="gen-sigtest" buildpath="${modules.fullpath}"/>
+  </target>
+  
+  <target name="check-sigtests-release" depends="init"
+    description="Checks signature files of stable API modules"
+  >
+    <echo message="Checking signature files of stable API modules"/>
+    
+    <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/check-release"/>
+    <property name="fail.on.error" value="true"/>
+    <delete dir="${sigtest.output.dir}"/>
+    <mkdir dir="${sigtest.output.dir}"/>
+    <subant target="check-sigtest" buildpath="${modules.fullpath}" failonerror="${fail.on.error}">
+        <property name="sigtest.output.dir" value="${sigtest.output.dir}"/>
+    </subant>
+  </target>
+
+  <target name="check-sigtests">
+    <echo message="Checking signature files for ${cluster.config} modules"/>
+    <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/check-snapshot"/>
+    <antcall target="-do-check-sigtests">
+        <param name="sigtest.check.type" value="strictcheck"/>
+        <param name="sigtest.output.dir" value="${sigtest.output.dir}"/>
+    </antcall>
+    <junitreport todir="${sigtest.output.dir}">
+        <fileset dir="${sigtest.output.dir}">
+            <include name="*.xml"/>
+        </fileset>
+        <report todir="${sigtest.output.dir}/html" format="frames"/>
+    </junitreport>
+    <echo message="Report generated to ${sigtest.output.dir}/html/index.html"/>
+  </target>
+
+  <target name="check-sigtests-version">
+    <echo message="Checking version of signature files for ${cluster.config} modules"/>
+    
+    <property name="sigtest.previous.url" value="http://deadlock.netbeans.org/job/nbms-and-javadoc/lastStableBuild/artifact/nbbuild/build/sigtest/snapshot/*zip*/snapshot.zip"/>
+    <property name="sigtest.prev.dir" location="${nb.build.dir}/sigtest/prev-snapshot"/>
+    <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/versioncheck"/>
+
+    <mkdir dir="${sigtest.prev.dir}"/>    
+    <get src="${sigtest.previous.url}" dest="${sigtest.prev.dir}/snapshot.zip"/>
+    <unzip src="${sigtest.prev.dir}/snapshot.zip" dest="${sigtest.prev.dir}">
+        <mapper type="flatten"/>
+    </unzip>
+    
+    <antcall target="-do-check-sigtests">
+        <param name="sigtest.check.type" value="versioncheck"/>
+        <param name="sigtest.basedir" location="${sigtest.prev.dir}"/>
+        <param name="sigtest.output.dir" value="${sigtest.output.dir}"/>
+    </antcall>
+    <junitreport todir="${sigtest.output.dir}">
+        <fileset dir="${sigtest.output.dir}">
+            <include name="*.xml"/>
+        </fileset>
+        <report todir="${sigtest.output.dir}/html" format="frames"/>
+    </junitreport>
+    <echo message="Report generated to ${sigtest.output.dir}/html/index.html"/>
+  </target>
+    
+  <target name="-do-check-sigtests" depends="init-module-list">
+    <fail unless="sigtest.check.type"/>
+    <fail unless="sigtest.output.dir"/>
+
+    <property name="sigtest.basedir" location="${nb.build.dir}/sigtest/snapshot"/>
+    <property name="sigtest.fail.on.error" value="false"/>
+    
+    <mkdir dir="${sigtest.basedir}"/>
+    <delete dir="${sigtest.output.dir}"/>
+    <mkdir dir="${sigtest.output.dir}"/>
+    <subant target="check-sigtest" buildpath="${modules.fullpath}" failonerror="${sigtest.fail.on.error}">
+        <property name="sigtest.output.dir" value="${sigtest.output.dir}"/>
+        <property name="sigtest.basedir" value="${sigtest.basedir}"/>
+    </subant>
+  </target>
+
+  <target name="findbugs-cluster" depends="init">
+    <echo message="Running findbugs for ${cluster.config} modules"/>
+    <subant target="findbugs" buildpath="${modules.fullpath}">
+        <property name="findbugs.continue.after.error" value="true"/>
+    </subant>
+  </target>
+
+  <target name="findbugs" depends="init" description="Runs findbugs target in modules specified by ${findbugs.modules}.">
+    <subant target="findbugs">
+       <property name="findbugs.continue.after.error" value="true"/>
+       <dirset dir=".." includes="${findbugs.modules}"/>
+    </subant>
+  </target>
+
+  
+  <target name="generate-uc-catalog" depends="bootstrap">
+    <taskdef name="makeupdatedesc"
+         classname="org.netbeans.nbbuild.MakeUpdateDesc"
+         classpath="${nbantext.jar}"/>
+      <property name="nbms.location" location="nbms"/>
+      <property name="catalog.file" location="${nbms.location}/updates.xml"/>
+      <property name="tasks.file" location="${catalog.file}/../tasks.jar"/>
+      <property name="catalog.base.url" value="."/>
+      <property name="use.license.url.in.catalog" value="true"/>
+      <property name="catalog.notification.message" value=""/>
+      <property name="catalog.notification.url"     value=""/>
+      <property name="catalog.content.description"  value=""/>
+      <property name="catalog.content.description.url" value=""/>
+      <property name="catalog.license.header" value="${nb_all}/nbbuild/catalog-license-header.txt"/>
+
+<!--      <genau config="ausrc/modules.setup" nbmLocation="${nbms.location}" catalog="${catalog.file}" catalogDeploymentLocation="${catalog.base.url}"/>-->
+      <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}" desclicense="${catalog.license.header}">
+          <fileset dir="${nbms.location}">
+              <include name="**/*.nbm"/>
+              <include name="**/*.jar"/>
+          </fileset>
+          <updaterjar>
+              <fileset dir="netbeans" includes="platform*/modules/ext/updater.jar"/>
+          </updaterjar>
+      </makeupdatedesc>
+      <gzip src="${catalog.file}" destfile="${catalog.file}.gz"/>
+      <copy tofile="${tasks.file}" file="netbeans/harness/tasks.jar"/>
+  </target>
+
+  <target name="verify-update-descriptor" depends="init">
+      <taskdef name="vuc" classname="org.netbeans.nbbuild.VerifyUpdateCenter" classpath="${nbantext.jar}"/>
+      <echo>Checking synchronic and diachronic consistency of NBMs; see http://wiki.netbeans.org/DevFaqImplementationDependency</echo>
+      <property name="old.updates" value=""/>
+      <property name="nbms.location" location="nbms"/>
+      <vuc updates="${nbms.location}/updates.xml" oldupdatesurl="${old.updates}" report="${nbms.location}/vuc-report.xml">
+          <classpath>
+              <fileset dir="netbeans">
+                  <include name="platform*/lib/*.jar"/>
+                  <include name="platform*/core/*.jar"/>
+              </fileset>
+          </classpath>
+      </vuc>
+  </target>
+
+    <!-- #42157 - Scans all xml layers for OptionsExport folder and creates
+    list of include/exclude patterns for import on the first start.  -->
+    <target name="create-netbeans-import" depends="-check-nb-cluster" if="has.nb.cluster">
+        <taskdef name="optionsimport" classname="org.netbeans.nbbuild.LayerOptionsImport" classpath="${nbantext.jar}"/>
+        <mkdir dir="${netbeans.dest.dir}/etc"/>
+        <optionsimport output="${netbeans.dest.dir}/etc/netbeans.import">
+            <modules dir="${netbeans.dest.dir}">
+                <include name="**/*.jar"/>
+            </modules>
+        </optionsimport>
+    </target>
+
+    <target name="test" depends="init" description="Runs ${test.type} target in modules specified by ${test.modules}.">
+        <property name="test.modules" value="${allmodules}"/>
+        <property name="test.type" value="test"/>
+        <subant target="${test.type}" >
+            <property name="continue.after.failing.tests" value="true"/>
+            <dirset dir=".." includes="${test.modules}"/>
+        </subant>
+    </target>
+
+    <target name="update-copyright-owner">
+        <taskdef name="checklicense" classname="org.netbeans.nbbuild.CheckLicense" classpath="${nbantext.jar}"/>
+        <fileset id="fs" dir="..">
+            <exclude name=".hg/"/> <!-- not sources -->
+            <exclude name="**/*.html"/><exclude name="**/*.css"/> <!-- JavaHelp etc. pages use their own header style -->
+            <exclude name="**/test/**/data/"/> <!-- test data should never be touched -->
+            <exclude name="**/*.orig"/> <!-- result of hg revert -->
+            <exclude name="*/external/"/> <!-- foreign licenses etc. -->
+            <exclude name="otherlicenses/"/> <!-- modules with thirdparty licenses -->
+            <exclude name="contrib/"/><exclude name="l10n/"/><exclude name="misc/"/><exclude name="nb-javac/"/> <!-- subrepos -->
+        </fileset>
+        <property name="prefix" value="^([ \t]*[*#/;%~-]*[ \t]*)?"/>
+        <checklicense>
+            <fileset refid="fs"/>
+            <convert token="${prefix}nbbuild/licenses/CDDL-GPL-2-CP\. +Sun designates this" prefix="true">
+                <line text="nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this"/>
+            </convert>
+            <convert token="${prefix}each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP\. +Sun" prefix="true">
+                <line text="each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle"/>
+            </convert>
+            <convert token="by Sun in the GPL Version 2 section of the License file that">
+                <line text="by Oracle in the GPL Version 2 section of the License file that"/>
+            </convert>
+            <convert token="-\d{4} Sun Microsystems, Inc\. All rights reserved\.">
+                <line text="-2010 Oracle and/or its affiliates. All rights reserved."/>
+                <line text=""/>
+                <line text="Oracle and Java are registered trademarks of Oracle and/or its affiliates."/>
+                <line text="Other names may be trademarks of their respective owners."/>
+            </convert>
+            <convert token="\d{4} Sun Microsystems, Inc\. All rights reserved\.">
+                <line text="2010 Oracle and/or its affiliates. All rights reserved."/>
+                <line text=""/>
+                <line text="Oracle and Java are registered trademarks of Oracle and/or its affiliates."/>
+                <line text="Other names may be trademarks of their respective owners."/>
+            </convert>
+        </checklicense>
+        <checklicense fragment="nbbuild/licenses/CDDL-GPL-2-CP.  Sun" fail="whenpresent">
+            <fileset refid="fs"/>
+        </checklicense>
+        <checklicense fragment="by Sun in the GPL" fail="whenpresent">
+            <fileset refid="fs"/>
+        </checklicense>
+        <!-- Samples: -->
+        <checklicense>
+            <fileset refid="fs"/>
+            <convert token="${prefix}Copyright \(c\) \d+(?:-\d+)?, Sun Microsystems, Inc\." prefix="true">
+                <line text="Copyright (c) 2010, Oracle."/>
+            </convert>
+            <convert token=" \* Neither the name of Sun Microsystems, Inc\. nor the names of its ">
+                <line text=" * Neither the name of Oracle nor the names of its "/>
+            </convert>
+            <convert token=" \* Neither the name of Sun Microsystems nor the names of its contributors">
+                <line text=" * Neither the name of Oracle nor the names of its contributors"/>
+            </convert>
+            <!-- XXX there are other patterns in mobility.midpexamples -->
+        </checklicense>
+        <checklicense fragment=", Sun Microsystems, Inc." fail="whenpresent">
+            <fileset refid="fs"/>
+        </checklicense>
+        <checklicense fragment="the name of Sun Microsystems" fail="whenpresent">
+            <fileset refid="fs"/>
+        </checklicense>
+    </target>
+
+    <target name="refresh-update_tracking-ml" depends="init-tasks">
+
+        <basename property="code.name.base.dashes" file="${nbm.filename}" suffix=".nbm"/>
+
+        <condition property="module" value="tmp/netbeans/lib/boot.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-bootstrap" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/core/core.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-core-startup" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/core/core.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-core-startup-base" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-openide-util-lookup.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-util-lookup" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-openide-util.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-util" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-openide-util-ui.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-util-ui" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/core/org-openide-filesystems.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-filesystems" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/core/org-openide-filesystems-compat8.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-filesystems-compat8" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-openide-modules.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-openide-modules" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-netbeans-libs-asm.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-libs-asm" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/lib/org-netbeans-libs-asm.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-libs-asm" />
+        </condition>
+
+        <condition property="module" value="tmp/netbeans/core/org-netbeans-upgrader.jar">
+            <equals arg1="${code.name.base.dashes}" arg2="org-netbeans-upgrader" />
+        </condition>
+
+        <property name="module" value="tmp/netbeans/modules/${code.name.base.dashes}.jar"/>
+
+        <patternset id="module.files">
+            <!-- include name="${module.jar}"/ -->
+            <include name="**/*.*"/>
+        </patternset>
+
+
+        <genlist outputfiledir="newbuild" module="${module}">
+            <fileset dir="newbuild/tmp/netbeans">
+                <patternset refid="module.files"/>
+            </fileset>
+        </genlist>
+
+    </target>
+
+    <target name="rat" depends="bootstrap">
+        <taskdef name="exclusionsfromlicenseinfo" classname="org.netbeans.nbbuild.extlibs.ExclusionsFromLicenseInfo" classpath="${nbantext.jar}"/>
+        <taskdef name="reportFromLicenseinfo" classname="org.netbeans.nbbuild.extlibs.ReportFromLicenseinfo" classpath="${nbantext.jar}"/>
+        
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+            <manifest dir="${nb_all}">
+                <include name="nbbuild/external/binaries-list"/>
+            </manifest>
+        </downloadbinaries>
+        
+        <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
+            <classpath>
+                <pathelement location="external/apache-rat-0.12.jar"/>
+            </classpath>
+        </taskdef>
+        
+        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" exclusionFile="build/rat-exclusions-licenseinfo.txt"/>
+        
+        <fileset dir="${nb_all}" id="rat.files">
+            <excludesfile name="rat-exclusions.txt" />
+            <excludesfile name="build/rat-exclusions-licenseinfo.txt" />
+        </fileset>
+        
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
+
+            <resources refid="rat.files" />
+        </rat:report>
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
+
+            <resources refid="rat.files" />
+        </rat:report>
+        <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
+        <loadproperties srcFile="cluster.properties" />
+        <property name="rat-report.haltonfailure" value="false" />
+        <rattotest source="build/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
+        
+        <reportFromLicenseinfo nball=".." report="${nb.build.dir}/rat-appendix.txt" />
+    </target>
+
+</project>

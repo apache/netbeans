@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="J2EE">
+        <folder name="DeploymentPlugins">
+            <folder name="Tomcat">
+                <file name="Descriptor" url="deployment.xml"/>
+                <file name="FactoryTomcat.instance">
+                    <attr name="urlPattern" stringvalue="^tomcat[0-9]*:.*$"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory.create"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyDeploymentFactory"/>
+                    <attr name="delegate" methodvalue="org.netbeans.modules.tomcat5.TomcatFactory.getInstance"/>
+                    <attr name="instanceOf" stringvalue="javax.enterprise.deploy.spi.factories.DeploymentFactory"/>
+                </file>
+                <file name="TomcatRegistryNodeFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.tomcat5.ui.nodes.TomcatRegistryNodeFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.RegistryNodeFactory"/>
+                </file>
+                <file name="OptionalFactoryTomcat.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.support.ProxyOptionalFactory.create"/>
+                    <attr name="delegate" newvalue="org.netbeans.modules.tomcat5.optional.OptionalFactory"/>
+                    <attr name="noInitializationFinish" boolvalue="true"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.OptionalDeploymentManagerFactory"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.tomcat5.Bundle#LBL_TomcatFactory"/>
+                </file>
+                <file name="TomcatPlatformFactory.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.tomcat5.j2ee.TomcatPlatformFactory"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.tomcat5.j2ee.TomcatPlatformFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformFactory"/>
+                </file>
+                <file name="TomcatModuleConfigurationFactory.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.tomcat5.config.TomcatModuleConfigurationFactory"/>
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.tomcat5.config.TomcatModuleConfigurationFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurationFactory"/>
+                </file>
+                <folder name="DeploymentFileNames">
+                    <folder name="WAR">
+                        <file name="META-INF\context.xml"/>
+                    </folder>
+                </folder>
+            </folder>            
+        </folder>
+    </folder>
+    
+    <!-- PENDING: settings for storing of Tomcat instances    
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="NetBeans_org_netbeans_modules_tomcat5">
+                <file name="DTD_XML_TomcatInstallations_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.tomcat5//DTD XML TomcatInstallations 1.0//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="NetBeans_org_netbeans_modules_tomcat5">
+                <file name="DTD_XML_TomcatInstallations_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.tomcat5.Tomcat5Installation"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.tomcat5.Tomcat5Installation"/>
+                </file>
+            </folder>
+        </folder>
+        
+        <folder name="memory">
+            <folder name="org">
+                <folder name="netbeans">
+                    <folder name="modules">
+                        <folder name="tomcat5">
+                            <file name="Tomcat5Installation">
+                                <attr name="settings.providerPath"
+                                stringvalue="xml/lookups/NetBeans_org_netbeans_modules_tomcat5/DTD_XML_TomcatInstallations_1_0.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    -->
+
+    <folder name="Editors">
+        <folder name="AnnotationTypes">
+            <file name="org-netbeans-modules-tomcat5-error.xml" url="error-annotation.xml"/>
+	</folder>
+    </folder>
+			
+</filesystem>

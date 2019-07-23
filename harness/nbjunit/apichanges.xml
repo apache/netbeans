@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+<apidefs>
+   <apidef name="nbjunit">NetBeans JUnit Extensions</apidef>
+   <apidef name="diff">Diff Support</apidef>
+</apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change id="NbModuleSuite.Configuration.parentClassLoader">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.parentClassLoader()</summary>
+        <version major="1" minor="91"/>
+        <date day="17" month="6" year="2018"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Adding a way to set parent classloader on which the NB platform should start.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="branding.token">
+        <api name="nbjunit"/>
+        <summary>System property branding.token</summary>
+        <version major="1" minor="72" subminor="2"/>
+        <date day="1" month="12" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                System.getProperty("<a href="@TOP@/architecture-summary.html#systemproperty-branding.token">branding.token</a>") 
+                recognized and influences branding used during the test.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="197066"/>
+    </change>
+    <change id="NbModuleSuite.Configuration.hideExtraModules">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.hideExtraModules()</summary>
+        <version major="1" minor="72"/>
+        <date day="11" month="11" year="2011"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Now there is a way to disable not explicitly enabled modules.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="185291"/>
+    </change>
+    <change id="NbModuleSuite.Configuration.suite">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.suite()</summary>
+        <version major="1" minor="70"/>
+        <date day="19" month="5" year="2011"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                You may now call <code>suite()</code> directly on a <code>Configuration</code> object.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="197720"/>
+    </change>
+    <change id="NbModuleSuite.Configuration.addStartupArgument">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.addStartupArgument</summary>
+        <version major="1" minor="69"/>
+        <date day="8" month="4" year="2011"/>
+        <author login="tomwheeler"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>NbModuleSuite.Configuration now has a
+                <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#addStartupArgument-java.lang.String...-">
+                addStartupArgument</a>
+                method which allows one to append one or more command line
+                arguments which will be used to start the application.
+                Arguments which must be passed directly to the JVM should
+                still be specified in the <code>test.run.args</code> property.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="197065" />
+    </change>
+    <change id="NbTestCase.logRoot">
+        <api name="nbjunit"/>
+        <summary><code>NbTestCase.logRoot</code> to collect messages from just some code</summary>
+        <version major="1" minor="68"/>
+        <date day="5" month="5" year="2011"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Overridable method to avoid excessive logging of uninteresting components.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbTestCase"/>
+        <issue number="197572"/>
+    </change>
+    <change id="NbModuleSuite.failOn">
+        <api name="nbjunit"/>
+        <summary>Easy way to fail the test on error or warning</summary>
+        <version major="1" minor="58"/>
+        <date day="15" month="3" year="2009"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="compatible" binary="compatible" source="compatible" modification="no"/>
+        <description>
+            <p>
+            Do you need to fail the test when some wrong message or
+            exception is logged? Easy now with
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#failOnMessage-java.util.logging.Level-">
+                Configuration.failOnMessage(Level.WARNING)</a> and
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#failOnException-java.util.logging.Level-">
+                Configuration.failOnException(Level.INFO)</a>.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="155444"/>
+    </change>
+    <change id="NbModuleSuite.honorAutoloadEager">
+        <api name="nbjunit"/>
+        <summary>Leave autoloads as autoloads and eagers as eager</summary>
+        <version major="1" minor="57"/>
+        <date day="13" month="2" year="2009"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="compatible" binary="compatible" source="compatible" modification="no"/>
+        <description>
+            <p>
+            One can decide to <b>not</b> enable autoload modules
+            by calling
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#honorAutoloadEager-boolean-">
+                Configuration.honorAutoEager(true)</a>.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.enableClasspathModules">
+        <api name="nbjunit"/>
+        <summary>Ignore modules on classpath</summary>
+        <version major="1" minor="56"/>
+        <date day="5" month="1" year="2009"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="compatible" binary="compatible" source="compatible" modification="no"/>
+        <description>
+            <p>
+            One can decide to <b>not</b> include modules on classpath in the test
+            by calling 
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#enableClasspathModules-boolean-">
+                Configuration.enableClasspathModules(false)</a>.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.enableModulesForCluster">
+        <api name="nbjunit"/>
+        <summary>Enable modules in a cluster</summary>
+        <version major="1" minor="55"/>
+        <date day="20" month="12" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="incompatible" binary="compatible" source="compatible" modification="yes"/>
+        <description>
+            <p>
+            It is now possible to easily enable modules in one cluster due
+            to <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#enableModules-java.lang.String-java.lang.String-">
+            Configuration.enableModules</a> method.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="153624"/>
+    </change>
+    <change id="NbModuleSuite.clustersMulti">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite's clusters method can be called multiple times</summary>
+        <version major="1" minor="55"/>
+        <date day="20" month="12" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="incompatible" binary="compatible" source="compatible" modification="yes"/>
+        <description>
+            <p>Semantics of
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#clusters-java.lang.String-">
+            Configuration.clusters</a> method has been extended. It can now be
+            called multiple times to accumulate the results.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+        <issue number="153624"/>
+    </change>
+    <change id="Log.assertInstancesWithNames">
+        <api name="nbjunit"/>
+        <summary>Log.assertInstances can take list of names one is searching for</summary>
+        <version major="1" minor="53"/>
+        <date day="8" month="8" year="2008"/>
+        <author login="mrkam"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>Enhanced version of
+            <a href="@TOP@/org/netbeans/junit/Log.html#assertInstances-java.lang.String-java.lang.String...-">
+            assertInstances(String msg, String... types)</a> added.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.Configuration.reuseUserDir">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.reuseUserDir(boolean reuse)</summary>
+        <version major="1" minor="52"/>
+        <date day="18" month="6" year="2008"/>
+        <author login="mrkam"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>NbModuleSuite.Configuration now has
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#reuseUserDir-boolean-">reuseUserDir(boolean)</a>
+            method which enables test suite to reuse userdir from previous suite run.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.Configuration.addTest">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.addTest(Class &lt; ? extends Test> test)</summary>
+        <version major="1" minor="51"/>
+        <date day="11" month="6" year="2008"/>
+        <author login="jsedek"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>NbModuleSuite.Configuration now has 
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#addTest-java.lang.Class-">addTest(java.lang.Class)</a>
+            method which allows to add Test implementation classes into configuration
+            and execution of the NbModuleSuite.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.emptyConfiguration">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.emptyConfiguration()</summary>
+        <version major="1" minor="51"/>
+        <date day="10" month="6" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>NbModuleSuite now has 
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.html#emptyConfiguration--">emptyConfiguration()</a>
+            method which returns empty, ready to be configured configuration.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.MultiTestCases">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite can now wrap multiple TestCase</summary>
+        <version major="1" minor="50"/>
+        <date day="3" month="6" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>NbModuleSuite.Configuration now has 
+            <a href="@TOP@/org/netbeans/junit/NbModuleSuite.Configuration.html#addTest-java.lang.Class-java.lang.String...-">addTest(clazz, tests)</a>
+            method which allows to add multiple test classes into single configuration
+            and execution of the NbModuleSuite.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite.allModules">
+        <api name="nbjunit"/>
+        <summary>New Utilitity methods in NbModuleSuite</summary>
+        <version major="1" minor="49"/>
+        <date day="3" month="6" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>Shura requested few new methods to simplify creation of
+            <code>NbModuleSuite</code>'s. Added, <code>allModules</code> and
+            another variant of <code>create</code> to complement the general
+            customization with <code>NbModuleSuite.Configuration</code>.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="NbModuleSuite">
+        <api name="nbjunit"/>
+        <summary>Support class to allow excution of unit tests inside of NetBeans Runtime Container</summary>
+        <version major="1" minor="46"/>
+        <date day="29" month="2" year="2008"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                It always used to be hard to setup the right environment for test
+                execution. In case this NetBeans this is even harder. The module
+                system is ready to work without classpath isolation, however 
+                not every feature is available and not every
+                behavior remains the same
+                That is why there is now the new <code>NbModuleSuite</code>
+                support class that allows to really start the whole NetBeans 
+                Runtime Container, satisfy all the dependencies and only then 
+                load the testing class and execute it.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
+    <change id="RandomlyFails">
+        <api name="nbjunit"/>
+        <summary>Added <code>@RandomlyFails</code></summary>
+        <version major="1" minor="51"/>
+        <date day="19" month="6" year="2008"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                New annotation added to easily mark tests
+                which occasionally fail for no particular reason.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="RandomlyFails"/>
+        <issue number="137069"/>
+    </change>
+    <change id="CollectData">
+        <api name="nbjunit"/>
+        <summary>Support for Garbage Collecting of Log Message Arguments</summary>
+        <version major="1" minor="44"/>
+        <date day="14" month="12" year="2007"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Methods <code>enableInstances</code> and 
+                <code>assertInstances</code> added to <code>Log</code> class to
+                simplify writing memory leaks tests integrated with
+                <a href="http://wiki.netbeans.org/wiki/view/FitnessViaTimersCounters">timers/counters</a> infastructure.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="Log"/>
+    </change>
+    <change id="PreferencesForTests">
+        <api name="nbjunit"/>
+        <summary>Default implementation of Preferences isn't used for running tests anymore</summary>
+        <version major="1" minor="38"/>
+        <date day="13" month="10" year="2006"/>
+        <author login="rmatous"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Not persistent implementation of <code>java.util.prefs.Preferences</code> 
+                is installed in place of the platform-specific default implementation for running tests.
+                See document
+                <a href="@org-openide-util@/org/openide/util/doc-files/preferences.html">Preferences in NetBeans</a>
+                to learn more.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbTestCase"/>
+    </change>
+    
+    <change id="MockServicesAndLookup">
+        <api name="nbjunit"/>
+        <summary>Added class <code>MockServices</code></summary>
+        <version major="1" minor="33"/>
+        <date day="30" month="6" year="2006"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                The MockServices class now supports closer cooperation
+                with <code>Lookup</code>. By default, clients listening to
+                <code>Lookup.Result</code> changes will be notified about
+                change in its content whenever one calls <code>MockServices.setServices</code>.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="MockServices"/>
+    </change>
+    
+    <change id="MockServices">
+        <api name="nbjunit"/>
+        <summary>Added class <code>MockServices</code></summary>
+        <version major="1" minor="30"/>
+        <date day="11" month="5" year="2006"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added new utility to help unit tests create mock implementations
+                of global services for lookup.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="MockServices"/>
+    </change>
+    
+    <change id="controlFlow">
+      <api name="nbjunit"/>
+      <summary>Non-deterministic execution can be made deterministic</summary>
+      <version major="1" minor="28"/>
+      <date day="1" month="4" year="2006"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" binary="compatible" semantic="compatible" />
+      <description>
+        <p>An excelent tool to emulate race condition, deadlock or any other
+        non-deterministic behaviour created in the form of
+        <a href="@TOP@/org/netbeans/junit/Log.html#controlFlow-java.util.logging.Logger-java.util.logging.Logger-java.lang.String-int-">
+        Log.controlFlow</a> method.
+        </p>
+      </description>
+      <class package="org.netbeans.junit" name="NbTestCase"/>
+      <class package="org.netbeans.junit" name="Log"/>
+      <issue number="35067" />
+    </change>
+
+
+<change id="logging">
+      <api name="nbjunit"/>
+      <summary> Added support for logging</summary>
+      <version major="1" minor="27"/>
+      <date day="1" month="4" year="2006"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" binary="compatible" semantic="compatible" />
+      <description>
+        <p>Added two ways how to enable logging in a test case. One can
+        either overwrite <a href="@TOP@/org/netbeans/junit/NbTestCase.html#logLevel--">NbTestCase.logLevel</a>
+        method and return the right level to capture in the test and then
+        all the messages logged with the level and greater will be sent
+        to <a href="@TOP@/org/netbeans/junit/NbTestCase.html#getLog--">NbTestCase.getLog()</a>
+        stream which is placed in working directory.
+        </p>
+
+        <p>
+        Or one can directly call
+        <a href="@TOP@/org/netbeans/junit/Log.html#enable-java.lang.String-java.util.logging.Level-">Log.enable</a>
+        to capture all the logging into a <code>CharSequence</code>
+        which can be later queried for its content, usually by calling <code>its.toString()</code>
+        method.
+        </p>
+      </description>
+      <class package="org.netbeans.junit" name="NbTestCase"/>
+      <class package="org.netbeans.junit" name="Log"/>
+      <issue number="35067" />
+    </change>
+</changes>
+
+    <htmlcontents>
+    <head>
+      <title>Change History for the NetBeans JUnit Extensions API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@/index.html">NetBeans JUnit Extensions</a> API.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.nbjunit"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -1,0 +1,37 @@
+FUNCTION issue238693 [ANONYMOUS: false, DECLARED: true - issue238693, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+$                : OBJECT $ [ANONYMOUS: false, DECLARED: false - $, MODIFIERS: PUBLIC, OBJECT]
+                 # PROPERTIES
+                 on : FUNCTION on [ANONYMOUS: false, DECLARED: false - on, MODIFIERS: PUBLIC, METHOD]
+                    # PARAMETERS
+                    OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                    OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+HudsonReader     : FUNCTION HudsonReader [ANONYMOUS: false, DECLARED: true - HudsonReader, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                 # RETURN TYPES
+                 HudsonReader, RESOLVED: true
+                 # PROPERTIES
+                 arguments    : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                 indexedDb    : OBJECT indexedDb [ANONYMOUS: false, DECLARED: true - indexedDb, MODIFIERS: PUBLIC, PROPERTY]
+                 logger       : OBJECT logger [ANONYMOUS: false, DECLARED: true - logger, MODIFIERS: PUBLIC, OBJECT]
+                              # PROPERTIES
+                              printLevel : OBJECT printLevel [ANONYMOUS: false, DECLARED: true - printLevel, MODIFIERS: PUBLIC, PROPERTY]
+                 self         : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+                 totalWorkers : OBJECT totalWorkers [ANONYMOUS: false, DECLARED: true - totalWorkers, MODIFIERS: PRIVATE, VARIABLE]
+                 utils        : OBJECT utils [ANONYMOUS: false, DECLARED: false - utils, MODIFIERS: PUBLIC, OBJECT]
+                              # PROPERTIES
+                              DB     : FUNCTION DB [ANONYMOUS: false, DECLARED: false - DB, MODIFIERS: PUBLIC, METHOD]
+                                     # PARAMETERS
+                                     OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                                     OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                              Logger : FUNCTION Logger [ANONYMOUS: false, DECLARED: false - Logger, MODIFIERS: PUBLIC, METHOD]
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+addServer        : OBJECT addServer [ANONYMOUS: false, DECLARED: false - addServer, MODIFIERS: PUBLIC, VARIABLE]
+databaseListener : OBJECT databaseListener [ANONYMOUS: false, DECLARED: false - databaseListener, MODIFIERS: PUBLIC, VARIABLE]
+loadCachedServer : OBJECT loadCachedServer [ANONYMOUS: false, DECLARED: false - loadCachedServer, MODIFIERS: PUBLIC, VARIABLE]

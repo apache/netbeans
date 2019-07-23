@@ -1,0 +1,8 @@
+Code completion result for source line:
+fw.l|anguage;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     lastIndexOf(searchElement: Obj  [PUBLIC]   JS Platform
+FIELD      language: String                [PUBLIC]   Controllers.js
+FIELD      length: Number                  [PUBLIC]   JS Platform
+FIELD      link: String                    [PUBLIC]   Controllers.js

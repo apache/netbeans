@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.html.parser/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/html/parser/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+AutoUpdate-Show-In-Client: false
+

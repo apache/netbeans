@@ -1,0 +1,5 @@
+Code completion result for source line:
+po| //here CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   pokus: Test                     [PUBLIC]   issue222955.js

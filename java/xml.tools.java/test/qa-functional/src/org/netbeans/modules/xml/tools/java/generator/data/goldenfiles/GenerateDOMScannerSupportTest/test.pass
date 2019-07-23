@@ -1,0 +1,424 @@
+/* REMOVED */
+package org.netbeans.modules.xml.tools.generator.data;
+/**
+ *
+ * This is a scanner of DOM tree.
+ *
+ * Example:
+ * <pre>
+ *     javax.xml.parsers.DocumentBuilderFactory builderFactory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+ *     javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
+ *     org.w3c.dom.Document document = builder.parse (new org.xml.sax.InputSource (???));
+ *     <font color="blue">BooksScanner scanner = new BooksScanner (document);</font>
+ *     <font color="blue">scanner.visitDocument();</font>
+ * </pre>
+ *
+ * @see org.w3c.dom.Document
+ * @see org.w3c.dom.Element
+ * @see org.w3c.dom.NamedNodeMap
+ */
+public class BooksScanner {
+    /**
+     * org.w3c.dom.Document document
+     */
+    org.w3c.dom.Document document;
+    
+    /**
+     * Create new BooksScanner with org.w3c.dom.Document.
+     */
+    public BooksScanner(org.w3c.dom.Document document) {
+        this.document = document;
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Document document.
+     */
+    public void visitDocument() {
+        org.w3c.dom.Element element = document.getDocumentElement();
+        if ((element != null) && element.getTagName().equals("Books")) {
+            visitElement_Books(element);
+        }
+        if ((element != null) && element.getTagName().equals("Product")) {
+            visitElement_Product(element);
+        }
+        if ((element != null) && element.getTagName().equals("Descript")) {
+            visitElement_Descript(element);
+        }
+        if ((element != null) && element.getTagName().equals("Custom")) {
+            visitElement_Custom(element);
+        }
+        if ((element != null) && element.getTagName().equals("Price")) {
+            visitElement_Price(element);
+        }
+        if ((element != null) && element.getTagName().equals("Image")) {
+            visitElement_Image(element);
+        }
+        if ((element != null) && element.getTagName().equals("x-include")) {
+            visitElement_x_include(element);
+        }
+        if ((element != null) && element.getTagName().equals("inc-level-1")) {
+            visitElement_inc_level_1(element);
+        }
+        if ((element != null) && element.getTagName().equals("inc-level-2")) {
+            visitElement_inc_level_2(element);
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Books.
+     */
+    void visitElement_Books(org.w3c.dom.Element element) { // <Books>
+        // element.getValue();
+        org.w3c.dom.NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);
+            if (attr.getName().equals("owner")) { // <Books owner="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("idow")) { // <Books idow="???">
+                // attr.getValue();
+            }
+        }
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    if (nodeElement.getTagName().equals("Product")) {
+                        visitElement_Product(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Custom")) {
+                        visitElement_Custom(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Price")) {
+                        visitElement_Price(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Image")) {
+                        visitElement_Image(nodeElement);
+                    }
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Product.
+     */
+    void visitElement_Product(org.w3c.dom.Element element) { // <Product>
+        // element.getValue();
+        org.w3c.dom.NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);
+            if (attr.getName().equals("isbn")) { // <Product isbn="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("id")) { // <Product id="???">
+                // attr.getValue();
+            }
+        }
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    if (nodeElement.getTagName().equals("Descript")) {
+                        visitElement_Descript(nodeElement);
+                    }
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Descript.
+     */
+    void visitElement_Descript(org.w3c.dom.Element element) { // <Descript>
+        // element.getValue();
+        org.w3c.dom.NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);
+            if (attr.getName().equals("lang")) { // <Descript lang="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("cprght")) { // <Descript cprght="???">
+                // attr.getValue();
+            }
+        }
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Custom.
+     */
+    void visitElement_Custom(org.w3c.dom.Element element) { // <Custom>
+        // element.getValue();
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    if (nodeElement.getTagName().equals("Books")) {
+                        visitElement_Books(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Product")) {
+                        visitElement_Product(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Descript")) {
+                        visitElement_Descript(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Custom")) {
+                        visitElement_Custom(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Price")) {
+                        visitElement_Price(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("Image")) {
+                        visitElement_Image(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("x-include")) {
+                        visitElement_x_include(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("inc-level-1")) {
+                        visitElement_inc_level_1(nodeElement);
+                    }
+                    if (nodeElement.getTagName().equals("inc-level-2")) {
+                        visitElement_inc_level_2(nodeElement);
+                    }
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Price.
+     */
+    void visitElement_Price(org.w3c.dom.Element element) { // <Price>
+        // element.getValue();
+        org.w3c.dom.NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);
+            if (attr.getName().equals("isbn")) { // <Price isbn="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("id")) { // <Price id="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("bla")) { // <Price bla="???">
+                // attr.getValue();
+            }
+        }
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named Image.
+     */
+    void visitElement_Image(org.w3c.dom.Element element) { // <Image>
+        // element.getValue();
+        org.w3c.dom.NamedNodeMap attrs = element.getAttributes();
+        for (int i = 0; i < attrs.getLength(); i++) {
+            org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);
+            if (attr.getName().equals("src")) { // <Image src="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("descr")) { // <Image descr="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("visible")) { // <Image visible="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("format")) { // <Image format="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("os")) { // <Image os="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("entity")) { // <Image entity="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("entities")) { // <Image entities="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("id")) { // <Image id="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("idref")) { // <Image idref="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("idrefs")) { // <Image idrefs="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("nmtoken")) { // <Image nmtoken="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("nmtokens")) { // <Image nmtokens="???">
+                // attr.getValue();
+            }
+            if (attr.getName().equals("notation")) { // <Image notation="???">
+                // attr.getValue();
+            }
+        }
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named x-include.
+     */
+    void visitElement_x_include(org.w3c.dom.Element element) { // <x-include>
+        // element.getValue();
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named inc-level-1.
+     */
+    void visitElement_inc_level_1(org.w3c.dom.Element element) { // <inc-level-1>
+        // element.getValue();
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Scan through org.w3c.dom.Element named inc-level-2.
+     */
+    void visitElement_inc_level_2(org.w3c.dom.Element element) { // <inc-level-2>
+        // element.getValue();
+        org.w3c.dom.NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node node = nodes.item(i);
+            switch (node.getNodeType()) {
+                case org.w3c.dom.Node.CDATA_SECTION_NODE:
+                    // ((org.w3c.dom.CDATASection)node).getData();
+                    break;
+                case org.w3c.dom.Node.ELEMENT_NODE:
+                    org.w3c.dom.Element nodeElement = (org.w3c.dom.Element)node;
+                    break;
+                case org.w3c.dom.Node.PROCESSING_INSTRUCTION_NODE:
+                    // ((org.w3c.dom.ProcessingInstruction)node).getTarget();
+                    // ((org.w3c.dom.ProcessingInstruction)node).getData();
+                    break;
+                case org.w3c.dom.Node.TEXT_NODE:
+                    // ((org.w3c.dom.Text)node).getData();
+                    break;
+            }
+        }
+    }
+    
+    
+}

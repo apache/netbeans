@@ -1,0 +1,483 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+<!--
+  XML DTD for Sun Application Server specific EJB jar module 
+  deployment descriptor. This is a companion DTD for ejb-jar_2_0.dtd
+
+-->
+
+<!--
+This is the root element of the ejb module descriptor document.
+-->
+<!ELEMENT sun-ejb-jar (security-role-mapping*, enterprise-beans) >
+
+<!-- 
+System unique object id. Automatically generated and updated at deployment/redeployment 
+-->
+<!ELEMENT unique-id (#PCDATA)>
+
+<!--
+This is the root element describing all the runtime of an ejb-jar in the application.
+-->
+<!ELEMENT enterprise-beans (name?, unique-id?, ejb*, pm-descriptors?, cmp-resource?)>
+
+<!--
+This is the element describing runtime bindings for a single ejb.
+
+Properties applicable to all types of beans:
+     ejb-name, ejb-ref*, jndi-name, resource-ref*, resource-env-ref*, pass-by-reference?, 
+     ior-security-config?, gen-classes?
+
+Additional properties applicable to a stateless session bean:
+    bean-pool
+
+Additional properties applicable to a stateful session bean:
+    bean-cache
+
+Additional properties applicable to an entity bean:
+   is-read-only-bean?, refresh-period-in-seconds?, cmp?, commit-option?, bean-cache?, bean-pool?
+
+Additional properties applicable to a message-driven bean:
+   mdb-connection-factory?, jms-durable-subscription-name?, jms-max-messages-load?, bean-pool?
+   ( In case of MDB, jndi-name is the jndi name of the associated jms destination )
+-->
+
+<!ELEMENT ejb (ejb-name, jndi-name?, ejb-ref*, resource-ref*, resource-env-ref*, pass-by-reference?, 
+               cmp?, principal?, mdb-connection-factory?, jms-durable-subscription-name?, 
+               jms-max-messages-load?, ior-security-config?, is-read-only-bean?, 
+               refresh-period-in-seconds?, commit-option?, gen-classes?, 
+               bean-pool?, bean-cache?)>
+<!--
+The text in this element matches the ejb-name of the ejb to which it refers in ejb-jar.xml.
+-->
+<!ELEMENT ejb-name (#PCDATA)>
+
+<!--
+The text in this element is a true/false flag for read only beans.
+-->
+<!ELEMENT is-read-only-bean (#PCDATA)>
+
+<!--
+This is the root element which binds an ejb reference to a jndi name.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+
+<!--
+The ejb ref name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+This element describes runtime information for a CMP EntityBean object for 
+EJB1.1 and EJB2.0 beans.  
+-->
+<!ELEMENT cmp (mapping-properties?, is-one-one-cmp?, one-one-finders?)>
+
+<!--
+This contains the location of the persistence vendor specific O/R mapping file
+-->
+<!ELEMENT mapping-properties (#PCDATA)>
+
+<!--
+This contains the boolean true if it is CMP 1.1.
+This field is used to identify CMP 1.1 with old descriptors
+Defaults to false.
+-->
+<!ELEMENT is-one-one-cmp (#PCDATA)>
+
+<!--
+This root element contains the finders for CMP 1.1.
+-->
+<!ELEMENT one-one-finders (finder+ )>
+
+<!--
+This root element contains the finder for CMP 1.1 with a method-name and query parameters
+-->
+<!ELEMENT finder (method-name, query-params?, query-filter?, query-variables?)>
+
+<!--
+This contains the method name for the query field 
+-->
+<!ELEMENT method-name (#PCDATA)>
+
+<!--
+This contains the query parameters for CMP 1.1 finder
+-->
+<!ELEMENT query-params (#PCDATA)>
+
+<!--
+This optional element contains the query filter for CMP 1.1 finder
+-->
+<!ELEMENT query-filter (#PCDATA)>
+
+<!--
+This optional element contains variables in query expression for CMP 1.1 finder
+-->
+<!ELEMENT query-variables (#PCDATA)>
+
+<!--
+This element contains the database to be used for storing CMP beans in an ejb-jar.
+-->
+<!ELEMENT cmp-resource (jndi-name, default-resource-principal?)>
+
+<!--
+This element specifies the connection factory associated with a message-driven bean.
+-->
+<!ELEMENT mdb-connection-factory (jndi-name, default-resource-principal?)>
+
+<!--
+Specifies the name of a durable subscription associated with a message-driven bean's 
+destination.  Required for a Topic destination, if subscription-durability is set to 
+Durable (in ejb-jar.xml)
+-->
+<!ELEMENT jms-durable-subscription-name (#PCDATA)>
+
+<!--
+A string value specifies the maximum number of messages to load into a JMS session 
+at one time for a message-driven bean to serve. If not specified, the default is 1.
+-->
+<!ELEMENT jms-max-messages-load (#PCDATA)>
+
+<!--
+This element contains all the generated class names for a bean.
+-->
+<!ELEMENT gen-classes ( remote-impl?, local-impl?, remote-home-impl?, local-home-impl? )>
+
+<!--
+This contains the fully qualified class name of the generated EJBObject impl class. 
+-->
+<!ELEMENT remote-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBLocalObject impl class. 
+-->
+<!ELEMENT local-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBHome impl class. 
+-->
+<!ELEMENT remote-home-impl (#PCDATA)>
+
+<!--
+This contains the fully qualified class name of the generated EJBLocalHome impl class. 
+-->
+<!ELEMENT local-home-impl (#PCDATA)>
+
+<!--
+This contains the bean cache properties. Used only for entity beans and stateful session beans
+-->
+<!ELEMENT bean-cache (max-cache-size?, resize-quantity?, is-cache-overflow-allowed?, cache-idle-timeout-in-seconds?, removal-timeout-in-seconds?, victim-selection-policy?)>
+
+<!--
+max-cache-size defines the maximum number of beans in the cache. Should be greater than 1.
+Default is 512.
+-->
+<!ELEMENT max-cache-size (#PCDATA)>
+
+<!--
+is-cache-overflow-allowed is a boolean which indicates if the cache size is a hard limit or not. 
+Default is true i.e there is no hard limit. max-cache-size is a hint to the cache implementation.
+-->
+<!ELEMENT is-cache-overflow-allowed (#PCDATA)>
+
+<!--
+cache-idle-timeout-in-seconds specifies the maximum time that a stateful session bean or 
+entity bean is allowed to be idle in the cache. After this time, the bean is passivated 
+to backup store. This is a hint to server. Default value for cache-idle-timeout-in-seconds 
+is 600 seconds.
+-->
+<!ELEMENT cache-idle-timeout-in-seconds (#PCDATA)>
+
+
+<!--
+The amount of time that the bean remains passivated (i.e. idle in the backup store) is 
+controlled by removal-timeout-in-seconds parameter.  Note that if a bean was not accessed beyond 
+removal-timeout-in-seconds, then it will be removed from the backup store and hence will not 
+be accessible to the client. The Default value for removal-timeout-in-seconds is 60min.
+-->
+<!ELEMENT removal-timeout-in-seconds (#PCDATA)>
+
+<!--
+victim-selection-policy specifies the algorithm to use to pick victims. 
+Possible values are FIFO | LRU | NRU. Default is NRU, which is actually 
+pseudo-random selection policy.
+-->
+<!ELEMENT victim-selection-policy (#PCDATA)>
+
+<!--
+bean-pool is a root element containing the bean pool properties. Used
+for stateless session bean, entity bean, and message-driven bean pools.
+-->
+<!ELEMENT bean-pool (steady-pool-size?, resize-quantity?, max-pool-size?, pool-idle-timeout-in-seconds?, max-wait-time-in-millis?)>
+
+<!--
+steady-pool-size specified the initial and minimum number of beans that must be maintained in the pool. 
+Valid values are from 0 to MAX_INTEGER. 
+-->
+<!ELEMENT steady-pool-size (#PCDATA)>
+
+<!--
+resize-quantity specifies the number of beans to be created or deleted when the pool 
+or cache is being serviced by the server. Valid values are from 0 to MAX_INTEGER and 
+subject to maximum size limit).  Default is 16.
+-->
+<!ELEMENT resize-quantity (#PCDATA)>
+
+<!--
+max-pool-size speifies the maximum pool size. Valid values are from 0 to MAX_INTEGER. 
+Default is 64.
+-->
+<!ELEMENT max-pool-size (#PCDATA)>
+
+<!--
+pool-idle-timeout-in-seconds specifies the maximum time that a stateless session bean or 
+message-driven bean is allowed to be idle in the pool. After this time, the bean is 
+passivated to backup store.  This is a hint to server. Default value for 
+pool-idle-timeout-in-seconds is 600 seconds.
+-->
+<!ELEMENT pool-idle-timeout-in-seconds (#PCDATA)>
+
+<!--
+A string field whose valid values are either "B", or "C". Default is "B" 
+-->
+<!ELEMENT commit-option (#PCDATA)>
+
+<!--
+Specifies the maximum time that the caller is willing to wait to get a bean from the pool.
+Wait time is infinite, if the value specified is 0. Deprecated.
+-->
+<!ELEMENT max-wait-time-in-millis (#PCDATA)>
+
+<!--
+refresh-period-in-seconds specifies the rate at which the read-only-bean must be refreshed 
+from the data source. 0 (never refreshed) and positive (refreshed at specified intervals).
+Specified value is a hint to the container.  Default is 600 seconds.
+-->
+<!ELEMENT refresh-period-in-seconds (#PCDATA)>
+
+<!--
+Specifies the jndi name string.
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!--
+This node describes a username on the platform.
+-->
+<!ELEMENT principal (name)>
+
+<!-- 
+security-role-mapping element maps the user principal or group 
+to a different principal on the server. 
+-->
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)> 
+
+<!-- 
+role-name specifies an accepted role 
+-->
+<!ELEMENT role-name (#PCDATA)> 
+
+<!-- 
+principal-name specifies a valid principal 
+-->
+<!ELEMENT principal-name (#PCDATA)> 
+
+<!-- 
+group-name specifies a valid group name 
+-->
+<!ELEMENT group-name (#PCDATA)> 
+
+<!--
+The name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+resource-env-ref holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+resource-ref node holds all the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  (res-ref-name, jndi-name, default-resource-principal?)>
+
+<!--
+user name and password to be used when none are specified while accesing a resource
+-->
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+ior-security-config element describes the security configuration information for the IOR.
+-->  
+<!ELEMENT ior-security-config ( transport-config? , as-context?, sas-context?  )> 
+
+<!--
+transport-config is the root element for security between the end points
+-->
+<!ELEMENT transport-config ( integrity, confidentiality, establish-trust-in-target, establish-trust-in-client )> 
+
+<!--
+integrity element indicates if the server (target) supports integrity protected messages. 
+The valid values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT integrity ( #PCDATA)>
+
+<!--
+confidentiality element indicates if the server (target) supports privacy protected 
+messages. The values are NONE, SUPPORTED or REQUIRED
+-->  
+<!ELEMENT confidentiality ( #PCDATA)>
+
+<!--
+establish-trust-in-target element indicates if the target is capable of authenticating to a client. 
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT establish-trust-in-target ( #PCDATA)>
+
+<!--
+establish-trust-in-client element indicates if the target is capable of authenticating a client. The
+values are NONE, SUPPORTED or REQUIRED.
+-->  
+<!ELEMENT establish-trust-in-client ( #PCDATA)>
+
+<!--
+as-context (CSIv2 authentication service) is the element describing the authentication 
+mechanism that will be used to authenticate the client. If specified it will be the 
+username-password mechanism.
+-->  
+<!ELEMENT as-context ( auth-method, realm, required )> 
+
+<!--
+required element specifies if the authentication method specified is required
+to be used for client authentication. If so the EstablishTrustInClient bit
+will be set in the target_requires field of the AS_Context. The element value
+is either true or false. 
+-->  
+<!ELEMENT required ( #PCDATA )> 
+
+<!--
+auth-method element describes the authentication method. The only supported value
+is USERNAME_PASSWORD
+-->  
+<!ELEMENT auth-method ( #PCDATA )> 
+
+<!--
+realm element describes the realm in which the user is authenticated. Must be 
+a valid realm that is registered in server configuration.
+-->  
+<!ELEMENT realm ( #PCDATA )> 
+
+<!--
+sas-context (related to CSIv2 security attribute service) element describes 
+the sas-context fields.
+-->  
+<!ELEMENT sas-context ( caller-propagation )> 
+
+<!--
+caller-propagation element indicates if the target will accept propagated caller identities
+The values are NONE or SUPPORTED.
+-->  
+<!ELEMENT caller-propagation ( #PCDATA) >
+
+<!-- 
+pass-by-reference elements controls use of Pass by Reference semantics.  
+EJB spec requires pass by value, which will be the default mode of operation. 
+This can be set to true for non-compliant operation and possibly higher 
+performance. For a stand-alone server, this can be used. By setting a similarly 
+named element at sun-application.xml, it can apply to all the enclosed ejb 
+modules. Allowed values are true and false. Default will be false.
+ -->
+<!ELEMENT pass-by-reference (#PCDATA)>
+
+<!-- 
+PM descriptors contain one or more pm descriptors, but only of them must 
+be in use at any given time 
+-->
+<!ELEMENT pm-descriptors ( pm-descriptor+, pm-inuse)>
+
+<!--
+pm-descriptor describes the properties for the persistence manager associated with entity bean
+-->
+<!ELEMENT pm-descriptor ( pm-identifier, pm-version, pm-config?, pm-class-generator?, pm-mapping-factory?)>
+
+<!--
+pm-identifier element describes the vendor who provided the PM implementation
+-->
+<!ELEMENT pm-identifier (#PCDATA)>
+
+<!--
+pm-version further specifies which version of PM vendor product to be used
+-->
+<!ELEMENT pm-version (#PCDATA)>
+
+<!--
+pm-config specifies the vendor specific config file to be used
+-->
+<!ELEMENT pm-config (#PCDATA)>
+
+<!--
+pm-class-generator specifies the vendor specific concrete class generator
+This is the name of the class specific to a vendor 
+-->
+<!ELEMENT pm-class-generator (#PCDATA)>
+
+<!--
+pm-mapping-factory specifies the vendor specific mapping factory
+This is the name of the class specific to a vendor 
+-->
+<!ELEMENT pm-mapping-factory (#PCDATA)>
+
+<!--
+pm-insue specifies whether this particular PM must be used or not
+-->
+<!ELEMENT pm-inuse (pm-identifier, pm-version)>
+

@@ -1,0 +1,20 @@
+
+  /**
+   * @typedef   MakeSelectWidgetArgs
+   * @type      {object}
+   * @property  {String} keyField
+   *            Key field for property
+   * @property  {String} [label]
+   *            Label to add to select widget
+   * @property  {(String|function|Array.<String>)} dataSource
+   *            Source for option elements, may be: ...
+   */
+
+  /**
+   * Make a select widget.
+   *
+   * @param   {MakeSelectWidgetArgs} opts
+   *          Object containing properties to create widget for.
+   */
+  function |>METHOD:makeSelectWidget<|(|>UNUSED:opts<|){
+  }

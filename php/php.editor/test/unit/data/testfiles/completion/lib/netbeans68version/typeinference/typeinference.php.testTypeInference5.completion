@@ -1,0 +1,12 @@
+Code completion result for source line:
+$clsA->methodA5()->|fld;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     methodA1()                      [PUBLIC]   clsA
+METHOD     methodA2()                      [PUBLIC]   clsA
+METHOD     methodA3()                      [PUBLIC]   clsA
+METHOD     methodA4()                      [PUBLIC]   clsA
+METHOD     methodA5()                      [PUBLIC]   clsA
+METHOD     methodA6()                      [PUBLIC]   clsA
+METHOD     methodA7()                      [PUBLIC]   clsA
+VARIABLE   clsA fld                        [PUBLIC]   clsA
+VARIABLE   clsA fld2                       [PUBLIC]   clsA

@@ -1,0 +1,47 @@
+<testresult testFile='returnTypes_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='19'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='19' end='20'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='20' end='21'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='21' end='22'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='23' end='31'>
+            <text>DateTime</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='32' end='33'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='34' end='35'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='36' end='36'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='36'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='35' isReference='false'>
+                <Identifier start='16' end='19' name='foo'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NamespaceName start='23' end='31' isCurrent='false' isGlobal='false'>
+                    <Identifier start='23' end='31' name='DateTime'/>
+                </NamespaceName>
+                <Block start='32' end='35' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

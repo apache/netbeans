@@ -1,0 +1,46 @@
+Calling GenBeans.doIt
+Bean Tree:
+application <application> : Application
+	[attr: version CDATA #FIXED 1.4 : java.math.BigDecimal] 	[whiteSpace (collapse)]
+	description <description> : java.lang.String[0,n]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	displayName <display-name> : java.lang.String[1,n] 	[whiteSpace (collapse)]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	icon <icon> : IconType[0,n]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		smallIcon <small-icon> : java.lang.String[0,1]
+		largeIcon <large-icon> : java.lang.String[0,1]
+	module <module> : ModuleType[1,n]
+		| connector <connector> : java.lang.String
+		| ejb <ejb> : java.lang.String
+		| java <java> : java.lang.String
+		| web <web> : WebType
+		| 	webUri <web-uri> : java.lang.String
+		| 	contextRoot <context-root> : java.lang.String 	[whiteSpace (collapse)]
+		| 	deploymentExtension <deployment-extension> : DeploymentExtensionType[0,n]
+		| 		[attr: namespace CDATA #REQUIRED  : java.net.URI]
+		| 		[attr: mustUnderstand CDATA #IMPLIED  : boolean]
+		| 		extensionElement <extension-element> : ExtensibleType[1,n]
+		altDd <alt-dd> : java.lang.String[0,1]
+		deploymentExtension <deployment-extension> : DeploymentExtensionType[0,n]
+			[attr: namespace CDATA #REQUIRED  : java.net.URI]
+			[attr: mustUnderstand CDATA #IMPLIED  : boolean]
+			extensionElement <extension-element> : ExtensibleType[1,n]
+	securityRole <security-role> : SecurityRoleType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		roleName <role-name> : java.lang.String
+
+Compiling
+Finished compiling: 0
+out: TestApplication1_4 - creating the DOM document
+out: TestApplication1_4 - creating the bean graph
+out: TestApplication1_4 - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <application xmlns='http://java.sun.com/xml/ns/j2ee' version='1.4'>
+out: 	<display-name>test app</display-name>
+out: 	<module>
+out: 		<java>org.foo</java>
+out: 	</module>
+out: </application>
+Finished running TestApplication1_4: 0

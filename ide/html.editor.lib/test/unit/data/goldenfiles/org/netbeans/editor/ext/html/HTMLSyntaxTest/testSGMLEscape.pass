@@ -1,0 +1,5 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<!DOCTYPE HTML PUBLIC "' [0, 23]; sgml-declaration; 11; -; HTMLTokenContext
+'-//W3C//DTD HTML 4.01 Transitional//EN">' [23, 40]; sgml-declaration; 11; -; HTMLTokenContext

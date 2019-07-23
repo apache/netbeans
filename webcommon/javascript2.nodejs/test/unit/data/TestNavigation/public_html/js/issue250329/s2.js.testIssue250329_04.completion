@@ -1,0 +1,6 @@
+Code completion result for source line:
+ut2.|endsWith2();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     endsWith2(pattern, suffix): Bo  [PUBLIC]   utl2.js
+METHOD     listFiles2(path)                [PUBLIC]   utl2.js

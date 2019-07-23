@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="org.netbeans.modules.form.layoutsupport.delegates.NullLayoutSupport" type="layout" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/layoutsupport/resources/NullLayout.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/layoutsupport/resources/NullLayout32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_org-netbeans-modules-form-layoutsupport-delegates-NullLayoutSupport"
+               tooltip-key="HINT_org-netbeans-modules-form-layoutsupport-delegates-NullLayoutSupport" />
+</palette_item>

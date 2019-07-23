@@ -1,0 +1,32 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:tns="test/operations" xmlns:po="http://www.example.com/PO1"
+targetNamespace="test/operations">
+    
+  <import namespace="http://www.example.com/PO1" location="PurchaseOrder.xsd"/>
+  
+  <types>
+  </types>    
+  <message name="message1">
+    <part name="m1-part1" type="po:PurchaseOrderType"/>
+  </message>
+  <message name="message2">
+    <part name="m2-part1" element="po:comment"/>
+  </message>
+  
+  <portType name="TestOperation">
+    <operation name="op1">
+      <input message="tns:message1"/>
+    </operation>
+    <operation name="op2">
+    </operation>
+    <operation name="op3">
+      <output message="tns:message2"/>
+      <input message="tns:message1"/>
+    </operation>
+    <operation name="op4">
+      <output message="tns:message2"/>
+    </operation>
+  </portType>
+	
+</definitions>

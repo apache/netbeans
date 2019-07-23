@@ -1,0 +1,4 @@
+        b.user = User.get(|>MARK_OCCURRENCES:ses^sion<|.user.id)
+            fromDelicious = deliciousService?.findRecent(|>MARK_OCCURRENCES:session<|.user)
+        [bookmarkList: Bookmark.findAllByUser(User.get(|>MARK_OCCURRENCES:session<|['user'].id), params ), deliciousList: fromDelicious ]
+            fromDelicious = deliciousService?.findAllForTag(params.q,|>MARK_OCCURRENCES:session<|.user) 

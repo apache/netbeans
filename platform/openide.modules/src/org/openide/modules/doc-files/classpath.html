@@ -1,0 +1,729 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><!-- -*- xhtml -*- -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <title>Modules, JARs, Class Loaders, and the "Class Path"</title>
+  <!-- Cf. #19961 -->
+  <link rel="stylesheet" href="../../../../prose.css" type="text/css"/>
+ </head>
+ <body>
+  <p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+  <h1>Contents</h1>
+
+  <ul>
+   <li><a href="#intro">Introduction</a></li>
+   <li><a href="#loader-hier">The Class Loader Hierarchy</a>
+    <ul>
+     <li><a href="#class-path">Extensions using <code>Class-Path</code></a></li>
+     <li><a href="#libs">Startup Libraries</a></li>
+     <li><a href="#patches-l10n">Patches and Localizations</a></li>
+     <li><a href="#prov-req">Provide-Require Dependencies</a></li>
+     <li><a href="#public-packages">Dependencies and Package Restrictions</a></li>
+    </ul>
+   </li>
+   <li><a href="#syscl">The System Class Loader, Thread Context Class Loading, and <code>nbres:</code></a></li>
+   <li><a href="#overlaps">"Parallel" Libraries</a></li>
+   <li><a href="#q-and-a">Common Problems and Solutions</a></li>
+  </ul>
+
+  <h1><a name="intro">Introduction</a></h1>
+
+  <p>
+   NetBeans, as a large Java application with a sophisticated module system and a
+   strong framework for maintaining inter-module compatibility, has a specialized
+   infrastructure for physically loading the classes that produce the
+   application. It uses <em>class loaders</em> to manage the interactions between
+   modules.
+  </p>
+  <p>
+   While developers who are accustomed to working with application servers or
+   other large componentized applications might already be familiar with the
+   purposes and basic mechanisms of class loader partitioning, many Java
+   developers only have experience with monolithic applications loaded entirely
+   from the system <em>class path</em> (the <code>-classpath</code> parameter to
+   the Java VM launcher). All developers seeking to write a NetBeans module
+   should have some practical understanding of how NetBeans manages class
+   loading.
+  </p>
+  <p>
+   This document attempts to explain the basic system by which classes are loaded
+   into NetBeans; and how you as a module author can take advantage of the power
+   this system offers, without becoming a victim to some common misperceptions
+   and mistakes.
+  </p>
+  <p>
+   Everything written here is <em>nonnormative</em>, which is to say it is not a
+   formal part of the Modules API specification. For precise guarantees as to
+   what you can and cannot do, as well as details on several points of manifest
+   syntax, please read the
+   <a href="api.html">Modules API</a>.
+  </p>
+
+  <h1><a name="loader-hier">The Class Loader Hierarchy</a></h1>
+
+  <p>
+   The basic thing you need to understand about how modules control class loading
+   is this:
+  </p>
+  <blockquote>
+   <p>
+    <em>
+     If module B has a declared dependency on module A, then classes in B can
+     refer to classes in A (but A cannot refer to B). If
+     B does not have a declared dependency on A, it cannot refer to A.
+     Furthermore, dependencies are not considered transitive for purposes of
+     classloading: if C has a declared dependency on B, it can refer to classes in
+     B, but not to A (unless it also declares an explicit dependency on A).
+    </em>
+   </p>
+  </blockquote>
+  <p>
+   Remember: <em>refer to</em> here means <em>refer to statically</em>: compile
+   and link against. Source code for B should be passed the JAR for A in its
+   classpath when compiling. Module A can certainly use objects created by module
+   B, if assigned to a suitably generic interface; it just cannot link against
+   these specific classes in Java source code.
+   The same system applies to classpath-oriented calls such as
+   <code>Class.getResource(String&nbsp;path)</code>.
+  </p>
+  <p>
+   This constraint is enforced using the parent-child relationship of <em>class
+   loaders</em>. Each module has its own dedicated class loader. A NetBeans
+   module classloader delegates only to the classloaders of modules which the
+   module author asked to depend on.
+  </p>
+  <p>
+   This kind of relationship - a hierarchy of classloaders - is common in
+   componentized Java applications. NetBeans takes the concept a little bit
+   further: since a module can (and very often will) depend on several other
+   modules, the classloader hierarchy is a directed acyclic graph, rather than a
+   tree. This could be called multiple inheritance of classloaders.
+  </p>
+  <p>
+   There are a number of reasons for using such a system, rather than dumping
+   everything in one big classpath. The main reason, though, is safety. If
+   NetBeans let you use any class from any other module, you might begin relying
+   on another module without even realizing it. This could cause sudden errors if
+   that other module were missing from a user's installation. Declaring a module
+   dependency prevents such a situation from arising.
+  </p>
+  <p>
+   Here is a trivial summary of the situation:
+  </p>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.a
+  </pre>
+<pre>
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="type">A</span> {<span class="comment">/* ... */</span>}
+<span class="comment">// ...
+</span><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">void</span> <span class="function-name">useSomeA</span>(A a) {<span class="comment">/* ... */</span>}
+</pre>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.b
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a
+  </pre>
+<pre>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">B</span> <span class="keyword">extends</span> A {<span class="comment">/* ... */</span>}
+<span class="comment">// ...
+</span>useSomeA(<span class="keyword">new</span> B());
+</pre>
+  <p>
+   This basic rule covers the bulk of the situations you will encounter. There
+   are some further reasons why you might not be able to access certain classes,
+   but you can probably stop reading now unless you actually run into problems.
+   <!--
+   Use of the <code>Class-Path</code> tag described in the next section is the
+   most common way to make classes available other than simple module
+   dependencies.
+   -->
+  </p>
+
+  <h2><a name="class-path">Extensions using <code>Class-Path</code></a></h2>
+
+  <p>
+   Commonly a NetBeans module will serve as a wrapper for an independent library,
+   or will use one or more separate libraries as part of its implementation or
+   API. Forcing all classes and resources used by a module to be packed together
+   into the module JAR is generally undesirable for reasons of maintenance and
+   clarity. Sometimes it may even violate license terms of a library to modify it
+   by repackaging it into a module JAR.
+  </p>
+  <p>
+   NetBeans handles this situation by letting you use the <code>Class-Path</code>
+   manifest attribute defined by the
+
+   <a href="http://java.sun.com/j2se/1.5.0/docs/guide/extensions/spec.html#bundled">Java Extension Mechanism</a>.
+
+   The value of the attribute consists of one or more relative paths to library
+   JARs, in the same directory as the module or (normally) beneath it.
+   Conventionally, such extensions are placed in a directory named
+   <samp>ext/</samp> beneath the directory where the module is. It is a good idea
+   to name extension JARs precisely (i.e., include the version number).
+  </p>
+  <p>
+   For example, a module <samp><i>$cluster</i>/modules/module.jar</samp> would
+   refer to the extensions
+   <samp><i>$cluster</i>/modules/ext/library-a-1.0.jar</samp> and
+   <samp><i>$cluster</i>/modules/ext/library-b-1.1.jar</samp> this way:
+  </p>
+  <pre>
+Class-Path: ext/library-a-1.0.jar ext/library-b-1.1.jar
+  </pre>
+  <p>
+   When you do this, the libraries are loaded from the same classloader as the
+   main module JAR, just as if they had been unpacked and physically added to it.
+   Classes from any of these JARs can refer to classes in the others. As a matter
+   of style, however, you should generally refer to the libraries from the module
+   but not refer to the module from the libraries. Modules dependent on a module
+   with extensions can refer to its extensions too.
+  </p>
+  <p>
+   It is common for a module to just be a <em>wrapper</em> which has no classes
+   itself, but merely refers to a library using <code>Class-Path</code>. Creating
+   such a wrapper module blesses the library with the flexible deployment and
+   maintenance qualities of a module. If there is no legal reason not to, you can
+   also just insert NetBeans-specific manifest attributes in <em>any</em> JAR and
+   use it as a module, without interfering with its use outside NetBeans.
+  </p>
+  <p>
+   Overuse of <code>Class-Path</code> is a common bad habit. Use module
+   dependencies to express relationships between independent blocks of code;
+   <code>Class-Path</code> should be used only when a JAR is a wholly owned part
+   of a module.
+  </p>
+  <p>
+   <strong>Never</strong> refer to the same JAR using <code>Class-Path</code>
+   from two different modules. (It will get loaded <em>twice</em> and could cause
+   strange problems.) If you think you need to, generally this just means you
+   have not factored out your module dependencies thoroughly: split off a third
+   module to hold the library.
+  </p>
+  <p>
+   <strong>Never</strong> try to use <code>Class-Path</code> to refer to other
+   module JARs, or to JARs in the NetBeans <samp>lib/</samp> directory, or
+   generally to any JAR you did not specifically bundle alongside your module and
+   your module only (for example, in an NBM package for Auto Update).
+  </p>
+  <p>
+   Do not be alarmed by all the "never"s; these are good guidelines to protect
+   you from common design mistakes, but the basic behavior of
+   <code>Class-Path</code> is pretty simple:
+  </p>
+  <blockquote>
+   <p>
+    <em>
+     If a module A has a <code>Class-Path</code> attribute listing some relative
+     JAR paths, the effect is exactly the same as if the contents of those JARs
+     were just copied into A's main JAR.
+    </em>
+   </p>
+  </blockquote>
+
+  <h2><a name="libs">Startup Libraries</a></h2>
+
+  <p>
+   In a given NetBeans release, there are several libraries placed in the
+   <samp>lib/</samp> and <samp>core/</samp> subdirectories of the NetBeans
+   installation. These are referred to as <em>startup libraries</em>.
+   If you need to use classes from them, just declare regular module dependencies.
+  </p>
+
+  <h2><a name="patches-l10n">Patches and Localizations</a></h2>
+
+  <p>
+   In addition to use of <code>Class-Path</code>, there are a couple of other
+   ways in which additional JARs might be added into the classloader for a
+   module.
+  </p>
+  <p>
+   <em>Patches</em> are JARs which may replace classes and resources in a module
+   classloader. If a module has the code name base <samp>a.b.c</samp>, and there
+   is a subdirectory named <samp>patches/a-b-c/</samp> beneath the directory in
+   which the module JAR resides, then this patch area will be scanned for JAR
+   files to be added to the "front" of the module classloader - anything found in
+   them will override corresponding classes or resources in the module and its
+   extensions.
+  </p>
+  <p>
+   This patching facility is occasionally useful for testing modifications to
+   installed modules, or making emergency fixes in the field, without needing to
+   touch the master copy of the module. Modules should not be shipped with any
+   patches, however.
+  </p>
+  <p>
+   <em>Localization and branding</em> may also affect the module classloader. A
+   module may load resources (such as property bundles, images, XML layers, and
+   so on) using the recommended internationalized lookup techniques -
+   <code>NbBundle</code> methods, the <code>nbresloc:</code> URL protocol, and so
+   on. Actual localizations of these resources are best placed in separate JAR
+   files, which must be named according to the locale and placed in a
+   subdirectory named <samp>locale/</samp> beneath the directory in which the
+   module JAR resides. For example, a Japanese localization of a module
+   <samp><i>$cluster</i>/modules/module.jar</samp> would be named
+   <samp><i>$cluster</i>/modules/locale/module_ja.jar</samp>.
+  </p>
+  <p>
+   Analogously, a module may be <em>branded</em> to adjust it to use in a
+   specific product, using essentially the same mechanism. The module just
+   mentioned could have a few text changes made for a product branding named
+   <samp>myapp</samp> by creating a file named
+   <samp><i>$cluster</i>/modules/locale/module_myapp.jar</samp>. Locales and
+   brandings are orthogonal, so a Belgian French translation of text strings
+   specific to MyApp Community Edition might be kept in
+   <samp><i>$cluster</i>/modules/locale/module_myapp_ce_fr_BE.jar</samp>.
+  </p>
+  <p>
+   All applicable locale and branding variants of module JARs are placed in the
+   same classloader as the module itself. Only variant JARs which actually apply
+   at runtime (according to the current locale and branding) will be loaded.
+  </p>
+
+  <h2><a name="prov-req">Provide-Require Dependencies</a></h2>
+
+  <p>
+   In addition to regular dependencies using
+   <code>OpenIDE-Module-Module-Dependencies</code>, modules can also depend on
+   the existence of other modules using <em>provide-require</em> dependencies.
+   Here, one or more modules provide some arbitrary token (often the name of an
+   API class for which they supply implementations in Lookup); and other modules
+   may request that this token be available. A requesting modules can be enabled
+   only when at least one (perhaps more) providing module is enabled.
+  </p>
+  <blockquote>
+   <p>
+    <em>
+     Provide-require dependencies have no effect on classloading. If module A
+     provides token T, and module B requires token T, B may not refer to classes
+     in A (unless it additionally declares a regular dependency on A).
+    </em>
+   </p>
+  </blockquote>
+
+  <h2><a name="public-packages">Dependencies and Package Restrictions</a></h2>
+
+  <p>
+   By default when a module B declares a direct dependency on another module A,
+   then B can access any public (or, as appropriate, protected) class in A - i.e.
+   all of A is "in its classpath". However it is often the case that such broad
+   access is undesirable. Module A may provide a formal API in certain packages,
+   and use other packages for its private implementation. In this case it would
+   not want other modules freely using its undocumented implementation classes.
+  </p>
+  <p>
+   For this reason, a special manifest attribute
+   <code>OpenIDE-Module-Public-Packages</code> can be specified in A:
+  </p>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.a
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-alpha-2
+OpenIDE-Module-Public-Packages: org.netbeans.api.a.**, org.netbeans.spi.a.**
+  </pre>
+  <p>
+   This attribute tells the NetBeans module system to limit which packages from A
+   are considered part of its API. If B declares a regular dependency on A
+   according to its public API specification version:
+  </p>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.b
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a > 1.0
+  </pre>
+  <p>
+   then B can only use some packages from A: here,
+   <code>org.netbeans.api.a</code> (and any subpackages it may have) and
+   <code>org.netbeans.spi.a</code> (and subpackages). Module B will <em>not</em>
+   be permitted to use other packages from A, such as
+   <code>org.netbeans.modules.a</code>; attempts to do so will just result in a
+   <code>NoClassDefFoundError</code> when loading code from B.
+  </p>
+  <p>
+   This manifest goes further and prevents <em>any</em> packages from being
+   available to other modules:
+  </p>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.a
+OpenIDE-Module-Public-Packages: -
+  </pre>
+  <p>
+   You may still declare a dependency on such a module, in order to ensure that
+   it is installed (perhaps it provides some non-Java-level service you need),
+   but you may not import any classes from it.
+  </p>
+  <p>
+   There is a limited "back door" to this package restriction: if module B
+   declares that it knows about module A's internal implementation, and is
+   prepared to track arbitrary changes in A, then it can use any public classes
+   from A regardless of the public package declaration. This is done using an
+   implementation dependency:
+  </p>
+  <pre>
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.b
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
+  </pre>
+  <p>
+   Here module B declares that it is written to match details of A's
+   implementation classes at that point in time. This version of B may not use
+   <em>any earlier or later</em> versions of A, since there is no telling what
+   changes to A's implementation classes there might have been. Therefore, such
+   implementation dependencies are usually used among "friend modules" which are
+   updated and published in clusters by a single developer or team.
+  </p>
+  <p>
+   Again, dependencies are not considered transitive for purposes of class
+   loading; so package visibility from module A to module C (where C depends on
+   B) is entirely independent of visibility from A to B - it can be computed
+   entirely from the manifests of A and C.
+  </p>
+  <p>
+   Public package declarations also apply to packages contained in
+   <code>Class-Path</code> extensions - just as if those classes were in the main
+   module JAR.
+  </p>
+  <p>
+   In summary:
+  </p>
+  <blockquote>
+   <p>
+    <em>
+     If module A declares that it has a particular list of public packages, and
+     module B declares a direct dependency on A, B can always use classes from
+     A's public packages (if any). B may only use undeclared packages from A
+     (implementation classes) if it declares an implementation dependency on the
+     exact version of A.
+    </em>
+   </p>
+  </blockquote>
+
+  <h1><a name="syscl">The System Class Loader, Thread Context Class Loading, and <code>nbres:</code></a></h1>
+
+  <p>
+   There is a special class loader in NetBeans referred to as the <em>system
+   class loader</em>. This loader can load classes from any enabled module, as
+   well as the JRE/JDK and all <a href="#libs">startup libraries</a> (APIs and core).
+   Therefore it is useful as a default class
+   loader to be used by any code which tries to find a class by name without
+   specific knowledge of where it may be located.
+  </p>
+  <p>
+   Finding the system class loader is easy using lookup:
+  </p>
+  <pre>
+<span class="type">ClassLoader</span> <span class="variable-name">syscl</span> = Lookup.getDefault().lookup(ClassLoader.<span class="keyword">class</span>);
+  </pre>
+  <p>
+   This class loader is also the
+   <a href="@JDK@/java/lang/Thread.html#getContextClassLoader--">context class loader</a>
+   for every thread in the NetBeans VM, unless that thread (or a parent)
+   explicitly set some other context class loader. Since many libraries which are
+   independent of NetBeans (including in the JRE) are written to assume that all
+   relevant classes can be loaded by name from the current thread's context loader,
+   it is very useful for this loader to be the system class loader - you can specify
+   any class in your module by name.
+  </p>
+  <pre>
+<span class="type">ClassLoader</span> <span class="variable-name">l</span> = Thread.currentThread().getContextClassLoader();
+<span class="type">Class</span> <span class="variable-name">c</span> = l.loadClass(<span class="string">"some.module.Class"</span>);
+  </pre>
+  <p>
+   Any module class can be accessed from this loader, regardless of any
+   <code>OpenIDE-Module-Public-Packages</code> declarations.
+  </p>
+  <p>
+   The system loader always represents the contents of the enabled modules in
+   NetBeans. If a module is newly enabled at runtime, its classes are effectively
+   added to the namespace of the <em>same</em> system <code>ClassLoader</code>
+   instance. (Note that this means that a call to <code>Class.forName</code>
+   which fails before the module is enabled may succeed afterwards.) However, if
+   a module is <em>disabled</em> at runtime, the system class loader is
+   <em>reset</em> to a new loader which does not have access to the old module.
+   This is necessary because it is impossible to remove classes from a loader
+   once they have been loaded. After a module is disabled and the loader reset, a
+   saved <code>Lookup.Result</code> query on <code>ClassLoader</code> will fire a
+   lookup result change, and all threads will be updated to get the new context
+   class loader too.
+  </p>
+  <p>
+   It is often useful to be able to refer to <em>resources</em> other than
+   classes in the system class loader. This is easy to do because NetBeans
+   defines a special URL protocol handler for just this purpose. URLs with the
+   <code>nbres</code> protocol refer to resources in the system loader, and thus
+   can refer to resources present in any module JAR. This is very useful when
+   some declarative syntax requires a URL that should look in a module; for
+   example:
+  </p>
+  <pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Filesystem 1.1//EN"</span>
+                            <span class="string">"http://www.netbeans.org/dtds/filesystem-1_1.dtd"</span>&gt;
+<span class="comment">&lt;!-- Register one DTD in the system entity catalog. --&gt;</span>
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"xml"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"entities"</span>&gt;
+            &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"NetBeans"</span>&gt;
+                &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"DTD_Foo_1_0"</span>
+                    <span class="variable-name">url</span>=<span class="string">"nbres:/org/netbeans/modules/foo/resources/foo-1.0.dtd"</span>&gt;
+                    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"hint.originalPublicID"</span>
+                          <span class="variable-name">stringvalue</span>=<span class="string">"-//NetBeans//DTD Foo 1.0//EN"</span>/&gt;
+                &lt;/<span class="function-name">file</span>&gt;
+            &lt;/<span class="function-name">folder</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+  </pre>
+  <p>
+   There is also a related protocol <code>nbresloc</code> which loads from the
+   system class loader but additionally performs automatic localization and
+   branding of the resource you specify. Various
+   <a href="@org-openide-util@/org/openide/util/NbBundle.html#getLocalizingSuffixes--">suffixes</a>
+   are inserted between the base name and the extension of the resource
+   (beginning with the last dot in the path, if it is in the last path
+   component), according to the current locale and branding. For example:
+  </p>
+  <pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">filesystem</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Filesystem 1.1//EN"</span>
+                            <span class="string">"http://www.netbeans.org/dtds/filesystem-1_1.dtd"</span>&gt;
+<span class="comment">&lt;!-- Add a URL to the Help menu with a localized name and icon. --&gt;</span>
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Menu"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Help"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"netbeans-web-link.url"</span> <span class="variable-name">url</span>=<span class="string">"netbeans-web-link.url"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span>
+                      <span class="variable-name">stringvalue</span>=<span class="string">"org.netbeans.modules.url.Bundle"</span>/&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.icon"</span>
+                     <span class="variable-name">urlvalue</span>=<span class="string">"nbresloc:/org/netbeans/modules/url/webLink.gif"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+  </pre>
+  <p>
+   Here NetBeans will look for the most specific applicable icon; it might for
+   example find <samp>org/netbeans/modules/url/webLink_ja.gif</samp> in
+   <samp>modules/locale/utilities_ja.jar</samp>, if Japanese localizers decided
+   the default icon was not intuitive for Japanese users and made a replacement.
+   Whenever you are asked for a URL to a displayable resource, consider using
+   <code>nbresloc</code> in place of <code>nbres</code>.
+  </p>
+
+  <h1><a name="overlaps">"Parallel" Libraries</a></h1>
+
+  <p>
+      It is possible for two modules to include classes with the same (fully-qualified) names, so long as the modules have distinct code name bases.
+      This can be useful in case you want to ship several versions of a third-party library.
+      For example, you could have modules <code>org.apache.log4j.v1</code> and <code>org.apache.log4j.v2</code>
+      both including <code>org.apache.log4j.**</code> classes and exposing these packages as public.
+      Some modules can depend on and use version 1 while other modules depend on and use version 2.
+      Potential problems you might run into:
+  </p>
+  <ul>
+      <li>
+          <p>
+              The <a href="#syscl">context class loader</a> will refuse to load <em>any</em> of the duplicated classes.
+              (It could not know which you meant to load.)
+              You would need to pass a specific <code>ClassLoader</code> to any code which needed it.
+          </p>
+      </li>
+      <li>
+          <p>
+              <code>nbres</code>-protocol URLs will similarly not work for duplicated resources.
+          </p>
+      </li>
+      <li>
+          <p>
+              Some third-party libraries, including Xerces, perversely use the thread context class loader
+              to load some classes which are in their own JARs, even though they could just use the class
+              loader which loaded the calling code. Such calls will fail. You can work around this by
+              temporarily setting the thread CCL to that of the desired library module, restoring it
+              in a <code>finally</code> block.
+          </p>
+      </li>
+      <li>
+          <p>
+              A given module cannot depend on both of these library modules at once - it would not know which to load.
+          </p>
+      </li>
+  </ul>
+
+  <h1><a name="q-and-a">Common Problems and Solutions</a></h1>
+
+  <p>
+   This section is an attempt to gather a number of the problems, questions, and
+   misperceptions that people using the NetBeans module system have run across.
+   In some cases an error is caused by a simple mistake that can be corrected
+   just as simply; in other cases, you may need to consider the design of your
+   module and how it can work smoothly in NetBeans.
+   The developer's FAQ is likely to have more recent answers to your questions.
+  </p>
+
+  <h2><a name="default_package">I am getting warnings when trying to access resources from the default (root, unnamed) package</a></h2>
+
+  <p>Loading classes from the default (root) package is disabled. You can load resources from
+     that package but a warning is printed. It is strongly discouraged to use the default package.
+     Please see the <a href="http://java.sun.com/docs/books/jls/second_edition/html/packages.doc.html#40169">
+     Java Language Specification </a> for more details.
+     You can suppress the warning using <code>-J-Dorg.netbeans.ProxyClassLoader.level=1000</code> command
+     line switch.
+  </p>
+
+  <h2>I would like to use <samp>%CLASSPATH%</samp> / <samp>$CLASSPATH</samp></h2>
+
+  <p>NetBeans ignores <samp>%CLASSPATH%</samp> / <samp>$CLASSPATH</samp> environment variables
+     and defines its own classpath containing minimal set of classes required to start
+     the application using <code>-classpath</code> parameter passed to JVM.
+     All other classes are loaded by classloaders created during runtime and briefly described 
+     in this document. 
+     If it is really neceseary to add more classes or resources to application classloader
+     <code>--cp:a</code> or <code>--cp:p</code> options of launcher can be used.
+ </p>
+
+  <h2>Using <samp>lib/*.jar</samp> or <samp>-cp</samp> sounds much easier but someone told me not to do it</h2>
+
+  <p>The reason is similar to why JDK documentation about setting the class path for
+     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/classpath.html">Windows</a> or
+     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/classpath.html">Solaris</a>
+     states that <code>-classpath</code> is prefered over environment variables.
+     Adding classes (resources) to <samp>lib/ext/</samp> affects all Java applications
+     running using this Java installation. 
+     Use of <samp>--cp</samp> affects all modules and for example prevents the possibility 
+     to have more modules depending on different version of the same library.
+  </p>
+
+  <h2>I need to add a library JAR from outside the NetBeans installation</h2>
+  
+  <!-- Moved here from the FAQ. -->
+  
+  <p>
+   <b>Q:</b> Can my module add a library JAR to the classpath from outside the
+   IDE installation? For example, I have an application called Etch-a-Kvetch for
+   modeling customer call response systems, and I want to build a module to
+   integrate it into the IDE. The user may already have Etch-a-Kvetch installed
+   on their disk, and I want to reuse the <samp>eak.jar</samp> main library JAR
+   in my module. It is not present in the IDE's installation directory. Can I add
+   it to the IDE's classpath so my module can use it?
+  </p>
+  
+  <p>
+   <b>A:</b> Not easily. You have a few options:
+  </p>
+  
+  <ol>
+
+   <li>
+    <p>
+     <em>Add an entry to <samp>ide.cfg</samp>.</em> For example:</p>
+    
+<pre>
+-cp:a c:\eak\lib\eak.jar
+</pre>
+
+    <p>
+     This startup file provides the ability to add classpath entries to the IDE's
+     Java invocation.
+    </p>
+
+    <p>
+     <em>Pros:</em> Adds the library as desired. <em>Cons:</em> Very fragile.
+     Assumes that the <samp>ide.cfg</samp> is actually read, which is not
+     guaranteed for all platforms. Easy to clobber existing user customizations.
+     Dependent on the exact structure of the IDE's <samp>bin/</samp> directory,
+     which has changed quite a bit in the past and could change again. Places
+     library in startup classpath, whereas it is preferred to have it in the
+     module classloader only. Must be done before the IDE starts, requiring some
+     kind of manual installation step and making updating your module very
+     difficult.
+    </p>
+
+   </li>
+
+   <li>
+    <p>
+     <em>Duplicate <samp>eak.jar</samp> in <samp>modules/ext/</samp>.</em> That
+      is, ship a copy of the required JAR file inside the IDE installation, and
+      continue to refer to dynamic resources in the desired external location.
+    </p>
+
+    <p>
+     <em>Pros:</em> Simple to implement and should be reliable. Version of the
+     library shipped can be controlled to match that which the module was
+     compiled against, avoiding potential version skew. <em>Cons:</em>
+     Impractical when the library is physically very large, or there are
+     licensing issues involved in redistributing it. Bugfix upgrades to the
+     master library may not be reflected in the IDE's copy.
+    </p>
+
+   </li>
+
+   <li>
+    <p>
+     <em>Partition your module and use a new classloader.</em> In other words:
+     logically divide your module into two halves. The first half will form a
+     compilation unit depending on the Open APIs and will contain all of the
+     classes referred to directly in the module manifest (the installer, data
+     loaders, or whatever you have). It should contain one or more interfaces or
+     similar constructs which describe what it expects the second half to
+     implement. The second half will form a separate compilation unit, depending
+     on the first half, possibly the Open APIs, and also <samp>eak.jar</samp>. It
+     should contain implementations of the interfaces specified in the first
+     half. The first half, at install/restore time (or lazily when any
+     functionality is needed) should create a new <code>URLClassLoader</code>
+     whose parent should be the first half's classloader, and including as URLs
+     the locations of both the second half as a JAR and the library JAR; using
+     this classloader, look up the implementation classes by name; create new
+     instances of them; cast them to the interface types; and begin using them.
+     The second half should probably be placed in a separate JAR file; if not, it
+     will be necessary to subclass the dynamic classloader to not delegate class
+     loads for the implementation packages to its parent. Either way, it is
+     strongly recommended that the build process enforce that the first half
+     compile without reference to the second.
+    </p>
+
+    <p>
+     <em>Pros:</em> Compliant with the Open APIs and reliable. The library JAR
+     may be located anywhere at runtime and could even be moved or replaced at
+     runtime. <em>Cons:</em> Potentially complex to implement. Some use of
+     reflection required, though it should be safe. More complex build and test
+     procedure for the module. The partition between the two halves must be
+     carefully chosen, especially for large modules, to minimize the complexity
+     of the interfaces and push as much implementation as possible to one side or
+     the other.
+    </p>
+
+    <p>
+     Oyetunde Fadele has kindly posted a detailed explanation of how to use this
+     technique in practice: see his message long ago on dev@openide.netbeans.org.
+    </p>
+
+   </li>
+
+  </ol>
+    
+  <hr/><p>@FOOTER@</p>
+ </body>
+</html>

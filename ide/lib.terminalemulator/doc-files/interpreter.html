@@ -1,0 +1,155 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Term interpreter construction</title>
+<LINK REL="Stylesheet" HREF="../../../../../prose.css" TYPE="text/css">
+
+</head>
+
+<body>
+
+<h1>
+Term interpreter construction
+<hr>
+</h1>
+
+Emulation can now be fully customized using user settable and
+describable Interps.
+<p>
+Emulation is the process of accepting characters and converting them
+to screen operations. The supported operations are embodied in
+the Ops interface and implemented inside Term.
+<p>
+The most common way to achieve the conversion is through a
+state machine. Therefore some classes are available for the
+construction and programming of such state machines.
+
+<h2>
+Using the state machine
+</h2>
+The main class used in the state machine is AbstractInterp.State.
+It contains a vector of transitions indexed by chars. Only characters
+up to 128 are dealt with by the vector, all other characters cause
+a transition as set by State.setRegular().
+<p>
+A transition is characterized by the new state and the action to 
+perform. Transitions are assigned to the state table via 
+State.setAction(char c, State new_state, Actor actor). The
+first two are obvious. The actor is a singleton subclass of
+Actor that overrides Actor.action() in order to preform a specific
+action.
+<p>
+The state machine is programmed by creating new States and
+assigning transitions for each relevant character.
+<p>
+This scheme lends itself to object oriented inheritance by
+having subclass Interp's re-use their superclasses' 
+state tables and actions. They can also modify the state tables
+they've inherited.
+<p>
+Because of this you need not start each new Interp from scratch.
+For example InterpDumb has a bases state 'st_base' and defines
+some common actions like ...
+<pre>
+	act_err		to indicate a bad state transition
+	act_regular	a regular character
+	act_nop		no-op used for intermediate states
+	act_cr		carriage return
+	act_lf		line feed
+	...
+</pre>
+<p>
+'st_base' is enhanced further and is joined by other states  in
+InterpANSI.
+
+<h2>
+Why use Actors?
+</h2>
+Actors seem like an odd and heavy-weight way to implement actions.
+The following techniques were considered:
+
+<ol>
+<li> Numbers used for actions and a switch statement for the semantics
+   of the actions. An "inheritance" scheme can be implemented by
+   having the default for a switch to pass the interpretation of
+   the action code to a superclass.
+
+<li> Use preinitialized Methods and invoke().
+
+<li> The current Actor scheme.
+
+<li> No tables, instead each State to have it's processChar() function
+   and a switch statement on the incoming character.
+</ol>
+
+Schemes 1, 2 and 3 were actually somewhat implemented and compared.
+#2 turned out to be the worst, about 3-4 times slower than all
+the other schemes. The Actor scheme allows for quick virtual dispatch
+and should be marginally faster than switch statements which need to
+check bounds before indexing into a table. In the performed experiments
+there was no measurable difference between #1 and #3. 
+Despite this the Actor scheme was picked because ...
+<ul>
+<li>
+  The "inheritance" scheme used in #1 multiplies the number of
+  times a switch has to be performed.
+<li>
+  It's more OO than switch statements. It frees us from having to
+  assign numbers to action codes.
+</ul>
+<p>
+This decision was made with the cognizance that inner class
+proliferation is probably not the best thing.
+
+<h2>
+Terminal types and termcap/terminfo
+</h2>
+The premiere terminal specification is ISO/IEC 6429:1992(E), 
+(also know as ANSI X3.64-1979?). This is generically referred to
+as an ANSI terminal. 
+<p>
+The termcap specification for "ansi" is very simplistic and hardly
+covers the full gamut of operations. Not only that but vi seems to
+not work very well with TERM=ansi, particulary when it deals with
+long lines.
+<p>
+However, there is no name in the termcap database that represents
+the full 6429 spec, so for those we're stuck with using historical
+implementation names like "vt220", "xterm" and "dtterm".
+<p>
+I've chosen "dtterm" as it is the newest, I believe matches the ANSI
+spec best and some of it's extra features,
+like glyph gutters, are already implemented in Term.
+
+<h2>
+odds and ends
+</h2>
+<ul>
+<li>Maybe the name should be changed to Emulator?
+<li>Action -> Transition?
+<li>better way to capture control stream
+<li>processChar to move to AbstractInterp?
+</ul>
+
+</body>
+</html>

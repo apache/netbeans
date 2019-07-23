@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Project Properties Window: PHPUnit</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.ui.customizer.CustomizerPhpUnit" name="org.netbeans.modules.php.project.ui.customizer.CustomizerPhpUnit"></a></p>
+<div id="NBCSH3556"><!-- infolevel="all" infotype="General" --><a id="sthref481" name="sthref481"></a>
+<h1>Project Properties Window: PHPUnit</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In this dialog, set custom PHPUnit properties for your project.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t17">Element</th>
+<th align="left" valign="bottom" id="r1c2-t17">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t17" headers="r1c1-t17">
+<p>Use bootstrap</p>
+</td>
+<td align="left" headers="r2c1-t17 r1c2-t17">A custom bootstrap file is required for projects that use a custom class loader, for example by implementing the __autoload() magic function. You also use the bootstrap option if you need to include a file in advance, such as a file that defines global constants used by multiple classes in your project.
+<p>Click Browse to locate custom bootstrap files on your local file system.</p>
+<p>Click Generate to generate a skeleton bootstrap file.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t17" headers="r1c1-t17">
+<p>Use XML Configuration</p>
+</td>
+<td align="left" headers="r3c1-t17 r1c2-t17">The XML configuration file allows you to define options that you use in a command line call. You can also use the XML configuration file to define <code dir="ltr">php.ini</code> settings and global vars for your test cases. You can also set the bootstrap option in the XML configuration file. See the PHPUnit manual for more details.
+<p>Click Browse to locate custom XML configuration files on your local file system.</p>
+<p>Click Generate to generate a skeleton XML Configuration file.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t17" headers="r1c1-t17">
+<p>Use Custom Test Suite</p>
+</td>
+<td align="left" headers="r4c1-t17 r1c2-t17">If you set a custom test suite, you run that suite whenever you select Run &gt; Test Project. This is particularly useful when you wish to run only a subset of your tests, or if you want to use recently added features of PHPUnit that you have to add manually, such as Data Providers.
+<p>Note that you may define as many test suites as you want and run them separately. To run a test suite, right-click the test suite file in your project explorer and choose "run".</p>
+<p>Click Browse to locate custom test suites on your local file system.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t17" headers="r1c1-t17">Use Custom PHPUnit Script</td>
+<td align="left" headers="r5c1-t17 r1c2-t17">Select a custom PHPUnit script to use for this project. If you select this option, browse for the custom script. If you do not select this option, the project uses the default PHPUnit script specified in Tools &gt; Options (NetBeans Preferences on Mac) &gt; PHP &gt; Unit Testing.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t17" headers="r1c1-t17">Run All *Test Files Using PHPUnit</td>
+<td align="left" headers="r6c1-t17 r1c2-t17">Forces the IDE to run all files with the name *Test.php using PHPUnit, regardless of the file's location in the project. When this option is not enabled, only files in the Test Files folder are run using PHPUnit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t17" headers="r1c1-t17">
+<p>Ask For Test Groups Before Running Tests</p>
+</td>
+<td align="left" headers="r7c1-t17 r1c2-t17">Select this if you are using test groups and you want the IDE to prompt you for which test groups to run before running the tests. Add test groups to your code with the <code dir="ltr">@Group</code> variable.
+<p><code dir="ltr">/**</code></p>
+<p><code dir="ltr">* @group production</code></p>
+<p><code dir="ltr">* @group development</code></p>
+<p><code dir="ltr">*/</code></p>
+<p><code dir="ltr">[Test method]</code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3561" name="NBCSH3561"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1534">
+<param name="text" value="<html><u>&quot;About Developing PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

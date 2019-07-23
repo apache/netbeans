@@ -1,0 +1,202 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.76 [en] (Windows NT 5.0; U) [Netscape]">
+  <title>package</title>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body>
+The NetBeans Debugger SPI definition defines interface to Debugger
+Plug-ins. It allows to extend some already existing debugger, or create
+a new implementation of debugger. <br>
+<br>
+Debugger SPI allows to:
+<ul>
+  <li><b>create a new instance of session: </b>{@link
+org.netbeans.spi.debugger.SessionProvider}, {@link
+org.netbeans.spi.debugger.DelegatingSessionProvider}</li>
+  <li><span style="font-weight: bold;">add support for a new language
+to some Session</span>: {@link
+org.netbeans.spi.debugger.DebuggerEngineProvider}, {@link
+org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider}</li>
+  <li><b>install new watch evaluation engine:</b> You can register a
+new evaluator for watches - {@link
+org.netbeans.spi.debugger.WatchesProvider} and {@link
+org.netbeans.spi.debugger.WatchImpl}. </li>
+  <li><b>add a new actions:</b> A support for some new debugger action
+(like Step Into Action) can be installed to some {@link
+org.netbeans.api.debugger.DebuggerEngine} - {@link
+org.netbeans.spi.debugger.ActionsProvider}, {@link
+org.netbeans.spi.debugger.ActionsProviderSupport} and {@link
+org.netbeans.spi.debugger.ActionsProviderListener}. </li>
+</ul>
+<br>
+<h2>Registration</h2>
+Debugger Core SPI contains service providers extending basic Debugger
+Core API model. Each service provider must be registerred in
+Meta-inf/debugger. Meta-inf/debugger is special folder in module *.jar
+file. <br>
+<br>
+If you would like to register some implementation(s) of some service to
+some Debugger Core API interface of type {type name}, you should create
+file with name {service full class name}in folder
+Meta-inf/debugger/{type name}.<br>
+The file should contain a list of fully-qualified class names, one
+per line, of classes implementing the service interface and having
+default public constructor. It's also possible to append a name of
+a static method followed by paranthesis, which returns the implementation
+of the service. That method is then called instead of the default
+constructor. The method can not take any arguments.
+If there is a need to remove a service that is provided by some other
+module, append <code>'-hidden'</code> after the class or method name. Space
+and tab characters surrounding each name, as well as blank lines, are
+ignored. The comment character is <code>'#'</code>
+(<code>\u0023</code>); on each line all characters following the
+first comment character are ignored. The file must be encoded in
+UTF-8.<br>
+
+<br>
+Example I:<br>
+<div style="margin-left: 40px;">I would like to register
+org.netbeans.modules.debugger.jpda.actions.StepAction and
+org.netbeans.modules.debugger.jpda.actions.StartAction service
+implementations for JPDA DebuggerEngine. In this case I should create
+file named org.netbeans.spi.debugger.ActionsProvider in folder
+Meta-inf/debugger/netbeans-JPDADebuggerEngine/.
+"netbeans-JPDADebuggerEngine" is a name of JPDA DebuggerEngine, and it
+can be obtained from DebuggerEngine.getTypeID(). This file should
+contain two lines:<br>
+<div style="margin-left: 40px;">org.netbeans.modules.debugger.jpda.actions.StepAction<br>
+org.netbeans.modules.debugger.jpda.actions.StartAction<br>
+</div>
+<br>
+</div>
+<br>
+Example II:<br>
+<div style="margin-left: 40px;">I would like to remove the default
+'type' and 'toString' columns in LocalVariables view and add
+a 'builtin' column instead. This is supposed to work for ANT debugger.
+In this case I should create file named
+org.netbeans.spi.viewmodel.ColumnModel in folder
+META-INF/debugger/AntSession/LocalsView/.
+This file should contain three lines, the first two remove columns we do
+not want to appear for ANT debugger, the third adds ANT-specific
+column:<br>
+<div style="margin-left: 40px;">org.netbeans.modules.debugger.ui.models.ColumnModels.createLocalsTypeColumn()-hidden<br>
+org.netbeans.modules.debugger.ui.models.ColumnModels.createLocalsToStringColumn()-hidden<br>
+org.netbeans.modules.ant.debugger.ColumnModels.createBuiltInColumn()<br>
+</div>
+<br>
+</div>
+<br>
+<span style="font-weight: bold; text-decoration: underline;">List of
+all default service providers:</span><br>
+<br>
+<table cellpadding="3" cellspacing="0" border="1"
+ style="text-align: left; width: 100%;">
+  <tbody>
+    <tr>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>Service
+provider interface<br>
+      </big></big></td>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>Should
+be registerred to:<br>
+      </big></big></td>
+      <td
+ style="vertical-align: top; background-color: rgb(204, 204, 255); font-weight: bold;"><big><big>File
+names:<br>
+      </big></big></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">{@link
+org.netbeans.spi.debugger.SessionProvider}<br>
+      </td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.DebuggerInfo} </td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{DebuggerInfo type name}<br>
+file name: org.netbeans.spi.debugger.SessionProvider<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"> {@link
+org.netbeans.spi.debugger.DelegatingSessionProvider}&nbsp;</td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.DebuggerInfo} </td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{DebuggerInfo type name}<br>
+file name: org.netbeans.spi.debugger.DelegatingSessionProvider</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">{@link
+org.netbeans.spi.debugger.DebuggerEngineProvider} </td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.Session}&nbsp;</td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{Session type name}<br>
+file name: org.netbeans.spi.debugger.DebuggerEngineProvider<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">{@link
+org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider} </td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.Session}</td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{Session type name}<br>
+file name: org.netbeans.spi.debugger.DelegatingDebuggerEngineProvider </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">{@link
+org.netbeans.spi.debugger.WatchesProvider}&nbsp;</td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.DebuggerEngine}&nbsp;</td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{DebuggerEngine type name}<br>
+file name: org.netbeans.spi.debugger.WatchesProvider</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">{@link
+org.netbeans.spi.debugger.ActionsProvider} <br>
+      </td>
+      <td style="vertical-align: top;">{@link
+org.netbeans.api.debugger.DebuggerEngine} <br>
+      </td>
+      <td style="vertical-align: top;">folder name:
+Meta-inf/debugger/{DebuggerEngine type name}<br>
+file name: org.netbeans.spi.debugger.ActionsProvider</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+</body>
+</html>

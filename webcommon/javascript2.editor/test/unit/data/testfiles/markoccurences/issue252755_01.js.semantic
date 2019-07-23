@@ -1,0 +1,8 @@
+function |>METHOD:Obj<|() {
+    this.|>FIELD:buf<| = [];
+    this.|>METHOD:peek<| = function |>METHOD,UNUSED:peek<|(pos) {
+        var |>LOCAL_VARIABLE_DECLARATION:buf<| = this.|>FIELD:buf<|,
+            |>LOCAL_VARIABLE_DECLARATION:ch<| = (pos < |>LOCAL_VARIABLE:buf<|.length ? |>LOCAL_VARIABLE:buf<|[pos] : '\0'); // problem with first 'buf'
+        return |>LOCAL_VARIABLE:ch<|;
+    };
+}

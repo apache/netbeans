@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.foo
+OpenIDE-Module-Public-Packages: org.netbeans.api.foo.*
+OpenIDE-Module-Friends: org.netbeans.core, usesapifriend
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: today
+

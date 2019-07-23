@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : testNewXMLSchema.xsd
+    Created.*
+    Author.*
+    Description:
+        Purpose of XML Schema document follows.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ns="http://xml.netbeans.org/examples/targetNS"
+            targetNamespace="http://xml.netbeans.org/examples/targetNS"
+            xmlns="http://xml.netbeans.org/examples/targetNS"
+            elementFormDefault="qualified">
+
+   <!-- 
+      TODO design your XML schema here.
+      XML Schema Primer: http://www.w3.org/TR/xmlschema-0/
+      Structures recommendation: http://www.w3.org/TR/xmlschema-1/
+      Datatypes recommendation: http://www.w3.org/TR/xmlschema-2/
+
+      Example: there is an <address-book> element specified.
+               The <address-book> can contain multiple <item> elements
+               with unique <name> values.
+               Notice that <mobile> element is specified as a restriction of xsd:string
+               and must match the pattern: three digits followed by a hypen followed 
+               by six digits.
+   -->
+
+   <!--   
+   <xsd:element name="address-book" type="ns:AddressBookType">
+     <xsd:unique name="item-name-uniqueness">
+       <xsd:selector xpath="ns:item"/>
+       <xsd:field    xpath="ns:name"/>
+     </xsd:unique>
+   </xsd:element>
+
+   <xsd:complexType name="AddressBookType">
+     <xsd:choice minOccurs="0" maxOccurs="unbounded">
+       <xsd:element name="item" type="ns:ItemType"/>
+     </xsd:choice>
+   </xsd:complexType>
+     
+   <xsd:complexType name="ItemType">
+     <xsd:sequence>
+       <xsd:element name="name"    type="xsd:string"/>
+       <xsd:element name="email"   type="xsd:string" minOccurs="0"/>
+       <xsd:element name="mobile" minOccurs="0">
+         <xsd:simpleType>
+           <xsd:restriction base="xsd:string">
+             <xsd:pattern value="\d{3}-\d{6}"/>
+           </xsd:restriction>
+         </xsd:simpleType>
+       </xsd:element>
+     </xsd:sequence>
+   </xsd:complexType>
+  -->
+</xsd:schema>
+

@@ -1,0 +1,42 @@
+<testresult testFile='gotostatement.php'>
+    <scanner>
+        <token id='T_STRING' start='6' end='11'>
+            <text>LABEL</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='11' end='12'>
+            <text>:</text>
+        </token>
+        <token id='T_GOTO' start='13' end='17'>
+            <text>goto</text>
+        </token>
+        <token id='T_STRING' start='18' end='23'>
+            <text>LABEL</text>
+        </token>
+        <token id='T_SEMICOLON' start='23' end='24'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='25' end='27'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='27' end='29'>
+            <text> \n</text>
+        </token>
+        <token id='EOF' start='29' end='29'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='28'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <GotoLabel start='6' end='12'>
+                <Identifier start='6' end='11' name='LABEL'/>
+            </GotoLabel>
+            <GotoStatement start='13' end='24'>
+                <Identifier start='18' end='23' name='LABEL'/>
+            </GotoStatement>
+            <EmptyStatement start='25' end='27'/>
+            <InLineHtml start='27' end='28'/>
+        </Statements>
+    </Program>
+</testresult>

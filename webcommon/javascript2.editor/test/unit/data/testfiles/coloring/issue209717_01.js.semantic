@@ -1,0 +1,3 @@
+function |>METHOD:test<|(foo, bar){
+          |>GLOBAL:foobar<| = (typeof foo == "undefined") ? bar : foo;
+}

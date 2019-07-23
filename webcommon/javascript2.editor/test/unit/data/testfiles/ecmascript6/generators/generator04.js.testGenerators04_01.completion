@@ -1,0 +1,5 @@
+Code completion result for source line:
+console.log(keyboard.keys().n|ext());
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     next(value: String): Object     [PUBLIC]   JS Platform

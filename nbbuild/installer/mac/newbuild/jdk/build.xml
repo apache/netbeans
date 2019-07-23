@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="jdk" basedir="." default="build-pkg">
+    <property name="builddir" value="${basedir}/build"/>
+    <property name="appdir" value="${builddir}/app"/>
+    <property name="scriptsdir" value="${builddir}/scripts"/>
+    
+    <target name="clean">
+        <delete dir="${builddir}" failonerror="no"/>
+    </target>
+
+    <target name="init">
+         <mkdir dir="${appdir}"/>
+         <mkdir dir="${scriptsdir}"/>
+    </target>
+    
+    <target name="get-bits">       
+        <echo message="Downloading JDK from ${jdk_bits_location}" />
+        <get src="${jdk_bits_location}" dest="./build/jdk.dmg" usetimestamp="true"/>
+    </target>
+    
+    <target name="copy-pkg" depends="get-bits">       
+        <exec executable="sh" failonerror="yes">
+            <arg value="-cv"/>
+            <arg value="cd ${builddir}; 
+hdiutil attach jdk.dmg -mountpoint jdk-disk; 
+pkgutil --expand jdk-disk/JDK* expanded; 
+mkdir flatten; 
+pkgutil --flatten expanded/jdk*.pkg flatten/jdk.pkg; 
+cp flatten/* .; 
+hdiutil detach jdk-disk; 
+rm ${builddir}/jdk.dmg; 
+rm -rf expanded flatten"/>
+        </exec>
+    </target>
+
+    <target name="build-pkg" depends="clean, init, copy-pkg">
+        <exec executable="sh" failonerror="yes" outputproperty="size">
+            <arg value="-c"/>
+            <arg value="du -sk build | sed 's/[\t]*build//' | xargs -I {}  expr {} + 5000"/>
+        </exec>        
+        <echo message="sizeof.jdk=${size}${line.separator}" file="${basedir}/../build/sizes.pro" append="true"/>
+        <echo message="Getting size of JDK - ${size}"/>
+        
+        <copy file="${basedir}/pkg/scripts/set_jdk_home.sh" todir="${basedir}/../build/postinstallscripts" verbose="yes" />
+        <chmod file="${basedir}/../build/postinstallscripts/set_jdk_home.sh" perm="ugo+x"/>
+    </target>
+    
+</project>

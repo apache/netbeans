@@ -1,0 +1,2 @@
+public abstract T get(int arg0) - implement
+public int getModCount() - generate

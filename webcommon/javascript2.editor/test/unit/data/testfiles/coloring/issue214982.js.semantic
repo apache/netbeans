@@ -1,0 +1,7 @@
+function |>METHOD:Foo<|(){
+
+    Foo.prototype.|>METHOD:getA<| = function(){ return "A";};
+    Foo.prototype.|>METHOD:getB<|= function(){ return "B"; };
+}  
+
+

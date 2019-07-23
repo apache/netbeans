@@ -1,0 +1,550 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/**
+  DTD grammar suitable for syntax coloring. It must take care of
+  newlines (only "\n" may appear) to achieve proper functionality. Currently it
+  returns: tag names, strings, ... and comments.
+
+  <h3>Suggestion to JavaCC developers</h3>
+  JavaCC [Token Manager] would be improved in following areas:
+
+  <li>TOKENMGR_BEGIN/END instead of TOKEN_MGR_DECLS.
+  <ul>
+    <li>It would allow TokenManager be a subclass.
+    <li>It would lead to code reuse/space save.
+    <li>It would be helpfull it a application uses more than one JavaCC generated analyzers.
+  </ul>
+
+
+  <li>Intoduction of lookahead (LA as ANLTR calls it is better than long LOOKAHEAD)
+  at lexical rules.
+
+  <li> Allow to return same token from more states. 
+  Construct that reclassifies returned token. E.g. It would generate 
+  <pre>
+  { matchedToken.kind = newKind; }
+  </pre>
+  Or allow non-unique token names. E.g. 
+  <SOFT_ERR: "?"> in default state and <SOFT_ERR: "--"> in comment state.
+
+  <li>ASCIICharStream etc. should be declared as CharStream implementations
+
+  <p>NOTE: Remove UCode_CharStream.java after javacc this source.
+
+  @author Petr Kuzel
+*/
+
+options {
+//      USER_CHAR_STREAM = true;
+    UNICODE_INPUT = true;  // generate unicode aware code
+    OPTIMIZE_TOKEN_MANAGER = true;
+    BUILD_PARSER = false;
+    STATIC = false;
+}
+
+
+PARSER_BEGIN(DTDSyntax)
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.xml.text.syntax.javacc;
+
+import java.io.*;
+import org.netbeans.modules.xml.text.syntax.javacc.lib.*;
+
+/** This must be included for javacc joy. 
+ *  We use just token manager.
+ */
+class DTDSyntax {
+
+    public static void main (String args[]) throws Exception {
+        InputStream in;
+        
+        if (args.length == 1) {
+            in = new FileInputStream(args[0]);
+        } else {
+            System.err.println("One argument required."); // NOI18N
+            return;
+        }
+        
+    }
+    
+}
+
+PARSER_END(DTDSyntax)
+
+/** TokenManager is modified so it seamlessly cooperate with Syntax.
+ */
+TOKEN_MGR_DECLS:
+{
+    //!!! enter proper bridge
+    public final class Bridge extends DTDSyntaxTokenManager implements JJSyntaxInterface, JJConstants {
+        public Bridge() {
+            super(null);
+        }
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~ TEXT BASED SHARING START ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    private transient String myimage = "";  //contais image of last scanned [partial] token // NOI18N
+    private transient String lastImage = ""; // NOI18N
+    private transient int id;
+
+    private int lastValidState; //contains last correct state
+                                //state may become incorect if EOB is returned
+                                //due to buffer end e.g.
+                                //(a) <! moves to IN_DECL
+                                //(b) <!-- moves to IN_COMMENT
+                                //if (a) is followed by EOB that
+                                //token manager enters illegal state
+
+    /** Return current state of lexan. 
+     * There will be probably necessary simple ID mappe among
+     * Syntax's state IDs with reserved INIT(-1) and JavaCC DEFAULT(variable often the highest one).
+     */
+    public final int getState() {
+        return curLexState;
+    }
+
+    /** Return length of last recognized token. ?? SKIP*/
+    public final int getLength() {
+        return myimage.length();
+    }
+
+    /** Return last token. */
+    public final String getImage() {
+        return myimage.toString();
+    }
+
+    /** Set state info to folowing one. */
+    public final void setStateInfo(int[] state) {
+        if (states == null) return;
+        int[] newstate = new int[states.length];
+        System.arraycopy(state,0,newstate,0,states.length);
+        lastValidState = state[states.length]; //restore lastValidState
+        states = newstate;
+    }
+
+    /** return copy of current state. */
+    public final int[] getStateInfo() {
+        int[] state = new int[states.length + 1];
+        System.arraycopy(states,0,state,0,states.length);
+        state[states.length] = lastValidState;  //store lastValidState
+        return state;
+    }
+
+
+    /** Set input stream to folowing one
+     *  and reset initial state.
+     */
+    public final void init(CharStream input) {
+        ReInit((UCode_CharStream)input);
+        lastValidState = getState();
+    }
+
+    /** Set input stream to folowing one
+     *  and set current state.
+     */
+    public final void init(CharStream in, int state) {    
+        ReInit((UCode_CharStream)in, state);
+        lastValidState = getState();
+    }
+
+    /** Syntax would want restore state on buffer boundaries. */
+    public final void setState(int state) {
+        lastValidState = state;
+        SwitchTo(state == -1 ? defaultLexState : state); //fix deleting at document start
+    }
+
+    /** Prepare next token from stream. */
+    public final void next() {
+        try {
+            Token tok = getNextToken();
+            myimage = tok.image;
+            id = tok.kind;
+            if (id == EOF) { //??? EOF is visible just at Parser LEVEL
+                setState(lastValidState);
+                id = Bridge.JJ_EOF;
+            }
+            lastValidState = getState();
+
+        } catch (TokenMgrError ex) {  
+            try {  
+                //is the exception caused by EOF?
+                char ch = input_stream.readChar();
+                input_stream.backup(1);
+
+                myimage = input_stream.GetImage();
+                
+                if (Boolean.getBoolean("netbeans.debug.exceptions")) // NOI18N
+                    System.err.println(getClass().toString() + " ERROR:" + getState() + ":'" + ch + "'"); // NOI18N
+
+                id = Bridge.JJ_ERR;      
+
+            } catch (IOException eof) {           
+
+                myimage = input_stream.GetImage();          
+                id = Bridge.JJ_EOF;
+            }
+        }    
+    }
+
+    /** Return ID of the last recognized token. */
+    public int getID() {
+        return id;
+    }
+
+    /** Return name of the last token. */
+    public final String getName() {
+        return tokenImage[id];
+    }
+
+    /** For testing purposes only. */
+    public static void main(String args[]) throws Exception {
+
+        InputStream in;
+        int dump = 0;
+        int dump2 = 1000;
+
+        System.err.println("Got " + args.length + " arguments."); // NOI18N
+
+        if (args.length != 0) {
+            in = new FileInputStream(args[0]);
+            if (args.length == 2) { //dump just requested line
+                dump = Integer.parseInt(args[1]) - 1;
+                dump2 = dump;
+                System.err.println("Line to be dumped:" + dump); // NOI18N
+            }
+        } else  {
+            System.err.println("One argument required."); // NOI18N
+            return;
+        }
+
+        CharStream input = new ASCIICharStream(in, 0, 0);
+        Bridge lex = null; //new XMLSyntaxTokenManager(input);
+
+        int i = 25; //token count
+        int id;
+        int toks = 0;
+        long time = System.currentTimeMillis();
+
+        while (i/*--*/>0) {
+
+            lex.next();
+            id = lex.getID();
+
+            toks++;
+            switch (id) {
+            case Bridge.JJ_EOF:
+                System.err.println("EOF at " + lex.getState() + " " + lex.getImage()); // NOI18N
+                System.err.println("Line: " + input.getLine() ); // NOI18N
+                System.err.println("Tokens: " + toks ); // NOI18N
+                System.err.println("Time: " + (System.currentTimeMillis() - time) ); // NOI18N
+                return;
+
+            default:
+                if (dump <= input.getLine() && input.getLine() <= dump2)
+                    System.err.println(" " + id + "@" + lex.getState() + ":" + lex.getImage() ); // NOI18N
+            }
+
+        }
+
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~ TEXT BASED SHARING END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+//##########################################################
+
+    //!!! enter proper code
+
+    /**
+     * The analyzer may store information about state in this
+     * array. These will be used as Syntax state info.
+     */
+    private int[] states = new int[5];
+    private final int IS_COMMENT = 0;
+    private final int IS_CREF = 1;
+    private final int IS_STRING = 2;
+    private final int IS_CHARS = 3;
+    private final int IS_PREF = 4;  
+  
+}
+
+//!!! enter proper grammar
+
+
+/*##########################################################*/
+/*              LEXAN                                       */
+/*#########################################################3*/
+
+
+/** Syntax requires recognition of newlines in any context. */
+<*>
+TOKEN: 
+{
+  <CRLF: "\n" >
+| /** global text matches all but following chars. 
+
+  ("<" | ">" | "'" | "\"" | "&" | "%"| ";" | "[" | "]" | "=" | "/" | "!" | "?")+
+*/
+  <#TEXT: (~[" ", "\t", "\n", "<", ">", "'", "\"", "&", "%", ";", "[", "]" , "=" , "/" , "!" , "?"])+>
+|
+  <#CONTENT: (~["\n","<",">","&"])+>
+| /** global white space. */
+  <#WS: (" " | "\t")+>
+}
+
+/** Initial state could be a switch allowing then guess 
+* which token is just recognized.
+*/
+<DEFAULT> //COMMENT //GREF //PREF //CREF
+TOKEN:
+{
+  <DECL_START: "<!"> : IN_DECL
+| <PI_START: "<?"> : IN_PI
+| <TEXT_IN_DEFAULT: "<" | " " | "\t">  //just being written
+| <COND_END_IN_DEFAULT: "]]>"> //little bit tricky - what it would be else?
+| <ERR_IN_DEFAULT: (~[" ", "\t", "\n", "]", "<", "&", "%"])+ >
+}
+
+
+
+/** <? ... ?> */
+<IN_PI>
+TOKEN:
+{
+
+  <XML_TARGET: "xml"> : IN_XML_DECL
+| <PI_TARGET: (<TEXT>)>
+| <ERR_IN_PI: ("<" | ">" | "'" | "\"" | "&" | "%"| ";" | "[" | "]" | "=" | "/" | "!" )+>
+| <PI_CONTENT_START: (<WS>) > : IN_PI_CONTENT
+| <PI_END: "?>"> : DEFAULT //be tolerant to missing <WS>
+}
+
+
+/** <?xml ... ?>
+*   just treat well known xml declaration "attributes" as keywords
+*/
+<IN_XML_DECL>
+TOKEN:
+{
+  <KW_IN_XML_DECL: "version" | "encoding" | "standalone" >
+| <TEXT_IN_XML_DECL: (~["\n", "\t", " ", "?", "="])+ >
+| <BR_IN_XML_DECL: ("\t" | " " | "=")+ >
+| <XML_DECL_END: "?>" > : DEFAULT
+| <Q_IN_XML_DECL: "?">
+}
+
+/** <? ... ?> */
+<IN_PI_CONTENT>
+TOKEN:
+{
+
+  <TEXT_IN_PI_CONTENT: (<TEXT> | <WS> | ( ">" | "&" | "%"| ";" | "[" | "]" | "=" | "/" | "!" | "\"" | "'" )+)+ >
+| <ERR_IN_PI_CONTENT: ("<")+>   
+| <PI_CONTENT_END: "?>"> : DEFAULT
+| <BR_IN_PI_CONTENT: "?">
+}
+
+
+/** declaration is <! ... */
+<IN_DECL> //GREF //PREF
+TOKEN:
+{
+  <ENTITY: "ENTITY"> : IN_ENTITY
+| <ATTLIST: "ATTLIST"> : IN_ATTLIST
+| <DOCTYPE: "DOCTYPE"> : IN_DOCTYPE
+| <ELEMENT: "ELEMENT"> : IN_ELEMENT
+| <NOTATION: "NOTATION"> : IN_NOTATION
+| <TEXT_IN_DECL: <TEXT> >
+| <WS_IN_DECL: <WS> >
+| <ERR_IN_DECL: ("<" | "'" | "\"" | ";" | "]" | "=" | "/" | "!" | "?")+>
+| <COND: "["> : IN_COND
+| <DECL_END: ">"> : DEFAULT  
+}
+
+<IN_ENTITY> //STRING //CHARS //PREF
+TOKEN:
+{
+  <KW_IN_ENTITY: "SYSTEM" | "NDATA" | "PUBLIC">
+| <BR_IN_ENTITY: (" " | "\t")+ >  //break token to recognize above
+| <TEXT_IN_ENTITY: (~["\n", " ", "\t", "%", ">", "\"", "'"])+  >
+| <ENTITY_END: ">" > : DEFAULT
+}
+
+<IN_ELEMENT> //PREF 
+TOKEN:
+{
+  <KW_IN_ELEMENT: "EMPTY" | "#PCDATA" | "ANY" >
+| <SYMBOL_IN_ELEMENT: ("," | "(" | "\t" | " " | ")" | "|" | "?" | "*" | "+")+ > //break token to recognize above
+| <TEXT_IN_ELEMENT: (~["\n", ",", "(", ")", "\t", " ", "%", ">", "|" , "?", "*" , "+"])+ >  
+| <ELEMENT_END: ">"> : DEFAULT
+}
+
+/** */
+<IN_NOTATION> //STRING //CHARS
+TOKEN:
+{
+  <KW_IN_NOTATION: ("SYSTEM" | "PUBLIC") >
+| <TEXT_IN_NOTATION: (~["\n", ">", " ", "\t", "\"", "'"])+ >
+| <BR_IN_NOTATION: (" " | "\t")+ >
+| <NOTATION_END: ">"> : DEFAULT
+}
+
+/** 
+* Conditional section "<![ ... [" declatation. Content of the section 
+* is treated by DEFAULT => the end delimiter too.
+* This code only tries to colorize "INCLUDE", "IGNORE" as kw.
+* PE as pe other as error
+*/
+<IN_COND> //PREF
+TOKEN:
+{
+  <KW_IN_COND: "I" ("NCLUDE" | "GNORE") >
+| <TEXT_IN_COND: (<WS>) >
+| <ERR_IN_COND: (<TEXT> | ("<" | ">" | "'" | "\"" | "&" | ";" | "]" | "!" | "/")+) >
+| <COND_END: "["> : DEFAULT
+}
+
+/** List of attribures */
+<IN_ATTLIST> //STRING //CHARS //PREF //CREF
+TOKEN:
+{
+  <ERR_IN_ATTLIST: ("<")+ >
+| <KW_IN_ATTLIST: 
+        ("#" ("REQUIRED"| "IMPLIED"| "FIXED" )) | ( "ID" ("REF")? ("S")? )
+        | "CDATA"| "ENTITY"| "ENTITIES"
+        | ( "NMTOKEN" ("S")? ) | "NOTATION"
+  >
+| <TEXT_IN_ATTLIST: (<WS> | <TEXT> | ( ";" | "[" | "]" | "=" | "!")+)>
+| <ATTLIST_END: ">"> : DEFAULT
+}
+
+/*########################################################*/
+// reused automatons
+
+/** REFERENCE is delimited by "%" | "&" ... ";" | <WS> 
+  It could be optimalized by introcusing just IN_REF state
+  shared by GREF & PREF because they can not be nested.
+*/
+<DEFAULT, IN_DECL, IN_ELEMENT, IN_COND, IN_ENTITY, IN_ATTLIST>
+TOKEN:
+{
+  <PREF_START: "%"> { states[IS_PREF]  = getState(); } : IN_PREF
+}
+
+<IN_PREF>
+TOKEN:
+{
+  <TEXT_IN_PREF: (~[";", " ", "\t", "\n"])+ > 
+| <PREF_END: ";" | <WS> > { setState(states[IS_PREF]); }
+}
+
+
+/** CHARS delimited by "'" */
+<IN_TAG_ATTLIST, IN_ENTITY, IN_ATTLIST, IN_DOCTYPE, IN_NOTATION>
+TOKEN:
+{
+  <CHARS_START: "'"> { states[IS_CHARS]  = getState(); } : IN_CHARS
+}
+
+<IN_CHARS>
+TOKEN:
+{
+  <TEXT_IN_CHARS: (~["\n","'"])+>
+| <CHARS_END: "'"> { setState(states[IS_CHARS]); }
+}
+
+/** delimited by "\"" */
+<IN_TAG_ATTLIST, IN_ENTITY, IN_ATTLIST, IN_DOCTYPE, IN_NOTATION>
+TOKEN:
+{
+  <STRING_START: "\""> { states[IS_STRING] = getState(); } : IN_STRING
+}
+
+<IN_STRING>
+TOKEN:
+{
+  <TEXT_IN_STRING: ((~["\n","\""])+)>
+| <STRING_END: "\""> { setState(states[IS_STRING]); }
+
+}
+
+/** comment is delimited by "-->" */
+<DEFAULT>
+TOKEN:
+{
+  <COMMENT_START: "<!--"> { states[IS_COMMENT] = getState(); } : IN_COMMENT
+}
+
+<IN_COMMENT>
+/* Comment is delimited by multiple character delimiter.
+   The comment end regular expressions must throw TokenMgrError 
+   to indicate that the lexer is in the middle of token at
+   buffer boundaries!
+*/
+TOKEN:
+{
+  <TEXT_IN_COMMENT: ( (~["-", "\n"])+ | ("-" ~["-", "\n"])+ )+  >
+| <ERR_IN_COMMENT: "--" ~[">","\n"] > 
+| <COMMENT_END: "-->" > { setState(states[IS_COMMENT]); }
+}
+
+
+/** char ref delimited by &#[x] ... ; */
+<DEFAULT, IN_ATTLIST>
+TOKEN:
+{
+  <CHREF_START: "&#x"> { states[IS_CREF] = getState(); } : IN_CHREF
+| <CREF_START: "&#"> { states[IS_CREF] = getState(); } : IN_CREF
+}
+
+<IN_CREF>
+TOKEN:
+{
+  <TEXT_IN_CREF: (["0"-"9"])+ >
+| <CREF_END: ";" | <WS> > { setState(states[IS_CREF]); }
+| <ERR_IN_CREF: ~["\n"]>
+}
+
+<IN_CHREF>
+TOKEN:
+{
+  <TEXT_IN_CHREF: (["0"-"9"] | ["a"-"f"] | ["A"-"F"])+ >
+| <CHREF_END: ";" | <WS> > { setState(states[IS_CREF]); }
+| <ERR_IN_CHREF: ~["\n"]>
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Bind Dialog Box: Binding Tab</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="CHDHEDCB" name="CHDHEDCB"></a><a id="gui.binding-customizer.basic" name="gui.binding-customizer.basic"></a></p>
+<div id="NBCSH2255"><!-- infolevel="all" infotype="General" -->
+<h1>Bind Dialog Box: Binding Tab</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to bind properties of JavaBeans components (beans) with each other so that the values of those properties are synchronized. For example, you can bind the <code dir="ltr">value</code> property of a JSlider component to the value of an object in a table so that the value in the table cell is updated as the user adjusts the slider. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2651">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The property for which you open the Bind dialog box serves as the <i>target</i> of the binding. In the Bind dialog box, you specify the binding <i>source</i> and configure the binding. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2649">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The Bind Dialog box Advanced tab contains the following fields:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t3">Element</th>
+<th align="left" valign="bottom" id="r1c2-t3">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t3" headers="r1c1-t3">
+<p>Name</p>
+</td>
+<td align="left" headers="r2c1-t3 r1c2-t3">Enables you to create a name for the binding, which gives you more flexibility for managing your bindings.
+<p>The name is added to the constructor of the binding and can be referenced with the binding's <code dir="ltr">getName()</code> method.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t3" headers="r1c1-t3">
+<p>Update Mode</p>
+</td>
+<td align="left" headers="r3c1-t3 r1c2-t3">Specifies the way that the properties are kept synchronized.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t3" headers="r1c1-t3">
+<p>Always sync (read/write)</p>
+</td>
+<td align="left" headers="r4c1-t3 r1c2-t3">Whenever a change is made to either the source or the target, the other is updated.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t3" headers="r1c1-t3">
+<p>Only read from source (read only)</p>
+</td>
+<td align="left" headers="r5c1-t3 r1c2-t3">The target is only updated the first time the source value is set.
+<p>Changes that are made to the source are updated in the target. Changes made to the target are not updated in the source.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t3" headers="r1c1-t3">
+<p>Read from source once (read once)</p>
+</td>
+<td align="left" headers="r6c1-t3 r1c2-t3">The target is only updated when the target and source are initially bound.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t3" headers="r1c1-t3">
+<p>Update Source When</p>
+</td>
+<td align="left" headers="r7c1-t3 r1c2-t3">This option is available only to the text property of <code dir="ltr">JTextField</code> and JTextArea components.
+<p>Enables you to select the frequency with which the properties are synchronized.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t3" headers="r1c1-t3">
+<p>Ignore Adjusting</p>
+</td>
+<td align="left" headers="r8c1-t3 r1c2-t3">This option is available to the value property of JSlider; to the <code dir="ltr">selectedElement</code> property of JTable and JList; and to the <code dir="ltr">selectedElements</code> property of JTable and JList.
+<p>When this checkbox is selected, any changes made to one property are not propagated to the other property until the user is finished making the change. For example, when the application's user drags a slider, the value of the property bound to the slider is updated when the user releases the mouse button.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t3" headers="r1c1-t3">
+<p>Converter</p>
+</td>
+<td align="left" headers="r9c1-t3 r1c2-t3">If your binding involves properties with different data types, you can specify code that converts values between the types. The beans binding library handles many commonly needed conversions, but you might need to provide your own converters for other combinations of property types. Such converters need to extend the <code dir="ltr">org.jdesktop.beansbinding.Converter</code> class.
+<p>The Converter drop-down list is populated with any converters that have been added as beans to your form. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2658">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You can also add the conversion code directly by clicking the ellipsis (...) button, and selecting Custom Code from the Select Converter Property Using drop-down list.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t3" headers="r1c1-t3">
+<p>Validator</p>
+</td>
+<td align="left" headers="r10c1-t3 r1c2-t3">Enables you to specify code to validate a change in the target property value before propagating that change back to the source property. Such a validator needs to extend the <code dir="ltr">org.jdesktop.beansbinding.Validator</code> class.
+<p>The Validator drop-down list is populated with any validators that have been added as beans to your form. You can also add the validation code directly by clicking the ellipsis (...) button, and selecting Custom Code from the Select Validator Property Using drop-down list.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t3" headers="r1c1-t3">
+<p>Null Source Value</p>
+</td>
+<td align="left" headers="r11c1-t3 r1c2-t3">Enables you to specify a different value to use if the source property has a null value when the binding is attempted.
+<p>This field corresponds with the <code dir="ltr">setSourceNullValue()</code> method of the <code dir="ltr">org.jdesktop.beansbinding.Binding class</code>.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t3" headers="r1c1-t3">
+<p>Unreadable Source Value</p>
+</td>
+<td align="left" headers="r12c1-t3 r1c2-t3">Enables you to specify a different value to use if the binding expression can not be resolved when the binding is attempted.
+<p>This field corresponds with the <code dir="ltr">setSourceUnreadableValue()</code> method of the <code dir="ltr">org.jdesktop.beansbinding.Binding</code> class.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note</b>: To better understand the classes and methods mentioned above, you can access the beans binding Javadoc documentation directly from the IDE. Choose <b>Help</b> &gt; <b>Javadoc References</b> &gt; <b>Beans Binding</b>. In the browser window that opens, click the <code dir="ltr">org.jdesktop.beansbinding</code> link to access documentation for those classes.</p>
+<a id="NBCSH2267" name="NBCSH2267"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2649">
+<param name="text" value="<html><u>&quot;Working with Database Applications and Beans Binding&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2578">
+<param name="text" value="<html><u>&quot;Working with the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2667">
+<param name="text" value="<html><u>&quot;Configuring the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

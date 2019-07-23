@@ -1,0 +1,257 @@
+[@W|, WebService, @WebService, 448]
+WebMethod
+WebParam
+WebService
+wsdl
+End cursor position = 460
+[@S|, SOAPBinding, @SOAPBinding, 487]
+SOAPBinding
+SafeVarargs
+Stateless
+SuppressWarnings
+sun
+sunw
+End cursor position = 500
+[@HandlerChain(|), String file, @HandlerChain(file=), 560]
+String file
+String name = ""
+End cursor position = 580
+[@WebParam(header=|), true, @WebParam(header=true), 627]
+false
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+Comparable <T>
+Compiler
+Deprecated
+Double
+Enum <E>
+EnumConstantNotPresentExceptio
+Error
+Exception
+ExceptionInInitializerError
+Float
+HandlerChain
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal <T>
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable <T>
+LinkageError
+Long
+Math
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+Readable
+ReflectiveOperationException
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SOAPBinding
+SafeVarargs
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+Stateless
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsExceptio
+SuppressWarnings
+System
+TestWebService
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+WebMethod
+WebParam
+WebService
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+wsdl
+End cursor position = 649
+[@WebParam(mode=|), Mode Mode.OUT, @WebParam(mode= WebParam.Mode.OUT), 714]
+Mode Mode.IN
+Mode Mode.INOUT
+Mode Mode.OUT
+false
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+Comparable <T>
+Compiler
+Deprecated
+Double
+Enum <E>
+EnumConstantNotPresentExceptio
+Error
+Exception
+ExceptionInInitializerError
+Float
+HandlerChain
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal <T>
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable <T>
+LinkageError
+Long
+Math
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+Readable
+ReflectiveOperationException
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SOAPBinding
+SafeVarargs
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+Stateless
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsExceptio
+SuppressWarnings
+System
+TestWebService
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+WebMethod
+WebParam
+WebService
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+wsdl
+End cursor position = 748

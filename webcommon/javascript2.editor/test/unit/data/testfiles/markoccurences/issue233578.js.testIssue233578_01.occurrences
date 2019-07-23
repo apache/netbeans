@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:name<| = 2;
+    this.name = |>MARK_OCCURRENCES:n^ame<|;
+|>MARK_OCCURRENCES:name<| = 20;

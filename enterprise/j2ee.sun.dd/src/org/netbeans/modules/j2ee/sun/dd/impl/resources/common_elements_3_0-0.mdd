@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+    <extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+	<meta-element>
+        <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.MessageSecurityBinding</import>
+        <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_1.ServiceQname</import>
+		<dtd-name>webservice-endpoint</dtd-name>
+		<bean-name>WebserviceEndpoint</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.WebserviceEndpoint</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>security-role-mapping</dtd-name>
+		<bean-name>SecurityRoleMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.SecurityRoleMapping</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>port-component-name</dtd-name>
+		<bean-name>PortComponentName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>endpoint-address-uri</dtd-name>
+		<bean-name>EndpointAddressUri</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>transport-guarantee</dtd-name>
+		<bean-name>TransportGuarantee</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>service-qname</dtd-name>
+		<bean-name>ServiceQname</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.ServiceQname</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>tie-class</dtd-name>
+		<bean-name>TieClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>servlet-impl-class</dtd-name>
+		<bean-name>ServletImplClass</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>debugging-enabled</dtd-name>
+		<bean-name>DebuggingEnabled</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>namespaceURI</dtd-name>
+		<bean-name>NamespaceURI</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>localpart</dtd-name>
+		<bean-name>Localpart</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>login-config</dtd-name>
+		<bean-name>LoginConfig</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.LoginConfig</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>realm</dtd-name>
+		<bean-name>Realm</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>message-security-binding</dtd-name>
+		<bean-name>MessageSecurityBinding</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurityBinding</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>message-security</dtd-name>
+		<bean-name>MessageSecurity</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.MessageSecurity</implements>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>message</dtd-name>
+		<bean-name>Message</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.Message</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>request-protection</dtd-name>
+		<bean-name>RequestProtection</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>response-protection</dtd-name>
+		<bean-name>ResponseProtection</bean-name>
+		<wrapper-class>Boolean</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>EMPTY</dtd-name>
+		<bean-name>Empty</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>java-method</dtd-name>
+		<bean-name>JavaMethod</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.JavaMethod</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>operation-name</dtd-name>
+		<bean-name>OperationName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-name</dtd-name>
+		<bean-name>MethodName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>method-params</dtd-name>
+		<bean-name>MethodParams</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>auth-method</dtd-name>
+		<bean-name>AuthMethod</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+        <meta-element>
+		<dtd-name>message-destination-ref-name</dtd-name>
+		<bean-name>MessageDestinationRefName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>message-destination-ref</dtd-name>
+		<bean-name>MessageDestinationRef</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.MessageDestinationRef</implements>
+	</meta-element>
+</metaDD>

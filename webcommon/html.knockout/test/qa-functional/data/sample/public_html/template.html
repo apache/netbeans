@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div data-bind="template: { name: 'person-template1', data: buyer }"></div>
+        <div data-bind="template: { name: 'person-template1', data: seller }"></div>
+        <script type="text/html" id="person-template1">
+            <h3 data-bind="text: "></h3>
+
+        </script>
+
+
+        <div data-bind="template: { name: 'person-template2', foreach: people1 }"></div>
+        <script type="text/html" id="person-template2">
+            <h3 data-bind="text: "></h3>
+
+        </script>
+
+
+        <ul data-bind="template: { name: 'seasonTemplate3', foreach: seasons, as: 'season' }"></ul>
+
+        <script type="text/html" id="seasonTemplate3">
+        <li>
+            <strong data-bind="text: name"></strong>
+            <ul data-bind="template: { name: 'monthTemplate', foreach: months, as: 'month' }"></ul>
+        </li>
+    </script>
+
+    <script type="text/html" id="monthTemplate">
+        <li>
+            <span data-bind="text: "></span>
+        </li>
+    </script>
+
+
+
+    <div data-bind="template: { name: 'person-template4', data: buyer }"></div>
+    <div data-bind="template: { name: 'person-template4', data: seller }"></div>
+    <script type="text/html" id="person-template4">
+        <h3 data-bind="text: date."></h3>
+
+    </script>
+    <div data-bind="template: { name: 'person-template4', data: buyer }"></div>
+    <div data-bind="template: { name: 'person-template4', data: seller }"></div>
+    <script type="text/html" id="person-template4">
+        <h3 data-bind="text: test."></h3>
+
+    </script>
+
+
+
+    <div data-bind="template: { name: 'person-template5', data: people }"></div>
+
+    <script type="text/html" id="person-template5">
+        <ul data-bind="foreach: group">
+            <li data-bind="text: "></li>
+        </ul>
+    </script>
+</body>
+</html>

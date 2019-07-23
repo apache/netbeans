@@ -1,0 +1,20 @@
+diff -c file1 file2
+*** file1 Tue Jul  7 16:48:22 2009
+--- file1 Tue Jul  7 16:49:01 2009
+***************
+*** 1,7 ****
+  one
+  two
+  three
+! for
+  five
+  six
+  seven
+--- 1,7 ----
+  one
+  two
+  three
+! four
+  five
+  six
+  seven

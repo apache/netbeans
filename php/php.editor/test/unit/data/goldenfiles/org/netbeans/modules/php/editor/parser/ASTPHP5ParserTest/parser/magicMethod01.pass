@@ -1,0 +1,68 @@
+<testresult testFile='magicMethod01.php'>
+    <scanner>
+        <token id='T_CLASS' start='32' end='37'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='38' end='39'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='40' end='41'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='47' end='48'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='49' end='52'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='52' end='52'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='51'>
+        <Comments>
+            <PHPDocBlock start='10' end='31'>
+                <Tags>
+                    <PHPDocMethodTag start='14' end='27' kind='method'>
+                        <Name>
+                            <PHPDocNode start='24' end='26' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='22' end='23' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+            <PHPDocBlock start='10' end='31'>
+                <Tags>
+                    <PHPDocMethodTag start='14' end='27' kind='method'>
+                        <Name>
+                            <PHPDocNode start='24' end='26' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='22' end='23' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='32' end='48' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='38' end='39' name='A'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='40' end='48' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='49' end='51'/>
+        </Statements>
+    </Program>
+</testresult>

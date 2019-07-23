@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Java Source UI API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="ElementOpenForTreePathHandle">
+            <api name="general"/>
+            <summary>Adding ElementOpen.open(FileObject toSearch, TreePathHandle toOpen)</summary>
+            <version major="1" minor="45"/>
+            <date day="4" month="10" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                 Adding ElementOpen.open(FileObject toSearch, TreePathHandle toOpen) method.
+            </description>
+        </change>
+        <change id="ModuleInfoDirectivesIcons">
+            <api name="general"/>
+            <summary>Added a method to return an icon for module info directive</summary>
+            <version major="1" minor="45"/>
+            <date day="4" month="10" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added the<code>getModuleDirectiveIcon</code> method into the <code>ElementIcons</code>
+                to return an icon for a module info directive.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ElementIcons"/>
+        </change>
+        <change id="TypeElementFinder-find">
+            <api name="general"/>
+            <summary>Added overload method for TypeElementFinder.find which allows to specify the prefilled initial text</summary>
+            <version major="1" minor="24"/>
+            <date day="20" month="9" year="2011"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added overload method for <code>TypeElementFinder.find</code> which allows to specify the prefilled initial text.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="TypeElementFinder"/>
+            <issue number="125811"/>
+        </change>
+        <change id="ElementJavadoc-getTextAsync">
+            <api name="general"/>
+            <summary>Added asynchronous version of getText method into ElementJavadoc </summary>
+            <version major="1" minor="20"/>
+            <date day="21" month="2" year="2011"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added asynchronous version of <code>getText</code> into <code>ElementJavadoc</code>.
+                The <code>getTextAsync</code> returns a <code>Future</code> which blocks until the javadoc is downloaded.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ElementJavadoc"/>
+            <issue number="194969"/>
+        </change>
+        <change id="ElementJavadoc-create">
+            <api name="general"/>
+            <summary>Adding cancelable version of ElementJavadoc.create</summary>
+            <version major="1" minor="15"/>
+            <date day="29" month="6" year="2010"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                 Added a cancelable version of ElementJavadoc.create to allow
+                 code completion to cancel slow call to JavadocForBinaryQuery.
+            </description>
+            <issue number="171183"/>
+        </change>
+        <change id="ElementOpenForCPInfoAndHandle">
+            <api name="general"/>
+            <summary>Adding ElementOpen.open(ClasspathInfo info, ElementHandle h)</summary>
+            <version major="1" minor="15"/>
+            <date day="25" month="1" year="2008"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                 Adding ElementOpen.open(ClasspathInfo info, ElementHandle h) method.
+            </description>
+            <issue number="125320"/>
+        </change>
+        
+        <change id="ScanDialog">
+            <api name="general"/>
+            <summary>Added support for notifying user about running background scan.</summary>
+            <version major="1" minor="2"/>
+            <date day="18" month="7" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+             Added support for notifying user about running background scan. When the 
+            background scan is running the support displays a dialog notifying user about it.
+            When the background scan finishes the dialog is closed and the action is executed.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ScanDialog"/>
+            <issue number="110136"/>
+        </change>
+        
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Java Source UI API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Java Source UI API<!--</a>-->.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.java.sourceui"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

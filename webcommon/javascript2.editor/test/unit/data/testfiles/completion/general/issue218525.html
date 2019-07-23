@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>NetBeans Testing Documentation</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    </head>
+    <body>
+        <div class="container">
+            <div class="thirteen columns offset-by-one content">
+                <h5 id="log" style="color:red;">Number of operations: 0</h5>
+                <ul style="list-style: circle;">
+                    <li style="cursor: pointer" onclick="operator.removeMe(this);">Remove me (breakpoint on node removal + breakpoint on nonDOM line)</li>
+                </ul>
+            </div>
+        </div>
+        <script>
+
+
+                        function dummy() {
+                            console.log("dummy breakpoint");
+                        }
+                      var operator = new DOMMaster();
+
+                        function DOMMaster() {
+                            this.operations = 0;
+
+
+                            this.removeMe = function(el) { // public
+                                console.log("Removing node");
+                                $(el).remove();
+                                this.operations++;
+                                this.updateLog();
+                            };
+                        }
+        </script>
+        <script type="text/javascript">
+            SyntaxHighlighter.defaults['gutter'] = false;
+            SyntaxHighlighter.all()
+        </script>
+    </body>
+</html>

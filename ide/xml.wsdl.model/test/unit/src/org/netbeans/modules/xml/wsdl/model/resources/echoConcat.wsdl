@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:slnk="http://schemas.xmlsoap.org/ws/2002/07/service-link/" 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:tns="http://stc.com/echoConcat" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    name="echoConcat" 
+    targetNamespace="http://stc.com/echoConcat">
+    <types>
+        <xsd:schema elementFormDefault="qualified" targetNamespace="http://stc.com/echoConcat">
+            <xsd:element name="item">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+    <message name="echoConcat">
+        <part element="tns:item" name="part"/>
+    </message>
+    <portType name="echoConcat">
+        <operation name="echoConcat">
+            <input message="tns:echoConcat"/>
+            <output message="tns:echoConcat"/>
+        </operation>
+    </portType>
+    <binding name="Binding" type="tns:echoConcat">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="echoConcat">
+            <soap:operation soapAction="echoConcat"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="echoConcatService">
+        <port binding="tns:Binding" name="port">
+            <soap:address location="http://localhost:12010/echoConcat"/>
+        </port>
+    </service>
+</definitions>

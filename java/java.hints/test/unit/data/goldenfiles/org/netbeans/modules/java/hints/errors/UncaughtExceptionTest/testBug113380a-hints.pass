@@ -1,0 +1,3 @@
+Add throws clause for java.lang.InstantiationException
+Surround Statement with try-catch
+Surround Block with try-catch

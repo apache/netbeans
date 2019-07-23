@@ -1,0 +1,2 @@
+    function |>MARK_OCCURRENCES:name<|() {}
+        $this->|>MARK_OCCURRENCES:na^me<|();

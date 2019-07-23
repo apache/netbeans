@@ -1,0 +1,266 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+Representation of Java classpaths, and the ability to find the classpath needed
+for a particular purpose.
+
+<p>Using the Classpath API you can look up the classpath used for a certain
+purpose (such as compilation or running) on a certain file.</p>
+
+<h1>
+Contents
+</h1>
+<ul>
+<li><a href="#overview">Overview</a>
+<li><a href="#obtaining-classpath">How to obtain a ClassPath</a>
+<li><a href="#roots-definition">Roots and the definition of the ClassPath</a>
+<li><a href="#resources-files">Resource names and FileObjects</a>
+<li><a href="#change-listen">Listening to classpath changes</a>
+<li><a href="#filesystem-replacements">Replacements of FileSystems API methods</a>
+</ul>
+
+<h1>ClassPath API</h1>
+
+<h2><a name="overview">Overview</a></h2>
+
+<p>At runtime, there's often only a single Classpath available through the application
+classloader. The application is often developed against a set of APIs, with some
+implementation provided at runtime. For example, if using JDBC, the application is
+compiled against JDBC API only and the proper driver is added to the runtime classpath.
+To avoid unintentional dependencies on implementation, the implementation classes
+are often stripped off the compilation path. Another case is debugging with special
+implementation libraries that - for example - perform special sanity checks or
+logging. Again, the classpath is different from those used during build or 
+application's execution.
+<p>
+Since the IDE supports the whole development cycle, it needs to provide <i>different
+classpaths</i> for each of the purposes mentioned, and maybe for others, too. 
+See {@link java.lang.ClassLoader}.
+
+<h2><a name="obtaining-classpath">Obtaining ClassPath</a></h2>
+
+<p>The ClassPath API uses concept similar to <a href="@org-openide-util@/org/openide/util/doc-files/api.html#service-lookup">
+Services</a> to categorize ClassPaths. Instead of the class, a string token
+is used to name a service type. 
+Various types such as {@link org.netbeans.api.java.classpath.ClassPath#COMPILE}
+are defined.
+<p>
+In addition to different services, the API also permits different files to have
+different classpaths configured for them. In addition to the desired
+classpath type, clients are required to pass in a FileObject of the user file, which
+is the "starting point" for the classpath search.
+<p>
+To obtain a ClassPath instance for the given FileObject and intended usage, you 
+want to call {@link org.netbeans.api.java.classpath.ClassPath#getClassPath}
+as in this example for getting compilation classpath:
+
+<div class="nonnormative">
+<pre>
+<font class="type"><a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a></font> <font class="variable-name">f</font> = <font class="function-name">getSomeJavaSourceFile</font>();
+<font class="type"><a href="ClassPath.html">ClassPath</a></font> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
+<font class="predefined">System.err.println</font>(cp);
+</pre>
+</div>
+
+<h2><a name="roots-definition">Roots and definition of the classpath</a></h2>
+
+<p>The <i>classpath</i> is formed from one or more roots. <i>JRE</i> itself supports
+at least two types of of them: a root can be either a directory or <i>an archive</i>
+(<code>.jar</code> or <code>.zip</code> file). The definition of the classpath cannot
+maintain integrity with the root folders or archives. If one of them is renamed,
+deleted or otherwise changed, its entry in the classpath becomes <i>invalid</i> and
+does not contribute to the contents of the classpath. Note that the entry cannot
+be removed automagically, since an archive can disappear (for example) because of
+the compilation products in a subproject. 
+<b>Note</b> that regardless of where the classpath entry is an archive, or a folder,
+the <i>root</i> returned for it will be <b>always a folder</b>. For archive files,
+it will be the root folder of the <i>archive filesystem</i>.
+<p>
+For most purposes, working with only those roots which are valid, is sufficient enough.
+The error condition can be detected when a required resource is missing, for example.
+For some tasks checking for validity of individual classpath entries may be appropriate,
+the build process being a notable example. For others, like searches or parsing,
+such behaviour is hihgly undesirable.
+<p>
+If you don't need to notify the user that the <i>definition</i> of classpath is 
+not correct (there are other ways or another, more appropriate, time to notify the user),
+you can use
+{@link org.netbeans.api.java.classpath.ClassPath#getRoots}
+to find out what folders are the roots:
+
+<div class="nonnormative">
+<pre>
+<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(myClassFile, ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>[] <font class="variable-name">roots</font> = cp.<a href="ClassPath.html#getRoots--"><font class="function-name">getRoots</font></a>();
+<font class="keyword">for</font> (<font class="keyword">int</font> <font class="variable-name">i</font> = <font class="constant">0</font>; i < roots.length; i++) {
+    System.err.print(roots[i] + <font class="constant">":"</font>);
+}
+</pre>
+</div>
+
+<p>Clients who need to find out whether the environment is set up well, may work
+more thoroughly using
+{@link org.netbeans.api.java.classpath.ClassPath.Entry} objects:
+
+<div class="nonnormative">
+<pre>
+<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(myClassObject, ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
+<a href="@JDK@/java/util/List.html"><font class="type">List</font></a> <font class="variable-name">entries</font> = cp.<a href="ClassPath.html#entries--"><font class="function-name">entries</font></a>();
+<font class="keyword">for</font> (Iterator <font class="variable-name">it</font> = entries.iterator(); it.hasNext(); ) {
+    <a href="ClassPath.Entry.html"><font class="type">ClassPath.Entry</font></a> <font class="variable-name">en</font> = (ClassPath.Entry)it.next();
+    <font class="keyword">if</font> (!en.<a href="ClassPath.Entry.html#isValid--"><font class="function-name">isValid()</font></a>) {
+        <font class="type">IOException</font> <font class="variable-name">x</font> = en.<a href="ClassPath.Entry.html#getError--"><font class="function-name">getError</font></a>();
+        <font class="comment">// Report the error somehow, perhaps using <a href="@org-openide-util-ui@/org/openide/ErrorManager.html"><code>org.openide.ErrorManager</code></a></font>.
+    } <font class="keyword">else</font> {
+        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">root</font> = en.<a href="ClassPath.Entry.html#getRoot--"><font class="function-name">getRoot</font></a>();
+        <font class="comment">// Do something with the root folder</font>
+    }
+}
+</pre>
+</div>
+
+<h2><a name="resources-files">Resource Names and FileObjects</a></h2>
+
+<p>The <b>resource name</b> is essentially a 
+file name, relative to the root of classpath. If the classpath has more roots (it's
+a <i>classpath forest</i> rather than a single tree),
+they are combined and merged together to give one "logical" tree. The merge operation
+has one subtle property, <b>resource hiding</b>: when there are several resources of
+the same name in the classpath forest, the order of the roots that define the
+classpath matters and the only the first resource encountered (in that order)
+is <i>visible</i> for the ClassLoader.
+<p>
+Often a FileObject is viewed as a resource to the application being developed.
+It's the most used view for Java sources, as they are required to appear in
+an appropriate folder in the source tree, but for other objects as well. For example,
+the IDE support for images need to record the <i>resource name</i> of the image
+so that it can be loaded at runtime using
+{@link java.lang.ClassLoader#getResourceAsStream}.
+If you need to obtain a name for FileObject,
+which is <i>relative to the classpath</i>, you first have to think about <b>for which
+service do you need it</b>. For resource bundles, for example, it will be mostly the <i>execution</i>
+service. Then you will get the appropriate {@link org.netbeans.api.java.classpath.ClassPath}
+instance and ask it to compute the name for you:
+
+<div class="nonnormative">
+<pre>
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">f</font> = bundleDataObject.<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--"><font class="function-name">getPrimaryFile</font></a>();
+<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(theSourceDataObject.getPrimaryFile(), ClassPath.<a href="ClassPath.html#EXECUTE"><font class="constant">EXECUTE</font></a>);
+String <font class="variable-name">bundleResource</font> = cp.<a href="ClassPath.html#getResourceName-org.openide.filesystems.FileObject-"><font class="function-name">getResourceName</font></a>(f);
+</pre>
+</div>
+
+<p>To check whether a resource (<code>FileObject</code>) is visible or not to the service,
+you may want to call {@link org.netbeans.api.java.classpath.ClassPath#isResourceVisible}.
+You may want to do just the opposite, to get a <code>FileObject</code> for a <i>resource name</i>
+you have. Since there may be more resources of that name, the API supports
+{@link org.netbeans.api.java.classpath.ClassPath#findResource} to get the visible one,
+or {@link org.netbeans.api.java.classpath.ClassPath#findAllResources} to get
+a collection of all resources matching the name.
+
+<h2><a name="change-listen">Listening to changes in ClassPath</a></h2>
+
+<p>The <code>ClassPath</code> interface supports listening to either <i>root folder set changes</i>
+or <i>entry set changes</i>. Changes in root folder set can be observed by 
+property change listeners, they are reported as additions,
+deletions or changes to the order of roots. For example, to watch out for new compile-time
+dependencies, you may do:
+
+<div class="nonnormative">
+<pre>
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html"><font class="type">FileObject</font></a> <font class="variable-name">f</font>; <font class="comment">// some interesting FileObject.</font>
+<a href="ClassPath.html"><font class="type">ClassPath</font></a> <font class="variable-name">cp</font> = ClassPath.<a href="ClassPath.html#getClassPath-org.openide.filesystems.FileObject-java.lang.String-"><font class="function-name">getClassPath</font></a>(f, ClassPath.<a href="ClassPath.html#COMPILE"><font class="constant">COMPILE</font></a>);
+cp.<a href="ClassPath.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><font class="function-name">addPropertyChangeListener</font></a>(new <a href="@JDK@/java/beans/PropertyChangeListener.html"><font class="type">PropertyChangeListener</font></a>() {
+    <font class="keyword">public void</font> <font class="function-name">propertyChange</font>(<a href="@JDK@/java/beans/PropertyChangeEvent.html"><font class="type">PropertyChangeEvent</font></a> <font class="variable-name">evt</font>) {
+        <font class="keyword">if</font> (ClassPath.<a href="ClassPath.html#PROP_ROOTS"><font class="constant">PROP_ROOTS</font></a>.equals(evt.<a href="@JDK@/java/beans/PropertyChangeEvent.html#getPropertyName()"><font class="function-name">getPropertyName()</font></a>)) {
+            <font class="comment">// Update your stuff, because classpath roots have changed.</font>
+        }
+    }
+});
+</pre>
+</div>
+
+<p>You may also listen <code><i>entries</i></code> property. Note that the <i>root 
+folder set</i> may change even though the <i>entry set</i> did not change,
+as a result of some entry becoming (in)valid.
+
+<h2><a name="filesystem-replacements">Replacements of FileSystems API methods</a></h2>
+
+<p>The <b>now-deprecated</b> way how to 
+obtain a resource name for a file object was to call 
+{@link org.openide.filesystems.FileObject#getPackageNameExt}.
+But the <code>getPackageNameExt()</code> method gives a name
+of the file within the <code>FileSystem</code> rather than its relative path
+from some classpath root point. Therefore it is no longer recommended to use the
+{@link org.openide.filesystems Filesystems API}
+to obtain classpaths.
+<p>
+As the {@link org.openide.filesystems.Repository}
+searches through FileSystems without regard to the intended usage for individual services,
+{@link org.openide.filesystems.Repository#findResource} and
+{@link org.openide.filesystems.Repository#findAllResources}
+should not be used at all.
+{@link org.netbeans.api.java.classpath.GlobalPathRegistry} may be used to find certain kinds of files that are
+available among open projects in the GUI, but this should be used only as a last
+resort if there is no other possible source of information about where a file
+might be located according to specific classpaths.
+The usage of the class
+{@link org.openide.filesystems.FileSystemCapability}
+is <b>deprecated</b>;
+you should use methods of
+{@link org.netbeans.api.java.classpath.ClassPath}
+instead of that.
+
+<table align=center border="1" summary='Summary of deprecated methods and their replacements'>
+<tr>
+<th align=center>Old method</th><th align=center>New method</th>
+</tr>
+<tbody>
+<tr>
+<td>{@link org.openide.filesystems.FileObject#getPackageName} and {@link org.openide.filesystems.FileObject#getPackageName}</td>
+<td>{@link org.netbeans.api.java.classpath.ClassPath#getResourceName}</td>
+</tr>
+<tr>
+<td>{@link org.openide.filesystems.FileSystemCapability#findResource}</td>
+<td>{@link org.netbeans.api.java.classpath.ClassPath#findResource}</td>
+</tr>
+<tr>
+<td>{@link org.openide.filesystems.FileSystemCapability#findAllResources}</td>
+<td>{@link org.netbeans.api.java.classpath.ClassPath#findAllResources}</td>
+</tr>
+<tr>
+<td>{@link org.openide.filesystems.FileSystemCapability#fileSystems}</td>
+<td>{@link org.netbeans.api.java.classpath.ClassPath#getRoots}</td>
+</tr>
+<tr>
+<td>{@link org.openide.filesystems.Repository#findResource}</td>
+<td>{@link org.netbeans.api.java.classpath.GlobalPathRegistry#findResource}</td>
+</tr><tr>
+<td>{@link org.openide.filesystems.Repository#findAllResources}</td>
+<td>{@link org.netbeans.api.java.classpath.GlobalPathRegistry#getSourceRoots}</td>
+</tr>
+</tbody>
+</table>
+  
+</body>
+</html>

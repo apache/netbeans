@@ -1,0 +1,6 @@
+<!ELEMENT application (display-name, description, module)>
+<!ELEMENT module (ejb, alt-dd)>
+<!ELEMENT display-name #PCDATA>
+<!ELEMENT description #PCDATA>
+<!ELEMENT ejb #PCDATA>
+<!ELEMENT alt-dd #PCDATA>

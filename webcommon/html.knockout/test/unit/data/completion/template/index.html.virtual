@@ -1,0 +1,90 @@
+__netbeans_import__('js/knockout-3.0.0.js');
+
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = undefined;
+var $context = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+$context.$parentContext.$data = undefined;
+$parentContext.$data = undefined;
+var $parent = undefined;
+var $parents = [];
+var $data = ko.$bindings;
+with ($data) {
+({ name: 'person-template', data: buyer });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = undefined;
+var $context = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+$context.$parentContext.$data = undefined;
+$parentContext.$data = undefined;
+var $parent = undefined;
+var $parents = [];
+var $data = ko.$bindings;
+with ($data) {
+({ name: 'person-template', data: seller });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = buyer || seller;
+}
+with ($data) {
+ ;}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = buyer || seller;
+}
+with ($data) {
+(credits);}
+});
+
+
+             function MyViewModel() {
+                 this.buyer = { name: 'Franklin', credits: 250 };
+                 this.seller = { name: 'Mario', credits: 5800 };
+             }
+             ko.applyBindings(new MyViewModel());
+        

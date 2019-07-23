@@ -1,0 +1,703 @@
+JGO 5.1 IN NETBEANS 6.0
+
+Sun Microsystems, Inc. ("Sun") ENTITLEMENT for SOFTWARE
+
+Licensee/Company: Entity receiving Software.
+
+Effective Date:  Date Sun delivers the Software to You.
+
+Software: JGo 5.1
+
+License Term:  Perpetual (subject to termination under the SLA).
+
+Licensed Unit: Software Copy.
+
+Licensed unit Count: Unlimited.
+
+Permitted Uses: You may reproduce and use the Software for Individual,
+Commercial, Research and Instructional and Service Provider Use, subject
+to and conditioned on Your compliance with the Additional Terms below.
+
+Additional Terms:
+
+1. Software includes only the versions of the above products that are
+made initially available to You.
+
+2. Notwithstanding anything to the contrary in any Master Terms between
+the parties or in the SLA, Master Terms do not apply to Software under
+this Agreement.
+
+3. You may only use the Software in binary form and only in conjunction
+with NetBeans.
+
+Sun Microsystems, Inc. ("Sun") SOFTWARE LICENSE AGREEMENT
+
+READ THE TERMS OF THIS AGREEMENT ("AGREEMENT") CAREFULLY BEFORE OPENING
+SOFTWARE MEDIA PACKAGE. BY OPENING SOFTWARE MEDIA PACKAGE, YOU AGREE TO
+THE TERMS OF THIS AGREEMENT. IF YOU ARE ACCESSING SOFTWARE ELECTRONICALLY,
+INDICATE YOUR ACCEPTANCE OF THESE TERMS BY SELECTING THE "ACCEPT" BUTTON
+AT THE END OF THIS AGREEMENT. IF YOU DO NOT AGREE TO ALL OF THE TERMS,
+PROMPTLY RETURN THE UNUSED SOFTWARE TO YOUR PLACE OF PURCHASE FOR A REFUND
+OR, IF SOFTWARE IS ACCESSED ELECTRONICALLY, SELECT THE "DECLINE" (OR
+"EXIT") BUTTON AT THE END OF THIS AGREEMENT. IF YOU HAVE SEPARATELY AGREED
+TO LICENSE TERMS ("MASTER TERMS") FOR YOUR LICENSE TO THIS SOFTWARE,
+THEN SECTIONS 1-6 OF THIS AGREEMENT ("SUPPLEMENTAL LICENSE TERMS") SHALL
+SUPPLEMENT AND SUPERSEDE THE MASTER TERMS IN RELATION TO THIS SOFTWARE.
+
+1.  Definitions.
+
+(a)     "Entitlement" means the collective set of applicable documents
+authorized by Sun evidencing your obligation to pay associated fees (if
+any) for the license, associated Services, and the authorized scope of
+use of Software under this Agreement.
+
+(b)     "Licensed Unit" means the unit of measure by which your use of
+Software and/or Service is licensed, as described in your Entitlement.
+
+(c) "Permitted Use" means the licensed Software use(s) authorized in
+this Agreement as specified in your Entitlement. The Permitted Use
+for any bundled Sun software not specified in your Entitlement will be
+evaluation use as provided in Section 3.
+
+(d)     "Service" means the service(s) that Sun or its delegate will
+provide, if any, as selected in your Entitlement and as further described
+in the applicable service listings at www.sun.com/service/servicelist.
+
+(e)     "Software" means the Sun software described in your
+Entitlement. Also, certain software may be included for evaluation use
+under Section 3.
+
+(f) "You" and "Your" means the individual or legal entity specified
+in the Entitlement, or for evaluation purposes, the entity performing
+the evaluation.
+
+2.  License Grant and Entitlement.
+
+Subject to the terms of your Entitlement, Sun grants you a nonexclusive,
+nontransferable limited license to use Software for its Permitted Use for
+the license term. Your Entitlement will specify (a) Software licensed,
+(b) the Permitted Use, (c) the license term, and (d) the Licensed Units.
+
+Additionally, if your Entitlement includes Services, then it will also
+specify the (e) Service and (f) service term.
+
+If your rights to Software or Services are limited in duration and the
+date such rights begin is other than the purchase date, your Entitlement
+will provide that beginning date(s).
+
+The Entitlement may be delivered to you in various ways depending on
+the manner in which you obtain Software and Services, for example, the
+Entitlement may be provided in your receipt, invoice or your contract
+with Sun or authorized Sun reseller. It may also be in electronic format
+if you download Software.
+
+3.  Permitted Use.
+
+As selected in your Entitlement, one or more of the following Permitted
+Uses will apply to your use of Software. Unless you have an Entitlement
+that expressly permits it, you may not use Software for any of the other
+Permitted Uses. If you don't have an Entitlement, or if your Entitlement
+doesn't cover additional software delivered to you, then such software
+is for your Evaluation Use.
+
+(a) Evaluation Use. You may evaluate Software internally for a period
+of 90 days from your first use.
+
+(b) Research and Instructional Use. You may use Software internally to
+design, develop and test, and also to provide instruction on such uses.
+
+(c) Individual Use. You may use Software internally for personal,
+individual use.
+
+(d) Commercial Use. You may use Software internally for your own
+commercial purposes.
+
+(e) Service Provider Use. You may make Software functionality accessible
+(but not by providing Software itself or through outsourcing services)
+to your end users in an extranet deployment, but not to your affiliated
+companies or to government agencies.
+
+4.  Licensed Units.
+
+Your Permitted Use is limited to the number of Licensed Units stated
+in your Entitlement. If you require additional Licensed Units, you will
+need additional Entitlement(s).
+
+5.  Restrictions.
+
+(a) The copies of Software provided to you under this Agreement
+are licensed, not sold, to you by Sun. Sun reserves all rights not
+expressly granted. (b) You may make a single archival copy of Software,
+but otherwise may not copy, modify, or distribute Software. However if
+the Sun documentation accompanying Software lists specific portions of
+Software, such as header files, class libraries, reference source code,
+and/or redistributable files, that may be handled differently, you may
+do so only as provided in the Sun documentation. (c) You may not rent,
+lease, lend or encumber Software. (d) Unless enforcement is prohibited by
+applicable law, you may not decompile, or reverse engineer Software. (e)
+The terms and conditions of this Agreement will apply to any Software
+updates, provided to you at Sun's discretion, that replace and/or
+supplement the original Software, unless such update contains a separate
+license. (f) You may not publish or provide the results of any benchmark
+or comparison tests run on Software to any third party without the prior
+written consent of Sun. (g) Software is confidential and copyrighted. (h)
+Unless otherwise specified, if Software is delivered with embedded or
+bundled software that enables functionality of Software, you may not
+use such software on a stand-alone basis or use any portion of such
+software to interoperate with any program(s) other than Software. (i)
+Software may contain programs that perform automated collection of
+system data and/or automated software updating services.  System data
+collected through such programs may be used by Sun, its subcontractors,
+and its service delivery partners for the purpose of providing you with
+remote system services and/or improving Sun's software and systems. (j)
+Software is not designed, licensed or intended for use in the design,
+construction, operation or maintenance of any nuclear facility and Sun
+and its licensors disclaim any express or implied warranty of fitness
+for such uses. (k) No right, title or interest in or to any trademark,
+service mark, logo or trade name of Sun or its licensors is granted
+under this Agreement.
+
+6.  Term and Termination.
+
+The license and service term are set forth in your Entitlement(s). Your
+rights under this Agreement will terminate immediately without notice from
+Sun if you materially breach it or take any action in derogation of Sun's
+and/or its licensors' rights to Software. Sun may terminate this Agreement
+should any Software become, or in Sun's reasonable opinion likely to
+become, the subject of a claim of intellectual property infringement or
+trade secret misappropriation.  Upon termination, you will cease use of,
+and destroy, Software and confirm compliance in writing to Sun. Sections
+1, 5, 6, 7, and 9-15 will survive termination of the Agreement.
+
+7.  Java Compatibility and Open Source.
+
+Software may contain Java technology. You may not create additional
+classes to, or modifications of, the Java technology, except under
+compatibility requirements available under a separate agreement available
+at www.java.net.
+
+Sun supports and benefits from the global community of open source
+developers, and thanks the community for its important contributions
+and open standards-based technology, which Sun has adopted into many of
+its products.
+
+Please note that portions of Software may be provided with notices and
+open source licenses from such communities and third parties that govern
+the use of those portions, and any licenses granted hereunder do not alter
+any rights and obligations you may have under such open source licenses,
+however, the disclaimer of warranty and limitation of liability provisions
+in this Agreement will apply to all Software in this distribution.
+
+8.  Limited Warranty.
+
+Sun warrants to you that for a period of 90 days from the date of
+purchase, as evidenced by a copy of the receipt, the media on which
+Software is furnished (if any) will be free of defects in materials and
+workmanship under normal use.  Except for the foregoing, Software is
+provided "AS IS". Your exclusive remedy and Sun's entire liability under
+this limited warranty will be at Sun's option to replace Software media
+or refund the fee paid for Software. Some states do not allow limitations
+on certain implied warranties, so the above may not apply to you. This
+limited warranty gives you specific legal rights. You may have others,
+which vary from state to state.
+
+9.  Disclaimer of Warranty.
+
+UNLESS SPECIFIED IN THIS AGREEMENT, ALL EXPRESS OR IMPLIED CONDITIONS,
+REPRESENTATIONS AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT
+ARE DISCLAIMED, EXCEPT TO THE EXTENT THAT THESE DISCLAIMERS ARE HELD TO
+BE LEGALLY INVALID.
+
+10.     Limitation of Liability.
+
+TO THE EXTENT NOT PROHIBITED BY LAW, IN NO EVENT WILL SUN OR ITS LICENSORS
+BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR SPECIAL, INDIRECT,
+CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED REGARDLESS
+OF THE THEORY OF LIABILITY, ARISING OUT OF OR RELATED TO THE USE OF
+OR INABILITY TO USE SOFTWARE, EVEN IF SUN HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES. In no event will Sun's liability to you,
+whether in contract, tort (including negligence), or otherwise, exceed
+the amount paid by you for Software under this Agreement. The foregoing
+limitations will apply even if the above stated warranty fails of its
+essential purpose. Some states do not allow the exclusion of incidental
+or consequential damages, so some of the terms above may not be applicable
+to you.
+
+11.     Export Regulations.
+
+All Software, documents, technical data, and any other materials delivered
+under this Agreement are subject to U.S. export control laws and may be
+subject to export or import regulations in other countries. You agree
+to comply strictly with these laws and regulations and acknowledge that
+you have the responsibility to obtain any licenses to export, re-export,
+or import as may be required after delivery to you.
+
+12.     U.S. Government Restricted Rights.
+
+If Software is being acquired by or on behalf of the U.S. Government or
+by a U.S. Government prime contractor or subcontractor (at any tier),
+then the Government's rights in Software and accompanying documentation
+will be only as set forth in this Agreement; this is in accordance with
+48 CFR 227.7201 through 227.7202-4 (for Department of Defense (DOD)
+acquisitions) and with 48 CFR 2.101 and 12.212 (for non-DOD acquisitions).
+
+13.     Governing Law.
+
+Any action related to this Agreement will be governed by California
+law and controlling U.S. federal law. No choice of law rules of any
+jurisdiction will apply.
+
+14.     Severability.
+
+If any provision of this Agreement is held to be unenforceable, this
+Agreement will remain in effect with the provision omitted, unless
+omission would frustrate the intent of the parties, in which case this
+Agreement will immediately terminate.
+
+15.     Integration.
+
+This Agreement, including any terms contained in your Entitlement, is the
+entire agreement between you and Sun relating to its subject matter. It
+supersedes all prior or contemporaneous oral or written communications,
+proposals, representations and warranties and prevails over any
+conflicting or additional terms of any quote, order, acknowledgment, or
+other communication between the parties relating to its subject matter
+during the term of this Agreement. No modification of this Agreement will
+be binding, unless in writing and signed by an authorized representative
+of each party.
+
+Please contact Sun Microsystems, Inc. 4150 Network Circle, Santa Clara,
+California 95054 if you have questions.
+
+
+LICENSE #3
+
+
+Pre-Release Software Evaluation Agreement
+
+SUN MICROSYSTEMS, INC. ("SUN") IS WILLING TO LICENSE THE SUN JAVA
+APPLICATION SERVER 9.1 BETA PRE-RELEASE SOFTWARE TO LICENSEE ONLY
+UPON THE CONDITION THAT LICENSEE ACCEPTS ALL OF THE TERMS CONTAINED
+IN THIS LICENSE AGREEMENT ("AGREEMENT"). PLEASE READ THE TERMS AND
+CONDITIONS OF THIS AGREEMENT CAREFULLY. BY DOWNLOADING OR INSTALLING
+THIS SOFTWARE, LICENSEE ACCEPTS THE TERMS AND CONDITIONS OF THIS LICENSE
+AGREEMENT. INDICATE ACCEPTANCE BY SELECTING THE "ACCEPT" BUTTON AT THE
+BOTTOM OF THIS AGREEMENT. IF LICENSEE IS NOT WILLING TO BE BOUND BY ALL
+THE TERMS, SELECT THE "DECLINE" BUTTON AT THE BOTTOM OF THE AGREEMENT
+AND THE DOWNLOAD OR INSTALL PROCESS WILL NOT CONTINUE.
+
+1.0 DEFINITIONS
+
+"Licensed Software" means the Sun Java Application Server 9.1 pre-release
+software in binary and/or source code forms, any other machine readable
+materials (including, but not limited to, libraries, source files,
+header files, and data files) and any user manuals, programming guides
+and other documentation provided to Licensee by Sun under this Agreement.
+
+2.0 LIMITED LICENSE
+
+2.1 Source Code. Sun grants to Licensee, a non-exclusive,
+non-transferable, royalty-free and limited license to view the source
+code portions of the Licensed Software internally for the purposes of
+evaluation only.
+
+2.2 Binary Code. Sun grants to Licensee, a non-exclusive,
+non-transferable, royalty-free and limited license to use the binary
+code portions of the Licensed Software internally for the purposes of
+evaluation only.
+
+2.3 No licenses are granted to Licensee for any other purposes, Licensee
+may not sell, rent, loan or otherwise encumber or transfer Licensed
+Software in whole or in part, to any third party.
+
+3.0 LICENSE RESTRICTIONS
+
+3.1 Licensee may not duplicate Licensed Software other than for a single
+copy of Licensed Software for archival purposes only. Licensee agrees
+to reproduce any copyright and other proprietary right notices on any
+such copy.
+
+3.2 Except as otherwise provided by law, Licensee may not modify or
+create derivative works of the Licensed Software, or reverse engineer,
+disassemble or decompile binary portions of the Licensed Software,
+or otherwise attempt to derive the source code from such portions.
+
+3.3 No right, title, or interest in or to Licensed Software, any
+trademarks, service marks, or trade names of Sun or Sun's licensors is
+granted under this Agreement.
+
+3.4 Licensee shall have no right to use the Licensed Software for
+productive or commercial use.
+
+4.0 NO SUPPORT
+
+Sun is under no obligation to support Licensed Software or to provide
+Licensee with updates or error corrections (collectively "Software
+Updates"). If Sun, at its sole option, supplies Software Updates to
+Licensee, the Software Updates will be considered part of Licensed
+Software, and subject to the terms of this Agreement.
+
+5.0 LICENSEE DUTIES
+
+Licensee agrees to evaluate and test the Software for use in Licensee's
+software environment and provide feedback to Sun in a manner reasonably
+requested by Sun. Any and all test results, error data, reports or other
+information, feedback or materials made or provided by Licensee relating
+to Software (collectively, "Feedback") are the exclusive property of Sun
+and Licensee hereby assigns all Feedback to Sun at no cost to Sun. Sun may
+use such Feedback in any manner and for any purpose, without limitation,
+liability or obligation to Licensee.
+
+6.0 TERM AND TERMINATION OF AGREEMENT
+
+6.1 This Agreement will commence on the date on which Licensee receives
+Licensed Software (the "Effective Date") and will expire ninety (90) days
+from the Effective Date, unless terminated earlier as provided herein.
+
+6.2 Either party may terminate this Agreement upon ten (10) days' written
+notice to the other party. However, Sun may terminate this Agreement
+immediately should any Licensed Software become, or in Sun's opinion be
+likely to become, the subject of a claim of infringement of a patent,
+trade secret or copyright.
+
+6.3 Sun may terminate this Agreement immediately should Licensee
+materially breach any of its provisions or take any action in derogation
+of Sun's rights to the Confidential Information licensed to Licensee.
+
+6.4 Upon termination or expiration of this Agreement, Licensee will
+immediately cease use of and destroy Licensed Software, any copies
+thereof and provide to Sun a written statement certifying that Licensee
+has complied with the foregoing obligations.
+
+6.5 Rights and obligations under this Agreement which by their nature
+should survive, will remain in effect after termination or expiration
+hereof.
+
+7.0 CONFIDENTIAL INFORMATION
+
+7.1 For purposes of this Agreement, "Confidential Information" means:
+(i) business and technical information and any source code or binary
+code, which Sun discloses to Licensee related to Licensed Software; (ii)
+Licensee's feedback based on Licensed Software; and (iii) the terms,
+conditions, and existence of this Agreement. Licensee may not disclose
+or use Confidential Information, except for the purposes specified in
+this Agreement. Licensee will protect the Confidential Information with
+the same degree of care, but not less than a reasonable degree of care,
+as Licensee uses to protect its own Confidential Information. Licensee's
+obligations regarding Confidential Information will expire no less than
+five (5) years from the date of receipt of the Confidential Information,
+except for Sun source code which will be protected in perpetuity.
+Licensee agrees that Licensed Software contains Sun trade secrets.
+
+7.2 Notwithstanding any provisions contained in this Agreement
+concerning nondisclosure and non-use of the Confidential Information,
+the nondisclosure obligations of Section 7.1 will not apply to any portion
+of Confidential Information that Licensee can demonstrate in writing is:
+(i) now, or hereafter through no act or failure to act on the part of
+Licensee becomes, generally known to the general public; (ii) known to
+Licensee at the time of receiving the Confidential Information without
+an obligation of confidentiality; (iii) hereafter rightfully furnished
+to Licensee by a third party without restriction on disclosure; or (iv)
+independently developed by Licensee without any use of the Confidential
+Information.
+
+7.3 Licensee must restrict access to Confidential Information to its
+employees or contractors with a need for this access to perform their
+employment or contractual obligations and who have agreed in writing
+to be bound by a confidentiality obligation, which incorporates the
+protections and restrictions substantially as set forth in this Agreement.
+
+8.0 DISCLAIMER OF WARRANTY
+
+8.1 Licensee acknowledges that Licensed Software may contain errors
+and is not designed, licensed, or intended for use in the design,
+construction, operation or maintenance of any nuclear facility ("High Risk
+Activities"). Sun disclaims any express or implied warranty of fitness
+for such uses. Licensee represents and warrants to Sun that it will not
+use, distribute or license the Licensed Software for High Risk Activities.
+
+8.2 LICENSED SOFTWARE IS PROVIDED "AS IS". ALL EXPRESS OR IMPLIED
+CONDITIONS, REPRESENTATIONS, AND WARRANTIES, INCLUDING ANY IMPLIED
+WARRANTY OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
+PARTICULAR PURPOSE, OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE
+EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
+
+9.0 LIMITATION OF LIABILITY
+
+9.1 Licensee acknowledges that the Licensed Software may be experimental
+and that the Licensed Software may have defects or deficiencies, which
+cannot or will not be corrected by Sun. Licensee will hold Sun harmless
+from any claims based on Licensee's use of the Licensed Software for any
+purposes other than those of internal evaluation, and from any claims
+that later versions or releases of any Licensed Software furnished to
+Licensee are incompatible with the Licensed Software provided to Licensee
+under this Agreement.
+
+9.2 To the extent not prohibited by law, in no event will Sun be liable
+for any indirect, punitive, special, incidental or consequential damage
+in connection with or arising out of this Agreement (including loss
+of business, revenue, profits, use, data or other economic advantage),
+however it arises, whether for breach or in tort, even if Sun has been
+previously advised of the possibility of such damage.
+
+10.0 U.S. GOVERNMENT RESTRICTED RIGHTS
+
+If this Software is being acquired by or on behalf of the U.S.
+Government or by a U.S. Government prime contractor or subcontractor (at
+any tier), then the Government's rights in the Software and accompanying
+documentation shall be only as set forth in this license; this is
+in accordance with 48 C.F.R. 227.7202-4 (for Department of Defense
+(DOD) acquisitions) and with 48 C.F.R. 2.101 and 12.212 (for non-DOD
+acquisitions).
+
+11.0 GENERAL TERMS
+
+11.1 Any action relating to or arising out of this Agreement will be
+governed by California law and controlling U.S. federal law. The U.N.
+Convention for the International Sale of Goods and the choice of law
+rules of any jurisdiction will not apply.
+
+11.2 Licensed Software and technical data delivered under this Agreement
+are subject to U.S. export control laws and may be subject to export
+or import regulations in other countries. Licensee agrees to comply
+strictly with all such laws and regulations and acknowledges that it
+has the responsibility to obtain such licenses to export, re-export or
+import as may be required after delivery to Licensee.
+
+11.3 It is understood and agreed that, notwithstanding any other provision
+of this Agreement, Licensee's breach of the provisions of Section 7 of
+this Agreement will cause Sun irreparable damage for which recovery
+of money damages would be inadequate, and that Sun will therefore be
+entitled to seek timely injunctive relief to protect Sun's rights under
+this Agreement in addition to any and all remedies available at law.
+
+11.4 Neither party may assign or otherwise transfer any of its rights
+or obligations under this Agreement, without the prior written consent
+of the other party, except that Sun may assign this Agreement to an
+affiliated company.
+
+11.5 This Agreement is the parties' entire agreement relating to its
+subject matter. It supersedes all prior or contemporaneous oral or written
+communications, proposals, conditions, representations and warranties and
+prevails over any conflicting or additional terms of any quote, order,
+acknowledgment, or other communication between the parties relating to its
+subject matter, including any Binary Code Licenses, Supplemental Terms,
+or other licenses contained within Licensed Software. No modification
+to this Agreement will be binding, unless in writing and signed by an
+authorized representative of each party.
+
+
+
+Pre-Release Software Evaluation Agreement
+
+SUN MICROSYSTEMS, INC. ("SUN") IS WILLING TO LICENSE THE SUN JAVA SYSTEM
+OPEN ESB 2.0 PRE-RELEASE SOFTWARE TO LICENSEE ONLY UPON THE CONDITION THAT
+LICENSEE ACCEPTS ALL OF THE TERMS CONTAINED IN THIS LICENSE AGREEMENT
+("AGREEMENT"). PLEASE READ THE TERMS AND CONDITIONS OF THIS AGREEMENT
+CAREFULLY. BY DOWNLOADING OR INSTALLING THIS SOFTWARE, LICENSEE ACCEPTS
+THE TERMS AND CONDITIONS OF THIS LICENSE AGREEMENT. INDICATE ACCEPTANCE
+BY SELECTING THE "ACCEPT" BUTTON AT THE BOTTOM OF THIS AGREEMENT. IF
+LICENSEE IS NOT WILLING TO BE BOUND BY ALL THE TERMS, SELECT THE "DECLINE"
+BUTTON AT THE BOTTOM OF THE AGREEMENT AND THE DOWNLOAD OR INSTALL PROCESS
+WILL NOT CONTINUE.
+
+1.0 DEFINITIONS
+
+"Licensed Software" means the Sun Java System Open ESB 2.0 pre-release
+software in binary and/or source code forms, any other machine readable
+materials (including, but not limited to, libraries, source files,
+header files, and data files) and any user manuals, programming guides
+and other documentation provided to Licensee by Sun under this Agreement.
+
+2.0 LIMITED LICENSE
+
+2.1 Source Code. Sun grants to Licensee, a non-exclusive,
+non-transferable, royalty-free and limited license to view the source
+code portions of the Licensed Software internally for the purposes of
+evaluation only.
+
+2.2 Binary Code. Sun grants to Licensee, a non-exclusive,
+non-transferable, royalty-free and limited license to use the binary
+code portions of the Licensed Software internally for the purposes of
+evaluation only.
+
+2.3 No licenses are granted to Licensee for any other purposes, Licensee
+may not sell, rent, loan or otherwise encumber or transfer Licensed
+Software in whole or in part, to any third party.
+
+3.0 LICENSE RESTRICTIONS
+
+3.1 Licensee may not duplicate Licensed Software other than for a single
+copy of Licensed Software for archival purposes only. Licensee agrees
+to reproduce any copyright and other proprietary right notices on any
+such copy.
+
+3.2 Except as otherwise provided by law, Licensee may not modify or
+create derivative works of the Licensed Software, or reverse engineer,
+disassemble or decompile binary portions of the Licensed Software,
+or otherwise attempt to derive the source code from such portions.
+
+3.3 No right, title, or interest in or to Licensed Software, any
+trademarks, service marks, or trade names of Sun or Sun's licensors is
+granted under this Agreement.
+
+3.4 Licensee shall have no right to use the Licensed Software for
+productive or commercial use.
+
+4.0 NO SUPPORT
+
+Sun is under no obligation to support Licensed Software or to provide
+Licensee with updates or error corrections (collectively "Software
+Updates"). If Sun, at its sole option, supplies Software Updates to
+Licensee, the Software Updates will be considered part of Licensed
+Software, and subject to the terms of this Agreement.
+
+5.0 LICENSEE DUTIES
+
+Licensee agrees to evaluate and test the Software for use in Licensee's
+software environment and provide feedback to Sun in a manner reasonably
+requested by Sun. Any and all test results, error data, reports or other
+information, feedback or materials made or provided by Licensee relating
+to Software (collectively, "Feedback") are the exclusive property of Sun
+and Licensee hereby assigns all Feedback to Sun at no cost to Sun. Sun may
+use such Feedback in any manner and for any purpose, without limitation,
+liability or obligation to Licensee.
+
+6.0 TERM AND TERMINATION OF AGREEMENT
+
+6.1 This Agreement will commence on the date on which Licensee receives
+Licensed Software (the "Effective Date") and will expire ninety (90) days
+from the Effective Date, unless terminated earlier as provided herein.
+
+6.2 Either party may terminate this Agreement upon ten (10) days' written
+notice to the other party. However, Sun may terminate this Agreement
+immediately should any Licensed Software become, or in Sun's opinion be
+likely to become, the subject of a claim of infringement of a patent,
+trade secret or copyright.
+
+6.3 Sun may terminate this Agreement immediately should Licensee
+materially breach any of its provisions or take any action in derogation
+of Sun's rights to the Confidential Information licensed to Licensee.
+
+6.4 Upon termination or expiration of this Agreement, Licensee will
+immediately cease use of and destroy Licensed Software, any copies
+thereof and provide to Sun a written statement certifying that Licensee
+has complied with the foregoing obligations.
+
+6.5 Rights and obligations under this Agreement which by their nature
+should survive, will remain in effect after termination or expiration
+hereof.
+
+7.0 CONFIDENTIAL INFORMATION
+
+7.1 For purposes of this Agreement, "Confidential Information" means:
+(i) business and technical information and any source code or binary
+code, which Sun discloses to Licensee related to Licensed Software; (ii)
+Licensee's feedback based on Licensed Software; and (iii) the terms,
+conditions, and existence of this Agreement. Licensee may not disclose
+or use Confidential Information, except for the purposes specified in
+this Agreement. Licensee will protect the Confidential Information with
+the same degree of care, but not less than a reasonable degree of care,
+as Licensee uses to protect its own Confidential Information. Licensee's
+obligations regarding Confidential Information will expire no less than
+five (5) years from the date of receipt of the Confidential Information,
+except for Sun source code which will be protected in perpetuity.
+Licensee agrees that Licensed Software contains Sun trade secrets.
+
+7.2 Notwithstanding any provisions contained in this Agreement
+concerning nondisclosure and non-use of the Confidential Information,
+the nondisclosure obligations of Section 7.1 will not apply to any portion
+of Confidential Information that Licensee can demonstrate in writing is:
+(i) now, or hereafter through no act or failure to act on the part of
+Licensee becomes, generally known to the general public; (ii) known to
+Licensee at the time of receiving the Confidential Information without
+an obligation of confidentiality; (iii) hereafter rightfully furnished
+to Licensee by a third party without restriction on disclosure; or (iv)
+independently developed by Licensee without any use of the Confidential
+Information.
+
+7.3 Licensee must restrict access to Confidential Information to its
+employees or contractors with a need for this access to perform their
+employment or contractual obligations and who have agreed in writing
+to be bound by a confidentiality obligation, which incorporates the
+protections and restrictions substantially as set forth in this Agreement.
+
+8.0 DISCLAIMER OF WARRANTY
+
+8.1 Licensee acknowledges that Licensed Software may contain errors
+and is not designed, licensed, or intended for use in the design,
+construction, operation or maintenance of any nuclear facility ("High Risk
+Activities"). Sun disclaims any express or implied warranty of fitness
+for such uses. Licensee represents and warrants to Sun that it will not
+use, distribute or license the Licensed Software for High Risk Activities.
+
+8.2 LICENSED SOFTWARE IS PROVIDED "AS IS". ALL EXPRESS OR IMPLIED
+CONDITIONS, REPRESENTATIONS, AND WARRANTIES, INCLUDING ANY IMPLIED
+WARRANTY OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A
+PARTICULAR PURPOSE, OR NON-INFRINGEMENT, ARE DISCLAIMED, EXCEPT TO THE
+EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY INVALID.
+
+9.0 LIMITATION OF LIABILITY
+
+9.1 Licensee acknowledges that the Licensed Software may be experimental
+and that the Licensed Software may have defects or deficiencies, which
+cannot or will not be corrected by Sun. Licensee will hold Sun harmless
+from any claims based on Licensee's use of the Licensed Software for any
+purposes other than those of internal evaluation, and from any claims
+that later versions or releases of any Licensed Software furnished to
+Licensee are incompatible with the Licensed Software provided to Licensee
+under this Agreement.
+
+9.2 To the extent not prohibited by law, in no event will Sun be liable
+for any indirect, punitive, special, incidental or consequential damage
+in connection with or arising out of this Agreement (including loss
+of business, revenue, profits, use, data or other economic advantage),
+however it arises, whether for breach or in tort, even if Sun has been
+previously advised of the possibility of such damage.
+
+10.0 U.S. GOVERNMENT RESTRICTED RIGHTS
+
+If this Software is being acquired by or on behalf of the U.S.
+Government or by a U.S. Government prime contractor or subcontractor (at
+any tier), then the Government's rights in the Software and accompanying
+documentation shall be only as set forth in this license; this is
+in accordance with 48 C.F.R. 227.7202-4 (for Department of Defense
+(DOD) acquisitions) and with 48 C.F.R. 2.101 and 12.212 (for non-DOD
+acquisitions).
+
+11.0 GENERAL TERMS
+
+11.1 Any action relating to or arising out of this Agreement will be
+governed by California law and controlling U.S. federal law. The U.N.
+Convention for the International Sale of Goods and the choice of law
+rules of any jurisdiction will not apply.
+
+11.2 Licensed Software and technical data delivered under this Agreement
+are subject to U.S. export control laws and may be subject to export
+or import regulations in other countries. Licensee agrees to comply
+strictly with all such laws and regulations and acknowledges that it
+has the responsibility to obtain such licenses to export, re-export or
+import as may be required after delivery to Licensee.
+
+11.3 It is understood and agreed that, notwithstanding any other provision
+of this Agreement, Licensee's breach of the provisions of Section 7 of
+this Agreement will cause Sun irreparable damage for which recovery
+of money damages would be inadequate, and that Sun will therefore be
+entitled to seek timely injunctive relief to protect Sun's rights under
+this Agreement in addition to any and all remedies available at law.
+
+11.4 Neither party may assign or otherwise transfer any of its rights
+or obligations under this Agreement, without the prior written consent
+of the other party, except that Sun may assign this Agreement to an
+affiliated company.
+
+11.5 This Agreement is the parties' entire agreement relating to its
+subject matter. It supersedes all prior or contemporaneous oral or written
+communications, proposals, conditions, representations and warranties and
+prevails over any conflicting or additional terms of any quote, order,
+acknowledgment, or other communication between the parties relating to its
+subject matter, including any Binary Code Licenses, Supplemental Terms,
+or other licenses contained within Licensed Software. No modification
+to this Agreement will be binding, unless in writing and signed by an
+authorized representative of each party.

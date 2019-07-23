@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+[most of contents snipped - see openide's apichanges for how-to instructions]
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="JPDADebuggerAPI">Debugger JPDA API</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Randomly select listening port</summary>
+        <version major="3" minor="12"/>
+        <date day="15" month="6" year="2019"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            Enhanced behavior of 
+            <a href="@TOP@/org/netbeans/api/debugger/jpda/ListeningDICookie.html">ListeningDICookie.create(-1)</a>
+            method.
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDADebugger.getException() method added.</summary>
+        <date day="20" month="4" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            JPDADebugger.getException() method added to. This is support for notifications about 
+            problems during start of debugger.
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Support for synchronouous start of JPDADebugger added.</summary>
+        <date day="3" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility modification="yes"/>
+        <description>
+            <p>
+                Methods starting debugger has been modified to support synchronous start of debugging.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Breakpoint Listener added.</summary>
+        <date day="4" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                JPDABreakpointEvent and JPDABreakpointListener classes added.
+                JPDABreakpoint.addJPDABreakpointListener (...) and JPDABreakpoint.removeJPDABreakpointListener (...)
+                methods added.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Support methods for various new features added.</summary>
+        <date day="9" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Support for Fix Action improved. Support for Pop Frame action added. Support for static and
+                inherited fields added. New methods:
+            </p>
+            <ul>
+                <li>CallStackFrame.isObsolete ()</li>
+                <li>CallStackFrame.popFrame ()</li>
+                <li>JPDADebugger.canFixClasses ()</li>
+                <li>JPDADebugger.fixClasses(java.util.Map)</li>
+                <li>ObjectVariable.getAllStaticFields(int,int)</li>
+                <li>ObjectVariable.getInheritedFields(int,int)</li>
+            </ul>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Definition of various breakpoints has been generalized.</summary>
+        <date day="10" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility modification="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                We have changed ClassLoadUnloadBreakpoint to support class exclusion filters, and
+                more than one class filter. The same change was done for MethodBreakpoints too.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDABreakpointEvent improvements.</summary>
+        <date day="11" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility modification="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                We have added several new properties to JPDABreakpointEvent:
+            </p>
+            <ul>
+                <li>ReferenceType</li>
+                <li>resume</li>
+                <li>Thread</li>
+                <li>Variable</li>
+            </ul>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Improvements of SmartStepping implementation.</summary>
+        <date day="16" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                We have added several new methods to fix issues in smart stepping implementation:
+            </p>
+            <ul>
+                <li>PropertyChangeListener added to SmartSteppingFilter.</li>
+                <li>JPDADebugger.getSmartSteppingFilter ()</li>
+                <li>SmartSteppingFilter.getExclusionPatterns ()</li>
+                <li>PropertyChangeListener added to EngineContextProvider.</li>
+                <li>EngineContextProvider.getOriginalSourceRoots()</li>
+                <li>EngineContextProvider.getSourceRoots()</li>
+                <li>EngineContextProvider.setSourceRoots()</li>
+            </ul>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDADebugger.SESSION_ID.</summary>
+        <date day="17" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                JPDADebugger.SESSION_ID constant has been added.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Firing of exceptions during watches evaluation fixed.</summary>
+        <date day="25" month="5" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility modification="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                InvalidExpressionException is fired from folowing methods now:
+            </p>
+            <ul>
+                <li>JPDAWatch.getToStringValue()</li>
+                <li>ObjectVariable.getToStringValue()</li>
+                <li>ObjectVariable.invokeMethod()</li>
+            </ul>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>InvalidExpressionException can encapsulate other exceptions.</summary>
+        <date day="1" month="6" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Mew constructor added (InvalidExpressionException(java.lang.Throwable)), 
+                and InvalidExpressionException.getTargetException() method added to support firing of
+                nested exceptions.
+            </p>
+            <ul>
+                <li>JPDAWatch.getToStringValue()</li>
+                <li>ObjectVariable.getToStringValue()</li>
+                <li>ObjectVariable.invokeMethod()</li>
+            </ul>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>ContextProvider.getFieldLineNumber() method added.</summary>
+        <date day="1" month="6" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                ContextProvider.getFieldLineNumber() method added.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Two methods added to ContextProvider.</summary>
+        <date day="8" month="6" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                ContextProvider.getImports () method added to support better evaluation of expressions.
+                ContextProvider.getLineNumber (annotaion) method added to fix stepping through modified files.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>ContextProvider and EngineContextProvider has been changed from interfaces to abstract classes.</summary>
+        <date day="8" month="6" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility modification="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                ContextProvider and EngineContextProvider has been changed from interfaces to abstract classes. 
+                This was done to support future changes in these classes.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>"String EditorContext.getClassName (url, lineNumber)" method has been added.</summary>
+        <date day="8" month="10" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                This method is needed to correctly implement line breakpoint in secondary classes.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>"EditorContext.updateTimeStamp(timeStamp,url)" method has been added.</summary>
+        <date day="13" month="10" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                This method is needed to correctly implement fix &amp; continue action.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>"global" parameter added to "SourcePathProvider.getURL (String relativePath, boolean global)" method.</summary>
+        <date day="18" month="10" year="2004"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                This parameter has been added to distinguish between finding sources for smart
+                stepping feature, and for all other features like douuble click on stack trace..
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>LineBreakpoint supplied with the information about the source path where it is set.</summary>
+        <version major="1" minor="3"/>
+        <date day="15" month="2" year="2005"/>
+        <author login="lkotouc"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                A line breakpoint does not contain the information
+                about the source path where it is set. There is no
+                way how to differ between breakpoints in the case
+                when
+                - several JSPs have the same name AND
+                - these JSPs are statically included into one JSP page.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="LineBreakpoint"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDAStep class added (also new method createJPDAStep added to JPDADebugger)</summary>
+        <version major="1" minor="5"/>
+        <date day="29" month="6" year="2005"/>
+        <author login="rondruska"/>
+        <compatibility addition="yes" source="incompatible" binary="compatible"/>
+        <description>
+            <p>
+                JPDAStep allows to create a step request to JDI with
+                no UI interference. It was designed for new RunIntoMethod
+                action. New method JPDADebugger.createJPDAStep creates
+                a new instance of JPDAStep.  
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDA API interfaces that correspond to JDI API declared as not to implement.</summary>
+        <version major="2" minor="0"/>
+        <date day="12" month="8" year="2005"/>
+        <author login="mentlicher"/>
+        <compatibility addition="no" source="incompatible" binary="incompatible"/>
+        <description>
+            <p>
+                JPDA API represents JDI functionality.
+                Since JDI interfaces evolve from one version to another, it's
+                necessary to declare that interfaces in
+                org.netbeans.api.debugger.jpda package should not be implemented,
+                since new methods can be added to these interfaces at any time
+                to keep up with the JDI functionality.
+            </p>
+            <p>
+                Also JPDABreakpointEvent and JPDABreakpointListener are moved to
+                newly created org.netbeans.api.debugger.jpda.event package.
+            </p>
+        </description>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Added interrupt method to JPDAThread class</summary>
+        <version major="2" minor="1"/>
+        <date day="18" month="8" year="2005"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                A possibility to interrupt a debuggee thread is added.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAThread" />
+        <issue number="59072"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Added canBeModified() method to JPDADebugger class</summary>
+        <version major="2" minor="3"/>
+        <date day="3" month="11" year="2005"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                A possibility to detect whether the debuggee is read-only is added.
+                This check works fine on JDK 1.5 and higher, on JDK 1.4 it returns
+                <code>true</code> by default.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <issue number="67046"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Added getSourceRoot() method to SourcePathProvider class</summary>
+        <version major="2" minor="6"/>
+        <date day="3" month="5" year="2006"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                Retrieves a source root for a given URL. This is necessary to
+                match breakpoint locations with the sources selected fopr debugging.
+                It returns <code>null</code> by default.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="SourcePathProvider" />
+        <issue number="52180"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Added JPDAClassType, ClassVariable and ReturnVariable classes</summary>
+        <version major="2" minor="7"/>
+        <date day="12" month="7" year="2006"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                In order to be able to provide static context information
+                and return value of methods, three new classes were added.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAClassType" />
+        <class package="org.netbeans.api.debugger.jpda" name="ClassVariable" />
+        <class package="org.netbeans.api.debugger.jpda" name="ReturnVariable" />
+        <issue number="80090"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Added setPreferedClassName and getPreferredClassName methods to LineBreakpoint</summary>
+        <version major="2" minor="8"/>
+        <date day="30" month="8" year="2006"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                In order to be able to provide the class name for which the
+                breakpoint should be submitted. This is necessary for JSP.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="LineBreakpoint" />
+        <issue number="83188"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Support for stepping over operations.</summary>
+        <version major="2" minor="9"/>
+        <date day="1" month="2" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                In order to be able to provide stepping over operations,
+                we need a representation of an operation and some way how to
+                retrieve the operation(s) from a Thread and a CallStackFrame.
+            </p>
+            <p>
+                Added fields:<br/>
+                <code>JPDAStep.STEP_OPERATION</code>,
+                <code>EditorContext.CURRENT_LAST_OPERATION_ANNOTATION_TYPE</code>,
+                <code>EditorContext.CURRENT_EXPRESSION_SECONDARY_LINE_ANNOTATION_TYPE</code>,
+                <code>EditorContext.CURRENT_EXPRESSION_CURRENT_LINE_ANNOTATION_TYPE</code>
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>CallStackFrame.getCurrentOperation()</code>,
+                <code>JPDAThread.getCurrentOperation()</code>,
+                <code>JPDAThread.getLastOperations()</code>,
+                <code>EditorContext.createMethodOperation()</code>,
+                <code>EditorContext.addNextOperationTo()</code>,
+                <code>EditorContext.createPosition()</code>,
+                <code>EditorContext.getOperations()</code>
+            </p>
+            <p>
+                Added classes:<br/>
+                <code>EditorContext.BytecodeProvider</code>,
+                <code>EditorContext.Operation</code>,
+                <code>EditorContext.Position</code>
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAStep" />
+        <class package="org.netbeans.api.debugger.jpda" name="CallStackFrame" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAThread" />
+        <class package="org.netbeans.spi.debugger.jpda" name="EditorContext" />
+        <issue number="93842"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>API for retrieval of method arguments.</summary>
+        <version major="2" minor="10"/>
+        <date day="28" month="3" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+               An access to method arguments in source code is necessary
+               for cases where we do not have full debug information.
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>EditorContext.getArguments()</code>
+            </p>
+            <p>
+                Added classes:<br/>
+                <code>EditorContext.MethodArgument</code>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="EditorContext" />
+        <issue number="99257"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Support for heap walking.</summary>
+        <version major="2" minor="11"/>
+        <date day="5" month="4" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                In order to be able to provide heap walking functionality,
+                we need methods for retrieval of class instances and
+                back references.
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>Field.getDeclaringClass()</code>,
+                <code>JPDAClassType.getClassLoader()</code>,
+                <code>JPDAClassType.getSuperClass()</code>,
+                <code>JPDAClassType.getInstanceCount()</code>,
+                <code>JPDAClassType.getInstances()</code>,
+                <code>JPDADebugger.canGetInstanceInfo()</code>,
+                <code>JPDADebugger.getAllClasses()</code>,
+                <code>JPDADebugger.getClassesByName()</code>,
+                <code>JPDADebugger.getInstanceCounts()</code>,
+                <code>ObjectVariable.getReferringObjects()</code>,
+                <code>ObjectVariable.getClassType()</code>,
+                <code>ObjectVariable.getUniqueID()</code>.
+            </p>
+            <p>
+                Added classes:<br/>
+                <code>VariableType</code>,
+                <code>JPDAArrayType</code>.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAClassType" />
+        <class package="org.netbeans.api.debugger.jpda" name="ObjectVariable" />
+        <class package="org.netbeans.api.debugger.jpda" name="VariableType" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAArrayType" />
+        <issue number="100047"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>API for identification of method declarations in source code.</summary>
+        <version major="2" minor="12"/>
+        <date day="21" month="5" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>In order to implement annotation of method breakpoints in Editor, we need to be
+able to locate individual methods in Editor, based on their names and signature. Also we need
+annotation types for fields and methods.
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>EditorContext.getMethodLineNumber()</code>,
+                <code>EditorContext.getCurrentMethodDeclaration()</code>,
+            </p>
+            <p>
+                Added fields:<br/>
+                <code>EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE</code>,
+                <code>EditorContext.DISABLED_FIELD_BREAKPOINT_ANNOTATION_TYPE</code>,
+                <code>EditorContext.METHOD_BREAKPOINT_ANNOTATION_TYPE</code>
+                <code>EditorContext.DISABLED_METHOD_BREAKPOINT_ANNOTATION_TYPE</code>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="EditorContext" />
+        <issue number="103934"/>
+    </change>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Enhance JPDA breakpoints.</summary>
+        <version major="2" minor="13"/>
+        <date day="21" month="5" year="2007"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                To catch-up with JDI capabilities and be able to implement new enhancements,
+we need to add support for new breakpoint properties into the debugger JPDA API.<br/>
+These are mainly class and thread filters and hit counts.
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>ExceptionBreakpoint.getClassFilters()</code>,
+                <code>ExceptionBreakpoint.setClassFilters()</code>,
+                <code>ExceptionBreakpoint.getClassExclusionFilters()</code>,
+                <code>ExceptionBreakpoint.setClassExclusionFilters()</code>,
+                <code>FieldBreakpoint.getInstanceFilters()</code>,
+                <code>FieldBreakpoint.setInstanceFilters()</code>,
+                <code>FieldBreakpoint.getThreadFilters()</code>,
+                <code>FieldBreakpoint.setThreadFilters()</code>,
+                <code>JPDABreakpoint.getHitCountFilter()</code>,
+                <code>JPDABreakpoint.getHitCountFilteringStyle()</code>,
+                <code>JPDABreakpoint.setHitCountFilter()</code>,
+                <code>LineBreakpoint.getInstanceFilters()</code>,
+                <code>LineBreakpoint.setInstanceFilters()</code>,
+                <code>LineBreakpoint.getThreadFilters()</code>,
+                <code>LineBreakpoint.setThreadFilters()</code>,
+                <code>MethodBreakpoint.getMethodSignature()</code>,
+                <code>MethodBreakpoint.setMethodSignature()</code>,
+                <code>MethodBreakpoint.getInstanceFilters()</code>,
+                <code>MethodBreakpoint.setInstanceFilters()</code>,
+                <code>MethodBreakpoint.getThreadFilters()</code>,
+                <code>MethodBreakpoint.setThreadFilters()</code>.
+            </p>
+            <p>
+                Added fields:<br/>
+                <code>ExceptionBreakpoint.PROP_CLASS_FILTERS</code>,
+                <code>ExceptionBreakpoint.PROP_CLASS_EXCLUSION_FILTERS</code>,
+                <code>FieldBreakpoint.PROP_INSTANCE_FILTERS</code>,
+                <code>FieldBreakpoint.PROP_THREAD_FILTERS</code>,
+                <code>JPDABreakpoint.PROP_HIT_COUNT_FILTER</code>,
+                <code>JPDABreakpoint.HIT_COUNT_FILTERING_STYLE</code>,
+                <code>LineBreakpoint.PROP_INSTANCE_FILTERS</code>,
+                <code>LineBreakpoint.PROP_THREAD_FILTERS</code>,
+                <code>MethodBreakpoint.PROP_METHOD_SIGNATURE</code>,
+                <code>MethodBreakpoint.PROP_INSTANCE_FILTERS</code>,
+                <code>MethodBreakpoint.PROP_THREAD_FILTERS</code>.
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="ExceptionBreakpoint" />
+        <class package="org.netbeans.api.debugger.jpda" name="FieldBreakpoint" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDABreakpoint" />
+        <class package="org.netbeans.api.debugger.jpda" name="LineBreakpoint" />
+        <class package="org.netbeans.api.debugger.jpda" name="MethodBreakpoint" />
+        <issue number="103936"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Enhance JPDA API with better thread control.</summary>
+        <version major="2" minor="16"/>
+        <date day="2" month="6" year="2008"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            This API change is necessary for the redesign of the debugger UI and
+            it's behavior with respect to threads.
+            <p>
+                Added classes:<br/>
+                <code>org.netbeans.api.debugger.jpda.DeadlockDetector</code>,
+                <code>org.netbeans.api.debugger.jpda.MonitorInfo</code>,
+                <code>org.netbeans.api.debugger.jpda.ThreadsCollector</code>
+            </p>
+            <p>
+                Added methods:<br/>
+                <code>CallStackFrame.getFrameDepth()</code>,
+                <code>CallStackFrame.getOwnedMonitors()</code>,
+                <code>JPDADebugger.getThreadsCollector()</code>,
+                <code>JPDADebugger.getDeadlockDetector()</code>,
+                <code>JPDAThread.getCurrentBreakpoint()</code>,
+                <code>JPDAThread.getContendedMonitorAndOwner()</code>,
+                <code>JPDAThread.getOwnedMonitorsAndFrames()</code>,
+                <code>EditorContext.annotate()</code> with thread argument,
+                <code>AttachingDICookie.getProcessID()</code>
+            </p>
+            <p>
+                Added fields:<br/>
+                <code>JPDADebugger.PROP_THREAD_STARTED</code>,
+                <code>JPDADebugger.PROP_THREAD_DIED</code>,
+                <code>JPDADebugger.PROP_THREAD_GROUP_ADDED</code>,
+                <code>JPDAThread.PROP_SUSPENDED</code>,
+                <code>JPDAThread.PROP_BREAKPOINT</code>,
+                <code>EditorContext.OTHER_THREAD_ANNOTATION_TYPE</code>
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="CallStackFrame" />
+        <class package="org.netbeans.api.debugger.jpda" name="DeadlockDetector" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAThread" />
+        <class package="org.netbeans.api.debugger.jpda" name="MonitorInfo" />
+        <class package="org.netbeans.api.debugger.jpda" name="ThreadsCollector" />
+        <class package="org.netbeans.spi.debugger.jpda" name="EditorContext" />
+        <issue number="136099"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Improve threading model.</summary>
+        <version major="2" minor="18"/>
+        <date day="13" month="1" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            ReadWriteLock is introduced to synchronize the access to JPDAThread.
+            ReadLock of that read/write pair is publicly available through the
+            new method JPDAThread.getReadAccessLock(). Clients can use this lock
+            to assure that the thread is not resumed in the mean time.
+            <p>
+                Added methods:<br/>
+                <code>JPDAThread.getReadAccessLock()</code>,
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAThread" />
+        <issue number="156368"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Annotations for debugger service registration.</summary>
+        <version major="2" minor="19"/>
+        <date day="2" month="2" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+             <p>
+             Annotations are added for easy registration on module layers.
+             <code>*Provider.Registration</code> annotations are introduced to register
+             implementations of appropriate providers.
+             </p>
+        </description>
+        <issue number="153093"/>
+        <issue number="156687"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>API for ability to plug-in evaluator engine.</summary>
+        <version major="2" minor="21"/>
+        <date day="10" month="9" year="2009"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+             <p>
+             An <code>Evaluator</code> interface is introduced, with
+             <code>evaluate()</code> method. It's implementation should be registered
+             for the desired language that compiles into bytecode.
+             </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="Evaluator" />
+        <issue number="171342"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Property for classes fixed event added.</summary>
+        <version major="2" minor="25"/>
+        <date day="14" month="2" year="2010"/>
+        <author login="dprusa"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            JPDA debugger properties have been extended by a property name for classes
+            fixed event. This event is usually generated when the user invokes Apply Code
+            Changes action.
+            <p>
+                Added field:<br/>
+                <code>JPDADebugger.PROP_CLASSES_FIXED</code>
+            </p>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <issue number="180695"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDADebugger.startListeningAndGetEngines().</summary>
+        <version major="2" minor="26"/>
+        <date day="23" month="3" year="2010"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            JPDADebugger.startListeningAndGetEngines() introduced to return the
+            debugger engines that are started, for use by the fix of the defect #182439.
+            This method is identical to JPDADebugger.startListening(), but returns
+            the started engines.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <issue number="182439"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>BreakpointsClassFilter provider introduced.</summary>
+        <version major="2" minor="37"/>
+        <date day="4" month="8" year="2012"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            BreakpointsClassFilter introduced to provide a customized set of classes
+            for breakpoints.
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="BreakpointsClassFilter" />
+        <issue number="215680"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Breakpoints can be made session-specific.</summary>
+        <version major="2" minor="41"/>
+        <date day="19" month="2" year="2013"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            getSession()/setSession() methods are added to JPDABreakpoint class.
+            They can be used to make the breakpoint debugger session-specific.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDABreakpoint" />
+        <issue number="226029"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Breakpoints can deactivated.</summary>
+        <version major="2" minor="42"/>
+        <date day="27" month="2" year="2013"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            Two methods are added to JPDADebugger class: getBreakpointsActive()
+            and setBreakpointsActive(boolean). The set method fires PROP_BREAKPOINTS_ACTIVE
+            event. <br/>
+            These methods are used to activate/deactivate all breakpoints in the
+            debugger session.
+            Initially, the breakpoints are active in the debugger session.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <issue number="79027"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>A possibility to get/set mirror objects from debugger variables.</summary>
+        <version major="2" minor="44"/>
+        <date day="30" month="4" year="2013"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>MutableVariable</code> interface is introduced. It's to be implemented by
+            variables that can change their values. <code>Field</code>,
+            <code>LocalVariable</code> and <code>JPDAWatch</code> now extend
+            <code>MutableVariable</code>.
+            <p/>
+            <code>Object createMirrorObject()</code> method is added to <code>Variable</code>
+            class and <code>void setFromMirrorObject(Object obj)</code> method
+            is declared by <code>MutableVariable</code>.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="Variable" />
+        <class package="org.netbeans.api.debugger.jpda" name="MutableVariable" />
+        <issue number="228894"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Add a way to create mirror objects in the target VM and execute static methods.</summary>
+        <version major="2" minor="47"/>
+        <date day="24" month="10" year="2013"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            createMirrorVar() methods are introduced in JPDADebugger class. They
+            create a mirror object in the target virtual machine.
+            <p/>
+            Similar to invokeMethod() method on ObjectVariable, invokeMethod()
+            is introduced on JPDAClassType for invocation of static methods.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAClassType" />
+        <issue number="237233"/>
+    </change>
+    
+     <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Add information about native methods into EditorContext.Operation.</summary>
+        <version major="2" minor="51"/>
+        <date day="8" month="9" year="2014"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            A new method <code>createMethodOperation()</code>, which takes
+            <code>boolean isNative</code> is added to <code>EditorContext</code>
+            class. The <code>EditorContext.Operation</code> has <code>isNative()</code>
+            method to retrieve that information. The implementation retrieves the
+            native flag from parser information, therefore there can occur native
+            methods at runtime, which are not marked as native by this flag.
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="EditorContext" />
+        <issue number="246819"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Add methods for retrieval of implemented and extended types.</summary>
+        <version major="3" minor="2"/>
+        <date day="10" month="7" year="2015"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            Methods that provide implemented and extended types were added to
+            <code>JPDAClassType</code> class. These are:
+            <ul>
+                <li>getSubClasses()</li>
+                <li>getAllInterfaces()</li>
+                <li>getDirectInterfaces()</li>
+                <li>isInstanceOf()</li>
+            </ul>
+            Associated with this is also an ability to retrieve the reflected type
+            from the class variable. Therefore, we add following method
+            to <code>ClassVariable</code>:
+            <ul>
+                <li>getReflectedType()</li>
+            </ul>
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAClassType" />
+        <class package="org.netbeans.api.debugger.jpda" name="ClassVariable" />
+        <issue number="253295"/>
+    </change>
+    
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Enhanced smart-stepping.</summary>
+        <version major="3" minor="5"/>
+        <date day="21" month="10" year="2015"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>SmartSteppingCallback.stopAt()</code> method added to be able
+            to override the default smart-stepping logic and provide specific
+            steps that should be performed at given locations.
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="SmartSteppingCallback" />
+        <issue number="255918"/>
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Differentiate application-level exceptions</summary>
+        <version major="3" minor="7"/>
+        <date day="26" month="10" year="2016"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>InvalidExpressionException</code> can be thrown as a result
+            of an application-level exception. We need to differentiate this case
+            from exceptions thrown from NetBeans code. A boolean argument in the
+            constructor and a method <code>hasApplicationTarget()</code> are
+            added to <code>InvalidExpressionException</code> for this purpose.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="InvalidExpressionException" />
+        <issue number="268011"/>
+    </change>
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Debugger JPDA API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Debugger JPDA APIs. Please ask on the 
+    <code>nbdev@netbeans.org</code>
+    mailing list if you have any questions about the details of a
+    change, or are wondering how to convert existing code to be compatible.
+</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.debugger.jpda/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

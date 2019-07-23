@@ -1,0 +1,5 @@
+<?php
+while ($tst) {
+    break;^
+}
+?>

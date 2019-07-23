@@ -1,0 +1,10 @@
+var |>GLOBAL:pavel<| = new Man ("Petr", "Pavel");
+  
+with(|>GLOBAL:pavel<|.address) {
+    |>FIELD:city<| = "Prague";
+    |>FIELD:street<| = "Piseckeho";
+    |>GLOBAL:z<|
+    |>GLOBAL:console<|.log(print());
+}
+|>GLOBAL:pavel<|.address.|>FIELD:city<| = "Praha";
+|>GLOBAL:console<|.log(|>GLOBAL:pavel<|.address.print());

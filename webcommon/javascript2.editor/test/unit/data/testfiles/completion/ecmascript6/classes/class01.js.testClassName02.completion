@@ -1,0 +1,7 @@
+Code completion result for source line:
+console.log(pol.|height);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO constructor                     [PUBLIC]   class01.js
+FIELD      height                          [PUBLIC]   class01.js
+FIELD      width                           [PUBLIC]   class01.js

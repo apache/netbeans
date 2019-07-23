@@ -1,0 +1,95 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Diagnostic Tools</h2>
+        <p>
+            There is a separate module in the
+            <a href="http://hg.netbeans.org/main/contrib">contrib</a> repository,
+            <code>gsf.tools</code>,
+            which provides a number of tools in the <b>Tools | GSF Development</b> menu.
+        </p>
+        <h3>AST Viewer</h3>
+        <p>
+            The AST viewer is useful for examining your own parser's AST. Clicking in the
+            editor will expose and select the corresponding AST node, and conversely,
+            selecting an AST node will highlight the editor region corresponding to that
+            AST node.
+        </p>
+        <p>
+            The AST viewer is described online here:
+            <a href="http://wiki.netbeans.org/RubyAstViewer">http://wiki.netbeans.org/RubyAstViewer</a>
+        </p>
+        <p>
+            NOTE: To support the AST viewer, your ParserResult must return a javax.swing.tree.TreeNode
+            from the <code>getAst()</code> method.
+        </p>
+        
+        <h3>Token Spy</h3>
+        <p>
+            The TokenSpy makes it easier to debug problems related to lexing. If you're
+            wondering what the token hierarchy looks like for a given offset, open the
+            TokenSpy. It will open a window which shows the current token id, text
+            and length (as well as the top level embedded token id, text and length)
+            for the caret offset. As you're moving the caret around, it shows the token
+            state up to date.
+        </p>
+        
+        <a name="index-browser"/>
+        <h3>Index Browser</h3>
+        <p>
+            The Lucene Index Browser lets you debug <a href="indexer.html">indexing and querying</a> 
+            problems.
+            <br/>
+            <br/>
+            <img src="index-browser.png" />
+            <br/>
+            <br/>
+            In the top left area, you get to choose the search key (there are some hardcoded
+            ones there that I've used in Ruby and JavaScript, but it's an editable combobox
+            so type any key you want). You also need to select which language index you want
+            to search with the language combo box further to the right - it's currently
+            set to Ruby. You can also choose what search type to use - it defaults to
+            Prefix but you can search by exact name, or by a regular expression etc.
+            Finally, you can enter a prefix or full name etc in the text field. Press enter
+            to search.
+        </p>
+        <p>
+            This will list the set of search result matches in the list on the bottom
+            left. Click on each result to see the full search result document on the 
+            bottom right. I've clicked on <code>mymethod</code> here, and you can
+            see the full document on the right - e.g. the other [key,value] pairs from
+            the document that contained your match. You can now for example compute the
+            class that contained your method.
+        </p>
+        <p>
+            There is also a "open in Luke" button there. Behind the scenes, GSF is using
+            the Lucene search engine to index and query the data, and 
+            <a href="http://www.getopt.org/luke/">Luke</a> is a Lucene index browser.
+            You can use this if you want to debug things down at the Lucene level. To
+            do this, you have to place the <code>luke-all.jar</code> file in the NetBeans
+            installation directory. If it's not there, clicking the button will tell you
+            the exact path GSF is expecting it.
+        </p>
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group xmlns="http://xml.netbeans.org/websvc/saas/services/1.0" 
+    name = "Web Services" >
+    <group name="test1"/>
+    <group name="test2">
+        <group name="test2.1"/>
+        <group name="test2.2"/>
+    </group>
+    <group name="test3"/>
+
+</group>

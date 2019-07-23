@@ -1,0 +1,5 @@
+Code completion result for source line:
+ClassCastExc|  // java.lang.ClassCastException
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ClassCastException                         null

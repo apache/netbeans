@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/csl/core/error-sg.gif</file>
+        <file>src/org/netbeans/modules/csl/core/warning-sg.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/override.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/variables.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/is-overridden-badge.png</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/inner.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/overrides-badge.png</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/nonPrivate.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/methods.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/filterHideInherited.png</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/public.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/filterHideFields.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/filterHideNonPublic.png</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/inherited.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/constructors.gif</file>
+        <file>src/org/netbeans/modules/csl/navigation/resources/filterHideStatic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/override.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/error-glyph.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/class.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodStaticPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodStaticPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorStaticPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/initializerStatic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldStaticPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodStaticProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/package-empty.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/rule.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/annotation.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/initializer.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/implement-glyph.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/jar.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldStaticPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/enum.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorStaticPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorStaticPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/database.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/wait.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constantPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodStaticPackage.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/enum.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/test.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/wait.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/emptyfile-icon.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/package.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorStaticProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/exception.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/class.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/interface.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldStaticProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constantPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/fieldStaticPublic.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constructorPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/interface.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/html_element.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/annotation.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/error-badge.gif</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/methodPrivate.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/constantProtected.png</file>
+        <file>src/org/netbeans/modules/csl/source/resources/icons/override-glyph.gif</file>
+        <file>src/org/netbeans/modules/csl/editor/completion/warning.png</file>
+        <file>doc/index-browser.png</file>
+        <file>doc/instant-rename.png</file>
+        <file>doc/history2.png</file>
+        <file>doc/test-diff.png</file>
+        <file>doc/history1.png</file>
+        <file>doc/gsf-architecture.png</file>
+        <file>doc/indexing.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

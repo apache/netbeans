@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:f<| = param || function () {}; // usage is correctly detected
+        ^|>MARK_OCCURRENCES:f<|();

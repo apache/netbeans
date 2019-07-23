@@ -1,0 +1,5 @@
+Code completion result for source line:
+$x->|requide_method();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     requide_method()                [PUBLIC]   MyTestTrait
+METHOD     requide_method2()               [PUBLIC]   MyTestTrait2

@@ -1,0 +1,9 @@
+<?php
+
+class MyClass {
+
+    public function compare () {
+        while (MyClass::test() == 10)^
+
+    }
+}

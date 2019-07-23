@@ -1,0 +1,6 @@
+Code completion result for source line:
+var module2 = require("lib/mod|uleLib1");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       moduleLib1.js                              
+FILE       moduleLib2.js                              

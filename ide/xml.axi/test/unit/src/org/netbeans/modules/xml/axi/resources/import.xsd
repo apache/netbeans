@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/courier"
+            xmlns:tns="http://xml.netbeans.org/schema/courier"
+			xmlns:addr="http://xml.netbeans.org/examples/targetNS/Address"
+            xmlns:po="http://xml.netbeans.org/examples/targetNS/PO"
+            elementFormDefault="qualified">
+	<xsd:import namespace="http://xml.netbeans.org/examples/targetNS/Address" schemaLocation="address.xsd"/>
+    <xsd:import namespace="http://xml.netbeans.org/examples/targetNS/PO" schemaLocation="newpo.xsd"/>
+    <xsd:complexType name="DeliveryType">
+        <xsd:sequence>
+            <xsd:element name="address" type="addr:USAddress"/>
+            <xsd:element name="items" type="po:Items"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="delivery" type="tns:DeliveryType"/>
+</xsd:schema>

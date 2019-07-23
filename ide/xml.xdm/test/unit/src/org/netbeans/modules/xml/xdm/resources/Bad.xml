@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="xmlns="http://www.test.com/TestModel" >
+    <a index='1'/>
+    <b index='1'/>
+    <c index='1'> /c>
+</test

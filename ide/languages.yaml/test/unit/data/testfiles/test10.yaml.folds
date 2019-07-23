@@ -1,0 +1,12 @@
++ development:
+|   adapter: mysql
+|   database: hello_development
+|   username: root
+|   password:
+|   host: localhost
+-   socket: /var/run/mysqld/mysqld.sock
+  
++ production:
+-   development
+  
+  

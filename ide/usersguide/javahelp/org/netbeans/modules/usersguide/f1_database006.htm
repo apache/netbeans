@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Create Table Dialog</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.db.explorer.actions.CreateTableAction" name="org.netbeans.modules.db.explorer.actions.CreateTableAction"></a></p>
+<div id="NBCSH5366"><!-- infolevel="all" infotype="General" --><a id="sthref795" name="sthref795"></a>
+<h1>Create Table Dialog</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to create a table, add columns, specify parameters for columns, and select an owner for the table. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1801">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t6">Element</th>
+<th align="left" valign="bottom" id="r1c2-t6">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t6" headers="r1c1-t6">
+<p>Table Name</p>
+</td>
+<td align="left" headers="r2c1-t6 r1c2-t6">Enter the name of the table.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t6" headers="r1c1-t6">
+<p>Add Column</p>
+</td>
+<td align="left" headers="r3c1-t6 r1c2-t6">Click to add a new column.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t6" headers="r1c1-t6">
+<p>Remove</p>
+</td>
+<td align="left" headers="r4c1-t6 r1c2-t6">Click to remove the selected column.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5370" name="NBCSH5370"></a>
+<p><b>Creating Columns</b></p>
+<p>When the Create Table dialog opens, one column is displayed in the dialog box, ready to be configured.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t7">Element</th>
+<th align="left" valign="bottom" id="r1c2-t7">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t7" headers="r1c1-t7">
+<p>Key</p>
+</td>
+<td align="left" headers="r2c1-t7 r1c2-t7">Select to indicate the primary key for the table. When you select this, <b>Index</b> and <b>Unique</b> are also selected.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t7" headers="r1c1-t7">
+<p>Index</p>
+</td>
+<td align="left" headers="r3c1-t7 r1c2-t7">Used for indexing the database by column name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t7" headers="r1c1-t7">
+<p>Null</p>
+</td>
+<td align="left" headers="r4c1-t7 r1c2-t7">Select to have an unknown or missing value represented.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t7" headers="r1c1-t7">
+<p>Column Name</p>
+</td>
+<td align="left" headers="r5c1-t7 r1c2-t7">Enter the name of the column in this field. Use underscore instead of hyphens.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t7" headers="r1c1-t7">
+<p>Data Type</p>
+</td>
+<td align="left" headers="r6c1-t7 r1c2-t7">Select the data type for the column from the list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t7" headers="r1c1-t7">
+<p>Size</p>
+</td>
+<td align="left" headers="r7c1-t7 r1c2-t7">Specify the size of the column. The default is <code dir="ltr">0</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t7" headers="r1c1-t7">
+<p>Scale</p>
+</td>
+<td align="left" headers="r8c1-t7 r1c2-t7">Specify the scale of the column.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t7" headers="r1c1-t7">
+<p>Comment</p>
+</td>
+<td align="left" headers="r9c1-t7 r1c2-t7">Enter any comment you want to associate with the column.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t7" headers="r1c1-t7">
+<p>Default value</p>
+</td>
+<td align="left" headers="r10c1-t7 r1c2-t7">Specify the default value of the column.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t7" headers="r1c1-t7">
+<p>Check</p>
+</td>
+<td align="left" headers="r11c1-t7 r1c2-t7">When selected, the IDE performs a check of the column to determine if it meets the required criteria.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t7" headers="r1c1-t7">
+<p>Check constraint</p>
+</td>
+<td align="left" headers="r12c1-t7 r1c2-t7">Enter the condition that defines valid data when adding or updating an entry in the column.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5382" name="NBCSH5382"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1790">
+<param name="text" value="<html><u>&quot;Working and Connecting with Databases&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

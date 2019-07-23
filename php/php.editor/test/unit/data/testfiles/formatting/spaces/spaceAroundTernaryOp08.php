@@ -1,0 +1,2 @@
+<?php
+    $var = $bar?  :   $baz;

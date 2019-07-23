@@ -1,0 +1,2 @@
+            var |>MARK_OCCURRENCES:fieldType<|; // fieldType marked as unused
+            switch (|>MARK_OCCURRENCES:field^Type<|) {

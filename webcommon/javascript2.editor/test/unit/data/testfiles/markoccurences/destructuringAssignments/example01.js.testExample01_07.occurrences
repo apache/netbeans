@@ -1,0 +1,2 @@
+function drawES6Chart({size = 'big', cords = { x: 0, y: 0 , z: 0}, |>MARK_OCCURRENCES:rad^ius<| = 25} = {}) {
+  console.log(size, cords, |>MARK_OCCURRENCES:radius<|);

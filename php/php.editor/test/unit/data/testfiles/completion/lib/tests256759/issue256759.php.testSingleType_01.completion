@@ -1,0 +1,4 @@
+Code completion result for source line:
+$test->single->|t1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? t1                            [PUBLIC]   T1

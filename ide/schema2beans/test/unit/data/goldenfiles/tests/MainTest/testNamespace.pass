@@ -1,0 +1,46 @@
+Calling GenBeans.doIt
+Bean Tree:
+namespaceSample <namespaceSample> : NamespaceSample
+	name <name> : java.lang.String
+	configProperty <config-property> : ConfigPropertyType[1,n]
+		configPropertyName <config-property-name> : java.lang.String
+		configPropertyType <config-property-type> : java.lang.String
+		description <description> : java.lang.String[0,1]
+	moreInfo <more-info> : MoreInfoType
+		configProperty <config-property> : ExpandedConfigPropertyType[1,n]
+			configPropertyName <config-property-name> : java.lang.String
+			configPropertyType <config-property-type> : java.lang.String
+			configPropertyValue <config-property-value> : java.lang.String
+	simpleConfigProperty <simple-config-property> : HttpAnythingOrgSimpleConfigPropertyType[0,1]
+		configPropertyName <config-property-name> : java.lang.String
+		configPropertyType <config-property-type> : java.lang.String
+
+Compiling
+Finished compiling: 0
+out: TestNamespace - creating the DOM document
+out: TestNamespace - creating the bean graph
+out: TestNamespace - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <namespaceSample xmlns='http://anything.org/extension'>
+out: 	<name>a name</name>
+out: 	<config-property>
+out: 		<config-property-name>age</config-property-name>
+out: 		<config-property-type>int</config-property-type>
+out: 		<description>now - birthday in years</description>
+out: 	</config-property>
+out: 	<more-info xmlns:sns='http://anything.org/simple'>
+out: 	</more-info>
+out: </namespaceSample>
+out: TestNamespace - Changed description
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <namespaceSample xmlns='http://anything.org/extension'>
+out: 	<name>a name</name>
+out: 	<config-property>
+out: 		<config-property-name>age</config-property-name>
+out: 		<config-property-type>int</config-property-type>
+out: 		<description>"now - birthday" (units: year)</description>
+out: 	</config-property>
+out: 	<more-info xmlns:sns='http://anything.org/simple'>
+out: 	</more-info>
+out: </namespaceSample>
+Finished running TestNamespace: 0

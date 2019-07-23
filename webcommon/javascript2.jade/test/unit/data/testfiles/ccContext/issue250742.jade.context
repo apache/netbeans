@@ -1,0 +1,11 @@
+[TAG_AND_KEYWORD]doctype[NONE] html
+[TAG_AND_KEYWORD]html
+    title [NONE]TODO supply a title
+[TAG_AND_KEYWORD]    body
+      -[NONE] var user = { description: 'foo bar baz' }
+[TAG_AND_KEYWORD]      -[NONE] var authorised = true
+[TAG_AND_KEYWORD]      [CSS_ID]#user
+[TAG_AND_KEYWORD]        unless[NONE] false
+[TAG_AND_KEYWORD]        
+          p [NONE]You're logged in as #{user.name}
+[TAG_AND_KEYWORD] 

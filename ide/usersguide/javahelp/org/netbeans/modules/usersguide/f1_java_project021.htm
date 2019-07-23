@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Standard Java SE Project Properties Dialog Box: Sources</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.java.j2seproject.ui.customizer.CustomizerSources" name="org.netbeans.modules.java.j2seproject.ui.customizer.CustomizerSources"></a></p>
+<div id="NBCSH2140"><!-- infolevel="all" infotype="General" --><a id="sthref291" name="sthref291"></a>
+<h1>Standard Java SE Project Properties Dialog Box: Sources</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to view the location of the project folder, manage source and test package folders, as well as set the source level of the packages that the IDE uses. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG372">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG373">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Use the buttons on the right side of the panel to add, remove, and change the order of classpath elements.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t20">Element</th>
+<th align="left" valign="bottom" id="r1c2-t20">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t20" headers="r1c1-t20">
+<p>Source Package Folder</p>
+</td>
+<td align="left" headers="r2c1-t20 r1c2-t20">Specifies the folder that contains the Java source code for the project. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG372">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>You must set the Source Package Folder to the folder that contains the default package.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t20" headers="r1c1-t20">
+<p>Test Package Folder</p>
+</td>
+<td align="left" headers="r3c1-t20 r1c2-t20">Specifies the folder that contains the JUnit test suites for the project.
+<p>You must set the Test Package Folder to the folder that contains the default package. By default, when you create a project the IDE creates a test package folder called <code dir="ltr">test</code> with the label Test Packages. Use the buttons to the right of the list to remove the selected folder or to specify the folder that the IDE uses when creating tests. You can also modify the Label field to change how the folder is displayed in the Projects window. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG667">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t20" headers="r1c1-t20">
+<p>Source/Binary Format</p>
+</td>
+<td align="left" headers="r4c1-t20 r1c2-t20">Specifies the JDK version that applies to the lowest Java platform version with which the Java code in your project is compatible. Default options range from JDK 6 to 8.
+<p>This setting corresponds to the <code dir="ltr">javac -source</code> option. Setting the source/binary format helps prevent you from using Java language constructs that are not available in the platform version to which you want to deploy. However, setting the source/binary format does not ensure that the platform APIs are used compatibly with that platform version. To make sure that your application is fully compatible with an earlier Java platform version, switch to the <b>Libraries</b> tab and set the Java Platform setting to the minimum version on which you plan to deploy</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t20" headers="r1c1-t20">
+<p>Includes/Excludes</p>
+</td>
+<td align="left" headers="r5c1-t20 r1c2-t20">Includes or excludes specific classes in or from compilation.
+<p>In the Configure Includes and Excludes dialog, use <code dir="ltr">regex</code> patterns in the Includes and Excludes fields to specify which classes on the project classpath you want to have compiled. The Included Files and Excluded Files panes list the resources that are compiled based on the supplied patterns.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t20" headers="r1c1-t20">
+<p>Profile</p>
+</td>
+<td align="left" headers="r6c1-t20 r1c2-t20">Specifies the Java runtime environment (JRE) used.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t20" headers="r1c1-t20">
+<p>Encoding</p>
+</td>
+<td align="left" headers="r7c1-t20 r1c2-t20">Specifies the character encoding the IDE applies when it saves and displays project source files. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2065">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>The project character encoding determines how the IDE interprets characters in your source files. The IDE displays and saves any new files you create using the encoding set by the project in which they reside. The default character encoding used with projects is UTF-8. Use the Encoding drop-down to change the character encoding used with the project.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> Specifying the source/binary format does not change the Java platform whose libraries and executables are used to compile and run your project. To set the Java platform that is used for compiling and running your project, click <b>Libraries</b> and set the Java Platform setting accordingly. You cannot set the source/binary format of a project to a higher release than the project's Java platform.</p>
+<a id="NBCSH2147" name="NBCSH2147"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG453">
+<param name="text" value="<html><u>&quot;Adding Multiple Sources Roots to a Project&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>&quot;Sharing Libraries a Library with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,2 @@
+        $this->|>MARK_OCCURRENCES:tes^tB<|();
+    private function |>MARK_OCCURRENCES:testB<|() {

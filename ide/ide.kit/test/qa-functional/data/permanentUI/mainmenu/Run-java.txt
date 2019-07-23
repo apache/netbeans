@@ -1,0 +1,22 @@
+| Run |                            R (mnemonics)
+=======
+Run Project (SampleProject)        R   - Run Project (project-name) - Run Main Project
+Test Project (SampleProject)       T
+================================
+Build Project (SampleProject)      B   - Build Project (project-name) - Build Main Project - hidden in Ruby and PHP bundles
+Clean and Build Project (SampleProject)       C   - Clean and Build Project (project-name) - Clean and Build Main Project - hidden in Ruby and PHP bundle
+Batch Build Project... (SampleProject)        j   - Batch Build Project (project-name)... - Batch Build Main Project - hidden in Ruby and PHP bundles
+================================
+Set Project Configuration      >   n   - Set Project Configuration (project-name) > - Set Main Project Configuration
+Set Project Browser            > 
+Set Main Project               >   M
+================================
+Generate Javadoc (SampleProject)   G   - Generate Javadoc (project-name) - hidden in Ruby, PHP and C/C++ bundles
+Run File                           F
+Test File                          e
+Compile File                       l   - hidden in Ruby and PHP bundles
+Check File                         k
+Validate File                      V
+================================
+Repeat Build/Run                   p   - hidden in Ruby, PHP and C/C++ bundles
+Stop Build/Run                     S   - hidden in Ruby, PHP and C/C++ bundles

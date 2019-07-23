@@ -1,0 +1,13 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_ECHO echo
+token #3 WHITESPACE  
+token #4 PHP_HEREDOC_TAG_START <<<ABC\n
+token #5 PHP_CONSTANT_ENCAPSED_STRING     foo bar
+token #6 PHP_CONSTANT_ENCAPSED_STRING \n    baz asd
+token #7 PHP_CONSTANT_ENCAPSED_STRING \n
+token #8 PHP_HEREDOC_TAG_END ABC
+token #9 PHP_SEMICOLON ;
+token #10 WHITESPACE \n
+token #11 PHP_CLOSETAG ?> 
+token #12 T_INLINE_HTML \n

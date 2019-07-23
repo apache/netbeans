@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/B"
+            xmlns:tns="http://xml.netbeans.org/schema/B"
+            elementFormDefault="qualified"
+            xmlns:c="http://xml.netbeans.org/schema/C">
+    <xsd:import schemaLocation="schemaC.xsd" namespace="http://xml.netbeans.org/schema/C"/>
+
+</xsd:schema>

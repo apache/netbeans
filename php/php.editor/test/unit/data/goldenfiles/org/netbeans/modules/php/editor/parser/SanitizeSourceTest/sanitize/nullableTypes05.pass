@@ -1,0 +1,50 @@
+<Program start='0' end='116'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <NamespaceDeclaration start='7' end='115' isBracketed='false'>
+            <NamespaceName start='17' end='23' isCurrent='false' isGlobal='false'>
+                <Identifier start='17' end='19' name='My'/>
+                <Identifier start='20' end='23' name='Sub'/>
+            </NamespaceName>
+            <Block start='24' end='115' isCurly='true'>
+                <ClassDeclaration start='26' end='115' modifier='NONE'>
+                    <ClassName>
+                        <Identifier start='32' end='49' name='NullableTypesTest'/>
+                    </ClassName>
+                    <SuperClassName>
+                    </SuperClassName>
+                    <Interfaces>
+                    </Interfaces>
+                    <Block start='50' end='115' isCurly='true'>
+                        <MethodDeclaration start='56' end='113' modifiers='public'>
+                            <FunctionDeclaration start='63' end='113' isReference='false'>
+                                <Identifier start='72' end='78' name='mytest'/>
+                                <FormalParameters>
+                                    <FormalParameter start='79' end='92' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                            <NullableType start='79' end='86'>
+                                                <NamespaceName start='80' end='86' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='80' end='86' name='string'/>
+                                                </NamespaceName>
+                                            </NullableType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='87' end='92' isDollared='true'>
+                                                <Identifier start='88' end='92' name='test'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='97' end='113' isCurly='true'>
+                                </Block>
+                            </FunctionDeclaration>
+                        </MethodDeclaration>
+                    </Block>
+                </ClassDeclaration>
+            </Block>
+        </NamespaceDeclaration>
+    </Statements>
+</Program>

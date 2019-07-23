@@ -1,0 +1,20 @@
+    function __construct($bar = 1) {
+             -----------
+HINT:Parent Constructor is Not Called
+- 0 mandatory and 0 optional parameters needed.
+- Your objects can be wrongly initialized.
+    public function __construct() {
+                    -----------
+HINT:Parent Constructor is Called
+- with wrong number of parameters: 2.
+- 0 mandatory and 1 optional parameters needed.
+    public function __construct() {
+                    -----------
+HINT:Parent Constructor is Called
+- with wrong number of parameters: 0.
+- 1 mandatory and 1 optional parameters needed.
+    public function __construct() {
+                    -----------
+HINT:Parent Constructor is Called
+- with wrong number of parameters: 3.
+- 1 mandatory and 1 optional parameters needed.

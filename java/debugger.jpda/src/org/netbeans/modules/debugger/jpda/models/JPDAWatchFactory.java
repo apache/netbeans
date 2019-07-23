@@ -1,0 +1,48 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.debugger.jpda.models;
+
+import com.sun.jdi.PrimitiveValue;
+import com.sun.jdi.Value;
+import org.netbeans.api.debugger.Watch;
+import org.netbeans.api.debugger.jpda.JPDAWatch;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+
+/**
+ *
+ * @author Martin Entlicher
+ */
+public final class JPDAWatchFactory {
+    
+    private JPDAWatchFactory() {}
+    
+    public static JPDAWatch createJPDAWatch(JPDADebuggerImpl debugger, Watch watch, Value v) {
+        JPDAWatch jw;
+        if (v instanceof PrimitiveValue) {
+            jw = new JPDAWatchImpl (debugger, watch, (PrimitiveValue) v);
+        } else { // ObjectReference or VoidValue
+            jw = new JPDAObjectWatchImpl (debugger, watch, v);
+        }
+        return jw;
+    }
+    
+    public static JPDAWatch createJPDAWatch(JPDADebuggerImpl debugger, Watch watch, Throwable th) {
+        return new JPDAWatchImpl(debugger, watch, th);
+    }
+}

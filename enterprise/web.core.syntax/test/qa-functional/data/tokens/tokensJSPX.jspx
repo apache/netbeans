@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jsp:root [
+]>
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+    <!-- to change the content type or response encoding change the following line -->
+    <jsp:directive.page contentType = 'text/xml;charset=UTF-8' />
+
+    <!-- any content can be specified here, e.g.: -->
+    <jsp:element name="text" >
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>
+        <![CDATA[Node18]]>
+        <?Node16 processing instruction data?>
+        </jsp:body>
+    </jsp:element>
+
+</jsp:root>

@@ -1,0 +1,124 @@
+<testresult testFile='yield_07.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='6' end='14'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='15' end='28'>
+            <text>generatorNull</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='28' end='29'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='29' end='30'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='31' end='32'>
+            <text>{</text>
+        </token>
+        <token id='T_FOR' start='37' end='40'>
+            <text>for</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='41' end='42'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='42' end='44'>
+            <text>$i</text>
+        </token>
+        <token id='T_EQUAL' start='45' end='46'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='47' end='48'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='48' end='49'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='50' end='52'>
+            <text>$i</text>
+        </token>
+        <token id='T_IS_SMALLER_OR_EQUAL' start='53' end='55'>
+            <text>&lt;=</text>
+        </token>
+        <token id='T_LNUMBER' start='56' end='57'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='57' end='58'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='59' end='61'>
+            <text>$i</text>
+        </token>
+        <token id='T_INC' start='61' end='63'>
+            <text>++</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='63' end='64'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='65' end='66'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='75' end='80'>
+            <text>yield</text>
+        </token>
+        <token id='T_SEMICOLON' start='80' end='81'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='86' end='87'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='88' end='89'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='90' end='93'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='93' end='93'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='92'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='6' end='89' isReference='false'>
+                <Identifier start='15' end='28' name='generatorNull'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Block start='31' end='89' isCurly='true'>
+                    <ForStatement start='37' end='87'>
+                        <Initializers>
+                            <Assignment start='42' end='48' operator='EQUAL'>
+                                <Variable start='42' end='44' isDollared='true'>
+                                    <Identifier start='43' end='44' name='i'/>
+                                </Variable>
+                                <Scalar start='47' end='48' type='INT' value='1'/>
+                            </Assignment>
+                        </Initializers>
+                        <Conditions>
+                            <InfixExpression start='50' end='57' operator='IS_SMALLER_OR_EQUAL'>
+                                <Variable start='50' end='52' isDollared='true'>
+                                    <Identifier start='51' end='52' name='i'/>
+                                </Variable>
+                                <Scalar start='56' end='57' type='INT' value='3'/>
+                            </InfixExpression>
+                        </Conditions>
+                        <Updaters>
+                            <PostfixExpression start='59' end='63' operator='INC'>
+                                <Variable start='59' end='61' isDollared='true'>
+                                    <Identifier start='60' end='61' name='i'/>
+                                </Variable>
+                            </PostfixExpression>
+                        </Updaters>
+                        <Block start='65' end='87' isCurly='true'>
+                            <ExpressionStatement start='75' end='81'>
+                                <YieldExpression start='75' end='80'>
+                                </YieldExpression>
+                            </ExpressionStatement>
+                        </Block>
+                    </ForStatement>
+                </Block>
+            </FunctionDeclaration>
+            <EmptyStatement start='90' end='92'/>
+        </Statements>
+    </Program>
+</testresult>

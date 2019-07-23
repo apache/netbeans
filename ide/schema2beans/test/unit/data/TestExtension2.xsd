@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name='mycar' type='car'/>
+
+	<xs:complexType name="car">
+		<xs:complexContent>
+			<xs:extension base="vehicle">
+				<xs:sequence>
+					<xs:element name="automatic" type="xsd:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="boat">
+		<xs:complexContent>
+			<xs:extension base="vehicle">
+				<xs:sequence>
+					<xs:element name="sailboat" type="xsd:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+		<xs:attribute name='boat-attr' type='xs:int'/>
+	</xs:complexType>
+	
+	<xs:complexType name="vehicle" abstract='true'>
+		<xs:sequence>
+			<xs:element name="wheels" type="xs:int"/>
+			<xs:element name="max-speed" type="xs:double"/>
+			<xs:element name="occupancy" type="xs:int"/>
+			<xs:element name="description" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name='vehicle-attr' type='xs:int'/>
+	</xs:complexType>	
+
+</xs:schema>

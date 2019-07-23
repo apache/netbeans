@@ -1,0 +1,112 @@
+.test(@a){
+    font: @a;
+    colors:red;
+}
+
+foo{
+    @a: 12px;
+    @b: normal;
+    .test(@a @b);
+}
+form {
+    dl {
+        + p {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.transform (@function) {
+    -webkit-transform: @function;
+}
+
+div{
+    .transform(rotate(90));
+}
+
+.grd {
+    background-size: @pw / @cols, @pw / @cols;
+}
+
+@-moz-keyframes flash {
+    0%, 50%, 100% {opacity: 1;}
+    25%, 75% {opacity: 0;}
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {transform: translateX(10px);}
+}
+
+.colourise (@image, @colour) {
+    background: -webkit-linear-gradient(left, @colour, @colour), url (@image);
+}
+.test{
+    .colourise('aaa.png', #444); 
+}
+@var: `"hello".toUpperCase() + '!'`;
+
+.test{
+    width: ~"100%";
+}
+@name: blocked;
+.@{name} {
+    color: black;
+}
+@singleQuery: "(max-width: 500px)";
+@media screen, @singleQuery {
+    set {
+        padding: 3 3 3 3;
+    }
+}
+.mixin(@val){
+    color: red
+}
+.important {
+    .mixin(2) !important; 
+} 
+
+.mixin (@a) when (lightness(@a) >= 50%) {
+    background-color: black;
+}
+
+.child, .sibling {
+    .parent & {
+        color: black;
+    }
+    & + & {
+        color: red;
+    }
+}
+
+@attr:1;
+@name:1;
+
+pre {    
+    .test2(red);
+}
+@media screen and (max-width: 400px) {
+    h1 { color: green; }
+}
+.transition() {
+    h1 {
+        color: red;
+    }
+}
+.a,
+.b {
+    width: 1050px;
+}
+
+.transition; //correct mixin call
+
+.transition, div { //not a mixin call
+}
+
+.test2(@j){
+    color: @j;
+    font-size: @attr;
+}
+
+// comment on last line

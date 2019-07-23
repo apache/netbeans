@@ -1,0 +1,114 @@
+<testresult testFile='finally_01.php'>
+    <scanner>
+        <token id='T_TRY' start='7' end='10'>
+            <text>try</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='11' end='12'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='17' end='21'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='22' end='24'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='24' end='25'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='26' end='27'>
+            <text>}</text>
+        </token>
+        <token id='T_CATCH' start='28' end='33'>
+            <text>catch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='34' end='35'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='35' end='44'>
+            <text>Exception</text>
+        </token>
+        <token id='T_VARIABLE' start='45' end='48'>
+            <text>$ex</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='48' end='49'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='50' end='51'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='56' end='60'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='61' end='63'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='63' end='64'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='65' end='66'>
+            <text>}</text>
+        </token>
+        <token id='T_FINALLY' start='67' end='74'>
+            <text>finally</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='75' end='76'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='81' end='85'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='86' end='88'>
+            <text>""</text>
+        </token>
+        <token id='T_SEMICOLON' start='88' end='89'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='90' end='91'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='93' end='96'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='96' end='96'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='95'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <TryStatement start='7' end='91'>
+                <CatchClauses>
+                    <CatchClause start='28' end='66'>
+                        <ClassNames>
+                            <NamespaceName start='35' end='44' isCurrent='false' isGlobal='false'>
+                                <Identifier start='35' end='44' name='Exception'/>
+                            </NamespaceName>
+                        </ClassNames>
+                        <Variable start='45' end='48' isDollared='true'>
+                            <Identifier start='46' end='48' name='ex'/>
+                        </Variable>
+                        <Block start='50' end='66' isCurly='true'>
+                            <EchoStatement start='56' end='64'>
+                                <Scalar start='61' end='63' type='STRING' value='""'/>
+                            </EchoStatement>
+                        </Block>
+                    </CatchClause>
+                </CatchClauses>
+                <FinallyClause start='67' end='91'>
+                    <Block start='75' end='91' isCurly='true'>
+                        <EchoStatement start='81' end='89'>
+                            <Scalar start='86' end='88' type='STRING' value='""'/>
+                        </EchoStatement>
+                    </Block>
+                </FinallyClause>
+                <Block start='11' end='27' isCurly='true'>
+                    <EchoStatement start='17' end='25'>
+                        <Scalar start='22' end='24' type='STRING' value='""'/>
+                    </EchoStatement>
+                </Block>
+            </TryStatement>
+            <EmptyStatement start='93' end='95'/>
+        </Statements>
+    </Program>
+</testresult>

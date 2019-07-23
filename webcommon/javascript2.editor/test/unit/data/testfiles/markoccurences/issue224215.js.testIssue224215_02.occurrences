@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:A<| = 1;
+    window.A = |>MARK_OCCURRENCES:A^<|;

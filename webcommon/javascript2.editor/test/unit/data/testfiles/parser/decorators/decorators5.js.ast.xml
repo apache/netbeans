@@ -1,0 +1,71 @@
+<FunctionNode name='decorators5.js' kind='MODULE' start='0' end='125'>
+  <isProgram/>
+  <ImportNode start='0' end='41'>
+    <ImportClauseNode start='7' end='17'>
+      <NamedImportsNode start='7' end='17'>
+        <ImportSpecifierNode start='9' end='15'>
+          <IdentNode start='9' end='15'>
+            <name>inject</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='18' end='41'>
+      <StringLiteralNode value='aurelia-framework' start='24' end='22'/>
+    </FromNode>
+  </ImportNode>
+  <ExportNode start='59' end='122'>
+    <ClassNode ident='Decorators' start='74' end='122'>
+      <!-- ClassNode Constructor -->
+      <PropertyNode name='Decorators' start='74' end='122'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='80' end='90'>
+          <name>Decorators</name>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='Decorators' kind='NORMAL' start='74' end='122'>
+          <isClassConstructor/>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='74' end='122'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Elements -->
+      <PropertyNode name='test' start='97' end='120'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='97' end='101'>
+          <name>test</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='test' kind='NORMAL' start='97' end='120'>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='104' end='105'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <!-- ClassNode Decorators -->
+    </ClassNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='123'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <EmptyNode start='122' end='123'>
+    </EmptyNode>
+  </Block>
+</FunctionNode>

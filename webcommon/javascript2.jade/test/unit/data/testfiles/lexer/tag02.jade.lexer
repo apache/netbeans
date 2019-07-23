@@ -1,0 +1,29 @@
+[EOL(1):\n]
+[TAG(7):tagname][OPERATOR_COLON(1)::][TAG(9):withcolon][EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]
+[TAG(5):first][OPERATOR_COLON(1)::][WHITESPACE(1): ][TAG(6):second][OPERATOR_COLON(1)::][WHITESPACE(1): ][TAG(5):third][WHITESPACE(1): ][TEXT(6):: text][EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]
+[EOL(1):\n]
+[TAG(3):tag][CSS_ID(6):#first][UNKNOWN(7):#second][CSS_CLASS(7):.class1][CSS_CLASS(7):.class2][UNKNOWN(6):#third][CSS_CLASS(7):.class3][EOL(1):\n]
+[EOL(1):\n]
+[TAG(3):tag][CSS_ID(6):#first][OPERATOR_COLON(1)::][WHITESPACE(1): ][TAG(3):tag][CSS_ID(6):#first][UNKNOWN(7):#second][EOL(1):\n]
+[EOL(1):\n]
+[COMMENT_DELIMITER(2)://][COMMENT(24): testing block of code 
+][TAG(3):tag][CSS_ID(4):#id1][CSS_CLASS(7):.class1][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(1):p][PLAIN_TEXT_DELIMITER(1):.][UNKNOWN(47): this text should not be there, is not rendered][EOL(1):\n]
+[PLAIN_TEXT(44):     ahoj jak se mas 
+     ja se mam dobre
+
+][COMMENT_DELIMITER(2)://][COMMENT(23): testing block of code
+][TAG(3):tag][CSS_ID(3):#id][PLAIN_TEXT_DELIMITER(1):.][UNKNOWN(6): block][EOL(1):\n]
+[PLAIN_TEXT(47):   line 1 of the block
+   line 2 of the block
+
+][TAG(3):tag][CSS_ID(3):#id][PLAIN_TEXT_DELIMITER(1):.][UNKNOWN(6): block][EOL(1):\n]
+[PLAIN_TEXT(68):   line 1 of the block
+   line 2 of the block
+
+    poracovani bloku
+]

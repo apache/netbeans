@@ -1,0 +1,169 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<#if ! (propertyChangeSupport??)>
+    <#assign propertyChangeSupport="propertyChangeSupport">
+</#if>
+<#if ! (vetoableChangeSupport??)>
+    <#assign vetoableChangeSupport="vetoableChangeSupport">
+</#if>
+
+    ${access}<#if static >static </#if><#if final >final </#if>${type}<#if indexed >[]</#if> ${fieldName}<#if final > = ${initializer}<#else><#if initializer != "" > = ${initializer}</#if></#if>;
+<#if bound >
+
+    public static final String ${PROP_NAME} = "${name}";
+</#if>
+<#if generateGetter >
+
+<#if generateJavadoc >
+    /**
+     * Get the value of ${name}
+     *
+     * @return the value of ${name}
+     */
+</#if>
+    public <#if static >static </#if>${type}<#if indexed >[]</#if> ${getterName}() {
+        return ${fieldName};
+    }
+</#if>
+<#if generateSetter >
+<#if !final >
+
+<#if generateJavadoc >
+    /**
+     * Set the value of ${name}
+     *
+     * @param ${paramName} new value of ${name}
+<#if vetoable>
+     * @throws java.beans.PropertyVetoException
+</#if>
+     */
+</#if>
+    public <#if static >static </#if>void ${setterName}(${type}<#if indexed >[]</#if> ${paramName})<#if vetoable> throws java.beans.PropertyVetoException</#if> {
+<#if bound >
+        ${type}<#if indexed >[]</#if> old${capitalizedName} = this.${fieldName};
+<#if vetoable> 
+        ${vetoableChangeSupport}.fireVetoableChange(${PROP_NAME}, old${capitalizedName}, ${paramName});
+</#if>
+</#if>
+        <#if static >${className}.<#else>this.</#if>${fieldName} = ${paramName};
+<#if bound >
+        ${propertyChangeSupport}.firePropertyChange(${PROP_NAME}, old${capitalizedName}, ${paramName});
+</#if>
+    }
+</#if>
+</#if>
+<#if indexed >
+<#if generateGetter >
+
+<#if generateJavadoc >
+    /**
+     * Get the value of ${name} at specified index
+     *
+     * @param ${paramIndex} the index of ${name}
+     * @return the value of ${name} at specified index
+     */
+</#if>
+    public <#if static >static </#if>${type} ${getterName}(int ${paramIndex}) {
+        return <#if !static >this.</#if>${fieldName}[${paramIndex}];
+    }
+</#if>
+<#if generateSetter >
+<#if generateJavadoc >
+    /**
+     * Set the value of ${name} at specified index.
+     *
+     * @param ${paramIndex} the index of ${name}
+     * @param ${paramName} new value of ${name} at specified index
+<#if vetoable>
+     * @throws java.beans.PropertyVetoException
+</#if>
+     */
+</#if>
+    public <#if static >static </#if>void ${setterName}(int ${paramIndex}, ${type} ${paramName})<#if vetoable> throws java.beans.PropertyVetoException</#if> {
+<#if bound >
+        ${type} old${capitalizedName} = this.${fieldName}[${paramIndex}];
+<#if vetoable> 
+        ${vetoableChangeSupport}.fireVetoableChange(${PROP_NAME}, old${capitalizedName}, ${paramName});
+</#if>
+</#if>
+        <#if !static >this.</#if>${fieldName}[${paramIndex}] = ${paramName};
+<#if bound >
+        ${propertyChangeSupport}.fireIndexedPropertyChange(${PROP_NAME}, ${paramIndex}, old${capitalizedName}, ${paramName});
+</#if>
+    }
+</#if>
+</#if>
+<#if generatePropertyChangeSupport >
+
+    private transient final java.beans.PropertyChangeSupport ${propertyChangeSupport} = new java.beans.PropertyChangeSupport(this);
+
+<#if generateJavadoc >
+    /**
+     * Add PropertyChangeListener.
+     *
+     * @param listener
+     */
+</#if>
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener listener )
+    {
+        ${propertyChangeSupport}.addPropertyChangeListener( listener );
+    }
+
+<#if generateJavadoc >
+    /**
+     * Remove PropertyChangeListener.
+     *
+     * @param listener
+     */
+</#if>
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener listener )
+    {
+        ${propertyChangeSupport}.removePropertyChangeListener( listener );
+    }
+</#if>
+<#if generateVetoablePropertyChangeSupport >
+
+    private transient final java.beans.VetoableChangeSupport ${vetoableChangeSupport} = new java.beans.VetoableChangeSupport(this);
+
+<#if generateJavadoc >
+    /**
+     * Add VetoableChangeListener.
+     *
+     * @param listener
+     */
+</#if>
+    public void addVetoableChangeListener(java.beans.VetoableChangeListener listener )
+    {
+        ${vetoableChangeSupport}.addVetoableChangeListener( listener );
+    }
+
+<#if generateJavadoc >
+    /**
+     * Remove VetoableChangeListener.
+     *
+     * @param listener
+     */
+</#if>
+    public void removeVetoableChangeListener(java.beans.VetoableChangeListener listener )
+    {
+        ${vetoableChangeSupport}.removeVetoableChangeListener( listener );
+    }
+</#if>

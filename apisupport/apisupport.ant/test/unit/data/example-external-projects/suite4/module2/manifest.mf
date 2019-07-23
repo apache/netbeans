@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: module2
+OpenIDE-Module-Layer: module2/layer.xml
+OpenIDE-Module-Localizing-Bundle: module2/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

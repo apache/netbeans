@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parent xmlns="urn:parent"
+        xmlns:c1="urn:child1"
+        xmlns:c2="urn:child2"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema XMLSchema.xsd
+                            urn:parent AbstractElementParent.xsd
+                            urn:child1 AbstractElementChildOne.xsd
+                            urn:child2 AbstractElementChildTwo.xsd">
+    
+</parent>

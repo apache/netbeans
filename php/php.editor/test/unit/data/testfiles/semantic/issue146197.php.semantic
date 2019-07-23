@@ -1,0 +1,9 @@
+<?php
+class |>CLASS:BlaBla<| {
+    private $|>FIELD:count<| = array();//see this line
+    function |>METHOD:count<|() {
+        self::$|>FIELD,STATIC:count<| = 10;
+        self::$|>FIELD,STATIC:count<|[0] = 10;
+    }
+}
+?>

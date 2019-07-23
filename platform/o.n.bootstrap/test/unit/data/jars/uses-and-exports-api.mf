@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: usesandexportsapi
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.foo > 1.0
+OpenIDE-Module-Public-Packages: usesapi.*
+

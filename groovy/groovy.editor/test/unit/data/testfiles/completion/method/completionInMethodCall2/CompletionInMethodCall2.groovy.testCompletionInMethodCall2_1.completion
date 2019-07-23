@@ -1,0 +1,19 @@
+Code completion result for source line:
+new File("something").c|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     canExecute()                    [PUBLIC]   boolean
+METHOD     canRead()                       [PUBLIC]   boolean
+METHOD     canWrite()                      [PUBLIC]   boolean
+METHOD     collect()                                  Collection
+METHOD     collect(Closure)                           List
+METHOD     collect(Collection, Closure)               Collection
+METHOD     compareTo(File)                 [PUBLIC]   int
+METHOD     createNewFile()                 [PUBLIC]   boolean
+METHOD     createTempDir()                            File
+METHOD     createTempDir(String, String)              File
+METHOD     createTempFile(String, String)  [STATIC,   File
+METHOD     createTempFile(String, String,  [STATIC,   File
+FIELD      canonicalFile                   [PUBLIC]   File
+FIELD      canonicalPath                   [PUBLIC]   String
+FIELD      class                           [PUBLIC]   Class

@@ -1,0 +1,5 @@
+bar:VARIABLE:[PRIVATE]:ESCAPED{bar}<font color="#999999">ESCAPED{ : }String</font>:
+alert:VARIABLE:[PRIVATE]:ESCAPED{alert}<font color="#999999">ESCAPED{ : }Alert</font>:
+Alert:CONSTRUCTOR:[PRIVATE]:ESCAPED{Alert}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Alert</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    getInfo:METHOD:[PUBLIC]:ESCAPED{getInfo}ESCAPED{(}ESCAPED{param}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:

@@ -1,0 +1,15 @@
+var |>GLOBAL:MyLib<| = new function |>METHOD,UNUSED:MyLib<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:_events<|;
+     
+    this.|>METHOD:on<| = _on; 
+    
+    function |>METHOD:_on<|(evtId, handler) {
+        var |>CLASS:handlers<| = |>LOCAL_VARIABLE:_events<|[evtId];
+        
+        if( !handlers )
+            |>LOCAL_VARIABLE:_events<|[evtId] = handlers = []; // <-- related line
+        
+        return handlers.push(handler); // <-- here
+    }; 
+};   
+   

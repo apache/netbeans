@@ -1,0 +1,2 @@
+import static java.awt.Color.|>MARK_OCCURRENCES:LIGHT_GRAY<|
+println |>MARK_OCCURRENCES:LIG^HT_GRAY<|

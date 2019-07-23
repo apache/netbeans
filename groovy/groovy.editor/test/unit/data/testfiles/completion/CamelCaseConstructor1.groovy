@@ -1,0 +1,3 @@
+class SomeSpecialClass {
+SSC
+}

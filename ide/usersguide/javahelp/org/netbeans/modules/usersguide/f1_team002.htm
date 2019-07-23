@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Team Project Wizard: Source Code and Issues</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.kenai.ui.SourceAndIssuesWizardPanel" name="org.netbeans.modules.kenai.ui.SourceAndIssuesWizardPanel"></a></p>
+<div id="NBCSH1764"><!-- infolevel="all" infotype="General" --><a id="sthref222" name="sthref222"></a>
+<h1>New Team Project Wizard: Source Code and Issues</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The New Team Project wizard enables you to create a project on a Team Server. You open the wizard by choosing Team Server &gt; New Team Project from the Team menu.</p>
+<p>The Source Code and Issues page enables you to set the properties related to the version control system and issue tracking system for the project.</p>
+<p>In the Source Code and Issues page you need to set the following properties.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t3">Element</th>
+<th align="left" valign="bottom" id="r1c2-t3">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t3" headers="r1c1-t3">
+<p>Source Code Repository</p>
+</td>
+<td align="left" headers="r2c1-t3 r1c2-t3">Select the version control system for the project from the drop-down menu.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t3" headers="r1c1-t3">
+<p>Subversion or Mercurial</p>
+</td>
+<td align="left" headers="r3c1-t3 r1c2-t3">Select Subversion or Mercurial to create the repository on the Team Server. If you are already using a Subversion or Mercurial repository but it is not on a Team Server, select External. If you select Subversion or Mercurial, you need to specify an empty folder to contain the local repository. The IDE initializes the local repository when you finish the wizard.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t3" headers="r1c1-t3">
+<p>External</p>
+</td>
+<td align="left" headers="r4c1-t3 r1c2-t3">Select External to specify an existing remote repository. If you select External, you need to specify the URL of the remote repository. The IDE will not create a local repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t3" headers="r1c1-t3">
+<p>None</p>
+</td>
+<td align="left" headers="r5c1-t3 r1c2-t3">Select None if you do not want to specify or create a remote repository for the project at this time. You can create or specify the repository later.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t3" headers="r1c1-t3">
+<p>Repository Name</p>
+</td>
+<td align="left" headers="r6c1-t3 r1c2-t3">(Subversion or Mercurial only) This field is used to generate the URL of the remote repository. You do not need to modify the default name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t3" headers="r1c1-t3">
+<p>Repository URL</p>
+</td>
+<td align="left" headers="r7c1-t3 r1c2-t3">(External only) Specify the URL of the remote repository when using an external version control system.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t3" headers="r1c1-t3">
+<p>Local Repository Folder</p>
+</td>
+<td align="left" headers="r8c1-t3 r1c2-t3">(Subversion or Mercurial only) Specify an empty local directory for the local repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t3" headers="r1c1-t3">
+<p>Folders or Projects</p>
+</td>
+<td align="left" headers="r9c1-t3 r1c2-t3">(Subversion or Mercurial only) Specify any additional projects or folders that you want to add to the repository. The local repository is created when you finish the wizard.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t3" headers="r1c1-t3">Issue Tracking</td>
+<td align="left" headers="r10c1-t3 r1c2-t3">Select the issue tracker for the project from the drop-down menu.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t3" headers="r1c1-t3">
+<p>Bugzilla or JIRA</p>
+</td>
+<td align="left" headers="r11c1-t3 r1c2-t3">If you select Bugzilla or JIRA, an issue tracker for the project is created on the Team Server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t3" headers="r1c1-t3">
+<p>External</p>
+</td>
+<td align="left" headers="r12c1-t3 r1c2-t3">Select External to specify an existing issue tracker. If you select External, you need to specify the URL of the issue tracker.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t3" headers="r1c1-t3">
+<p>None</p>
+</td>
+<td align="left" headers="r13c1-t3 r1c2-t3">Select None if you do not want to specify or create an issue tracker for the project. You can create or specify the issue tracker later.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Click <b>Next</b> to review a summary of the details of the Team project that will be created.</p>
+<a id="NBCSH1776" name="NBCSH1776"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG236">
+<param name="text" value="<html><u>&quot;About Versioning Applications with Version Control&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

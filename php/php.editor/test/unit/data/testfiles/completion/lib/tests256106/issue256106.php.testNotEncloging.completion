@@ -1,0 +1,13 @@
+Code completion result for source line:
+$childClass->publicChildMethod()->publicTraitMethod()->|publicChildMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     enclosingTest()                 [PUBLIC]   \Issue256106\ChildClass
+METHOD     publicChildMethod()             [PUBLIC]   \Issue256106\ChildClass
+METHOD     publicParentMethod()            [PUBLIC]   \Issue256106\ParentClass
+METHOD     publicStaticTraitMethod()       [STATIC]   \Issue256106\BaseTrait
+METHOD     publicTraitMethod()             [PUBLIC]   \Issue256106\BaseTrait
+METHOD     publicTraitOnlyReturnSelfMetho  [PUBLIC]   \Issue256106\BaseTrait
+METHOD     publicTraitOnlyReturnStaticMet  [PUBLIC]   \Issue256106\BaseTrait
+VARIABLE   ? publicChildField              [PUBLIC]   \Issue256106\ChildClass
+VARIABLE   ? publicParentField             [PUBLIC]   \Issue256106\ParentClass
+VARIABLE   ? publicTraitField              [PUBLIC]   \Issue256106\BaseTrait

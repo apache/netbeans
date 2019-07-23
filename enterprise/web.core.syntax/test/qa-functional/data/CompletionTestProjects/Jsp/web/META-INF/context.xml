@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/JspCompletionTest">
+  <Logger className="org.apache.catalina.logger.FileLogger" prefix="JspCompletionTest." suffix=".log" timestamp="true"/>
+</Context>

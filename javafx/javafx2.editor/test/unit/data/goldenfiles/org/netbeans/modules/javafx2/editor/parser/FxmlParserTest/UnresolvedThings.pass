@@ -1,0 +1,5 @@
+Error{type: import-identifier-not-exists, pos: 241, len: 22, message: Class javafx.scene.layout.Bu does not exist., [javafx.scene.layout.Bu]}
+Error{type: class-not-exist, pos: 1262, len: 10, message: Class does not exist: MotionBlur, [MotionBlur]}
+Error{type: property-not-exist, pos: 465, len: 5, message: Class 'javafx.scene.control.CheckBox' does not support property 'text2', [javafx.scene.control.CheckBox, text2]}
+Error{type: attached-property-not-exist, pos: 631, len: 13, message: The class 'javafx.scene.layout.AnchorPane' does not provide attached property 'bottomAnchor2', [javafx.scene.layout.AnchorPane, bottomAnchor2]}
+Error{type: property-not-exist, pos: 1606, len: 9, message: Class 'javafx.scene.layout.AnchorPane' does not support property 'children2', [javafx.scene.layout.AnchorPane, children2]}

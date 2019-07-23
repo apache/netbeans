@@ -1,0 +1,235 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+   this file lists all currently known modules that produce
+   javadoc. If there is new javadoc being build for certain
+   module, the nbbuild/javadoctools/template.xml adds new
+   entry at the end of this file, it is then on the author
+   to decide whether such change shall be commited to the repository
+   or not
+-->
+<replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/>
+<replacefilter token="@org-openide-util@" value="${javadoc.docs.org-openide-util}"/>
+<replacefilter token="@org-openide-nodes@" value="${javadoc.docs.org-openide-nodes}"/>
+<replacefilter token="@org-netbeans-modules-nbjunit@" value="${javadoc.docs.org-netbeans-modules-nbjunit}"/>
+<replacefilter token="@org-openide-actions@" value="${javadoc.docs.org-openide-actions}"/>
+<replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/>
+<replacefilter token="@org-openide-awt@" value="${javadoc.docs.org-openide-awt}"/>
+<replacefilter token="@org-openide-dialogs@" value="${javadoc.docs.org-openide-dialogs}"/>
+<replacefilter token="@org-openide-explorer@" value="${javadoc.docs.org-openide-explorer}"/>
+<replacefilter token="@org-openide-modules@" value="${javadoc.docs.org-openide-modules}"/>
+<replacefilter token="@org-openide-text@" value="${javadoc.docs.org-openide-text}"/>
+<replacefilter token="@org-openide-windows@" value="${javadoc.docs.org-openide-windows}"/>
+<replacefilter token="@org-openide-loaders@" value="${javadoc.docs.org-openide-loaders}"/>
+<replacefilter token="@org-openide-io@" value="${javadoc.docs.org-openide-io}"/>
+<replacefilter token="@org-openide-execution@" value="${javadoc.docs.org-openide-execution}"/>
+<replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
+<replacefilter token="@org-apache-tools-ant-module@" value="${javadoc.docs.org-apache-tools-ant-module}"/>
+<replacefilter token="@org-netbeans-modules-javahelp@" value="${javadoc.docs.org-netbeans-modules-javahelp}"/>
+<replacefilter token="@org-netbeans-modules-settings@" value="${javadoc.docs.org-netbeans-modules-settings}"/>
+<replacefilter token="@org-netbeans-core-multiview@" value="${javadoc.docs.org-netbeans-core-multiview}"/>
+<replacefilter token="@org-netbeans-modules-diff@" value="${javadoc.docs.org-netbeans-modules-diff}"/>
+<replacefilter token="@org-openide-src@" value="${javadoc.docs.org-openide-src}"/>
+<replacefilter token="@org-netbeans-modules-queries@" value="${javadoc.docs.org-netbeans-modules-queries}"/>
+<replacefilter token="@org-netbeans-modules-projectapi@" value="${javadoc.docs.org-netbeans-modules-projectapi}"/>
+<replacefilter token="@org-netbeans-modules-projectuiapi@" value="${javadoc.docs.org-netbeans-modules-projectuiapi}"/>
+<replacefilter token="@org-netbeans-modules-project-libraries@" value="${javadoc.docs.org-netbeans-modules-project-libraries}"/>
+<replacefilter token="@org-netbeans-api-debugger@" value="${javadoc.docs.org-netbeans-api-debugger}"/>
+<replacefilter token="@org-netbeans-spi-viewmodel@" value="${javadoc.docs.org-netbeans-spi-viewmodel}"/>
+<replacefilter token="@org-netbeans-spi-debugger-ui@" value="${javadoc.docs.org-netbeans-spi-debugger-ui}"/>
+<replacefilter token="@org-netbeans-api-debugger-jpda@" value="${javadoc.docs.org-netbeans-api-debugger-jpda}"/>
+<replacefilter token="@org-netbeans-modules-project-ant@" value="${javadoc.docs.org-netbeans-modules-project-ant}"/>
+<replacefilter token="@org-netbeans-modules-j2eeserver@" value="${javadoc.docs.org-netbeans-modules-j2eeserver}"/>
+<replacefilter token="@org-netbeans-api-java@" value="${javadoc.docs.org-netbeans-api-java}"/>
+<replacefilter token="@org-netbeans-modules-javacore@" value="${javadoc.docs.org-netbeans-modules-javacore}"/>
+<replacefilter token="@org-netbeans-jmi-javamodel@" value="${javadoc.docs.org-netbeans-jmi-javamodel}"/>
+<replacefilter token="@org-netbeans-modules-java-platform@" value="${javadoc.docs.org-netbeans-modules-java-platform}"/>
+<replacefilter token="@org-netbeans-modules-java-project@" value="${javadoc.docs.org-netbeans-modules-java-project}"/>
+<replacefilter token="@org-netbeans-modules-lexer@" value="${javadoc.docs.org-netbeans-modules-lexer}"/>
+<replacefilter token="@org-netbeans-modules-refactoring@" value="${javadoc.docs.org-netbeans-modules-refactoring}"/>
+<replacefilter token="@org-netbeans-modules-vcscore@" value="${javadoc.docs.org-netbeans-modules-vcscore}"/>
+<replacefilter token="@org-netbeans-api-xml@" value="${javadoc.docs.org-netbeans-api-xml}"/>
+<replacefilter token="@org-netbeans-api-web-dd@" value="${javadoc.docs.org-netbeans-api-web-dd}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-dd@" value="${javadoc.docs.org-netbeans-modules-j2ee-dd}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-api-ejbmodule@" value="${javadoc.docs.org-netbeans-modules-j2ee-api-ejbmodule}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-common@" value="${javadoc.docs.org-netbeans-modules-j2ee-common}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-dd-webservice@" value="${javadoc.docs.org-netbeans-modules-j2ee-dd-webservice}"/>
+<replacefilter token="@org-netbeans-modules-websvc-websvcapi@" value="${javadoc.docs.org-netbeans-modules-websvc-websvcapi}"/>
+<replacefilter token="@org-netbeans-modules-websvc-registry@" value="${javadoc.docs.org-netbeans-modules-websvc-registry}"/>
+<replacefilter token="@org-netbeans-modules-websvc-core@" value="${javadoc.docs.org-netbeans-modules-websvc-core}"/>
+<replacefilter token="@org-netbeans-modules-editor@" value="${javadoc.docs.org-netbeans-modules-editor}"/>
+<replacefilter token="@org-netbeans-modules-editor-fold@" value="${javadoc.docs.org-netbeans-modules-editor-fold}"/>
+<replacefilter token="@org-netbeans-modules-classfile@" value="${javadoc.docs.org-netbeans-modules-classfile}"/>
+<replacefilter token="@org-netbeans-modules-registry@" value="${javadoc.docs.org-netbeans-modules-registry}"/>
+<replacefilter token="@org-netbeans-core-registry@" value="${javadoc.docs.org-netbeans-core-registry}"/>
+<replacefilter token="@org-netbeans-modules-convertor@" value="${javadoc.docs.org-netbeans-modules-convertor}"/>
+<replacefilter token="@org-netbeans-modules-masterfs@" value="${javadoc.docs.org-netbeans-modules-masterfs}"/>
+<replacefilter token="@org-netbeans-modules-looks@" value="${javadoc.docs.org-netbeans-modules-looks}"/>
+<replacefilter token="@org-netbeans-lib-terminalemulator@" value="${javadoc.docs.org-netbeans-lib-terminalemulator}"/>
+<replacefilter token="@org-netbeans-swing-tabcontrol@" value="${javadoc.docs.org-netbeans-swing-tabcontrol}"/>
+<replacefilter token="@org-netbeans-swing-plaf@" value="${javadoc.docs.org-netbeans-swing-plaf}"/>
+<replacefilter token="@org-netbeans-modules-autoupdate@" value="${javadoc.docs.org-netbeans-modules-autoupdate}"/>
+<replacefilter token="@org-netbeans-api-mdr@" value="${javadoc.docs.org-netbeans-api-mdr}"/>
+<replacefilter token="@org-netbeans-api-progress@" value="${javadoc.docs.org-netbeans-api-progress}"/>
+<replacefilter token="@org-openide-filesystems@" value="${javadoc.docs.org-openide-filesystems}"/>
+<replacefilter token="@org-openide-util-enumerations@" value="${javadoc.docs.org-openide-util-enumerations}"/>
+<replacefilter token="@org-netbeans-modules-editor-completion@" value="${javadoc.docs.org-netbeans-modules-editor-completion}"/>
+<replacefilter token="@org-netbeans-modules-adaptable@" value="${javadoc.docs.org-netbeans-modules-adaptable}"/>
+<replacefilter token="@org-netbeans-spi-navigator@" value="${javadoc.docs.org-netbeans-spi-navigator}"/>
+<replacefilter token="@org-netbeans-spi-palette@" value="${javadoc.docs.org-netbeans-spi-palette}"/>
+<replacefilter token="@org-netbeans-modules-editor-hints@" value="${javadoc.docs.org-netbeans-modules-editor-hints}"/>
+<replacefilter token="@org-netbeans-modules-editor-mimelookup@" value="${javadoc.docs.org-netbeans-modules-editor-mimelookup}"/>
+<replacefilter token="@org-netbeans-modules-editor-util@" value="${javadoc.docs.org-netbeans-modules-editor-util}"/>
+<replacefilter token="@org-netbeans-modules-editor-lib@" value="${javadoc.docs.org-netbeans-modules-editor-lib}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-ejbjarproject@" value="${javadoc.docs.org-netbeans-modules-j2ee-ejbjarproject}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-ejbcore@" value="${javadoc.docs.org-netbeans-modules-j2ee-ejbcore}"/>
+<replacefilter token="@org-netbeans-modules-editor-errorstripe-api@" value="${javadoc.docs.org-netbeans-modules-editor-errorstripe-api}"/>
+<replacefilter token="@org-netbeans-modules-editor-settings@" value="${javadoc.docs.org-netbeans-modules-editor-settings}"/>
+<replacefilter token="@org-netbeans-modules-db@" value="${javadoc.docs.org-netbeans-modules-db}"/>
+<replacefilter token="@org-netbeans-modules-options-api@" value="${javadoc.docs.org-netbeans-modules-options-api}"/>
+<replacefilter token="@org-netbeans-api-web-webmodule@" value="${javadoc.docs.org-netbeans-api-web-webmodule}"/>
+<replacefilter token="@org-netbeans-modules-editor-codetemplates@" value="${javadoc.docs.org-netbeans-modules-editor-codetemplates}"/>
+<replacefilter token="@org-netbeans-modules-sendopts@" value="${javadoc.docs.org-netbeans-modules-sendopts}"/>
+<replacefilter token="@org-netbeans-modules-nbjunit-ide@" value="${javadoc.docs.org-netbeans-modules-nbjunit-ide}"/>
+<replacefilter token="@org-netbeans-libs-javacapi@" value="${javadoc.docs.org-netbeans-libs-javacapi}"/>
+<replacefilter token="@org-netbeans-jackpot@" value="${javadoc.docs.org-netbeans-jackpot}"/>
+<replacefilter token="@org-netbeans-modules-indexedannotations@" value="${javadoc.docs.org-netbeans-modules-indexedannotations}"/>
+<replacefilter token="@org-netbeans-modules-junit@" value="${javadoc.docs.org-netbeans-modules-junit}"/>
+<replacefilter token="@org-netbeans-api-actions-support@" value="${javadoc.docs.org-netbeans-api-actions-support}"/>
+<replacefilter token="@org-netbeans-modules-uihandler@" value="${javadoc.docs.org-netbeans-modules-uihandler}"/>
+<replacefilter token="@org-netbeans-lib-uihandler@" value="${javadoc.docs.org-netbeans-lib-uihandler}"/>
+<replacefilter token="@org-netbeans-modules-j2ee-metadata@" value="${javadoc.docs.org-netbeans-modules-j2ee-metadata}"/>
+<replacefilter token="@org-netbeans-modules-editor-lib2@" value="${javadoc.docs.org-netbeans-modules-editor-lib2}"/>
+<replacefilter token="@org-netbeans-modules-java-j2seproject@" value="${javadoc.docs.org-netbeans-modules-java-j2seproject}"/>
+<replacefilter token="@org-netbeans-modules-java-source@" value="${javadoc.docs.org-netbeans-modules-java-source}"/>
+<replacefilter token="@org-netbeans-api-visual@" value="${javadoc.docs.org-netbeans-api-visual}"/>
+<replacefilter token="@org-netbeans-modules-editor-settings-storage@" value="${javadoc.docs.org-netbeans-modules-editor-settings-storage}"/>
+<replacefilter token="@org-netbeans-modules-editor-guards@" value="${javadoc.docs.org-netbeans-modules-editor-guards}"/>
+<replacefilter token="@org-netbeans-modules-autoupdate-services@" value="${javadoc.docs.org-netbeans-modules-autoupdate-services}"/>
+<replacefilter token="@org-netbeans-modules-refactoring-api@" value="${javadoc.docs.org-netbeans-modules-refactoring-api}"/>
+<replacefilter token="@org-netbeans-core-startup@" value="${javadoc.docs.org-netbeans-core-startup}"/>
+<replacefilter token="@org-netbeans-modules-xml-xdm@" value="${javadoc.docs.org-netbeans-modules-xml-xdm}"/>
+<replacefilter token="@org-netbeans-modules-xml-xam@" value="${javadoc.docs.org-netbeans-modules-xml-xam}"/>
+<replacefilter token="@org-netbeans-insane@" value="${javadoc.docs.org-netbeans-insane}"/>
+<replacefilter token="@org-netbeans-modules-editor-bracesmatching@" value="${javadoc.docs.org-netbeans-modules-editor-bracesmatching}"/>
+<replacefilter token="@org-netbeans-modules-editor-indent@" value="${javadoc.docs.org-netbeans-modules-editor-indent}"/>
+<replacefilter token="@org-netbeans-spi-tasklist@" value="${javadoc.docs.org-netbeans-spi-tasklist}"/>
+<replacefilter token="@org-netbeans-modules-projectui@" value="${javadoc.docs.org-netbeans-modules-projectui}"/>
+<replacefilter token="@org-netbeans-modules-refactoring-java@" value="${javadoc.docs.org-netbeans-modules-refactoring-java}"/>
+<replacefilter token="@org-netbeans-bootstrap@" value="${javadoc.docs.org-netbeans-bootstrap}"/>
+<replacefilter token="@org-netbeans-modules-kenai@" value="${javadoc.docs.org-netbeans-modules-kenai}"/>
+<replacefilter token="@org-netbeans-modules-xml-retriever@" value="${javadoc.docs.org-netbeans-modules-xml-retriever}"/>
+<replacefilter token="@org-netbeans-modules-server@" value="${javadoc.docs.org-netbeans-modules-server}"/>
+<replacefilter token="@org-netbeans-modules-java-api-common@" value="${javadoc.docs.org-netbeans-modules-java-api-common}"/>
+<replacefilter token="@org-netbeans-modules-java-sourceui@" value="${javadoc.docs.org-netbeans-modules-java-sourceui}"/>
+<replacefilter token="@org-netbeans-modules-parsing-api@" value="${javadoc.docs.org-netbeans-modules-parsing-api}"/>
+<replacefilter token="@org-netbeans-spi-quicksearch@" value="${javadoc.docs.org-netbeans-spi-quicksearch}"/>
+<replacefilter token="@org-netbeans-api-java-classpath@" value="${javadoc.docs.org-netbeans-api-java-classpath}"/>
+<replacefilter token="@org-netbeans-modules-extexecution@" value="${javadoc.docs.org-netbeans-modules-extexecution}"/>
+<replacefilter token="@org-netbeans-modules-print@" value="${javadoc.docs.org-netbeans-modules-print}"/>
+<replacefilter token="@org-netbeans-modules-xml-core@" value="${javadoc.docs.org-netbeans-modules-xml-core}"/>
+<replacefilter token="@org-netbeans-modules-websvc-wsstackapi@" value="${javadoc.docs.org-netbeans-modules-websvc-wsstackapi}"/>
+<replacefilter token="@org-netbeans-swing-outline@" value="${javadoc.docs.org-netbeans-swing-outline}"/>
+<replacefilter token="@org-netbeans-modules-maven@" value="${javadoc.docs.org-netbeans-modules-maven}"/>
+<replacefilter token="@org-netbeans-modules-maven-indexer@" value="${javadoc.docs.org-netbeans-modules-maven-indexer}"/>
+<replacefilter token="@org-netbeans-modules-maven-embedder@" value="${javadoc.docs.org-netbeans-modules-maven-embedder}"/>
+<replacefilter token="@org-netbeans-spi-actions@" value="${javadoc.docs.org-netbeans-spi-actions}"/>
+<replacefilter token="@org-netbeans-modules-spi-actions@" value="${javadoc.docs.org-netbeans-modules-spi-actions}"/>
+<replacefilter token="@org-netbeans-modules-extexecution@" value="${javadoc.docs.org-netbeans-modules-extexecution}"/>
+<replacefilter token="@org-netbeans-modules-gsf-api@" value="${javadoc.docs.org-netbeans-modules-gsf-api}"/>
+<replacefilter token="@org-netbeans-modules-mobility-project@" value="${javadoc.docs.org-netbeans-modules-mobility-project}"/>
+<replacefilter token="@org-netbeans-api-annotations-common@" value="${javadoc.docs.org-netbeans-api-annotations-common}"/>
+<replacefilter token="@org-netbeans-modules-kenai-ui@" value="${javadoc.docs.org-netbeans-modules-kenai-ui}"/>
+<replacefilter token="@org-netbeans-spi-editor-hints@" value="${javadoc.docs.org-netbeans-spi-editor-hints}"/>
+<replacefilter token="@org-netbeans-core-ide@" value="${javadoc.docs.org-netbeans-core-ide}"/>
+<replacefilter token="@org-netbeans-modules-jellytools-cnd@" value="${javadoc.docs.org-netbeans-modules-jellytools-cnd}"/>
+<replacefilter token="@org-netbeans-modules-jellytools-enterprise@" value="${javadoc.docs.org-netbeans-modules-jellytools-enterprise}"/>
+<replacefilter token="@org-netbeans-modules-jellytools-ide@" value="${javadoc.docs.org-netbeans-modules-jellytools-ide}"/>
+<replacefilter token="@org-netbeans-modules-jellytools-java@" value="${javadoc.docs.org-netbeans-modules-jellytools-java}"/>
+<replacefilter token="@org-netbeans-modules-jellytools-platform@" value="${javadoc.docs.org-netbeans-modules-jellytools-platform}"/>
+<replacefilter token="@org-netbeans-modules-javacard-spi@" value="${javadoc.docs.org-netbeans-modules-javacard-spi}"/>
+<replacefilter token="@org-netbeans-modules-keyring@" value="${javadoc.docs.org-netbeans-modules-keyring}"/>
+<replacefilter token="@org-netbeans-modules-schema2beans@" value="${javadoc.docs.org-netbeans-modules-schema2beans}"/>
+<replacefilter token="@org-openide-util-lookup@" value="${javadoc.docs.org-openide-util-lookup}"/>
+<replacefilter token="@org-netbeans-modules-terminal@" value="${javadoc.docs.org-netbeans-modules-terminal}"/>
+<replacefilter token="@org-netbeans-modules-dlight-nativeexecution@" value="${javadoc.docs.org-netbeans-modules-dlight-nativeexecution}"/>
+<replacefilter token="@org-netbeans-core-netigso@" value="${javadoc.docs.org-netbeans-core-netigso}"/>
+<replacefilter token="@org-netbeans-modules-parsing-lucene@" value="${javadoc.docs.org-netbeans-modules-parsing-lucene}"/>
+<replacefilter token="@org-netbeans-modules-autoupdate-ui@" value="${javadoc.docs.org-netbeans-modules-autoupdate-ui}"/>
+<replacefilter token="@org-netbeans-modules-php-project@" value="${javadoc.docs.org-netbeans-modules-php-project}"/>
+<replacefilter token="@org-netbeans-api-progress-transactional@" value="${javadoc.docs.org-netbeans-api-progress-transactional}"/>
+<replacefilter token="@org-netbeans-core@" value="${javadoc.docs.org-netbeans-core}"/>
+<replacefilter token="@org-netbeans-modules-versioning@" value="${javadoc.docs.org-netbeans-modules-versioning}"/>
+<replacefilter token="@org-netbeans-spi-java-hints@" value="${javadoc.docs.org-netbeans-spi-java-hints}"/>
+<replacefilter token="@org-netbeans-modules-versioning-core@" value="${javadoc.docs.org-netbeans-modules-versioning-core}"/>
+<replacefilter token="@org-netbeans-modules-java-hints-declarative-test@" value="${javadoc.docs.org-netbeans-modules-java-hints-declarative-test}"/>
+<replacefilter token="@org-netbeans-modules-java-hints-legacy-spi@" value="${javadoc.docs.org-netbeans-modules-java-hints-legacy-spi}"/>
+<replacefilter token="@org-netbeans-modules-java-hints-providers-spi@" value="${javadoc.docs.org-netbeans-modules-java-hints-providers-spi}"/>
+<replacefilter token="@org-netbeans-modules-java-hints-test@" value="${javadoc.docs.org-netbeans-modules-java-hints-test}"/>
+<replacefilter token="@org-netbeans-libs-git@" value="${javadoc.docs.org-netbeans-libs-git}"/>
+<replacefilter token="@org-netbeans-modules-sampler@" value="${javadoc.docs.org-netbeans-modules-sampler}"/>
+<replacefilter token="@org-netbeans-api-search@" value="${javadoc.docs.org-netbeans-api-search}"/>
+<replacefilter token="@org-netbeans-modules-code-analysis@" value="${javadoc.docs.org-netbeans-modules-code-analysis}"/>
+<replacefilter token="@org-netbeans-modules-glassfish-cloud@" value="${javadoc.docs.org-netbeans-modules-glassfish-cloud}"/>
+<replacefilter token="@org-netbeans-spi-editor-hints-projects@" value="${javadoc.docs.org-netbeans-spi-editor-hints-projects}"/>
+<replacefilter token="@org-netbeans-modules-glassfish-common@" value="${javadoc.docs.org-netbeans-modules-glassfish-common}"/>
+<replacefilter token="@org-netbeans-modules-javaee-project@" value="${javadoc.docs.org-netbeans-modules-javaee-project}"/>
+<replacefilter token="@org-netbeans-modules-maven-util@" value="${javadoc.docs.org-netbeans-modules-maven-util}"/>
+<replacefilter token="@org-netbeans-modules-bugtracking@" value="${javadoc.docs.org-netbeans-modules-bugtracking}"/>
+<replacefilter token="@org-netbeans-core-multitabs@" value="${javadoc.docs.org-netbeans-core-multitabs}"/>
+<replacefilter token="@org-openide-util-ui@" value="${javadoc.docs.org-openide-util-ui}"/>
+<replacefilter token="@org-netbeans-api-maven@" value="${javadoc.docs.org-netbeans-api-maven}"/>
+<replacefilter token="@org-netbeans-api-html4j@" value="${javadoc.docs.org-netbeans-api-html4j}"/>
+<replacefilter token="@org-openide-filesystems-compat8@" value="${javadoc.docs.org-openide-filesystems-compat8}"/>
+<replacefilter token="@org-netbeans-modules-parsing-indexing@" value="${javadoc.docs.org-netbeans-modules-parsing-indexing}"/>
+<replacefilter token="@org-netbeans-modules-extexecution-base@" value="${javadoc.docs.org-netbeans-modules-extexecution-base}"/>
+<replacefilter token="@org-netbeans-modules-java-platform-ui@" value="${javadoc.docs.org-netbeans-modules-java-platform-ui}"/>
+<replacefilter token="@org-netbeans-modules-projectuiapi-base@" value="${javadoc.docs.org-netbeans-modules-projectuiapi-base}"/>
+<replacefilter token="@org-netbeans-modules-editor-document@" value="${javadoc.docs.org-netbeans-modules-editor-document}"/>
+<replacefilter token="@org-netbeans-modules-java-source-base@" value="${javadoc.docs.org-netbeans-modules-java-source-base}"/>
+<replacefilter token="@org-netbeans-modules-project-ant-ui@" value="${javadoc.docs.org-netbeans-modules-project-ant-ui}"/>
+<replacefilter token="@org-netbeans-modules-java-project-ui@" value="${javadoc.docs.org-netbeans-modules-java-project-ui}"/>
+<replacefilter token="@org-netbeans-modules-xml-catalog-ui@" value="${javadoc.docs.org-netbeans-modules-xml-catalog-ui}"/>
+<replacefilter token="@org-netbeans-api-progress-nb@" value="${javadoc.docs.org-netbeans-api-progress-nb}"/>
+<replacefilter token="@org-netbeans-modules-editor-indent-support@" value="${javadoc.docs.org-netbeans-modules-editor-indent-support}"/>
+<replacefilter token="@org-netbeans-modules-masterfs-ui@" value="${javadoc.docs.org-netbeans-modules-masterfs-ui}"/>
+<replacefilter token="@org-netbeans-modules-parsing-nb@" value="${javadoc.docs.org-netbeans-modules-parsing-nb}"/>
+<replacefilter token="@org-netbeans-modules-project-libraries-ui@" value="${javadoc.docs.org-netbeans-modules-project-libraries-ui}"/>
+<replacefilter token="@org-openide-filesystems-nb@" value="${javadoc.docs.org-openide-filesystems-nb}"/>
+<replacefilter token="@org-netbeans-api-intent@" value="${javadoc.docs.org-netbeans-api-intent}"/>
+<replacefilter token="@org-netbeans-api-templates@" value="${javadoc.docs.org-netbeans-api-templates}"/>
+<replacefilter token="@org-netbeans-api-io@" value="${javadoc.docs.org-netbeans-api-io}"/>
+<replacefilter token="@org-netbeans-api-htmlui@" value="${javadoc.docs.org-netbeans-api-htmlui}"/>
+<replacefilter token="@org-netbeans-api-knockout@" value="${javadoc.docs.org-netbeans-api-knockout}"/>
+<replacefilter token="@org-netbeans-lib-v8debug@" value="${javadoc.docs.org-netbeans-lib-v8debug}"/>
+<replacefilter token="@org-netbeans-modules-docker-api@" value="${javadoc.docs.org-netbeans-modules-docker-api}"/>
+<replacefilter token="@org-netbeans-modules-csl-types@" value="${javadoc.docs.org-netbeans-modules-csl-types}"/>
+<replacefilter token="@org-netbeans-modules-csl-api@" value="${javadoc.docs.org-netbeans-modules-csl-api}"/>
+<replacefilter token="@org-netbeans-modules-xml-text@" value="${javadoc.docs.org-netbeans-modules-xml-text}"/>
+<replacefilter token="@org-netbeans-modules-xml-lexer@" value="${javadoc.docs.org-netbeans-modules-xml-lexer}"/>
+<replacefilter token="@org-netbeans-modules-xml-text@" value="${javadoc.docs.org-netbeans-modules-xml-text}"/>
+<replacefilter token="@org-netbeans-core-network@" value="${javadoc.docs.org-netbeans-core-network}"/>
+<replacefilter token="@org-netbeans-api-scripting@" value="${javadoc.docs.org-netbeans-api-scripting}"/>
+<replacefilter token="@org-netbeans-libs-graalsdk@" value="${javadoc.docs.org-netbeans-libs-graalsdk}"/>
+<replacefilter token="@org-netbeans-modules-gradle@" value="${javadoc.docs.org-netbeans-modules-gradle}"/>
+<replacefilter token="@org-netbeans-modules-gradle-java@" value="${javadoc.docs.org-netbeans-modules-gradle-java}"/>
+<replacefilter token="@org-netbeans-modules-textmate-lexer@" value="${javadoc.docs.org-netbeans-modules-textmate-lexer}"/>

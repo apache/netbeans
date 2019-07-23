@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.csl.api/2
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Layer: org/netbeans/modules/csl/core/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/csl/api/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

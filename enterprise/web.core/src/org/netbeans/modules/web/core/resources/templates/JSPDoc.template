@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="${encoding}"?>
+<!-- 
+    Document   : ${name}
+    Created on : ${date}, ${time}
+    Author     : ${user}
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="${encoding}"/>
+
+    <!-- any content can be specified here, e.g.: -->
+    <jsp:element name="text">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>Hello World!</jsp:body>
+    </jsp:element>
+
+</jsp:root>

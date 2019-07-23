@@ -1,0 +1,19 @@
+package org.netbeans.test.java.hints;
+
+import java.awt.Rectangle;
+
+/**
+ * @author leon chiver
+ */
+public class TypeFromParama {
+    
+    /** Creates a new instance of TypeFromParama */
+    public TypeFromParama() {
+        doStuff(1, r, 2);
+    }
+    
+    public void doStuff(int i1, Rectangle r, int i2) {
+        
+    }
+    
+}

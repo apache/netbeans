@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:f1<| = function f1(cont) {
+        |>MARK_OCCURRENCES:f^1<|(true); // inner f1 is called

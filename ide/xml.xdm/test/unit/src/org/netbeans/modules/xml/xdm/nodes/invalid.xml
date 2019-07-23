@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--invalid-->
+sss
+<!--xml-->
+<company>
+    <employee ssn="xx-xx-xxxx" id="123"
+        address="16 Network Circle"
+        phone="123-456-7890" >Vidhya Narayanan
+    </employee>
+    <!-- -->    
+    <employee/>
+</company>

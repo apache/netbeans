@@ -1,0 +1,15 @@
+<?php
+
+    include("__NAME__Profile.php");
+
+    class __NAME__ {
+
+        public static function getApiKey() {
+            $apiKey = __NAME__Profile::getApiKey();
+            if ($apiKey == null || $apiKey == "") {
+                throw new Exception("Please specify your api key in the apikey.php file.");
+            }
+            return $apiKey;
+        }
+    }
+?>

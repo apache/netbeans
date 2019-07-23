@@ -1,0 +1,73 @@
+<testresult testFile='netbeans1563_04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='820'>
+            <text>$code</text>
+        </token>
+        <token id='T_EQUAL' start='821' end='822'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='823' end='830'>
+            <text>&lt;&lt;&lt;EOF\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='830' end='868'>
+            <text>\n    if(!isset(\$test1[\$test2])) {// </text>
+        </token>
+        <token id='T_VARIABLE' start='868' end='876'>
+            <text>$comment</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='876' end='885'>
+            <text>\$comment</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='885' end='886'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='886' end='894'>
+            <text>$comment</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='894' end='895'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='895' end='917'>
+            <text>\n        break;\n    }\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='917' end='920'>
+            <text>EOF</text>
+        </token>
+        <token id='T_SEMICOLON' start='920' end='921'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='922' end='922'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='922'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='921'>
+                <Assignment start='815' end='920' operator='EQUAL'>
+                    <Variable start='815' end='820' isDollared='true'>
+                        <Identifier start='816' end='820' name='code'/>
+                    </Variable>
+                    <Quote start='823' end='920' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='830' end='868' type='STRING' value='\n    if(!isset(\$test1[\$test2])) {// '/>
+                            <Variable start='868' end='876' isDollared='true'>
+                                <Identifier start='869' end='876' name='comment'/>
+                            </Variable>
+                            <Scalar start='876' end='885' type='STRING' value='\$comment'/>
+                            <ReflectionVariable start='885' end='895'>
+                                <Variable start='886' end='894' isDollared='true'>
+                                    <Identifier start='887' end='894' name='comment'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='895' end='917' type='STRING' value='\n        break;\n    }\n'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

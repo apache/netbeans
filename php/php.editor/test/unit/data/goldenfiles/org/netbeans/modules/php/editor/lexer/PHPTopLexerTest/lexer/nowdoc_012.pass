@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nTest false labels\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\n$x = <<<'ENDOFNOWDOC'\nThis is a nowdoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFNOWDOCWILLBESOON\nNow let's finish it\nENDOFNOWDOC;\nprint "{$x}\n";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\nThis is a nowdoc test.\nNOTREALLYEND;\nAnother line\nNOTENDEITHER;\nENDOFNOWDOCWILLBESOON\nNow let's finish it\n

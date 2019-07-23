@@ -1,0 +1,1398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.25"
+  author="dsimonek@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture.
+            <hint>
+            What will be API for
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+ <answer id="arch-overall">
+  <p>
+   Navigator API is good for clients (module writers) that want to show some
+   structure or outline of their document in dedicated window, allowing end user
+   fast navigation and control over the document.</p>
+   <p>
+   API allows its clients to plug in their Swing based views easily, which 
+   then will be automatically shown in specialized Navigator UI.</p>
+   
+   <api group="java" name="org.netbeans.spi.navigator.NavigatorPanel" category="stable" type="export" />
+   <api group="java" name="org.netbeans.spi.navigator.NavigatorHandler" category="devel" type="export" />
+   
+ </answer>
+
+
+
+<!--
+        <question id="arch-quality" when="init">
+            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            of your code be tested and 
+            how are future regressions going to be prevented?
+            <hint>
+            What kind of testing do
+            you want to use? How much functionality, in which areas,
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+ <answer id="arch-quality">
+  <p>
+   Unit tests will be written ensuring that implementation loads, instantiates
+   and calls client's SPI correctly. Usual manual testing will be performed as
+   well. As whole API is rather small, it will be easily covered by unit tests
+   as a whole. 
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone by which the work should be 
+            ready?
+            </hint>
+        </question>
+-->
+ <answer id="arch-time">
+  <p>
+    (June 8, 2005) Basic design and implementation are somehow written and
+    compilable, but not tested so far.
+    Estimated time for work left is three-four weeks of one-man work.
+    Important milestone is merge into main trunk, which should happen in
+    early August.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it under
+            what circumstances? What kind of code would typically need to be written
+            to use the module?
+        </question>
+-->
+ <answer id="arch-usecases">
+    
+   <usecase id="basicUsage" name="Basic Usage Steps" >
+      In order to plug in a view into Navigator UI for certain document (data) type,
+      module writers need to write a <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanel.html">NavigatorPanel</a>
+      implementation marked with <code>@Registration</code>.
+
+      <h4>Writing NavigatorPanel implementation</h4>
+        <p>Implementing <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanel.html">NavigatorPanel</a>
+         interface is easy, you can copy from template basic implementation 
+        <a href="@TOP@/org/netbeans/spi/navigator/doc-files/BasicNavPanelImpl_java">BasicNavPanelImpl.java</a>.</p>
+        
+        Advices on important part of panel implementation:
+
+        <ul>
+            <li><b>Instantiation:</b> Your implementation of NavigatorPanel
+            is instantied automatically by the system if you register it using <code>@Registration</code>.</li>
+
+            <li><b>getComponent</b> method: Simply create and return your UI
+            representation of your data in Swing's JComponent envelope. Just be sure
+            that you don't create new JComponent subclass per every call, as
+            performance will suffer then.<p></p></li>
+
+            <li><b>panelActivated and panelDeactivated</b> methods wraps an 
+            'active' life of your panel implementation. In panelActivated, grab
+            your data from given <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html">Lookup</a>,
+            usually by looking up its asociated
+            <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a>
+            or 
+            <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>
+            to take data from. Also remember to attach listeners to lookup result,
+            perhaps also to data itself and trigger UI update with new data.
+            Code will typically look like this:<br></br>
+            <pre>
+        /** JavaDataObject used as example, replace with your own data source */
+        private static final Lookup.Template MY_DATA = new Lookup.Template(JavaDataObject.class);
+
+        public void panelActivated (Lookup context) {
+            // lookup context and listen to result to get notified about context changes
+            curResult = context.lookup(MY_DATA);
+            curResult.addLookupListener(/** your LookupListener impl here*/);
+            Collection data = curResult.allInstances();
+            // ... compute view from data and trigger repaint
+        }
+            </pre>
+            Do *not* perform any long computation in panelActivated directly, see below.<br></br>
+            In panelDeactivated, be sure to remove all listeners to context given
+            to you in panelActivated.<p></p></li>
+
+            <li><b>Long computation of content:</b> What if rendering your
+            Navigator view takes long time, more than several milliseconds?
+            Right approach is to create and run new task using
+            <a href="@org-openide-util@/org/openide/util/RequestProcessor.html">RequestProcessor techniques</a>, 
+            each time when panelActivated call arrived or your listeners on 
+            data context got called.<br></br>
+            While computing, UI of Navigator view
+            should show some please wait message.<p></p></li>
+        </ul>
+
+      <h4>Registering NavigatorPanel impl</h4>
+       <p>Declarative registration of your NavigatorPanel impl connects this
+        implementation with specific content type, which is type of 
+        the document, expressed in mime-type syntax, for example 'text/x-java'
+        for java sources. Infrastructure will automatically load and show
+        your NavigatorPanel impl in UI, when <b>currently activated Node
+        is backed by primary FileObject whose 
+        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html#getMIMEType--">FileObject.getMimeType()</a>
+        equals to content type specified in your registering annotation</b> (see more options below).</p>
+   </usecase> 
+
+   <usecase id="lookupHint" name="Advanced Content Registration - Linking to Node's Lookup" >
+        <p>There may be situations where linking between your Navigator view and
+        activated Node's primary FileObject is not enough or not possible at all.
+        This simply happens when the data you want to represent in Navigator are
+        not accessible through primary FileObject or DataObject. Usual example is
+        Multiview environment, where more views of one document exists.</p>
+         
+        <p>The solution is to bind content of your Navigator view directly to your
+        TopComponent. Then, whenever your TopComponent gets activated in the system, Navigator UI
+        will show th content you connected to it.</p>
+        
+        <b>Steps to do:</b>
+         
+        <ul>
+            <li>Choose your content type, could be either well known or arbitrary,
+            say <b>'text/my-amazing-type'</b> and
+            do all basic steps described in above use case.<p></p></li>
+            
+            <li>Implement <a href="@TOP@/org/netbeans/spi/navigator/NavigatorLookupHint.html">NavigatorLookupHint</a>
+             interface like this:
+             <pre>
+        class AmazingTypeLookupHint implements NavigatorLookupHint {
+            public String getContentType () {
+                return "text/my-amazing-type";
+            }
+        }
+             </pre>
+             <p></p></li>
+             
+            <li>Alter your <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent</a>
+             to contain your NavigatorLookupHint implementation (AmazingTypeLookupHint in this case)
+            in its lookup, returned from 
+            <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
+             method.<p></p></li>
+             
+             <li>
+             Another option you have is to alter lookup of your <code>Node</code> subclass 
+             instead of directly altering lookup of your <code>TopComponent</code>.
+             See <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--">Node.getLookup()</a> method.
+             Then Navigator will show your desired content whenever your <code>Node</code>
+             subclass will be active in the system.<br></br>             
+             However, keep in mind that this option is less preferred, because it
+             only uses implementation detail knowledge that default implementation
+             of <code>TopComponent.getLookup()</code> includes also results from 
+             lookup of asociated <code>Node</code>. So this approach will stop
+             working if you change default behaviour of <code>TopComponent.getLookup()</code> method.
+             <p></p>
+             </li>
+             
+        </ul>
+   
+           
+   </usecase>
+   
+   <usecase id="activatePanel" name="Programmatic activation of NavigatorPanel" >
+        <p>Programmatic activation of specific navigator panel activates and shows
+            navigator panel in navigation area, as if user had selected the panel
+            manually. API clients are expected to use programmatic activation to
+            activate/select preferred panel from a set of available panels.</p>
+        <b>Example:</b>
+            Several <code>TopComponents</code> in multiview arrangement,
+            <code>TopComponentA</code> and <code>TopComponentB</code>.
+            Both components provide the same
+            <code>NavigatorLookupHint</code> impl, which is recognized by two
+            providers <code>NavigatorPanelA</code> and <code>NavigatorPanelB</code>.
+            Now when <code>TopComponentA</code> becomes activated (has a focus),
+            it's desirable to select/show <code>NavigatorPanelA</code> from
+            navigator panels. On the other side, when <code>TopComponentB</code>
+            is activated, <code>NavigatorPanelB</code> should be activated automatically.
+            <p></p>
+         
+        <b>Steps to do to activate panel programmatically:</b>
+         
+        <ul>
+            <li>Get the instance of <code>NavigatorPanel</code> implementation that
+                you want to activate/show in navigator area.<br></br>
+                See <a href="@org-openide-util@/org/openide/util/doc-files/api.html#instances">Instantiation rules</a>.<p></p>
+            </li>
+            
+            <li>Call <a href="@TOP@/org/netbeans/spi/navigator/NavigatorHandler.html#activatePanel-org.netbeans.spi.navigator.NavigatorPanel-">
+                NavigatorHandler.activatePanel(NavigatorPanel panel)</a><p></p>.
+            </li>
+             
+        </ul>
+           
+   </usecase>
+   
+   <usecase id="activatedNode" name="Setting activated node of Navigator window" >
+        <p>Sometimes clients need to alter activated Nodes of Navigator window,
+            to better represent Navigator area content within the whole application.
+            See <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getActivatedNodes--">TopComponent.getActivatedNodes()</a>
+            and <a href="@org-openide-windows@/org/openide/windows/TopComponent.Registry.html#getActivatedNodes--">TopComponent.Registry.html#getActivatedNodes()</a>
+            to find out what activated nodes of TopComponent and whole system mean.
+        </p>
+        <b>Use Case Example:</b>
+            NavigatorPanel implementation shows list or tree of some <code>Node</code>s
+            in Navigator area. When user selects a Node in the list or tree,
+            it is desirable to show selected Node's properties in Properties
+            window and enable proper actions in main menu. Exactly this can be done
+            by presenting Node selected in the list/tree as activated Node of 
+            Navigator window.
+            <p></p>
+         
+        <b>Steps to specify activated Nodes of Navigator window:</b>
+         
+        <ul>
+            <li>In your implementation of <code>NavigatorPanel</code>, implement
+                method <code>getLookup()</code> to return Lookup instance filled
+                with Node(s) that you want to set as activated Nodes of Navigator window.
+                <p></p>
+            </li>
+            
+            <li>Be sure to update Lookup content properly, for example using
+                <a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.html">InstanceContent</a> as follows:
+             <pre>
+        class MyNavigatorPanel implements NavigatorPanel {
+        
+            /** Dynamic Lookup content */
+            private final InstanceContent ic;
+            /** Lookup instance */
+            private final Lookup lookup;
+            
+            public MyNavigatorPanel () {
+                this.ic = new InstanceContent();
+                this.lookup = new AbstractLookup(ic);
+            }
+        
+            public Lookup getLookup () {
+                return lookup;
+            }
+
+            /** Call this method when activated Nodes change is needed, 
+            * for example when selection changes in your NavigatorPanel's Component
+            */
+            private void selectionChanged (Node oldSel, Node newSel) {
+                ic.remove(oldSel);
+                ic.add(newSel);
+            }
+            
+            ... impl of rest of your NavigatorPanel
+            
+        }
+             </pre>
+            </li>
+             
+        </ul>
+           
+   </usecase>
+
+   <usecase id="undoRedo" name="Adding UndoRedo support to the navigation view" >
+        <p>Some complex navigation views need support for undoing and redoing 
+            edit changes done either directly in the view or in document which 
+            the view is representing.
+        </p>
+         
+        <b>Steps to support undo and redo in navigation view:</b>
+         
+        <ul>
+            <li>Implement your navigation view as <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanelWithUndo.html">NavigatorPanelWithUndo</a>,
+                which is <code>NavigatorPanel</code> interface with extra method 
+                <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanelWithUndo.html#getUndoRedo--">getUndoRedo()</a>.
+                <p></p>
+            </li>
+            
+            <li>All other things remain the same as with basic <code>NavigatorPanel</code> usage.
+                <code>UndoRedo</code> support returned from <code>NavigatorPanelWithUndo.getUndoRedo()</code>
+                is propagated to the Navigator TopComponent and returned as its
+                <code>UndoRedo</code> support. For details see 
+                <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getUndoRedo--">TopComponent.getUndoRedo()</a>
+                and <a href="@org-openide-awt@/org/openide/awt/UndoRedo.html">UndoRedo interface</a>.
+                <p></p>
+            </li>
+
+            <li>Example of <code>NavigatorPanelWithUndo</code> implementation:
+             <pre>
+        class MyNavigatorPanelWithUndo implements NavigatorPanelWithUndo {
+        
+            /** UndoRedo support, substitute with your impl */
+            private final UndoRedo undo = new UndoRedo.Manager();
+        
+            public UndoRedo getUndoRedo () {
+                return undo;
+            }
+            
+            ... rest of the NavigatorPanelWithUndo impl ...
+
+        }
+             </pre>
+            </li>
+             
+        </ul>
+           
+   </usecase>
+
+   <usecase id="panelsPolicy" name="Removing active Node/DataObject related NavigatorPanels from Navigator window" >
+        <p>In certain situations it's not desired to show NavigatorPanel implementations
+            related to DataObject of active Node in Navigator window. Typically
+            you need to have active Node of some type, so that actions in the system
+            works properly. But you don't want to show NavigatorPanels that "come"
+            with such active Node. 
+        </p>
+
+        <b>Steps to remove such NavigatorPanels:</b>
+
+        <ul>
+         <li>Implement interface <a href="@TOP@/org/netbeans/spi/navigator/NavigatorLookupPanelsPolicy.html">NavigatorLookupPanelsPolicy</a>,
+             return kind of policy that suits you from <code>getPanelsPolicy()</code> method.
+             <p></p>
+        </li>
+         <li>Put implementation instance into your TopComponent's subclass lookup,
+             see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
+             for details.
+             <p></p>
+         </li>
+         <li>Now when your TopComponent becomes active in the system, found
+             panels policy is used to limit/affect set of available
+             <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanel.html">NavigatorPanel</a>
+             implementations. 
+             <p></p>
+         </li>
+        </ul>
+
+   </usecase>
+   
+   <usecase id="explorerView" name="Integration of Explorer view into Navigator" >
+        <p>Explorer views comes handy when showing Nodes in varienty of situations
+            and it is just natural to be able to integrate them into Navigator window.
+            Working with explorer views is described at 
+            <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html">ExplorerUtils javadoc</a>.
+            Integration with Navigator is easy and there are only subtle differencies
+            from integration into TopComponent.
+        </p>
+        
+        <b>Steps to integrate some kind of Explorer View into Navigator:</b>
+         
+        <ul>
+            <li>Implement <code>NavigatorPanel</code> interface and return created explorer
+                view from <code>getComponent()</code> method. Creating explorer view
+                is described in <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html">ExplorerUtils</a>.
+                <p></p>
+            </li>
+            
+            <li>Return lookup created using 
+                <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#createLookup-org.openide.explorer.ExplorerManager-javax.swing.ActionMap-">
+                ExplorerUtils.createLookup(ExplorerManager, ActionMap)</a> 
+                from <code>getLookup()</code> method of <code>NavigatorPanel</code>.
+                <p></p>
+            </li>
+            
+            <li>Use <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#activateActions-org.openide.explorer.ExplorerManager-boolean-">
+                ExplorerUtils.activateActions(ExplorerManager, boolean)</a> for actions activation and
+                deactivation in <code>panelActivated</code> and <code>panelDeactivated</code>.
+                <p></p>
+            </li>
+            
+            <li>Take inspiration from following example code which integrates
+                ListView with Navigator:
+                
+                <pre>
+        public class ListViewNavigatorPanel extends JPanel implements NavigatorPanel, ExplorerManager.Provider {
+
+            private ExplorerManager manager;
+            private ListView listView;
+            private Lookup lookup;
+            private Action copyAction;
+
+            public ListViewNavigatorPanel () {
+                manager = new ExplorerManager();
+                ActionMap map = getActionMap();
+                copyAction = ExplorerUtils.actionCopy(manager);
+                map.put(DefaultEditorKit.copyAction, copyAction);
+                map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(manager));
+                map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(manager));
+                map.put("delete", ExplorerUtils.actionDelete(manager, true)); // or false
+
+                lookup = ExplorerUtils.createLookup(manager, map);
+
+                listView = new ListView();
+                fillListView(listView);
+
+                add(listView);
+            }
+
+            public String getDisplayName() {
+                return "List view panel";
+            }
+
+            public String getDisplayHint() {
+                return "List view based navigator panel";
+            }
+
+            public JComponent getComponent() {
+                return this;
+            }
+
+            public void panelActivated(Lookup context) {
+                ExplorerUtils.activateActions(manager, true);
+            }
+
+            public void panelDeactivated() {
+                ExplorerUtils.activateActions(manager, false);
+            }
+
+            public Lookup getLookup() {
+                return lookup;
+            }
+
+            public ExplorerManager getExplorerManager() {
+                return manager;
+            }
+
+            private void fillListView(ListView listView) {
+                try {
+                    Node testNode = new AbstractNode(Children.LEAF);
+                    manager.setRootContext(testNode);
+                    manager.setSelectedNodes(new Node[]{testNode});
+                } catch (PropertyVetoException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+                </pre>
+            </li>
+             
+        </ul>
+           
+   </usecase>
+            
+ </answer>
+
+
+
+<!--
+        <question id="arch-what" when="init">
+            What is this project good for?
+            <hint>
+            Please provide here a few lines describing the project, 
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+ <answer id="arch-what">
+   Navigator module is a base API module which provides:
+   
+   <ul>
+    <li> A place for modules to show structure/outline of their documents</li>
+    <li> Ability for modules to show their view only when special document(node)
+     is active in the system</li>
+    <li> UI for switching between multiple views available for currently active document(node)</li>
+    <li> Coalescing of fast coming selected node changes to show content for</li>
+    </ul>
+ </answer>
+
+
+
+<!--
+        <question id="compat-i18n" when="impl">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instructions 
+            at <a href="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/doc-files/i18n-branding.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+ <answer id="compat-i18n">
+  <p>
+   Yes, there is not much I18N.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="compat-standards" when="init">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+ <answer id="compat-standards">
+  <p>
+    No new unusual standard, just layer-based xml registration and SPI
+    interface NavigatorPanel that clients has to implement.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="compat-version" when="impl">
+            Can your module coexist with earlier and future
+            versions of itself? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+ <answer id="compat-version">
+  <p>
+   Yes it will. However this is open issue now - whether to store settings
+   (like filter values) for Navigator API clients and how.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="dep-jre" when="final">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+ <answer id="dep-jre">
+  <p>
+   1.4 or greater
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="dep-jrejdk" when="final">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+ <answer id="dep-jrejdk">
+  <p>
+   JRE AFAIK
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="dep-nb" when="init">
+            What other NetBeans projects and modules does this one depend on?
+            <hint>
+            If you want, describe such projects as imported APIs using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+ <answer id="dep-nb">
+  <p>
+   Navigator module depends on:
+    <api group="java" name="OpenAPIs" type="import" category="official">
+     <p>
+      For acces to winsys TopComponent, Nodes, lookup,
+      general utilities like icon obtaining, bundles.
+     </p>
+    </api>
+
+    <api group="java" name="Loaders" type="import" category="official">
+     <p>
+      API implementation has to access data objects for obtaining mime types.
+     </p>
+    </api>
+
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="dep-non-nb" when="init">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org/">libraries</a>) and
+            it is preferred to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+ <answer id="dep-non-nb">
+  <p>
+   None
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="dep-platform" when="init">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+ <answer id="dep-platform">
+  <p>
+   No platform deps
+  </p>
+ </answer>
+
+
+
+ <answer id="deploy-dependencies">
+  <p>
+    Nothing.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="deploy-jar" when="impl">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consists of just one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where they are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/uninstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+ <answer id="deploy-jar">
+  <p>
+    Just one regular jar.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="deploy-nbm" when="impl">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+ <answer id="deploy-nbm">
+  <p>
+   Yes
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="deploy-packages" when="init">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/javadoc/OpenAPIs/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). If you do not restrict access to your classes you are
+            making it too easy for other people to misuse your implementation
+            details, that is why you should have good reason for not 
+            restricting package access.
+            </hint>
+        </question>
+-->
+ <answer id="deploy-packages">
+  <p>
+   Yes.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="deploy-shared" when="final">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+ <answer id="deploy-shared">
+  <p>
+   Anywhere
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-classloader" when="impl">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+ <answer id="exec-classloader">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-component" when="impl">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behavior of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+ <answer id="exec-component">
+  <p>
+   No.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-introspection" when="impl">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+ <answer id="exec-introspection">
+  <p>
+   Class.newInstance() RTTI is used to load registered view providers.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-privateaccess" when="final">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+ <answer id="exec-privateaccess">
+  <p>
+   No.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-process" when="impl">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+ <answer id="exec-process">
+  <p>
+   No.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-property" when="impl">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behavior of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
+            of this API. You may use
+            <pre>
+                &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/api&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+ <answer id="exec-property">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-reflection" when="impl">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or insufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+ <answer id="exec-reflection">
+  <p>
+   No, just instatiating registered providers.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+ <answer id="exec-threading">
+  <h3>Navigator and Threading</h3>
+  <p>
+  Navigator API itself doesn't define any specific threading model, it's 
+  up to clients to handle threading. API just instructs clients which SPI
+  methods should execute fast and tell them to use Request Processor for
+  long runnign computation of Navigator view content.
+  </p>
+ 
+ </answer>
+
+
+
+<!--
+        <question id="format-clipboard" when="impl">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard (by access to clipboard on means calling methods on <code>java.awt.datatransfer.Transferable</code>?
+            
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            Check your code for overriding these methods.
+            </hint>
+        </question>
+-->
+ <answer id="format-clipboard">
+  <p>
+   Nothing.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="format-dnd" when="impl">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>. 
+            Check your code for overriding these methods. Btw. if they are not overridden, they
+            by default delegate to <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            </hint>
+        </question>
+-->
+ <answer id="format-dnd">
+  <p>
+   None.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="format-types" when="impl">
+            Which protocols and file formats (if any) does your module read or write on disk,
+            or transmit or receive over the network?
+        </question>
+-->
+ <answer id="format-types">
+  <p>
+   None
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="lookup-lookup" when="init">
+            Does your module use <code>org.openide.util.Lookup</code>
+            or any similar technology to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also classify the stability of such
+            API contract. For that use &lt;api group=&amp;lookup&amp; /&gt; tag.
+            </hint>
+        </question>
+-->
+ <answer id="lookup-lookup">
+ <p>
+    <api group="lookup" name="activated_node" type="export" category="devel">
+     <p>
+        Navigator listen to system activated node changes and sets activated
+        node for Navigator top component accordingly. Local activated node is
+        set from system activated node if any provider agrees to display content
+        for data object behind the node. Navigator relies on default lookup
+        mechanism of TopComponent to populate its activated node.
+        Currently it means that if node backed by JavaDataObject is activated node
+        in the system, it is also activated node for Navigator's top component.
+        So main menu actions like Compile File, Move Class etc. work as usual
+        when Navigator window is active.
+        Also, lookup of currently selected Node is searched for NavigatorPanel
+        SPI instances. 
+     </p>
+    </api>
+ </p>    
+ </answer>
+
+
+
+<!--
+        <question id="lookup-register" when="final">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+ <answer id="lookup-register">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="lookup-remove" when="final">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+ <answer id="lookup-remove">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-exit" when="final">
+            Does your module run any code on exit?
+        </question>
+-->
+ <answer id="perf-exit">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+
+<!--
+        <question id="perf-huge_dialogs" when="final">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+ <answer id="perf-huge_dialogs">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-limit" when="init">
+            Are there any hard-coded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+ <answer id="perf-limit">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-mem" when="final">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+ <answer id="perf-mem">
+  <p>
+   Not much, just one lighweight envelope TopComponent. 
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-menus" when="final">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+ <answer id="perf-menus">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-progress" when="final">
+            Does your module execute any long-running tasks?
+            
+            <hint>Long running tasks should never block 
+            AWT thread as it badly hurts the UI
+            <a href="http://performance.netbeans.org/responsiveness/issues.html">
+            responsiveness</a>.
+            Tasks like connecting over
+            network, computing huge amount of data, compilation
+            be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+ <answer id="perf-progress">
+  <p>
+   No, but clients will face this.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-scale" when="init">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            <hint>
+            Please include some estimates, there are other more detailed 
+            questions to answer in later phases of implementation. 
+            </hint>
+        </question>
+-->
+ <answer id="perf-scale">
+  <p>
+   Nothing, API itself is out of this, but client's performance is affected by a
+   type of document behind selected node - so the size and complexness of java,
+   xml documents will affect performance of related Navigator clients.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce that it will behave correctly and quickly and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+ <answer id="perf-spi">
+  <p>
+   Just javadoc recommandations.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-startup" when="final">
+            Does your module run any code on startup?
+        </question>
+-->
+ <answer id="perf-startup">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-wakeup" when="final">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+ <answer id="perf-wakeup">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-file" when="final">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the preferred
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+ <answer id="resources-file">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-layer" when="final">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+ <answer id="resources-layer">
+  <p>
+   Navigator registers an action to show the navigator window.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-mask" when="final">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+ <answer id="resources-mask">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-read" when="final">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and classify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+ <answer id="resources-read">
+  <p>
+   Yes Navigator module reads registered view providers from specific folder
+   Navigator/Panels.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant additional rights to some other code?
+            <hint>Avoid using a class loader that adds extra
+            permissions to loaded code unless really necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            calling AccessController.doPrivileged().</hint>
+        </question>
+-->
+ <answer id="security-grant">
+  <p>
+   No
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require modifications to the standard policy file?
+            <hint>Your code might pass control to third-party code not
+            coming from trusted domains. This could be code downloaded over the
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions need to be granted to which domains?</hint>
+        </question>
+-->
+ <answer id="security-policy">
+  <p>
+   No
+  </p>
+ </answer>
+
+ <!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+ <answer id="exec-ant-tasks">
+  <p>
+   No.
+  </p>
+ </answer>
+ 
+
+
+
+
+
+<!--
+        <question id="arch-where" when="init">
+            Where one can find sources for your module?
+            <hint>
+                Please provide link to the CVS web client at
+                http://www.netbeans.org/download/source_browse.html
+                or just use tag defaultanswer generate='here'
+            </hint>
+        </question>
+-->
+ <answer id="arch-where">
+  <defaultanswer generate='here' />
+ </answer>
+
+</api-answers>

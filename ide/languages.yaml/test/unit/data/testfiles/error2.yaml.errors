@@ -1,0 +1,1 @@
+272-272:While scanning a block mapping we had this expected <block end>, but found org.jvyamlb.tokens.PositionedScalarToken

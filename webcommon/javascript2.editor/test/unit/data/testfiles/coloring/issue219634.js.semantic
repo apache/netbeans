@@ -1,0 +1,25 @@
+function |>METHOD:do_submit<|() {
+    if (!disallowBlank(|>GLOBAL:document<|.form1.period, 'Pls. selec Period.'))
+        return false;
+    if (!disallowBlank(|>GLOBAL:document<|.form1.mon_yr, 'Pls. select Month /Year.'))
+        return false;
+    var |>LOCAL_VARIABLE_DECLARATION:mon_yr<| = getInputValue(|>GLOBAL:document<|.form1.mon_yr),
+        |>LOCAL_VARIABLE_DECLARATION:period<| = getInputValue(|>GLOBAL:document<|.form1.period);
+
+    |>GLOBAL:$<|.getJSON('json_txt.php', {|>FIELD:mon_yr<|: |>LOCAL_VARIABLE:mon_yr<|, |>FIELD:period<|: |>LOCAL_VARIABLE:period<|},
+    function(j) {
+        if (j == 'n') {
+            alert('No record found to generate text file.');
+        } else if (j == 'nc') {
+            if (confirm('Not all employee entry completed. Are you sure to generate text file.')) {
+                |>GLOBAL:document<|.form1.submit();
+            }
+        } else {
+            |>GLOBAL:document<|.form1.submit();
+        }
+    })
+            .error(function() {
+        alert('Some problem arises. Pls. try again.');
+    });
+    return false;
+}

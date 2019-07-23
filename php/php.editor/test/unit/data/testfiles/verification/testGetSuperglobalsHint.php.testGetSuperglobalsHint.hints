@@ -1,0 +1,25 @@
+$foo->bar($_GET);
+          -----
+HINT:Do not Access Superglobal $_GET Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+echo $_GET["foo"];
+     -----
+HINT:Do not Access Superglobal $_GET Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    echo $_GET["foo"];
+         -----
+HINT:Do not Access Superglobal $_GET Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    ? $_GET[""]
+      -----
+HINT:Do not Access Superglobal $_GET Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    : $_GET[""];
+      -----
+HINT:Do not Access Superglobal $_GET Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).

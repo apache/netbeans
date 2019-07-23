@@ -1,0 +1,26 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#if description != "">
+description = '${description}'
+</#if>
+allprojects {
+
+<#if group != "">
+    group = '${group}'
+
+</#if>
+    repositories {
+        jcenter()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+<#if dependencies??>
+    dependencies {
+<#list dependencies as dep>
+        ${dep}
+</#list>
+    }
+</#if>
+}

@@ -1,0 +1,120 @@
+<testresult testFile='yieldFrom_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='17'>
+            <text>g</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='17' end='18'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='18' end='19'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='20' end='21'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='24' end='29'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='30' end='31'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='31' end='32'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD_FROM' start='35' end='45'>
+            <text>yield from</text>
+        </token>
+        <token id='T_OPEN_RECT' start='46' end='47'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='47' end='48'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='48' end='49'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='50' end='51'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='51' end='52'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='53' end='54'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='54' end='55'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='55' end='56'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='59' end='64'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='65' end='66'>
+            <text>5</text>
+        </token>
+        <token id='T_SEMICOLON' start='66' end='67'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='68' end='69'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='70' end='70'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='70'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='69' isReference='false'>
+                <Identifier start='16' end='17' name='g'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Block start='20' end='69' isCurly='true'>
+                    <ExpressionStatement start='24' end='32'>
+                        <YieldExpression start='24' end='31'>
+                            <Scalar start='30' end='31' type='INT' value='1'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='35' end='56'>
+                        <YieldFromExpression start='35' end='55'>
+                            <ArrayCreation start='46' end='55' type='NEW'>
+                                <ArrayElement start='47' end='48'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='47' end='48' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='50' end='51'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='50' end='51' type='INT' value='3'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='53' end='54'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='53' end='54' type='INT' value='4'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </YieldFromExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='59' end='67'>
+                        <YieldExpression start='59' end='66'>
+                            <Scalar start='65' end='66' type='INT' value='5'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

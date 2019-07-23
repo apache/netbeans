@@ -1,0 +1,42 @@
+token #0 T_INLINE_HTML --TEST--\nHighliting empty nowdoc\n--INI--\nhighlight.string  = #DD0000\nhighlight.comment = #FF8000\nhighlight.keyword = #007700\nhighlight.bg      = #FFFFFF\nhighlight.default = #0000BB\nhighlight.html    = #000000\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_VARIABLE $code
+token #4 WHITESPACE  
+token #5 PHP_OPERATOR =
+token #6 WHITESPACE  
+token #7 PHP_NOWDOC_TAG_START <<<'EOF'\n
+token #8 PHP_CONSTANT_ENCAPSED_STRING <?php\n  $x = <<<'EOT'\nEOT\n  $y = 2;\n?>\n
+token #9 PHP_NOWDOC_TAG_END EOF
+token #10 PHP_SEMICOLON ;
+token #11 WHITESPACE \n
+token #12 PHP_STRING highlight_string
+token #13 PHP_TOKEN (
+token #14 PHP_VARIABLE $code
+token #15 PHP_TOKEN )
+token #16 PHP_SEMICOLON ;
+token #17 WHITESPACE \n
+token #18 PHP_CLOSETAG ?>
+token #19 T_INLINE_HTML \n--EXPECT--\n
+token #20 T_INLINE_HTML <
+token #21 T_INLINE_HTML code>
+token #22 T_INLINE_HTML <
+token #23 T_INLINE_HTML span style="color: #000000">\n
+token #24 T_INLINE_HTML <
+token #25 T_INLINE_HTML span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;$x&nbsp;</span>
+token #26 T_INLINE_HTML <
+token #27 T_INLINE_HTML span style="color: #007700">=&nbsp;&lt;&lt;&lt;'EOT'<br /></span>
+token #28 T_INLINE_HTML <
+token #29 T_INLINE_HTML span style="color: #0000BB"></span>
+token #30 T_INLINE_HTML <
+token #31 T_INLINE_HTML span style="color: #007700">EOT<br />&nbsp;&nbsp;</span>
+token #32 T_INLINE_HTML <
+token #33 T_INLINE_HTML span style="color: #0000BB">$y&nbsp;</span>
+token #34 T_INLINE_HTML <
+token #35 T_INLINE_HTML span style="color: #007700">=&nbsp;</span>
+token #36 T_INLINE_HTML <
+token #37 T_INLINE_HTML span style="color: #0000BB">2</span>
+token #38 T_INLINE_HTML <
+token #39 T_INLINE_HTML span style="color: #007700">;<br /></span>
+token #40 T_INLINE_HTML <
+token #41 T_INLINE_HTML span style="color: #0000BB">?&gt;</span>\n</span>\n</code>\n

@@ -1,0 +1,4 @@
+Code completion result for source line:
+static::w|ho(); // Here comes Late Static Bindings
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     who()                           [STATIC]   A

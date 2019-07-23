@@ -1,0 +1,2 @@
+public GenericMoreCtors()
+public GenericMoreCtors(MoreCtors inst)

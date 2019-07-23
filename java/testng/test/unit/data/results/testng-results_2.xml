@@ -1,0 +1,108 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<testng-results>
+  <reporter-output>
+  </reporter-output>
+  <suite name="Ant suite">
+    <groups>
+    </groups>
+    <test name="Ant test">
+      <class name="javaapplication5.MainTest">
+        <test-method status="PASS" signature="cleanUp()" name="cleanUp" is-config="true" duration-ms="0" started-at="2008-11-20T00:23:58Z" finished-at="2008-11-20T00:23:58Z">
+        </test-method>
+        <test-method status="FAIL" signature="cTest()" name="cTest" duration-ms="1" started-at="2008-11-20T00:23:58Z" finished-at="2008-11-20T00:23:58Z">
+          <exception class="java.lang.NullPointerException">
+            <message>
+              <![CDATA[test]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException: test
+	at javaapplication5.MainTest.cTest(MainTest.java:35)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:580)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:478)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:617)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:885)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:712)
+	at org.testng.TestRunner.privateRun(TestRunner.java:582)
+	at org.testng.TestRunner.run(TestRunner.java:477)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:324)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:319)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:292)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:198)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:823)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:790)
+	at org.testng.TestNG.run(TestNG.java:708)
+	at org.testng.TestNG.privateMain(TestNG.java:860)
+	at org.testng.TestNG.main(TestNG.java:833)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="setUp()" name="setUp" is-config="true" duration-ms="3" started-at="2008-11-20T00:23:58Z" finished-at="2008-11-20T00:23:58Z">
+        </test-method>
+        <test-method status="SKIP" signature="bTest()" name="bTest" duration-ms="0" started-at="2008-11-20T00:23:58Z" depends-on-methods="javaapplication5.MainTest.cTest" finished-at="2008-11-20T00:23:58Z">
+        </test-method>
+        <test-method status="PASS" signature="dTest()" name="dTest" duration-ms="0" started-at="2008-11-20T00:23:58Z" finished-at="2008-11-20T00:23:58Z">
+          <exception class="java.lang.NullPointerException">
+            <message>
+              <![CDATA[test]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException: test
+	at javaapplication5.MainTest.dTest(MainTest.java:40)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:585)
+	at org.testng.internal.MethodHelper.invokeMethod(MethodHelper.java:580)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:478)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:617)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:885)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:110)
+	at org.testng.TestRunner.runWorkers(TestRunner.java:712)
+	at org.testng.TestRunner.privateRun(TestRunner.java:582)
+	at org.testng.TestRunner.run(TestRunner.java:477)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:324)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:319)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:292)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:198)
+	at org.testng.TestNG.createAndRunSuiteRunners(TestNG.java:823)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:790)
+	at org.testng.TestNG.run(TestNG.java:708)
+	at org.testng.TestNG.privateMain(TestNG.java:860)
+	at org.testng.TestNG.main(TestNG.java:833)
+]]>
+            </full-stacktrace>
+          </exception>
+        </test-method>
+        <test-method status="PASS" signature="aTest()" name="aTest" duration-ms="1" started-at="2008-11-20T00:23:58Z" finished-at="2008-11-20T00:23:58Z">
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>

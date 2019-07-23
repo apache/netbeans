@@ -1,0 +1,99 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Creating a New Explorer View</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<h1><a name="cust-view">Creating a new Explorer view</a></h1>
+
+Anyone may create a new Explorer view and use it for special purposes
+with a custom UI, to provide an alternate representation of nodes
+suited to some particular application. For example, you may require
+that your view only display a root node of a certain class which has
+added behaviors used in display. As a rule, it is preferable to add
+special functionality directly to the node if that is possible, and to
+use a special Explorer view only when a truly different means of
+display is required.
+
+<p>An Explorer view may be any visual component;
+it need not implement any particular interface, etc. However, the
+convention is that it keep track of the Explorer manager that controls
+it; this manager should be located when it is
+
+<a href="@JDK@/java/awt/Component.html#addNotify--">added</a>
+
+to a parent component, by calling
+
+<a href="../ExplorerManager.html#find-java.awt.Component-"><code>ExplorerManager.find(...)</code></a>,
+
+and then use that manager's properties to control it; the view should
+also stop consulting the manager when the component is
+
+<a href="@JDK@/java/awt/Component.html#removeNotify--">removed</a>
+
+from its parent.
+
+<p>The view will want to use a
+
+<a href="../ExplorerManager.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property change listener</a>
+
+to keep track of what the manager expects it to do;
+
+possibly it could also
+
+<a href="../ExplorerManager.html#addVetoableChangeListener-java.beans.VetoableChangeListener-">veto</a>
+
+certain changes.
+
+<p>Other than these requirements, nearly any visual representation is
+possible, and so the API does not specify any more than this.
+
+<h3><a name="cust-treeview">Subclassing the tree views</a></h3>
+
+The abstract base class
+
+<a href="../view/TreeView.html"><code>TreeView</code></a>
+
+may be used to create a specialized view based on the normal visual
+metaphor of an expandable tree of nodes being explored. Many
+customizations to it may be done by modifying the
+
+<a href="../view/NodeTreeModel.html">model</a>
+
+it uses to determine which nodes are to be displayed.
+
+Or, one of its implementations may be fine-tuned:
+
+<a href="../view/BeanTreeView.html"><code>BeanTreeView</code></a>
+
+provides the usual Explorer view;
+
+<a href="../view/ContextTreeView.html"><code>ContextTreeView</code></a>
+
+provides something similar but only displaying non-leaf nodes (which
+may be useful as one panel of a multi-paned UI setup, also including a
+list view pane). 
+  </body>
+</html>

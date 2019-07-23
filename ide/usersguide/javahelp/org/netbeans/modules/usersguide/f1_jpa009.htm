@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>persistence.xml Visual Editor</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="persistence_multiview_design_persistenceUnitNode" name="persistence_multiview_design_persistenceUnitNode"></a></p>
+<div id="NBCSH5069"><!-- infolevel="all" infotype="General" --><a id="sthref753" name="sthref753"></a>
+<h1>persistence.xml Visual Editor</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to view the persistence units defined in <code dir="ltr">persistence.xml</code>. You open the <code dir="ltr">persistence.xml</code> Visual Editor from the Projects window by expanding the Configuration Files node and then double-clicking the <code dir="ltr">persistence.xml</code> file. You can use the visual editor to create, delete, and modify the persistence units. You can also click XML in the visual editor toolbar to access the XML view of <code dir="ltr">persistence.xml</code>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2772">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In the <code dir="ltr">persistence.xml</code> Visual Editor, you can perform the following tasks:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t7">Element</th>
+<th align="left" valign="bottom" id="r1c2-t7">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t7" headers="r1c1-t7">
+<p>Create a persistence unit</p>
+</td>
+<td align="left" headers="r2c1-t7 r1c2-t7">Click <b>Add</b> in the top right corner of the visual editor.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t7" headers="r1c1-t7">
+<p>Delete a persistence unit</p>
+</td>
+<td align="left" headers="r3c1-t7 r1c2-t7">Click <b>Remove</b> next to the name of the persistence unit you want to delete.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t7" headers="r1c1-t7">
+<p>Modify a persistence unit</p>
+</td>
+<td align="left" headers="r4c1-t7 r1c2-t7">Click the expand icon to the left of the name of the persistence unit to display the editable properties of the persistence unit.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The visual editor displays the properties of each persistence unit in persistence.xml. Depending on your project configuration, for each persistence unit, you can modify the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Persistence Unit Name</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">Each persistence unit in persistence.xml must have a unique name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">Persistence Provider or Persistence Library</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">The persistence provider or library determines the entity manager that is used to manage the entities scoped by the persistence unit.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t8" headers="r1c1-t8">
+<p>Data Source or JDBC Connection</p>
+</td>
+<td align="left" headers="r4c1-t8 r1c2-t8">This is the JNDI name of the data source or the JDBC connection to the database.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t8" headers="r1c1-t8">
+<p>Use Java Transaction APIs</p>
+</td>
+<td align="left" headers="r5c1-t8 r1c2-t8">If selected, the Java EE container manages the lifecycle of entities. If not selected, the entities are managed by the application. (If the target container is not a Java EE container, then this option is not available and the entities must be managed by the application.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t8" headers="r1c1-t8">
+<p>Table Generation Strategy</p>
+</td>
+<td align="left" headers="r6c1-t8 r1c2-t8">Select the table generation strategy for the data source.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t8" headers="r1c1-t8">
+<p>Validation Strategy</p>
+</td>
+<td align="left" headers="r7c1-t8 r1c2-t8">(EclipseLink) Select the validation mode for the persistence unit (default is Auto).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t8" headers="r1c1-t8">
+<p>Caching Type</p>
+</td>
+<td align="left" headers="r8c1-t8 r1c2-t8">(EclipseLink) Select a caching type to explicitly specify if entities and entity-related data is cached.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t8" headers="r1c1-t8">
+<p>Include All Entity Classes in "&lt;project&gt;" Module</p>
+</td>
+<td align="left" headers="r9c1-t8 r1c2-t8">If selected, all entity classes in the persistence unit's root are included in the persistence unit. If not selected, only the classes listed in the Include Entity Classes textfield are included in the scope of the persistence unit.
+<p>In Java EE projects, you do not need to explicitly specify which entity classes to include in the scope, because all entity classes in the persistence unit's root are included by default.</p>
+<p>In Java SE projects, the option to include all entity classes is not available. Instead, you need to explicitly specify which classes to include in the scope. Only the classes listed in the Include Entity Classes textfield are included.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t8" headers="r1c1-t8">
+<p>Include Entity Classes</p>
+</td>
+<td align="left" headers="r10c1-t8 r1c2-t8">The textfield lists the entity classes explicitly included in the scope of the persistence unit. By default, entity classes in the persistence unit's root are included in the scope and listed in the textfield. You can remove entity classes from the scope by selecting the class name and clicking Remove.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH5081" name="NBCSH5081"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2764">
+<param name="text" value="<html><u>&quot;About Developing with Java Persistence&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2767">
+<param name="text" value="<html><u>&quot;Creating a Persistence Unit&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,24 @@
+Mercurial      >  Initialize Project     n
+                  ====================
+                  Status                 t
+                  Diff                   D
+                  Update...              U
+                  Commit...              M
+                  ====================
+                  Export Diff...         x
+                  Import Patches...      P
+                  ====================
+                  Clone - <project>      o
+                  Clone Other...         h
+                  Fetch                  F
+                  Share              >   e
+                  Merge              >   g
+                  ====================
+                  Show History           H
+                  Show               >   w
+                  ====================
+                  Revert                 R
+                  Recover            >   v
+                  Toggle Ignore          I
+                  ====================
+                  Properties             P

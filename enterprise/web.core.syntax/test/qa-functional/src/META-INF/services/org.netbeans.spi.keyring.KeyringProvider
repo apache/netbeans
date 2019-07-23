@@ -1,0 +1,3 @@
+#-org.netbeans.modules.keyring.gnome.GnomeProvider
+#-org.netbeans.modules.keyring.kde.KWalletProvider
+#-org.netbeans.modules.keyring.mac.MacProvider

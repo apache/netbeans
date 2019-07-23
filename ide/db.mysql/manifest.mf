@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.db.mysql
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Layer: org/netbeans/modules/db/mysql/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/db/mysql/Bundle.properties
+

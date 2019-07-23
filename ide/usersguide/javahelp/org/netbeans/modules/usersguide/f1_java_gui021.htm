@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Java FX Project Properties: Deployment</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javafx2.project.ui.JFXDeploymentPanel" name="org.netbeans.modules.javafx2.project.ui.JFXDeploymentPanel"></a></p>
+<div id="NBCSH2374"><!-- infolevel="all" infotype="General" --><a id="sthref324" name="sthref324"></a>
+<h1>Java FX Project Properties: Deployment</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Deployment panel lets you configure options for deploying your project. These options apply only to projects that are run as Java Web Start or Browser applications. Select how to run your project in the Run properties. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG403">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The IDE uses the settings in this panel, along with the settings in the Run and Application panels, to generate the project's JNLP file.</p>
+<p>The panel contains the following deployment settings:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t17">Element</th>
+<th align="left" valign="bottom" id="r1c2-t17">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t17" headers="r1c1-t17">
+<p>Check for Application Updates in Background</p>
+</td>
+<td align="left" headers="r2c1-t17 r1c2-t17">Java Web Start and browser-embedded applications automatically check for updates to the application at the original location where the application was loaded. By default the application checks for updates in the background and applies updates only on application restart ("lazy" mode). Uncheck this box and the application checks for and applies updates at start time, before running ("eager" mode). In the JNLP file, unchecking this box changes <code dir="ltr">&lt;update check="lazy"/&gt;</code> to <code dir="ltr">&lt;update check="eager"/&gt;</code>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG399">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t17" headers="r1c1-t17">
+<p>Install permanently</p>
+</td>
+<td align="left" headers="r3c1-t17 r1c2-t17">Permanently install the application on the client machine.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t17" headers="r1c1-t17">
+<p>Add desktop shortcut</p>
+</td>
+<td align="left" headers="r4c1-t17 r1c2-t17">Add desktop shortcut to the client machine.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t17" headers="r1c1-t17">
+<p>Add Start Menu shortcut</p>
+</td>
+<td align="left" headers="r5c1-t17 r1c2-t17">Add a start menu shortcut to the client machine.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t17" headers="r1c1-t17">
+<p>Request unrestricted access</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Signing certificate</p>
+</td>
+<td align="left" headers="r6c1-t17 r1c2-t17">By default, Java Web Start applications run in a restricted environment where they have limited access to local computing resources. Tick this box if you want the application to request unrestricted access to the local file system. When you tick this box, the IDE inserts the <code dir="ltr">&lt;all-permissions&gt;</code> element into the security section of the JNLP file. The application must be signed in order to request unrestricted access.
+<p>If the application requests unrestricted access, the application must be signed. The IDE can generate a self-signed key, or you can use an existing key. To select a key, click <b>Edit</b>. A dialog opens in which you select to use either a self-signed key or a specified key. If you select to use a specified key, enter the path to the key, its password, the key alias, and the key password.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t17" headers="r1c1-t17">
+<p>Custom JavaScript Actions</p>
+</td>
+<td align="left" headers="r7c1-t17 r1c2-t17">The JavaFX 2 Deployment Toolkit provides a set of hooks that can be used to customize startup behavior.
+<p>Click <b>Edit</b> to open a table of these hooks. Type your own callback function for each hook you want the application to use.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t17" headers="r1c1-t17">
+<p>Download Mode for Libraries</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;"eager" (default)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;"lazy"</p>
+</td>
+<td align="left" headers="r8c1-t17 r1c2-t17">Click <b>Edit</b> to open a dialog where you can change the download mode for libraries. The modes are:
+<p>Libraries are downloaded before the application starts.</p>
+<p>Libraries are downloaded in the background as the application runs and are applied on restart.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2385" name="NBCSH2385"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,53 @@
+FormatToken{kind=SOURCE_START, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=0, text=a, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=1, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=2, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=3, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_JSX_BLOCK_START, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=4, text=<a>
+        , id=JSX_TEXT}
+FormatToken{kind=TEXT, offset=16, text={, id=JSX_EXP_BEGIN}
+FormatToken{kind=INDENTATION_INC, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=17, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=18, text=                , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=34, text=x, id=IDENTIFIER}
+FormatToken{kind=WHITESPACE, offset=35, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=36, text==, id=OPERATOR_ASSIGNMENT}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_ASSIGNMENT_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=37, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=38, text=5, id=NUMBER}
+FormatToken{kind=WHITESPACE, offset=39, text= , id=WHITESPACE}
+FormatToken{kind=BEFORE_TERNARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=BEFORE_TERNARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=40, text=?, id=OPERATOR_TERNARY}
+FormatToken{kind=AFTER_TERNARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_TERNARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=41, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=42, text=6, id=NUMBER}
+FormatToken{kind=EOL, offset=43, text=
+, id=EOL}
+FormatToken{kind=WHITESPACE, offset=44, text=                , id=WHITESPACE}
+FormatToken{kind=BEFORE_TERNARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=BEFORE_TERNARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=TEXT, offset=60, text=:, id=OPERATOR_COLON}
+FormatToken{kind=AFTER_TERNARY_OPERATOR_WRAP, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_TERNARY_OPERATOR, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=61, text= , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=62, text=3, id=NUMBER}
+FormatToken{kind=EOL, offset=63, text=
+, id=EOL}
+FormatToken{kind=INDENTATION_DEC, offset=-1, text=null, id=null}
+FormatToken{kind=WHITESPACE, offset=64, text=                , id=WHITESPACE}
+FormatToken{kind=TEXT, offset=80, text=}, id=JSX_EXP_END}
+FormatToken{kind=TEXT, offset=81, text=
+    </a>, id=JSX_TEXT}
+FormatToken{kind=AFTER_JSX_BLOCK_END, offset=-1, text=null, id=null}
+FormatToken{kind=AFTER_STATEMENT, offset=-1, text=null, id=null}
+FormatToken{kind=EOL, offset=90, text=
+, id=EOL}

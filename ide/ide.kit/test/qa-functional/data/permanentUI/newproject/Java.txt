@@ -1,0 +1,5 @@
+Java
+    Java Application
+    Java Class Library
+    Java Project with Existing Sources
+    Java Free-Form Project

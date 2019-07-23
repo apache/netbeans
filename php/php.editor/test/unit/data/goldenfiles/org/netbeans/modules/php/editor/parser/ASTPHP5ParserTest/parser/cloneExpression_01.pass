@@ -1,0 +1,335 @@
+<testresult testFile='cloneExpression_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='6' end='11'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='12' end='27'>
+            <text>CloneExpression</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='28' end='29'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='34' end='40'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='41' end='49'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='50' end='56'>
+            <text>create</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='56' end='57'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='57' end='58'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='59' end='60'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='69' end='74'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='75' end='76'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='77' end='78'>
+            <text>(</text>
+        </token>
+        <token id='T_CLONE' start='78' end='83'>
+            <text>clone</text>
+        </token>
+        <token id='T_VARIABLE' start='84' end='89'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='89' end='91'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='91' end='96'>
+            <text>test1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='96' end='97'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='97' end='98'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='98' end='99'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='99' end='101'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='101' end='106'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='106' end='107'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='107' end='108'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='108' end='109'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='118' end='124'>
+            <text>return</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='125' end='126'>
+            <text>(</text>
+        </token>
+        <token id='T_CLONE' start='126' end='131'>
+            <text>clone</text>
+        </token>
+        <token id='T_VARIABLE' start='132' end='137'>
+            <text>$this</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='137' end='138'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='138' end='140'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='140' end='145'>
+            <text>test1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='145' end='146'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='146' end='147'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='147' end='148'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='153' end='154'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='160' end='166'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='167' end='175'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='176' end='181'>
+            <text>test1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='181' end='182'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='182' end='183'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='184' end='185'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='190' end='191'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='197' end='203'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='204' end='212'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='213' end='218'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='218' end='219'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='219' end='220'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='221' end='222'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='227' end='228'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='230' end='231'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='233' end='234'>
+            <text>(</text>
+        </token>
+        <token id='T_CLONE' start='234' end='239'>
+            <text>clone</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='240' end='241'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='241' end='244'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='245' end='260'>
+            <text>CloneExpression</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='260' end='261'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='261' end='262'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='262' end='263'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='263' end='264'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='264' end='266'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='266' end='272'>
+            <text>create</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='272' end='273'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='273' end='274'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='274' end='275'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='276' end='276'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='276'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='6' end='231' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='12' end='27' name='CloneExpression'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='28' end='231' isCurly='true'>
+                    <MethodDeclaration start='34' end='154' modifiers='public'>
+                        <FunctionDeclaration start='41' end='154' isReference='false'>
+                            <Identifier start='50' end='56' name='create'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='59' end='154' isCurly='true'>
+                                <ExpressionStatement start='69' end='109'>
+                                    <Assignment start='69' end='108' operator='EQUAL'>
+                                        <Variable start='69' end='74' isDollared='true'>
+                                            <Identifier start='70' end='74' name='test'/>
+                                        </Variable>
+                                        <MethodInvocation start='77' end='108'>
+                                            <AnonymousObjectVariable start='77' end='99'>
+                                                <CloneExpression start='78' end='98'>
+                                                    <MethodInvocation start='84' end='98'>
+                                                        <Variable start='84' end='89' isDollared='true'>
+                                                            <Identifier start='85' end='89' name='this'/>
+                                                        </Variable>
+                                                        <Method>
+                                                            <FunctionInvocation start='91' end='98'>
+                                                                <FucntionName start='91' end='96'>
+                                                                    <Variable start='91' end='96' isDollared='false'>
+                                                                        <Identifier start='91' end='96' name='test1'/>
+                                                                    </Variable>
+                                                                </FucntionName>
+                                                                <Parameters>
+                                                                </Parameters>
+                                                            </FunctionInvocation>
+                                                        </Method>
+                                                    </MethodInvocation>
+                                                </CloneExpression>
+                                            </AnonymousObjectVariable>
+                                            <Method>
+                                                <FunctionInvocation start='101' end='108'>
+                                                    <FucntionName start='101' end='106'>
+                                                        <Variable start='101' end='106' isDollared='false'>
+                                                            <Identifier start='101' end='106' name='test2'/>
+                                                        </Variable>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </Method>
+                                        </MethodInvocation>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ReturnStatement start='118' end='148'>
+                                    <MethodInvocation start='125' end='147'>
+                                        <AnonymousObjectVariable start='125' end='138'>
+                                            <CloneExpression start='126' end='137'>
+                                                <Variable start='132' end='137' isDollared='true'>
+                                                    <Identifier start='133' end='137' name='this'/>
+                                                </Variable>
+                                            </CloneExpression>
+                                        </AnonymousObjectVariable>
+                                        <Method>
+                                            <FunctionInvocation start='140' end='147'>
+                                                <FucntionName start='140' end='145'>
+                                                    <Variable start='140' end='145' isDollared='false'>
+                                                        <Identifier start='140' end='145' name='test1'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='160' end='191' modifiers='public'>
+                        <FunctionDeclaration start='167' end='191' isReference='false'>
+                            <Identifier start='176' end='181' name='test1'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='184' end='191' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='197' end='228' modifiers='public'>
+                        <FunctionDeclaration start='204' end='228' isReference='false'>
+                            <Identifier start='213' end='218' name='test2'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='221' end='228' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='233' end='275'>
+                <MethodInvocation start='233' end='274'>
+                    <AnonymousObjectVariable start='233' end='264'>
+                        <CloneExpression start='234' end='263'>
+                            <AnonymousObjectVariable start='240' end='263'>
+                                <ClassInstanceCreation start='241' end='262' anonymous='false'>
+                                    <ClassName start='245' end='260'>
+                                        <NamespaceName start='245' end='260' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='245' end='260' name='CloneExpression'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </AnonymousObjectVariable>
+                        </CloneExpression>
+                    </AnonymousObjectVariable>
+                    <Method>
+                        <FunctionInvocation start='266' end='274'>
+                            <FucntionName start='266' end='272'>
+                                <Variable start='266' end='272' isDollared='false'>
+                                    <Identifier start='266' end='272' name='create'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

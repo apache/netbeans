@@ -1,0 +1,30 @@
+Code completion result for source line:
+|// CC HERE
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     __construct($foo) - override    [PUBLIC]   Foo
+METHOD     bat() - override                [PUBLIC]   Foo
+METHOD     baz() - generate                [PUBLIC,   Foo
+------------------------------------
+METHOD     __call($name, $arguments) - ge  [PUBLIC]   Magic Method
+METHOD     __callStatic($name, $arguments  [STATIC]   Magic Method
+METHOD     __clone() - generate            [PUBLIC]   Magic Method
+METHOD     __construct() - generate        [PUBLIC]   Magic Method
+METHOD     __destruct() - generate         [PUBLIC]   Magic Method
+METHOD     __get($name) - generate         [PUBLIC]   Magic Method
+METHOD     __invoke() - generate           [PUBLIC]   Magic Method
+METHOD     __isset($name) - generate       [PUBLIC]   Magic Method
+METHOD     __set($name, $value) - generat  [PUBLIC]   Magic Method
+METHOD     __set_state($array) - generate  [STATIC]   Magic Method
+METHOD     __sleep() - generate            [PUBLIC]   Magic Method
+METHOD     __toString() - generate         [PUBLIC]   Magic Method
+METHOD     __unset($name) - generate       [PUBLIC]   Magic Method
+METHOD     __wakeup() - generate           [PUBLIC]   Magic Method
+KEYWORD    abstract                                   null
+KEYWORD    const                                      null
+KEYWORD    final                                      null
+KEYWORD    function                                   null
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    static                                     null
+KEYWORD    var                                        null

@@ -1,0 +1,38 @@
+Calling GenBeans.doIt
+Bean Tree:
+complexFunSpec <ComplexFunSpec> : ComplexFunSpec
+	[attr: name CDATA #REQUIRED  : java.lang.String]
+	[attr: funSpecType CDATA #IMPLIED  : java.lang.String]
+	property <Property> : String[0,n]
+	inputRecord <InputRecord> : String
+	outputRecord <OutputRecord> : String
+	description <Description> : String
+	funSpec <FunSpec> : FunSpec[0,n]
+		[attr: name CDATA #REQUIRED  : java.lang.String]
+		[attr: funSpecType CDATA #IMPLIED  : java.lang.String]
+		property <Property> : String[0,n]
+		inputRecord <InputRecord> : String
+		outputRecord <OutputRecord> : String
+		description <Description> : String
+	property <Property> : String[0,n]
+	inputRecord <InputRecord> : String
+	outputRecord <OutputRecord> : String
+	description <Description> : String
+
+Compiling
+Finished compiling: 0
+out: TestExtension - creating the DOM document
+out: TestExtension - creating the bean graph
+out: TestExtension - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <ComplexFunSpec name='Hank' funSpecType='cool'>
+out: 	<InputRecord>a</InputRecord>
+out: 	<OutputRecord>b</OutputRecord>
+out: 	<Description>c</Description>
+out: 	<FunSpec name='Joe'>
+out: 		<InputRecord>d</InputRecord>
+out: 		<OutputRecord>e</OutputRecord>
+out: 		<Description>f</Description>
+out: 	</FunSpec>
+out: </ComplexFunSpec>
+Finished running TestExtension: 0

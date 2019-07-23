@@ -1,0 +1,88 @@
+mixin list
+  ul
+    li foo
+    li bar
+    li baz
+mixin pet(name)
+  li.pet= name
+
+mixin article(title)
+  .article
+    .article-wrapper
+      h1= title
+      if block
+        block
+      else
+        p No content provided
+
+mixin link(href, name)
+  //- attributes == {class: "btn"}
+  a(class!=attributes.class, href=href)= name
+
+
+mixin list(id, ...items)
+  ul(id=id)
+    each item in items
+      li= item
+
+
+doctype html
+html
+    title TODO supply a title
+    body
+        - var title = "On Dogs: Man's Best Friend";
+        - var author = "enlore";
+        - var theGreat = "<span>escape!</span>";
+
+        h1= title
+        - var riskyBusiness = "<em>Some of the girls are wearing my mother's clothing.</em>";
+        .quote
+            p Joel: !{riskyBusiness}
+
+        p Written with love by #{author}
+        p This will be safe: #{theGreat}
+        - var msg = "not my inside voice";
+        p This is #{msg.toUpperCase()}
+        p This is #{msg.toUpperCase() == 'aa' ? 1:'not'}
+        p.
+          If you take a look at this page's source #[a(target="_blank", href="https://github.com/jadejs/jade/blob/master/docs/views/reference/interpolation.jade") on GitHub],
+          you'll see several places where the tag interpolation operator is
+          used, like so.
+        ul
+            each val in [1, 2, 3, 4, 5]
+                li= val
+        ul
+            each val, index in ['zero', 'one', 'two']
+                li= index + ': ' + val
+        ul
+            each val, index in {1:'one',2:'two',3:'three'}
+                li= index + ': ' + val
+        - var values = [];
+        ul
+            each val in values.length ? values : ['There are no values']
+                li= val
+        - var n = 0
+        ul
+            while n < 4
+                li= n++
+
+        //- Use
+        +list
+        +list
+        +article('Ahoj')
+        +article('Hello world')
+            p This is my
+            p Amazing article
+        +link('/foo', 'foo')(class="btn")
+        +list('my-list', 1, 2, 3, 4)
+        | Plain text can include <strong>html</strong>
+        p
+            | It must always be on its own line
+        p Plain text can include <strong>html</strong>
+        script.
+          if (usingJade)
+            console.log('you are awesome')
+          else
+            console.log('use jade')
+        a: img
+        img/

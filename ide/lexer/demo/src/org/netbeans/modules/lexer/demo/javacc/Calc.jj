@@ -1,0 +1,121 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+/*
+ * Javacc grammar file for the Calc demo.
+ * Copy this grammar and modify the [MODIFY] sections as necessary.
+ */
+
+options {
+    // do not remove or modify the following 5 lines:
+    STATIC = false; // more instances of the token manager will be allowed
+    USER_CHAR_STREAM = true; // user provided CharStream
+    BUILD_PARSER = false; // do not build parser
+    BUILD_TOKEN_MANAGER = true; // build token manager
+    UNICODE_INPUT = true; // input will be unicode characters
+}
+
+/*
+ * The following "PARSER" section is necessary in order to add the proper
+ * header section to generated token manager.
+ */
+PARSER_BEGIN(Calc) // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+package org.netbeans.modules.lexer.demo.javacc; // [MODIFY] Target package of the generated classes:
+
+import org.netbeans.spi.lexer.javacc.CharStream; // do not remove or modify this line
+import org.netbeans.spi.lexer.javacc.Token; // do not remove or modify this line
+import org.netbeans.spi.lexer.javacc.TokenMgrError; // do not remove or modify this line
+
+/*
+ * The definition of the parser class must be present
+ * otherwise the javacc will not continue.
+ */
+class Calc { // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+}
+
+PARSER_END(Calc) // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+/* 
+ * The token definitions of the lexer for the target language folow.
+ */
+TOKEN:
+{
+    <WHITESPACE: (" " | "\t" | "\r" | "\n")+>
+}
+
+
+TOKEN: // Multi-line (traditional) comment start
+{
+    <INCOMPLETE_ML_COMMENT: "/*" > : IN_ML_COMMENT
+}
+
+<IN_ML_COMMENT> // Inside multi-line comment
+TOKEN:
+{
+    <ML_COMMENT: (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/" > : DEFAULT
+}
+
+TOKEN: // Operators
+{
+    <PLUS: "+">
+    | <MINUS: "-">
+    | <MUL: "*">
+    | <DIV: "/">
+    | <MUL3: "***">   /* to get two tokens lookback */
+    | <PLUS5: "+++++">
+}
+
+TOKEN: // Separators
+{
+    <LPAREN: "(">
+    | <RPAREN: ")">
+}
+
+TOKEN: // Constant ('#' means internal tokens)
+{
+    <CONSTANT: <FLOAT>
+        | <FLOAT> (["e","E"] (["-","+"])? <INTEGER>)? 
+    >
+
+    | <#FLOAT: <INTEGER> ("." <INTEGER>)?
+        | "." <INTEGER>
+    >
+
+    | <#INTEGER: (<DIGIT>)+>
+    | <#DIGIT: ["0" - "9"]>
+
+}
+
+TOKEN: // Errorneous constructions
+{
+    <ML_COMMENT_END: "*/">
+}
+
+TOKEN:
+{
+    /* All other things are considered to be error character.
+     * Only one character must be matched because the (~[])+
+     * would be the longest match so it would be always
+     * preferred. The ERROR clause must be the last
+     * in the grammar specification so that other one-char
+     * clauses are matched preferably.
+     */
+    <ERROR: ~[] >
+}

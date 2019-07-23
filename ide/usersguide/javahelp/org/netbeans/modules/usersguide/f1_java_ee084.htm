@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Servers Manager</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.api.server.CommonServerUIs" name="org.netbeans.api.server.CommonServerUIs"></a></p>
+<div id="NBCSH4885"><!-- infolevel="all" infotype="General" --><a id="sthref713" name="sthref713"></a>
+<h1>Servers Manager</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Before you can deploy an enterprise application, web application, JSP file, servlet, or EJB module, an instance of the server to which you are going to deploy needs to be registered with the IDE.</p>
+<p>The Servers Manager enables you to register and remove server instances and to specify additional configuration details for registered server instances. The settings that are available depend upon the server type.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t81">Element</th>
+<th align="left" valign="bottom" id="r1c2-t81">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t81" headers="r1c1-t81">Servers</td>
+<td align="left" headers="r2c1-t81 r1c2-t81">This panel displays a list of registered server instances.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t81" headers="r1c1-t81">Add Server</td>
+<td align="left" headers="r3c1-t81 r1c2-t81">Click to open the Add Server Instance dialog box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t81" headers="r1c1-t81">
+<p>Remove Server</p>
+</td>
+<td align="left" headers="r4c1-t81 r1c2-t81">Click to remove the server instance that is selected in the Servers panel.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t81" headers="r1c1-t81">
+<p>Server Name</p>
+</td>
+<td align="left" headers="r5c1-t81 r1c2-t81">Name specified for the server instance when the server was added. This field is read-only.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t81" headers="r1c1-t81">Server Type</td>
+<td align="left" headers="r6c1-t81 r1c2-t81">Type of the server instance. This field is read-only.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can modify the following settings for registered instances of the Apache Tomcat or TomEE web servers.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t82">Element</th>
+<th align="left" valign="bottom" id="r1c2-t82">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t82" headers="r1c1-t82">
+<p>Connection</p>
+</td>
+<td align="left" headers="r2c1-t82 r1c2-t82">The Connection tab enables you to set the server port numbers and the username and password for the manager role. You can view the server password by clicking Show next to the password field. You can also enable the HTTP monitor in this tab.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Catalina Home</td>
+<td align="left" headers="r3c1-t82 r1c2-t82">Specifies the location of the server installation.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Catalina Base</td>
+<td align="left" headers="r4c1-t82 r1c2-t82">Specifies the base directory for the Tomcat Web Server. You can set this property when you add a Tomcat Web Server to the Server Manager. If you set a base directory, then that is where the Tomcat configuration files reside. One reason for specifying a separate base directory is to allow more than one user to use the same server. If no base directory is specified, then the configuration files reside in the home directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Username</td>
+<td align="left" headers="r5c1-t82 r1c2-t82">Specifies the user name that the IDE uses to log into the server's manager application. <b>The user must be associated with the manager role</b>. The first time the IDE starts the Tomcat Web Server, such as through the Start/Stop menu action or by executing a web component from the IDE, the IDE adds an admin user with a randomly-generated password to the tomcat-base-path<code dir="ltr">/conf/tomcat-users.xml</code> file. (Right-click the Tomcat Web Server instance node in the Services window and select Properties. In the Properties dialog box, the Base Directory property points to the <code dir="ltr">base-dir</code> directory.) The admin user entry in the <code dir="ltr">tomcat-users.xml</code> file looks similar to the following:
+<p><code dir="ltr">&lt;user username="ide" password="woiehh" roles="manager"/&gt;</code></p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Password</td>
+<td align="left" headers="r6c1-t82 r1c2-t82">Specifies the user's password. See the explanation for the Username property above for details.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Server Port</td>
+<td align="left" headers="r7c1-t82 r1c2-t82">Specifies the number of the TCP/IP port that the server listens on. The URL for a web application that is deployed on the server is derived from the host's URL and the server port, such as <code dir="ltr">http://localhost:8086</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Shutdown Port</td>
+<td align="left" headers="r8c1-t82 r1c2-t82">Specifies the port number on which the server waits for a shutdown command.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Enable HTTP Monitor</td>
+<td align="left" headers="r9c1-t82 r1c2-t82">If selected, this checkbox enables the HTTP Monitor for web applications executing on the Tomcat Web Server. When enabling the monitor, you must restart the server in order for the change to take affect. The HTTP Monitor is useful for debugging web applications. If you are using the server for production purposes only, you may want to clear the checkbox to reduce its impact on the server's performance. When you clear the checkbox, the IDE removes the HTTP monitor's declaration from the server. However the monitor's libraries remain deployed to the server. When you disable the HTTP Monitor, you <b>must</b> restart the server for the change to take affect.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t82" headers="r1c1-t82">Startup</td>
+<td align="left" headers="r10c1-t82 r1c2-t82">The Startup tab enables you to specify a custom Catalina script for startup and debugger transport options.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Use Custom Catalina Script</td>
+<td align="left" headers="r11c1-t82 r1c2-t82">When selected the server is started using a custom a Catalina script. Click Browse to specify the location of the custom script. This is deselected by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Force Stop</td>
+<td align="left" headers="r12c1-t82 r1c2-t82">Specifies whether to use the force shutdown (shutdown is followed by the kill command). This is unchecked by default. This function is disabled on Windows.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Debugger Transport</td>
+<td align="left" headers="r13c1-t82 r1c2-t82">Enables you to select either shared memory or socket based transport for debugging.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shared Memory Name</td>
+<td align="left" headers="r14c1-t82 r1c2-t82">When selected, the transport is set to <code dir="ltr">dt_shmem</code>. You can type a shared memory name or use the default name. This option is selected by default on Windows.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Socket Port</td>
+<td align="left" headers="r15c1-t82 r1c2-t82">When selected the Java Platform Debugger Architecture (JPDA) transport is set to <code dir="ltr">dt_socket</code> and the JPDA address is set to the specified socket port number when the server is started in debug mode.
+<p>The Shared Memory transport option is only available on Windows. If you want to use the JPDA socket transport for debugging on Windows, select Socket Port and specify the JPDA port number.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t82" headers="r1c1-t82">Platform</td>
+<td align="left" headers="r16c1-t82 r1c2-t82">This Platform tab enables you to specify the Java platform for the server and any VM options.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Java Platform</td>
+<td align="left" headers="r17c1-t82 r1c2-t82">Specifies the Java Platform the server will use. By default the server will use the same Java Platform as is used by the IDE. Click <b>Manage Platforms</b> to open the Java Platform Manager.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;VM Options</td>
+<td align="left" headers="r18c1-t82 r1c2-t82">Specifies the Java Virtual Machine options.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Use IDE Proxy Settings</td>
+<td align="left" headers="r19c1-t82 r1c2-t82">When selected, the server uses the proxy settings for the IDE.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r20c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Use Security Manager</td>
+<td align="left" headers="r20c1-t82 r1c2-t82">If selected, this checkbox enables the Tomcat Web Server to be started with the <code dir="ltr">-security</code> option. The security policy implemented by the Security Manager are configured in the <code dir="ltr">catalina.policy</code> file, which is in the Tomcat home directory's <code dir="ltr">conf</code> folder.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r21c1-t82" headers="r1c1-t82">Deployment</td>
+<td align="left" headers="r21c1-t82 r1c2-t82">The Deployment tab enables you to specify the timeout length for deployment. You can also enable automatic JDBC driver deployment to the server if required.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r22c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Deployment Timeout(s)</td>
+<td align="left" headers="r22c1-t82 r1c2-t82">Specifies the length of server timeout(s).</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r23c1-t82" headers="r1c1-t82">&nbsp;&nbsp;&nbsp;&nbsp;Enable JDBC driver deployment</td>
+<td align="left" headers="r23c1-t82 r1c2-t82">Specifies whether to enable JDBC driver deployment. This is checked by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r24c1-t82" headers="r1c1-t82">
+<p>Classes</p>
+</td>
+<td align="left" headers="r24c1-t82 r1c2-t82">The Classes tab lists all classes associated with the server instance.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r25c1-t82" headers="r1c1-t82">
+<p>Sources</p>
+</td>
+<td align="left" headers="r25c1-t82 r1c2-t82">The Sources tab lists all sources associated with the server instance. You can use this tab to add and remove JARs and folders.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r26c1-t82" headers="r1c1-t82">
+<p>Javadoc</p>
+</td>
+<td align="left" headers="r26c1-t82 r1c2-t82">The Javadoc tab lists all Javadocs associated with the server instance.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can modify the following settings for registered instances of GlassFish Server 3.x and GlassFish Server 4.x.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t83">Element</th>
+<th align="left" valign="bottom" id="r1c2-t83">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t83" headers="r1c1-t83">
+<p>Common</p>
+</td>
+<td align="left" headers="r2c1-t83 r1c2-t83">The Common tab enables you to enable and disable the following options:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t83" headers="r1c1-t83">&nbsp;&nbsp;&nbsp;&nbsp;Location</td>
+<td align="left" headers="r3c1-t83 r1c2-t83">Type of the server instance. This field is read-only</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t83" headers="r1c1-t83">&nbsp;&nbsp;&nbsp;&nbsp;Domains Folder</td>
+<td align="left" headers="r4c1-t83 r1c2-t83">Enter the host name or IP address for the remote Glassfish 3 server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t83" headers="r1c1-t83">&nbsp;&nbsp;&nbsp;&nbsp;Domain Name</td>
+<td align="left" headers="r5c1-t83 r1c2-t83">Enter the port number used to communicate with the remote server. The default port is 4848.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Target</p>
+</td>
+<td align="left" headers="r6c1-t83 r1c2-t83">(Optional) Enter a value that is used to identify a cluster and/or stand-alone instance. This value will be used as the value for the target option when running server administration tasks from the IDE. For example, if you have a cluster identified as cluster1 and enter cluster1 as the Target value, when you deploy an application from the IDE to the server the application will be deployed to every instance in the cluster (asadmin deploy --target cluster1 --name myapp myapp.war).
+<p>When no Target value is specified (default) all commands will be applied to the domain administration server instance.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Username</p>
+</td>
+<td align="left" headers="r7c1-t83 r1c2-t83">Type the username for the server instance.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Password</p>
+</td>
+<td align="left" headers="r8c1-t83 r1c2-t83">Type the password for the server instance.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Enable Comet Support</p>
+</td>
+<td align="left" headers="r9c1-t83 r1c2-t83">When selected, Comet support is enabled to allow a persistent connection between the server and the client and enable the server to push data when available. This option is disabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Enable HTTP Monitor</p>
+</td>
+<td align="left" headers="r10c1-t83 r1c2-t83">When selected, HTTP server-side monitoring is started when an application is deployed to the server. The HTTP Server-Side Monitor gathers data about HTTP requests that are processed by the servlet engine. For each HTTP request that is processed, the monitor records data about the incoming request and the data states maintained on the server. This option is disabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Enable JDBC Driver Deployment</p>
+</td>
+<td align="left" headers="r11c1-t83 r1c2-t83">When selected, JDBC drivers are deployed to the server if required. This option is disabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Preserve Sessions Across Redeployment</p>
+</td>
+<td align="left" headers="r12c1-t83 r1c2-t83">When selected, the server preserves active HTTP sessions when an application is redeployed. This option is enabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Start Registered Derby Server</p>
+</td>
+<td align="left" headers="r13c1-t83 r1c2-t83">When selected, the Derby database server is started when the application server is started. This option is enabled by default.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t83" headers="r1c1-t83">
+<p>Java</p>
+</td>
+<td align="left" headers="r14c1-t83 r1c2-t83">The Java tab enables you to specify the following options:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Java Platform</p>
+</td>
+<td align="left" headers="r15c1-t83 r1c2-t83">Enables you to specify the Java Platform the server will use. By default the server will use the same Java Platform as is used by the IDE. Click <b>Manage Platforms</b> to open the Java Platform Manager.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Debug Settings</p>
+</td>
+<td align="left" headers="r16c1-t83 r1c2-t83">Enables you to select either shared memory or socket based transport for debugging. You can also select Address to specify a transport address or JPDA port according to the specified debugging transport.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t83" headers="r1c1-t83">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Use IDE's proxy settings</p>
+</td>
+<td align="left" headers="r17c1-t83 r1c2-t83">When selected, the IDE proxy settings are used for debugging.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note</b>: When you register an existing domain, the IDE uses the port numbers and other properties specified in the domain configuration.</p>
+<p><b>Note</b>: A username and password are required to work with a remote instance of GlassFish Server 3.1.2 and GlassFish Server 4.x. To accept remote admin requests the secure administration feature on the remote instance must be enabled. The secure administration feature cannot be enabled if any admin accounts on the remote instance have an empty password.</p>
+<a id="NBCSH4905" name="NBCSH4905"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1681">
+<param name="text" value="<html><u>&quot;Working with Glassfish Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

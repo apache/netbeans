@@ -1,0 +1,122 @@
+<testresult testFile='uniformVariableSyntax_27.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_FUNCTION' start='8' end='16'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='16' end='17'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='17' end='24'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='24' end='25'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='26' end='33'>
+            <text>$param2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='33' end='34'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='35' end='36'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='36' end='40'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='41' end='61'>
+            <text>"anonymous function"</text>
+        </token>
+        <token id='T_NEKUDA' start='62' end='63'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='64' end='71'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='71' end='72'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='72' end='73'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='73' end='74'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='74' end='75'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='75' end='83'>
+            <text>"param1"</text>
+        </token>
+        <token id='T_COMMA' start='83' end='84'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='85' end='93'>
+            <text>"param2"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='93' end='94'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='94' end='95'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='96' end='96'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='96'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='95'>
+                <FunctionInvocation start='7' end='94'>
+                    <FucntionName start='7' end='74'>
+                        <ParenthesisExpression start='7' end='74'>
+                            <LambdaFunctionDeclaration start='8' end='73' isReference='false'>
+                                <FormalParameter start='17' end='24' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='17' end='24' isDollared='true'>
+                                            <Identifier start='18' end='24' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='26' end='33' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='26' end='33' isDollared='true'>
+                                            <Identifier start='27' end='33' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <Block start='35' end='73' isCurly='true'>
+                                    <EchoStatement start='36' end='72'>
+                                        <InfixExpression start='41' end='71' operator='CONCAT'>
+                                            <Scalar start='41' end='61' type='STRING' value='"anonymous function"'/>
+                                            <NamespaceName start='64' end='71' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='64' end='71' name='PHP_EOL'/>
+                                            </NamespaceName>
+                                        </InfixExpression>
+                                    </EchoStatement>
+                                </Block>
+                            </LambdaFunctionDeclaration>
+                        </ParenthesisExpression>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='75' end='83' type='STRING' value='"param1"'/>
+                        <Scalar start='85' end='93' type='STRING' value='"param2"'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+util.ins|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTRUCTO inspect(obj: Object, opts: Obj  [PUBLIC]   util.js

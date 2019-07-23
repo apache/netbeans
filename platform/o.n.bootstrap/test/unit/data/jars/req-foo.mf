@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: req_foo
+OpenIDE-Module-Name: Requires foo
+OpenIDE-Module-Requires: foo

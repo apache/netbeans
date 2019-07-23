@@ -1,0 +1,113 @@
+<testresult testFile='uniformVariableSyntax_29.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='8' end='11'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='12' end='17'>
+            <text>class</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='18' end='19'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='20' end='26'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='27' end='35'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='36' end='44'>
+            <text>__invoke</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='44' end='45'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='45' end='46'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='47' end='48'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='48' end='52'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='53' end='79'>
+            <text>"anonymous class __invoke"</text>
+        </token>
+        <token id='T_NEKUDA' start='80' end='81'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='82' end='89'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='89' end='90'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='90' end='91'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='92' end='93'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='93' end='94'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='94' end='95'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='95' end='96'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='98' end='98'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='98'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='97'>
+                <FunctionInvocation start='7' end='96'>
+                    <FucntionName start='7' end='94'>
+                        <AnonymousObjectVariable start='7' end='94'>
+                            <ClassInstanceCreation start='8' end='93' anonymous='true'>
+                                <Parameters>
+                                </Parameters>
+                                <Superclass>
+                                </Superclass>
+                                <Interfaces>
+                                </Interfaces>
+                                <Block start='18' end='93' isCurly='true'>
+                                    <MethodDeclaration start='20' end='91' modifiers='public'>
+                                        <FunctionDeclaration start='27' end='91' isReference='false'>
+                                            <Identifier start='36' end='44' name='__invoke'/>
+                                            <FormalParameters>
+                                            </FormalParameters>
+                                            <Block start='47' end='91' isCurly='true'>
+                                                <EchoStatement start='48' end='90'>
+                                                    <InfixExpression start='53' end='89' operator='CONCAT'>
+                                                        <Scalar start='53' end='79' type='STRING' value='"anonymous class __invoke"'/>
+                                                        <NamespaceName start='82' end='89' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='82' end='89' name='PHP_EOL'/>
+                                                        </NamespaceName>
+                                                    </InfixExpression>
+                                                </EchoStatement>
+                                            </Block>
+                                        </FunctionDeclaration>
+                                    </MethodDeclaration>
+                                </Block>
+                            </ClassInstanceCreation>
+                        </AnonymousObjectVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

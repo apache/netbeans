@@ -1,0 +1,5 @@
+|>MARK_OCCURRENCES:TestCase<| c = new TestCase()
+|>MARK_OCCURRENCES:TestCase<|.create().method1()
+|>MARK_OCCURRENCES:TestCase<|.create().method1(1)
+class |>MARK_OCCURRENCES:Test^Case<| extends java.lang.Object {
+    static |>MARK_OCCURRENCES:TestCase<| create() {

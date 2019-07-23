@@ -1,0 +1,1563 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<title>Window System API</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<p></p><p>
+<em>Note: See the <a href="http://core.netbeans.org/windowsystem/changes.html">changes document</a>. Window system implementation
+changed is major version. Comparing to the older version it has changed its
+laout significantly, introduced group, and released support of workspaces</em>
+</p>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+The Javadoc is present in the
+
+<a href="../package-summary.html"><code>org.openide.windows</code></a>
+
+package. Most module authors will want to look at
+
+<a href="../TopComponent.html"><code>TopComponent</code></a>
+
+to subclass it, or perhaps at
+
+<a href="../CloneableTopComponent.html"><code>CloneableTopComponent</code></a>.
+
+<h1>Contents</h1>
+
+<ul>
+
+<li><a href="#overview">Overview of the Window System</a>
+<ul>
+<li><a href="#overview-top">Top components and docking</a>
+<li><a href="#overview-clone">Cloning</a>
+<li><a href="#overview-group">Groups</a>
+</ul>
+
+<li><a href="#create">Creating a Top Component</a>
+<ul>
+<li><a href="#create-top">Subclassing <code>TopComponent</code></a>
+<li><a href="#find-mode">Finding modes</a>
+<li><a href="#create-clone">Creating a cloneable component</a>
+<li><a href="#create-misc">Handling focus, and the node selection</a>
+<li><a href="#create-ser">Special support for serialization</a>
+</ul>
+
+<li><a href="#manip">Manipulating Existing Windows</a>
+<ul>
+<li><a href="#find">Finding modes, top components and groups</a>
+<li><a href="#manip-misc">Giving focus and closing</a>
+<li><a href="#listen">Listening to window system events</a>
+</ul>
+
+<li><a href="#xml">XML Persistence Format and Installation</a>
+<ul>
+<li><a href="#xml-overview">Overview</a>
+<li><a href="#xml-layout">Physical Layout and File Formats</a>
+<li><a href="#xml-visual">Visual Display</a>
+<li><a href="#xml-programmatic">Programmatic Manipulation</a>
+<li><a href="#xml-scenarios">Common Scenarios</a>
+</ul>
+
+<li><a href="#diagrams">UML diagrams</a>
+<ul>
+<li><a href="#diagram_basic">Overall structure class diagram</a>
+<li><a href="#diagram_inputoutput">Input-Output class diagram</a>
+</ul>
+
+</ul>
+
+<h1>Window System API</h1>
+
+The Window System API provides fairly abstract support for creating
+windows or window-like container components that may be handled
+smoothly by the NetBeans window manager implementation.
+
+<h2><a name="overview">Overview of the Window System</a></h2>
+
+As a rule, modules should not create their own top-level windows
+(e.g.
+
+<a href="@JDK@/java/awt/Window.html"><code>java.awt.Window</code></a>),
+
+since these would exist without the knowledge of NetBeans' window
+manager. This window manager is capable of manipulating application
+windows and panels, including docking and undocking them into
+tabbed frames, and making the window configuration persistent across
+sessions. Well-behaved modules will use the API so as to integrate
+nicely into the feel of the rest of the application.
+
+<h3><a name="overview-top">Top components and docking</a></h3>
+
+A <em>top component</em> is a Swing component (usually a panel or
+the like, though not necessarily); it might be <em>docked</em> (added into
+windows system) into one tab of a multi-tabbed window. The <em>top component</em> 
+has to be <em>docked</em>, in order to be manipulated by window system.
+If the <em>top component</em> isn't <em>docked</em> it can be used as an
+ordinary Swing JComponent, e.g by adding it another container (possibly
+<em>docked top component</em>) without window system knowledge about it.
+Almost everything visible in NetBeans is a top component, except the Main Window
+(which is treated specially because of its centrality), and dialog
+boxes.
+
+<p>The API provides access to a set of modes, each
+of which can contain some top components. The API user cannot create modes
+directly. She can achieve that by specifying them in a XML layer.
+
+<p>Top components have some special trimming, they may have a popup menu of
+actions (e.g. Save, Close, ...) which can be displayed in the tab. Top components
+may provide special actions in this list as well.
+
+<p>At any given time, one top component is <em>active</em>. It will
+be the last docked top component containing focus, and of course will
+be in the selected tab. This component serves as the base for a number
+of things in NetBeans; for example, the <em>current node
+selection</em> is controlled by the active component.
+
+<h3><a name="overview-clone">Cloning</a></h3>
+
+Some top components can be <em>cloned</em>, meaning that a new top
+component created which initially shares the same contents. Exactly
+how the cloning works depends on the top component, but typically
+the same data will be referred to and the cloned component will
+simply be a new view on it. For example, Editor panes can be cloned
+with the effect that the same file will be open in each view.
+
+<h3><a name="overview-group">Groups</a></h3>
+
+NetBeans starts off with the groups "form", "debugger", etc.
+to group windows according to their expected
+applicability. The groups manage opening and closing of top components belonging
+to the group accodring the user work flow. User can influence which of the top
+component should be opened at the group opening, or remamained opened at the 
+group closing etc. The group is usualy opened/closed when user starts/finishes
+some specific taks, like GUI editing and debugging.
+
+<p>NetBeans tries to save the current window configuration when it
+exits, including the positions of all modes, the arrangement of
+modes, and the components present in each mode; and grouos, their state; and
+then restore this configuration when next started.
+
+<h2><a name="create">Creating a Top Component</a></h2>
+
+Creating a custom top component, including assigning it to the
+proper docking mode, is not generally difficult.
+
+<h3><a name="create-top">Subclassing <code>TopComponent</code></a></h3>
+
+To create a simple top component, it suffices to subclass
+
+<a href="../TopComponent.html"><code>TopComponent</code></a>.
+
+This is a subclass of
+
+<a href="@JDK@/javax/swing/JComponent.html"><code>JComponent</code></a>,
+
+which means that it is possible to draw on it using a variety of
+mechanisms; typically, it is treated as a container, and its layout
+may be
+
+<a href="@JDK@/java/awt/Container.html#setLayout-java.awt.LayoutManager-">set</a>
+
+and components
+
+<a href="@JDK@/java/awt/Container.html#add-java.awt.Component-java.lang.Object-">added</a>
+
+to it. 
+
+<p>There are a few general ways in which you can customize the
+component besides painting subcomponents on it:
+
+<ul>
+
+<li>You may set a
+
+<a href="../TopComponent.html#setName-java.lang.String-">display name</a>
+
+and
+
+<a href="../TopComponent.html#setIcon-java.awt.Image-">icon</a>
+
+for the component, affecting its appearance in window title bars
+and tabs. These ought generally be set in the constructor.
+
+<li><a href="../TopComponent.html#getHelpCtx--"><code>TopComponent.getHelpCtx()</code></a>
+
+should be overridden to provide a help link for the component as a
+whole, if you have any context help. Or, subcomponents may have their
+own more specific help. By default, context help is taken from the activated
+node selection, if there is any to be found.
+
+<li><a href="../TopComponent.html#getUndoRedo--"><code>TopComponent.getUndoRedo()</code></a>
+
+allows you to associate undo/redo actions with the component, so
+that these actions will work properly when your component is
+focussed.
+
+<li><a href="../TopComponent.html#getActions--"><code>TopComponent.getActions()</code></a>
+
+permits you to provide a list of actions which will appear in a
+popup menu, e.g. on a tab for the component. The system should
+provide a few standard actions such as "Close"; you may want to add
+more (for example, "Save" for an Editor pane). The
+
+<a href="@org-openide-actions@/org/openide/actions/doc-files/api.html">Actions API</a>
+
+describes how to write these.
+
+</ul>
+
+<h3><a name="find-mode">Finding modes</a></h3>
+
+Finding <a href="#overview-top">modes</a> is straightforward.
+
+<p>You cannot create mode directly, however you can specify
+new mode in XML layer. Then you can find such a mode by call
+
+<a href="../WindowManager.html#findMode-java.lang.String-"><code>WindowManager.findMode(String)</code></a>
+
+. Do not keep references to modes, Rather use the above method to access them.
+Modes could be removed from window system inbetween, thus manipulating with such
+a mode wouldn't achieve desired goal.
+
+<p>To add top components to a mode, just call
+
+<a href="../Mode.html#dockInto-org.openide.windows.TopComponent-"><code>Mode.dockInto(TopComponent)</code></a>.
+
+For example:
+
+<pre>
+<font class="keyword">public</font> <font class="keyword">static</font> <font class="keyword">class</font> <font class="type">MyComponent</font> <font class="keyword">extends</font> <font class="type">TopComponent</font> {
+    <font class="keyword">public</font> <font class="type">MyComponent</font>(<font class="type">Object</font> <font class="variable-name">data</font>, <font class="type">Image</font> <font class="variable-name">icon</font>) {
+        setName(NbBundle.getMessage(This.<font class="keyword">class</font>, <font class="string">"LBL_widget_tree"</font>));
+        setIcon(icon);
+        setLayout(<font class="keyword">new</font> <font class="type">BorderLayout</font>());
+        add(<font class="keyword">new</font> <font class="type">JTree</font>(createModel(data)), BorderLayout.CENTER);
+    }
+    <font class="keyword">public</font> <font class="type">Action</font>[] <font class="function-name">getActions</font>() {
+        <font class="type">List</font>[] <font class="variable-name">actions</font> = Arrays.asList(<font class="keyword">super</font>.getctions());
+        <font class="variable-name">actions</font>.add(<font class="keyword">new</font> WidgetReparseAction());
+        <font class="keyword">return</font> (<font class="type">Action</font>[])<font class="variable-name">actions</font>.toArray(<font class="keyword">new</font> <font class="type">Action</font>[0]);
+    }
+}
+
+// ...
+<font class="type">TopComponent</font> <font class="variable-name">myComponent1</font> = <font class="keyword">new</font> <font class="type">MyComponent</font>(firstData, firstIcon);
+<font class="type">TopComponent</font> <font class="variable-name">myComponent2</font> = <font class="keyword">new</font> <font class="type">MyComponent</font>(secondData, secondIcon);
+<font class="type">Mode</font> <font class="variable-name">myMode</font> = WindowManager.getDefault().findMode(<font class="string">"myWidgetsMode"</font>);
+<font class="keyword">if</font> (myMode != <font class="constant">null</font>) {
+    myMode.dockInto(myComponent);
+    myMode.dockInto(myComponent2);
+} else {
+    // Mode was not found, i.e. it is not specified in XML layer, or some problem occured.
+    // Then the TopComponent will be opened in default editor mode.
+}
+myComponent.open();
+myComponent2.open();
+myComponent2.requestActive();
+</pre>
+
+<h3><a name="create-clone">Creating a cloneable component</a></h3>
+
+Just by subclassing
+
+<a href="../CloneableTopComponent.html"><code>CloneableTopComponent</code></a>,
+
+you can create a component which is capable of <em>cloning</em>
+itself, like the Editor does with the popup action "Clone View". If
+
+<a href="@JDK@/java/lang/Object.html#clone--"><code>Object.clone()</code></a>
+
+takes care of all of your instance state satisfactorily, then you
+need do little more; otherwise, you can override
+
+<a href="../CloneableTopComponent.html#createClonedObject--"><code>CloneableTopComponent.createClonedObject()</code></a>
+
+to specify exactly what fields should be shared with the original
+top component. Typically all clones of a component should share any
+underlying data object (e.g. edited files), but they may each have
+different display parameters or other noncritical settings.
+
+<p>You may specify how these cloned windows act when they are
+closed, by overriding
+
+<a href="../CloneableTopComponent.html#closeLast--"><code>CloneableTopComponent.closeLast()</code></a>.
+
+(There are more general methods for all top components pertaining
+to closing them; this method is specific to cloneable top
+components.) It will be called when the last clone of a component
+is about to be closed. Components keeping some sort of user data,
+such as the Editor, should offer to save it here, and also shut
+down the editing system for that file. If you do not wish to close
+the last clone (for example, <b>Cancel</b> was pressed on a save dialog),
+just return <code>false</code>.
+
+<p>Other methods allow you to keep track of when new clones are
+created, and to find the sister clones of a top component, if that
+is needed. As an example, you could provide a component action
+which would cause all visible clones to display a different part of
+the content of the data simultaneously, so the user could use the
+screen more effectively.
+
+<h3><a name="create-misc">Handling focus, and the node selection</a></h3>
+
+There are several more ways in which top components can interact
+with the desktop smoothly.
+
+<h4>Focus/activation</h4>
+
+Focus works naturally with top components: the focussed multitabbed
+window has the activated component on its selected tab.
+
+<p>You can explicitly request that a top component be activated by calling
+
+<a href="../TopComponent.html#requestActive--"><code>TopComponent.requestActive()</code></a>.
+
+(It should be opened first.)
+
+<a href="../TopComponent.html#getRegistry--"><code>TopComponent.getRegistry()</code></a>
+
+and then
+
+<a href="../TopComponent.Registry.html#getActivated--"><code>TopComponent.Registry.getActivated()</code></a>
+
+correspondingly finds the last-activated component.
+
+<h4>The node selection</h4>
+
+Finally, each top component may have associated with it a <em>node
+selection</em>, which is simply a list of
+
+<a href="@org-openide-nodes@/org/openide/nodes/Node.html"><code>Node</code></a>s
+
+that it decides to treat as "active". The node selection will have
+effects on other parts of the system - for example,
+
+<a href="@org-openide-nodes@/org/openide/util/actions/NodeAction.html"><code>NodeAction</code></a>s
+
+and
+
+<a href="@org-openide-nodes@/org/openide/util/actions/CookieAction.html"><code>CookieAction</code></a>s
+
+pay attention to it.
+
+<p>The selection may be set using
+
+<a href="../TopComponent.html#setActivatedNodes-org.openide.nodes.Node:A-"><code>TopComponent.setActivatedNodes(...)</code></a>.
+
+<p>Explorer views embedded in as described at
+
+<a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html"><code>ExplorerUtils</code></a>
+
+automatically make the node selection track user selections in the
+view, as you would expect. Also, any top component associated with
+a data object will automatically select that object's node
+delegate, which is usually the intuitive behavior as well.
+
+<h3><a name="create-ser">Special support for serialization</a></h3>
+
+If you are writing a top component with a complex configuration or
+other instance state not associated with a data object, you may
+want to specially support its serialization, so that the same
+configuration will be restored after NetBeans
+restart. This is not difficult to do; you just need to hook into
+the externalization methods of <code>TopComponent</code>:
+
+<pre>
+<font class="keyword">public</font> <font class="keyword">class</font> <font class="type">FlippableView</font> <font class="keyword">extends</font> <font class="type">TopComponent</font> {
+    <font class="keyword">public</font> <font class="keyword">static</font> <font class="type">int</font> <font class="variable-name">HORIZ_ORIENT</font> = 1;
+    <font class="keyword">public</font> <font class="keyword">static</font> <font class="type">int</font> <font class="variable-name">VERT_ORIENT</font> = 2;
+    <font class="keyword">private</font> <font class="type">int</font> <font class="variable-name">orient</font> = HORIZ_ORIENT;
+    <font class="keyword">public</font> <font class="type">int</font> <font class="function-name">getOrientation</font>() { <font class="comment">/* ... */</font> }
+    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">setOrientation</font>(<font class="type">int</font> <font class="variable-name">ornt</font>) { <font class="comment">/* ... */</font> }
+    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">writeExternal</font>(<font class="type">ObjectOutput</font> <font class="variable-name">oo</font>) <font class="keyword">throws</font> <font class="type">IOException</font> {
+        <font class="keyword">super</font>.writeExternal(oo);
+        oo.writeInt(getOrientation());
+    }
+    <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">readExternal</font>(<font class="type">ObjectInput</font> <font class="variable-name">oi</font>) <font class="keyword">throws</font> <font class="type">IOException</font>, <font class="type">ClassNotFoundException</font> {
+        <font class="keyword">super</font>.readExternal(oi);
+        setOrientation(oi.readInt());
+    }
+}
+</pre>
+
+It is desirable to store as much of your component's
+configuration as possible (if you can do so safely, i.e. without
+triggering an exception typically during
+<code>readExternal</code>). For example, Editor windows will store
+the open file and cursor position; Explorer windows, the current
+node selection and expanded path; etc. If part of the configuration
+you wish to store is some piece of serializable data that you are
+not completely confident can be deserialized without error, please
+instead store a
+
+<a href="@org-openide-util@/org/openide/util/io/NbMarshalledObject.html"><code>NbMarshalledObject</code></a>
+
+wrapping the data, which will protect the object streams from being
+corrupted just because of one component. For example:
+
+<pre>
+<font class="comment">// Possible that you may break serialization of this class accidentally:
+</font><font class="keyword">private</font> <font class="type">MySerObject</font> <font class="variable-name">state</font>;
+<font class="comment">// ...
+</font><font class="keyword">public</font> <font class="type">void</font> <font class="function-name">writeExternal</font>(<font class="type">ObjectOutput</font> <font class="variable-name">oo</font>) <font class="keyword">throws</font> <font class="type">IOException</font> {
+    <font class="keyword">super</font>.writeExternal(oo);
+    <font class="type">Object</font> <font class="variable-name">toWrite</font>;
+    <font class="keyword">try</font> {
+        toWrite = <font class="keyword">new</font> <font class="type">NbMarshalledObject</font>(state);
+    } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
+        ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
+        toWrite = <font class="constant">null</font>;
+    }
+    oo.writeObject(toWrite);
+}
+<font class="keyword">public</font> <font class="type">void</font> <font class="function-name">readExternal</font>(<font class="type">ObjectInput</font> <font class="variable-name">oi</font>) <font class="keyword">throws</font> <font class="type">IOException</font>, <font class="type">ClassNotFoundException</font> {
+    <font class="keyword">super</font>.readExternal(oi);
+    <font class="type">NbMarshalledObject</font> <font class="variable-name">read</font> =(<font class="type">NbMarshalledObject</font>)oi.readObject();
+    <font class="keyword">if</font> (read != <font class="constant">null</font>) {
+        <font class="keyword">try</font> {
+            state = (<font class="type">MySerObject</font>)read.get();
+        } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
+            ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
+        }
+    }
+}
+</pre>
+
+This example assumes that your component can survive a restart
+even without setting this piece of its state correctly (it can just
+use some default settings). If the component cannot be validly
+recreated without this information, still use an
+<code>NbMarshalledObject</code>, but <em>do not</em> throw the
+original exception from it to the <code>writeExternal</code> or
+<code>readExternal</code> callers - this will make the whole window
+system stream be treated as corrupt and discarded! Instead, use:
+
+<pre>
+<font class="keyword">try</font> {
+    <font class="comment">// new NbMarshalledObject(obj) or nbmo.get()
+</font>} <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">e</font>) {
+    <font class="keyword">throw</font> <font class="keyword">new</font> <font class="type">SafeException</font>(e);
+}
+</pre>
+
+This will cause your top component to not be stored or loaded,
+but other components in the system will be unaffected.
+
+<p>The default implementation of the read and write methods must
+always be called. It stores the name and some internal information
+pertaining to the Window System. You must save the icon yourself,
+though most users will set the icon in the constructor. Remember
+that a <code>TopComponent</code> must have a <strong>default
+constructor</strong> in order to be deserialized. In older versions of
+NetBeans this needed to be public; this is no longer necessary.
+
+<p>Persistent singleton implementations (i.e. where only one instance of the class
+should exist in NetBeans) are possible; just remember to assign the default
+instance both in the default constructor, and also in the <code>readResolve</code>
+method. To force deserialization of singleton instance by window system method
+<code>WindowManager.findTopComponent(String)</code> must be used. Pass unique TopComponent
+ID (name of settings file) as parameter to this method. To be able to create
+singleton instance 2 public static accessor methods must be provided: First eg. 
+<code>getDefault</code> reserved for window system will be given as creation method 
+in settings file and also called from <code>readResolve</code>. <code>getDefault</code>
+creates singleton instance using constructor as usual in common singleton accessor.
+Second eg. <code>findDefault</code> will be used as normal accessor method to get correctly
+deserialized singleton instance by window system. It can be used to access singleton
+instance for example by view action. <code>findDefault</code> will call 
+<code>WindowManager.findTopComponent</code>. As <code>WindowManager.findTopComponent</code>
+can return <code>null</code> <code>findDefault</code> should handle such case somehow
+eg. by calling of <code>getDefault</code>.
+There is a
+<a href="http://www.netbeans.org/source/browse/platform/samples/window-system-basic/">simple example module</a>
+where persistent singleton instance is defined in module layer as described here.
+
+<p>It is possible to use <code>writeReplace</code> and <code>readResolve</code> as well
+for some advanced uses - but be very careful to resolve to a subclass of <code>TopComponent</code>,
+and to always invoke the default implementations of <code>readExternal</code> and
+<code>writeExternal</code>.</p>
+
+<div class="nonnormative">
+
+<h4>TopComponent persistence type</h4>
+
+<p>It is recommended to explicitely set the persistence type of a
+TopComponent subclass by overriding API method <code>TopComponent.getPersistenceType</code>.
+</p>
+
+<p>This method can return one of following constants:</p>
+
+<dl>
+
+<dt><code>TopComponent.PERSISTENCE_NEVER</code>
+
+<dd>The system will not try to serialize your component. Suitable for
+transient windows that the user would not generally wish to save
+across NetBeans restarts as well as for windows containing data which cannot
+by its nature be persisted correctly.
+
+<dt><code>TopComponent.PERSISTENCE_ONLY_OPENED</code>
+
+<dd>The system will only try to serialize your component if it was
+open at the time. Suitable for many types of windows that should be
+saved if visible, but for which there is no
+compelling reason to keep information about the window state (docked
+mode and so on) when closed.
+
+<dt><code>TopComponent.PERSISTENCE_ALWAYS</code>
+
+<dd>The system will try to serialize your component always.
+Suitable for many types of windows that should be saved even if closed.
+User can close and reopen such component anytime even after NetBeans restart.
+Such components are often singletons and have view action so user is able
+to open/reopen component.
+
+</dl>
+
+<p>By default all top components are persisted but it is recommended not to rely
+on default but to set persistence type explicitely as described above.</p>
+
+</div>
+
+<h2><a name="manip">Manipulating Existing Windows</a></h2>
+
+Most manipulation of existing windows should be kept to a minimum,
+of course, to avoid disrupting the user needlessly. Occasionally it
+makes sense to do a few things to top components externally.
+
+<h3><a name="find">Finding modes, top components and groups</a></h3>
+
+A few method calls may be used to find modes, groups and top components:
+
+<ul>
+
+<li><code>WindowManager</code> instance is obtained by
+
+<a href="../WindowManager.html#getDefault--"><code>WindowManager.getDefault()</code></a>.
+
+<li>The modes in a window systeme may be gotten
+with
+
+<a href="../WindowManager.html#getModes--"><code>WindowManager.getModes()</code></a>
+
+or
+
+<a href="../WindowManager.html#findMode-java.lang.String-"><code>WindowManager.findMode(String)</code></a>
+
+(or also
+
+<a href="../WindowManager.html#findMode-org.openide.windows.TopComponent-"><code>WindowManager.findMode(TopComponent)</code></a>).
+
+
+<li>Each mode has some top components in it, obtainable with
+
+<a href="../Mode.html#getTopComponents--"><code>Mode.getTopComponents()</code></a>.
+
+<li>Groups can be retrieved via
+
+<a href="../WindowManager.html#findTopComponentGroup-java.lang.String-"><code>WindowManager.findTopComponentGroup(String)</code></a>
+
+<li>To get the currently selected top component, use
+
+<a href="../TopComponent.html#getRegistry--"><code>TopComponent.getRegistry()</code></a>
+
+followed by
+
+<a href="../TopComponent.Registry.html#getActivated--"><code>TopComponent.Registry.getActivated()</code></a>.
+
+You can also get all opened components with
+
+<a href="../TopComponent.Registry.html#getOpened--"><code>TopComponent.Registry.getOpened()</code></a>.
+
+</ul>
+
+<h3><a name="manip-misc">Activating and closing</a></h3>
+
+Any top component may be activated just by calling
+
+<a href="../TopComponent.html#requestActive--"><code>TopComponent.requestActive()</code></a>.
+
+<p>To close a top component programmatically, call
+
+<a href="../TopComponent.html#close--"><code>TopComponent.close()</code></a>.
+
+<h3><a name="listen">Listening to window system events</a></h3>
+
+Most interesting aspects of the Window System may be listened to
+using the Java Event model. Most commonly, this is done to listen
+to changes in the activated node selection, but other things are
+possible too.
+
+<ul>
+
+<li>All properties of the window manager (i.e. contained modes) may be listened to with
+
+<a href="../WindowManager.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>WindowManager.addPropertyChangeListener(PropertyChangeListener)</code></a>.
+
+<li>All properties of the top component registry (i.e. available
+and selected components, and the node selection) may be listened to with
+
+<a href="../TopComponent.Registry.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>TopComponent.Registry.addPropertyChangeListener(PropertyChangeListener)</code></a>.
+
+
+<!-- No longer exists...why?
+<li><code>CloneableTopComponent.addComponentRefListener(...)</code>
+
+may be used to determine when the number of clones in a clone group changes.
+-->
+
+<li>Currently, there is no support for listening to changes in
+<code>Mode</code> nor in <code>TopComponent</code>, though both
+have modifiable properties which in principle there might be a need
+to listen to.
+
+</ul>
+
+
+
+
+<h2><a name="xml">XML Persistence Format and Installation</a></h2>
+
+
+
+<div class="nonnormative">
+
+<h3><a name="xml-overview">Overview</a></h3>
+
+<P>The window system layout used by NetBeans is based on modes.</P>
+
+<P>The was needed in two areas - modules
+and initial layout. What does this mean? Modules had limited
+possibilities to control layout of their modes. Also,
+the initial layout of system modes was hardcoded in core sources,
+which was not sufficient due to the nature of this information, which is
+likely to change frequently. Modifications of initial layout
+needed to be easier. 
+</P>
+
+<h4>Justification</h4>
+
+<P>Main goals comes directly from the issues that were mentioned in
+motivation section:</P>
+
+<dl>
+    <dt>Enhance module control over modes layout</dt>
+        <dd><p>
+        Modules will have full control over layout of own modes,
+        including frame MDI constraints.</P>
+        
+    <dt>Easy initial layout modifications</dt>
+    <dd><p>
+        Initial layout modifications should be as easy as possible,
+        without changes in source code.</P>
+
+    <dt>Less hard-coding in core</dt>
+        <dd><p>
+        Core implementation currently specifies nearly all initial layout.
+        However, right way to go is to let modules specify complete layout of
+        their modes, such as inspector, palette, debugger etc.</P>
+
+    <dt>Expert users</dt>
+    <dd><p>
+        Allow expert users to read, understand, modify, backup and make
+        versions of stored window system content.</P>
+</dl>
+
+<P>From above points, it's clear that description of modes layout
+should cover all features that window system offers (point 1.) and
+should be expressed in some human readable form (point 2, 4.).
+Mentioned requirements fits well into XML layers architecture, which
+is already supported by Netbeans' Open APIs.</P>
+
+<P>Solution backbone reads like this:</P>
+<UL>
+    <LI><P>Each module will have a possibility to define modes
+        layout described in their module layer, expressed in XML document.</P>
+
+    <LI><P>Core itself will define basic layout for explorer and editor
+        modes (etc.), other modes will be specified directly by
+        responsible modules.</P>
+
+    <LI><P>Solution will use advantages of XML layers architecture, modes
+        defined by individual modules and core will be merged into whole
+        modes picture which will define overall content of window system.</P>
+
+    <LI><P>WS implementation will read and understand XML mode
+        layout format.</P>
+
+    <LI><P>WS implementation will make its content persistent using XML layers
+        support too.</P>
+</UL>
+
+<P>Example of simple window system content expressed as merge of
+modes layouts from different modules is shown on picture below:</P>
+
+<P ALIGN=CENTER><IMG SRC="layers-example.gif" alt="Modes in layering schema"></P>
+<BR>
+<p>
+Note: The same applies for groups, but those are not dealing with laout, but
+rather opening and closing of component.
+</P>
+
+Above picture shows simple situation when modules (in this case form and debugger)
+define just their modes and nothing more. In reality, modules will want to
+influence other modes, especially modes created by core implementation.<br>
+To support such features, modes layout description format has to be well
+organized and granularized, as described in next paragraph.
+
+</div>
+
+
+
+<h3><a name="xml-layout">Physical Layout and File Formats</a></h3>
+
+<P>In first part of this chapter, overall structure of layout configuration is
+ discussed. XML layers architecture uses directory-like structure for storing
+information. Directory structure itself is expressed in XML syntax, creating
+picture of 'virtual filesystem' stored in XML file.<BR>
+Further, exact format of folders and files which hold layout information is
+specified, together with examples. 
+</P>
+
+<H4>Storage of Configurations</H4>
+
+<P>Physical storage of layout configuration documents is determined by layers
+support. Until modified, layout configuration files lives in modules that defined
+ them. More exactly, they are read from files which are stored in module jar archives,
+together with other module classes.</p>
+
+<p>However, modes layout configuration is likely to change frequently during
+runtime of the system, so then modifications will be stored under (for example) the <code>config</code>
+subdirectory of current userdir, as shows example directory tree below.
+Described mechanism is fully driven by XML layers support provided by
+Filesystems API and we needn't care about it more from the perspective of 
+window system. (The precise details of where customizations are stored
+is dependent on the implementation; suffice it to say that the default file
+system of the repository is responsible for holding the files and applying
+any changes made.)
+</P>
+
+<H4>Directory structure</H4>
+
+<P>To effectively use XML layers, it's necessary to define directory structure
+for modes layout description. Following directory structure is fixed and
+in fact it represents part of API modules can deal with. It means that this
+structure will not change in incompatible manner and modules can rely on it.
+Again, the specification is of resource paths in the system filesystem rather
+than details of how this filesystem is composed and modified.
+</P>
+
+<div class="nonnormative">
+
+<P>Window system is not part of individual projects as it was in previous releases.
+Window system configuration is defined by modules in folder <code>Windows2</code> and is stored
+locally under <code>$NBUSERDIR/config/Windows2Local</code>. It means that default initial configuration
+defined by modules and customized configuration are separated to different folders.
+</P>
+
+<PRE>
+   See <a href="http://core.netbeans.org/windowsystem/changes.html#3.4.2">Structure of configuration data</a>.
+</PRE>
+
+</div>
+
+<h5>Modes</h5>
+
+<p>There exist direct mapping between instances of classes which are defined in
+traditional winsys API and folders and files shown above. Folders and files 
+named "Mode_X" under <samp>Modes/</samp> define modes (= component containers) belonging to
+window system, and map to instances of org.openide.windows.Mode
+(by which it is meant that the corresponding data objects have an appropriate instance cookie).
+</p>
+
+<p>Naming of folders and files is important, because folder and file names are
+used as unique identifiers for modes and groups. Basically it means that
+winsys API methods Mode.getName() will return the same  names as used for folders and files.</P>
+
+<h5>Folder - data file pairs</h5>
+
+<p>Folders for window manager, for each mode have to be
+stored together with their properties, for example display name or icon URL.
+This is done using "folder - file pair", as evident from example directory tree
+above. Folders cannot hold their properties directly, that's why each folder
+is accompanied by file on the same directory level, which has the same name as
+folder and stores property information for its folder.<br>
+Note, window system will recognize only folder - file pairs with exactly same
+ names.
+</P>
+
+<h5>Top Components</h5>
+
+<p>
+Components introduce a bit of complexity to the directory structure, because
+one top component can be a mode(=component containers) and also can by in some group.
+To handle that sharing correctly, modes and groups contains only references to components,
+Component's data are stored in separate folder named <samp>Windows2/Components/</samp>.
+Example of top component reference is file TC_1.wstcref or TC_1.wstcgrp shown above in
+directory tree. Top component data needs to be referenced through some unique
+identifiers, treated as unique IDs.
+</p>
+
+<div class="nonnormative">
+
+<h5>Structure Depth</h5>
+
+<p>Directory structure of winsys configuration is fine-grained in the sense that each
+mode and group is represented by a folder, while each presence
+of top component is represented by special file. Such design will enhance module
+possibilities of configuring modes ang groups defined by other modules or by core
+implementation.</p>
+
+<p><em>Detailed explanation:</em>
+
+Imagine that debugger module wants to specify size, location,
+constraints of debugger window not only on its own debugger mode, but also
+on output mode. So debugger module specifies folder 'debugger', with
+proper 'debugger.wsmode' file content, under folder 'output'. Note that
+debugger module must not define 'execution.wsmode', because debugger module is not
+defining output mode, debugger is only completing output mode if present.
+As a result of layers merge done by system, 'debugger.wstcref' will appear as
+file under 'output'.</p>
+
+<p>If there were no folders for frames, this operation would not be possible,
+because layering is done on folder and file level, not on file contents level.</P>
+
+Modules now can:
+
+<dl> 
+    <dt>Create their own modes</dt>
+    <dd><p>
+        Module builds its own modes and layout from the scratch by creating
+        new folder and data file for mode.
+        Module can put own components on such mode. Other modules
+        can 'complete' such mode by their own components.</P>
+
+    <dt>Create their own groups</dt>
+    <dd><p>
+        Module builds its own groups and layout from the scratch by creating
+        new folder and data file for group.
+        Module can put own components on such group. Other modules
+        can 'complete' such group by their own components.</P>
+
+
+    <dt>Add components to foreign modes</dt>
+    <dd><p>
+        Module can install a component into mode that was defined by other
+        module or core implementation.
+        To achieve this, module is required to create folder named by foreign
+        mode, together with file '.wstcref' referencing its component.<br>
+        Note that module which is using other module's mode may not
+        define '.wsmode' data file for such 'foreign' mode, because module
+        which define folder and '.wsmode' file for mode then owns that mode
+        and there cannot be multiple modules owning the same mode.</P>
+    <dt>Add components to foreign groups</dt>
+    <dd><p>
+        Module can install a component into group that was defined by other
+        module or core implementation.
+        To achieve this, module is required to create folder named by foreign
+        group, together with file '.wstcgrp' referencing its component.<br>
+        Note that module which is using other module's group may not
+        define '.wsgrp' data file for such 'foreign' group, because module
+        which define folder and '.wsgrp' file for group then owns that group
+        and there cannot be multiple modules owning the same group.</P>
+
+    <dt>Override winsys elements defined by other modules</dt>
+    <dd><p>
+        As layers can overlap and hide information between each other,
+        modules can also modify and/or hide winsys layout elements defined 
+        in other modules. However, module must depend on other module whose 
+        winsys layout it overrides, as is generally required when overriding
+        layer-provided files.
+        </p>
+
+</dl>
+
+</div>
+
+<H4>Global properties</H4>
+Window system as a whole stores several properties which have global nature.
+They are always defined by a folder <samp>Windows/WindowManager/</samp> and data file
+<samp>Windows/WindowManager.wswmgr</samp>. Core implementation defines default values
+of global properties for win sys. Format of data file is simple:
+
+<pre>
+&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
+&lt;!<font class="keyword">DOCTYPE</font> <font class="type">windowmanager</font> <font class="keyword">PUBLIC</font>
+          <font class="string">"-//NetBeans//DTD Window Manager Properties 2.0//EN"</font>
+          <font class="string">"<a href="http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd">http://www.netbeans.org/dtds/windowmanager-properties2_0.dtd</a>"</font>&gt;
+&lt;<font class="function-name">windowmanager</font> <font class="variable-name">version</font>=<font class="string">"2.0"</font>&gt;
+    <font class="comment">&lt;!-- size and location of the main window --&gt;</font>
+    &lt;<font class="function-name">main-window</font>&gt;
+         &lt;<font class="function-name">joined-properties</font> <font
+class="variable-name">centered-vertically</font>=<font class="string">"true"</font> <font
+class="variable-name">centered-horizontally</font>=<font class="string">"true"</font>
+                            <font class="variable-name">relative-width</font>=<font class="string">"0.8"</font> <font
+class="variable-name">relative-height</font>=<font class="string">"0.8"</font>/&gt;
+    &lt;/<font class="function-name">main-window</font>&gt;
+    <font class="comment">&lt;!-- size of the screen last displayed on --&gt;</font>
+    &lt;<font class="function-name">screen</font> <font class="variable-name">width</font>=<font class="string">"1024"</font> <font class="variable-name">height</font>=<font class="string">"768"</font>/&gt;
+    <font class="comment">&lt;!-- reference to active mode --&gt;</font>
+    &lt;<font class="function-name">active-mode</font> <font class="variable-name">name</font>=<font class="string">"explorer"</font>/&gt;
+    <font class="comment">&lt;!-- reference to maximized mode --&gt;</font>
+    &lt;<font class="function-name">maximized-mode</font> <font class="variable-name">name</font>=<font class="string">"explorer"</font>/&gt;
+    <font class="comment">&lt;!-- reference to toolbar configuration --&gt;</font>
+    &lt;<font class="function-name">toolbar</font> <font class="variable-name">configuration</font>=<font class="string">"Standard"</font>/&gt;
+&lt;/<font class="function-name">windowmanager</font>&gt;
+</pre>
+
+Modules will typically never need to access these global properties, and 
+modules should never try to change them.  
+
+
+<H4>Modes</H4>
+
+<p class="nonnormative">Modules can either define own mode
+from scratch or reference mode defined by other modules.</p>
+
+<H5>Mode definition</H5>
+
+<p>Module defines mode by creating proper mode folder
+<samp>Windows2/Modes/<em>MODE_UID</em>/</samp> and data file
+<samp>Windows2/Modes/<em>MODE_UID</em>.wsmode</samp>.</P>
+
+<p>Here is example of valid mode data file:</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd"&gt;
+
+&lt;mode version="2.0"&gt;
+    &lt;module name="org.netbeans.core.ui/1" spec="1.2" /&gt;
+    &lt;name unique="explorer" /&gt;
+    &lt;kind type="view" /&gt;
+    &lt;state type="joined" /&gt;
+    &lt;constraints&gt;
+        &lt;path orientation="vertical" number="0" weight="0.7" /&gt;
+        &lt;path orientation="horizontal" number="0" weight="0.25" /&gt;
+    &lt;/constraints&gt;
+    &lt;active-tc id="filesystems" /&gt;
+    &lt;empty-behavior permanent="true" /&gt;
+&lt;/mode&gt;
+</pre>
+
+<div class="nonnormative">
+
+<H5>Mode referencing</H5>
+
+<p>Module references mode defined by other module in order to place own components
+into such mode to complete its layout. Module specifies
+only mode folder <samp>Windows2/Modes/<em>MODE_UID</em>/</samp> filled
+with own top component reference files. The mode data file should not be given.</p>
+
+</div>
+
+<H4>Groups</H4>
+
+<p class="nonnormative">Modules can either define own group
+from scratch or reference grouo defined by other modules.</p>
+
+<H5>Group definition</H5>
+
+<p>Module defines group by creating proper group folder
+<samp>Windows2/Groups/<em>GROUP_UID</em>/</samp> and data file
+<samp>Windows2/Groups/<em>GROUP_UID</em>.wsgrp</samp>.</P>
+
+<p>Here is example of valid group data file:</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+&lt;!DOCTYPE group PUBLIC
+          "-//NetBeans//DTD Group Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/group-properties2_0.dtd"&gt;
+
+&lt;group version="2.0"&gt;
+    &lt;module name="org.netbeans.modules.form/2" spec="1.7" /&gt;
+    &lt;name unique="form" /&gt;
+    &lt;state opened="false" /&gt;
+&lt;/group&gt;
+</pre>
+
+<div class="nonnormative">
+
+<H5>Group referencing</H5>
+
+<p>Module references group defined by other module in order to place own components
+into such group to complete its layout. Module specifies
+only group folder <samp>Windows2/Groups/<em>GROUP_UID</em>/</samp> filled
+with own top component reference files. The group data file should not be given.</p>
+
+</div>
+
+
+<H4>Top component references in modes</H4>
+
+<p>For top component to appear in mode, reference file needs to be put into
+mode folder, for example file <samp>Windows2/Modes/<em>MODE_UID</em>/<em>COMP_UID</em>.wstcref</samp>.
+Keep in mind that component reference file is only a part of the story,
+to specify complete link to top component through <samp><em>COMP_UID</em></samp>, you
+have to provide file <samp><em>COMP_UID</em>.settings</samp> or <samp><em>COMP_UID</em>.ser</samp> and place it into
+<samp>Windows2/Components/</samp> folder.</p>
+
+<p>Example top component reference file content:</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+
+&lt;!DOCTYPE tc-ref PUBLIC
+          "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/tc-ref2_0.dtd"&gt;
+
+&lt;tc-ref version="2.0"&gt;
+    &lt;module name="org.netbeans.core.ui/1" spec="1.2" /&gt;
+    &lt;tc-id id="filesystems" /&gt;
+    &lt;state opened="true" /&gt;
+&lt;/tc-ref&gt;
+</pre>
+
+<H4>Top component references in groups</H4>
+
+<p>For top component to appear in group, reference file needs to be put into
+group folder, for example file
+<samp>Windows2/Groups/<em>GROUP_UID</em>/<em>COMP_UID</em>.wstcgrp</samp>.
+Keep in mind that component reference file is only a part of the story,
+to specify complete link to top component through <samp><em>COMP_UID</em></samp>, you
+have to provide file <samp><em>COMP_UID</em>.settings</samp> or <samp><em>COMP_UID</em>.ser</samp> and place it into
+<samp>Windows2/Components/</samp> folder.</p>
+
+<p>Example top component reference in group file content:</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+
+&lt;!DOCTYPE tc-group PUBLIC
+          "-//NetBeans//DTD Top Component in Group Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/tc-group2_0.dtd"&gt;
+
+&lt;tc-group version="2.0"&gt;
+    &lt;module name="org.netbeans.modules.form/2" spec="1.7" /&gt;
+    &lt;tc-id id="ComponentInspector" /&gt;
+    &lt;open-close-behavior open="true" close="true" /&gt;
+&lt;/tc-group&gt;
+</pre>
+
+
+<H4>Top component data</H4>
+
+<p>Stored in folder <samp>Windows2/Components/</samp> as <samp>*.settings</samp> or <samp>*.ser</samp> files, which holds
+data of top component. Top components are instantiated using information stored
+in these files. If top component is created dynamically in the code, system
+will automatically create a new file containing proper information during save
+operation.</p>
+
+<p>Names of files in <samp>Windows2/Components/</samp> (without extensions) are used to link
+top components and their references in modes and groups.</p>
+
+<p class="nonnormative">
+In the future other or even arbitrary file extensions and types may be supported
+for storing top component information, provided that the result of
+<code>DataObject.getName()</code> matches the ID. Also currently all
+settings for newly created components will be stored in <samp>*.settings</samp> files.
+</p>
+
+<!-- XXX currently false? or now true again?
+<p>Note that top component data filed needn't be restricted only to .settings and
+.ser files, also .instance files are supported.</p>
+-->
+
+<div class="nonnormative">
+
+<P>
+Top component can be divided from instantiation perspective to following
+types:</p>
+
+<OL>
+    <LI>"Singleton", static top components<BR>
+        These components are created only once, typically there exist only
+        one instance of component per class. Examples of such components
+        are Filesystems, Runtime, Execution. 
+    </LI>
+    <LI>Dynamic top components<BR>
+        Some components have dynamic character, which means that new
+        instances of such components are needed during the NetBeans runtime.
+        Another typical characteristic is cloneability. All editors like
+        java source, html, xml or form editors fall into this category.
+    </LI>
+</OL>
+
+<p>
+For static components, specifying their data file and link it with component
+reference in mode is well enough to describe all life of such component.
+However, for dynamic top components, situation is more complicated.
+</p>
+
+</div>
+
+<h4>Defined locations</h4>
+
+<p>The window system API does not define any particular mode names; it only defines the structure given names.
+So the only files whose names are defined here are:</p>
+
+<ol>
+
+<li><samp>Windows2/WindowManager.wsmgr/</samp>
+
+<li><samp>Windows2/Components</samp>
+
+</ol>
+
+<!-- XXX unimplemented:
+Modules can define top component data and top component reference as template. Then,
+when a need for new instance of dynamic top component occur, action like new
+from template is performed, resulting in creation of new instance with properties
+and data inherited from template info.
+-->
+
+<H4>Automatic deinstallation support</H4>
+
+<p>Modules that define modes, groups or component references can
+"mark" these items so that the system can perform automatic removal of
+these items when the module is uninstalled.</p>
+
+<p>All three types of window system XML files may have module
+information defined in the same way, using the optional
+<code>&lt;module/&gt;</code> element, which has two attributes
+<code>name</code> and <code>spec</code>.</p>
+
+<p>Normally a module will define just the <code>name</code> attribute,
+with its code name base (for example, <samp>org.domain.module</samp>).
+The windowing elements will be removed if the module thus named is
+uninstalled (or removed). <code>name</code> may also be a full code
+name (for example, <samp>org.domain.module/1</samp>) and
+<code>spec</code> may be given with the specification version (for
+example, <samp>1.0</samp>) in which case the windowing element will
+also be removed if the module is present and enabled, but in an older
+version than was specified - though this feature is unlikely to be
+used commonly.</p>
+
+<p>The window system may at its discretion just ignore XML files
+corresponding to missing modules; or it may actually delete them. In
+either case, removal of windowing components applies also to
+subcomponents: so for example a missing mode (or group) implies that any
+contained modes (or group) are not available either, even if they otherwise would
+have been.</p>
+
+
+
+<!--<h3><a name="xml-visual">Visual Display</a></h3>
+
+<H4>Defining layout for multiple interfaces of the system</H4>
+
+<p>System currently supports both Single Document Interface (SDI) and Multiple Document
+Interface (MDI). It's possible to define special property set for each interface
+using XML data files for window system elements.</p>
+
+<p>Mode, group and top component reference data files all have required XML element
+named <code>ui-type</code> with attribute <code>type</code>, whose possible values are:</p>
+
+<DL>
+    <dt><code>sdi</code></dt><dd>
+        All properties specified inside "sdi" ui-type element will be applicable
+        only in SDI mode and ignored for other interface modes.
+    </dd>
+    <dt><code>mdi</code></dt><dd>
+        All properties specified inside "mdi" ui-type element will be applicable
+        only in MDI mode and ignored for other interface modes.
+    </dd>
+    <dt><code>any</code></dt><dd>
+        Marks properties as kind of default, applicable to any interface mode,
+        including any modes which may be added in the future.
+    </dd>
+</DL>
+
+System uses trivial algorithm for finding right property set:
+
+<ol>
+    <LI>
+        Try to find special property set for the interface mode system is
+        currently in. If search fails, continue, otherwise finish.
+    </LI>
+    <LI>
+        Search for "any" property set. If found, use it, otherwise ignore
+        given window system item.
+    </LI>
+</ol>
+
+<p class="nonnormative">Note that it's perfectly legal to define window system element to be active
+only for one type of interface mode. In fact, this technique is used in core's
+default layout for the mode of property sheet - property sheet has
+its own mode only in SDI, in MDI it is part of explorer mode.
+</P>
+
+<H4>Playing with bounds of modes</H4>
+
+<p>Bounds of modes or mode areas can be specified either in absolute or relative form, and
+coordination space is different for SDI and MDI modes. Absolute bounds are
+specified in pixels, relative bounds are specified in percentage of area
+to which bounds are relative to.</p>
+
+<p class="nonnormative">Most convenient way for modules is to specify bounds in relative form, so that
+right layout is assured for various screen resolutions.</p>
+
+<dl>
+    <dt>Bounds in SDI</dt><dd>
+        <p>
+        Coordination space for modes in SDI is whole screen, so absolute
+        bounds of modes are specified relative to the screen.
+        </p>
+        <p>
+        Relative bounds are relative to "working space of the window system",
+        which is defined as rectangular area which starts right <b>below</b>
+        main window, down to bottom of the screen, width equal to screen width.
+        If main window in SDI mode is placed to bottom part of the screen,
+        then working space changes to occupy upper part of the screen above
+        main window.
+        </p>
+    </dd>
+    <dt>Bounds in MDI</dt><dd>
+        <p>
+        Coordination space is inner part of main window, except toolbar area.
+        </p>
+        <p>
+        "working space of the window system" is in MDI the same as coordination space,
+        although there are some anomalies:
+        </p>
+        <ul>
+        <li><p>x,y coordinates are ignored for modes attached to some side of main window</p></li>
+        <li><p>x,y coordinates of modes floating in inner desktop pane are relative to
+        left top corner of that inner desktop, not to whole coordinate space</p></li>
+        </ul>
+    </dd>
+    <dt>Bounds of mode areas</dt><dd>
+        <p>
+        Bounds of mode areas are always relative to the mode itself, areas cannot
+        exceed borders of their parent mode. Again it's wise to use bounds specified
+        using percentage values.
+        </p>
+    </dd>
+</dl>
+
+<p>Precise interpretation of these boundaries is left up to the window
+system implementation in case of significant future GUI changes,
+however the basic layout mechanism given here should continue to be
+honored.</p>
+-->
+<!-- TODO the above -->
+
+
+<!-- XXX What's this for a strange thing? Is this supposed to be supported?? -->
+<!--<h3><a name="xml-programmatic">Programmatic Manipulation</a></h3>
+
+<div class="nonnormative">
+
+<P>
+From the first look at XML modes layout, module developer can think that
+it may be useful only for initial layout, but not during runtime.</p>
+<p>That's not completely true, because modes layout changes are saved into
+system filesystem of NetBeans, under <B>system/</B> subdirectory.</p>
+
+</div>
+
+<p>Modules can work with system filesystem at runtime using the
+<a href="@org-openide-filesystems@/org/openide/filesystems/doc-files/api.html">Filesystems API</A>.
+Moreover, the window system defines special data objects for modes, modes,
+and top component references, so that modes layout modifications can be done using
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html">Datasystems API</a> on a higher level.
+Top component data is stored according to general settings mechanisms which also
+permits both modes of access.
+</P>
+
+<div class="nonnormative">
+
+<P>
+Overall mechanism will behave like in desktops and menus in many current OS
+implementations. Desktop and menus content information is stored in files on
+persistent storage and there are basically two ways how to change the information.
+Either modify it from the GUI as the user (move icons on desktop etc.) or
+modify files on disk, which can be done by user or by application. Our approach
+here is quite similar, module writers can consider Datasystems API on system
+filesystem together with xml property files modification as specialized API
+for runtime access and modifications of modes layout.
+</P>
+
+</div>
+
+<h4>Reading into the Java-level API</h4>
+
+<p>A module is not permitted to read the entire window system
+configuration as this is a singleton.</p>
+
+<p>Reading of top component data is handled by mechanisms specific to
+the Services API. For example, <samp>*.settings</samp> files will have
+an <code>InstanceCookie</code> which will produce the correct
+<code>TopComponent</code>.</p>
+
+<p>Reading of workspace and mode data may be accomplished using
+<code>InstanceCookie</code>. Using the naming rules given previously,
+you might for example retrieve a mode as follows:</p>
+
+<pre>
+<font class="type">FileSystem</font> <font class="variable-name">sfs</font> = Repository.getDefault().getDefaultFileSystem();
+<font class="comment">// Assume these two were known somehow:
+</font><font class="type">String</font> <font class="variable-name">wsName</font> = <font class="string">"Editing"</font>;
+<font class="type">String</font> <font class="variable-name">modeName</font> = <font class="string">"editor"</font>;
+<font class="type">FileObject</font> <font class="variable-name">modeFolder</font> = sfs.findResource(<font class="string">"Windows/WindowManager/"</font> + wsName + <font class="string">"/"</font> + modeName);
+<font class="comment">// deal with null result...
+// this would also work with the .wsmode file, but the folder is the primary file so:
+</font><font class="type">DataObject</font> <font class="variable-name">modeObj</font> = DataObject.find(modeFolder);
+<font class="type">InstanceCookie</font> <font class="variable-name">instance</font> = (<font class="type">InstanceCookie</font>)modeObj.getCookie(InstanceCookie.<font class="keyword">class</font>);
+<font class="comment">// instance could be null if .wsmode was missing...
+</font><font class="type">Mode</font> <font class="variable-name">m</font> = (<font class="type">Mode</font>)instance.instanceCreate();
+<font class="comment">// now use it as desired...
+</font></pre>
+
+<H4>Writing from the Java-level API</H4>
+
+<p>As for reading, you may not write the entire window to disk from
+module code; and handling of top component data is determined by the
+semantics of the data object providing that instance: for example,
+<samp>*.settings</samp> files may write new state at some point after
+receiving a property change event on the component.</p>
+
+<p>For forcing saves of workspaces and modes, you may look for
+<code>SaveCookie</code>:</p>
+
+<pre>
+<font class="type">DataObject</font> <font class="variable-name">modeObj</font> = <font class="comment">/* as above */</font>;
+<font class="type">SaveCookie</font> <font class="variable-name">save</font> = (<font class="type">SaveCookie</font>)modeObj.getCookie(SaveCookie.<font class="keyword">class</font>);
+<font class="keyword">if</font> (save != <font class="constant">null</font>) {
+    save.save();
+} <font class="keyword">else</font> {
+    <font class="comment">// was already up-to-date on disk
+</font>}
+</pre>
+
+<p>You could also use calls such as <code>DataObject.delete()</code>
+to remove a mode or workspace, and so on.</p>
+
+<h4>Reading and writing at the XML level</h4>
+
+<p>You may alternately read or write the file objects constituting
+workspaces, modes, and top component references using the DTDs and
+file structures given above. Modification of top components at this
+level again is up to the semantics of the data object storing the top
+component.</p>
+
+<p>Note that only file- and data object-level access is provided for
+top component references. Whether these have an instance cookie, and
+if so what it is an instance of, is undefined.</p>
+
+<H4>Synchronization issues</h4>
+
+<p>Currently there is no defined synchronization mechanism
+guaranteeing when changes made at the Filesystems level will be
+synchronized with those made at the Java API level. That is, changes
+in either direction will probably be made asynchronously according to
+the discretion of the window system implementation, so no module
+should rely on the exact timing. In fact the window system may decide
+to defer writing structural changes back to files until it is
+necessary (for example at project switch time or during NetBeans shutdown).</p>
+
+<p>To improve safety, changes made at the file level ought to be run
+in a filesystem atomic action. An additional guard is to look for and
+use any existing <code>SaveCookie</code> immediately before reading or
+writing files, to force the system to synchronize pending changes.
+This leaves open possible race conditions.</p>
+
+<p class="nonnormative">Since there are not guarantees made about
+synchronization, reading and writing window system data procedurally
+should be done with heavy error-checking and may be considered an
+expert task. Normal modules should only declare initial setup using
+layers, and perform changes such as docking new top components in
+modes using the Java-level API.</p>
+
+<div class="nonnormative">
+-->
+
+<h3><a name="xml-scenarios">Common Scenarios</a></h3>
+
+<p>Following chapter summarizes procedures that module can do in order to use
+features of XML mode layout. Each procedure is detailed into steps which
+module writers are required or supposed to do.
+
+<H4>Creating new mode</H4>
+Following section shows creation of new mode defined by module.
+
+<OL>
+    <LI><P><B>Specify module layer</B><BR>
+        To use module layer properly, specify reference to module layer in 
+        module's manifest file using <B>OpenIDE-Module-Layer</B> entry, with 
+        relative patch to the xml file describing module's xml layer.
+        In other words, add to the manifest line like this:</p>
+        <PRE>OpenIDE-Module-Layer: org/your_company/your_module/resources/YourModuleLayer.xml</PRE>
+    </LI>
+
+    <LI><P><B>Describe mode</B><BR>
+        Example of adding new mode, with id "my_own_mode", without any
+        components contained in mode yet:
+
+<pre>
+&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
+&lt;!<font class="keyword">DOCTYPE</font> <font class="type">filesystem</font> <font class="keyword">PUBLIC</font>
+          <font class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</font>
+          <font class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</font>&gt;
+&lt;<font class="function-name">filesystem</font>&gt;
+    &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"Windows2"</font>&gt;
+        &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"Modes"</font>&gt;
+            <font class="comment">&lt;!-- configuration file is stored separately --&gt;</font>
+            &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font
+class="string">"my_own_mode.wsmode"</font> <font class="variable-name">url</font>=<font
+class="string">"my_own_mode.wsmode"</font>/&gt;
+            &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"my_own_mode"</font>/&gt;
+        &lt;/<font class="function-name">folder</font>&gt;
+    &lt;/<font class="function-name">folder</font>&gt;
+&lt;/<font class="function-name">filesystem</font>&gt;
+</pre>
+
+        <p>What example shows? Creates folder <b>Windows2/Modes/my_own_mode</b>
+        and inserts description of its properties into file
+<b>Windows2/Modes/my_own_mode.wsmode</B>,
+        which has format defined in its DTD (see above). Folder name must be unique,
+        fixed name for mode identification.
+    </P></LI>
+
+</OL>
+
+
+<H4>Add components to foreign modes</H4>
+It's even possible to add own top components into frames defined by other modules
+or core. To add top component "shower" into frame "bathroom", specify layer
+like this (ser or settings file shower.ser or shower.settings is expected in
+folder Windows/Components):
+
+<pre>
+&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
+&lt;!<font class="keyword">DOCTYPE</font> <font class="type">filesystem</font> <font class="keyword">PUBLIC</font>
+          <font class="string">"-//NetBeans//DTD Filesystem 1.0//EN"</font>
+          <font class="string">"http://www.netbeans.org/dtds/filesystem-1_0.dtd"</font>&gt;
+&lt;<font class="function-name">filesystem</font>&gt;
+    &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"Windows2"</font>&gt;
+        &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"Modes"</font>&gt;
+            <font class="comment">&lt;!-- foreign mode, don't specify data file --&gt;</font>
+            &lt;<font class="function-name">folder</font> <font class="variable-name">name</font>=<font
+class="string">"bathroom"</font>&gt;
+                <font class="comment">&lt;!-- configuration file stored separately --&gt;</font>
+                &lt;<font class="function-name">file</font> <font class="variable-name">name</font>=<font class="string">"shower.wstcref"</font> <font class="variable-name">url</font>=<font class="string">"shower.wstcref"</font>&gt;
+            &lt;/<font class="function-name">folder</font>&gt;
+        &lt;/<font class="function-name">folder</font>&gt;
+    &lt;/<font class="function-name">folder</font>&gt;
+&lt;/<font class="function-name">filesystem</font>&gt;
+</pre>
+
+There are several other notes that developer should be aware of:
+<OL>
+    <LI>Don't insert configuration files directly using CDATA sections,
+        keep them in separate files and refer through url (like in above examples).
+        The reason is performance, CDATA sections are not maintained so
+        efficiently by xml parsers system currently uses.
+    </LI>
+    <LI>Link modes and components together using names of files where data of
+        top components are stored (see section 3.7). For example, if you create
+        file "foo.setting" or "foo.ser" in Windows2/Components directory for your
+        top component, then use name "foo" in top component references.
+    </LI>
+</OL>
+
+<H4>Overriding components and modes defined by other modules</H4>
+In some cases, it's useful to override mode and components layout defined by
+other module. To achieve this, the modules in question must have dependency
+defined.<P>
+
+<B>So let's say we have following example situation</B>:
+
+<OL>
+    <LI>Two modules, A and B</LI>
+    <LI>Module B depends on module A</LI>
+    <LI>Module A defined its own mode, called "a_mode" with one component.
+        "a_comp" and module B defines also mode called "a_mode" with one
+componetn "b_comp" reference.
+    <LI>Module B wants to override layout, so that mode "a_mode"
+        will be replaced by its own mode and component "a_comp" will vanish.</LI>
+</OL>
+<P>
+<B>Solution:</B><BR>
+Module A needs no changes, module B has to assure following:
+
+<OL>
+    <LI>Define mode "a_comp" in foreign mode "a_mode", which will
+        override properties of original mode specified in module A. Important thing
+        is, that file name of new mode must be exactly the same as old one.
+        Layered architecture of xml filesystem assures that file defined by
+        module B will "hide" or "override" original file.
+    </LI>
+    <LI>Specify special "hiding" file for "a_comp" in folder "a_mode"
+        so that it doesn't appear in module B's mode:<br>
+            &lt;file name="a_comp1.wstcref_hidden" /&gt;
+    </LI>
+    <LI>Create own content of mode "b_comp". It means create proper XML for
+        top component references in "a_mode" folder.
+    </LI>
+    <LI>Remove original mode "a_mode" by specifying "hiding" file for mode
+        itself:<br>
+            &lt;file name="a_mode.wsmode_hidden" /&gt;<br>
+        It's not needed to explicitly hide mode folder or mode components, because
+        mode will not be recognized if *.wsmode file is missing, so hiding
+        *.wsmode is enough.
+    </LI>
+</OL>
+<P>
+Similar procedures can be applied when module needs to override only one top
+component reference entry or hide whole workspace.
+
+</div>
+
+
+<div class="nonnormative">
+
+<h2><a name="diagrams">UML Diagrams</a></h2>
+
+<h3><a name="diagram_basic">Overall structure class diagram</a></h3>
+
+<img src="windows.gif" alt="general UML">
+
+<h3><a name="diagram_inputoutput">Input-Output class diagram</a></h3>
+
+<img src="inputoutput.gif" alt="I/O UML">
+
+</div>
+
+<hr>@FOOTER@
+</body>
+</html>

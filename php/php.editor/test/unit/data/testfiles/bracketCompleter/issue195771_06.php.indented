@@ -1,0 +1,4 @@
+<?php while ($a == $b): ?>
+^
+<?php endwhile; ?>
+

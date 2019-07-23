@@ -1,0 +1,7 @@
+Code completion result for source line:
+'lib/api/v0.1/|',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       OMessages.js                               
+FILE       Options.js                                 
+FILE       issue247759.js                             

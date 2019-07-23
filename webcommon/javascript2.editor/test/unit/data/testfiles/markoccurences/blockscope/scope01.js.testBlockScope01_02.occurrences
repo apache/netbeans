@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:te^st<| = 10;
+    console.log(|>MARK_OCCURRENCES:test<|); // 10

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<#if css?? && css != "">
+<?import java.net.*?>
+</#if>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<#if controller?? && controller != "">
+<#if css?? && css != "">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="${controller}">
+    <stylesheets>
+        <URL value="@${css}.css"/>
+    </stylesheets>
+<#else>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="${controller}">
+    
+</#if>
+</AnchorPane>
+<#else>
+<#if css?? && css != "">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@${css}.css"/>
+    </stylesheets>
+<#else>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
+    
+</#if>
+</AnchorPane>
+</#if>

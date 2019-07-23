@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+Copyright 2007 the original author or authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<xsd:schema xmlns="http://www.springframework.org/schema/osgi"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            targetNamespace="http://www.springframework.org/schema/osgi"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    <xsd:import namespace="http://www.springframework.org/schema/tool"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Defines the configuration elements for Spring OSGi support.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <!-- reference -->
+    <xsd:element name="reference" type="Treference">
+        <xsd:annotation>
+            <xsd:documentation>
+                Reference to a single OSGi service.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="Treference">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="property" type="beans:mapType" minOccurs="0"/>
+                    <xsd:element name="listener" type="Tlistener" minOccurs="0"/>
+                </xsd:sequence>
+                <xsd:attribute name="interface" use="required" type="xsd:string"/>
+                <xsd:attribute name="filter" use="optional" type="xsd:string"/>
+                <xsd:attribute name="timeout" use="optional" type="xsd:int"/>
+                <xsd:attribute name="mandatory" use="optional" type="xsd:boolean" default="true"/>
+                <xsd:attribute name="depends-on" type="xsd:string" use="optional"/>
+                <xsd:attribute name="bean-name" type="xsd:string" use="optional"/>
+                <xsd:attribute name="context-classloader" type="TreferenceClassLoaderOptions" default="client"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="TreferenceClassLoaderOptions">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="client"/>
+            <xsd:enumeration value="service-provider"/>
+            <xsd:enumeration value="unmanaged"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="Tlistener">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+            <!-- nested bean declaration -->
+            <xsd:any namespace="##other" minOccurs="1" maxOccurs="1" processContents="skip"/>
+        </xsd:sequence>
+
+        <!-- shortcut for bean references -->
+        <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+        <xsd:attribute name="bind-method" type="xsd:string" use="optional"/>
+        <xsd:attribute name="unbind-method" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+	<!-- reference collections -->
+	
+	<xsd:complexType name="Tcomparator">
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+            <!-- nested bean declaration -->
+            <xsd:any namespace="##other" minOccurs="1" maxOccurs="1" processContents="skip"/>
+        </xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="TreferenceCollection">
+		<xsd:complexContent>
+			<xsd:extension base="Treference">
+				<xsd:sequence minOccurs="0" maxOccurs="1">
+					<xsd:element name="comparator" type="Tcomparator">
+						<xsd:annotation>
+							<xsd:documentation source="java:java.util.Comparator"/>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="comparator-ref" type="xsd:string" use="optional"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:element name="collection" type="Treference">
+		<xsd:annotation>
+			<!-- TODO: recopy this description around somehow; maybe includes would help -->
+			<xsd:documentation source="java:org.springframework.osgi.collection.OsgiServiceCollection">
+			 Collection of OSGi services. The collection will automatically pick up the OSGi services that match the criteria. The dynamic nature is understood
+			 by the collection which will grow or shrink in size, as matching services come and go. The collection offers 'consistent' iterators so that clients
+			 can safely travers the services, at a certain point in time, without having to worry about the dynamics.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="list" type="TreferenceCollection">
+		<xsd:annotation>
+			<xsd:documentation source="java:org.springframework.osgi.collection.OsgiServiceList"/>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="sorted-list" type="TreferenceCollection">
+		<xsd:annotation>
+			<xsd:documentation source="java:org.springframework.osgi.collection.OsgiServiceSortedList"/>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="set" type="TreferenceCollection">
+		<xsd:annotation>
+			<xsd:documentation source="java:org.springframework.osgi.collection.OsgiServiceSet"/>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:element name="sorted-set" type="TreferenceCollection">
+		<xsd:annotation>
+			<xsd:documentation source="java:org.springframework.osgi.collection.OsgiServiceSortedSet"/>
+		</xsd:annotation>
+	</xsd:element>
+	
+
+    <!-- service -->
+    <xsd:element name="service" type="Tservice"/>
+
+    <xsd:complexType name="TmapOrPropsType">
+        <xsd:choice>
+        	<xsd:sequence>
+            <xsd:element name="props" type="beans:propsType"/>
+            </xsd:sequence>
+            
+            <xsd:sequence>
+            <xsd:element name="map" type="beans:mapType"/>
+            </xsd:sequence>
+
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="Tservice">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:sequence minOccurs="0" maxOccurs="1">
+                    <xsd:element name="interfaces" type="beans:listOrSetType" minOccurs="0"/>
+                    <xsd:element name="service-properties" minOccurs="0">
+                    <!-- This is a little bit of a hack to support both entry and prop, full validation occurs in the code -->
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:any namespace="http://www.springframework.org/schema/beans" processContents="strict"
+                                         minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    
+                    <!-- nested bean declaration -->
+                    <xsd:any namespace="##other" minOccurs="0" maxOccurs="1" processContents="skip"/>
+                </xsd:sequence>
+                <xsd:attribute name="interface" type="xsd:string" use="optional"/>
+                <xsd:attribute name="ref" type="xsd:string" use="optional"/>
+                <xsd:attribute name="lazy-init" type="xsd:boolean" use="optional" default="false"/>
+                <xsd:attribute name="depends-on" type="xsd:string" use="optional"/>
+                <xsd:attribute name="context-classloader" type="TserviceClassLoaderOptions" default="unmanaged"/>
+                <xsd:attribute name="auto-export" type="TautoExportModes" default="disabled"/>
+                <xsd:attribute name="ranking" type="xsd:int" default="0"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="TserviceClassLoaderOptions">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="service-provider"/>
+            <xsd:enumeration value="unmanaged"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="TautoExportModes">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="disabled"/>
+            <xsd:enumeration value="interfaces"/>
+            <xsd:enumeration value="class-hierarchy"/>
+            <xsd:enumeration value="all"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- property placeholder -->
+    <xsd:element name="property-placeholder" type="TpropertyPlaceholder"/>
+
+    <xsd:complexType name="TpropertyPlaceholder">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:sequence minOccurs="0" maxOccurs="1">
+                    <!-- nested properties declaration -->
+                    <xsd:element name="default-properties" type="beans:propsType" minOccurs="0" maxOccurs="1"/>
+                </xsd:sequence>
+                <xsd:attribute name="persistent-id" type="xsd:string" use="required"/>
+                <xsd:attribute name="placeholder-prefix" type="xsd:string" use="optional" default="${"/>
+                <xsd:attribute name="placeholder-suffix" type="xsd:string" use="optional" default="}"/>
+                <xsd:attribute name="defaults-ref" type="xsd:string" use="optional"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- config object -->
+    <xsd:element name="config" type="Tconfig"/>
+
+    <xsd:complexType name="Tconfig">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="config-listener" type="TconfigListener"/>
+                </xsd:sequence>
+                <xsd:attribute name="persistent-id" type="xsd:string" use="required"/>
+                <xsd:attribute name="factory" type="xsd:boolean" default="false"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="TconfigListener">
+        <xsd:attribute name="ref" type="xsd:string" use="required"/>
+        <xsd:attribute name="update-method" type="xsd:string" use="required"/>
+        <xsd:attribute name="deleted-method" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+    <!-- bundle -->
+    <xsd:element name="bundle" type="Tbundle"/>
+
+    <xsd:complexType name="Tbundle">
+        <xsd:complexContent>
+            <xsd:extension base="beans:identifiedType">
+                <xsd:attribute name="symbolic-name" type="xsd:string" use="optional"/>
+                <xsd:attribute name="depends-on" type="xsd:string" use="optional"/>
+                <xsd:attribute name="location" type="xsd:string" use="optional"/>
+                <xsd:attribute name="state" type="Tstate" use="optional"/>
+                <xsd:attribute name="start-level" type="xsd:int" use="optional" default="0"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:simpleType name="Tstate">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="start"/>
+            <xsd:enumeration value="stop"/>
+            <xsd:enumeration value="install"/>
+            <xsd:enumeration value="uninstall"/>
+            <xsd:enumeration value="update"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

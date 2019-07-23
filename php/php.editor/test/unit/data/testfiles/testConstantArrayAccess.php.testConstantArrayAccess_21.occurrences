@@ -1,0 +1,3 @@
+        const |>MARK_OCCURRENCES:CLASS_CONSTANT4<| = [0, 1];
+            self::CLASS_CONSTANT1[ConstantClass::|>MARK_OCCURRENCES:CLASS_C^ONSTANT4<|[self::|>MARK_OCCURRENCES:CLASS_CONSTANT4<|[0]]];
+    "String"[ConstantClass::|>MARK_OCCURRENCES:CLASS_CONSTANT4<|[0]];

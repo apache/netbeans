@@ -1,0 +1,16 @@
+var |>GLOBAL:man01<| = {
+    |>FIELD:firstName<| : "Pepa",
+    |>FIELD:secondName<|: "Vyskoc"
+};
+
+var |>GLOBAL:address01<| = {
+    |>FIELD:street<|: "Kolesa",
+    |>FIELD:city<|: "Kladruby"
+};
+
+with (|>GLOBAL:man01<|) {
+    |>GLOBAL:console<|.log(|>FIELD:firstName<|);
+    with(|>GLOBAL:address01<|) {
+        |>GLOBAL:console<|.log(|>FIELD:street<|);
+    }
+}

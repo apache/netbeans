@@ -1,0 +1,10 @@
+var |>GLOBAL:MyObject234381<| = new function() {
+    this.|>FIELD:times<| = 3;
+    this.|>METHOD:test<| = function() {
+        return 1;
+    };
+};   
+
+with (|>GLOBAL:MyObject234381<|) {
+    var |>GLOBAL:z<| = test() * |>FIELD:times<|;
+}   

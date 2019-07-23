@@ -1,0 +1,5 @@
+Code completion result for source line:
+function iteratorParameterType(itera|ble $iterator) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    iterable                                   null

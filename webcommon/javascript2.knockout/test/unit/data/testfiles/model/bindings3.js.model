@@ -1,0 +1,77 @@
+FUNCTION bindings3 [ANONYMOUS: false, DECLARED: true - bindings3, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+AppViewModel : FUNCTION AppViewModel [ANONYMOUS: false, DECLARED: true - AppViewModel, MODIFIERS: PUBLIC, CONSTRUCTOR]
+             # RETURN TYPES
+             AppViewModel, RESOLVED: true
+             # PROPERTIES
+             arguments                      : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             bindings3AppViewModel#fullName : FUNCTION bindings3AppViewModel#fullName [ANONYMOUS: true, DECLARED: true - bindings3AppViewModel#fullName, MODIFIERS: PRIVATE, METHOD]
+                                            # RETURN TYPES
+                                            String, RESOLVED: true
+                                            # PROPERTIES
+                                            arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                            firstName : FUNCTION firstName [ANONYMOUS: false, DECLARED: false - firstName, MODIFIERS: PUBLIC, METHOD]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                            lastName  : FUNCTION lastName [ANONYMOUS: false, DECLARED: false - lastName, MODIFIERS: PUBLIC, METHOD]
+                                                      # PROPERTIES
+                                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             capitalizeLastName             : FUNCTION capitalizeLastName [ANONYMOUS: false, DECLARED: true - capitalizeLastName, MODIFIERS: PROTECTED, METHOD]
+                                            # RETURN TYPES
+                                            undefined, RESOLVED: true
+                                            # PROPERTIES
+                                            arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                            currentVal : OBJECT currentVal [ANONYMOUS: false, DECLARED: true - currentVal, MODIFIERS: PRIVATE, VARIABLE]
+                                                       # PROPERTIES
+                                                       toUpperCase : FUNCTION toUpperCase [ANONYMOUS: false, DECLARED: false - toUpperCase, MODIFIERS: PUBLIC, METHOD]
+                                                                   # PROPERTIES
+                                                                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             firstName                      : OBJECT firstName [ANONYMOUS: false, DECLARED: true - firstName, MODIFIERS: PUBLIC, PROPERTY]
+             fullName                       : OBJECT fullName [ANONYMOUS: false, DECLARED: true - fullName, MODIFIERS: PUBLIC, PROPERTY]
+             lastName                       : OBJECT lastName [ANONYMOUS: false, DECLARED: true - lastName, MODIFIERS: PUBLIC, PROPERTY]
+ko           : OBJECT ko [ANONYMOUS: false, DECLARED: false - ko, MODIFIERS: PUBLIC, OBJECT]
+             # PROPERTIES
+             $bindings     : OBJECT $bindings [ANONYMOUS: false, DECLARED: true - $bindings, MODIFIERS: PUBLIC, OBJECT]
+                           # PROPERTIES
+                           bindings3AppViewModel#fullName : FUNCTION bindings3AppViewModel#fullName [ANONYMOUS: false, DECLARED: true - bindings3AppViewModel#fullName, MODIFIERS: PRIVATE, METHOD]
+                                                          # RETURN TYPES
+                                                          String, RESOLVED: true
+                                                          # PROPERTIES
+                                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                          firstName : FUNCTION firstName [ANONYMOUS: false, DECLARED: false - firstName, MODIFIERS: PUBLIC, METHOD]
+                                                                    # PROPERTIES
+                                                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                          lastName  : FUNCTION lastName [ANONYMOUS: false, DECLARED: false - lastName, MODIFIERS: PUBLIC, METHOD]
+                                                                    # PROPERTIES
+                                                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                           capitalizeLastName             : FUNCTION capitalizeLastName [ANONYMOUS: false, DECLARED: true - capitalizeLastName, MODIFIERS: PROTECTED, METHOD]
+                                                          # RETURN TYPES
+                                                          undefined, RESOLVED: true
+                                                          # PROPERTIES
+                                                          arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                          currentVal : OBJECT currentVal [ANONYMOUS: false, DECLARED: true - currentVal, MODIFIERS: PRIVATE, VARIABLE]
+                                                                     # PROPERTIES
+                                                                     toUpperCase : FUNCTION toUpperCase [ANONYMOUS: false, DECLARED: false - toUpperCase, MODIFIERS: PUBLIC, METHOD]
+                                                                                 # PROPERTIES
+                                                                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                           firstName                      : OBJECT firstName [ANONYMOUS: false, DECLARED: true - firstName, MODIFIERS: PUBLIC, PROPERTY]
+                           fullName                       : OBJECT fullName [ANONYMOUS: false, DECLARED: true - fullName, MODIFIERS: PUBLIC, PROPERTY]
+                           lastName                       : OBJECT lastName [ANONYMOUS: false, DECLARED: true - lastName, MODIFIERS: PUBLIC, PROPERTY]
+             applyBindings : FUNCTION applyBindings [ANONYMOUS: false, DECLARED: false - applyBindings, MODIFIERS: PUBLIC, METHOD]
+                           # PARAMETERS
+                           OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             computed      : FUNCTION computed [ANONYMOUS: false, DECLARED: false - computed, MODIFIERS: PUBLIC, METHOD]
+                           # PARAMETERS
+                           OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                           OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             observable    : FUNCTION observable [ANONYMOUS: false, DECLARED: false - observable, MODIFIERS: PUBLIC, METHOD]
+                           # PARAMETERS
+                           OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

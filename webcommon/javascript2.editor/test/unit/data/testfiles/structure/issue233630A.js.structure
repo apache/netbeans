@@ -1,0 +1,5 @@
+$:PARAMETER:[PUBLIC]:ESCAPED{$}:
+  multicombo:METHOD:[PUBLIC]:ESCAPED{multicombo}ESCAPED{(}ESCAPED{select}ESCAPED{, }ESCAPED{options}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    initGuiSingle:METHOD:[PRIVATE]:ESCAPED{initGuiSingle}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    plugin:CLASS:[PRIVATE]:ESCAPED{plugin}:
+      val:METHOD:[PUBLIC]:ESCAPED{val}ESCAPED{(}ESCAPED{values}ESCAPED{)}<font color="#999999">ESCAPED{ : }$.multicombo.val.returnArray</font>:

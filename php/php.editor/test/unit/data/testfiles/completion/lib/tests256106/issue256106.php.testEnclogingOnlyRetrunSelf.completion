@@ -1,0 +1,27 @@
+Code completion result for source line:
+$this->protectedParentMethod()->protectedTraitOnlyReturnSelfMethod()->|privateTraitMethod(); // test self
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     enclosingTest()                 [PUBLIC]   \Issue256106\ChildClass
+METHOD     privateChildMethod()            [PRIVATE]  \Issue256106\ChildClass
+METHOD     privateStaticTraitMethod()      [PRIVATE,  \Issue256106\BaseTrait
+METHOD     privateTraitMethod()            [PRIVATE]  \Issue256106\BaseTrait
+METHOD     privateTraitOnlyReturnStaticMe  [PRIVATE]  \Issue256106\BaseTrait
+METHOD     protectedChildMethod()          [PROTECTE  \Issue256106\ChildClass
+METHOD     protectedParentMethod()         [PROTECTE  \Issue256106\ParentClass
+METHOD     protectedStaticTraitMethod()    [PROTECTE  \Issue256106\BaseTrait
+METHOD     protectedTraitMethod()          [PROTECTE  \Issue256106\BaseTrait
+METHOD     protectedTraitOnlyReturnSelfMe  [PROTECTE  \Issue256106\BaseTrait
+METHOD     publicChildMethod()             [PUBLIC]   \Issue256106\ChildClass
+METHOD     publicParentMethod()            [PUBLIC]   \Issue256106\ParentClass
+METHOD     publicStaticTraitMethod()       [STATIC]   \Issue256106\BaseTrait
+METHOD     publicTraitMethod()             [PUBLIC]   \Issue256106\BaseTrait
+METHOD     publicTraitOnlyReturnSelfMetho  [PUBLIC]   \Issue256106\BaseTrait
+METHOD     publicTraitOnlyReturnStaticMet  [PUBLIC]   \Issue256106\BaseTrait
+VARIABLE   ? privateChildField             [PRIVATE]  \Issue256106\ChildClass
+VARIABLE   ? privateTraitField             [PRIVATE]  \Issue256106\BaseTrait
+VARIABLE   ? protectedChildField           [PROTECTE  \Issue256106\ChildClass
+VARIABLE   ? protectedParentField          [PROTECTE  \Issue256106\ParentClass
+VARIABLE   ? protectedTraitField           [PROTECTE  \Issue256106\BaseTrait
+VARIABLE   ? publicChildField              [PUBLIC]   \Issue256106\ChildClass
+VARIABLE   ? publicParentField             [PUBLIC]   \Issue256106\ParentClass
+VARIABLE   ? publicTraitField              [PUBLIC]   \Issue256106\BaseTrait

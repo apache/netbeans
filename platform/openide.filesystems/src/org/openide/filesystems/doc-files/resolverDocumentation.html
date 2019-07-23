@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>DTD Grammar Documentation</title>
+<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+</head>
+
+<!-- Generated on 10.11.2008 by NetBeans XML module. -->
+<body>
+
+<hr />
+<h2>Element Index</h2>
+<ul><li><tt><a href="#MIME-resolver">MIME-resolver</a></tt></li>
+<li><tt><a href="#attr">attr</a></tt></li>
+<li><tt><a href="#doctype">doctype</a></tt></li>
+<li><tt><a href="#element">element</a></tt></li>
+<li><tt><a href="#exit">exit</a></tt></li>
+<li><tt><a href="#ext">ext</a></tt></li>
+<li><tt><a href="#fattr">fattr</a></tt></li>
+<li><tt><a href="#file">file</a></tt></li>
+<li><tt><a href="#magic">magic</a></tt></li>
+<li><tt><a href="#mime">mime</a></tt></li>
+<li><tt><a href="#name">name</a></tt></li>
+<li><tt><a href="#ns">ns</a></tt></li>
+<li><tt><a href="#pattern">pattern</a></tt></li>
+<li><tt><a href="#pi">pi</a></tt></li>
+<li><tt><a href="#public-id">public-id</a></tt></li>
+<li><tt><a href="#resolver">resolver</a></tt></li>
+<li><tt><a href="#xml-rule">xml-rule</a></tt></li>
+</ul>
+
+<hr />
+<h2>Element Details</h2>
+
+
+<hr />
+<h2><a name="MIME-resolver"></a>MIME-resolver</h2>
+<div>MIME resolver description root element.
+  <p>
+  <samp>PUBLIC "-//NetBeans//DTD MIME Resolver 1.0//EN"</samp>
+  </p></div>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#file">file</a>)+</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt></tt></p>
+
+
+<hr />
+<h2><a name="xml-rule"></a>xml-rule</h2>
+<div>MIME component checking XML resource header, permitting matches against
+  XML constructs: processing instructions, document type declarations, and root element (start tag).
+  <p>
+  <samp>PUBLIC "-//NetBeans//DTD MIME Resolver XML Rules 1.0//EN"</samp>
+  </p>
+  It should work well for:
+  <dl>
+  <dt>Well-formed document type detection</dt>
+  <dd>Using: PIs, root element name and root element attributes.</dd>
+  <dt>DTD-constrained document detection</dt>
+  <dd>Using: PIs and DOCTYPE public IDs.</dd>
+  <dt>NS-constrained documents</dt>
+  <dd>Using: PIs and root element namespaces.</dd>
+  </dl></div>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#pi">pi</a>*, <a href="#doctype">doctype</a>?, <a href="#element">element</a>?)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#resolver">resolver</a></tt></p>
+
+
+<hr />
+<h2><a name="pi"></a>pi</h2>
+<div>Processing instructions can be tested on target and pseudo-attributes.
+  <p>
+  It should be used for in-band tagging that is specified by some
+  accepted specification. For NetBeans-specific tagging of third party standards it is
+  recommended to use out-of-band tagging such as <code>FileObject</code> attributes.
+  </p></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA target</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#attr">attr</a>*)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#xml-rule">xml-rule</a></tt></p>
+
+
+<hr />
+<h2><a name="doctype"></a>doctype</h2>
+<div>Match one of the DOCTYPE's public IDs.
+  Use of <code>public-id</code> subelements is mutually exclusive with the attribute.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA public-id</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#public-id">public-id</a>*)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#xml-rule">xml-rule</a></tt></p>
+
+
+<hr />
+<h2><a name="public-id"></a>public-id</h2>
+<div>A public ID is checked for an exact match.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA id</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#doctype">doctype</a></tt></p>
+
+
+<hr />
+<h2><a name="element"></a>element</h2>
+<div>Matches a root element by specified name, attributes or namespace.
+  <p>
+  The namespace <code>ns</code> attribute or the presence of any <code>ns</code> subelements
+  implies that the <code>name</code> attribute represents a local element name,
+  otherwise the <code>name</code> attribute represents a full element name ("QName").
+  One of the namespaces must match.
+  </p></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#IMPLIED CDATA ns</tt></li>
+<li><tt>#IMPLIED CDATA name</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#ns">ns</a>*, <a href="#attr">attr</a>*)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#xml-rule">xml-rule</a></tt></p>
+
+
+<hr />
+<h2><a name="ns"></a>ns</h2>
+<div>Test namespace equality (exact match).</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA ns</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#element">element</a></tt></p>
+
+
+<hr />
+<h2><a name="attr"></a>attr</h2>
+<div>Element attribute template, also used for pseudo-attributes in processing instructions.
+  <p>
+  The <code>name</code> attribute contains the full attribute name (QName).
+  This is inteded to be used for documents that cannot be indentified by public ID nor
+  root element namespace.
+  </p>
+  If <code>text</code> is specified then the attribute's normalized text must
+  exactly match the specified text, otherwise the attribute just needs to be present.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA name</tt></li>
+<li><tt>#IMPLIED CDATA text</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#pi">pi</a>, <a href="#element">element</a></tt></p>
+
+
+<hr />
+<h2><a name="file"></a>file</h2>
+<div>A file (resource) represents the MIME resolver input.
+  The resource is tested on attributes obtained from lower layers (OS) such
+  as extension, header bytes and wrapping <code>FileObject</code> attributes.
+  Some of them must match to proceed to the <code>resolver</code> element.
+  <p>
+  Implementation Note:
+  Lower level MIME type is obtained by <code>FileUtil.getMIMEType()</code>. It may not be
+  retrieved by a call to <code>FileObject.getMIMEType</code> to avoid recursion. A better way
+  to determine MIME type as assigned by the OS may be introduced in the future.
+  </p>
+  <p>
+  Implementation Note:
+  All other tests are performed by calling appropriate methods on <code>FileObject</code>
+  so there is a danger of recursion if these call <code>this.getMIMEType()</code>.
+  </p></div>
+<p><b>Element Content Model</b></p>
+<p><tt>((<a href="#ext">ext</a>&nbsp;| <a href="#mime">mime</a>&nbsp;| <a href="#magic">magic</a>&nbsp;| <a href="#fattr">fattr</a>&nbsp;| <a href="#pattern">pattern</a>&nbsp;| <a href="#name">name</a>)+, (<a href="#resolver">resolver</a>&nbsp;| <a href="#exit">exit</a>))</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#MIME-resolver">MIME-resolver</a></tt></p>
+
+
+<hr />
+<h2><a name="ext"></a>ext</h2>
+<div>Tests resource extension for full equality. If name attribute is empty string
+  (name=""), it matches all files without extension.</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA name</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="mime"></a>mime</h2>
+<div>Tests resource MIME type for equality (RFC2045) or suffix equality if it
+  starts with '+' (RFC 3023).</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA name</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="magic"></a>magic</h2>
+<div>Look at initial bytes of the file and test for a complete match of masked
+  bits. The default mask is the hexadecimal byte <samp>FF</samp> repeated as
+  many times as the <code>hex</code> attribute is long.
+  E.g. <samp>&lt;magic hex="0a0001" mask="FF00FF"/&gt;</samp></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA hex</tt></li>
+<li><tt>#IMPLIED CDATA mask</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="fattr"></a>fattr</h2>
+<div>Test on <code>FileObject</code> attributes. Matching attributes are converted
+  to strings via <code>Object.toString()</code> and compared to the <code>text</code>
+  attribute.
+  <p>
+  <code>FileObject</code> attributes can be used for out-of-band tagging of standard documents.
+  </p></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA name</tt></li>
+<li><tt>#REQUIRED CDATA text</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="pattern"></a>pattern</h2>
+<div>Search in the file for given pattern in given range. If there is an inner
+  pattern element, it is used only if outer is fulfilled. Searching starts
+  always from the beginning of the file. For example:
+  <p>
+  Pattern &lt;?php in first 255 bytes
+  <pre>
+    &lt;pattern value="&lt;?php" range="255"/&gt;
+  </pre>
+  </p>
+  <p>
+  Pattern &lt;HTML&gt; or &lt;html&gt; in first 255 bytes and pattern &lt;?php in first 4000 bytes.
+  <pre>
+    &lt;pattern value="&lt;HTML&gt;" range="255" ignorecase="true"&gt;
+        &lt;pattern value="&lt;?php" range="4000"/&gt;
+    &lt;/pattern&gt;
+  </pre>
+  </p></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA value</tt></li>
+<li><tt>#REQUIRED CDATA range</tt></li>
+<li><tt>#IMPLIED CDATA ignorecase</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#pattern">pattern</a>?)</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a>, <a href="#pattern">pattern</a></tt></p>
+
+
+<hr />
+<h2><a name="name"></a>name</h2>
+<div>Compare filename with given name.
+  For example:
+  <p>
+  Filename matches makefile, Makefile, MaKeFiLe, mymakefile, gnumakefile, makefile1, ....
+  <pre>
+    &lt;name name="makefile" substring="true"/&gt;
+  </pre>
+  </p>
+  <p>
+  Filename exactly matches rakefile or Rakefile.
+  <pre>
+    &lt;name name="rakefile" ignorecase="false"/&gt;
+    &lt;name name="Rakefile" ignorecase="false"/&gt;
+  </pre>
+  </p></div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA name</tt></li>
+<li><tt>#IMPLIED CDATA substring</tt></li>
+<li><tt>#IMPLIED CDATA ignorecase</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="resolver"></a>resolver</h2>
+<div>You may apply additional rules based on resource content.
+  The <code>mime</code> element value is returned. Use the reserved value of <code>null</code>
+  to indicate you are not interested in such files (same as <samp>&lt;exit/&gt;</samp>).</div>
+<p><b>Declared Attributes</b></p>
+<ul><li><tt>#REQUIRED CDATA mime</tt></li>
+</ul>
+<p><b>Element Content Model</b></p>
+<p><tt>(<a href="#xml-rule">xml-rule</a>)?</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+
+
+<hr />
+<h2><a name="exit"></a>exit</h2>
+<div>Declares that this file is not recognized by this resolver.
+  A shortcut for <samp>&lt;resolver mime="null"/&gt;</samp>.
+  For example:
+  <p>
+  Do not resolve *.txt files and do time consuming magic recognition only for not-txt files.
+  <pre>
+    &lt;file&gt;
+      &lt;ext name="txt"/&gt;
+      &lt;exit/&gt;
+    &lt;/file&gt;
+    &lt;file&gt;
+      &lt;magic hex="0a0001" mask="FF00FF"/&gt;
+      &lt;resolver mime="text/plain"/&gt;
+    &lt;/file&gt;
+  </pre>
+  </p></div>
+<p><b>Element Content Model</b></p>
+<p><tt>EMPTY</tt></p>
+<p><b>Referenced by</b></p>
+<p><tt><a href="#file">file</a></tt></p>
+</body></html>

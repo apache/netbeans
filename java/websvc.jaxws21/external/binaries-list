@@ -1,0 +1,32 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+279E959309368046456F10EFC2BF0BD61CE98CF0 javax.xml.ws:jaxws-api:2.2.6:javadoc
+E8C1C096162A146C2D84135C5036EDF54C1B1D38 com.sun.xml.fastinfoset:FastInfoset:1.2.12
+3502C55C7AD2085ECE6B38202B5169DD9177E0A2 org.glassfish.gmbal:gmbal-api-only:3.1.0-b001
+260AC0DBF841E1D19AE0405A894515E67EF41F4B org.glassfish.ha:ha-api:3.1.8
+1AA1579AE5ECD41920C4F355B0A9EF40B68315DD javax.mail:mail:1.4
+F98B197F1C26536A709E6016CC238E79E58AA6E3 com.sun.xml.ws:jaxws-rt:2.2.6-1
+036033A238FBDFBF6FB47B7F3E644C90D0E9A805 com.sun.xml.ws:jaxws-tools:2.2.6-1
+707686D845FAEDE060B79BDF018A25A469A611B4 org.glassfish.external:management-api:3.0.0-b012
+E0B2ED6E9CCAAFE3E96294A181C09E3AAE18AA90 org.jvnet.mimepull:mimepull:1.8
+AE9BFCE521AAB950D13D4447ACEC0BC1EFC5C9E8 com.sun.xml.ws:policy:2.3.1
+353EC287FADE0062410E10D788350BDFB0F9C13B com.sun.xml.messaging.saaj:saaj-impl:1.3.18
+21075D99A7A3BD39EF5A987BC310E905DA9FF899 org.jvnet.staxex:stax-ex:1.7
+0466EAB062E9D1A3CE2C4631B6D09B5E5C0CBD1B org.codehaus.woodstox:stax2-api:3.1.1
+AB7C3890FF7A0A5331C2F8938B02472E3D73A0D8 com.sun.xml.stream.buffer:streambuffer:1.4
+B8DF430DDC4947BC7B68AF5ED09B8C1C5B527553 org.codehaus.woodstox:woodstox-core-asl:4.1.2

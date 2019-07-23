@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.0 NT beta 2 build Jul 26 2001 (http://www.xmlspy.com) by Vladislav Gavrielov (Altova) -->
+<?xmlspysps OrgChart.sps?>
+<OrgChart xmlns="http://www.xmlspy.com/schemas/orgchart" xmlns:ipo="http://www.altova.com/IPO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xmlspy.com/schemas/orgchart OrgChart.xsd">
+	<CompanyLogo href="nanonull.gif"/>
+	<Name>Organization Chart</Name>
+	<Office>
+		<Name>Nanonull, Inc.</Name>
+		<Desc>
+			<para>The company was established <bold>in Vereno in 1995</bold> as a privately held software company. Since 1996, Nanonull has been actively involved in developing nanoelectronic software technologies. It released the first version of its acclaimed <italic>NanoSoft Development Suite </italic>in February 1999. Also in 1999, Nanonull increased its capital base with invesment from a consortium of private investment firms. The company has been expanding rapidly ever since.</para>
+			<para>Due to the fact that nanoelectronic software components are new and that sales are restricted to corporate customers, Nanonull and its product line have not received much media publicity in the company&apos;s early years. This has however changed in recent months as trade journals have realized the importance of this revolutionary technology.</para>
+		</Desc>
+		<Location>US</Location>
+		<Address>
+			<ipo:street>119 Oakstreet, Suite 4876</ipo:street>
+			<ipo:city>Vereno</ipo:city>
+			<ipo:state>DC</ipo:state>
+			<ipo:zip>29213</ipo:zip>
+		</Address>
+		<Phone>+1 (321) 555 5155 0</Phone>
+		<Fax>+1 (321) 555 5155 4</Fax>
+		<EMail>office@nanonull.com</EMail>
+		<Department>
+			<Name>Administration</Name>
+			<Person>
+				<First>Vernon</First>
+				<Last>Callaby</Last>
+				<Title>Office Manager</Title>
+				<PhoneExt>582</PhoneExt>
+				<EMail>v.callaby@nanonull.com</EMail>
+				<Shares>1500</Shares>
+				<LeaveTotal>25</LeaveTotal>
+				<LeaveUsed>4</LeaveUsed>
+				<LeaveLeft>21</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Frank</First>
+				<Last>Further</Last>
+				<Title>Accounts Receivable</Title>
+				<PhoneExt>471</PhoneExt>
+				<EMail>f.further@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>2</LeaveUsed>
+				<LeaveLeft>20</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Loby</First>
+				<Last>Matise</Last>
+				<Title>Accounting Manager</Title>
+				<PhoneExt>963</PhoneExt>
+				<EMail>l.matise@nanonull.com</EMail>
+				<LeaveTotal>25</LeaveTotal>
+				<LeaveUsed>7</LeaveUsed>
+				<LeaveLeft>18</LeaveLeft>
+			</Person>
+		</Department>
+		<Department>
+			<Name>Marketing</Name>
+			<Person>
+				<First>Joe</First>
+				<Last>Martin</Last>
+				<Title>Marketing Manager Europe</Title>
+				<PhoneExt>620</PhoneExt>
+				<EMail>j.martin@nanonull.com</EMail>
+				<Shares>2000</Shares>
+				<LeaveTotal>30</LeaveTotal>
+				<LeaveUsed>14</LeaveUsed>
+				<LeaveLeft>16</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Susi</First>
+				<Last>Sanna</Last>
+				<Title>Art Director</Title>
+				<PhoneExt>622</PhoneExt>
+				<EMail>s.sanna@nanonull.com</EMail>
+				<Shares>1000</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>1</LeaveUsed>
+				<LeaveLeft>21</LeaveLeft>
+			</Person>
+		</Department>
+		<Department>
+			<Name>Engineering</Name>
+			<Person>
+				<First>Fred</First>
+				<Last>Landis</Last>
+				<Title>Program Manager</Title>
+				<PhoneExt>951</PhoneExt>
+				<EMail>f.landis@nanonull.com</EMail>
+				<Shares>2000</Shares>
+				<LeaveTotal>28</LeaveTotal>
+				<LeaveUsed>10</LeaveUsed>
+				<LeaveLeft>18</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Michelle</First>
+				<Last>Butler</Last>
+				<Title>Software Engineer</Title>
+				<PhoneExt>654</PhoneExt>
+				<EMail>m.butler@nanonull.com</EMail>
+				<Shares>1500</Shares>
+				<LeaveTotal>19</LeaveTotal>
+				<LeaveUsed>9</LeaveUsed>
+				<LeaveLeft>10</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Ted</First>
+				<Last>Little</Last>
+				<Title>Software Engineer</Title>
+				<PhoneExt>852</PhoneExt>
+				<EMail>t.little@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>10</LeaveUsed>
+				<LeaveLeft>12</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Ann</First>
+				<Last>Way</Last>
+				<Title>Technical Writer</Title>
+				<PhoneExt>951</PhoneExt>
+				<EMail>a.way@nanonull.com</EMail>
+				<Shares>1000</Shares>
+				<LeaveTotal>25</LeaveTotal>
+				<LeaveUsed>3</LeaveUsed>
+				<LeaveLeft>22</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Liz</First>
+				<Last>Gardner</Last>
+				<Title>Software Engineer</Title>
+				<PhoneExt>753</PhoneExt>
+				<EMail>l.gardner@nanonull.com</EMail>
+				<LeaveTotal>24</LeaveTotal>
+				<LeaveUsed>8</LeaveUsed>
+				<LeaveLeft>16</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Paul</First>
+				<Last>Smith</Last>
+				<Title>Software Engineer</Title>
+				<PhoneExt>334</PhoneExt>
+				<EMail>p.smith@nanonull.com</EMail>
+				<Shares>1000</Shares>
+				<LeaveTotal>21</LeaveTotal>
+				<LeaveUsed>7</LeaveUsed>
+				<LeaveLeft>14</LeaveLeft>
+			</Person>
+		</Department>
+		<Department>
+			<Name>IT &amp; Technical Support</Name>
+			<Person>
+				<First>Alex</First>
+				<Last>Martin</Last>
+				<Title>IT Manager</Title>
+				<PhoneExt>778</PhoneExt>
+				<EMail>a.martin@nanonull.com</EMail>
+				<Shares>2000</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>10</LeaveUsed>
+				<LeaveLeft>12</LeaveLeft>
+			</Person>
+			<Person>
+				<First>George</First>
+				<Last>Hammer</Last>
+				<Title>Web Developer</Title>
+				<PhoneExt>223</PhoneExt>
+				<EMail>g.hammer@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>19</LeaveTotal>
+				<LeaveUsed>9</LeaveUsed>
+				<LeaveLeft>10</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Jessica</First>
+				<Last>Bander</Last>
+				<Title>Support Engineer</Title>
+				<PhoneExt>241</PhoneExt>
+				<EMail>j.band@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>25</LeaveTotal>
+				<LeaveUsed>13</LeaveUsed>
+				<LeaveLeft>12</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Lui</First>
+				<Last>King</Last>
+				<Title>Support Engineer</Title>
+				<PhoneExt>345</PhoneExt>
+				<EMail>l.king@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>20</LeaveTotal>
+				<LeaveUsed>6</LeaveUsed>
+				<LeaveLeft>14</LeaveLeft>
+			</Person>
+		</Department>
+	</Office>
+	<Office>
+		<Name>Nanonull Europe, AG</Name>
+		<Desc>
+			<para>In May 2000, Nanonull<italic> </italic>Europe was set up in Vienna. At the start of the subsidiary&apos;s operations, the team consisted of five research scientists and one administrative staff. By the end of 2000, the number of research scientists had risen to nine. Nanonull Europe will play the central role in all new research and will work closely with the Engineering team in Vereno.</para>
+		</Desc>
+		<Location>EU</Location>
+		<Address_EU>
+			<ipo:street>Kennedyplatz 30</ipo:street>
+			<ipo:city>Vienna</ipo:city>
+			<ipo:postcode>A-1200</ipo:postcode>
+		</Address_EU>
+		<Phone>+ 43 1 555 5000</Phone>
+		<Fax>+ 43 1 555 5009</Fax>
+		<EMail>euoffice@nanonull.com</EMail>
+		<Department>
+			<Name>Administration</Name>
+			<Person>
+				<First>Heidi</First>
+				<Last>Brunner</Last>
+				<Title>Office Manager</Title>
+				<PhoneExt>101</PhoneExt>
+				<EMail>h.brunner@nanonull.com</EMail>
+				<Shares>1500</Shares>
+				<LeaveTotal>10</LeaveTotal>
+				<LeaveUsed>5</LeaveUsed>
+				<LeaveLeft>5</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Ines</First>
+				<Last>Jameson</Last>
+				<Title>Administrator</Title>
+				<PhoneExt>102</PhoneExt>
+				<EMail>i.jameson@nanonull.com</EMail>
+				<Shares>1000</Shares>
+				<LeaveTotal>20</LeaveTotal>
+				<LeaveUsed>5</LeaveUsed>
+				<LeaveLeft>15</LeaveLeft>
+			</Person>
+		</Department>
+		<Department>
+			<Name>IT &amp; Technical Support</Name>
+			<Person>
+				<First>Gamil</First>
+				<Last>Djervo</Last>
+				<Title>IT Manager</Title>
+				<PhoneExt>201</PhoneExt>
+				<EMail>g.djervo@nanonull.com</EMail>
+				<Shares>1000</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>5</LeaveUsed>
+				<LeaveLeft>17</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Djuna</First>
+				<Last>Urban</Last>
+				<Title>IT Engineer</Title>
+				<PhoneExt>202</PhoneExt>
+				<EMail>d.urbann@nanonull.com</EMail>
+				<Shares>750</Shares>
+				<LeaveTotal>29</LeaveTotal>
+				<LeaveUsed>3</LeaveUsed>
+				<LeaveLeft>26</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Michael</First>
+				<Last>Stein</Last>
+				<Title>IT Engineer</Title>
+				<PhoneExt>203</PhoneExt>
+				<EMail>m.stein@nanonull.com</EMail>
+				<LeaveTotal>19</LeaveTotal>
+				<LeaveUsed>7</LeaveUsed>
+				<LeaveLeft>12</LeaveLeft>
+			</Person>
+		</Department>
+		<Department>
+			<Name>Research &amp; Development</Name>
+			<Person>
+				<First>Valentin</First>
+				<Last>Rutger</Last>
+				<Title>R&amp;D Manager</Title>
+				<PhoneExt>301</PhoneExt>
+				<EMail>v.rutger@nanonull.com</EMail>
+				<Shares>1500</Shares>
+				<LeaveTotal>28</LeaveTotal>
+				<LeaveUsed>21</LeaveUsed>
+				<LeaveLeft>7</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Gaia</First>
+				<Last>Winkler</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>302</PhoneExt>
+				<EMail>g.winkler@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>22</LeaveTotal>
+				<LeaveUsed>5</LeaveUsed>
+				<LeaveLeft>17</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Felipe</First>
+				<Last>Gomez</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>304</PhoneExt>
+				<EMail>f.gomez@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>20</LeaveTotal>
+				<LeaveUsed>6</LeaveUsed>
+				<LeaveLeft>14</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Mirko</First>
+				<Last>Filipcic</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>305</PhoneExt>
+				<EMail>m.filipcic@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>21</LeaveTotal>
+				<LeaveUsed>8</LeaveUsed>
+				<LeaveLeft>13</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Norbert</First>
+				<Last>Riedler</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>303</PhoneExt>
+				<EMail>n.riedler@nanonull.com</EMail>
+				<Shares>1500</Shares>
+				<LeaveTotal>18</LeaveTotal>
+				<LeaveUsed>2</LeaveUsed>
+				<LeaveLeft>16</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Sabine</First>
+				<Last>Kraus</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>308</PhoneExt>
+				<EMail>s.kraus@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>18</LeaveTotal>
+				<LeaveUsed>7</LeaveUsed>
+				<LeaveLeft>11</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Robert</First>
+				<Last>Manko</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>306</PhoneExt>
+				<EMail>r.manko@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>20</LeaveTotal>
+				<LeaveUsed>10</LeaveUsed>
+				<LeaveLeft>10</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Mandy</First>
+				<Last>Mitchell</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>311</PhoneExt>
+				<EMail>m.mitchell@nanonull.com</EMail>
+				<Shares>500</Shares>
+				<LeaveTotal>19</LeaveTotal>
+				<LeaveUsed>6</LeaveUsed>
+				<LeaveLeft>13</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Lempel</First>
+				<Last>Wenzl</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>307</PhoneExt>
+				<EMail>l.wenzl@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>28</LeaveTotal>
+				<LeaveUsed>3</LeaveUsed>
+				<LeaveLeft>25</LeaveLeft>
+			</Person>
+			<Person>
+				<First>Max</First>
+				<Last>Matzik</Last>
+				<Title>Research Scientist</Title>
+				<PhoneExt>309</PhoneExt>
+				<EMail>m.matzik@nanonull.com</EMail>
+				<Shares>0</Shares>
+				<LeaveTotal>19</LeaveTotal>
+				<LeaveUsed>5</LeaveUsed>
+				<LeaveLeft>14</LeaveLeft>
+			</Person>
+		</Department>
+	</Office>
+</OrgChart>

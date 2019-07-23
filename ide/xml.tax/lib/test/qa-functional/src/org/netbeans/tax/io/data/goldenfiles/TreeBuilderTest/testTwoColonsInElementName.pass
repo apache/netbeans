@@ -1,0 +1,25 @@
+<?xml encoding="UTF-8"?>
+
+<!ENTITY % INC "INCLUDE">
+<!ENTITY % IGN "IGNORE">
+<![ INCLUDE [
+    <!ENTITY notice "INC = INCLUDE">
+    <!ELEMENT x-include ( #PCDATA )*>
+]]>
+<![ IGNORE [
+  <!ENTITY notice "IGN = INCLUDE">
+  <!ELEMENT y-include (#PCDATA)>
+]]>
+<!ELEMENT inc-level-221 ( #PCDATA )*>
+<![ INCLUDE [
+    <!ELEMENT inc-level-1 ( #PCDATA )*>
+    <![ INCLUDE [
+        <!ELEMENT inc-level-2 ( #PCDATA )*>
+]]>
+    <![ IGNORE [<!ELEMENT ign-in-include (#PCDATA)>]]>
+]]>
+<![ IGNORE [
+  <!ELEMENT ign_level_1 (#PCDATA)>
+  <![ INCLUDE [<!ELEMENT inc-in-ignore (#PCDATA)>]]>
+]]>
+

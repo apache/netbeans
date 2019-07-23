@@ -1,0 +1,178 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+language: java
+addons:
+  apt:
+    packages:
+      - ant
+      - ant-optional
+      - xvfb
+install:
+  - export DISPLAY=:99.0
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  - sleep 3
+script:
+  - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/release-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
+  - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
+  - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
+  - ant $OPTS clean
+  - ant $OPTS $TARGET
+  - if [ "x$COMPILETEST" == "xtrue" ]; then ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild; fi
+  - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
+  - if [ "x$EOL" == "xtrue" ]; then ./nbbuild/travis/check-line-endings.sh; fi
+  - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
+  - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
+  - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
+  - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
+  - if [ "x$RUN_TESTS_JDK8" == "xtrue" ]; then for MODULE in $TEST_MODULES; do cd $MODULE; ant test; done; fi
+  - if [ "x$RUN_TESTS_JDK9PLUS" == "xtrue" ]; then wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh && export TEST_JDK=`bash install-jdk.sh $TEST_JDK_VERSION --emit-java-home --silent | tail -1` && for MODULE in $TEST_MODULES; do cd $MODULE; ant "-Dtest.nbjdk.home=$TEST_JDK" $TEST_RUN_OPTIONS test; done; fi
+
+matrix:
+    include:
+        - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+          jdk: openjdk8
+
+        - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+          jdk: openjdk8
+
+#        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
+#          jdk: openjdk8
+
+        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+          jdk: openjdk8
+
+        - env: OPTS="-quiet" TARGET="build-platform"
+          jdk: openjdk11
+
+        - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
+          jdk: openjdk8
+
+        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
+          jdk: openjdk11
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          jdk: openjdk8
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          jdk: openjdk8
+
+        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          jdk: openjdk8
+          
+        - env: > 
+            SIGTEST=false 
+            COMPILETEST=false 
+            RAT=false 
+            EOL=false 
+            LICENSE=false 
+            CV=false 
+            RUN_TESTS_JDK9PLUS=false 
+            RUN_TESTS_JDK8=true 
+            OPTS="-Dcluster.config=minimal -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            TEST_MODULES="ide/api.xml
+             ide/api.xml.ui
+             ide/bugtracking
+             ide/bugtracking.bridge
+             ide/bugtracking.commons
+             ide/bugzilla
+             ide/code.analysis
+             ide/core.ide
+             ide/csl.api
+             ide/csl.types
+             ide/css.editor
+             ide/css.lib
+             ide/css.model
+             ide/db.dataview
+             ide/db.sql.editor
+             ide/docker.api
+             ide/docker.ui
+             ide/editor.bookmarks
+             ide/editor.bracesmatching
+             ide/editor.document
+             ide/editor.fold
+             ide/editor.fold.nbui
+             ide/editor.guards
+             ide/editor.indent
+             ide/editor.indent.project
+             ide/editor.macros
+             ide/editor.search
+             ide/editor.settings
+             ide/editor.settings.storage
+             ide/editor.tools.storage
+             ide/editor.util
+             ide/extbrowser
+             ide/extexecution.base
+             ide/gsf.testrunner.ui
+             ide/html
+             ide/html.custom
+             ide/html.editor
+             ide/html.lexer
+             ide/html.parser
+             ide/html.validation
+             ide/hudson
+             ide/hudson.git
+             ide/hudson.mercurial
+             ide/hudson.subversion
+             ide/hudson.tasklist
+             ide/hudson.ui
+             ide/javascript2.debug
+             ide/languages.yaml
+             ide/lexer
+             ide/lib.terminalemulator
+             ide/libs.freemarker
+             ide/libs.git
+             ide/libs.graalsdk
+             ide/localhistory
+             ide/o.openidex.util
+             ide/parsing.api
+             ide/parsing.indexing
+             ide/parsing.lucene
+             ide/project.ant
+             ide/project.ant.compat8
+             ide/project.ant.ui
+             ide/project.libraries
+             ide/project.libraries.ui
+             ide/projectapi
+             ide/projectapi.nb
+             ide/projectuiapi.base
+             ide/refactoring.api
+             ide/schema2beans
+             ide/server
+             ide/spellchecker
+             ide/spi.editor.hints
+             ide/spi.palette
+             ide/spi.tasklist
+             ide/tasklist.ui
+             ide/team.commons
+             ide/terminal.nb
+             ide/utilities
+             ide/versioning.masterfs
+             ide/versioning.util
+             ide/web.common
+             ide/web.common.ui
+             ide/web.webkit.debugging
+             ide/xml
+             ide/xml.axi
+             ide/xml.core
+             ide/xml.lexer
+             ide/xml.multiview
+             ide/xml.text
+             ide/xml.text.obsolete90
+             ide/xml.xam
+             ide/xml.xdm
+             ide/xsl"
+          jdk: openjdk8

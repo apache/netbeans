@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<metaDD>
+        <extends>org.netbeans.modules.j2ee.sun.dd.impl.common.SunBaseBean</extends>
+	<meta-element>
+                <import>org.netbeans.modules.j2ee.sun.dd.impl.common.model_2_1_0.SecurityRoleMapping</import>
+		<dtd-name>sun-application</dtd-name>
+		<bean-name>SunApplication</bean-name>
+                <implements>org.netbeans.modules.j2ee.sun.dd.api.app.SunApplication</implements>
+		<user-code>
+                public void setVersion(java.math.BigDecimal value) {
+                }
+                public java.math.BigDecimal getVersion() {
+//                    return new java.math.BigDecimal(org.netbeans.modules.j2ee.sun.dd.api.app.SunApplication.VERSION_1_4_0);
+                    return new java.math.BigDecimal("1.4");
+                }
+                public org.xml.sax.SAXParseException getError() {
+                    return null;
+                }
+                public int getStatus() {
+                    return STATE_VALID;
+                }
+                public boolean isEventSource(org.netbeans.modules.j2ee.sun.dd.api.RootInterface rootDD) {
+                    return this == rootDD;
+                }
+                </user-code>
+	</meta-element>
+	<meta-element>
+		<dtd-name>web</dtd-name>
+		<bean-name>Web</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.app.Web</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>pass-by-reference</dtd-name>
+		<bean-name>PassByReference</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>unique-id</dtd-name>
+		<bean-name>UniqueId</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+                <skip-generation/>
+		<dtd-name>security-role-mapping</dtd-name>
+		<bean-name>SecurityRoleMapping</bean-name>
+		<implements>org.netbeans.modules.j2ee.sun.dd.api.common.SecurityRoleMapping</implements>
+	</meta-element>
+	<meta-element>
+		<dtd-name>realm</dtd-name>
+		<bean-name>Realm</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>#PCDATA</dtd-name>
+		<bean-name>Pcdata</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>role-name</dtd-name>
+		<bean-name>RoleName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>principal-name</dtd-name>
+		<bean-name>PrincipalName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>group-name</dtd-name>
+		<bean-name>GroupName</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>web-uri</dtd-name>
+		<bean-name>WebUri</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+	<meta-element>
+		<dtd-name>context-root</dtd-name>
+		<bean-name>ContextRoot</bean-name>
+		<wrapper-class>String</wrapper-class>
+	</meta-element>
+</metaDD>

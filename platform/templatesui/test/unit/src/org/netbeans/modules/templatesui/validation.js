@@ -1,0 +1,57 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+function assertDisplay(id, value, msg) {
+    var e = document.getElementById(id);
+    assertEquals(value, e.style.display, msg)
+}
+
+assertEquals(3, tck.steps(false).length, "There are three step directives");
+assertEquals('init', tck.steps(false)[0], "First step id");
+assertEquals('info', tck.steps(false)[1], "Second step id");
+assertEquals('summary', tck.steps(false)[2], "3rd step id");
+
+assertEquals(3, tck.steps(true).length, "There are three localized data-step headers");
+assertEquals('Initial Page', tck.steps(true)[0], "First step has own display name");
+assertEquals('info', tck.steps(true)[1], "Second display name is taken from id string");
+assertEquals('summary', tck.steps(true)[2], "3rd display name fallbacks to id attribute");
+
+assertEquals('init', tck.current(), "Current step is 1st one");
+assertDisplay('s0', '', "Display characteristics of 1st panel not mangled");
+assertDisplay('s1', 'none', "Invisible s1");
+assertDisplay('s2', 'none', "Invisible s2");
+
+tck.next();
+assertEquals('info', tck.current(), "Moved to 2nd panel");
+assertDisplay('s0', 'none', "Invisible s0");
+assertDisplay('s1', '', "Display characteristics of 2nd panel not mangled");
+assertDisplay('s2', 'none', "Invisible s2");
+
+assertEquals(-1, tck.data().errorCode(), "error state -1 means we require validation");
+tck.next();
+assertEquals('checking!', tck.data().msg(), "validation method has been called");
+assertEquals('info', tck.current(), "Still remains on 2nd panel");
+
+// process tasks registered by invokeLater by the tested page
+tck.invokeNow();
+
+assertEquals('summary', tck.current(), "Moved to 3nd panel");
+assertEquals(true, tck.data().ok(), "ok assigned to true");
+assertEquals('Validated!', tck.data().msg(), "message changed");
+assertEquals(0, tck.data().errorCode(), "no error");

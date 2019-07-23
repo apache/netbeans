@@ -1,0 +1,6 @@
+Code completion result for source line:
+a.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     print(): undefined              [PROTECTE  issue237878.js
+FIELD      title                           [PUBLIC]   issue237878.js

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-php5">
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                </folder>
+                <folder name="ToolTips">
+                    <file name="org-netbeans-modules-php-dbgp-annotations-ToolTipAnnotation.instance"/>
+                </folder>
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="850"/>
+                    </file>		    		                        
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+            </folder>
+       </folder>
+        <folder name="AnnotationTypes">
+            <file name="PHPError.xml" url="PHPError.xml"/>
+            <file name="PHPNotice.xml" url="PHPNotice.xml"/>
+            <file name="PHPWarning.xml" url="PHPWarning.xml"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="RunProject">
+            <file name="org-netbeans-modules-debugger-ui-actions-KillAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="Separator11.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+                <attr name="position" intvalue="1400"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+                <attr name="position" intvalue="1500"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance"/>
+                <attr name="position" intvalue="1600"/>
+            </file>
+            <file name="Separator3.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                <attr name="position" intvalue="2300"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                <attr name="position" intvalue="2500"/>
+            </file>                    
+        </folder>
+    </folder>
+
+</filesystem>

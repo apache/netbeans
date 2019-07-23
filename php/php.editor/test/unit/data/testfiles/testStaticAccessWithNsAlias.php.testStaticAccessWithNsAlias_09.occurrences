@@ -1,0 +1,2 @@
+        static function |>MARK_OCCURRENCES:some^Func<|() {
+            parent::|>MARK_OCCURRENCES:someFunc<|();

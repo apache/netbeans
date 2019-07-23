@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Entity Classes from Database Wizard: Database Tables</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.persistence.wizard.fromdb.DatabaseTablesPanel" name="org.netbeans.modules.j2ee.persistence.wizard.fromdb.DatabaseTablesPanel"></a></p>
+<div id="NBCSH5038"><!-- infolevel="all" infotype="General" --><a id="sthref747" name="sthref747"></a>
+<h1>New Entity Classes from Database Wizard: Database Tables</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to generate a set of entity classes based on tables from an existing database connection or schema. In this wizard, you choose the data source or connection to your database and the tables in that database with the fields that you want to persist. The IDE then generates an entity class for each of these tables and any related tables with persistent fields. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2778">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Use this page of the wizard as follows:</p>
+<ol>
+<li>
+<p>Select one of the following:</p>
+<ul>
+<li>
+<p><b>Data Source.</b> Select this option if you want to generate the entity classes directly from a database. Select the JNDI name of the data source from the drop-down list. If the data source you want is not listed, choose New Data Source in the drop-down list.</p>
+<ul>
+<li>When choosing a data source, the server must be running and the data source must be registered with the server.</li>
+<li>The drop-down list contains the database connections registered with the IDE if your target server is not a Java EE container or if the target project is a Java SE project.</li>
+</ul>
+</li>
+<li><b>Database Schema.</b> Select this if you already have a database schema you want to use. The drop-down list displays the database schemas that are found in the <code dir="ltr">src/conf</code> directory of your project.</li>
+</ul>
+</li>
+<li>
+<p>Select any tables in the left panel and click <b>Add</b>. If the table references other tables, the referenced tables are automatically added to the Selected Tables list in the right pane. The referenced tables are greyed out to indicate that they are referenced tables. You can place your cursor over the referenced tables to see a tooltip indicating which table references the table. The IDE automatically generates entity classes for each of the tables listed in the right pane.</p>
+<ul>
+<li>If you do not want entity classes created from referenced tables, deselect Include Related Tables.</li>
+<li>You can use the drop-down list to filter the Available Tables.</li>
+</ul>
+</li>
+<li>Click <b>Next</b> to confirm the entity class names and specify where to save the entity classes.</li>
+</ol>
+<a id="NBCSH5039" name="NBCSH5039"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2773">
+<param name="text" value="<html><u>&quot;Creating an Entity Class&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

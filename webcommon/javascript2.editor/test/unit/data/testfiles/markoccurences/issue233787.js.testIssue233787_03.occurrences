@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:address<| = {
+console.log(|>MARK_OCCURRENCES:addr^ess<|.street);

@@ -1,0 +1,25 @@
+FUNCTION issue233001 [ANONYMOUS: false, DECLARED: true - issue233001, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+issue233001Anonym$0 : OBJECT issue233001Anonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                    # PROPERTIES
+                    city   : OBJECT city [ANONYMOUS: false, DECLARED: true - city, MODIFIERS: PUBLIC, PROPERTY]
+                    coords : OBJECT coords [ANONYMOUS: false, DECLARED: true - coords, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                           # PROPERTIES
+                           test1 : OBJECT test1 [ANONYMOUS: false, DECLARED: true - test1, MODIFIERS: PUBLIC, PROPERTY]
+                           test2 : OBJECT test2 [ANONYMOUS: false, DECLARED: true - test2, MODIFIERS: PUBLIC, PROPERTY]
+ko                  : OBJECT ko [ANONYMOUS: false, DECLARED: false - ko, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    $bindings     : OBJECT $bindings [ANONYMOUS: false, DECLARED: true - $bindings, MODIFIERS: PUBLIC, OBJECT]
+                                  # PROPERTIES
+                                  city   : OBJECT city [ANONYMOUS: false, DECLARED: true - city, MODIFIERS: PUBLIC, PROPERTY]
+                                  coords : OBJECT coords [ANONYMOUS: false, DECLARED: true - coords, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                                         # PROPERTIES
+                                         test1 : OBJECT test1 [ANONYMOUS: false, DECLARED: true - test1, MODIFIERS: PUBLIC, PROPERTY]
+                                         test2 : OBJECT test2 [ANONYMOUS: false, DECLARED: true - test2, MODIFIERS: PUBLIC, PROPERTY]
+                    applyBindings : FUNCTION applyBindings [ANONYMOUS: false, DECLARED: false - applyBindings, MODIFIERS: PUBLIC, METHOD]
+                                  # PARAMETERS
+                                  OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

@@ -1,0 +1,7 @@
+<?php
+class |>CLASS:Root<| {
+
+    public static $|>FIELD,STATIC:PAHT<| ='/';
+    protected static $|>FIELD,STATIC:UI<| = 'help';
+
+}

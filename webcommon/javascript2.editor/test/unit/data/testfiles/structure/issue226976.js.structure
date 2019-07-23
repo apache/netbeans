@@ -1,0 +1,7 @@
+jasmine:CLASS:[PUBLIC]:ESCAPED{jasmine}:
+  TrivialReporter:CONSTRUCTOR:[PUBLIC]:ESCAPED{TrivialReporter}ESCAPED{(}ESCAPED{doc}ESCAPED{)}<font color="#999999">ESCAPED{ : }jasmine.TrivialReporter</font>:
+    document:FIELD:[PUBLIC]:ESCAPED{document}<font color="#999999">ESCAPED{ : }jasmine.TrivialReporter.document</font>:
+    logRunningSpecs:FIELD:[PUBLIC]:ESCAPED{logRunningSpecs}<font color="#999999">ESCAPED{ : }Boolean</font>:
+    prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+      createDom:METHOD:[PUBLIC]:ESCAPED{createDom}ESCAPED{(}ESCAPED{type}ESCAPED{, }ESCAPED{attrs}ESCAPED{, }ESCAPED{childrenVarArgs}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+    suiteDivs:CLASS:[PUBLIC]:ESCAPED{suiteDivs}:

@@ -1,0 +1,2 @@
+		var address = {|>MARK_OCCURRENCES:bas^eUrl<|:'', id:0};
+			address.|>MARK_OCCURRENCES:baseUrl<| = protocol + server;

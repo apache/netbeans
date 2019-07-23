@@ -1,0 +1,12 @@
+token #0 NEON_COMMENT # here can be a | pipe
+token #1 NEON_WHITESPACE \n
+token #2 NEON_VALUED_BLOCK first
+token #3 NEON_INTERPUNCTION :
+token #4 NEON_WHITESPACE  
+token #5 NEON_STRING "here can be a | pipe"
+token #6 NEON_WHITESPACE \n
+token #7 NEON_VALUED_BLOCK second
+token #8 NEON_INTERPUNCTION :
+token #9 NEON_WHITESPACE  
+token #10 NEON_STRING 'here can be a | pipe'
+token #11 NEON_WHITESPACE \n

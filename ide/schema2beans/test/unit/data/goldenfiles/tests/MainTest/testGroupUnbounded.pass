@@ -1,0 +1,30 @@
+Calling GenBeans.doIt
+Bean Tree:
+groupUnbounded <group-unbounded> : GroupUnbounded
+	[attr: version CDATA #REQUIRED  : java.lang.String]
+	(
+	  | object <object> : ObjectType
+	  | 	[attr: id CDATA #REQUIRED  : java.lang.String]
+	  | 	[attr: type CDATA #REQUIRED  : java.lang.String]
+	  | iobject <iobject> : IobjectType
+	  | 	[attr: id CDATA #REQUIRED  : java.lang.String]
+	  | 	[attr: type CDATA #REQUIRED  : java.lang.String]
+	  | 	[attr: value CDATA #REQUIRED  : java.lang.String]
+	  | property <property> : PropertyType
+	  | 	[attr: name CDATA #REQUIRED  : java.lang.String]
+	  | 	[attr: subject CDATA #REQUIRED  : java.lang.String]
+	  | 	[attr: value CDATA #REQUIRED  : java.lang.String]
+	)[0,n]
+
+Compiling
+Finished compiling: 0
+out: TestGroupUnbounded - creating the DOM document
+out: TestGroupUnbounded - creating the bean graph
+out: TestGroupUnbounded - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <group-unbounded xmlns='http://foo.com/xml/group-unbounded' version=''>
+out: 	<object id='b' type='green'/>
+out: 	<object id='a' type='blue'/>
+out: 	<iobject id='a' type='blue' value='stuff'/>
+out: </group-unbounded>
+Finished running TestGroupUnbounded: 0

@@ -1,0 +1,782 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	index <index> : Index[1,n]
+		word <word> : java.lang.String
+		ref <ref> : Ref[1,n]
+			page <page> : int
+			line <line> : int
+			rating <rating> : java.lang.Float
+			groupRating <groupRating> : float
+	chapter <chapter> : Chapter[1,n]
+		comment <comment> : java.lang.String[0,1]
+		paragraph <paragraph> : java.lang.String[0,n]
+		comment2 <comment> : java.lang.String[0,1]
+	summary <summary> : java.lang.String[0,1]
+	good <good> : boolean
+	available <available> : boolean
+	extra <extra> : Extra
+		| sizeCm <size-cm> : java.lang.String 	[pattern (\d+x\d+)]
+		| sizeInches <size-inches> : java.lang.String 	[pattern (\d+x\d+)]
+		| size <size> : java.lang.String 	[pattern (\d+x\d+)]
+		color <color> : java.lang.String[0,1]
+		| weightLb <weight-lb> : java.lang.Float
+		| weightKg <weight-kg> : java.lang.Float
+
+Compiling
+Finished compiling: 0
+out: TestBookXMLSchema - creating the DOM document
+out: TestBookXMLSchema - creating the bean graph
+out: TestBookXMLSchema - bean graph created
+out: TestBookXMLSchema single String - get/set -> OK
+out: TestBookXMLSchema single String - remove -> OK
+out: TestBookXMLSchema - should not have a 'summary' element:
+out: 
+out: TestBookXMLSchema single String - set new -> OK
+out: TestBookXMLSchema - should have a 'summary' element:
+out:   summary - element
+out: 
+out: TestBookXMLSchema boolean - get value (from true) -> OK
+out: TestBookXMLSchema - should have a 'good' element:
+out:   good - element
+out: 
+out: TestBookXMLSchema boolean - change to same value (true) -> OK
+out: TestBookXMLSchema - should still have a 'good' element:
+out:   good - element
+out: 
+out: TestBookXMLSchema boolean - change to false -> OK
+out: TestBookXMLSchema - should have a 'good' element:
+out:   good - element
+out: 
+out: TestBookXMLSchema boolean - change back to true -> OK
+out: TestBookXMLSchema - should have a 'good' element:
+out:   good - element
+out: 
+out: TestBookXMLSchema boolean - get value (from false) -> OK
+out: TestBookXMLSchema - should not have an 'available' element:
+out: 
+out: TestBookXMLSchema boolean - change to same value (false) -> OK
+out: TestBookXMLSchema - should have an 'available' element:
+out:   available - element
+out: 
+out: TestBookXMLSchema boolean - change to true -> OK
+out: TestBookXMLSchema - should have now an 'available' element:
+out:   available - element
+out: 
+out: TestBookXMLSchema boolean - change back to false -> OK
+out: TestBookXMLSchema - should have an 'available' element:
+out:   available - element
+out: 
+out: TestBookXMLSchema - String[] - search for the string arrays
+out: TestBookXMLSchema - found 3 chapter in book
+out: TestBookXMLSchema - chapter 1 has 2 paragraphs:
+out:   paragraph - element
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema - chapter 2 has 1 paragraphs:
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema - chapter 3 has 0 paragraphs:
+out: 
+out: TestBookXMLSchema String[0] - search for empty array -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [-1] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [0] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [1] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [999] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - add a string to the array -> OK
+out: TestBookXMLSchema - should contain one paragraph:
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema String[0] - add another string to the array -> OK
+out: TestBookXMLSchema - should contain two paragraphs:
+out:   paragraph - element
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema String[0] - compare paragraphs (same content) -> OK
+out: TestBookXMLSchema String[0] - compare paragraphs (different instances) -> OK
+out: TestBookXMLSchema String[0] - remove element -> OK
+out: TestBookXMLSchema - should contain one paragraph:
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema String[0] - access elements (first, should be null) -> OK
+out: TestBookXMLSchema String[0] - access elements (second, should be !null) -> OK
+out: TestBookXMLSchema String[0] - set again first element -> OK
+out: TestBookXMLSchema - should contain two paragraphs:
+out:   paragraph - element
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema String[0] - removing all elements (removed correct index) -> OK
+out: TestBookXMLSchema String[0] - removing all elements (size is now 1) -> OK
+out: TestBookXMLSchema String[0] - removing all elements (removed correct index) -> OK
+out: TestBookXMLSchema String[0] - removing all elements (size is now 0) -> OK
+out: TestBookXMLSchema - should contain no paragraph:
+out: 
+out: TestBookXMLSchema String[0] - search for array of size 1 -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [-1] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [1] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - out of bounds access [999] (IndexOutOfBoundsException) -> OK
+out: TestBookXMLSchema String[0] - add a string to the array -> OK
+out: TestBookXMLSchema - should contain two paragraphs:
+out:   paragraph - element
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema String[0] - compare paragraphs (different content) -> OK
+out: TestBookXMLSchema String[0] - add more paragraphs (100 new paragraphs) -> OK
+out: TestBookXMLSchema String[0] - removing paragraphs (leaving 10) -> OK
+out: TestBookXMLSchema - should contain 10 paragraphs:
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out:   paragraph - element
+out: 
+out: TestBookXMLSchema - book has 2 Index beans
+out:   index - element
+out:   index - element
+out: 
+out: TestBookXMLSchema remove a bean w/ remove() (correct element removed) -> OK
+out: TestBookXMLSchema remove a bean w/ remove() (correct Index array size) -> OK
+out: TestBookXMLSchema - book should have 1 Index beans
+out:   index - element
+out: 
+out: TestBookXMLSchema remove another bean w/ set(null) (correct Index array size) -> OK
+out: TestBookXMLSchema - book should have 0 Index beans
+out: 
+out: TestBookXMLSchema add an empty bean to the graph (correct Index array size) -> OK
+out: TestBookXMLSchema - book should have 1 Index beans
+out:   index - element
+out: 
+out: TestBookXMLSchema - book should have 2 Index beans
+out:   index - element
+out:   index - element
+out: 
+out: TestBookXMLSchema - idx should have 2 refs
+out: index - element
+out:   word - element
+out:     #text=who - text
+out:   ref - element
+out:     page - element
+out:       #text=122 - text
+out:     line - element
+out:       #text=32 - text
+out:   ref - element
+out:     page - element
+out:       #text=1 - text
+out:     line - element
+out:       #text=3 - text
+out: 
+out: TestBookXMLSchema add a subtree bean -> OK
+out: TestBookXMLSchema - book should have 3 Index beans
+out:   index - element
+out:   index - element
+out:   index - element
+out: 
+out: TestBookXMLSchema - idx should have 1 ref
+out: index - element
+out:   word - element
+out:     #text=what - text
+out:   ref - element
+out:     page - element
+out:       #text=22 - text
+out:     line - element
+out:       #text=2 - text
+out: 
+out: TestBookXMLSchema add another subtree bean -> OK
+out: TestBookXMLSchema should failed adding the same instance subtree 
+out:  >> caught: java.lang.IllegalArgumentException: Cannot insert an element which is already part of a graph. The element should be cloned first. -> OK
+out: TestBookXMLSchema - book should have 4 Index beans
+out:   index - element
+out:   index - element
+out:   index - element
+out:   index - element
+out: 
+out: TestBookXMLSchema - Initial Index is:
+out: index - element
+out:   word - element
+out:     #text=who - text
+out:   ref - element
+out:     page - element
+out:       #text=122 - text
+out:     line - element
+out:       #text=32 - text
+out:   ref - element
+out:     page - element
+out:       #text=1 - text
+out:     line - element
+out:       #text=3 - text
+out: 
+out: TestBookXMLSchema - New Index should be identical:
+out: index - element
+out:   word - element
+out:     #text=who - text
+out:   ref - element
+out:     page - element
+out:       #text=122 - text
+out:     line - element
+out:       #text=32 - text
+out:   ref - element
+out:     page - element
+out:       #text=1 - text
+out:     line - element
+out:       #text=3 - text
+out: 
+out: TestBookXMLSchema add the same cloned tree -> OK
+out: TestBookXMLSchema add beans (correct size of array) -> OK
+out: TestBookXMLSchema - should have nothing to print: 
+out: <no binding>
+out: TestBookXMLSchema remove an element (correct size of array) -> OK
+out: TestBookXMLSchema remove last element (correct size) -> OK
+out: TestBookXMLSchema - add an element and test getValues:
+out: Index
+out: 
+out:   Word
+out:   	<oops>
+out: 
+out:   Ref[1]
+out:   	#0:
+out:   	Page
+out:   		<77>
+out: 
+out:   	Line
+out:   		<7>
+out: 
+out:   	Rating
+out:   		<null>
+out: 
+out: TestBookXMLSchema creating the root for a brand new graph -> OK
+out: TestBookXMLSchema populating the graph -> OK
+out: TestBookXMLSchema - print the new graph DOM nodes:
+out: book - element
+out:   index - element
+out:     word - element
+out:       #text=summary - text
+out:     ref - element
+out:       page - element
+out:         #text=22 - text
+out:       line - element
+out:         #text=12 - text
+out:     ref - element
+out:       page - element
+out:         #text=4 - text
+out:       line - element
+out:         #text=5 - text
+out:   chapter - element
+out:     comment - element
+out:       #text=What's a good summary in chapter 1 - text
+out:     paragraph - element
+out:       #text=This is the first paragraph - text
+out:     paragraph - element
+out:       #text=This is a second paragraph - text
+out:     comment - element
+out:       #text=Additional comment - text
+out:   chapter - element
+out:     comment - element
+out:       #text=Yet another comment for chapter 2 - text
+out:     paragraph - element
+out:       #text=only one paragraph in this second chapter - text
+out:   chapter - element
+out:   summary - element
+out:     #text=This book is about avoiding summaries at the end of books - text
+out:   good - element
+out:     #text=false - text
+out:   available - element
+out:     #text=true - text
+out: 
+out: TestBookXMLSchema - Re-read the original XML file for array getter/setter testing
+out: TestBookXMLSchema - creating the DOM document
+out: TestBookXMLSchema - bean graph created
+out: TestBookXMLSchema check Index[] getter() method (correct array size) -> OK
+out: TestBookXMLSchema check Index[] getter() method (same first element) -> OK
+out: TestBookXMLSchema check Index[] getter() method (same second element) -> OK
+out: TestBookXMLSchema check Index[] getter() method ([0] != [1]) -> OK
+out: TestBookXMLSchema check Chapter[] getter() method (correct array size) -> OK
+out: TestBookXMLSchema check Chapter[] getter() method (same first element) -> OK
+out: TestBookXMLSchema check Chapter[] getter() method (same second element) -> OK
+out: TestBookXMLSchema check Chapter[] getter() method (same third element) -> OK
+out: TestBookXMLSchema check Chapter[] getter() method ([0] != [2]) -> OK
+out: TestBookXMLSchema check Chapter.Paragraph getter() method (correct array size) -> OK
+out: TestBookXMLSchema check Chapter.Paragraph getter() method (correct array size) -> OK
+out: TestBookXMLSchema check Chapter.Paragraph getter() method (correct array size) -> OK
+out: TestBookXMLSchema change the Chapter[] order (reversed first element) -> OK
+out: TestBookXMLSchema change the Chapter[] order (same second element) -> OK
+out: TestBookXMLSchema change the Chapter[] order (reversed third element) -> OK
+out: TestBookXMLSchema - Make sure the contents of a Chapter object remain intact after removing that Chapter from the Book
+out: TestBookXMLSchema - This chapter may not make it into the book.
+out: TestBookXMLSchema - 4
+out: TestBookXMLSchema Chapter going in and out of Book undecided chapter is in there -> OK
+out: TestBookXMLSchema - make sure undecidedChapter is intact
+out: TestBookXMLSchema - This chapter may not make it into the book.
+out: TestBookXMLSchema - make sure book is intact
+out: TestBookXMLSchema - 3
+out: TestBookXMLSchema - Put the chapter back in.
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <book>
+out:   <chapter>
+out:     <comment>This chapter may not make it into the book.</comment>
+out:   </chapter>
+out:   <summary>
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	</summary>
+out:   <chapter>
+out:     <comment>
+out: 		First chapter.
+out: 		</comment>
+out:     <paragraph>
+out: 			Once upon a time...
+out: 		</paragraph>
+out:     <paragraph>
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		</paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <paragraph>
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		</paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <comment>
+out: 		Empty chapter
+out: 		</comment>
+out:   </chapter>
+out:   <index>
+out:     <word>
+out: 			Good book
+out: 		</word>
+out:     <ref>
+out:       <page>22</page>
+out:       <line>12</line>
+out:     </ref>
+out:   </index>
+out:   <index>
+out:     <word>
+out: 			E-Tool
+out: 		</word>
+out:     <ref>
+out:       <page>5</page>
+out:       <line>15</line>
+out:     </ref>
+out:     <ref>
+out:       <page>29</page>
+out:       <line>31</line>
+out:     </ref>
+out:   </index>
+out:   <good/>
+out:   <extra>
+out:     <size-cm>
+out: 	10x20
+out: 	</size-cm>
+out:     <weight-kg>
+out: 	0.125
+out: 	</weight-kg>
+out:   </extra>
+out: </book>
+out: TestBookXMLSchema - creating the DOM document
+out: TestBookXMLSchema - creating the bean graph
+out: TestBookXMLSchema check if the root has any choice prop (none found) -> OK
+out: TestBookXMLSchema check if the root has any choice prop (none found on Chapter prop) -> OK
+out: TestBookXMLSchema check if the root has any choice prop (none found on index prop) -> OK
+out: TestBookXMLSchema test extra prop (at least one) -> OK
+out: TestBookXMLSchema - Getting a set of choice properties:
+out: TestBookXMLSchema test extra prop size-cm -> OK
+out: TestBookXMLSchema test extra prop size-inches -> OK
+out: TestBookXMLSchema test extra prop size -> OK
+out: TestBookXMLSchema - Getting a set of choice properties:
+out: TestBookXMLSchema test extra prop weight-lb -> OK
+out: TestBookXMLSchema test extra prop weight-kg -> OK
+out: TestBookXMLSchema - Getting the same list 3 times:
+out: TestBookXMLSchema test extra prop size-cm -> OK
+out: TestBookXMLSchema test extra prop size-inches -> OK
+out: TestBookXMLSchema test extra prop size -> OK
+out: TestBookXMLSchema test extra prop size-cm -> OK
+out: TestBookXMLSchema test extra prop size-inches -> OK
+out: TestBookXMLSchema test extra prop size -> OK
+out: TestBookXMLSchema test extra prop size-cm -> OK
+out: TestBookXMLSchema test extra prop size-inches -> OK
+out: TestBookXMLSchema test extra prop size -> OK
+out: TestBookXMLSchema - Getting twice the same list:
+out: TestBookXMLSchema test extra prop weight-lb -> OK
+out: TestBookXMLSchema test extra prop weight-kg -> OK
+out: TestBookXMLSchema test extra prop weight-lb -> OK
+out: TestBookXMLSchema test extra prop weight-kg -> OK
+out: TestBookXMLSchema test extra prop  color not choice prop -> OK
+out: TestBookXMLSchema - Parsing /Book/Good
+out: TestBookXMLSchema - true
+out: TestBookXMLSchema - Parsing /Good
+out: TestBookXMLSchema - true
+out: TestBookXMLSchema - Parsing Summary/
+out: TestBookXMLSchema - 
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	
+out: TestBookXMLSchema - Parsing Summary
+out: TestBookXMLSchema - Parsing Available
+out: TestBookXMLSchema - Parsing Extra
+out: TestBookXMLSchema - Extra
+out: 
+out:   SizeCm
+out:   	<10x20>
+out: 
+out:   SizeInches
+out:   	<null>
+out: 
+out:   Size
+out:   	<null>
+out: 
+out:   Color
+out:   	<null>
+out: 
+out:   WeightLb
+out:   	<null>
+out: 
+out:   WeightKg
+out:   	<0.125>
+out: 
+out: TestBookXMLSchema - Parsing Chapter
+out: TestBookXMLSchema - Chapter
+out: 
+out:   Comment
+out:   	<First chapter.>
+out: 
+out:   Paragraph[2]
+out:   	#0:
+out:   	<Once upon a time...>
+out: 
+out:   	#1:
+out:   	<And this is how the book met the fairy, and how all this
+out: 			story began.>
+out: 
+out:   Comment2
+out:   	<null>
+out: 
+out: TestBookXMLSchema - Chapter
+out: 
+out:   Comment
+out:   	<null>
+out: 
+out:   Paragraph[1]
+out:   	#0:
+out:   	<And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.>
+out: 
+out:   Comment2
+out:   	<null>
+out: 
+out: TestBookXMLSchema - Chapter
+out: 
+out:   Comment
+out:   	<Empty chapter>
+out: 
+out:   Paragraph[0]
+out:   Comment2
+out:   	<null>
+out: 
+out: TestBookXMLSchema - Parsing Chapter/Comment
+out: TestBookXMLSchema - 
+out: 		First chapter.
+out: 		
+out: TestBookXMLSchema - 
+out: 		Empty chapter
+out: 		
+out: TestBookXMLSchema - Parsing Chapter/Paragraph
+out: TestBookXMLSchema - 
+out: 			Once upon a time...
+out: 		
+out: TestBookXMLSchema - 
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		
+out: TestBookXMLSchema - 
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		
+out: TestBookXMLSchema - Parsing index/ref/line
+out: TestBookXMLSchema - 12
+out: TestBookXMLSchema - 15
+out: TestBookXMLSchema - 31
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[2]
+out:   	#0:
+out:   	Word
+out:   		<Good book>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Page
+out:   			<22>
+out: 
+out:   		Line
+out:   			<12>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   	#1:
+out:   	Word
+out:   		<E-Tool>
+out: 
+out:   	Ref[2]
+out:   		#0:
+out:   		Page
+out:   			<5>
+out: 
+out:   		Line
+out:   			<15>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   		#1:
+out:   		Page
+out:   			<29>
+out: 
+out:   		Line
+out:   			<31>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   Chapter[3]
+out:   	#0:
+out:   	Comment
+out:   		<First chapter.>
+out: 
+out:   	Paragraph[2]
+out:   		#0:
+out:   		<Once upon a time...>
+out: 
+out:   		#1:
+out:   		<And this is how the book met the fairy, and how all this
+out: 			story began.>
+out: 
+out:   	Comment2
+out:   		<null>
+out: 
+out:   	#1:
+out:   	Comment
+out:   		<null>
+out: 
+out:   	Paragraph[1]
+out:   		#0:
+out:   		<And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.>
+out: 
+out:   	Comment2
+out:   		<null>
+out: 
+out:   	#2:
+out:   	Comment
+out:   		<Empty chapter>
+out: 
+out:   	Paragraph[0]
+out:   	Comment2
+out:   		<null>
+out: 
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	true
+out:   Available
+out:   	false
+out:   Extra
+out:   	SizeCm
+out:   		<10x20>
+out: 
+out:   	SizeInches
+out:   		<null>
+out: 
+out:   	Size
+out:   		<null>
+out: 
+out:   	Color
+out:   		<null>
+out: 
+out:   	WeightLb
+out:   		<null>
+out: 
+out:   	WeightKg
+out:   		<0.125>
+out: 
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tools/Ref/Page
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tool/Ref/Page
+out: TestBookXMLSchema - 5
+out: TestBookXMLSchema - 29
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tool/Ref.Line=15/Page
+out: TestBookXMLSchema - 5
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tool/Ref.Line=15/Page=22
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tool/Ref.Line=15/Page=5
+out: TestBookXMLSchema - 5
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[0]
+out:   Chapter[0]
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	false
+out:   Available
+out:   	false
+out:   Extra
+out:   	null
+out: TestBookXMLSchema - Parsing /Book/Index.Word=E-Tools/Ref.Line=15/Page!
+out: TestBookXMLSchema - null
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[1]
+out:   	#0:
+out:   	Word
+out:   		<E-Tools>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Line
+out:   			<15>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   Chapter[0]
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	false
+out:   Available
+out:   	false
+out:   Extra
+out:   	null
+out: TestBookXMLSchema - Parsing /Book/Chapter.Comment=My Comment
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[1]
+out:   	#0:
+out:   	Word
+out:   		<E-Tools>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Line
+out:   			<15>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   Chapter[0]
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	false
+out:   Available
+out:   	false
+out:   Extra
+out:   	null
+out: TestBookXMLSchema - Parsing /Book/Chapter.Comment=My Comment!
+out: TestBookXMLSchema - Chapter
+out: 
+out:   Comment
+out:   	<My Comment>
+out: 
+out:   Paragraph[0]
+out:   Comment2
+out:   	<null>
+out: 
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[1]
+out:   	#0:
+out:   	Word
+out:   		<E-Tools>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Line
+out:   			<15>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   Chapter[1]
+out:   	#0:
+out:   	Comment
+out:   		<My Comment>
+out: 
+out:   	Paragraph[0]
+out:   	Comment2
+out:   		<null>
+out: 
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	false
+out:   Available
+out:   	false
+out:   Extra
+out:   	null
+out: TestBookXMLSchema - Parsing /Book/Index.Word=the word/Ref.Line=10/Page=20!
+out: TestBookXMLSchema - 20
+out: TestBookXMLSchema - Book
+out: 
+out:   Index[2]
+out:   	#0:
+out:   	Word
+out:   		<E-Tools>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Line
+out:   			<15>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   	#1:
+out:   	Word
+out:   		<the word>
+out: 
+out:   	Ref[1]
+out:   		#0:
+out:   		Page
+out:   			<20>
+out: 
+out:   		Line
+out:   			<10>
+out: 
+out:   		Rating
+out:   			<null>
+out: 
+out:   Chapter[1]
+out:   	#0:
+out:   	Comment
+out:   		<My Comment>
+out: 
+out:   	Paragraph[0]
+out:   	Comment2
+out:   		<null>
+out: 
+out:   Summary
+out:   	<null>
+out: 
+out:   Good
+out:   	false
+out:   Available
+out:   	false
+out:   Extra
+out:   	null
+out: TestBookXMLSchema - creating the DOM document
+out: TestBookXMLSchema - creating the bean graph
+out: TestBookXMLSchema simple merge identical graphs -> OK
+Finished running TestBookXMLSchema: 0

@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:name<| = "Hurvinek";
+Test.modules.moduleA.|>MARK_OCCURRENCES:na^me<|;

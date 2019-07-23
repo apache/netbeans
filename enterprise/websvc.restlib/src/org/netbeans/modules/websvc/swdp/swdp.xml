@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<library  version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
+    <name>restlib</name>
+    <type>j2se</type>
+    <localizing-bundle>org/netbeans/modules/websvc/swdp/Bundle</localizing-bundle>
+    <volume>
+        <type>classpath</type>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/asm-all-repackaged-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/cglib-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/guava-14.0.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/hk2-api-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/hk2-locator-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/hk2-utils-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/javax.annotation-api-1.2.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/javax.inject-2.2.0-b21.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/javax.servlet-api-3.0.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/jaxb-api-2.2.7.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/jersey-entity-filtering-2.5.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/jersey-media-moxy-2.5.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/org.osgi.core-4.2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/osgi-resource-locator-1.0.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/persistence-api-1.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/ext/validation-api-1.1.0.Final.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jersey-client.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jersey-common.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jersey-container-servlet.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jersey-container-servlet-core.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jersey2/jersey-server.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/eclipselink.jar!/</resource>
+    </volume>
+    <properties>
+        <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
+        <property>
+            <name>maven-dependencies</name>
+            <value>
+                org.glassfish.jersey.containers:jersey-container-servlet:2.5.1:jar
+                org.glassfish.jersey.core:jersey-client:2.5.1:jar
+                org.glassfish.jersey.media:jersey-media-moxy:2.5.1:jar
+            </value>
+        </property>
+    </properties>    
+</library>

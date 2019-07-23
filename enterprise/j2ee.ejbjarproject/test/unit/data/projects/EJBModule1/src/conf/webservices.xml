@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<webservices xmlns='http://java.sun.com/xml/ns/j2ee' version='1.1'>
+	<webservice-description>
+		<webservice-description-name>NewWebService</webservice-description-name>
+		<wsdl-file>META-INF/wsdl/NewWebService.wsdl</wsdl-file>
+		<jaxrpc-mapping-file>META-INF/NewWebService-mapping.xml</jaxrpc-mapping-file>
+		<port-component xmlns:wsdl-port_ns='urn:NewWebService/wsdl'>
+			<port-component-name>NewWebService</port-component-name>
+			<wsdl-port>wsdl-port_ns:NewWebServiceSEIPort</wsdl-port>
+			<service-endpoint-interface>ws.NewWebServiceSEI</service-endpoint-interface>
+			<service-impl-bean>
+				<ejb-link>NewWebService</ejb-link>
+			</service-impl-bean>
+		</port-component>
+	</webservice-description>
+</webservices>

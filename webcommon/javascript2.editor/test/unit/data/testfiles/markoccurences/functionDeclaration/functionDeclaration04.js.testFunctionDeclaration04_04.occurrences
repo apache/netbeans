@@ -1,0 +1,2 @@
+    var f1 = function f1(|>MARK_OCCURRENCES:c^ont<|) {
+        if (|>MARK_OCCURRENCES:cont<|) {

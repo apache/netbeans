@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">General</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+
+        <change id="ProjectNature.getSchemas-deleted">
+            <summary><code>ProjectNature.getSchemas</code> deleted</summary>
+            <version major="1" minor="18"/>
+            <date day="11" month="7" year="2008"/>
+            <author login="jglick"/>
+            <compatibility deletion="yes" binary="compatible"/>
+            <description>
+                <p>
+                    <code>ProjectNature.getSchemas</code> is no longer necessary and was deleted.
+                    Natures should instead register schemas according to <code>AntProjectHelper</code> documentation.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.ant.freeform.spi" name="ProjectNature"/>
+            <issue number="42686"/>
+        </change>
+
+        <change id="view-source-folder-subproject-style">
+            <summary>New view style for subprojects</summary>
+            <version major="1" minor="15"/>
+            <date day="7" month="3" year="2007"/>
+            <author login="jglick"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Added a new view style for folders in the <b>Projects</b> tab:
+                    <code>subproject</code>. Displays a project node which can be opened.
+                </p>
+            </description>
+            <issue number="97442"/>
+        </change>
+
+        <change id="includes-excludes">
+            <summary>Include/exclude support in views</summary>
+            <version major="1" minor="15"/>
+            <date day="1" month="3" year="2007"/>
+            <author login="jglick"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no"/>
+            <description>
+                <p>
+                    Changed signature of <code>ProjectNature.createSourceFolderView</code> to accept
+                    <code>includes</code> and <code>excludes</code> parameters.
+                </p>
+                <p>
+                    Added methods to <code>Util</code> to work with a new <code>http://www.netbeans.org/ns/freeform-project/2</code>
+                    general data schema. Use of <code>AntProjectHelper.get/putPrimaryConfigurationData</code>
+                    is now considered unsafe.
+                </p>
+            </description>
+             <class package="org.netbeans.modules.ant.freeform.spi" name="ProjectNature"/>
+             <class package="org.netbeans.modules.ant.freeform.spi.support" name="Util"/>
+            <issue number="49026"/>
+        </change>
+        
+        <change id="remove_nature_lookup_customizer">
+            <summary>Simplify ProjectNature and align with common project extensibility APIs</summary>
+            <version major="1" minor="14"/>
+            <date day="20" month="2" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no" />
+            <description>
+                <p>
+                    Removed class <code>org.netbeans.modules.ant.freeform.spi.ProjectPropertiesPanel</code>
+                    and removed methods from <code>org.netbeans.modules.ant.freeform.spi.ProjectNature</code>.
+                    The removed methods were replaced by new project extensibility APIs.
+                </p>
+            </description>
+             <class package="org.netbeans.modules.ant.freeform.spi" name="ProjectPropertiesPanel"/>
+             <class package="org.netbeans.modules.ant.freeform.spi" name="ProjectNature"/>
+            <issue number="90562" />
+        </change>
+        
+        <change id="deprecate_LookupMerger">
+            <summary>Remove LookupMerger</summary>
+            <version major="1" minor="13"/>
+            <date day="11" month="10" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no" />
+            <description>
+                <p>
+                    Removed class <code>org.netbeans.modules.ant.freeform.spi.LookupMerger</code>
+                    and replaced by <code>org.netbeans.spi.project.LookupMerger</code>
+                </p>
+            </description>
+             <class package="org.netbeans.modules.ant.freeform.spi" name="LookupMerger"/>
+            <issue number="86680" />
+        </change>
+        
+        <change id="HelpIDFragmentProvider">
+            <summary>Class HelpIDFragmentProvider added</summary>
+            <version major="1" minor="11" subminor="1"/>
+            <date day="11" month="8" year="2006"/>
+            <author login="mkubec"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" />
+            <description>
+                <p>
+                    Class HelpIDFragmentProvider added to help to generate freeform project type specific HelpIDs in other project natures
+                </p>
+            </description>
+            <issue number="63085" />
+        </change>
+        
+        <change id="getDefaultAntScript">
+            <summary>Method getDefaultAntScript added</summary>
+            <version major="1" minor="9"/>
+            <date day="7" month="11" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" />
+            <description>
+                <p>
+                    Method org.netbeans.modules.ant.freeform.spi.support.Util.getDefaultAntScript added.
+                </p>
+            </description>
+            <issue number="67207" />
+        </change>
+        
+        <change id="friend-packages">
+            <summary>Declare SPI packages for friends only</summary>
+            <version major="1" minor="8"/>
+            <date day="31" month="10" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="compatible">
+                Only permitted clients can now use this SPI, and they were all updated.
+            </compatibility>
+            <description>
+                <p>
+                    Use of this SPI was restricted to known client modules.
+                </p>
+            </description>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!-- Generated from apichanges.xml -->
+    <head>
+      <title>Change History for the Ant Freeform SPI</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="overview-summary.html">Ant Freeform SPI</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.ant.freeform/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

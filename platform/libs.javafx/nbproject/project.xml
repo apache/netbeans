@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.libs.javafx</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.40</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.23</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <test-dependencies>
+                <test-type>
+                    <name>unit</name>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                    </test-dependency>
+                </test-type>
+            </test-dependencies>
+            <public-packages>
+                <package>javafx.animation</package>
+                <package>javafx.application</package>
+                <package>javafx.beans</package>
+                <package>javafx.beans.binding</package>
+                <package>javafx.beans.property</package>
+                <package>javafx.beans.property.adapter</package>
+                <package>javafx.beans.value</package>
+                <package>javafx.collections</package>
+                <package>javafx.concurrent</package>
+                <package>javafx.css</package>
+                <package>javafx.embed.swing</package>
+                <package>javafx.event</package>
+                <package>javafx.fxml</package>
+                <package>javafx.geometry</package>
+                <package>javafx.scene</package>
+                <package>javafx.scene.canvas</package>
+                <package>javafx.scene.chart</package>
+                <package>javafx.scene.control</package>
+                <package>javafx.scene.control.cell</package>
+                <package>javafx.scene.effect</package>
+                <package>javafx.scene.image</package>
+                <package>javafx.scene.input</package>
+                <package>javafx.scene.layout</package>
+                <package>javafx.scene.media</package>
+                <package>javafx.scene.paint</package>
+                <package>javafx.scene.shape</package>
+                <package>javafx.scene.text</package>
+                <package>javafx.scene.transform</package>
+                <package>javafx.scene.web</package>
+                <package>javafx.stage</package>
+                <package>javafx.util</package>
+                <package>javafx.util.converter</package>
+                <package>netscape.javascript</package>
+                <package>com.sun.javafx.scene.web</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>${java.home}/lib/ext/jfxrt.jar</runtime-relative-path>
+                <binary-origin>build/openjfx.zip</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

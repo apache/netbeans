@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="bean-graph">
+	<xsd:complexType>
+	  <xsd:sequence>
+		<xsd:element name="schema-type-mapping" type="schemaTypeMappingType"
+		  minOccurs="0" maxOccurs="unbounded"/>
+	  </xsd:sequence>
+	</xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="schemaTypeMappingType">
+	<xsd:annotation>
+	  <xsd:documentation>
+		Map between schema types and java types.
+	  </xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+	  <xsd:element name="schema-type-namespace" type="xsd:string" minOccurs="0"/>
+	  <xsd:element name="schema-type-name" type="xsd:string">
+		<xsd:annotation>
+		  <xsd:documentation>
+			The schema type; for instance, "string"
+		  </xsd:documentation>
+		</xsd:annotation>
+	  </xsd:element>
+	  <xsd:element name="java-type" type="xsd:string">
+		<xsd:annotation>
+		  <xsd:documentation>
+			The java type; for instance, "java.lang.String", or "int"
+		  </xsd:documentation>
+		</xsd:annotation>
+	  </xsd:element>
+	  <xsd:element name="root" type="xsd:boolean" minOccurs="0"/>
+	  <xsd:element name="bean" type="xsd:boolean" minOccurs="0"/>
+	  <xsd:element name="can-be-empty" type="xsd:boolean" minOccurs="0"/>
+	</xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

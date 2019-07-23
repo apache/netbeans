@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="CreditReport" targetNamespace="http://j2ee.netbeans.org/wsdl/CreditReport"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://j2ee.netbeans.org/wsdl/CreditReport"
+    xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+    xmlns:ns0="http://j2ee.netbeans.org/wsdl/CreditReport">
+    <types>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/CreditReport"
+                    xmlns:tns1="http://j2ee.netbeans.org/wsdl/CreditReport">
+            <xsd:element name="creditQuery">
+                <xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                    <xsd:sequence>
+                        <xsd:element name="firstName" type="xsd:string"></xsd:element>
+                        <xsd:element name="lastName" type="xsd:string"></xsd:element>
+                        <xsd:element name="ssn" type="xsd:string"></xsd:element>
+                        <xsd:element name="queryType" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="creditReport">
+                <xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+                    <xsd:sequence>
+                        <xsd:element name="firstName" type="xsd:string"></xsd:element>
+                        <xsd:element name="lastName" type="xsd:string"></xsd:element>
+                        <xsd:element name="dob" type="xsd:string"></xsd:element>
+                        <xsd:element name="ssn" type="xsd:string"></xsd:element>
+                        <xsd:element name="score" type="xsd:string"></xsd:element>
+                        <xsd:element name="latestAddress1" type="xsd:string"></xsd:element>
+                        <xsd:element name="latestAddress2" type="xsd:string"></xsd:element>
+                        <xsd:element name="city" type="xsd:string"></xsd:element>
+                        <xsd:element name="state" type="xsd:string"></xsd:element>
+                        <xsd:element name="country" type="xsd:string"></xsd:element>
+                        <xsd:element name="postalCode" type="xsd:string"></xsd:element>
+                        <xsd:element name="liability" type="xsd:integer"></xsd:element>
+                        <xsd:element name="liquidAssests" type="xsd:integer"></xsd:element>
+                        <xsd:element name="immovableAssests" type="xsd:integer"></xsd:element>
+                        <xsd:element name="currency" type="xsd:string"></xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+    <message name="CreditReportOperationRequest">
+        <part name="part1" element="ns0:creditQuery"/>
+    </message>
+    <message name="CreditReportOperationReply">
+        <part name="part1" element="ns0:creditReport"/>
+    </message>
+    <portType name="CreditReportPortType">
+        <wsdl:operation name="CreditReportOperation">
+            <wsdl:input name="input1" message="tns:CreditReportOperationRequest"/>
+            <wsdl:output name="output1" message="tns:CreditReportOperationReply"/>
+        </wsdl:operation>
+    </portType>
+    <binding name="binding1" type="tns:CreditReportPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="CreditReportOperation">
+            <wsdl:input name="input1">
+                <soap:body parts="part1" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="output1">
+                <soap:body use="literal" parts="part1"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </binding>
+    <service name="service1">
+        <port name="port1" binding="tns:binding1">
+            <soap:address location="http://localhost:18181/WebApplication5/CreditReport/port1"/>
+        </port>
+    </service>
+</definitions>

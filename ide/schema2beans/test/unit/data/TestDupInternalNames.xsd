@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://multitrode.com/config"
+  		xmlns="http://multitrode.com/config"
+  		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  elementFormDefault="qualified">
+
+<xs:element name="root">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="in" type="analogInput"/>
+			<xs:element name="out" type="analogOutput"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+<xs:complexType name="analogInput">
+<xs:all>
+<xs:element default="0" name="pointNumber">
+  <xs:complexType>
+   <xs:simpleContent>
+     <xs:extension base="xs:integer">
+      <xs:attribute default="Point Number" name="longname" type="xs:string"/>
+     </xs:extension>
+   </xs:simpleContent>
+  </xs:complexType>
+</xs:element>
+<xs:element name="subelement">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="a" type="xsd:double"/>
+      <xs:element name="b" type="xsd:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:all>
+</xs:complexType>
+<xs:complexType name="analogOutput">
+<xs:all>
+<xs:element default="0" name="pointNumber">
+  <xs:complexType>
+   <xs:simpleContent>
+     <xs:extension base="xs:integer">
+      <xs:attribute default="Point Number" name="longname" type="xs:string"/>
+     </xs:extension>
+   </xs:simpleContent>
+  </xs:complexType>
+</xs:element>
+<xs:element name="subelement">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="a" type="xsd:string"/>
+      <xs:element name="c" type="xsd:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:all>
+</xs:complexType>
+
+</xs:schema>

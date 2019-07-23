@@ -1,0 +1,3 @@
+Keybord:CLASS:[PUBLIC]:ESCAPED{Keybord}:
+  keys:METHOD:[PUBLIC]:ESCAPED{keys}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Generator</font>:
+keyboard:VARIABLE:[PUBLIC]:ESCAPED{keyboard}<font color="#999999">ESCAPED{ : }Keybord</font>:

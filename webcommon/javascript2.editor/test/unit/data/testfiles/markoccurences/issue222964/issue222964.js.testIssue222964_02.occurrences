@@ -1,0 +1,3 @@
+    |>MARK_OCCURRENCES:address<|: {
+console.log(store.|>MARK_OCCURRENCES:address<|.street);
+console.log(window.store.|>MARK_OCCURRENCES:addre^ss<|.street);

@@ -1,0 +1,15 @@
+{extends "inheritance.parent.latte"}
+
+
+{block content}
+	<h1>{block title}Homepage{/block}</h1>
+
+	<ul>
+	{foreach $people as $person}
+		<li>{$person}</li>
+	{/foreach}
+	</ul>
+{/block}
+
+
+{block sidebar}{/block}

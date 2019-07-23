@@ -1,0 +1,2 @@
+    const |>MARK_OCCURRENCES:MY_CO^NST<| = 'MY_CONST';
+            echo self::|>MARK_OCCURRENCES:MY_CONST<| . PHP_EOL;

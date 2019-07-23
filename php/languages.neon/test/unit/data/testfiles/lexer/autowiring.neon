@@ -1,0 +1,25 @@
+parameters:
+	class: Lorem
+	factory: Factory
+
+services:
+	model:
+		factory: %factory%::createModel
+		setup:
+			# local methods
+			- test(...)
+			- @model::test()
+			- @self::test()
+
+			# static class method
+			- Lorem::test
+
+			# other service method
+			- @lorem::test
+
+	lorem:
+		class: %class%
+
+	database:
+		class: Nette\Database\Connection
+		arguments: ['sqlite2::memory:']

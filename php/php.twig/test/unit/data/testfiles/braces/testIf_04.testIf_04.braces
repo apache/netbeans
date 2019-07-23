@@ -1,0 +1,5 @@
+<html>
+{% *if* true %}
+text
+{% *end^if* %}
+</html>

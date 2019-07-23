@@ -1,0 +1,46 @@
+        <%  if(true){
+            switch(age){
+                case 10:
+                    
+                    a=b;
+            }
+        }
+        %>
+    
+
+        <%
+        
+        if (true) {
+            
+        }
+        
+        %>
+<font size="4"/>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <%
+            if (true) {
+                switch (age) {
+                    
+                    case 10:
+                        dsds;
+                        case 12:
+                            kfkfdlf;
+                            case 22:
+                                fdfjd;
+                            
+                        a = b;
+
+                }   
+
+            }
+        %>           
+        
+        
+    </head>
+    <body>
+        <h2>Hello World!</h2>
+    </body>
+    <div style="color: red;"/>
+</html>

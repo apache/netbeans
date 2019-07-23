@@ -1,0 +1,5 @@
+function |>METHOD:weird<|(x, |>UNUSED:y<|) {
+    var |>LOCAL_VARIABLE_DECLARATION,UNUSED:baf<| = 10;
+    x = x;
+    
+}

@@ -1,0 +1,7 @@
+Queues  >   Diff                D
+            Go To Patch...      G
+            Pop All Patches     P
+            Push All Patches    S
+            Create Patch...     C
+            Refresh Patch...    R
+            Finish Patches...   F

@@ -1,0 +1,100 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	index <index> : Index[1,n]
+		alpha <alpha> : char
+		word <word> : String
+		ref <ref> : Ref[1,n]
+			page <page> : int
+			line <line> : int[1,n]
+	chapter <chapter> : Chapter[1,n]
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+	summary <summary> : String[0,1]
+	available <available> : boolean
+		EMPTY : String
+	price <price> : float
+	date <date> : book.MyDate
+
+Compiling
+Finished compiling: 0
+out: TestMdd - creating the DOM document
+out: TestMdd - creating the bean graph
+out: TestMdd - bean graph created
+out: TestMdd get non scalar wrapper object -> OK
+out: TestMdd - MyDate value = 14/07/2000
+out: TestMdd get float scalar value -> OK
+out: TestMdd - Setting new price to 9.99
+out: TestMdd get float scalar value -> OK
+out: TestMdd - Price and date should match
+out: book - element
+out:   summary - element
+out:     #text=
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	 - text
+out:   price - element
+out:     #text=9.99 - text
+out:   date - element
+out:     #text=14/07/2000 - text
+out:   chapter - element
+out:     comment - element
+out:     paragraph - element
+out:     paragraph - element
+out:   chapter - element
+out:     paragraph - element
+out:   chapter - element
+out:     comment - element
+out:   index - element
+out:     alpha - element
+out:     word - element
+out:     ref - element
+out:   index - element
+out:     word - element
+out:     ref - element
+out:     ref - element
+out: 
+out: TestMdd get char scalar value -> OK
+out: TestMdd get char scalar value -> OK
+out: TestMdd - Alpha should be 'x'
+out: index - element
+out:   alpha - element
+out:     #text=x - text
+out:   word - element
+out:     #text=
+out: 			Good book
+out: 		 - text
+out:   ref - element
+out:     page - element
+out:     line - element
+out:     line - element
+out:     line - element
+out: 
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd get int/int[] scalar values -> OK
+out: TestMdd - Lines should be 12/22/323
+out: ref - element
+out:   page - element
+out:     #text=
+out: 			22
+out: 		 - text
+out:   line - element
+out:     #text=
+out: 			12
+out: 		 - text
+out:   line - element
+out:     #text=
+out: 			22
+out: 		 - text
+out:   line - element
+out:     #text=323 - text
+out: 
+Finished running TestMdd: 0

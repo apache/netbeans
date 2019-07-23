@@ -1,0 +1,9 @@
+{* check signed in user *}
+{if $logged_in neq 0}
+    Welcome, <font color="{#fontColor#}">{$name|upper}!</font>
+{else}
+    hi, {$name} {php}echo " - " . Date ("d. n. Y, H:i:s");{/php}
+{/if}
+{include file='footer.tpl' ad=$random_id}
+{foreach from=banners item=item name=foo}
+{$ error}

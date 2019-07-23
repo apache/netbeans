@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Deployment Descriptor Visual Editor: EJB</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbJarView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.ReferencesNode.AS_CFG_CmpEntityEjb" name="org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbJarView,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.EjbNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb.ReferencesNode.AS_CFG_CmpEntityEjb"></a></p>
+<div id="NBCSH4781"><!-- infolevel="all" infotype="General" --><a id="sthref695" name="sthref695"></a>
+<h1>Deployment Descriptor Visual Editor: EJB</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to configure platform-specific descriptor settings for entity beans when your target server is the GlassFish Server. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2813">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The EJB tab does not contain nodes by default because the EJBs in your project by default do not have any properties. If any configuration information for an enterprise bean is not specified in the <code dir="ltr">glassfish-ejb-jar.xml</code> file, it defaults to a corresponding setting in the EJB container if an equivalency exists.</p>
+<p>If you want to add descriptor properties to <code dir="ltr">glassfish-ejb-jar.xml</code> for an EJB in your project, you first need to create an entry for that EJB by clicking <b>Add EJB</b>. When you add an EJB, a node appears in the tab with a default name for the EJB. Expand the EJB node to edit the EJB properties. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2814">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>This dialog box enables you to edit the following properties:</p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t60">Element</th>
+<th align="left" valign="bottom" id="r1c2-t60">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t60" headers="r1c1-t60">
+<p>Name</p>
+</td>
+<td align="left" headers="r2c1-t60 r1c2-t60">Specifies the name field contains the name of the bean.
+<p>Changing this name does not change the name of the bean in your project.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t60" headers="r1c1-t60">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t60 r1c2-t60">Specifies the JNDI name of the entity bean.
+<p>In the case of session beans, this name specifies the global JNDI name of the EJBHome object. This name is required if the session bean exposes a remote view.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t60" headers="r1c1-t60">
+<p>Pass by Reference</p>
+</td>
+<td align="left" headers="r4c1-t60 r1c2-t60">Specifies the passing method used by the enterprise bean calling a remote interface method in another bean co-located within the same process.
+<p>If unselected (default), the enterprise bean uses pass-by-value semantics for calls to remote interfaces. If selected, pass-by-reference semantics is used. Using pass-by-reference results in non-portable applications.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Each EJB node contains the following sections for editing deployment descriptor properties of reference elements:</p>
+<ul>
+<li>
+<p>References</p>
+<ul>
+<li>EJB References</li>
+<li>Resource References</li>
+<li>Resource Environment References</li>
+<li>Web Service Clients</li>
+</ul>
+</li>
+<li>Web Service Endpoints</li>
+</ul>
+<p>If no reference element exists, you can create new references elements to the descriptor file by selecting the section title and then clicking the button to add a new reference element. When you create a new reference element it is visible as a node under the section. The IDE generates a default reference name.</p>
+<p><b>EJB References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t61">Element</th>
+<th align="left" valign="bottom" id="r1c2-t61">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t61" headers="r1c1-t61">
+<p>EJB Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t61 r1c2-t61">Displays the EJB Reference name. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1715">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t61" headers="r1c1-t61">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t61 r1c2-t61">Specifies the JNDI name for the EJB reference.
+<p>This field should not be empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Resource References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t62">Element</th>
+<th align="left" valign="bottom" id="r1c2-t62">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t62" headers="r1c1-t62">
+<p>Resource Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t62 r1c2-t62">Displays the Resource Reference name. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1715">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t62" headers="r1c1-t62">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t62 r1c2-t62">Specifies the JNDI name for the Resource reference.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t62" headers="r1c1-t62">
+<p>Principal Name</p>
+</td>
+<td align="left" headers="r4c1-t62 r1c2-t62">Specifies the principal name for the Resource reference.
+<p>(Optional) If you enter a principal name, you must also provide a password.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t62" headers="r1c1-t62">
+<p>Principal Password</p>
+</td>
+<td align="left" headers="r5c1-t62 r1c2-t62">Specifies the Principal password.
+<p>Required if the Principal name is provided.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Resource Environment References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t63">Element</th>
+<th align="left" valign="bottom" id="r1c2-t63">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t63" headers="r1c1-t63">
+<p>Resource Environment Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t63 r1c2-t63">Displays the Resource Environment Reference name. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1715">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t63" headers="r1c1-t63">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t63 r1c2-t63">Specifies the JNDI name for the Resource Environment reference.
+<p>This field should not be empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Web Service Clients</p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t64">Element</th>
+<th align="left" valign="bottom" id="r1c2-t64">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t64" headers="r1c1-t64">
+<p>Add Web Service Reference</p>
+</td>
+<td align="left" headers="r2c1-t64 r1c2-t64">Adds descriptor properties for a web service. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1715">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Web Service Endpoints</b></p>
+<p>An endpoint identifies the final destination of a service or a message. In the web service context, an endpoint is the URL at which the service can be reached. The fields should automatically be prepopulated with entries corresponding to the ports defined for this service in <code dir="ltr">webservices.xml</code>.</p>
+<a id="NBCSH4794" name="NBCSH4794"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2676">
+<param name="text" value="<html><u>&quot;Editing Deployment Descriptors&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2696">
+<param name="text" value="<html><u>&quot;About Developing with Enterprise Beans&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2805">
+<param name="text" value="<html><u>&quot;Configuring Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

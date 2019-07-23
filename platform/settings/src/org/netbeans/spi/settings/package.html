@@ -1,0 +1,449 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html><head>
+<title>Settings API</title>
+</head><body>
+
+Makes it possible to store settings in a custom human-readable storage format or
+reuse any existing format by using convertors.
+
+<h1>Contents</h1>
+
+<ul>
+<li><a href="#intro">What are Convertors?</a></li>
+<li><a href="#use">Make Own Convertor</a>
+<ul>
+<li><a href="#use-create">Subclass Convertor</a></li>
+<li><a href="#use-own">Register Convertor</a></li>
+<li><a href="#use-memory">Runtime Instances</a></li>
+<li><a href="#use-composed">Composed Content</a></li>
+</ul>
+</li>
+<li><a href="#find">Finding Settings</a></li>
+<li><a href="#version">Versioning Settings</a></li>
+<li><a href="#xmlprops">Properties Format</a></li>
+
+</ul>
+
+
+<h1>Settings API</h1>
+
+
+<h2><a name="intro">What are Convertors?</a></h2>
+
+Convertors are intended, as the name indicates, to convert objects
+from and to its persistent state. They are supposed to facilitate
+module writers to persist objects in a human readable format
+and to allow to separate code related information like class names from data
+to prevent to later compatibility issues.
+
+
+<h2><a name="use">Make Own Convertor</a></h2>
+
+<h3><a name="use-create">Subclass Convertor</a></h3>
+
+<p>Creating a convertor means creating a new class which subclasses
+the abstract <a href="Convertor.html"><code>Convertor</code></a> class.</p>
+Methods <code>read</code> and <code>write</code> should contain
+an converting algorithm.
+<p>
+Methods <code>registerSaver</code> and <code>unregisterSaver</code> allow
+to define own logic to detect changes in a setting object and notify the framework
+about these changes via <a href="Saver.html">Saver</a> interface.
+Notifications are interpreted as requests to store the object or to mark it as 
+changed (e.g the framework provides SaveCookie).
+
+<p>
+E.g. you can incorporate the property change support in your setting object as
+the source of notifications. The <code>Convertor.registerSaver</code>
+will register own listener and filter fired events you want the framework to be notified.
+
+<h3><a name="use-own">Register Convertor</a></h3>
+If you have already written own convertor class it is necessary to register it.
+<p>
+Each <code>.settings</code> file containing values
+in the format supported by your convertor has to be headed by DOCTYPE containing
+a public identifier defining grammar used for entity registrations.
+<p>
+First you should register an entity beneath <code>xml/entities</code> according to public identifier
+in the module layer. That registration has to be in the shape recognizable by a
+<a href="@org-openide-util@/org/openide/xml/EntityCatalog.html">system entity resolver</a>.
+<pre>
+&lt;<span class="function-name">folder</span> name=<span class="string">"xml"</span>&gt;
+  &lt;<span class="function-name">folder</span> name=<span class="string">"entities"</span>&gt;
+    <span class="comment">&lt;!--Entity registration--&gt;</span>
+    &lt;<span class="function-name">folder</span> name=<span class="string">"Vendor_org_netbeans_modules_foo"</span>&gt;
+      &lt;<span class="function-name">file</span> name=<span class="string">"DTD_FooSetting_1_0"</span> url=<span class="string">"nbres:/org/netbeans/modules/foo/entity-1_0.dtd"</span>&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"hint.originalPublicID"</span>
+          stringvalue=<span class="string">"-//Vendor org.netbeans.modules.foo//DTD FooSetting 1.0//EN"</span>/&gt;
+      &lt;<span class="function-name">/file</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+</pre>
+
+<p>
+Next register the Environment Provider associated with the entity under <code>xml/lookups</code>. The registration
+has to contain following attributes
+<pre>
+&lt;<span class="function-name">folder</span> name=<span class="string">"xml"</span>&gt;
+  &lt;<span class="function-name">folder</span> name=<span class="string">"lookups"</span>&gt;
+    &lt;<span class="function-name">folder</span> name=<span class="string">"Vendor_org_netbeans_modules_foo"</span>&gt;
+      &lt;<span class="function-name">file</span> name=<span class="string">"DTD_FooSetting_1_0.instance"</span>&gt;
+        <span class="comment">&lt;!--Environment Provider provided by the settings module--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"instanceCreate"</span> methodvalue=<span class="string">"org.netbeans.api.settings.Factory.create"</span>/&gt;
+        <span class="comment">&lt;!--Custom convertor object--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.convertor"</span> methodvalue=<span class="string">"org.netbeans.modules.foo.FooConvertor.create"</span>/&gt;
+        <span class="comment">&lt;!--class name of the setting object--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.instanceClass"</span> stringvalue=<span class="string">"org.netbeans.modules.foo.FooSetting"</span>/&gt;
+        &lt;!--the setting object; optional attribute; here you can specify
+          a factory producing object into which stored data are read. The produced object
+          should conform the settings.instanceClass attribute--&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.instanceCreate"</span> methodvalue=<span class="string">"org.netbeans.modules.foo.FooSetting.create"</span>/&gt;
+        &lt;!--class name and subclass names of the setting object separated by comma;
+          used for performance reasons; be careful what you include or exclude here to ensure
+          your setting is accessible via the Lookup API --&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.instanceOf"</span> stringvalue=<span class="string">"org.netbeans.modules.foo.FooSetting"</span>/&gt;
+        <span class="comment">&lt;!--plus attributes specific to your convertor--&gt;</span>
+      &lt;<span class="function-name">/file</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+</pre>
+
+
+<h3><a name="use-memory">Runtime Instances</a></h3>
+Now if you need to create new persistent instances of your setting object in the runtime you have to
+register its class with attribute <code>settings.providerPath</code> under
+<code>xml/memory</code> folder. The attribute has to contain path to the environment provider
+associated with a proper entity registration.
+
+<pre>
+&lt;<span class="function-name">folder</span> name=<span class="string">"xml"</span>&gt;
+  &lt;<span class="function-name">folder</span> name=<span class="string">"memory"</span>&gt;
+    &lt;<span class="function-name">folder</span> name=<span class="string">"org"</span>&gt;
+      &lt;<span class="function-name">folder</span> name=<span class="string">"netbeans"</span>&gt;
+        &lt;<span class="function-name">folder</span> name=<span class="string">"modules"</span>&gt;
+          &lt;<span class="function-name">folder</span> name=<span class="string">"foo"</span>&gt;
+            <span class="comment">&lt;!--allows to create .settings file from memory via InstanceDataObject.create--&gt;</span>
+            &lt;<span class="function-name">file</span> name=<span class="string">"FooSetting"</span>&gt;
+              &lt;<span class="function-name">attr</span> name=<span class="string">"settings.providerPath"</span>
+                 stringvalue=<span class="string">"xml/lookups/Vendor_org_netbeans_modules_foo/DTD_FooSetting_1_0.instance"</span>/&gt;
+            &lt;<span class="function-name">/file</span>&gt;
+          &lt;<span class="function-name">/folder</span>&gt;
+        &lt;<span class="function-name">/folder</span>&gt;
+      &lt;<span class="function-name">/folder</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+</pre>
+
+To create a persistent instance use method
+<a href="@org-openide-loaders@/org/openide/loaders/InstanceDataObject.html#create-org.openide.loaders.DataFolder-java.lang.String-java.lang.Object-org.openide.modules.ModuleInfo-">
+org.openide.loaders.InstanceDataObject.create</a>. The framework will
+look up the provider registration for the exact class of the object passed
+into the method.
+
+<p> If you have a special setting convertor capable of converting of objects
+of its class and of all of its superclasses you might want to specify also
+attribute <code>settings.subclasses</code> with boolean value set to true like this:
+
+<pre>
+&lt;<span class="function-name">folder</span> name=<span class="string">"xml"</span>&gt;
+  &lt;<span class="function-name">folder</span> name=<span class="string">"memory"</span>&gt;
+    &lt;<span class="function-name">folder</span> name=<span class="string">"org"</span>&gt;
+      &lt;<span class="function-name">folder</span> name=<span class="string">"netbeans"</span>&gt;
+        &lt;<span class="function-name">folder</span> name=<span class="string">"modules"</span>&gt;
+          &lt;<span class="function-name">folder</span> name=<span class="string">"foo"</span>&gt;
+            <span class="comment">&lt;!--allows to create .settings file from memory via InstanceDataObject.create--&gt;</span>
+            &lt;<span class="function-name">file</span> name=<span class="string">"FooSetting"</span>&gt;
+              &lt;<span class="function-name">attr</span> name=<span class="string">"settings.providerPath"</span>
+                 stringvalue=<span class="string">"xml/lookups/Vendor_org_netbeans_modules_foo/DTD_FooSetting_1_0.instance"</span>/&gt;
+              &lt;<span class="function-name">attr</span> name=<span class="string">"settings.subclasses"</span>
+                 boolvalue=<span class="string">"true"</span>/&gt;
+            &lt;<span class="function-name">/file</span>&gt;
+          &lt;<span class="function-name">/folder</span>&gt;
+        &lt;<span class="function-name">/folder</span>&gt;
+      &lt;<span class="function-name">/folder</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+</pre>
+
+<p> Please use the attribute <code>settings.subclasses</code> only in case
+you are sure your convertor can handle all subclasses!
+
+<h3><a name="use-composed">Composed Content</a></h3>
+In order to allow to reuse existing convertors and to put their output together
+into one XML document
+the settings module introduces a <a href="DOMConvertor.html"><code>DOMConvertor</code></a>
+allowing to delegate reading and writing of setting object's properties (e.g. complex objects)
+to already existing convertors. 
+<p>The delegating is handled by methods <code>DOMConvertor.delegateRead/delegateWrite</code> which
+are able to look up a proper registered
+<code>Convertor</code> according to a class of a setting object (see registration for
+<a href="#use-memory">runtime instances</a>) and according to a public ID (see registration for
+<a href="#use-own">entities</a>) specified as an attribute (<code>dtd_public_id</code>) of a xml element.
+
+<p>There are two ways in which is the delegation handled:
+
+<ol>
+<li>
+in case a <code>DOMConvertor</code> <b>is</b> available read/write operation is delegated to
+<code>DOMConvertor.readElement</code> or <code>DOMConvertor.writeElement</code> which are
+supposed to be rewritten by subclasses.
+</li>
+<li>
+in case a <code>DOMConvertor</code> <b>is not</b> available a plain <code>Convertor</code> is used and its output
+is encapsulated in a CDATA block inside the <code>domconvertor</code> element.
+
+</li></ol>
+
+Follows XML fragment showing some complex property described by tag <code>complex_property</code>
+which was written via SubclassedDOMConvertor.writeElement and plugged by DOMConvertor.delegateWrite into document:
+<pre>
+  ...
+    &lt;<span class="function-name">complex_property</span> dtd_public_id=<span class="string">"-//Vendor ...//EN"</span>&gt;
+      &lt;<span class="function-name">foo</span> /&gt;
+    &lt;<span class="function-name">/complex_property</span>&gt;
+  ...
+</pre>
+
+Other XML fragment shows a complex property written via a SubclassedConvertor.write
+and plugged by DOMConvertor.delegateWrite into document:
+<pre>
+  ...
+    &lt;<span class="function-name">domconvertor</span> dtd_public_id=<span class="string">"-//Vendor ...//EN"</span>&gt;&lt;[!CDATA[...]]&gt;&lt;<span class="function-name">/domconvertor</span>&gt;
+  ...
+</pre>
+
+<p>
+
+The <code>DOMConvertor.delegateRead/delegateWrite</code> also solve multiple references of an object
+that can appear in scope of a XML document. Attributes <code>ID</code>
+and <code>IDREF</code> are used in accordance with <a href="http://www.w3c.org/XML">the XML specification </a>.
+
+<pre>
+  ...
+    &lt;<span class="function-name">foosetting</span> dtd_public_id=<span class="string">"-//Vendor ...//EN"</span> id=<span class="string">"1"</span>&gt;
+    &lt;<span class="function-name">/foosetting</span>
+  ...
+    &lt;<span class="function-name">domconvertor</span> idref=<span class="string">"1"</span>/&gt;
+  ...
+</pre>
+
+<p>Utilizing of <A href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>Document Object Model (DOM) Level 2 Core Specification</A>
+facilitates code formatting of
+the output and also provides APIs describing the hierarchy of nested
+elements, arbitrary complex.
+</p>
+
+<h2><a name="find">Finding Settings</a></h2>
+To find out your setting you can use the <a href="@org-openide-util@/org/openide/util/doc-files/api.html#lookup">
+lookup system</a>. In such case you have to place your .settings file under
+<code>Services</code> folder. This is useful for settings shared among modules.
+<p>
+Otherwise you can place the file under own folder and use
+<a href="@org-openide-loaders@/org/openide/loaders/doc-files/api.html">DataSystem API
+</a> to get the object.
+<pre>
+<span class="type">FileObject</span> <span class="variable-name">fo</span> = FileUtil.getConfigFile(<span class="string">"YourFolder/YourSetting.settings"</span>);
+<span class="type">DataObject</span> <span class="variable-name">dobj</span> = DataObject.find(fo);
+<span class="type">InstanceCookie</span> <span class="variable-name">ic</span> = (<span class="type">InstanceCookie</span>) dobj.getCookie(InstanceCookie.<span class="keyword">class</span>);
+<span class="type">Object</span> <span class="variable-name">setting</span> = ic.instanceCreate();
+</pre>
+
+
+<h2><a name="version">Versioning Settings</a></h2>
+
+<h3>Replacing the setting object class</h3>
+Update the environment provider registration mainly file attributes
+<code>settings.instanceClass</code> and <code>settings.instanceOf</code>. If an old class
+is referenced inside the format use <code>META-INF/netbeans/translate.names</code> file.
+
+<h3>Replacing the setting format</h3>
+Register an entity for the newly introduced format.
+Register your setting class with proper file attribute <code>settings.providerPath</code>
+as was described in the <a href="#use-memory">section</a> about creating settings in the runtime.
+Do not remove the old registration! The framework will read the file via original
+convertor but changes will be stored via new one.
+
+<h2><a name="xmlprops">Properties Format</a></h2>
+For some (and maybe many) modules it is sufficient to store its values as
+name, value string pairs. For them the Settings module provides a special
+convertor that handles content of java.util.Properties. The format definition
+is as follows:
+<pre>
+&lt;!ELEMENT properties (property*)>
+&lt;!ELEMENT property EMPTY>
+&lt;!ATTLIST property
+    name    CDATA   #REQUIRED
+    value   CDATA   #REQUIRED
+>
+</pre>
+<p>
+To create a setting object class compatible with the XMLProperties convertor
+the class has to contain the property change support
+(like java.beans.ProperyChangeSupport) to make possible to register <code>java.beans.PropertyChangeListener</code>, implement public default constructor
+(if the <code>settings.instanceCreate</code> attribute is not used). To collect
+data supposed to be persisted following methods have to be present:
+<pre>
+&lt;ANY-ACCESS-MODIFIER&gt; <span class="type">void</span> <span class="function-name">readProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>)
+</pre>
+and 
+<pre>
+&lt;ANY-ACCESS-MODIFIER&gt; <span class="type">void</span> <span class="function-name">writeProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>)
+</pre>
+It is the setting object concern to collect all properties of its super classes.
+Since version 1.18, the <code>readProperties</code> can also return an Object.
+In such case, the <code>XMLPropertiesConvertor</code> replaces the current object
+with the returned one.
+<p>
+The XMLProperties convertor also makes possible to prevent automatic storing
+of the setting object by using file attribute <code>xmlproperties.preventStoring</code>
+in the module layer.
+The attribute can contain the value whether the setting object will be
+stored automatically (<code>xmlproperties.preventStoring==false</code>) or <code>SaveCookie</code>
+will be provided. Default value is <code>false</code>. Usage
+<pre>
+&lt;<span class="function-name">attr</span> name=<span class="string">"xmlproperties.preventStoring"</span> boolvalue=<span class="string">"[true|false]"</span>/&gt;
+</pre>
+
+The second additional attribute is <code>xmlproperties.ignoreChanges</code>
+specifying property change events by comma separated list
+of property names which will be ignored. You can use special token <code>all</code>
+to ignore all events. Usage
+<pre>
+&lt;<span class="function-name">attr</span> name=<span class="string">"xmlproperties.ignoreChanges"</span> stringvalue=<span class="string">"name[, ...]"</span>/&gt;
+</pre>
+
+<p>
+Here is an example of registrations in a module layer necessary
+to properly handle FooSetting object persisted in the properties format.
+<pre>
+&lt;<span class="function-name">folder</span> name=<span class="string">"xml"</span>&gt;
+
+  <span class="comment">&lt;!--First you need to register own public identifier--&gt;</span>
+  &lt;<span class="function-name">folder</span> name=<span class="string">"entities"</span>&gt;
+    <span class="comment">&lt;!--the public identifier registration--&gt;</span>
+    &lt;<span class="function-name">folder</span> name=<span class="string">"NetBeans_org_netbeans_modules_foo"</span>&gt;
+      &lt;<span class="function-name">file</span> name=<span class="string">"DTD_FooSetting_1_0"</span>
+            url=<span class="string">"nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd"</span>&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"hint.originalPublicID"</span>
+              stringvalue=<span class="string">"-//NetBeans org.netbeans.modules.foo//DTD FooSetting 1.0//EN"</span>/&gt;
+      &lt;<span class="function-name">/file</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+  
+  <span class="comment">&lt;!--Follows XMLPropertiesConvertor registration with proper attributes--&gt;</span>
+  &lt;<span class="function-name">folder</span> name=<span class="string">"lookups"</span>&gt;
+    <span class="comment">&lt;!--the environment provider registration--&gt;</span>
+    &lt;<span class="function-name">folder</span> name=<span class="string">"NetBeans_org_netbeans_modules_foo"</span>&gt;
+      &lt;<span class="function-name">file</span> name=<span class="string">"DTD_FooSetting_1_0.instance"</span>&gt;
+        <span class="comment">&lt;!--env. provider--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"instanceCreate"</span> methodvalue=<span class="string">"org.netbeans.api.settings.Factory.create"</span>/&gt;
+        <span class="comment">&lt;!--XMLProperties convertor provided by the settings module--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.convertor"</span> methodvalue=<span class="string">"org.netbeans.api.settings.Factory.properties"</span>/&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.instanceClass"</span> stringvalue=<span class="string">"org.netbeans.modules.foo.FooSetting"</span>/&gt;
+        &lt;<span class="function-name">attr</span> name=<span class="string">"settings.instanceOf"</span> stringvalue=<span class="string">"org.netbeans.modules.foo.FooSetting"</span>/&gt;
+        <span class="comment">&lt;!--changes of propertyName1, propertyName2 will be ignored--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"xmlproperties.ignoreChanges"</span> stringvalue=<span class="string">"propertyName1, propertyName2"</span>/&gt;
+        <span class="comment">&lt;!--the setting object will not be stored automatically--&gt;</span>
+        &lt;<span class="function-name">attr</span> name=<span class="string">"xmlproperties.preventStoring"</span> boolvalue=<span class="string">"true"</span>/&gt;
+      &lt;<span class="function-name">/file</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+
+  <span class="comment">&lt;!--FooSetting class to XMLPropertiesConvertor mapping (for persistent instances
+    created in the runtime)--&gt;</span>
+  &lt;<span class="function-name">folder</span> name=<span class="string">"memory"</span>&gt;
+    &lt;<span class="function-name">folder</span> name=<span class="string">"org"</span>&gt;
+      &lt;<span class="function-name">folder</span> name=<span class="string">"netbeans"</span>&gt;
+        &lt;<span class="function-name">folder</span> name=<span class="string">"modules"</span>&gt;
+          &lt;<span class="function-name">folder</span> name=<span class="string">"foo"</span>&gt;
+            <span class="comment">&lt;!--allows to create .settings file from memory via InstanceDataObject.create--&gt;</span>
+            &lt;<span class="function-name">file</span> name=<span class="string">"FooSetting"</span>&gt;
+              &lt;<span class="function-name">attr</span> name=<span class="string">"settings.providerPath"</span>
+                stringvalue=<span class="string">"xml/lookups/NetBeans_org_netbeans_modules_foo/DTD_FooSetting_1_0.instance"</span>/&gt;
+            &lt;<span class="function-name">/file</span>&gt;
+          &lt;<span class="function-name">/folder</span>&gt;
+        &lt;<span class="function-name">/folder</span>&gt;
+      &lt;<span class="function-name">/folder</span>&gt;
+    &lt;<span class="function-name">/folder</span>&gt;
+  &lt;<span class="function-name">/folder</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+
+<span class="comment">&lt;!--And here is the FooSetting data registration containing default values--&gt;</span>
+&lt;<span class="function-name">folder</span> name=<span class="string">"Services"</span>&gt;
+  <span class="comment">&lt;!--the .settings data file registration--&gt;</span>
+  &lt;<span class="function-name">file</span> name=<span class="string">"org-netbeans-modules-foo-FooSetting.settings"</span> url=<span class="string">"FooSetting.xml"</span>&gt;
+    <span class="comment">&lt;!-- SystemFileSystem.localizedName and SystemFileSystem.icon as usual --&gt;</span>
+  &lt;<span class="function-name">/file</span>&gt;
+&lt;<span class="function-name">/folder</span>&gt;
+</pre>
+
+<code>FooSetting.xml</code> containing the persisted setting object:
+<pre>
+&lt;<span class="keyword">?xml</span> version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> ?&gt;
+&lt;<span class="keyword">!DOCTYPE</span> properties
+ PUBLIC <span class="string">"-//NetBeans org.netbeans.modules.foo//DTD FooSetting 1.0//EN"</span>
+ <span class="string">"http://www.netbeans.org/dtds/properties-1_0.dtd"</span>
+&lt;<span class="function-name">properties</span>&gt;
+    &lt;<span class="function-name">property</span> name=<span class="string">"property1Name"</span> value=<span class="string">"xxx"</span>/&gt;
+    &lt;<span class="function-name">property</span> name=<span class="string">"property2Name"</span> value=<span class="string">"xxx"</span>/&gt;
+&lt;<span class="function-name">/properties</span>&gt;
+</pre>
+
+<code>FooSetting</code> class would look like:
+<pre>
+<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">FooSetting</span> {
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable-name">PROP_PROPERTY1NAME</span> = <span class="string">"property1Name"</span>; <span class="comment">//NOI18N
+</span>    ...
+    <span class="keyword">public</span> <span class="type">FooSetting</span>() {...}
+    <span class="comment">//  property change event support
+</span>    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">addPropertyChangeListener</span>(java.beans.<span class="type">PropertyChangeListener</span> <span class="variable-name">l</span>) {...}
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">removePropertyChangeListener</span>(java.beans.<span class="type">PropertyChangeListener</span> <span class="variable-name">l</span>) {...}
+    <span class="comment">// getters/setters
+</span>    <span class="keyword">public</span> <span class="type">String</span> <span class="function-name">getPropery1</span>() {...}
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">setProperty1</span>(<span class="type">Object</span> <span class="variable-name">property1</span>) {
+        ...
+        <span class="comment">// fire a property change event
+</span>    }
+    <span class="comment">// readProperties/writeProperties called by XMLPropertiesConvertor
+</span>    <span class="keyword">private</span> <span class="type">void</span> <span class="function-name">readProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>) {
+        property1 = p.getProperty(PROP_PROPERTY1NAME);
+        ...
+    }
+    <span class="keyword">private</span> <span class="type">void</span> <span class="function-name">writeProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>) {
+        p.setProperty(PROP_PROPERTY1NAME, property1);
+        ...
+    }
+    ...
+}
+</pre>
+
+<p>
+
+<hr>@FOOTER@
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>HTML and JSP Source Editor</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.html.editor.api.HtmlKit" name="org.netbeans.modules.html.editor.api.HtmlKit"></a></p>
+<div id="NBCSH659"><!-- infolevel="all" infotype="General" --><a id="sthref59" name="sthref59"></a>
+<h1>HTML and JSP Source Editor</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The HTML/JSP Source Editor is a full-featured text editor that is integrated with other parts of the IDE. You open the Source Editor by creating a new HTML or JSP file or double-clicking an HTML or JSP file node in the Projects window, Files window, or Navigator window.</p>
+<p>The HTML/JSP editor has the following features:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t65">Element</th>
+<th align="left" valign="bottom" id="r1c2-t65">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t65" headers="r1c1-t65">
+<p>Source Editor Tabs</p>
+</td>
+<td align="left" headers="r2c1-t65 r1c2-t65">The top of the Source Editor has a tab for each open document. Each tab shows the name of the document. If the document has been modified and has not been saved the name of the document is displayed in bold in the tab.
+<p>You can right-click a tab to access the following commands:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Close</p>
+</td>
+<td align="left" headers="r3c1-t65 r1c2-t65">Closes the selected file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Close All</p>
+</td>
+<td align="left" headers="r4c1-t65 r1c2-t65">Closes all files that are open in the Source Editor area.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Close Other</p>
+</td>
+<td align="left" headers="r5c1-t65 r1c2-t65">Closes all files except for the selected file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Clone</p>
+</td>
+<td align="left" headers="r6c1-t65 r1c2-t65">Opens a new tab for the same document. This command is particularly useful in combination with splitting the window so that you can view different parts of the same file simultaneously. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG130">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Maximize Window/Restore Window</p>
+</td>
+<td align="left" headers="r7c1-t65 r1c2-t65">Maximize Window hides other windows and expands the Source Editor to use all of the window space in the IDE. Restore Window returns the windows to the state that they were before you chose Maximize Window. You can also maximize and restore the Source Editor by double-clicking a tab.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Float/Dock Window</p>
+</td>
+<td align="left" headers="r8c1-t65 r1c2-t65">Opens document in an editor in a new window. If window is already floating, the Dock Window option appears instead.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;New Document Tab Group/Collapse Document Tab Group</p>
+</td>
+<td align="left" headers="r9c1-t65 r1c2-t65">Splits the editor window into two groups of tabs and separates the selected tab into the new group. If a separate group of tabs exists, Collapse Document Tab Group combines these groups into one group. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG128">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Select in Projects</p>
+</td>
+<td align="left" headers="r10c1-t65 r1c2-t65">Highlights the file's node in the Projects window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Local History</p>
+</td>
+<td align="left" headers="r11c1-t65 r1c2-t65">Opens a menu from which you can view the changes you made to the file or revert those changes. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG339">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;[version control]</p>
+</td>
+<td align="left" headers="r12c1-t65 r1c2-t65">If the file is under version control, a menu item with the name of the version control system appears. The option opens a menu of relevant version control commands.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Diff To...</p>
+</td>
+<td align="left" headers="r13c1-t65 r1c2-t65">Diff the file to another file in its folder or another file open in the editor.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Copy File Path</p>
+</td>
+<td align="left" headers="r14c1-t65 r1c2-t65">Copies path to file to clipboard.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t65" headers="r1c1-t65">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Editors</p>
+</td>
+<td align="left" headers="r15c1-t65 r1c2-t65">Opens a menu from which you can view the file in the source editor view or the local history view.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t65" headers="r1c1-t65">
+<p>Toolbar</p>
+</td>
+<td align="left" headers="r16c1-t65 r1c2-t65">The editor toolbar is at the top of the Source Editor window. The toolbar has buttons for various navigating and editing shortcuts, which vary according to the type of file you are editing. Hold the cursor over a button to display a description of the command. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG155">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t65" headers="r1c1-t65">
+<p>Left Margin</p>
+</td>
+<td align="left" headers="r17c1-t65 r1c2-t65">The left margin displays annotation glyphs that indicate line status, such as warnings.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t65" headers="r1c1-t65">
+<p>Error Stripe</p>
+</td>
+<td align="left" headers="r18c1-t65 r1c2-t65">The error stripe is the strip to the right of the right scroll bar and contains marks for various things in your file, such as errors, bookmarks, and comments for the To Do list. The error stripe represents the whole file, not just the lines currently displayed. You can immediately identify whether your file has any errors without having to scroll through the entire file. You can double-click a mark in the error stripe to jump to the line that the mark refers to.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t65" headers="r1c1-t65">
+<p>Status Line</p>
+</td>
+<td align="left" headers="r19c1-t65 r1c2-t65">The Source Editor status line is in the bottom right corner of the IDE. The first area of the status line shows the current line number and row number in the form line:row. The second area of the status line indicates the insertion mode (INS or OVR). The text area on the right is used for status messages.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH678" name="NBCSH678"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG217">
+<param name="text" value="<html><u>&quot;Working with Source Files in NetBeans IDE&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

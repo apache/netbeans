@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="java.awt.GridLayout" type="layout" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/gridLayout.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/gridLayout32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_java-awt-GridLayout"
+               tooltip-key="HINT_java-awt-GridLayout" />
+</palette_item>

@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo "Hello $tst13229|4";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $tst132294                  [PUBLIC]   issue132294.php

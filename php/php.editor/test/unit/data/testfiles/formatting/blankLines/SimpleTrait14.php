@@ -1,0 +1,5 @@
+<?php
+trait trait_name {
+public function test() {}
+}
+?>

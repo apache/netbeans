@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaDD>
+  <throw-exceptions/>
+  <meta-element>
+    <dtd-name>display-name</dtd-name>
+    <bean-name>DisplayName</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>alt-dd</dtd-name>
+    <bean-name>MyAltDd</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>application</dtd-name>
+    <bean-name>Application</bean-name>
+    <meta-property>
+      <bean-name>DisplayName</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Description</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>Module</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>module</dtd-name>
+    <bean-name>Module</bean-name>
+    <meta-property>
+      <bean-name>AlternateNameEjb</bean-name>
+    </meta-property>
+    <meta-property>
+      <bean-name>MyAltDd</bean-name>
+    </meta-property>
+  </meta-element>
+  <meta-element>
+    <dtd-name>ejb</dtd-name>
+    <bean-name>AlternateNameEjb</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+  <meta-element>
+    <dtd-name>description</dtd-name>
+    <bean-name>Description</bean-name>
+    <wrapper-class>String</wrapper-class>
+  </meta-element>
+</metaDD>

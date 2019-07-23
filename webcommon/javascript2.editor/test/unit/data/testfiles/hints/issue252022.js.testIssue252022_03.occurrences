@@ -1,0 +1,2 @@
+        fn2().|>MARK_OCCURRENCES:toLower^Case<|();  // test
+        fn2().|>MARK_OCCURRENCES:toLowerCase<|();

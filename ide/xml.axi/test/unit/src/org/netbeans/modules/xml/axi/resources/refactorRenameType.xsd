@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://www.example.com/PO1"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+    <xsd:element name="a1" type="tns:aType"/>
+	<xsd:element name="a2" type="tns:aType"/>
+    <xsd:complexType name="aType">
+        <xsd:sequence>
+            <xsd:element ref="tns:b"/>
+        </xsd:sequence>
+    </xsd:complexType>
+	<xsd:element name="b"/>
+</xsd:schema>

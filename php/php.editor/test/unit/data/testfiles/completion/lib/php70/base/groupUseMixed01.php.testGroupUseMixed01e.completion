@@ -1,0 +1,7 @@
+Code completion result for source line:
+function |testA,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testA()                         [PUBLIC]   A
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+METHOD     fa()                            [PUBLIC]   A

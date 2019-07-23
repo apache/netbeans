@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/refactoring/api/resources/edit_parameters.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/file_view.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/expandTree.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/refresh.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/prevmatch.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/warning.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/stop.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/nextmatch.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/error.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/query.gif</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/colapseTree.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/sourceOptions.gif</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/found_item_orange.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/findusages.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/refactoringpreview.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/refactoring.gif</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/logical_view.png</file>
+        <file>src/org/netbeans/modules/refactoring/api/resources/save_results.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

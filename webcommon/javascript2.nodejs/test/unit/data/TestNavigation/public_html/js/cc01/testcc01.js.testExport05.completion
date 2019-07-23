@@ -1,0 +1,7 @@
+Code completion result for source line:
+mOut.o|utput = 'bug';
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      output: Array                   [PUBLIC]   simpleModule.js
+FIELD      output: String                  [PUBLIC]   testcc01.js
+FIELD      outputEncodings: Array          [PUBLIC]   simpleModule.js

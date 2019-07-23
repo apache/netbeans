@@ -1,0 +1,17 @@
+    <!DOCTYPE html>
+    <html>
+<head>
+        <title>jQuery effect</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <a href="http://jquery.com/">jQuery</a>
+        <script src="../jquery-1.7.2.js"></script>
+        <script type="text/javascript">
+            $("a").click(function(event){
+ event.preventDefault();
+ $(this).hide("slow");
+ });
+        </script>
+    </body>
+</html>

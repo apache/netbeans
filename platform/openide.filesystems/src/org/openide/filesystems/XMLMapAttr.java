@@ -204,10 +204,14 @@ final class XMLMapAttr implements Map {
 
         Object retVal = null;
         if (attr == null && origAttrName.startsWith("class:")) { // NOI18N
-            attr = (Attr) map.get(origAttrName.substring(6));
+            synchronized (this) {
+                attr = (Attr) map.get(origAttrName.substring(6));
+            }
             retVal = attr != null ? attr.getType(params) : null;
         } else if (attr == null && origAttrName.startsWith("raw:")) { // NOI18N
-            attr = (Attr) map.get(origAttrName.substring(4));
+            synchronized (this) {
+                attr = (Attr) map.get(origAttrName.substring(4));
+            }
             if (attr != null && attr.keyIndex == 9) {
                 return attr.methodValue(attr.value, params).getMethod();
             }

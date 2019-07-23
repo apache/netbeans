@@ -42,6 +42,7 @@ import org.netbeans.modules.java.j2seplatform.platformdefinition.Util;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
+import org.openide.modules.Places;
 import org.openide.util.Utilities;
 
 /**
@@ -90,8 +91,17 @@ public final class NewJ2SEPlatform extends J2SEPlatformImpl implements Runnable 
                 return;
             }
             String javapath = javaFile.getAbsolutePath();
+            FileObject javac = findTool("javac"); //NOI18N
+            if (javac == null) {
+                return;
+            }
+            File javacFile = FileUtil.toFile (javac);
+            if (javacFile == null) {
+                return;
+            }
+            String javacpath = javacFile.getAbsolutePath();
             String filePath = File.createTempFile("nb-platformdetect", "properties").getAbsolutePath(); //NOI18N
-            final String probePath = getSDKProperties(javapath, filePath);
+            final String probePath = getSDKProperties(javapath, javacpath, filePath);
             File f = new File(filePath);
             Properties p = new Properties();
             try (InputStream is = new FileInputStream(f)) {
@@ -123,27 +133,36 @@ public final class NewJ2SEPlatform extends J2SEPlatformImpl implements Runnable 
         }
     }
 
-    private String getSDKProperties(String javaPath, String path) throws IOException {
-        Runtime runtime = Runtime.getRuntime();
+    private String getSDKProperties(String javaPath, String javacPath, String path) throws IOException {
         try {
-            String[] command = new String[5];
-            command[0] = javaPath;
-            command[1] = "-classpath";    //NOI18N
-            command[2] = InstalledFileLocator.getDefault().locate("modules/ext/org-netbeans-modules-java-j2seplatform-probe.jar", "org.netbeans.modules.java.j2seplatform", false).getAbsolutePath(); // NOI18N
-            command[3] = "org.netbeans.modules.java.j2seplatform.wizard.SDKProbe";
-            command[4] = path;
-            if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.fine(String.format("Executing: %s %s %s %s %s", command[0],command[1],command[2],command[3],command[4]));
+            String probeDir = Places.getCacheSubdirectory("j2seplatform/probe").getAbsolutePath();
+            File probeSrc = InstalledFileLocator.getDefault().locate("scripts/J2SEPlatformProbe.java", "org.netbeans.modules.java.j2seplatform", false);
+            Process compile = new ProcessBuilder(javacPath,
+                                                "-d",
+                                                probeDir,
+                                                probeSrc.getAbsolutePath())
+                              .inheritIO()
+                              .start();
+            compile.waitFor();
+            int compileExitValue = compile.exitValue();
+            if (compileExitValue != 0) {
+                throw new IOException(String.format("javac process exit code: %d", compileExitValue));  //NOI18N
             }
-            final Process process = runtime.exec(command);
+            Process probe = new ProcessBuilder(javaPath,
+                                               "-cp",
+                                               probeDir,
+                                               "J2SEPlatformProbe",
+                                               path)
+                            .inheritIO()
+                            .start();
             // PENDING -- this may be better done by using ExecEngine, since
             // it produces a cancellable task.
-            process.waitFor();
-            int exitValue = process.exitValue();
-            if (exitValue != 0) {
-                throw new IOException(String.format("Java process exit code: %d", exitValue));  //NOI18N
+            probe.waitFor();
+            int probeExitValue = probe.exitValue();
+            if (probeExitValue != 0) {
+                throw new IOException(String.format("Java process exit code: %d", probeExitValue));  //NOI18N
             }
-            return command[2];
+            return probeDir;
         } catch (InterruptedException ex) {
             IOException e = new IOException(ex);
             throw e;

@@ -49,15 +49,14 @@ public class SAXEntityParserTest extends NbTestCase {
     }
     
     /** Test of parse method, of class org.netbeans.api.xml.parsers.SAXEntityParser. */
-    public void testParse() throws Exception {
-        System.out.println("testParse");
-        
+    public void testParse() throws Exception {        
         // DTD parser test        
         
         InputSource input = new InputSource(new StringReader("<!ELEMENT x ANY>"));
         input.setSystemId("StringReader");
                 
-        XMLReader peer = XMLReaderFactory.createXMLReader("org.apache.crimson.parser.XMLReaderImpl");
+        XMLReader peer = XMLReaderFactory.createXMLReader();
+        
         TestDeclHandler dtdHandler = new TestDeclHandler();
         peer.setProperty("http://xml.org/sax/properties/declaration-handler", dtdHandler);
         SAXEntityParser parser = new SAXEntityParser(peer, false);
@@ -79,21 +78,18 @@ public class SAXEntityParserTest extends NbTestCase {
             assertTrue("Parser may not be reused!", exceptionThrown);
         }
         
-        relativeReferenceTest();
-    }        
+    }  
     
     /**
      * Wrapping used to broke relative references.
      */
-    private void relativeReferenceTest() throws Exception {
-
+    public void testParseRelativeReference() throws Exception {
         final boolean pass[] = {false};
 
         try {
             URL url = getClass().getResource("data/RelativeTest.dtd");
-            System.out.println("URL:" + url);
             InputSource input = new InputSource(url.toExternalForm());
-            XMLReader peer = XMLReaderFactory.createXMLReader("org.apache.crimson.parser.XMLReaderImpl");
+            XMLReader peer = XMLReaderFactory.createXMLReader();
             peer.setDTDHandler(new DefaultHandler() {
                 public void notationDecl(String name, String publicId, String systemId) {
                     if ("notation".equals(name)) pass[0] = true;

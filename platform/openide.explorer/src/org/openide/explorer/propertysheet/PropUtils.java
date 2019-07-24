@@ -54,7 +54,7 @@ final class PropUtils {
     static final boolean noCustomButtons = Boolean.getBoolean("netbeans.ps.noCustomButtons"); //NOI18N
 
     /**If true, radio button boolean editor will always be used */
-    static boolean forceRadioButtons = 
+    static boolean forceRadioButtons =
         //          !Boolean.getBoolean ("netbeans.ps.useCheckbox");
         Boolean.getBoolean("netbeans.ps.forceRadioButtons");
 
@@ -76,10 +76,10 @@ final class PropUtils {
      *  gets written.  */
     static final boolean psCommitOnFocusLoss = !Boolean.getBoolean("netbeans.ps.NoCommitOnFocusLoss");
 
-    /** If true, the default help button inside property sheet will not be 
+    /** If true, the default help button inside property sheet will not be
      * present. */
     static final boolean psNoHelpButton = Boolean.getBoolean("netbeans.ps.noHelpButton");
-    
+
     /** UIManager key for alternate color for table - if present, color will
      *  alternate between the standard background and this color    */
     private static final String KEY_ALTBG = "Tree.altbackground"; //NOI18N
@@ -103,6 +103,11 @@ final class PropUtils {
      *  set, the color will be derived from the default tree selection background
      *  color */
     private static final String KEY_SELSETFG = "PropSheet.selectedSetForeground"; //NOI18N
+
+    /** UIManager key for the custom button foreground color. */
+    private static final String KEY_CUSTOM_BUTTON_FG = "PropSheet.customButtonForeground"; //NOI18N
+    /** UIManager key for the custom button icon. If not set, the icon will be an instance of BpIcon. */
+    private static final String KEY_CUSTOM_BUTTON_ICON = "PropSheet.customButtonIcon"; //NOI18N
 
     /** UIManager key for integer icon margin, amount of space to add beside
      *  the expandable set icon to make up the margin */
@@ -202,7 +207,7 @@ final class PropUtils {
     static final boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
     static final boolean isGtk = "GTK".equals(UIManager.getLookAndFeel().getID()); //NOI18N
     static final boolean isNimbus = "Nimbus".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-    
+
     private static Graphics scratchGraphics = null;
 
     //Comparators copied from original propertysheet implementation
@@ -523,7 +528,7 @@ final class PropUtils {
         try {
             try {
                 Object oldValue = mdl.getValue();
-                
+
                 int selBeans = 0;
                 if( mdl instanceof NodePropertyModel ) {
                     Object[] beans = ((NodePropertyModel)mdl).getBeans();
@@ -532,7 +537,7 @@ final class PropUtils {
                 }
 
                 // test if newValue is not equal to oldValue
-                if (((newValue != null) && !newValue.equals(oldValue)) 
+                if (((newValue != null) && !newValue.equals(oldValue))
                         || ((newValue == null) && (oldValue != null || selBeans > 1))) {
                     mdl.setValue(newValue);
                     result = Boolean.TRUE;
@@ -661,7 +666,7 @@ final class PropUtils {
     static synchronized String findLocalizedMessage(Throwable throwable, Object newValue, String title) {
         try {
             if (throwable == null) {
-                //need to catch this - for mysterious reasons, calling 
+                //need to catch this - for mysterious reasons, calling
                 //getLocalizedMessage on a null throwable hangs/or results in an
                 //endless loop - thread will stop doing anything unrecoverably
                 return null;
@@ -680,7 +685,7 @@ final class PropUtils {
                 //Handle NFE's from the core sun.beans property editors w/o raising stack traces
                 return NbBundle.getMessage(
                     PropUtils.class, "FMT_BAD_NUMBER_FORMAT", newValue);
-            } 
+            }
             //No localized message could be found, log the exception
             //ErrorManager.getDefault().annotate(throwable, ErrorManager.WARNING, null, null, null, null);
 
@@ -689,7 +694,7 @@ final class PropUtils {
                 PropUtils.class, "FMT_CannotUpdateProperty", newValue, title); //NOI18N
         } catch (Exception e) {
             //We ABSOLUTELY cannot let this method throw exceptions or it will
-            //quietly endlessly 
+            //quietly endlessly
             Exceptions.printStackTrace(e);
 
             return null;
@@ -736,7 +741,7 @@ final class PropUtils {
 
         return missing;
     }
-    
+
     private static PropertyEditor ignored(PropertyEditor p) {
         if (p != null && (p.getClass().getName().equals("sun.beans.editors.EnumEditor") // NOI18N
                             //#220154 - the package name has change in JDK 1.7 update 10
@@ -766,7 +771,7 @@ final class PropUtils {
                 Thread.currentThread().setContextClassLoader(now);
             }
         }
-        
+
         if (result == null && Enum.class.isAssignableFrom(c)) {
             // XXX should this rather be done in Node.getPropertyEditor?
             result = new EnumPropertyEditor(c.asSubclass(Enum.class));
@@ -840,7 +845,7 @@ final class PropUtils {
                             ((p.getValueType() == Boolean.class) || (p.getValueType() == Boolean.TYPE)) &&
                                 (p.getValue() == null)
                         ) {
-                            // Allows Module folder nodes that use null to 
+                            // Allows Module folder nodes that use null to
                             // indicate indeterminate state to work
                             result = new Boolean3WayEditor();
                         }
@@ -1094,7 +1099,7 @@ final class PropUtils {
         }
 
         Icon collapsedIcon = getCollapsedIcon();
-            
+
         int iconSize = 9;
         if (collapsedIcon != null) {
             iconSize = collapsedIcon.getIconWidth();
@@ -1138,7 +1143,7 @@ final class PropUtils {
         }
         return expandedIcon;
     }
-    
+
     /** Get the icon displayed by a collapsed set. Typically this is just the
      * icon the look and feel supplies for trees */
     static Icon getCollapsedIcon() {
@@ -1219,7 +1224,11 @@ final class PropUtils {
 
     /** Lazily creates the custom editor button icon */
     static Icon getCustomButtonIcon() {
-        return new BpIcon();
+        Icon result = UIManager.getIcon(KEY_CUSTOM_BUTTON_ICON);
+        if (result == null) {
+            result = new BpIcon();
+        }
+        return result;
     }
 
     /** Adjust an rgb color component.
@@ -1463,7 +1472,7 @@ final class PropUtils {
      * disappear when a row with a custom editor button is selected.
      * @see org.netbeans.core.NbTheme.installCustomDefaultsWinXP */
     private static Color getIconForeground() {
-        return UIManager.getColor("PropSheet.customButtonForeground"); //NOI18N
+        return UIManager.getColor(KEY_CUSTOM_BUTTON_FG);
     }
 
     public static boolean isXPTheme() {
@@ -1587,7 +1596,7 @@ final class PropUtils {
         }
         return res;
     }
-    
+
     static void wrapUpDownArrowActions(JComponent inplaceEditor, final IncrementPropertyValueSupport incrementSupport) {
         InputMap im = inplaceEditor.getInputMap( JComponent.WHEN_FOCUSED );
         wrapAction( im.get(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0)), inplaceEditor.getActionMap(), incrementSupport, true );
@@ -1607,25 +1616,25 @@ final class PropUtils {
             actionMap.put( key, new IncrementValueActionWrapper(originalAction, incrementSupport, doIncrement) );
         }
     }
-    
+
     private static class IncrementValueActionWrapper extends AbstractAction {
-        
+
         private final Action originalAction;
         private final IncrementPropertyValueSupport incrementSupport;
         private final boolean increment;
-        
+
         public IncrementValueActionWrapper( Action originalAction, IncrementPropertyValueSupport incrementSupport, boolean doIncrement ) {
             this.originalAction = originalAction;
             this.incrementSupport = incrementSupport;
             this.increment = doIncrement;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent ae) {
             boolean consume = increment ? incrementSupport.incrementValue() : incrementSupport.decrementValue();
             if( consume )
                 return;
-            
+
             originalAction.actionPerformed(ae);
         }
 
@@ -1635,7 +1644,7 @@ final class PropUtils {
         }
     }
 
-    
+
 
     /** Property editor for properties which belong to more than one property, but have
      *  different values.   */
@@ -1735,12 +1744,12 @@ final class PropUtils {
         }
     }
 
-    /** 
+    /**
       * Extended Property editor for properties which belong to more than one property, but have
-      * different values.   
+      * different values.
       */
     static final class ExDifferentValuesEditor extends DifferentValuesEditor implements ExPropertyEditor{
- 
+
         public ExDifferentValuesEditor(PropertyEditor ed){
             super(ed);
         }
@@ -1750,8 +1759,8 @@ final class PropUtils {
             ((ExPropertyEditor)ed).attachEnv(env);
         }
     }
- 
-        
+
+
     /** Dummy property editor for properties which have no real editor.
      *  The property sheet does not handle null property editors;  this editor
      * stands in, and returns &quot;No property editor&quot; from getAsText() */
@@ -1849,16 +1858,16 @@ final class PropUtils {
             super.installDefaults();
             divider.setBorder(new SplitBorder());
         }
-        
+
         @Override
         public BasicSplitPaneDivider createDefaultDivider() {
             return new CleanSplitPaneDivider(this);
         }
     }
-    
+
     private static class CleanSplitPaneDivider extends BasicSplitPaneDivider implements Accessible {
         private AccessibleContext accessibleContext;
-        
+
         public CleanSplitPaneDivider( BasicSplitPaneUI ui ) {
             super( ui );
         }

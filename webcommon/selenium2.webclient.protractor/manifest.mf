@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.selenium2.webclient.protractor
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/selenium2/webclient/protractor/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.8
+OpenIDE-Module-Specification-Version: 1.9
 

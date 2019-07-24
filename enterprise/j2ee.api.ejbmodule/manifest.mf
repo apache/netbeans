@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.j2ee.api.ejbmodule
-OpenIDE-Module-Specification-Version: 1.42
+OpenIDE-Module-Specification-Version: 1.43
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/ejbjar/Bundle.properties

@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.terminal.nb
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/terminal/nb/resources/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/terminal/nb/layer.xml
-OpenIDE-Module-Specification-Version: 1.5
+OpenIDE-Module-Specification-Version: 1.6
 

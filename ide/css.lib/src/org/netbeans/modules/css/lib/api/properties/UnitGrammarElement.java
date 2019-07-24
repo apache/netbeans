@@ -61,6 +61,7 @@ public class UnitGrammarElement extends ValueGrammarElement {
      * @deprecated
      * @return null if there are no fixed value tokens, or list of the fixed token values
      */
+    @Deprecated
     public Collection<String> getFixedValues() {
         return tokenAcceptor.getFixedImageTokens();
     }

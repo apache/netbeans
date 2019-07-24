@@ -61,6 +61,7 @@ import org.openide.util.Exceptions;
  *   for details
  * @author Jan Jancura, Petr Hamernik, Ian Formanek, Jaroslav Tulach
  */
+@Deprecated
 public class ExplorerActions {
     /** actions to work with */
     private static CopyAction copy = null;
@@ -178,6 +179,7 @@ public class ExplorerActions {
      * via reflection (!) from RegistryImpl in core.
      * @deprecated Kill me later; see #18137 for explanation.
      */
+    @Deprecated
     ExplorerManager getAttachedManager() {
         return manager;
     }

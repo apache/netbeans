@@ -227,6 +227,7 @@ public class Action {
      * {@link Action#Action(String menuPath, String popupPath, String systemActionClass, KeyStroke[] keystrokes)}
      * instead.
      */
+    @Deprecated
     public Action(String menuPath, String popupPath, String systemActionClass, Shortcut[] shortcuts) {
         this(menuPath, popupPath, systemActionClass, convertShortcuts(shortcuts));
     }
@@ -257,6 +258,7 @@ public class Action {
      * {@link Action#Action(String menuPath, String popupPath, String systemActionClass, KeyStroke keystroke)}
      * instead.
      */
+    @Deprecated
     public Action(String menuPath, String popupPath, String systemActionClass, Shortcut shortcut) {
         this(menuPath, popupPath, systemActionClass, new Shortcut[]{shortcut});
     }
@@ -1224,6 +1226,7 @@ public class Action {
      *
      * @deprecated Use {@link javax.swing.KeyStroke} instead.
      */
+    @Deprecated
     public static class Shortcut extends Object {
 
         /**

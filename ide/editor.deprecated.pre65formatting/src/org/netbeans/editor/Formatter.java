@@ -56,7 +56,7 @@ import org.openide.util.WeakListeners;
  * @deprecated Please use Editor Indentation API instead, for details see
  *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
  */
-
+@Deprecated
 public class Formatter {
 
     private static final Map<Class, Formatter> kitClass2Formatter = new WeakHashMap<Class, Formatter>();
@@ -73,6 +73,7 @@ public class Formatter {
      * @deprecated Use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public static synchronized Formatter getFormatter(Class kitClass) {
         String mimeType = KitsTracker.getInstance().findMimeType(kitClass);
         if (mimeType != null) {
@@ -98,6 +99,7 @@ public class Formatter {
      * @deprecated Use Editor Indentation API.
      * @since 1.18
      */
+    @Deprecated
     public static synchronized Formatter getFormatter(String mimeType) {
         MimePath mimePath = MimePath.parse(mimeType);
         Formatter formatter = mimePath2Formatter.get(mimePath);
@@ -128,6 +130,7 @@ public class Formatter {
      * 
      * @deprecated Use Editor Indentation API.
      */
+    @Deprecated
     public static synchronized void setFormatter(Class kitClass, Formatter formatter) {
         String mimeType = KitsTracker.getInstance().findMimeType(kitClass);
         if (mimeType != null) {

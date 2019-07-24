@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.lib.nbjshell9
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/nbjshell9/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.4
+OpenIDE-Module-Specification-Version: 1.5
 OpenIDE-Module-Provides: jshell.implementation
 OpenIDE-Module-Package-Dependencies: [jdk.jshell.JShell]
 OpenIDE-Module-Java-Dependencies: Java > 9

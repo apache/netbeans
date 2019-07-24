@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.78.1
+#Version 1.80.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1726,6 +1726,7 @@ fld public final static int T_CLONE = 24
 fld public final static int T_CLOSE_PARENTHESE = 148
 fld public final static int T_CLOSE_RECT = 136
 fld public final static int T_COALESCE = 160
+fld public final static int T_COALESCE_EQUAL = 161
 fld public final static int T_COMMA = 82
 fld public final static int T_CONCAT_EQUAL = 92
 fld public final static int T_CONST = 34
@@ -2254,6 +2255,7 @@ hfds leftHandSide,operator,rightHandSide
 CLSS public final static !enum org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type
  outer org.netbeans.modules.php.editor.parser.astnodes.Assignment
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type AND_EQUAL
+fld public final static org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type COALESCE_EQUAL
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type CONCAT_EQUAL
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type DIV_EQUAL
 fld public final static org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type EQUAL

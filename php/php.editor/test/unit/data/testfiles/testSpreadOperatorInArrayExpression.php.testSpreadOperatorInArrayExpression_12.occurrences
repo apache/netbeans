@@ -1,0 +1,2 @@
+function |>MARK_OCCURRENCES:arrayGenerator<|() {
+$array8 = [...|>MARK_OCCURRENCES:arrayGenera^tor<|()];

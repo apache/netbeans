@@ -54,29 +54,33 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     String defaultType;
     private String defaultFQType;
     private String className;
+    private final boolean isAnnotation;
 
-    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, ASTNodeInfo<FieldAccess> nodeInfo, boolean isDeprecated) {
+    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, ASTNodeInfo<FieldAccess> nodeInfo, boolean isDeprecated, boolean isAnnotation) {
         super(inScope, nodeInfo, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), null, isDeprecated);
         this.defaultType = defaultType;
         this.defaultFQType = defaultFQType;
         assert inScope instanceof TypeScope;
         className = inScope.getName();
+        this.isAnnotation = isAnnotation;
     }
 
-    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, SingleFieldDeclarationInfo nodeInfo, boolean isDeprecated) {
+    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, SingleFieldDeclarationInfo nodeInfo, boolean isDeprecated, boolean isAnnotation) {
         super(inScope, nodeInfo, nodeInfo.getAccessModifiers(), null, isDeprecated);
         this.defaultType = defaultType;
         this.defaultFQType = defaultFQType;
         assert inScope instanceof TypeScope;
         className = inScope.getName();
+        this.isAnnotation = isAnnotation;
     }
 
-    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, PhpDocTypeTagInfo nodeInfo) {
+    FieldElementImpl(Scope inScope, String defaultType, String defaultFQType, PhpDocTypeTagInfo nodeInfo, boolean isAnnotation) {
         super(inScope, nodeInfo, nodeInfo.getAccessModifiers(), null, inScope.isDeprecated());
         this.defaultType = defaultType;
         this.defaultFQType = defaultFQType;
         assert inScope instanceof TypeScope;
         className = inScope.getName();
+        this.isAnnotation = isAnnotation;
     }
 
     FieldElementImpl(Scope inScope, org.netbeans.modules.php.editor.api.elements.FieldElement indexedConstant) {
@@ -111,6 +115,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
                 }
             }
         }
+        this.isAnnotation = indexedConstant.isAnnotation();
     }
 
     private FieldElementImpl(Scope inScope, String name,
@@ -119,6 +124,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         super(inScope, name, file, offsetRange, PhpElementKind.FIELD, modifiers, isDeprecated);
         this.defaultType = defaultType;
         this.defaultFQType = defaultType;
+        this.isAnnotation = false;
     }
 
     @Override
@@ -222,6 +228,11 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         return retval;
     }
 
+    @Override
+    public boolean isAnnotation() {
+        return isAnnotation;
+    }
+
     public Collection<? extends FieldAssignmentImpl> getAssignments() {
         return filter(getElements(), new ElementFilter() {
             @Override
@@ -272,6 +283,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         sb.append(Signature.ITEM_DELIMITER);
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
+        sb.append(isAnnotation() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
 

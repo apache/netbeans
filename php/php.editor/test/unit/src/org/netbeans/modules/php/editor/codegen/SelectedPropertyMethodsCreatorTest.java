@@ -248,4 +248,11 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 selectProperties(cgsInfo.getPossibleMethods(), "__construct", "myMethod"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
+    // PHP 7.4
+    public void testSerializeUnserializeMagicMethod() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "__serialize", "__unserialize"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
 }

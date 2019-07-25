@@ -29,4 +29,14 @@ public class PHP74FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/php74/nullCoalescingAssignmentOperator_01");
     }
 
+    // e.g. 100_000_000
+    public void testNumericLiteralSeparator_01() throws Exception {
+        performTest("lexer/php74/numericLiteralSeparator_01");
+    }
+
+    // e.g. fn($x) => $x + $y;
+    public void testArrowFunctions_01() throws Exception {
+        performTest("lexer/php74/arrowFunctions_01");
+    }
+
 }

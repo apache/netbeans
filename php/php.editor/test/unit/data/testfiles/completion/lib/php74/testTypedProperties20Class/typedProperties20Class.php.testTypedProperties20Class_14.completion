@@ -1,0 +1,4 @@
+Code completion result for source line:
+protected ?\Bar|\MyClass $myClass4;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null

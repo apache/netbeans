@@ -1,0 +1,5 @@
+Code completion result for source line:
+$fn = fn() => $af->|getNumber() + $number + $globalVariable;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions

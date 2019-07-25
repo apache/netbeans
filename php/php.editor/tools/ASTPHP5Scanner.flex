@@ -329,11 +329,11 @@ import org.netbeans.modules.web.common.api.ByteStack;
 
 %}
 
-LNUM=[0-9]+
-DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
+LNUM=[0-9]+(_[0-9]+)*
+DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
-HNUM="0x"[0-9a-fA-F]+
-BNUM="0b"[01]+
+HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
+BNUM="0b"[01]+(_[01]+)*
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 NAMESPACE_SEPARATOR=[\\]
@@ -366,6 +366,12 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"die" {
     return createFullSymbol(ASTPHP5Symbols.T_EXIT);
+}
+
+<ST_IN_SCRIPTING>"fn" {
+    // PHP 7.4 Arrow Functions 2.0
+    // https://wiki.php.net/rfc/arrow_functions_v2
+    return createFullSymbol(ASTPHP5Symbols.T_FN);
 }
 
 <ST_IN_SCRIPTING>"function" {

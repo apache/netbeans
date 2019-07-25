@@ -390,7 +390,9 @@
                     <attr name="position" intvalue="110"/>
                     <file name="org-netbeans-modules-php-editor-verification-AddUseImportSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ArraySyntaxSuggestion.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-ArrowFunctionSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-AssignVariableSuggestion.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-CombinedAssignmentOperatorSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-DeclareStrictTypesSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IdenticalComparisonSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-InitializeFieldSuggestion.instance"/>
@@ -421,6 +423,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-PHP74UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ReturnTypeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-TypeRedeclarationHintError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-UnusableTypesUnhandledError.instance"/>
                 </folder>
             </folder>
         </folder>

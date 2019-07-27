@@ -66,8 +66,8 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
         if (preferred != null) {
             actions.add(preferred);
         }
-        FileObject testFO = getTestcaseFileObject();                            
-        if (testFO != null){
+        FileObject testFO = getTestcaseFileObject();
+        if (testFO != null && (getTestcase().getType() == null || "UNIT".equals(getTestcase().getType()))) {
             Project suiteProject = FileOwnerQuery.getOwner(testFO);
             if (suiteProject != null) {
                 ActionProvider actionProvider = suiteProject.getLookup().lookup(ActionProvider.class);

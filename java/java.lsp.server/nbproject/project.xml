@@ -6,6 +6,12 @@
             <code-name-base>org.netbeans.modules.java.lsp.server</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>com.google.gson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.java.classpath</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -88,7 +94,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>2.42</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -123,7 +129,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>9.13</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -150,6 +156,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.50</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.sendopts</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.41</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

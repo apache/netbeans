@@ -18,18 +18,16 @@
  */
 package org.netbeans.modules.java.lsp.server;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -57,62 +55,60 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.api.sendopts.CommandException;
 import org.netbeans.modules.java.lsp.server.text.TextDocumentServiceImpl;
 import org.netbeans.modules.java.lsp.server.workspace.WorkspaceServiceImpl;
-import org.netbeans.modules.parsing.impl.indexing.DefaultCacheFolderProvider;
-import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
+import org.netbeans.spi.sendopts.Arg;
+import org.netbeans.spi.sendopts.ArgsProcessor;
+import org.netbeans.spi.sendopts.Description;
+import org.netbeans.spi.sendopts.Env;
+import org.netbeans.spi.sendopts.Option;
+import org.netbeans.spi.sendopts.OptionProcessor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.modules.ModuleInfo;
-import org.openide.modules.Places;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
-public class Server {
-    public static void main(String... args) throws Exception {
-        OutputStream debugIn = new FileOutputStream("/tmp/in-debug.txt");
-        OutputStream debugOut = new FileOutputStream("/tmp/out-debug.txt");
-        run(new InputStream() {
-            @Override
-            public int read() throws IOException {
-                int r = System.in.read();
-                debugIn.write(r);
-                debugIn.flush();
-                return r;
+public class Server implements ArgsProcessor {
+
+    @Arg(longName="start-java-language-server")
+    @Description(shortDescription="whatever")
+    @Messages("DESC_StartJavaLanguageServer=Starts the Java Language Server")
+    public boolean enable;
+
+    @Override
+    public void process(Env env) throws CommandException {
+        try {
+            run(env.getInputStream(), env.getOutputStream());
+        } catch (Exception ex) {
+            throw (CommandException) new CommandException(1).initCause(ex);
+        }
+    }
+    
+    @ServiceProvider(service=OptionProcessor.class)
+    public static class OptionProcessorImpl extends OptionProcessor {
+
+        @Override
+        protected Set<Option> getOptions() {
+            return new HashSet<>(Arrays.asList(Option.withoutArgument('\0', "--start-java-language-server")));
+        }
+
+        @Override
+        protected void process(Env env, Map<Option, String[]> optionValues) throws CommandException {
+            try {
+                run(env.getInputStream(), env.getOutputStream());
+            } catch (Exception ex) {
+                throw (CommandException) new CommandException(1).initCause(ex);
             }
-        }, new OutputStream() {
-            @Override
-            public void write(int w) throws IOException {
-                System.out.write(w);
-                System.out.flush();
-                debugOut.write(w);
-                debugOut.flush();
-            }
-        });
+        }
+        
     }
 
-    public static void run(InputStream in, OutputStream out) throws Exception {
-        Path tempDir = Files.createTempDirectory("lsp-server");
-        File userdir = tempDir.resolve("scratch-user").toFile();
-        File cachedir = tempDir.resolve("scratch-cache").toFile();
-        System.setProperty("netbeans.user", userdir.getAbsolutePath());
-        File varLog = new File(new File(userdir, "var"), "log");
-        varLog.mkdirs();
-        System.setProperty("jdk.home", System.getProperty("java.home")); //for j2seplatform
-        Class<?> main = Class.forName("org.netbeans.core.startup.Main");
-        main.getDeclaredMethod("initializeURLFactory").invoke(null);
-        new File(cachedir, "index").mkdirs();
-        Class jsClass = JavaSource.class;
-        File javaCluster = new File(jsClass.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
-        System.setProperty("netbeans.dirs", javaCluster.getAbsolutePath());
-        CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
-
-        Lookup.getDefault().lookup(ModuleInfo.class); //start the module system
-
+    private static void run(InputStream in, OutputStream out) throws Exception {
         LanguageServerImpl server = new LanguageServerImpl();
         Launcher<LanguageClient> serverLauncher = LSPLauncher.createServerLauncher(server, in, out);
         ((LanguageClientAware) server).connect(serverLauncher.getRemoteProxy());

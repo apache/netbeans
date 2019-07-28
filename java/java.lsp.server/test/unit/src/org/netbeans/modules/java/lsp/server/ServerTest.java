@@ -26,13 +26,17 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import junit.framework.Test;
 import junit.framework.TestCase;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -70,17 +74,27 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
-import org.junit.Test;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.sendopts.CommandLine;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.ModuleInfo;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 /**
  *
  * @author lahvac
  */
 public class ServerTest extends NbTestCase {
+
+    private Socket client;
+    private Thread serverThread;
 
     public ServerTest(String name) {
         super(name);
@@ -90,9 +104,43 @@ public class ServerTest extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         clearWorkDir();
+        ServerSocket srv = new ServerSocket(0);
+        serverThread = new Thread(() -> {
+            try {
+                Socket server = srv.accept();
+
+                Path tempDir = Files.createTempDirectory("lsp-server");
+                File userdir = tempDir.resolve("scratch-user").toFile();
+                File cachedir = tempDir.resolve("scratch-cache").toFile();
+                System.setProperty("netbeans.user", userdir.getAbsolutePath());
+                File varLog = new File(new File(userdir, "var"), "log");
+                varLog.mkdirs();
+                System.setProperty("jdk.home", System.getProperty("java.home")); //for j2seplatform
+                Class<?> main = Class.forName("org.netbeans.core.startup.Main");
+                main.getDeclaredMethod("initializeURLFactory").invoke(null);
+                new File(cachedir, "index").mkdirs();
+                Class jsClass = JavaSource.class;
+                File javaCluster = Utilities.toFile(jsClass.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
+                System.setProperty("netbeans.dirs", javaCluster.getAbsolutePath());
+                CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
+
+                Lookup.getDefault().lookup(ModuleInfo.class); //start the module system
+
+                CommandLine.getDefault().process(new String[] {"--start-java-language-server"}, server.getInputStream(), server.getOutputStream(), System.err, getWorkDir());
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
+        serverThread.start();
+        client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
     }
 
-    @Test
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        serverThread.stop();
+    }
+
     public void testMain() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -100,17 +148,6 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        ServerSocket srv = new ServerSocket(0);
-        Thread serverThread = new Thread(() -> {
-            try {
-                Socket server = srv.accept();
-                Server.run(server.getInputStream(), server.getOutputStream());
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        });
-        serverThread.start();
-        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         List<Diagnostic>[] diags = new List[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
@@ -184,8 +221,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("(String) ", edit.getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
-        assertDiags(diags, "Error:1:0-1:9", "Information:0:81-0:86", "Information:0:85-0:86");//hints
-        serverThread.stop();
+        assertDiags(diags, "Error:1:0-1:9", "Warning:0:81-0:86", "Warning:0:85-0:86");//hints
     }
 
     private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {
@@ -218,7 +254,6 @@ public class ServerTest extends NbTestCase {
         }
     }
 
-    @Test
     public void testNavigator() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -235,16 +270,6 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        ServerSocket srv = new ServerSocket(0);
-        new Thread(() -> {
-            try {
-                Socket server = srv.accept();
-                Server.run(server.getInputStream(), server.getOutputStream());
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        }).start();
-        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -342,7 +367,6 @@ public class ServerTest extends NbTestCase {
                   .collect(Collectors.joining(", ", "(", ")"));
     }
 
-    @Test
     public void testGoToDefinition() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -357,16 +381,6 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        ServerSocket srv = new ServerSocket(0);
-        new Thread(() -> {
-            try {
-                Socket server = srv.accept();
-                Server.run(server.getInputStream(), server.getOutputStream());
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        }).start();
-        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -411,7 +425,6 @@ public class ServerTest extends NbTestCase {
         //XXX: test jump to another file!
     }
 
-    @Test
     public void testOpenProjectOpenJDK() throws Exception {
         getWorkDir().mkdirs();
 
@@ -428,17 +441,6 @@ public class ServerTest extends NbTestCase {
             w.write("module java.compiler { }");
         }
 
-        ServerSocket srv = new ServerSocket(0);
-        Thread serverThread = new Thread(() -> {
-            try {
-                Socket server = srv.accept();
-                Server.run(server.getInputStream(), server.getOutputStream());
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        });
-        serverThread.start();
-        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         List<Diagnostic>[] diags = new List[1];
         boolean[] indexingComplete = new boolean[1];
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
@@ -495,7 +497,6 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags);
     }
     
-    @Test
     public void testMarkOccurrences() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -510,16 +511,6 @@ public class ServerTest extends NbTestCase {
             w.write(code);
         }
         FileUtil.refreshFor(getWorkDir());
-        ServerSocket srv = new ServerSocket(0);
-        new Thread(() -> {
-            try {
-                Socket server = srv.accept();
-                Server.run(server.getInputStream(), server.getOutputStream());
-            } catch (Exception ex) {
-                throw new IllegalStateException(ex);
-            }
-        }).start();
-        Socket client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {

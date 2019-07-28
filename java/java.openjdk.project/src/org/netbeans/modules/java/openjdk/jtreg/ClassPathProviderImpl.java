@@ -70,11 +70,12 @@ public class ClassPathProviderImpl implements ClassPathProvider {
             if (testRoot != null) {
                 boolean javac = (Utilities.isLangtoolsRepository(search.getParent()) || search.getNameExt().equals("langtools")) &&
                                 ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(search.getParent(), file));
+                FileObject keyRoot = javac ? search.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(search.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(search.getParent()) : null;
                 //XXX: hack to make things work for langtools:
                 switch (type) {
                     case ClassPath.COMPILE:
                         if (javac) {
-                            ClassPath langtoolsCP = ClassPath.getClassPath(Utilities.getLangtoolsKeyRoot(search.getParent()), ClassPath.COMPILE);
+                            ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
                             Library testngLib = LibraryManager.getDefault().getLibrary("testng");
 
                             if (testngLib != null) {
@@ -91,7 +92,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
                     case ClassPath.BOOT:
                         if (javac) {
                             try {
-                                ClassPath langtoolsBCP = ClassPath.getClassPath(Utilities.getLangtoolsKeyRoot(search.getParent()), ClassPath.BOOT);
+                                ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
                                 List<URL> roots = new ArrayList<>();
                                 for (String rootPaths : new String[] {"build/classes/",
                                                                       "build/java.compiler/classes/",

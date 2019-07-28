@@ -76,14 +76,14 @@ public final class OpenProjectFolderAction extends AbstractAction implements Con
         public ContextAction(Lookup context) {
             super(OpenProjectFolderAction_LBL_action());
             this.context = context;
-            boolean foundProject = false;
+            ProjectManager.Result[] projects = new ProjectManager.Result[0];
             for (DataFolder d : context.lookupAll(DataFolder.class)) {
-                if (ProjectManager.getDefault().isProject(d.getPrimaryFile())) {
-                    foundProject = true;
+                projects = ProjectManager.getDefault().checkProject(d.getPrimaryFile());
+                if (projects.length > 0) {
                     break;
                 }
             }
-            if (!foundProject) {
+            if (projects.length != 1) {
                 putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
                 setEnabled(false);
             }

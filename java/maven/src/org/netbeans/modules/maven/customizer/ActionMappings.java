@@ -202,6 +202,8 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         titles.put(ActionProvider.COMMAND_PROFILE_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Profile_test"));
         titles.put("javadoc", NbBundle.getMessage(ActionMappings.class, "COM_Javadoc_project"));
         titles.put(ActionProviderImpl.BUILD_WITH_DEPENDENCIES, NbBundle.getMessage(ActionMappings.class, "COM_Build_WithDeps_project"));
+        titles.put(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Integration_Test_file"));
+        titles.put(ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Debug_Integration_test"));
 
         comConfiguration.setEditable(false);
         comConfiguration.setRenderer(new DefaultListCellRenderer() {
@@ -768,6 +770,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             addSingleAction(ActionProviderImpl.BUILD_WITH_DEPENDENCIES, model);
             addSingleAction(ActionProvider.COMMAND_TEST, model);
             addSingleAction(ActionProvider.COMMAND_TEST_SINGLE, model);
+            addSingleAction(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, model);
             addSingleAction(ActionProvider.COMMAND_RUN, model);
             addSingleAction(ActionProvider.COMMAND_RUN_SINGLE + ".main", model); //NOI18N
             if (isWar) {
@@ -779,6 +782,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 addSingleAction(ActionProvider.COMMAND_DEBUG_SINGLE + ".deploy", model); //NOI18N
             }
             addSingleAction(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, model);
+            addSingleAction(ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE, model);
             addSingleAction(ActionProvider.COMMAND_PROFILE, model);
             addSingleAction(ActionProvider.COMMAND_PROFILE_SINGLE + ".main", model); // NOI18N
             if (isWar) {

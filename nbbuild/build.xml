@@ -114,13 +114,13 @@
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
     <condition property="build.branch" value="master">
-          <not>
-              <isset property="build.branch"/>
-          </not>
-      </condition>
-      <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
-      <setjavadoc branch="${build.branch}"/>
-      <echo message="${config.javadoc.all}" />
+        <not>
+            <isset property="build.branch"/>
+        </not>
+    </condition>
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
+    <setjavadoc branch="${build.branch}"/>
+    <echo message="${config.javadoc.all}" />
   </target>
 
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">

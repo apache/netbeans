@@ -20,12 +20,15 @@ pre,code{font-family:Consolas,Menlo,Monaco,"IBM Plex Mono","Lucida Console","Lib
 
 
 .apidocmaincontent{
-    height: 100%;
+    height: 92%;
     width: 80%;
     position: fixed;
     overflow-x: hidden;
     right:0;
     font-size: 11px;
+    padding-top:15px;
+    padding-left: 3px;
+    
 
 }
 .innercontent{
@@ -36,11 +39,12 @@ pre,code{font-family:Consolas,Menlo,Monaco,"IBM Plex Mono","Lucida Console","Lib
     width:100%;
 }
 .apidocleft{
-    height: 100%;
+    height: 92%;
     width: 20%;
     position: fixed;
     overflow-x: hidden;
     left:0;
+    z-index: -1;
 
 }
 .toc{
@@ -66,4 +70,33 @@ pre,code{font-family:Consolas,Menlo,Monaco,"IBM Plex Mono","Lucida Console","Lib
     padding-left: 15px;
     font-weight: bold;
     color:black;
+}
+
+ul.moduleslist {
+    list-style-type: none;
+    margin-left: 2px;
+    font-size:.9em;
+}
+ul.modulesclasslist {
+    list-style-type: none;
+    margin-left: 2px;
+}
+
+li.module {
+    background: url('module.png') no-repeat ;
+    padding-left: 20px;
+    background-position:  left .25em;
+}
+
+li.class {
+    background: url('class.png') no-repeat ;
+    padding-left: 20px;
+    background-position:  left .25em;
+}
+
+
+li.interface {
+    background: url('interface.png') no-repeat ;
+    padding-left: 20px;
+    background-position:  left .25em;
 }

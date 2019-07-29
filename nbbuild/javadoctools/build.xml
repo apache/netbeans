@@ -47,17 +47,17 @@
         <echo message="${config.javadoc.all}" />
         <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.javadoc.all}"/>
         <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
-        
+
         <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>
         <property name="export.apichanges" location="${netbeans.javadoc.dir}/../APIChanges"/>
         <mkdir dir="${export.interfaces}"/>
         <mkdir dir="${export.apichanges}"/>
-                       
+
         <property name="javadoc.fail.on.error" value="true"/>
-       <!-- <subant-junit target="javadoc" failonerror="${javadoc.fail.on.error}" report="${nb_all}/nbbuild/build/build-all-javadoc.xml">
+        <subant-junit target="javadoc" failonerror="${javadoc.fail.on.error}" report="${nb_all}/nbbuild/build/build-all-javadoc.xml">
             <buildpath path="${modules.sorted}"/>
         </subant-junit>
-        -->
+
         <antcall inheritall="true" inheritrefs="true" target="generate-xml"/>
         <antcall inheritall="true" inheritrefs="true" target="generate-html"/>
         <antcall inheritall="true" inheritrefs="true" target="check-broken-links"/>
@@ -130,17 +130,40 @@
                 <include name="**/allclasses-noframe.html"/>
             </packageslist>
         </javadoc-index>
+        
+        <echo file="${export.interfaces}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;alldata&gt;
+        </echo>
+        
+        <echo file="${export.interfaces}/footer.gen">
+            &lt;/alldata&gt;
+        </echo>
+        <concat destfile="${netbeans.javadoc.dir}/alldatas.xml">
+            <fileset dir="${export.interfaces}" includes="header.gen"/>
+            <fileset file="${netbeans.javadoc.dir}/allclasses.xml"/>
+            <fileset file="${netbeans.javadoc.dir}/modules.xml"/>
+            <fileset file="${netbeans.javadoc.dir}/apichanges.xml"/>
+            <fileset dir="${export.interfaces}" includes="footer.gen"/>
+            <filterchain>
+                <linecontainsregexp negate="true">
+                    <regexp pattern="&lt;\?xml version"/>
+                </linecontainsregexp>
+            </filterchain>  
+        </concat>
     </target>
     
     <target name="generate-html" depends="init">
         <!-- for testing new template -->
+        
         <property name="xslversion" value="vapache/"/>
         <!-- <property name="xslversion" value=""/>-->
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/usecases.html" style="${xslversion}export2usecases.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/usecases.html" style="${xslversion}export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.version}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
-        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="${xslversion}export2apichanges.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="${xslversion}export2apichanges.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="changes-since-year" expression="${previous.release.year}"/>
             <param name="changes-since-day" expression="${previous.release.day}"/>
@@ -152,12 +175,18 @@
             <param name="allmodule" expression="${netbeans.javadoc.dir}/modules.xml" />
         </style>
 
-        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="${xslversion}export2apichanges-atom.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="${xslversion}export2apichanges-atom.xsl">
             <param name="date" expression="${atom-date}"/>
             <param name="maturity" expression="${json.maturity}" />
         </style>
         
         <copy file="${xslversion}netbeans.css" tofile="${netbeans.javadoc.dir}/netbeans.css" overwrite="true"/>
+        <copy todir="${netbeans.javadoc.dir}" overwrite="true">
+            <fileset dir="${xslversion}" >
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
+        
         <copy file="resources/apache-netbeans.svg" tofile="${netbeans.javadoc.dir}/apache-netbeans.svg" overwrite="true"/>
         <condition property="javadoc.style.sheet.exists">
             <available file="${netbeans.javadoc.dir}/org-openide-util/javadoc.css"/>
@@ -169,37 +198,37 @@
             the export*.xsl templates.
         </fail>
 
-        <style in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="${xslversion}export2allclasses.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="${xslversion}export2allclasses.xsl">
             <param name="maturity" expression="${json.maturity}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="${xslversion}export2allmodules.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="${xslversion}export2allmodules.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/layers.html" style="${xslversion}export2layer.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="${xslversion}export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.version}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/properties.html" style="${xslversion}export2property.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="${xslversion}export2property.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.version}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
 
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/branding.html" style="${xslversion}export2branding.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/branding.html" style="${xslversion}export2branding.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.version}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-summary.html" style="${xslversion}export2html.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/overview-summary.html" style="${xslversion}export2index.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="download" expression="true"/>
             <param name="maturity" expression="${json.maturity}" />
@@ -207,7 +236,7 @@
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${nb_all}/nbbuild/build/tmp/overview-summary.html" style="${xslversion}export2html.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${nb_all}/nbbuild/build/tmp/overview-summary.html" style="${xslversion}export2index.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="download" expression="false"/>
             <param name="maturity" expression="${json.maturity}" />
@@ -215,7 +244,7 @@
         </style>
         
         <!-- at the end generate the index.html so people know where to start --> 
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/index.html" style="${xslversion}export2index.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="${xslversion}export2index.xsl">
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.version}" />
             <param name="releaseinfo" expression="${xmlrelease}" />

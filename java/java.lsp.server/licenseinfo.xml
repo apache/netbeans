@@ -21,10 +21,10 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>package-lock.json</file>
-        <file>package.json</file>
-        <file>tsconfig.json</file>
-        <file>src/extension.ts</file>
-        <license ref="W3C2" />
+        <file>vscode/package-lock.json</file>
+        <file>vscode/package.json</file>
+        <file>vscode/tsconfig.json</file>
+        <file>vscode/src/extension.ts</file>
+        <license ref="MIT-vscode-ext" />
     </fileset>
 </licenseinfo>

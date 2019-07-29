@@ -1,0 +1,6 @@
+Code completion result for source line:
+private const CONST3 = [1, ...\Foo\|UnpackClass::CONSTANT, 4];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      UnpackChildClass                [PUBLIC]   Foo
+CLASS      UnpackClass                     [PUBLIC]   Foo
+CONSTANT   F_CONST "test"                  [PUBLIC]   Foo

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.derby
 OpenIDE-Module-Layer: org/netbeans/modules/derby/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/derby/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 AutoUpdate-Show-In-Client: false

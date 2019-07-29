@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11.1
+#Version 2.12
 
 CLSS public abstract interface !annotation com.sun.javafx.beans.IDProperty
  anno 0 java.lang.annotation.Documented()
@@ -535,49 +535,6 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
-
-CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
-cons protected init()
-intf java.util.Collection<{java.util.AbstractCollection%0}>
-meth public <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
-meth public abstract int size()
-meth public abstract java.util.Iterator<{java.util.AbstractCollection%0}> iterator()
-meth public boolean add({java.util.AbstractCollection%0})
-meth public boolean addAll(java.util.Collection<? extends {java.util.AbstractCollection%0}>)
-meth public boolean contains(java.lang.Object)
-meth public boolean containsAll(java.util.Collection<?>)
-meth public boolean isEmpty()
-meth public boolean remove(java.lang.Object)
-meth public boolean removeAll(java.util.Collection<?>)
-meth public boolean retainAll(java.util.Collection<?>)
-meth public java.lang.Object[] toArray()
-meth public java.lang.String toString()
-meth public void clear()
-supr java.lang.Object
-hfds MAX_ARRAY_SIZE
-
-CLSS public abstract java.util.AbstractList<%0 extends java.lang.Object>
-cons protected init()
-fld protected int modCount
-intf java.util.List<{java.util.AbstractList%0}>
-meth protected void removeRange(int,int)
-meth public abstract {java.util.AbstractList%0} get(int)
-meth public boolean add({java.util.AbstractList%0})
-meth public boolean addAll(int,java.util.Collection<? extends {java.util.AbstractList%0}>)
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-meth public int indexOf(java.lang.Object)
-meth public int lastIndexOf(java.lang.Object)
-meth public java.util.Iterator<{java.util.AbstractList%0}> iterator()
-meth public java.util.List<{java.util.AbstractList%0}> subList(int,int)
-meth public java.util.ListIterator<{java.util.AbstractList%0}> listIterator()
-meth public java.util.ListIterator<{java.util.AbstractList%0}> listIterator(int)
-meth public void add(int,{java.util.AbstractList%0})
-meth public void clear()
-meth public {java.util.AbstractList%0} remove(int)
-meth public {java.util.AbstractList%0} set(int,{java.util.AbstractList%0})
-supr java.util.AbstractCollection<{java.util.AbstractList%0}>
-hcls Itr,ListItr
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -1492,13 +1449,6 @@ meth public abstract java.lang.String value()
 
 CLSS public abstract interface javafx.beans.InvalidationListener
 meth public abstract void invalidated(javafx.beans.Observable)
-
-CLSS public abstract interface !annotation javafx.beans.NamedArg
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PARAMETER])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.String defaultValue()
-meth public abstract java.lang.String value()
 
 CLSS public abstract interface javafx.beans.Observable
 meth public abstract void addListener(javafx.beans.InvalidationListener)
@@ -3725,9 +3675,6 @@ CLSS public abstract interface javafx.beans.value.WritableValue<%0 extends java.
 meth public abstract void setValue({javafx.beans.value.WritableValue%0})
 meth public abstract {javafx.beans.value.WritableValue%0} getValue()
 
-CLSS public abstract interface javafx.collections.ArrayChangeListener<%0 extends javafx.collections.ObservableArray<{javafx.collections.ArrayChangeListener%0}>>
-meth public abstract void onChanged({javafx.collections.ArrayChangeListener%0},boolean,int,int)
-
 CLSS public javafx.collections.FXCollections
 meth public !varargs static <%0 extends java.lang.Object> javafx.collections.ObservableList<{%%0}> concat(javafx.collections.ObservableList<{%%0}>[])
 meth public !varargs static <%0 extends java.lang.Object> javafx.collections.ObservableList<{%%0}> observableArrayList({%%0}[])
@@ -3801,86 +3748,6 @@ meth public javafx.collections.ObservableMap<{javafx.collections.MapChangeListen
 supr java.lang.Object
 hfds map
 
-CLSS public abstract javafx.collections.ModifiableObservableListBase<%0 extends java.lang.Object>
-cons public init()
-meth protected abstract void doAdd(int,{javafx.collections.ModifiableObservableListBase%0})
-meth protected abstract {javafx.collections.ModifiableObservableListBase%0} doRemove(int)
-meth protected abstract {javafx.collections.ModifiableObservableListBase%0} doSet(int,{javafx.collections.ModifiableObservableListBase%0})
-meth protected void removeRange(int,int)
-meth public abstract int size()
-meth public abstract {javafx.collections.ModifiableObservableListBase%0} get(int)
-meth public boolean addAll(int,java.util.Collection<? extends {javafx.collections.ModifiableObservableListBase%0}>)
-meth public boolean addAll(java.util.Collection<? extends {javafx.collections.ModifiableObservableListBase%0}>)
-meth public boolean remove(java.lang.Object)
-meth public boolean removeAll(java.util.Collection<?>)
-meth public boolean retainAll(java.util.Collection<?>)
-meth public boolean setAll(java.util.Collection<? extends {javafx.collections.ModifiableObservableListBase%0}>)
-meth public java.util.List<{javafx.collections.ModifiableObservableListBase%0}> subList(int,int)
-meth public void add(int,{javafx.collections.ModifiableObservableListBase%0})
-meth public {javafx.collections.ModifiableObservableListBase%0} remove(int)
-meth public {javafx.collections.ModifiableObservableListBase%0} set(int,{javafx.collections.ModifiableObservableListBase%0})
-supr javafx.collections.ObservableListBase<{javafx.collections.ModifiableObservableListBase%0}>
-hcls SubObservableList
-
-CLSS public abstract interface javafx.collections.ObservableArray<%0 extends javafx.collections.ObservableArray<{javafx.collections.ObservableArray%0}>>
-intf javafx.beans.Observable
-meth public abstract int size()
-meth public abstract void addListener(javafx.collections.ArrayChangeListener<{javafx.collections.ObservableArray%0}>)
-meth public abstract void clear()
-meth public abstract void ensureCapacity(int)
-meth public abstract void removeListener(javafx.collections.ArrayChangeListener<{javafx.collections.ObservableArray%0}>)
-meth public abstract void resize(int)
-meth public abstract void trimToSize()
-
-CLSS public abstract javafx.collections.ObservableArrayBase<%0 extends javafx.collections.ObservableArray<{javafx.collections.ObservableArrayBase%0}>>
-cons public init()
-intf javafx.collections.ObservableArray<{javafx.collections.ObservableArrayBase%0}>
-meth protected final void fireChange(boolean,int,int)
-meth public final void addListener(javafx.beans.InvalidationListener)
-meth public final void addListener(javafx.collections.ArrayChangeListener<{javafx.collections.ObservableArrayBase%0}>)
-meth public final void removeListener(javafx.beans.InvalidationListener)
-meth public final void removeListener(javafx.collections.ArrayChangeListener<{javafx.collections.ObservableArrayBase%0}>)
-supr java.lang.Object
-hfds listenerHelper
-
-CLSS public abstract interface javafx.collections.ObservableFloatArray
-intf javafx.collections.ObservableArray<javafx.collections.ObservableFloatArray>
-meth public abstract !varargs void addAll(float[])
-meth public abstract !varargs void setAll(float[])
-meth public abstract float get(int)
-meth public abstract float[] toArray(float[])
-meth public abstract float[] toArray(int,float[],int)
-meth public abstract void addAll(float[],int,int)
-meth public abstract void addAll(javafx.collections.ObservableFloatArray)
-meth public abstract void addAll(javafx.collections.ObservableFloatArray,int,int)
-meth public abstract void copyTo(int,float[],int,int)
-meth public abstract void copyTo(int,javafx.collections.ObservableFloatArray,int,int)
-meth public abstract void set(int,float)
-meth public abstract void set(int,float[],int,int)
-meth public abstract void set(int,javafx.collections.ObservableFloatArray,int,int)
-meth public abstract void setAll(float[],int,int)
-meth public abstract void setAll(javafx.collections.ObservableFloatArray)
-meth public abstract void setAll(javafx.collections.ObservableFloatArray,int,int)
-
-CLSS public abstract interface javafx.collections.ObservableIntegerArray
-intf javafx.collections.ObservableArray<javafx.collections.ObservableIntegerArray>
-meth public abstract !varargs void addAll(int[])
-meth public abstract !varargs void setAll(int[])
-meth public abstract int get(int)
-meth public abstract int[] toArray(int,int[],int)
-meth public abstract int[] toArray(int[])
-meth public abstract void addAll(int[],int,int)
-meth public abstract void addAll(javafx.collections.ObservableIntegerArray)
-meth public abstract void addAll(javafx.collections.ObservableIntegerArray,int,int)
-meth public abstract void copyTo(int,int[],int,int)
-meth public abstract void copyTo(int,javafx.collections.ObservableIntegerArray,int,int)
-meth public abstract void set(int,int)
-meth public abstract void set(int,int[],int,int)
-meth public abstract void set(int,javafx.collections.ObservableIntegerArray,int,int)
-meth public abstract void setAll(int[],int,int)
-meth public abstract void setAll(javafx.collections.ObservableIntegerArray)
-meth public abstract void setAll(javafx.collections.ObservableIntegerArray,int,int)
-
 CLSS public abstract interface javafx.collections.ObservableList<%0 extends java.lang.Object>
 intf java.util.List<{javafx.collections.ObservableList%0}>
 intf javafx.beans.Observable
@@ -3892,33 +3759,6 @@ meth public abstract boolean setAll(java.util.Collection<? extends {javafx.colle
 meth public abstract void addListener(javafx.collections.ListChangeListener<? super {javafx.collections.ObservableList%0}>)
 meth public abstract void remove(int,int)
 meth public abstract void removeListener(javafx.collections.ListChangeListener<? super {javafx.collections.ObservableList%0}>)
-
-CLSS public abstract javafx.collections.ObservableListBase<%0 extends java.lang.Object>
-cons public init()
-intf javafx.collections.ObservableList<{javafx.collections.ObservableListBase%0}>
-meth protected final boolean hasListeners()
-meth protected final void beginChange()
-meth protected final void endChange()
-meth protected final void fireChange(javafx.collections.ListChangeListener$Change<? extends {javafx.collections.ObservableListBase%0}>)
-meth protected final void nextAdd(int,int)
-meth protected final void nextPermutation(int,int,int[])
-meth protected final void nextRemove(int,java.util.List<? extends {javafx.collections.ObservableListBase%0}>)
-meth protected final void nextRemove(int,{javafx.collections.ObservableListBase%0})
-meth protected final void nextReplace(int,int,java.util.List<? extends {javafx.collections.ObservableListBase%0}>)
-meth protected final void nextSet(int,{javafx.collections.ObservableListBase%0})
-meth protected final void nextUpdate(int)
-meth public !varargs boolean addAll({javafx.collections.ObservableListBase%0}[])
-meth public !varargs boolean removeAll({javafx.collections.ObservableListBase%0}[])
-meth public !varargs boolean retainAll({javafx.collections.ObservableListBase%0}[])
-meth public !varargs boolean setAll({javafx.collections.ObservableListBase%0}[])
-meth public boolean setAll(java.util.Collection<? extends {javafx.collections.ObservableListBase%0}>)
-meth public final void addListener(javafx.beans.InvalidationListener)
-meth public final void addListener(javafx.collections.ListChangeListener<? super {javafx.collections.ObservableListBase%0}>)
-meth public final void removeListener(javafx.beans.InvalidationListener)
-meth public final void removeListener(javafx.collections.ListChangeListener<? super {javafx.collections.ObservableListBase%0}>)
-meth public void remove(int,int)
-supr java.util.AbstractList<{javafx.collections.ObservableListBase%0}>
-hfds changeBuilder,listenerHelper
 
 CLSS public abstract interface javafx.collections.ObservableMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 intf java.util.Map<{javafx.collections.ObservableMap%0},{javafx.collections.ObservableMap%1}>
@@ -3973,43 +3813,6 @@ meth public boolean wasGarbageCollected()
 meth public void onChanged(javafx.collections.SetChangeListener$Change<? extends {javafx.collections.WeakSetChangeListener%0}>)
 supr java.lang.Object
 hfds ref
-
-CLSS public abstract javafx.concurrent.ScheduledService<%0 extends java.lang.Object>
-cons public init()
-fld public final static javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration> EXPONENTIAL_BACKOFF_STRATEGY
-fld public final static javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration> LINEAR_BACKOFF_STRATEGY
-fld public final static javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration> LOGARITHMIC_BACKOFF_STRATEGY
-meth protected void executeTask(javafx.concurrent.Task<{javafx.concurrent.ScheduledService%0}>)
-meth protected void failed()
-meth protected void succeeded()
-meth public boolean cancel()
-meth public final boolean getRestartOnFailure()
-meth public final int getCurrentFailureCount()
-meth public final int getMaximumFailureCount()
-meth public final javafx.beans.property.BooleanProperty restartOnFailureProperty()
-meth public final javafx.beans.property.IntegerProperty maximumFailureCountProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration>> backoffStrategyProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Duration> delayProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Duration> maximumCumulativePeriodProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Duration> periodProperty()
-meth public final javafx.beans.property.ReadOnlyIntegerProperty currentFailureCountProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.util.Duration> cumulativePeriodProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<{javafx.concurrent.ScheduledService%0}> lastValueProperty()
-meth public final javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration> getBackoffStrategy()
-meth public final javafx.util.Duration getCumulativePeriod()
-meth public final javafx.util.Duration getDelay()
-meth public final javafx.util.Duration getMaximumCumulativePeriod()
-meth public final javafx.util.Duration getPeriod()
-meth public final void setBackoffStrategy(javafx.util.Callback<javafx.concurrent.ScheduledService<?>,javafx.util.Duration>)
-meth public final void setDelay(javafx.util.Duration)
-meth public final void setMaximumCumulativePeriod(javafx.util.Duration)
-meth public final void setMaximumFailureCount(int)
-meth public final void setPeriod(javafx.util.Duration)
-meth public final void setRestartOnFailure(boolean)
-meth public final {javafx.concurrent.ScheduledService%0} getLastValue()
-meth public void reset()
-supr javafx.concurrent.Service<{javafx.concurrent.ScheduledService%0}>
-hfds DELAY_TIMER,backoffStrategy,cumulativePeriod,currentFailureCount,delay,delayTask,freshStart,lastRunTime,lastValue,maximumCumulativePeriod,maximumFailureCount,period,restartOnFailure,stop
 
 CLSS public abstract javafx.concurrent.Service<%0 extends java.lang.Object>
 cons protected init()
@@ -4182,323 +3985,6 @@ fld public final static javafx.event.EventType<javafx.concurrent.WorkerStateEven
 meth public javafx.concurrent.Worker getSource()
 supr javafx.event.Event
 
-CLSS public abstract javafx.css.CssMetaData<%0 extends javafx.css.Styleable, %1 extends java.lang.Object>
-cons protected init(java.lang.String,javafx.css.StyleConverter<?,{javafx.css.CssMetaData%1}>)
-cons protected init(java.lang.String,javafx.css.StyleConverter<?,{javafx.css.CssMetaData%1}>,{javafx.css.CssMetaData%1})
-cons protected init(java.lang.String,javafx.css.StyleConverter<?,{javafx.css.CssMetaData%1}>,{javafx.css.CssMetaData%1},boolean)
-cons protected init(java.lang.String,javafx.css.StyleConverter<?,{javafx.css.CssMetaData%1}>,{javafx.css.CssMetaData%1},boolean,java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>>)
-meth public abstract boolean isSettable({javafx.css.CssMetaData%0})
-meth public abstract javafx.css.StyleableProperty<{javafx.css.CssMetaData%1}> getStyleableProperty({javafx.css.CssMetaData%0})
-meth public boolean equals(java.lang.Object)
-meth public final boolean isInherits()
-meth public final java.lang.String getProperty()
-meth public final java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getSubProperties()
-meth public final javafx.css.StyleConverter<?,{javafx.css.CssMetaData%1}> getConverter()
-meth public int hashCode()
-meth public java.lang.String toString()
-meth public void set({javafx.css.CssMetaData%0},{javafx.css.CssMetaData%1},javafx.css.StyleOrigin)
- anno 0 java.lang.Deprecated()
-meth public {javafx.css.CssMetaData%1} getInitialValue({javafx.css.CssMetaData%0})
-supr java.lang.Object
-hfds converter,inherits,initialValue,property,subProperties
-
-CLSS public abstract javafx.css.FontCssMetaData<%0 extends javafx.css.Styleable>
-cons public init(java.lang.String,javafx.scene.text.Font)
-supr javafx.css.CssMetaData<{javafx.css.FontCssMetaData%0},javafx.scene.text.Font>
-
-CLSS public javafx.css.ParsedValue<%0 extends java.lang.Object, %1 extends java.lang.Object>
-cons protected init({javafx.css.ParsedValue%0},javafx.css.StyleConverter<{javafx.css.ParsedValue%0},{javafx.css.ParsedValue%1}>)
-fld protected final javafx.css.StyleConverter<{javafx.css.ParsedValue%0},{javafx.css.ParsedValue%1}> converter
-fld protected final {javafx.css.ParsedValue%0} value
-meth public final javafx.css.StyleConverter<{javafx.css.ParsedValue%0},{javafx.css.ParsedValue%1}> getConverter()
-meth public final {javafx.css.ParsedValue%0} getValue()
-meth public {javafx.css.ParsedValue%1} convert(javafx.scene.text.Font)
-supr java.lang.Object
-
-CLSS public abstract javafx.css.PseudoClass
-cons public init()
-meth public abstract java.lang.String getPseudoClassName()
-meth public static javafx.css.PseudoClass getPseudoClass(java.lang.String)
-supr java.lang.Object
-
-CLSS public javafx.css.SimpleStyleableBooleanProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Boolean>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Boolean>,boolean)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Boolean>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Boolean>,java.lang.Object,java.lang.String,boolean)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Boolean> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableBooleanProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableDoubleProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Double)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String,java.lang.Double)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableDoubleProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableFloatProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Float)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String,java.lang.Float)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableFloatProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableIntegerProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Integer)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String,java.lang.Integer)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableIntegerProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableLongProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Long)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number>,java.lang.Object,java.lang.String,java.lang.Long)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.Number> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableLongProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableObjectProperty<%0 extends java.lang.Object>
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.SimpleStyleableObjectProperty%0}>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.SimpleStyleableObjectProperty%0}>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.SimpleStyleableObjectProperty%0}>,java.lang.Object,java.lang.String,{javafx.css.SimpleStyleableObjectProperty%0})
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.SimpleStyleableObjectProperty%0}>,{javafx.css.SimpleStyleableObjectProperty%0})
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.SimpleStyleableObjectProperty%0}> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableObjectProperty<{javafx.css.SimpleStyleableObjectProperty%0}>
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.SimpleStyleableStringProperty
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.String>)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.String>,java.lang.Object,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.String>,java.lang.Object,java.lang.String,java.lang.String)
-cons public init(javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.String>,java.lang.String)
-meth public final javafx.css.CssMetaData<? extends javafx.css.Styleable,java.lang.String> getCssMetaData()
-meth public java.lang.Object getBean()
-meth public java.lang.String getName()
-supr javafx.css.StyleableStringProperty
-hfds DEFAULT_BEAN,DEFAULT_NAME,bean,cssMetaData,name
-
-CLSS public javafx.css.StyleConverter<%0 extends java.lang.Object, %1 extends java.lang.Object>
-cons public init()
-meth public static <%0 extends java.lang.Enum<{%%0}>> javafx.css.StyleConverter<java.lang.String,? extends java.lang.Enum<?>> getEnumConverter(java.lang.Class<{%%0}>)
-meth public static javafx.css.StyleConverter<?,java.lang.Number> getSizeConverter()
-meth public static javafx.css.StyleConverter<?,javafx.util.Duration> getDurationConverter()
-meth public static javafx.css.StyleConverter<java.lang.String,java.lang.Boolean> getBooleanConverter()
-meth public static javafx.css.StyleConverter<java.lang.String,java.lang.String> getStringConverter()
-meth public static javafx.css.StyleConverter<java.lang.String,javafx.scene.paint.Color> getColorConverter()
-meth public static javafx.css.StyleConverter<javafx.css.ParsedValue<?,javafx.scene.paint.Paint>,javafx.scene.paint.Paint> getPaintConverter()
-meth public static javafx.css.StyleConverter<javafx.css.ParsedValue[],java.lang.String> getUrlConverter()
-meth public static javafx.css.StyleConverter<javafx.css.ParsedValue[],javafx.geometry.Insets> getInsetsConverter()
-meth public static javafx.css.StyleConverter<javafx.css.ParsedValue[],javafx.scene.effect.Effect> getEffectConverter()
-meth public static javafx.css.StyleConverter<javafx.css.ParsedValue[],javafx.scene.text.Font> getFontConverter()
-meth public {javafx.css.StyleConverter%1} convert(javafx.css.ParsedValue<{javafx.css.StyleConverter%0},{javafx.css.StyleConverter%1}>,javafx.scene.text.Font)
-supr java.lang.Object
-
-CLSS public final !enum javafx.css.StyleOrigin
-fld public final static javafx.css.StyleOrigin AUTHOR
-fld public final static javafx.css.StyleOrigin INLINE
-fld public final static javafx.css.StyleOrigin USER
-fld public final static javafx.css.StyleOrigin USER_AGENT
-meth public static javafx.css.StyleOrigin valueOf(java.lang.String)
-meth public static javafx.css.StyleOrigin[] values()
-supr java.lang.Enum<javafx.css.StyleOrigin>
-
-CLSS public abstract interface javafx.css.Styleable
-meth public abstract java.lang.String getId()
-meth public abstract java.lang.String getStyle()
-meth public abstract java.lang.String getTypeSelector()
-meth public abstract java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public abstract javafx.collections.ObservableList<java.lang.String> getStyleClass()
-meth public abstract javafx.collections.ObservableSet<javafx.css.PseudoClass> getPseudoClassStates()
-meth public abstract javafx.css.Styleable getStyleableParent()
-
-CLSS public abstract javafx.css.StyleableBooleanProperty
-cons public init()
-cons public init(boolean)
-intf javafx.css.StyleableProperty<java.lang.Boolean>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.Boolean)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.Boolean>)
-meth public void set(boolean)
-supr javafx.beans.property.BooleanPropertyBase
-hfds origin
-
-CLSS public abstract javafx.css.StyleableDoubleProperty
-cons public init()
-cons public init(double)
-intf javafx.css.StyleableProperty<java.lang.Number>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.Number)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.Number>)
-meth public void set(double)
-supr javafx.beans.property.DoublePropertyBase
-hfds origin
-
-CLSS public abstract javafx.css.StyleableFloatProperty
-cons public init()
-cons public init(float)
-intf javafx.css.StyleableProperty<java.lang.Number>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.Number)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.Number>)
-meth public void set(float)
-supr javafx.beans.property.FloatPropertyBase
-hfds origin
-
-CLSS public abstract javafx.css.StyleableIntegerProperty
-cons public init()
-cons public init(int)
-intf javafx.css.StyleableProperty<java.lang.Number>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.Number)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.Number>)
-meth public void set(int)
-supr javafx.beans.property.IntegerPropertyBase
-hfds origin
-
-CLSS public abstract javafx.css.StyleableLongProperty
-cons public init()
-cons public init(long)
-intf javafx.css.StyleableProperty<java.lang.Number>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.Number)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.Number>)
-meth public void set(long)
-supr javafx.beans.property.LongPropertyBase
-hfds origin
-
-CLSS public abstract javafx.css.StyleableObjectProperty<%0 extends java.lang.Object>
-cons public init()
-cons public init({javafx.css.StyleableObjectProperty%0})
-intf javafx.css.StyleableProperty<{javafx.css.StyleableObjectProperty%0}>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,{javafx.css.StyleableObjectProperty%0})
-meth public void bind(javafx.beans.value.ObservableValue<? extends {javafx.css.StyleableObjectProperty%0}>)
-meth public void set({javafx.css.StyleableObjectProperty%0})
-supr javafx.beans.property.ObjectPropertyBase<{javafx.css.StyleableObjectProperty%0}>
-hfds origin
-
-CLSS public abstract interface javafx.css.StyleableProperty<%0 extends java.lang.Object>
-intf javafx.beans.value.WritableValue<{javafx.css.StyleableProperty%0}>
-meth public abstract javafx.css.CssMetaData<? extends javafx.css.Styleable,{javafx.css.StyleableProperty%0}> getCssMetaData()
-meth public abstract javafx.css.StyleOrigin getStyleOrigin()
-meth public abstract void applyStyle(javafx.css.StyleOrigin,{javafx.css.StyleableProperty%0})
-
-CLSS public javafx.css.StyleablePropertyFactory<%0 extends javafx.css.Styleable>
-cons public init(java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>>)
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEnumCssMetaData(java.lang.Class<? extends java.lang.Enum>,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>)
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEnumCssMetaData(java.lang.Class<? extends java.lang.Enum>,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0})
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEnumCssMetaData(java.lang.Class<? extends java.lang.Enum>,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0},boolean)
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.StyleableProperty<{%%0}> createStyleableEffectProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.lang.Class<{%%0}>)
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.StyleableProperty<{%%0}> createStyleableEnumProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,java.lang.Class<{%%0}>)
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.StyleableProperty<{%%0}> createStyleableEnumProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,java.lang.Class<{%%0}>,{%%0})
-meth public final <%0 extends java.lang.Enum<{%%0}>> javafx.css.StyleableProperty<{%%0}> createStyleableEnumProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,java.lang.Class<{%%0}>,{%%0},boolean)
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEffectCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>)
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEffectCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0})
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},{%%0}> createEffectCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0},boolean)
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.StyleableProperty<{%%0}> createStyleableEffectProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>)
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.StyleableProperty<{%%0}> createStyleableEffectProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0})
-meth public final <%0 extends javafx.scene.effect.Effect> javafx.css.StyleableProperty<{%%0}> createStyleableEffectProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<{%%0}>>,{%%0},boolean)
-meth public final java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Boolean> createBooleanCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Boolean> createBooleanCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Boolean> createBooleanCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>,boolean,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Number> createSizeCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Number> createSizeCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>,java.lang.Number)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.Number> createSizeCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>,java.lang.Number,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createStringCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createStringCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createStringCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createUrlCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createUrlCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},java.lang.String> createUrlCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.geometry.Insets> createInsetsCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.geometry.Insets> createInsetsCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>,javafx.geometry.Insets)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.geometry.Insets> createInsetsCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>,javafx.geometry.Insets,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Color> createColorCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Color> createColorCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>,javafx.scene.paint.Color)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Color> createColorCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>,javafx.scene.paint.Color,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Paint> createPaintCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Paint> createPaintCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>,javafx.scene.paint.Paint)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.paint.Paint> createPaintCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>,javafx.scene.paint.Paint,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.text.Font> createFontCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.text.Font> createFontCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>,javafx.scene.text.Font)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.scene.text.Font> createFontCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>,javafx.scene.text.Font,boolean)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.util.Duration> createDurationCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.util.Duration> createDurationCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>,javafx.util.Duration)
-meth public final javafx.css.CssMetaData<{javafx.css.StyleablePropertyFactory%0},javafx.util.Duration> createDurationCssMetaData(java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>,javafx.util.Duration,boolean)
-meth public final javafx.css.StyleableProperty<java.lang.Boolean> createStyleableBooleanProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.Boolean> createStyleableBooleanProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>)
-meth public final javafx.css.StyleableProperty<java.lang.Boolean> createStyleableBooleanProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>,boolean)
-meth public final javafx.css.StyleableProperty<java.lang.Boolean> createStyleableBooleanProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Boolean>>,boolean,boolean)
-meth public final javafx.css.StyleableProperty<java.lang.Number> createStyleableNumberProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.Number> createStyleableNumberProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>)
-meth public final javafx.css.StyleableProperty<java.lang.Number> createStyleableNumberProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>,java.lang.Number)
-meth public final javafx.css.StyleableProperty<java.lang.Number> createStyleableNumberProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.Number>>,java.lang.Number,boolean)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableStringProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableStringProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableStringProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableStringProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String,boolean)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableUrlProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableUrlProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableUrlProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String)
-meth public final javafx.css.StyleableProperty<java.lang.String> createStyleableUrlProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<java.lang.String>>,java.lang.String,boolean)
-meth public final javafx.css.StyleableProperty<javafx.geometry.Insets> createStyleableInsetsProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.geometry.Insets> createStyleableInsetsProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>)
-meth public final javafx.css.StyleableProperty<javafx.geometry.Insets> createStyleableInsetsProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>,javafx.geometry.Insets)
-meth public final javafx.css.StyleableProperty<javafx.geometry.Insets> createStyleableInsetsProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.geometry.Insets>>,javafx.geometry.Insets,boolean)
-meth public final javafx.css.StyleableProperty<javafx.scene.effect.Effect> createStyleableEffectProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Color> createStyleableColorProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Color> createStyleableColorProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Color> createStyleableColorProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>,javafx.scene.paint.Color)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Color> createStyleableColorProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Color>>,javafx.scene.paint.Color,boolean)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Paint> createStyleablePaintProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Paint> createStyleablePaintProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Paint> createStyleablePaintProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>,javafx.scene.paint.Paint)
-meth public final javafx.css.StyleableProperty<javafx.scene.paint.Paint> createStyleablePaintProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.paint.Paint>>,javafx.scene.paint.Paint,boolean)
-meth public final javafx.css.StyleableProperty<javafx.scene.text.Font> createStyleableFontProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.scene.text.Font> createStyleableFontProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>)
-meth public final javafx.css.StyleableProperty<javafx.scene.text.Font> createStyleableFontProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>,javafx.scene.text.Font)
-meth public final javafx.css.StyleableProperty<javafx.scene.text.Font> createStyleableFontProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.scene.text.Font>>,javafx.scene.text.Font,boolean)
-meth public final javafx.css.StyleableProperty<javafx.util.Duration> createStyleableDurationProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String)
-meth public final javafx.css.StyleableProperty<javafx.util.Duration> createStyleableDurationProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>)
-meth public final javafx.css.StyleableProperty<javafx.util.Duration> createStyleableDurationProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>,javafx.util.Duration)
-meth public final javafx.css.StyleableProperty<javafx.util.Duration> createStyleableDurationProperty({javafx.css.StyleablePropertyFactory%0},java.lang.String,java.lang.String,java.util.function.Function<{javafx.css.StyleablePropertyFactory%0},javafx.css.StyleableProperty<javafx.util.Duration>>,javafx.util.Duration,boolean)
-supr java.lang.Object
-hfds metaDataList,metaDataMap,unmodifiableMetaDataList
-hcls SimpleCssMetaData
-
-CLSS public abstract javafx.css.StyleableStringProperty
-cons public init()
-cons public init(java.lang.String)
-intf javafx.css.StyleableProperty<java.lang.String>
-meth public javafx.css.StyleOrigin getStyleOrigin()
-meth public void applyStyle(javafx.css.StyleOrigin,java.lang.String)
-meth public void bind(javafx.beans.value.ObservableValue<? extends java.lang.String>)
-meth public void set(java.lang.String)
-supr javafx.beans.property.StringPropertyBase
-hfds origin
-
 CLSS public javafx.embed.swing.JFXPanel
 cons public init()
 meth protected void paintComponent(java.awt.Graphics)
@@ -4536,33 +4022,6 @@ CLSS public javafx.embed.swing.SwingFXUtils
 meth public static java.awt.image.BufferedImage fromFXImage(javafx.scene.image.Image,java.awt.image.BufferedImage)
 meth public static javafx.scene.image.WritableImage toFXImage(java.awt.image.BufferedImage,javafx.scene.image.WritableImage)
 supr java.lang.Object
-
-CLSS public javafx.embed.swing.SwingNode
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth public boolean isResizable()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public double maxHeight(double)
-meth public double maxWidth(double)
-meth public double minHeight(double)
-meth public double minWidth(double)
-meth public double prefHeight(double)
-meth public double prefWidth(double)
-meth public java.lang.Object impl_processMXNode(com.sun.javafx.jmx.MXNodeAlgorithm,com.sun.javafx.jmx.MXNodeAlgorithmContext)
- anno 0 java.lang.Deprecated()
-meth public javax.swing.JComponent getContent()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-meth public void resize(double,double)
-meth public void setContent(javax.swing.JComponent)
-supr javafx.scene.Node
-hfds content,fxHeight,fxWidth,grabbed,hWindow,isThreadMerged,jlfNotifyDisplayChanged,jlfOverrideNativeWindowHandle,jlfSetHostBounds,locationListener,lwFrame,paintLock,peer,peerRequests,scale,sceneWindowListener,skipBackwardUnrgabNotification,swingMaxHeight,swingMaxWidth,swingMinHeight,swingMinWidth,swingPrefHeight,swingPrefWidth,ungrabHandler,windowHiddenHandler,windowVisibleListener
-hcls OptionalMethod,PostEventAction,SwingKeyEventHandler,SwingMouseEventHandler,SwingNodeContent,SwingNodeDisposer,SwingNodeWindowFocusListener,SwingScrollEventHandler
 
 CLSS public javafx.event.ActionEvent
 cons public init()
@@ -4614,14 +4073,6 @@ meth public final javafx.event.EventType<? super {javafx.event.EventType%0}> get
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds name,superType
-
-CLSS public final javafx.event.WeakEventHandler<%0 extends javafx.event.Event>
-cons public init(javafx.event.EventHandler<{javafx.event.WeakEventHandler%0}>)
-intf javafx.event.EventHandler<{javafx.event.WeakEventHandler%0}>
-meth public boolean wasGarbageCollected()
-meth public void handle({javafx.event.WeakEventHandler%0})
-supr java.lang.Object
-hfds weakRef
 
 CLSS public abstract interface !annotation javafx.fxml.FXML
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -4866,14 +4317,6 @@ meth public {javafx.geometry.InsetsBuilder%0} top(double)
 supr java.lang.Object
 hfds bottom,left,right,top
 
-CLSS public final !enum javafx.geometry.NodeOrientation
-fld public final static javafx.geometry.NodeOrientation INHERIT
-fld public final static javafx.geometry.NodeOrientation LEFT_TO_RIGHT
-fld public final static javafx.geometry.NodeOrientation RIGHT_TO_LEFT
-meth public static javafx.geometry.NodeOrientation valueOf(java.lang.String)
-meth public static javafx.geometry.NodeOrientation[] values()
-supr java.lang.Enum<javafx.geometry.NodeOrientation>
-
 CLSS public final !enum javafx.geometry.Orientation
 fld public final static javafx.geometry.Orientation HORIZONTAL
 fld public final static javafx.geometry.Orientation VERTICAL
@@ -5007,154 +4450,6 @@ meth public static javafx.geometry.VerticalDirection valueOf(java.lang.String)
 meth public static javafx.geometry.VerticalDirection[] values()
 supr java.lang.Enum<javafx.geometry.VerticalDirection>
 
-CLSS public final !enum javafx.scene.AccessibleAction
-fld public final static javafx.scene.AccessibleAction BLOCK_DECREMENT
-fld public final static javafx.scene.AccessibleAction BLOCK_INCREMENT
-fld public final static javafx.scene.AccessibleAction COLLAPSE
-fld public final static javafx.scene.AccessibleAction DECREMENT
-fld public final static javafx.scene.AccessibleAction EXPAND
-fld public final static javafx.scene.AccessibleAction FIRE
-fld public final static javafx.scene.AccessibleAction INCREMENT
-fld public final static javafx.scene.AccessibleAction REQUEST_FOCUS
-fld public final static javafx.scene.AccessibleAction SET_SELECTED_ITEMS
-fld public final static javafx.scene.AccessibleAction SET_TEXT
-fld public final static javafx.scene.AccessibleAction SET_TEXT_SELECTION
-fld public final static javafx.scene.AccessibleAction SET_VALUE
-fld public final static javafx.scene.AccessibleAction SHOW_ITEM
-fld public final static javafx.scene.AccessibleAction SHOW_MENU
-fld public final static javafx.scene.AccessibleAction SHOW_TEXT_RANGE
-meth public static javafx.scene.AccessibleAction valueOf(java.lang.String)
-meth public static javafx.scene.AccessibleAction[] values()
-supr java.lang.Enum<javafx.scene.AccessibleAction>
-
-CLSS public final !enum javafx.scene.AccessibleAttribute
-fld public final static javafx.scene.AccessibleAttribute ACCELERATOR
-fld public final static javafx.scene.AccessibleAttribute BOUNDS
-fld public final static javafx.scene.AccessibleAttribute BOUNDS_FOR_RANGE
-fld public final static javafx.scene.AccessibleAttribute CARET_OFFSET
-fld public final static javafx.scene.AccessibleAttribute CELL_AT_ROW_COLUMN
-fld public final static javafx.scene.AccessibleAttribute CHILDREN
-fld public final static javafx.scene.AccessibleAttribute COLUMN_AT_INDEX
-fld public final static javafx.scene.AccessibleAttribute COLUMN_COUNT
-fld public final static javafx.scene.AccessibleAttribute COLUMN_INDEX
-fld public final static javafx.scene.AccessibleAttribute CONTENTS
-fld public final static javafx.scene.AccessibleAttribute DATE
-fld public final static javafx.scene.AccessibleAttribute DISABLED
-fld public final static javafx.scene.AccessibleAttribute DISCLOSURE_LEVEL
-fld public final static javafx.scene.AccessibleAttribute EDITABLE
-fld public final static javafx.scene.AccessibleAttribute EXPANDED
-fld public final static javafx.scene.AccessibleAttribute FOCUSED
-fld public final static javafx.scene.AccessibleAttribute FOCUS_ITEM
-fld public final static javafx.scene.AccessibleAttribute FOCUS_NODE
-fld public final static javafx.scene.AccessibleAttribute FONT
-fld public final static javafx.scene.AccessibleAttribute HEADER
-fld public final static javafx.scene.AccessibleAttribute HELP
-fld public final static javafx.scene.AccessibleAttribute HORIZONTAL_SCROLLBAR
-fld public final static javafx.scene.AccessibleAttribute INDETERMINATE
-fld public final static javafx.scene.AccessibleAttribute INDEX
-fld public final static javafx.scene.AccessibleAttribute ITEM_AT_INDEX
-fld public final static javafx.scene.AccessibleAttribute ITEM_COUNT
-fld public final static javafx.scene.AccessibleAttribute LABELED_BY
-fld public final static javafx.scene.AccessibleAttribute LEAF
-fld public final static javafx.scene.AccessibleAttribute LINE_END
-fld public final static javafx.scene.AccessibleAttribute LINE_FOR_OFFSET
-fld public final static javafx.scene.AccessibleAttribute LINE_START
-fld public final static javafx.scene.AccessibleAttribute MAX_VALUE
-fld public final static javafx.scene.AccessibleAttribute MIN_VALUE
-fld public final static javafx.scene.AccessibleAttribute MNEMONIC
-fld public final static javafx.scene.AccessibleAttribute MULTIPLE_SELECTION
-fld public final static javafx.scene.AccessibleAttribute NODE_AT_POINT
-fld public final static javafx.scene.AccessibleAttribute OFFSET_AT_POINT
-fld public final static javafx.scene.AccessibleAttribute ORIENTATION
-fld public final static javafx.scene.AccessibleAttribute OVERFLOW_BUTTON
-fld public final static javafx.scene.AccessibleAttribute PARENT
-fld public final static javafx.scene.AccessibleAttribute PARENT_MENU
-fld public final static javafx.scene.AccessibleAttribute ROLE
-fld public final static javafx.scene.AccessibleAttribute ROLE_DESCRIPTION
-fld public final static javafx.scene.AccessibleAttribute ROW_AT_INDEX
-fld public final static javafx.scene.AccessibleAttribute ROW_COUNT
-fld public final static javafx.scene.AccessibleAttribute ROW_INDEX
-fld public final static javafx.scene.AccessibleAttribute SCENE
-fld public final static javafx.scene.AccessibleAttribute SELECTED
-fld public final static javafx.scene.AccessibleAttribute SELECTED_ITEMS
-fld public final static javafx.scene.AccessibleAttribute SELECTION_END
-fld public final static javafx.scene.AccessibleAttribute SELECTION_START
-fld public final static javafx.scene.AccessibleAttribute SUBMENU
-fld public final static javafx.scene.AccessibleAttribute TEXT
-fld public final static javafx.scene.AccessibleAttribute TREE_ITEM_AT_INDEX
-fld public final static javafx.scene.AccessibleAttribute TREE_ITEM_COUNT
-fld public final static javafx.scene.AccessibleAttribute TREE_ITEM_PARENT
-fld public final static javafx.scene.AccessibleAttribute VALUE
-fld public final static javafx.scene.AccessibleAttribute VERTICAL_SCROLLBAR
-fld public final static javafx.scene.AccessibleAttribute VISIBLE
-fld public final static javafx.scene.AccessibleAttribute VISITED
-meth public java.lang.Class<?> getReturnType()
-meth public static javafx.scene.AccessibleAttribute valueOf(java.lang.String)
-meth public static javafx.scene.AccessibleAttribute[] values()
-supr java.lang.Enum<javafx.scene.AccessibleAttribute>
-hfds returnClass
-
-CLSS public final !enum javafx.scene.AccessibleRole
-fld public final static javafx.scene.AccessibleRole BUTTON
-fld public final static javafx.scene.AccessibleRole CHECK_BOX
-fld public final static javafx.scene.AccessibleRole CHECK_MENU_ITEM
-fld public final static javafx.scene.AccessibleRole COMBO_BOX
-fld public final static javafx.scene.AccessibleRole CONTEXT_MENU
-fld public final static javafx.scene.AccessibleRole DATE_PICKER
-fld public final static javafx.scene.AccessibleRole DECREMENT_BUTTON
-fld public final static javafx.scene.AccessibleRole HYPERLINK
-fld public final static javafx.scene.AccessibleRole IMAGE_VIEW
-fld public final static javafx.scene.AccessibleRole INCREMENT_BUTTON
-fld public final static javafx.scene.AccessibleRole LIST_ITEM
-fld public final static javafx.scene.AccessibleRole LIST_VIEW
-fld public final static javafx.scene.AccessibleRole MENU
-fld public final static javafx.scene.AccessibleRole MENU_BAR
-fld public final static javafx.scene.AccessibleRole MENU_BUTTON
-fld public final static javafx.scene.AccessibleRole MENU_ITEM
-fld public final static javafx.scene.AccessibleRole NODE
-fld public final static javafx.scene.AccessibleRole PAGE_ITEM
-fld public final static javafx.scene.AccessibleRole PAGINATION
-fld public final static javafx.scene.AccessibleRole PARENT
-fld public final static javafx.scene.AccessibleRole PASSWORD_FIELD
-fld public final static javafx.scene.AccessibleRole PROGRESS_INDICATOR
-fld public final static javafx.scene.AccessibleRole RADIO_BUTTON
-fld public final static javafx.scene.AccessibleRole RADIO_MENU_ITEM
-fld public final static javafx.scene.AccessibleRole SCROLL_BAR
-fld public final static javafx.scene.AccessibleRole SCROLL_PANE
-fld public final static javafx.scene.AccessibleRole SLIDER
-fld public final static javafx.scene.AccessibleRole SPINNER
-fld public final static javafx.scene.AccessibleRole SPLIT_MENU_BUTTON
-fld public final static javafx.scene.AccessibleRole TABLE_CELL
-fld public final static javafx.scene.AccessibleRole TABLE_COLUMN
-fld public final static javafx.scene.AccessibleRole TABLE_ROW
-fld public final static javafx.scene.AccessibleRole TABLE_VIEW
-fld public final static javafx.scene.AccessibleRole TAB_ITEM
-fld public final static javafx.scene.AccessibleRole TAB_PANE
-fld public final static javafx.scene.AccessibleRole TEXT
-fld public final static javafx.scene.AccessibleRole TEXT_AREA
-fld public final static javafx.scene.AccessibleRole TEXT_FIELD
-fld public final static javafx.scene.AccessibleRole THUMB
-fld public final static javafx.scene.AccessibleRole TITLED_PANE
-fld public final static javafx.scene.AccessibleRole TOGGLE_BUTTON
-fld public final static javafx.scene.AccessibleRole TOOLTIP
-fld public final static javafx.scene.AccessibleRole TOOL_BAR
-fld public final static javafx.scene.AccessibleRole TREE_ITEM
-fld public final static javafx.scene.AccessibleRole TREE_TABLE_CELL
-fld public final static javafx.scene.AccessibleRole TREE_TABLE_ROW
-fld public final static javafx.scene.AccessibleRole TREE_TABLE_VIEW
-fld public final static javafx.scene.AccessibleRole TREE_VIEW
-meth public static javafx.scene.AccessibleRole valueOf(java.lang.String)
-meth public static javafx.scene.AccessibleRole[] values()
-supr java.lang.Enum<javafx.scene.AccessibleRole>
-
-CLSS public javafx.scene.AmbientLight
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(javafx.scene.paint.Color)
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.LightBase
-
 CLSS public final !enum javafx.scene.CacheHint
 fld public final static javafx.scene.CacheHint DEFAULT
 fld public final static javafx.scene.CacheHint QUALITY
@@ -5260,30 +4555,6 @@ meth public {javafx.scene.ImageCursorBuilder%0} hotspotY(double)
 meth public {javafx.scene.ImageCursorBuilder%0} image(javafx.scene.image.Image)
 supr java.lang.Object
 hfds hotspotX,hotspotY,image
-
-CLSS public abstract javafx.scene.LightBase
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons protected init()
-cons protected init(javafx.scene.paint.Color)
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected void impl_markDirty(com.sun.javafx.scene.DirtyBits)
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final boolean isLightOn()
-meth public final javafx.beans.property.BooleanProperty lightOnProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.paint.Color> colorProperty()
-meth public final javafx.scene.paint.Color getColor()
-meth public final void setColor(javafx.scene.paint.Color)
-meth public final void setLightOn(boolean)
-meth public java.lang.Object impl_processMXNode(com.sun.javafx.jmx.MXNodeAlgorithm,com.sun.javafx.jmx.MXNodeAlgorithmContext)
- anno 0 java.lang.Deprecated()
-meth public javafx.collections.ObservableList<javafx.scene.Node> getScope()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.Node
-hfds color,lightOn,localToSceneTx,scope
 
 CLSS public abstract javafx.scene.Node
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -5828,14 +5099,6 @@ meth public {javafx.scene.PerspectiveCameraBuilder%0} fieldOfView(double)
 supr java.lang.Object
 hfds __set,fieldOfView
 
-CLSS public javafx.scene.PointLight
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(javafx.scene.paint.Color)
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.LightBase
-
 CLSS public javafx.scene.Scene
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="root")
 cons public init(javafx.scene.Parent)
@@ -6035,13 +5298,6 @@ supr java.lang.Object
 hfds MIN_DIRTY_CAPACITY,PLATFORM_DRAG_GESTURE_INITIATION,allowPGAccess,camera,cameraChangeListener,clickGenerator,cursor,cursorScenePos,cursorScreenPos,depthBuffer,dirtyBits,dirtyLayoutRoots,dirtyLayoutRootsA,dirtyLayoutRootsB,dirtyNodes,dirtyNodesSize,dndGesture,dragGestureListener,eventDispatcher,fill,focusDirty,focusOwner,height,heightSetByUser,impl_peer,inMousePick,inSynchronizer,initialized,internalEventDispatcher,keyHandler,mouseHandler,nextTouchEvent,oldCamera,oldFocusOwner,oldRoot,onContextMenuRequested,onDragDetected,onDragDone,onDragDropped,onDragEntered,onDragExited,onDragOver,onInputMethodTextChanged,onKeyPressed,onKeyReleased,onKeyTyped,onMouseClicked,onMouseDragEntered,onMouseDragExited,onMouseDragOver,onMouseDragReleased,onMouseDragged,onMouseEntered,onMouseExited,onMouseMoved,onMousePressed,onMouseReleased,onRotate,onRotationFinished,onRotationStarted,onScroll,onScrollFinished,onScrollStarted,onSwipeDown,onSwipeLeft,onSwipeRight,onSwipeUp,onTouchMoved,onTouchPressed,onTouchReleased,onTouchStationary,onZoom,onZoomFinished,onZoomStarted,paused,pgAccessCount,pickingCamera,root,rotateGesture,scenePulseListener,scrollGesture,sizeInitialized,snapshotPulseListener,snapshotRunnableList,snapshotRunnableListA,snapshotRunnableListB,stylesheets,swipeGesture,testPulseListener,tmpTargetWrapper,touchEventSetId,touchMap,touchPointIndex,touchPoints,touchTargets,tracker,trackerMonitor,traversalRegistry,width,widthSetByUser,window,x,y,zoomGesture
 hcls ClickCounter,ClickGenerator,DirtyBits,DnDGesture,DragDetectedState,DragGestureListener,DragSourceListener,DropTargetListener,InputMethodRequestsDelegate,KeyHandler,MouseHandler,ScenePeerListener,ScenePeerPaintListener,ScenePulseListener,TargetWrapper,TouchGesture,TouchMap
 
-CLSS public final javafx.scene.SceneAntialiasing
-fld public final static javafx.scene.SceneAntialiasing BALANCED
-fld public final static javafx.scene.SceneAntialiasing DISABLED
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds val
-
 CLSS public javafx.scene.SceneBuilder<%0 extends javafx.scene.SceneBuilder<{javafx.scene.SceneBuilder%0}>>
 cons protected init()
 intf javafx.util.Builder<javafx.scene.Scene>
@@ -6135,48 +5391,6 @@ meth public javafx.scene.SnapshotParameters getSnapshotParameters()
 meth public javafx.scene.image.WritableImage getImage()
 supr java.lang.Object
 hfds image,params,source
-
-CLSS public javafx.scene.SubScene
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init(javafx.scene.Parent,double,double)
-cons public init(javafx.scene.Parent,double,double,boolean,javafx.scene.SceneAntialiasing)
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth protected void impl_pickNodeLocal(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser)
- anno 0 java.lang.Deprecated()
-meth protected void impl_processCSS(javafx.beans.value.WritableValue<java.lang.Boolean>)
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final boolean isDepthBuffer()
-meth public final double getHeight()
-meth public final double getWidth()
-meth public final java.lang.String getUserAgentStylesheet()
-meth public final javafx.beans.property.DoubleProperty heightProperty()
-meth public final javafx.beans.property.DoubleProperty widthProperty()
-meth public final javafx.beans.property.ObjectProperty<java.lang.String> userAgentStylesheetProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Camera> cameraProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Parent> rootProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.paint.Paint> fillProperty()
-meth public final javafx.scene.Camera getCamera()
-meth public final javafx.scene.Parent getRoot()
-meth public final javafx.scene.SceneAntialiasing getAntiAliasing()
-meth public final javafx.scene.paint.Paint getFill()
-meth public final void setCamera(javafx.scene.Camera)
-meth public final void setFill(javafx.scene.paint.Paint)
-meth public final void setHeight(double)
-meth public final void setRoot(javafx.scene.Parent)
-meth public final void setUserAgentStylesheet(java.lang.String)
-meth public final void setWidth(double)
-meth public java.lang.Object impl_processMXNode(com.sun.javafx.jmx.MXNodeAlgorithm,com.sun.javafx.jmx.MXNodeAlgorithmContext)
- anno 0 java.lang.Deprecated()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.Node
-hfds antiAliasing,camera,defaultCamera,depthBuffer,dirtyBits,dirtyLayout,dirtyNodes,fill,height,is3DSupported,lights,root,traversalEngine,userAgentStylesheet,width
-hcls SubSceneDirtyBits
 
 CLSS public javafx.scene.canvas.Canvas
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -6613,15 +5827,6 @@ supr javafx.scene.chart.XYChart<{javafx.scene.chart.LineChart%0},{javafx.scene.c
 hfds createSymbols,dataItemBeingRemoved,dataRemoveTimeline,legend,seriesOfDataRemoved,seriesYMultiplierMap
 hcls StyleableProperties
 
-CLSS public final static !enum javafx.scene.chart.LineChart$SortingPolicy
- outer javafx.scene.chart.LineChart
-fld public final static javafx.scene.chart.LineChart$SortingPolicy NONE
-fld public final static javafx.scene.chart.LineChart$SortingPolicy X_AXIS
-fld public final static javafx.scene.chart.LineChart$SortingPolicy Y_AXIS
-meth public static javafx.scene.chart.LineChart$SortingPolicy valueOf(java.lang.String)
-meth public static javafx.scene.chart.LineChart$SortingPolicy[] values()
-supr java.lang.Enum<javafx.scene.chart.LineChart$SortingPolicy>
-
 CLSS public javafx.scene.chart.LineChartBuilder<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends javafx.scene.chart.LineChartBuilder<{javafx.scene.chart.LineChartBuilder%0},{javafx.scene.chart.LineChartBuilder%1},{javafx.scene.chart.LineChartBuilder%2}>>
 cons protected init()
 meth public javafx.scene.chart.LineChart<{javafx.scene.chart.LineChartBuilder%0},{javafx.scene.chart.LineChartBuilder%1}> build()
@@ -7025,28 +6230,6 @@ meth public {javafx.scene.control.AccordionBuilder%0} panes(java.util.Collection
 supr javafx.scene.control.ControlBuilder<{javafx.scene.control.AccordionBuilder%0}>
 hfds __set,expandedPane,panes
 
-CLSS public javafx.scene.control.Alert
-cons public !varargs init(javafx.scene.control.Alert$AlertType,java.lang.String,javafx.scene.control.ButtonType[])
-cons public init(javafx.scene.control.Alert$AlertType)
-innr public final static !enum AlertType
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.Alert$AlertType> alertTypeProperty()
-meth public final javafx.collections.ObservableList<javafx.scene.control.ButtonType> getButtonTypes()
-meth public final javafx.scene.control.Alert$AlertType getAlertType()
-meth public final void setAlertType(javafx.scene.control.Alert$AlertType)
-supr javafx.scene.control.Dialog<javafx.scene.control.ButtonType>
-hfds alertType,buttonsListener,dialogPaneRef,hasCustomButtons,hasCustomHeaderText,hasCustomTitle,headerTextListener,installingDefaults,titleListener
-
-CLSS public final static !enum javafx.scene.control.Alert$AlertType
- outer javafx.scene.control.Alert
-fld public final static javafx.scene.control.Alert$AlertType CONFIRMATION
-fld public final static javafx.scene.control.Alert$AlertType ERROR
-fld public final static javafx.scene.control.Alert$AlertType INFORMATION
-fld public final static javafx.scene.control.Alert$AlertType NONE
-fld public final static javafx.scene.control.Alert$AlertType WARNING
-meth public static javafx.scene.control.Alert$AlertType valueOf(java.lang.String)
-meth public static javafx.scene.control.Alert$AlertType[] values()
-supr java.lang.Enum<javafx.scene.control.Alert$AlertType>
-
 CLSS public javafx.scene.control.Button
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
@@ -7064,57 +6247,6 @@ meth public long impl_getPseudoClassState()
 meth public void fire()
 supr javafx.scene.control.ButtonBase
 hfds DEFAULT_STYLE_CLASS,PSEUDO_CLASS_CANCEL,PSEUDO_CLASS_CANCEL_MASK,PSEUDO_CLASS_DEFAULT,PSEUDO_CLASS_DEFAULT_MASK,cancelButton,defaultButton
-
-CLSS public javafx.scene.control.ButtonBar
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(java.lang.String)
-fld public final static java.lang.String BUTTON_ORDER_LINUX = "L_HE+UNYACBXIO_R"
-fld public final static java.lang.String BUTTON_ORDER_MAC_OS = "L_HE+U+FBIX_NCYOA_R"
-fld public final static java.lang.String BUTTON_ORDER_NONE = ""
-fld public final static java.lang.String BUTTON_ORDER_WINDOWS = "L_E+U+FBXI_YNOCAH_R"
-innr public final static !enum ButtonData
-meth protected java.lang.Boolean impl_cssGetFocusTraversableInitialValue()
- anno 0 java.lang.Deprecated()
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth public final double getButtonMinWidth()
-meth public final java.lang.String getButtonOrder()
-meth public final javafx.beans.property.DoubleProperty buttonMinWidthProperty()
-meth public final javafx.beans.property.StringProperty buttonOrderProperty()
-meth public final javafx.collections.ObservableList<javafx.scene.Node> getButtons()
-meth public final void setButtonMinWidth(double)
-meth public final void setButtonOrder(java.lang.String)
-meth public static boolean isButtonUniformSize(javafx.scene.Node)
-meth public static javafx.scene.control.ButtonBar$ButtonData getButtonData(javafx.scene.Node)
-meth public static void setButtonData(javafx.scene.Node,javafx.scene.control.ButtonBar$ButtonData)
-meth public static void setButtonUniformSize(javafx.scene.Node,boolean)
-supr javafx.scene.control.Control
-hfds buttonMinWidthProperty,buttonOrderProperty,buttons
-
-CLSS public final static !enum javafx.scene.control.ButtonBar$ButtonData
- outer javafx.scene.control.ButtonBar
-fld public final static javafx.scene.control.ButtonBar$ButtonData APPLY
-fld public final static javafx.scene.control.ButtonBar$ButtonData BACK_PREVIOUS
-fld public final static javafx.scene.control.ButtonBar$ButtonData BIG_GAP
-fld public final static javafx.scene.control.ButtonBar$ButtonData CANCEL_CLOSE
-fld public final static javafx.scene.control.ButtonBar$ButtonData FINISH
-fld public final static javafx.scene.control.ButtonBar$ButtonData HELP
-fld public final static javafx.scene.control.ButtonBar$ButtonData HELP_2
-fld public final static javafx.scene.control.ButtonBar$ButtonData LEFT
-fld public final static javafx.scene.control.ButtonBar$ButtonData NEXT_FORWARD
-fld public final static javafx.scene.control.ButtonBar$ButtonData NO
-fld public final static javafx.scene.control.ButtonBar$ButtonData OK_DONE
-fld public final static javafx.scene.control.ButtonBar$ButtonData OTHER
-fld public final static javafx.scene.control.ButtonBar$ButtonData RIGHT
-fld public final static javafx.scene.control.ButtonBar$ButtonData SMALL_GAP
-fld public final static javafx.scene.control.ButtonBar$ButtonData YES
-meth public final boolean isCancelButton()
-meth public final boolean isDefaultButton()
-meth public java.lang.String getTypeCode()
-meth public static javafx.scene.control.ButtonBar$ButtonData valueOf(java.lang.String)
-meth public static javafx.scene.control.ButtonBar$ButtonData[] values()
-supr java.lang.Enum<javafx.scene.control.ButtonBar$ButtonData>
-hfds cancelButton,defaultButton,typeCode
 
 CLSS public abstract javafx.scene.control.ButtonBase
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -7152,24 +6284,6 @@ meth public {javafx.scene.control.ButtonBuilder%0} cancelButton(boolean)
 meth public {javafx.scene.control.ButtonBuilder%0} defaultButton(boolean)
 supr javafx.scene.control.ButtonBaseBuilder<{javafx.scene.control.ButtonBuilder%0}>
 hfds __set,cancelButton,defaultButton
-
-CLSS public final javafx.scene.control.ButtonType
-cons public init(java.lang.String)
-cons public init(java.lang.String,javafx.scene.control.ButtonBar$ButtonData)
-fld public final static javafx.scene.control.ButtonType APPLY
-fld public final static javafx.scene.control.ButtonType CANCEL
-fld public final static javafx.scene.control.ButtonType CLOSE
-fld public final static javafx.scene.control.ButtonType FINISH
-fld public final static javafx.scene.control.ButtonType NEXT
-fld public final static javafx.scene.control.ButtonType NO
-fld public final static javafx.scene.control.ButtonType OK
-fld public final static javafx.scene.control.ButtonType PREVIOUS
-fld public final static javafx.scene.control.ButtonType YES
-meth public final java.lang.String getText()
-meth public final javafx.scene.control.ButtonBar$ButtonData getButtonData()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds buttonData,key,text
 
 CLSS public javafx.scene.control.Cell<%0 extends java.lang.Object>
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -7336,18 +6450,6 @@ meth public {javafx.scene.control.ChoiceBoxBuilder%1} selectionModel(javafx.scen
 meth public {javafx.scene.control.ChoiceBoxBuilder%1} value({javafx.scene.control.ChoiceBoxBuilder%0})
 supr javafx.scene.control.ControlBuilder<{javafx.scene.control.ChoiceBoxBuilder%1}>
 hfds __set,converter,items,selectionModel,value
-
-CLSS public javafx.scene.control.ChoiceDialog<%0 extends java.lang.Object>
-cons public !varargs init({javafx.scene.control.ChoiceDialog%0},{javafx.scene.control.ChoiceDialog%0}[])
-cons public init()
-cons public init({javafx.scene.control.ChoiceDialog%0},java.util.Collection<{javafx.scene.control.ChoiceDialog%0}>)
-meth public final javafx.beans.property.ReadOnlyObjectProperty<{javafx.scene.control.ChoiceDialog%0}> selectedItemProperty()
-meth public final javafx.collections.ObservableList<{javafx.scene.control.ChoiceDialog%0}> getItems()
-meth public final void setSelectedItem({javafx.scene.control.ChoiceDialog%0})
-meth public final {javafx.scene.control.ChoiceDialog%0} getDefaultChoice()
-meth public final {javafx.scene.control.ChoiceDialog%0} getSelectedItem()
-supr javafx.scene.control.Dialog<{javafx.scene.control.ChoiceDialog%0}>
-hfds comboBox,defaultChoice,grid,label
 
 CLSS public javafx.scene.control.ColorPicker
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -7630,167 +6732,6 @@ meth public {javafx.scene.control.CustomMenuItemBuilder%0} content(javafx.scene.
 meth public {javafx.scene.control.CustomMenuItemBuilder%0} hideOnClick(boolean)
 supr javafx.scene.control.MenuItemBuilder<{javafx.scene.control.CustomMenuItemBuilder%0}>
 hfds __set,content,hideOnClick
-
-CLSS public javafx.scene.control.DateCell
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth public void updateItem(java.time.LocalDate,boolean)
-supr javafx.scene.control.Cell<java.time.LocalDate>
-hfds DEFAULT_STYLE_CLASS
-
-CLSS public javafx.scene.control.DatePicker
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(java.time.LocalDate)
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public final boolean isShowWeekNumbers()
-meth public final java.time.chrono.Chronology getChronology()
-meth public final javafx.beans.property.BooleanProperty showWeekNumbersProperty()
-meth public final javafx.beans.property.ObjectProperty<java.time.chrono.Chronology> chronologyProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.DatePicker,javafx.scene.control.DateCell>> dayCellFactoryProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<java.time.LocalDate>> converterProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TextField> editorProperty()
-meth public final javafx.scene.control.TextField getEditor()
-meth public final javafx.util.Callback<javafx.scene.control.DatePicker,javafx.scene.control.DateCell> getDayCellFactory()
-meth public final javafx.util.StringConverter<java.time.LocalDate> getConverter()
-meth public final void setChronology(java.time.chrono.Chronology)
-meth public final void setConverter(javafx.util.StringConverter<java.time.LocalDate>)
-meth public final void setDayCellFactory(javafx.util.Callback<javafx.scene.control.DatePicker,javafx.scene.control.DateCell>)
-meth public final void setShowWeekNumbers(boolean)
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getControlCssMetaData()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-supr javafx.scene.control.ComboBoxBase<java.time.LocalDate>
-hfds DEFAULT_STYLE_CLASS,chronology,converter,dayCellFactory,defaultConverter,editor,lastValidChronology,lastValidDate,showWeekNumbers
-hcls StyleableProperties
-
-CLSS public javafx.scene.control.Dialog<%0 extends java.lang.Object>
-cons public init()
-intf javafx.event.EventTarget
-meth public final boolean isResizable()
-meth public final boolean isShowing()
-meth public final double getHeight()
-meth public final double getWidth()
-meth public final double getX()
-meth public final double getY()
-meth public final java.lang.String getContentText()
-meth public final java.lang.String getHeaderText()
-meth public final java.lang.String getTitle()
-meth public final java.util.Optional<{javafx.scene.control.Dialog%0}> showAndWait()
-meth public final javafx.beans.property.BooleanProperty resizableProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.DialogEvent>> onCloseRequestProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.DialogEvent>> onHiddenProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.DialogEvent>> onHidingProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.DialogEvent>> onShowingProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.DialogEvent>> onShownProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> graphicProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.DialogPane> dialogPaneProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.ButtonType,{javafx.scene.control.Dialog%0}>> resultConverterProperty()
-meth public final javafx.beans.property.ObjectProperty<{javafx.scene.control.Dialog%0}> resultProperty()
-meth public final javafx.beans.property.ReadOnlyBooleanProperty showingProperty()
-meth public final javafx.beans.property.ReadOnlyDoubleProperty heightProperty()
-meth public final javafx.beans.property.ReadOnlyDoubleProperty widthProperty()
-meth public final javafx.beans.property.ReadOnlyDoubleProperty xProperty()
-meth public final javafx.beans.property.ReadOnlyDoubleProperty yProperty()
-meth public final javafx.beans.property.StringProperty contentTextProperty()
-meth public final javafx.beans.property.StringProperty headerTextProperty()
-meth public final javafx.beans.property.StringProperty titleProperty()
-meth public final javafx.event.EventHandler<javafx.scene.control.DialogEvent> getOnCloseRequest()
-meth public final javafx.event.EventHandler<javafx.scene.control.DialogEvent> getOnHidden()
-meth public final javafx.event.EventHandler<javafx.scene.control.DialogEvent> getOnHiding()
-meth public final javafx.event.EventHandler<javafx.scene.control.DialogEvent> getOnShowing()
-meth public final javafx.event.EventHandler<javafx.scene.control.DialogEvent> getOnShown()
-meth public final javafx.scene.Node getGraphic()
-meth public final javafx.scene.control.DialogPane getDialogPane()
-meth public final javafx.stage.Modality getModality()
-meth public final javafx.stage.Window getOwner()
-meth public final javafx.util.Callback<javafx.scene.control.ButtonType,{javafx.scene.control.Dialog%0}> getResultConverter()
-meth public final void close()
-meth public final void hide()
-meth public final void initModality(javafx.stage.Modality)
-meth public final void initOwner(javafx.stage.Window)
-meth public final void initStyle(javafx.stage.StageStyle)
-meth public final void setContentText(java.lang.String)
-meth public final void setDialogPane(javafx.scene.control.DialogPane)
-meth public final void setGraphic(javafx.scene.Node)
-meth public final void setHeaderText(java.lang.String)
-meth public final void setHeight(double)
-meth public final void setOnCloseRequest(javafx.event.EventHandler<javafx.scene.control.DialogEvent>)
-meth public final void setOnHidden(javafx.event.EventHandler<javafx.scene.control.DialogEvent>)
-meth public final void setOnHiding(javafx.event.EventHandler<javafx.scene.control.DialogEvent>)
-meth public final void setOnShowing(javafx.event.EventHandler<javafx.scene.control.DialogEvent>)
-meth public final void setOnShown(javafx.event.EventHandler<javafx.scene.control.DialogEvent>)
-meth public final void setResizable(boolean)
-meth public final void setResult({javafx.scene.control.Dialog%0})
-meth public final void setResultConverter(javafx.util.Callback<javafx.scene.control.ButtonType,{javafx.scene.control.Dialog%0}>)
-meth public final void setTitle(java.lang.String)
-meth public final void setWidth(double)
-meth public final void setX(double)
-meth public final void setY(double)
-meth public final void show()
-meth public final {javafx.scene.control.Dialog%0} getResult()
-meth public javafx.event.EventDispatchChain buildEventDispatchChain(javafx.event.EventDispatchChain)
-supr java.lang.Object
-hfds HEADER_PSEUDO_CLASS,NO_HEADER_PSEUDO_CLASS,dialog,dialogPane,eventHandlerManager,isClosing,onCloseRequest,onHidden,onHiding,onShowing,onShown,resultConverterProperty,resultProperty
-
-CLSS public javafx.scene.control.DialogEvent
-cons public init(javafx.scene.control.Dialog<?>,javafx.event.EventType<? extends javafx.event.Event>)
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> ANY
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> DIALOG_CLOSE_REQUEST
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> DIALOG_HIDDEN
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> DIALOG_HIDING
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> DIALOG_SHOWING
-fld public final static javafx.event.EventType<javafx.scene.control.DialogEvent> DIALOG_SHOWN
-meth public java.lang.String toString()
-meth public javafx.event.EventType<javafx.scene.control.DialogEvent> getEventType()
-meth public javafx.scene.control.DialogEvent copyFor(java.lang.Object,javafx.event.EventTarget)
-meth public javafx.scene.control.DialogEvent copyFor(java.lang.Object,javafx.event.EventTarget,javafx.event.EventType<javafx.scene.control.DialogEvent>)
-supr javafx.event.Event
-hfds serialVersionUID
-
-CLSS public javafx.scene.control.DialogPane
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="buttonTypes")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="children")
-cons public init()
-meth protected double computeMinHeight(double)
-meth protected double computeMinWidth(double)
-meth protected double computePrefHeight(double)
-meth protected double computePrefWidth(double)
-meth protected javafx.scene.Node createButton(javafx.scene.control.ButtonType)
-meth protected javafx.scene.Node createButtonBar()
-meth protected javafx.scene.Node createDetailsButton()
-meth protected void layoutChildren()
-meth public final boolean isExpanded()
-meth public final java.lang.String getContentText()
-meth public final java.lang.String getHeaderText()
-meth public final javafx.beans.property.BooleanProperty expandedProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> contentProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> expandableContentProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> graphicProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> headerProperty()
-meth public final javafx.beans.property.StringProperty contentTextProperty()
-meth public final javafx.beans.property.StringProperty headerTextProperty()
-meth public final javafx.collections.ObservableList<javafx.scene.control.ButtonType> getButtonTypes()
-meth public final javafx.scene.Node getContent()
-meth public final javafx.scene.Node getExpandableContent()
-meth public final javafx.scene.Node getGraphic()
-meth public final javafx.scene.Node getHeader()
-meth public final javafx.scene.Node lookupButton(javafx.scene.control.ButtonType)
-meth public final void setContent(javafx.scene.Node)
-meth public final void setContentText(java.lang.String)
-meth public final void setExpandableContent(javafx.scene.Node)
-meth public final void setExpanded(boolean)
-meth public final void setGraphic(javafx.scene.Node)
-meth public final void setHeader(javafx.scene.Node)
-meth public final void setHeaderText(java.lang.String)
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-supr javafx.scene.layout.Pane
-hfds buttonBar,buttonNodes,buttons,content,contentLabel,contentText,detailsButton,dialog,expandableContentProperty,expandedProperty,graphicContainer,graphicProperty,header,headerText,headerTextPanel,imageUrl,oldHeight
-hcls StyleableProperties
 
 CLSS public abstract javafx.scene.control.FocusModel<%0 extends java.lang.Object>
 cons public init()
@@ -8537,13 +7478,6 @@ meth public {javafx.scene.control.RadioMenuItemBuilder%0} toggleGroup(javafx.sce
 supr javafx.scene.control.MenuItemBuilder<{javafx.scene.control.RadioMenuItemBuilder%0}>
 hfds __set,selected,text,toggleGroup
 
-CLSS public javafx.scene.control.ResizeFeaturesBase<%0 extends java.lang.Object>
-cons public init(javafx.scene.control.TableColumnBase<{javafx.scene.control.ResizeFeaturesBase%0},?>,java.lang.Double)
-meth public java.lang.Double getDelta()
-meth public javafx.scene.control.TableColumnBase<{javafx.scene.control.ResizeFeaturesBase%0},?> getColumn()
-supr java.lang.Object
-hfds column,delta
-
 CLSS public javafx.scene.control.ScrollBar
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
 cons public init()
@@ -8694,15 +7628,6 @@ meth public {javafx.scene.control.ScrollPaneBuilder%0} vvalue(double)
 supr javafx.scene.control.ControlBuilder<{javafx.scene.control.ScrollPaneBuilder%0}>
 hfds __set,content,fitToHeight,fitToWidth,hbarPolicy,hmax,hmin,hvalue,pannable,prefViewportHeight,prefViewportWidth,vbarPolicy,viewportBounds,vmax,vmin,vvalue
 
-CLSS public javafx.scene.control.ScrollToEvent<%0 extends java.lang.Object>
-cons public init(java.lang.Object,javafx.event.EventTarget,javafx.event.EventType<javafx.scene.control.ScrollToEvent<{javafx.scene.control.ScrollToEvent%0}>>,{javafx.scene.control.ScrollToEvent%0})
-fld public final static javafx.event.EventType<javafx.scene.control.ScrollToEvent> ANY
-meth public static <%0 extends javafx.scene.control.TableColumnBase<?,?>> javafx.event.EventType<javafx.scene.control.ScrollToEvent<{%%0}>> scrollToColumn()
-meth public static javafx.event.EventType<javafx.scene.control.ScrollToEvent<java.lang.Integer>> scrollToTopIndex()
-meth public {javafx.scene.control.ScrollToEvent%0} getScrollTarget()
-supr javafx.event.Event
-hfds SCROLL_TO_COLUMN,SCROLL_TO_TOP_INDEX,scrollTarget,serialVersionUID
-
 CLSS public final !enum javafx.scene.control.SelectionMode
 fld public final static javafx.scene.control.SelectionMode MULTIPLE
 fld public final static javafx.scene.control.SelectionMode SINGLE
@@ -8803,43 +7728,6 @@ meth public abstract javafx.scene.Node getNode()
 meth public abstract void dispose()
 meth public abstract {javafx.scene.control.Skin%0} getSkinnable()
 
-CLSS public abstract javafx.scene.control.SkinBase<%0 extends javafx.scene.control.Control>
-cons protected init({javafx.scene.control.SkinBase%0})
-intf javafx.scene.control.Skin<{javafx.scene.control.SkinBase%0}>
-meth protected !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth protected !varargs void executeAccessibleAction(javafx.scene.AccessibleAction,java.lang.Object[])
-meth protected double computeBaselineOffset(double,double,double,double)
-meth protected double computeMaxHeight(double,double,double,double,double)
-meth protected double computeMaxWidth(double,double,double,double,double)
-meth protected double computeMinHeight(double,double,double,double,double)
-meth protected double computeMinWidth(double,double,double,double,double)
-meth protected double computePrefHeight(double,double,double,double,double)
-meth protected double computePrefWidth(double,double,double,double,double)
-meth protected double snapPosition(double)
-meth protected double snapSize(double)
-meth protected double snapSpace(double)
-meth protected double snappedBottomInset()
-meth protected double snappedLeftInset()
-meth protected double snappedRightInset()
-meth protected double snappedTopInset()
-meth protected final void consumeMouseEvents(boolean)
-meth protected void layoutChildren(double,double,double,double)
-meth protected void layoutInArea(javafx.scene.Node,double,double,double,double,double,javafx.geometry.HPos,javafx.geometry.VPos)
-meth protected void layoutInArea(javafx.scene.Node,double,double,double,double,double,javafx.geometry.Insets,boolean,boolean,javafx.geometry.HPos,javafx.geometry.VPos)
-meth protected void layoutInArea(javafx.scene.Node,double,double,double,double,double,javafx.geometry.Insets,javafx.geometry.HPos,javafx.geometry.VPos)
-meth protected void positionInArea(javafx.scene.Node,double,double,double,double,double,javafx.geometry.HPos,javafx.geometry.VPos)
-meth protected void positionInArea(javafx.scene.Node,double,double,double,double,double,javafx.geometry.Insets,javafx.geometry.HPos,javafx.geometry.VPos)
-meth public final javafx.collections.ObservableList<javafx.scene.Node> getChildren()
-meth public final javafx.scene.Node getNode()
-meth public final void pseudoClassStateChanged(javafx.css.PseudoClass,boolean)
-meth public final {javafx.scene.control.SkinBase%0} getSkinnable()
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-meth public void dispose()
-supr java.lang.Object
-hfds children,control,mouseEventConsumer
-hcls StyleableProperties
-
 CLSS public abstract interface javafx.scene.control.Skinnable
 meth public abstract javafx.beans.property.ObjectProperty<javafx.scene.control.Skin<?>> skinProperty()
 meth public abstract javafx.scene.control.Skin<?> getSkin()
@@ -8918,117 +7806,6 @@ meth public {javafx.scene.control.SliderBuilder%0} value(double)
 meth public {javafx.scene.control.SliderBuilder%0} valueChanging(boolean)
 supr javafx.scene.control.ControlBuilder<{javafx.scene.control.SliderBuilder%0}>
 hfds __set,blockIncrement,labelFormatter,majorTickUnit,max,min,minorTickCount,orientation,showTickLabels,showTickMarks,snapToTicks,value,valueChanging
-
-CLSS public javafx.scene.control.SortEvent<%0 extends java.lang.Object>
-cons public init({javafx.scene.control.SortEvent%0},javafx.event.EventTarget)
-fld public final static javafx.event.EventType<javafx.scene.control.SortEvent> ANY
-meth public static <%0 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.SortEvent<{%%0}>> sortEvent()
-meth public {javafx.scene.control.SortEvent%0} getSource()
-supr javafx.event.Event
-hfds SORT_EVENT
-
-CLSS public javafx.scene.control.Spinner<%0 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(double,double,double)
-cons public init(double,double,double,double)
-cons public init(int,int,int)
-cons public init(int,int,int,int)
-cons public init(javafx.collections.ObservableList<{javafx.scene.control.Spinner%0}>)
-cons public init(javafx.scene.control.SpinnerValueFactory<{javafx.scene.control.Spinner%0}>)
-fld public final static java.lang.String STYLE_CLASS_ARROWS_ON_LEFT_HORIZONTAL = "arrows-on-left-horizontal"
-fld public final static java.lang.String STYLE_CLASS_ARROWS_ON_LEFT_VERTICAL = "arrows-on-left-vertical"
-fld public final static java.lang.String STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL = "arrows-on-right-horizontal"
-fld public final static java.lang.String STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL = "split-arrows-horizontal"
-fld public final static java.lang.String STYLE_CLASS_SPLIT_ARROWS_VERTICAL = "split-arrows-vertical"
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public !varargs void executeAccessibleAction(javafx.scene.AccessibleAction,java.lang.Object[])
-meth public final boolean isEditable()
-meth public final javafx.beans.property.BooleanProperty editableProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.SpinnerValueFactory<{javafx.scene.control.Spinner%0}>> valueFactoryProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TextField> editorProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<{javafx.scene.control.Spinner%0}> valueProperty()
-meth public final javafx.scene.control.SpinnerValueFactory<{javafx.scene.control.Spinner%0}> getValueFactory()
-meth public final javafx.scene.control.TextField getEditor()
-meth public final void setEditable(boolean)
-meth public final void setValueFactory(javafx.scene.control.SpinnerValueFactory<{javafx.scene.control.Spinner%0}>)
-meth public final {javafx.scene.control.Spinner%0} getValue()
-meth public void decrement()
-meth public void decrement(int)
-meth public void increment()
-meth public void increment(int)
-supr javafx.scene.control.Control
-hfds DEFAULT_STYLE_CLASS,editable,editor,textField,value,valueFactory
-
-CLSS public abstract javafx.scene.control.SpinnerValueFactory<%0 extends java.lang.Object>
-cons public init()
-innr public static DoubleSpinnerValueFactory
-innr public static IntegerSpinnerValueFactory
-innr public static ListSpinnerValueFactory
-meth public abstract void decrement(int)
-meth public abstract void increment(int)
-meth public final boolean isWrapAround()
-meth public final javafx.beans.property.BooleanProperty wrapAroundProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<{javafx.scene.control.SpinnerValueFactory%0}>> converterProperty()
-meth public final javafx.beans.property.ObjectProperty<{javafx.scene.control.SpinnerValueFactory%0}> valueProperty()
-meth public final javafx.util.StringConverter<{javafx.scene.control.SpinnerValueFactory%0}> getConverter()
-meth public final void setConverter(javafx.util.StringConverter<{javafx.scene.control.SpinnerValueFactory%0}>)
-meth public final void setValue({javafx.scene.control.SpinnerValueFactory%0})
-meth public final void setWrapAround(boolean)
-meth public final {javafx.scene.control.SpinnerValueFactory%0} getValue()
-supr java.lang.Object
-hfds converter,value,wrapAround
-hcls LocalDateSpinnerValueFactory,LocalTimeSpinnerValueFactory
-
-CLSS public static javafx.scene.control.SpinnerValueFactory$DoubleSpinnerValueFactory
- outer javafx.scene.control.SpinnerValueFactory
-cons public init(double,double)
-cons public init(double,double,double)
-cons public init(double,double,double,double)
-meth public final double getAmountToStepBy()
-meth public final double getMax()
-meth public final double getMin()
-meth public final javafx.beans.property.DoubleProperty amountToStepByProperty()
-meth public final javafx.beans.property.DoubleProperty maxProperty()
-meth public final javafx.beans.property.DoubleProperty minProperty()
-meth public final void setAmountToStepBy(double)
-meth public final void setMax(double)
-meth public final void setMin(double)
-meth public void decrement(int)
-meth public void increment(int)
-supr javafx.scene.control.SpinnerValueFactory<java.lang.Double>
-hfds amountToStepBy,max,min
-
-CLSS public static javafx.scene.control.SpinnerValueFactory$IntegerSpinnerValueFactory
- outer javafx.scene.control.SpinnerValueFactory
-cons public init(int,int)
-cons public init(int,int,int)
-cons public init(int,int,int,int)
-meth public final int getAmountToStepBy()
-meth public final int getMax()
-meth public final int getMin()
-meth public final javafx.beans.property.IntegerProperty amountToStepByProperty()
-meth public final javafx.beans.property.IntegerProperty maxProperty()
-meth public final javafx.beans.property.IntegerProperty minProperty()
-meth public final void setAmountToStepBy(int)
-meth public final void setMax(int)
-meth public final void setMin(int)
-meth public void decrement(int)
-meth public void increment(int)
-supr javafx.scene.control.SpinnerValueFactory<java.lang.Integer>
-hfds amountToStepBy,max,min
-
-CLSS public static javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory<%0 extends java.lang.Object>
- outer javafx.scene.control.SpinnerValueFactory
-cons public init(javafx.collections.ObservableList<{javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory%0}>)
-meth public final javafx.beans.property.ObjectProperty<javafx.collections.ObservableList<{javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory%0}>> itemsProperty()
-meth public final javafx.collections.ObservableList<{javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory%0}> getItems()
-meth public final void setItems(javafx.collections.ObservableList<{javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory%0}>)
-meth public void decrement(int)
-meth public void increment(int)
-supr javafx.scene.control.SpinnerValueFactory<{javafx.scene.control.SpinnerValueFactory$ListSpinnerValueFactory%0}>
-hfds currentIndex,items,itemsContentObserver,weakItemsContentObserver
 
 CLSS public javafx.scene.control.SplitMenuButton
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -9402,90 +8179,6 @@ meth public static javafx.scene.control.TableColumn$SortType valueOf(java.lang.S
 meth public static javafx.scene.control.TableColumn$SortType[] values()
 supr java.lang.Enum<javafx.scene.control.TableColumn$SortType>
 
-CLSS public abstract javafx.scene.control.TableColumnBase<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons protected init()
-cons protected init(java.lang.String)
-fld public final static java.util.Comparator DEFAULT_COMPARATOR
-intf javafx.css.Styleable
-intf javafx.event.EventTarget
-meth public <%0 extends javafx.event.Event> void addEventHandler(javafx.event.EventType<{%%0}>,javafx.event.EventHandler<{%%0}>)
-meth public <%0 extends javafx.event.Event> void removeEventHandler(javafx.event.EventType<{%%0}>,javafx.event.EventHandler<{%%0}>)
-meth public abstract javafx.beans.value.ObservableValue<{javafx.scene.control.TableColumnBase%1}> getCellObservableValue(int)
-meth public abstract javafx.beans.value.ObservableValue<{javafx.scene.control.TableColumnBase%1}> getCellObservableValue({javafx.scene.control.TableColumnBase%0})
-meth public abstract javafx.collections.ObservableList<? extends javafx.scene.control.TableColumnBase<{javafx.scene.control.TableColumnBase%0},?>> getColumns()
-meth public boolean hasProperties()
-meth public final boolean impl_isFixed()
- anno 0 java.lang.Deprecated()
-meth public final boolean impl_isReorderable()
- anno 0 java.lang.Deprecated()
-meth public final boolean isEditable()
-meth public final boolean isResizable()
-meth public final boolean isSortable()
-meth public final boolean isVisible()
-meth public final double getMaxWidth()
-meth public final double getMinWidth()
-meth public final double getPrefWidth()
-meth public final double getWidth()
-meth public final java.lang.String getId()
-meth public final java.lang.String getStyle()
-meth public final java.lang.String getText()
-meth public final java.util.Comparator<{javafx.scene.control.TableColumnBase%1}> getComparator()
-meth public final javafx.beans.property.BooleanProperty editableProperty()
-meth public final javafx.beans.property.BooleanProperty impl_fixedProperty()
- anno 0 java.lang.Deprecated()
-meth public final javafx.beans.property.BooleanProperty impl_reorderableProperty()
- anno 0 java.lang.Deprecated()
-meth public final javafx.beans.property.BooleanProperty resizableProperty()
-meth public final javafx.beans.property.BooleanProperty sortableProperty()
-meth public final javafx.beans.property.BooleanProperty visibleProperty()
-meth public final javafx.beans.property.DoubleProperty maxWidthProperty()
-meth public final javafx.beans.property.DoubleProperty minWidthProperty()
-meth public final javafx.beans.property.DoubleProperty prefWidthProperty()
-meth public final javafx.beans.property.ObjectProperty<java.util.Comparator<{javafx.scene.control.TableColumnBase%1}>> comparatorProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> graphicProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> sortNodeProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.ContextMenu> contextMenuProperty()
-meth public final javafx.beans.property.ReadOnlyDoubleProperty widthProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TableColumnBase<{javafx.scene.control.TableColumnBase%0},?>> parentColumnProperty()
-meth public final javafx.beans.property.StringProperty idProperty()
-meth public final javafx.beans.property.StringProperty styleProperty()
-meth public final javafx.beans.property.StringProperty textProperty()
-meth public final javafx.collections.ObservableMap<java.lang.Object,java.lang.Object> getProperties()
-meth public final javafx.collections.ObservableSet<javafx.css.PseudoClass> getPseudoClassStates()
-meth public final javafx.scene.Node getGraphic()
-meth public final javafx.scene.Node getSortNode()
-meth public final javafx.scene.control.ContextMenu getContextMenu()
-meth public final javafx.scene.control.TableColumnBase<{javafx.scene.control.TableColumnBase%0},?> getParentColumn()
-meth public final void impl_setFixed(boolean)
- anno 0 java.lang.Deprecated()
-meth public final void impl_setReorderable(boolean)
- anno 0 java.lang.Deprecated()
-meth public final void setComparator(java.util.Comparator<{javafx.scene.control.TableColumnBase%1}>)
-meth public final void setContextMenu(javafx.scene.control.ContextMenu)
-meth public final void setEditable(boolean)
-meth public final void setGraphic(javafx.scene.Node)
-meth public final void setId(java.lang.String)
-meth public final void setMaxWidth(double)
-meth public final void setMinWidth(double)
-meth public final void setPrefWidth(double)
-meth public final void setResizable(boolean)
-meth public final void setSortNode(javafx.scene.Node)
-meth public final void setSortable(boolean)
-meth public final void setStyle(java.lang.String)
-meth public final void setText(java.lang.String)
-meth public final void setVisible(boolean)
-meth public final {javafx.scene.control.TableColumnBase%1} getCellData(int)
-meth public final {javafx.scene.control.TableColumnBase%1} getCellData({javafx.scene.control.TableColumnBase%0})
-meth public java.lang.Object getUserData()
-meth public javafx.collections.ObservableList<java.lang.String> getStyleClass()
-meth public javafx.event.EventDispatchChain buildEventDispatchChain(javafx.event.EventDispatchChain)
-meth public void impl_setWidth(double)
- anno 0 java.lang.Deprecated()
-meth public void setUserData(java.lang.Object)
-supr java.lang.Object
-hfds DEFAULT_MAX_WIDTH,DEFAULT_MIN_WIDTH,DEFAULT_WIDTH,USER_DATA_KEY,comparator,contextMenu,editable,eventHandlerManager,fixed,graphic,id,maxWidth,minWidth,parentColumn,prefWidth,properties,reorderable,resizable,sortNode,sortable,style,styleClass,text,visible,width
-
 CLSS public javafx.scene.control.TableColumnBuilder<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends javafx.scene.control.TableColumnBuilder<{javafx.scene.control.TableColumnBuilder%0},{javafx.scene.control.TableColumnBuilder%1},{javafx.scene.control.TableColumnBuilder%2}>>
 cons protected init()
 intf javafx.util.Builder<javafx.scene.control.TableColumn<{javafx.scene.control.TableColumnBuilder%0},{javafx.scene.control.TableColumnBuilder%1}>>
@@ -9520,16 +8213,6 @@ meth public {javafx.scene.control.TableColumnBuilder%2} visible(boolean)
 supr java.lang.Object
 hfds __set,cellFactory,cellValueFactory,columns,comparator,contextMenu,editable,graphic,id,maxWidth,minWidth,onEditCancel,onEditCommit,onEditStart,prefWidth,resizable,sortNode,sortType,sortable,style,styleClass,text,userData,visible
 
-CLSS public abstract javafx.scene.control.TableFocusModel<%0 extends java.lang.Object, %1 extends javafx.scene.control.TableColumnBase<{javafx.scene.control.TableFocusModel%0},?>>
-cons public init()
-meth public abstract boolean isFocused(int,{javafx.scene.control.TableFocusModel%1})
-meth public abstract void focus(int,{javafx.scene.control.TableFocusModel%1})
-meth public abstract void focusAboveCell()
-meth public abstract void focusBelowCell()
-meth public abstract void focusLeftCell()
-meth public abstract void focusRightCell()
-supr javafx.scene.control.FocusModel<{javafx.scene.control.TableFocusModel%0}>
-
 CLSS public javafx.scene.control.TablePosition<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init(javafx.scene.control.TableView<{javafx.scene.control.TablePosition%0}>,int,javafx.scene.control.TableColumn<{javafx.scene.control.TablePosition%0},{javafx.scene.control.TablePosition%1}>)
 meth public boolean equals(java.lang.Object)
@@ -9541,16 +8224,6 @@ meth public int hashCode()
 meth public java.lang.String toString()
 supr java.lang.Object
 hfds row,tableColumn,tableView
-
-CLSS public abstract javafx.scene.control.TablePositionBase<%0 extends javafx.scene.control.TableColumnBase>
-cons protected init(int,{javafx.scene.control.TablePositionBase%0})
-meth public abstract int getColumn()
-meth public boolean equals(java.lang.Object)
-meth public int getRow()
-meth public int hashCode()
-meth public {javafx.scene.control.TablePositionBase%0} getTableColumn()
-supr java.lang.Object
-hfds row,tableColumnRef
 
 CLSS public javafx.scene.control.TablePositionBuilder<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends javafx.scene.control.TablePositionBuilder<{javafx.scene.control.TablePositionBuilder%0},{javafx.scene.control.TablePositionBuilder%1},{javafx.scene.control.TablePositionBuilder%2}>>
 cons protected init()
@@ -9578,42 +8251,6 @@ cons protected init()
 meth public javafx.scene.control.TableRow<{javafx.scene.control.TableRowBuilder%0}> build()
 meth public static <%0 extends java.lang.Object> javafx.scene.control.TableRowBuilder<{%%0},?> create()
 supr javafx.scene.control.IndexedCellBuilder<{javafx.scene.control.TableRowBuilder%0},{javafx.scene.control.TableRowBuilder%1}>
-
-CLSS public abstract javafx.scene.control.TableSelectionModel<%0 extends java.lang.Object>
-cons public init()
-meth protected abstract int getFocusedIndex()
-meth protected abstract int getItemCount()
-meth protected abstract void focus(int)
-meth protected abstract {javafx.scene.control.TableSelectionModel%0} getModelItem(int)
-meth public !varargs void selectIndices(int,int[])
-meth public abstract boolean isSelected(int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>)
-meth public abstract void clearAndSelect(int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>)
-meth public abstract void clearSelection(int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>)
-meth public abstract void select(int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>)
-meth public abstract void selectAboveCell()
-meth public abstract void selectBelowCell()
-meth public abstract void selectLeftCell()
-meth public abstract void selectRange(int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>,int,javafx.scene.control.TableColumnBase<{javafx.scene.control.TableSelectionModel%0},?>)
-meth public abstract void selectRightCell()
-meth public boolean isEmpty()
-meth public boolean isSelected(int)
-meth public final boolean isCellSelectionEnabled()
-meth public final javafx.beans.property.BooleanProperty cellSelectionEnabledProperty()
-meth public final void setCellSelectionEnabled(boolean)
-meth public javafx.collections.ObservableList<java.lang.Integer> getSelectedIndices()
-meth public javafx.collections.ObservableList<{javafx.scene.control.TableSelectionModel%0}> getSelectedItems()
-meth public void clearAndSelect(int)
-meth public void clearSelection()
-meth public void clearSelection(int)
-meth public void select(int)
-meth public void select({javafx.scene.control.TableSelectionModel%0})
-meth public void selectAll()
-meth public void selectFirst()
-meth public void selectLast()
-meth public void selectNext()
-meth public void selectPrevious()
-supr javafx.scene.control.MultipleSelectionModel<{javafx.scene.control.TableSelectionModel%0}>
-hfds cellSelectionEnabled
 
 CLSS public javafx.scene.control.TableView<%0 extends java.lang.Object>
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -9815,49 +8452,6 @@ meth public {javafx.scene.control.TextFieldBuilder%0} promptText(java.lang.Strin
 supr javafx.scene.control.TextInputControlBuilder<{javafx.scene.control.TextFieldBuilder%0}>
 hfds __set,alignment,onAction,prefColumnCount,promptText
 
-CLSS public javafx.scene.control.TextFormatter<%0 extends java.lang.Object>
-cons public init(java.util.function.UnaryOperator<javafx.scene.control.TextFormatter$Change>)
-cons public init(javafx.util.StringConverter<{javafx.scene.control.TextFormatter%0}>)
-cons public init(javafx.util.StringConverter<{javafx.scene.control.TextFormatter%0}>,{javafx.scene.control.TextFormatter%0})
-cons public init(javafx.util.StringConverter<{javafx.scene.control.TextFormatter%0}>,{javafx.scene.control.TextFormatter%0},java.util.function.UnaryOperator<javafx.scene.control.TextFormatter$Change>)
-fld public final static javafx.util.StringConverter<java.lang.String> IDENTITY_STRING_CONVERTER
-innr public final static Change
-meth public final java.util.function.UnaryOperator<javafx.scene.control.TextFormatter$Change> getFilter()
-meth public final javafx.beans.property.ObjectProperty<{javafx.scene.control.TextFormatter%0}> valueProperty()
-meth public final javafx.util.StringConverter<{javafx.scene.control.TextFormatter%0}> getValueConverter()
-meth public final void setValue({javafx.scene.control.TextFormatter%0})
-meth public final {javafx.scene.control.TextFormatter%0} getValue()
-supr java.lang.Object
-hfds filter,textUpdater,value,valueConverter
-
-CLSS public final static javafx.scene.control.TextFormatter$Change
- outer javafx.scene.control.TextFormatter
-intf java.lang.Cloneable
-meth public final boolean isAdded()
-meth public final boolean isContentChange()
-meth public final boolean isDeleted()
-meth public final boolean isReplaced()
-meth public final int getAnchor()
-meth public final int getCaretPosition()
-meth public final int getControlAnchor()
-meth public final int getControlCaretPosition()
-meth public final int getRangeEnd()
-meth public final int getRangeStart()
-meth public final java.lang.String getControlNewText()
-meth public final java.lang.String getControlText()
-meth public final java.lang.String getText()
-meth public final javafx.scene.control.Control getControl()
-meth public final javafx.scene.control.IndexRange getSelection()
-meth public final void selectRange(int,int)
-meth public final void setAnchor(int)
-meth public final void setCaretPosition(int)
-meth public final void setRange(int,int)
-meth public final void setText(java.lang.String)
-meth public java.lang.String toString()
-meth public javafx.scene.control.TextFormatter$Change clone()
-supr java.lang.Object
-hfds accessor,anchor,caret,control,end,start,text
-
 CLSS public abstract javafx.scene.control.TextInputControl
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
@@ -9939,14 +8533,6 @@ meth public {javafx.scene.control.TextInputControlBuilder%0} promptText(java.lan
 meth public {javafx.scene.control.TextInputControlBuilder%0} text(java.lang.String)
 supr javafx.scene.control.ControlBuilder<{javafx.scene.control.TextInputControlBuilder%0}>
 hfds __set,editable,promptText,text
-
-CLSS public javafx.scene.control.TextInputDialog
-cons public init()
-cons public init(java.lang.String)
-meth public final java.lang.String getDefaultValue()
-meth public final javafx.scene.control.TextField getEditor()
-supr javafx.scene.control.Dialog<java.lang.String>
-hfds defaultValue,grid,label,textField
 
 CLSS public javafx.scene.control.TitledPane
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -10242,291 +8828,6 @@ meth public {javafx.scene.control.TreeItemBuilder%1} value({javafx.scene.control
 supr java.lang.Object
 hfds __set,children,expanded,graphic,value
 
-CLSS public final !enum javafx.scene.control.TreeSortMode
-fld public final static javafx.scene.control.TreeSortMode ALL_DESCENDANTS
-fld public final static javafx.scene.control.TreeSortMode ONLY_FIRST_LEVEL
-meth public static javafx.scene.control.TreeSortMode valueOf(java.lang.String)
-meth public static javafx.scene.control.TreeSortMode[] values()
-supr java.lang.Enum<javafx.scene.control.TreeSortMode>
-
-CLSS public javafx.scene.control.TreeTableCell<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth protected void layoutChildren()
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public !varargs void executeAccessibleAction(javafx.scene.AccessibleAction,java.lang.Object[])
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableCell%0},{javafx.scene.control.TreeTableCell%1}>> tableColumnProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableCell%0}>> tableRowProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableCell%0}>> treeTableViewProperty()
-meth public final javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableCell%0},{javafx.scene.control.TreeTableCell%1}> getTableColumn()
-meth public final javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableCell%0}> getTreeTableRow()
-meth public final javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableCell%0}> getTreeTableView()
-meth public final void updateTreeTableColumn(javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableCell%0},{javafx.scene.control.TreeTableCell%1}>)
-meth public final void updateTreeTableRow(javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableCell%0}>)
-meth public final void updateTreeTableView(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableCell%0}>)
-meth public void cancelEdit()
-meth public void commitEdit({javafx.scene.control.TreeTableCell%1})
-meth public void startEdit()
-meth public void updateSelected(boolean)
-supr javafx.scene.control.IndexedCell<{javafx.scene.control.TreeTableCell%1}>
-hfds DEFAULT_STYLE_CLASS,PSEUDO_CLASS_LAST_VISIBLE,columnIdListener,columnIndex,columnStyleClassListener,columnStyleListener,currentObservableValue,editingListener,focusedListener,isFirstRun,isLastVisibleColumn,itemDirty,lockItemOnEdit,oldRowItemRef,rootPropertyListener,selectedListener,tableRowUpdateObserver,treeTableColumn,treeTableRow,treeTableView,updateEditingIndex,visibleLeafColumnsListener,weakColumnIdListener,weakColumnStyleClassListener,weakColumnStyleListener,weakEditingListener,weakFocusedListener,weakRootPropertyListener,weakSelectedListener,weakVisibleLeafColumnsListener,weaktableRowUpdateObserver
-
-CLSS public javafx.scene.control.TreeTableColumn<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(java.lang.String)
-fld public final static javafx.util.Callback<javafx.scene.control.TreeTableColumn<?,?>,javafx.scene.control.TreeTableCell<?,?>> DEFAULT_CELL_FACTORY
-innr public final static !enum SortType
-innr public static CellDataFeatures
-innr public static CellEditEvent
-intf javafx.event.EventTarget
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>> onEditCancelProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>> onEditCommitProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>> onEditStartProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeTableColumn$SortType> sortTypeProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.TreeTableColumn$CellDataFeatures<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.beans.value.ObservableValue<{javafx.scene.control.TreeTableColumn%1}>>> cellValueFactoryProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.scene.control.TreeTableCell<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>> cellFactoryProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn%0}>> treeTableViewProperty()
-meth public final javafx.beans.value.ObservableValue<{javafx.scene.control.TreeTableColumn%1}> getCellObservableValue(int)
-meth public final javafx.beans.value.ObservableValue<{javafx.scene.control.TreeTableColumn%1}> getCellObservableValue(javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableColumn%0}>)
-meth public final javafx.collections.ObservableList<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn%0},?>> getColumns()
-meth public final javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>> getOnEditCancel()
-meth public final javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>> getOnEditCommit()
-meth public final javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>> getOnEditStart()
-meth public final javafx.scene.control.TreeTableColumn$SortType getSortType()
-meth public final javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn%0}> getTreeTableView()
-meth public final javafx.util.Callback<javafx.scene.control.TreeTableColumn$CellDataFeatures<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.beans.value.ObservableValue<{javafx.scene.control.TreeTableColumn%1}>> getCellValueFactory()
-meth public final javafx.util.Callback<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.scene.control.TreeTableCell<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>> getCellFactory()
-meth public final void setCellFactory(javafx.util.Callback<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.scene.control.TreeTableCell<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>)
-meth public final void setCellValueFactory(javafx.util.Callback<javafx.scene.control.TreeTableColumn$CellDataFeatures<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>,javafx.beans.value.ObservableValue<{javafx.scene.control.TreeTableColumn%1}>>)
-meth public final void setOnEditCancel(javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>)
-meth public final void setOnEditCommit(javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>)
-meth public final void setOnEditStart(javafx.event.EventHandler<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn%0},{javafx.scene.control.TreeTableColumn%1}>>)
-meth public final void setSortType(javafx.scene.control.TreeTableColumn$SortType)
-meth public java.lang.String getTypeSelector()
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public javafx.css.Styleable getStyleableParent()
-meth public javafx.scene.Node impl_styleableGetNode()
- anno 0 java.lang.Deprecated()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableColumn$CellEditEvent<{%%0},{%%1}>> editAnyEvent()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableColumn$CellEditEvent<{%%0},{%%1}>> editCancelEvent()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableColumn$CellEditEvent<{%%0},{%%1}>> editCommitEvent()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableColumn$CellEditEvent<{%%0},{%%1}>> editStartEvent()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-supr javafx.scene.control.TableColumnBase<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableColumn%0}>,{javafx.scene.control.TreeTableColumn%1}>
-hfds DEFAULT_EDIT_COMMIT_HANDLER,DEFAULT_STYLE_CLASS,EDIT_ANY_EVENT,EDIT_CANCEL_EVENT,EDIT_COMMIT_EVENT,EDIT_START_EVENT,cellFactory,cellValueFactory,columns,columnsListener,onEditCancel,onEditCommit,onEditStart,sortType,treeTableView,weakColumnsListener
-
-CLSS public static javafx.scene.control.TreeTableColumn$CellDataFeatures<%0 extends java.lang.Object, %1 extends java.lang.Object>
- outer javafx.scene.control.TreeTableColumn
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0}>,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0},{javafx.scene.control.TreeTableColumn$CellDataFeatures%1}>,javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0}>)
-meth public javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0}> getValue()
-meth public javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0},{javafx.scene.control.TreeTableColumn$CellDataFeatures%1}> getTreeTableColumn()
-meth public javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn$CellDataFeatures%0}> getTreeTableView()
-supr java.lang.Object
-hfds tableColumn,treeTableView,value
-
-CLSS public static javafx.scene.control.TreeTableColumn$CellEditEvent<%0 extends java.lang.Object, %1 extends java.lang.Object>
- outer javafx.scene.control.TreeTableColumn
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn$CellEditEvent%0}>,javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableColumn$CellEditEvent%0},{javafx.scene.control.TreeTableColumn$CellEditEvent%1}>,javafx.event.EventType<javafx.scene.control.TreeTableColumn$CellEditEvent<{javafx.scene.control.TreeTableColumn$CellEditEvent%0},{javafx.scene.control.TreeTableColumn$CellEditEvent%1}>>,{javafx.scene.control.TreeTableColumn$CellEditEvent%1})
-fld public final static javafx.event.EventType<?> ANY
-meth public javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableColumn$CellEditEvent%0}> getRowValue()
-meth public javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableColumn$CellEditEvent%0},{javafx.scene.control.TreeTableColumn$CellEditEvent%1}> getTableColumn()
-meth public javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableColumn$CellEditEvent%0},{javafx.scene.control.TreeTableColumn$CellEditEvent%1}> getTreeTablePosition()
-meth public javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableColumn$CellEditEvent%0}> getTreeTableView()
-meth public {javafx.scene.control.TreeTableColumn$CellEditEvent%1} getNewValue()
-meth public {javafx.scene.control.TreeTableColumn$CellEditEvent%1} getOldValue()
-supr javafx.event.Event
-hfds newValue,pos,serialVersionUID
-
-CLSS public final static !enum javafx.scene.control.TreeTableColumn$SortType
- outer javafx.scene.control.TreeTableColumn
-fld public final static javafx.scene.control.TreeTableColumn$SortType ASCENDING
-fld public final static javafx.scene.control.TreeTableColumn$SortType DESCENDING
-meth public static javafx.scene.control.TreeTableColumn$SortType valueOf(java.lang.String)
-meth public static javafx.scene.control.TreeTableColumn$SortType[] values()
-supr java.lang.Enum<javafx.scene.control.TreeTableColumn$SortType>
-
-CLSS public javafx.scene.control.TreeTablePosition<%0 extends java.lang.Object, %1 extends java.lang.Object>
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTablePosition%0}>,int,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTablePosition%0},{javafx.scene.control.TreeTablePosition%1}>)
-meth public final javafx.scene.control.TreeItem<{javafx.scene.control.TreeTablePosition%0}> getTreeItem()
-meth public final javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTablePosition%0},{javafx.scene.control.TreeTablePosition%1}> getTableColumn()
-meth public final javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTablePosition%0}> getTreeTableView()
-meth public int getColumn()
-supr javafx.scene.control.TablePositionBase<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTablePosition%0},{javafx.scene.control.TreeTablePosition%1}>>
-hfds controlRef,fixedColumnIndex,treeItemRef
-
-CLSS public javafx.scene.control.TreeTableRow<%0 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public !varargs void executeAccessibleAction(javafx.scene.AccessibleAction,java.lang.Object[])
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> disclosureNodeProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableRow%0}>> treeItemProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableRow%0}>> treeTableViewProperty()
-meth public final javafx.scene.Node getDisclosureNode()
-meth public final javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableRow%0}> getTreeItem()
-meth public final javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableRow%0}> getTreeTableView()
-meth public final void setDisclosureNode(javafx.scene.Node)
-meth public final void updateTreeItem(javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableRow%0}>)
-meth public final void updateTreeTableView(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableRow%0}>)
-meth public void cancelEdit()
-meth public void commitEdit({javafx.scene.control.TreeTableRow%0})
-meth public void startEdit()
-supr javafx.scene.control.IndexedCell<{javafx.scene.control.TreeTableRow%0}>
-hfds COLLAPSED_PSEUDOCLASS_STATE,DEFAULT_STYLE_CLASS,EXPANDED_PSEUDOCLASS_STATE,disclosureNode,editingListener,focusedListener,index,isFirstRun,leafListener,oldExpanded,selectedListener,treeItem,treeItemExpandedInvalidationListener,treeTableView,weakEditingListener,weakFocusedListener,weakLeafListener,weakSelectedListener,weakTreeItemExpandedInvalidationListener
-
-CLSS public javafx.scene.control.TreeTableView<%0 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="root")
-cons public init()
-cons public init(javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>)
-fld public final static javafx.util.Callback<javafx.scene.control.TreeTableView$ResizeFeatures,java.lang.Boolean> CONSTRAINED_RESIZE_POLICY
-fld public final static javafx.util.Callback<javafx.scene.control.TreeTableView$ResizeFeatures,java.lang.Boolean> UNCONSTRAINED_RESIZE_POLICY
-fld public final static javafx.util.Callback<javafx.scene.control.TreeTableView,java.lang.Boolean> DEFAULT_SORT_POLICY
-innr public abstract static TreeTableViewSelectionModel
-innr public static EditEvent
-innr public static ResizeFeatures
-innr public static TreeTableViewFocusModel
-meth protected javafx.scene.control.Skin<?> createDefaultSkin()
-meth protected void layoutChildren()
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public boolean resizeColumn(javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>,double)
-meth public final boolean isEditable()
-meth public final boolean isShowRoot()
-meth public final boolean isTableMenuButtonVisible()
-meth public final double getFixedCellSize()
-meth public final int getExpandedItemCount()
-meth public final java.util.Comparator<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>> getComparator()
-meth public final javafx.beans.property.BooleanProperty editableProperty()
-meth public final javafx.beans.property.BooleanProperty showRootProperty()
-meth public final javafx.beans.property.BooleanProperty tableMenuButtonVisibleProperty()
-meth public final javafx.beans.property.DoubleProperty fixedCellSizeProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.Node> placeholderProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>> rootProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeSortMode> sortModeProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>> treeColumnProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeTableView$TreeTableViewFocusModel<{javafx.scene.control.TreeTableView%0}>> focusModelProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.control.TreeTableView$TreeTableViewSelectionModel<{javafx.scene.control.TreeTableView%0}>> selectionModelProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.TreeTableView$ResizeFeatures,java.lang.Boolean>> columnResizePolicyProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,java.lang.Boolean>> sortPolicyProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableView%0}>>> rowFactoryProperty()
-meth public final javafx.beans.property.ReadOnlyIntegerProperty expandedItemCountProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<java.util.Comparator<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>>> comparatorProperty()
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView%0},?>> editingCellProperty()
-meth public final javafx.collections.ObservableList<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>> getColumns()
-meth public final javafx.collections.ObservableList<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>> getSortOrder()
-meth public final javafx.scene.Node getPlaceholder()
-meth public final javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}> getRoot()
-meth public final javafx.scene.control.TreeSortMode getSortMode()
-meth public final javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?> getTreeColumn()
-meth public final javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView%0},?> getEditingCell()
-meth public final javafx.scene.control.TreeTableView$TreeTableViewFocusModel<{javafx.scene.control.TreeTableView%0}> getFocusModel()
-meth public final javafx.scene.control.TreeTableView$TreeTableViewSelectionModel<{javafx.scene.control.TreeTableView%0}> getSelectionModel()
-meth public final javafx.util.Callback<javafx.scene.control.TreeTableView$ResizeFeatures,java.lang.Boolean> getColumnResizePolicy()
-meth public final javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,java.lang.Boolean> getSortPolicy()
-meth public final javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableView%0}>> getRowFactory()
-meth public final void setColumnResizePolicy(javafx.util.Callback<javafx.scene.control.TreeTableView$ResizeFeatures,java.lang.Boolean>)
-meth public final void setEditable(boolean)
-meth public final void setFixedCellSize(double)
-meth public final void setFocusModel(javafx.scene.control.TreeTableView$TreeTableViewFocusModel<{javafx.scene.control.TreeTableView%0}>)
-meth public final void setPlaceholder(javafx.scene.Node)
-meth public final void setRoot(javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>)
-meth public final void setRowFactory(javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,javafx.scene.control.TreeTableRow<{javafx.scene.control.TreeTableView%0}>>)
-meth public final void setSelectionModel(javafx.scene.control.TreeTableView$TreeTableViewSelectionModel<{javafx.scene.control.TreeTableView%0}>)
-meth public final void setShowRoot(boolean)
-meth public final void setSortMode(javafx.scene.control.TreeSortMode)
-meth public final void setSortPolicy(javafx.util.Callback<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>,java.lang.Boolean>)
-meth public final void setTableMenuButtonVisible(boolean)
-meth public final void setTreeColumn(javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>)
-meth public int getRow(javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}>)
-meth public int getTreeItemLevel(javafx.scene.control.TreeItem<?>)
-meth public int getVisibleLeafIndex(javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>)
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getControlCssMetaData()
-meth public javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<java.lang.Integer>>> onScrollToProperty()
-meth public javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>>>> onScrollToColumnProperty()
-meth public javafx.beans.property.ObjectProperty<javafx.event.EventHandler<javafx.scene.control.SortEvent<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>>>> onSortProperty()
-meth public javafx.collections.ObservableList<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>> getVisibleLeafColumns()
-meth public javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<java.lang.Integer>> getOnScrollTo()
-meth public javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>>> getOnScrollToColumn()
-meth public javafx.event.EventHandler<javafx.scene.control.SortEvent<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>>> getOnSort()
-meth public javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView%0}> getTreeItem(int)
-meth public javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?> getVisibleLeafColumn(int)
-meth public static <%0 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableView$EditEvent<{%%0}>> editAnyEvent()
-meth public static <%0 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableView$EditEvent<{%%0}>> editCancelEvent()
-meth public static <%0 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableView$EditEvent<{%%0}>> editCommitEvent()
-meth public static <%0 extends java.lang.Object> javafx.event.EventType<javafx.scene.control.TreeTableView$EditEvent<{%%0}>> editStartEvent()
-meth public static int getNodeLevel(javafx.scene.control.TreeItem<?>)
- anno 0 java.lang.Deprecated()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-meth public void edit(int,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>)
-meth public void refresh()
-meth public void scrollTo(int)
-meth public void scrollToColumn(javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>)
-meth public void scrollToColumnIndex(int)
-meth public void setOnScrollTo(javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<java.lang.Integer>>)
-meth public void setOnScrollToColumn(javafx.event.EventHandler<javafx.scene.control.ScrollToEvent<javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView%0},?>>>)
-meth public void setOnSort(javafx.event.EventHandler<javafx.scene.control.SortEvent<javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView%0}>>>)
-meth public void sort()
-supr javafx.scene.control.Control
-hfds DEFAULT_STYLE_CLASS,EDIT_ANY_EVENT,EDIT_CANCEL_EVENT,EDIT_COMMIT_EVENT,EDIT_START_EVENT,PSEUDO_CLASS_CELL_SELECTION,PSEUDO_CLASS_ROW_SELECTION,cellSelectionModelInvalidationListener,columnComparatorObserver,columnResizePolicy,columnSortTypeObserver,columnSortableObserver,columnVisibleObserver,columns,columnsObserver,comparator,contentWidth,editable,editingCell,expandedItemCount,expandedItemCountDirty,fixedCellSize,focusModel,isInited,lastKnownColumnIndex,lastSortEventSupportInfo,lastSortEventType,onScrollTo,onScrollToColumn,onSort,placeholder,root,rootEvent,rowFactory,selectionModel,showRoot,sortLock,sortMode,sortOrder,sortPolicy,tableMenuButtonVisible,treeColumn,treeItemCacheMap,unmodifiableVisibleLeafColumns,visibleLeafColumns,weakCellSelectionModelInvalidationListener,weakColumnComparatorObserver,weakColumnSortTypeObserver,weakColumnSortableObserver,weakColumnVisibleObserver,weakColumnsObserver,weakRootEventListener
-hcls StyleableProperties,TreeTableViewArrayListSelectionModel
-
-CLSS public static javafx.scene.control.TreeTableView$EditEvent<%0 extends java.lang.Object>
- outer javafx.scene.control.TreeTableView
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$EditEvent%0}>,javafx.event.EventType<? extends javafx.scene.control.TreeTableView$EditEvent>,javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$EditEvent%0}>,{javafx.scene.control.TreeTableView$EditEvent%0},{javafx.scene.control.TreeTableView$EditEvent%0})
-fld public final static javafx.event.EventType<?> ANY
-meth public javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$EditEvent%0}> getTreeItem()
-meth public javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$EditEvent%0}> getSource()
-meth public {javafx.scene.control.TreeTableView$EditEvent%0} getNewValue()
-meth public {javafx.scene.control.TreeTableView$EditEvent%0} getOldValue()
-supr javafx.event.Event
-hfds newValue,oldValue,serialVersionUID,treeItem
-
-CLSS public static javafx.scene.control.TreeTableView$ResizeFeatures<%0 extends java.lang.Object>
- outer javafx.scene.control.TreeTableView
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$ResizeFeatures%0}>,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView$ResizeFeatures%0},?>,java.lang.Double)
-meth public javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView$ResizeFeatures%0},?> getColumn()
-meth public javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$ResizeFeatures%0}> getTable()
-supr javafx.scene.control.ResizeFeaturesBase<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$ResizeFeatures%0}>>
-hfds treeTable
-
-CLSS public static javafx.scene.control.TreeTableView$TreeTableViewFocusModel<%0 extends java.lang.Object>
- outer javafx.scene.control.TreeTableView
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0}>)
-meth protected int getItemCount()
-meth protected javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0}> getModelItem(int)
-meth public boolean isFocused(int,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?>)
-meth public final javafx.beans.property.ReadOnlyObjectProperty<javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?>> focusedCellProperty()
-meth public final javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?> getFocusedCell()
-meth public void focus(int)
-meth public void focus(int,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?>)
-meth public void focus(javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?>)
-meth public void focusAboveCell()
-meth public void focusBelowCell()
-meth public void focusLeftCell()
-meth public void focusNext()
-meth public void focusPrevious()
-meth public void focusRightCell()
-supr javafx.scene.control.TableFocusModel<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0}>,javafx.scene.control.TreeTableColumn<{javafx.scene.control.TreeTableView$TreeTableViewFocusModel%0},?>>
-hfds EMPTY_CELL,focusedCell,rootPropertyListener,treeItemListener,treeTableView,weakRootPropertyListener,weakTreeItemListener
-
-CLSS public abstract static javafx.scene.control.TreeTableView$TreeTableViewSelectionModel<%0 extends java.lang.Object>
- outer javafx.scene.control.TreeTableView
-cons public init(javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}>)
-meth protected int getItemCount()
-meth public abstract javafx.collections.ObservableList<javafx.scene.control.TreeTablePosition<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0},?>> getSelectedCells()
-meth public int getFocusedIndex()
-meth public javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}> getModelItem(int)
-meth public javafx.scene.control.TreeTableView<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}> getTreeTableView()
-meth public void focus(int)
-meth public void selectRange(int,javafx.scene.control.TableColumnBase<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}>,?>,int,javafx.scene.control.TableColumnBase<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}>,?>)
-supr javafx.scene.control.TableSelectionModel<javafx.scene.control.TreeItem<{javafx.scene.control.TreeTableView$TreeTableViewSelectionModel%0}>>
-hfds treeTableView
-
 CLSS public javafx.scene.control.TreeView<%0 extends java.lang.Object>
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="root")
@@ -10695,26 +8996,6 @@ meth public {javafx.scene.control.cell.CheckBoxTreeCellBuilder%1} selectedStateC
 supr javafx.scene.control.TreeCellBuilder<{javafx.scene.control.cell.CheckBoxTreeCellBuilder%0},{javafx.scene.control.cell.CheckBoxTreeCellBuilder%1}>
 hfds __set,converter,selectedStateCallback
 
-CLSS public javafx.scene.control.cell.CheckBoxTreeTableCell<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-cons public init(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>)
-cons public init(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>,javafx.util.StringConverter<{javafx.scene.control.cell.CheckBoxTreeTableCell%1}>)
-meth public final javafx.beans.property.ObjectProperty<javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>> selectedStateCallbackProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<{javafx.scene.control.cell.CheckBoxTreeTableCell%1}>> converterProperty()
-meth public final javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>> getSelectedStateCallback()
-meth public final javafx.util.StringConverter<{javafx.scene.control.cell.CheckBoxTreeTableCell%1}> getConverter()
-meth public final void setConverter(javafx.util.StringConverter<{javafx.scene.control.cell.CheckBoxTreeTableCell%1}>)
-meth public final void setSelectedStateCallback(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>,boolean)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.Callback<java.lang.Integer,javafx.beans.value.ObservableValue<java.lang.Boolean>>,javafx.util.StringConverter<{%%1}>)
-meth public static <%0 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},java.lang.Boolean>,javafx.scene.control.TreeTableCell<{%%0},java.lang.Boolean>> forTreeTableColumn(javafx.scene.control.TreeTableColumn<{%%0},java.lang.Boolean>)
-meth public void updateItem({javafx.scene.control.cell.CheckBoxTreeTableCell%1},boolean)
-supr javafx.scene.control.TreeTableCell<{javafx.scene.control.cell.CheckBoxTreeTableCell%0},{javafx.scene.control.cell.CheckBoxTreeTableCell%1}>
-hfds booleanProperty,checkBox,converter,selectedStateCallback,showLabel
-
 CLSS public javafx.scene.control.cell.ChoiceBoxListCell<%0 extends java.lang.Object>
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
@@ -10813,32 +9094,6 @@ meth public {javafx.scene.control.cell.ChoiceBoxTreeCellBuilder%1} converter(jav
 meth public {javafx.scene.control.cell.ChoiceBoxTreeCellBuilder%1} items(java.util.Collection<? extends {javafx.scene.control.cell.ChoiceBoxTreeCellBuilder%0}>)
 supr javafx.scene.control.TreeCellBuilder<{javafx.scene.control.cell.ChoiceBoxTreeCellBuilder%0},{javafx.scene.control.cell.ChoiceBoxTreeCellBuilder%1}>
 hfds __set,converter,items
-
-CLSS public javafx.scene.control.cell.ChoiceBoxTreeTableCell<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public !varargs init(javafx.util.StringConverter<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>,{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}[])
- anno 0 java.lang.SafeVarargs()
-cons public !varargs init({javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}[])
- anno 0 java.lang.SafeVarargs()
-cons public init()
-cons public init(javafx.collections.ObservableList<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>)
-cons public init(javafx.util.StringConverter<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>,javafx.collections.ObservableList<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>)
-meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.StringConverter<{%%1}>,{%%1}[])
- anno 0 java.lang.SafeVarargs()
-meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn({%%1}[])
- anno 0 java.lang.SafeVarargs()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>> converterProperty()
-meth public final javafx.util.StringConverter<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}> getConverter()
-meth public final void setConverter(javafx.util.StringConverter<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>)
-meth public javafx.collections.ObservableList<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}> getItems()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.collections.ObservableList<{%%1}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.StringConverter<{%%1}>,javafx.collections.ObservableList<{%%1}>)
-meth public void cancelEdit()
-meth public void startEdit()
-meth public void updateItem({javafx.scene.control.cell.ChoiceBoxTreeTableCell%1},boolean)
-supr javafx.scene.control.TreeTableCell<{javafx.scene.control.cell.ChoiceBoxTreeTableCell%0},{javafx.scene.control.cell.ChoiceBoxTreeTableCell%1}>
-hfds choiceBox,converter,items
 
 CLSS public javafx.scene.control.cell.ComboBoxListCell<%0 extends java.lang.Object>
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -10951,35 +9206,6 @@ meth public {javafx.scene.control.cell.ComboBoxTreeCellBuilder%1} items(java.uti
 supr javafx.scene.control.TreeCellBuilder<{javafx.scene.control.cell.ComboBoxTreeCellBuilder%0},{javafx.scene.control.cell.ComboBoxTreeCellBuilder%1}>
 hfds __set,comboBoxEditable,converter,items
 
-CLSS public javafx.scene.control.cell.ComboBoxTreeTableCell<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public !varargs init(javafx.util.StringConverter<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>,{javafx.scene.control.cell.ComboBoxTreeTableCell%1}[])
- anno 0 java.lang.SafeVarargs()
-cons public !varargs init({javafx.scene.control.cell.ComboBoxTreeTableCell%1}[])
- anno 0 java.lang.SafeVarargs()
-cons public init()
-cons public init(javafx.collections.ObservableList<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>)
-cons public init(javafx.util.StringConverter<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>,javafx.collections.ObservableList<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>)
-meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.StringConverter<{%%1}>,{%%1}[])
- anno 0 java.lang.SafeVarargs()
-meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn({%%1}[])
- anno 0 java.lang.SafeVarargs()
-meth public final boolean isComboBoxEditable()
-meth public final javafx.beans.property.BooleanProperty comboBoxEditableProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>> converterProperty()
-meth public final javafx.util.StringConverter<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}> getConverter()
-meth public final void setComboBoxEditable(boolean)
-meth public final void setConverter(javafx.util.StringConverter<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>)
-meth public javafx.collections.ObservableList<{javafx.scene.control.cell.ComboBoxTreeTableCell%1}> getItems()
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.collections.ObservableList<{%%1}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.StringConverter<{%%1}>,javafx.collections.ObservableList<{%%1}>)
-meth public void cancelEdit()
-meth public void startEdit()
-meth public void updateItem({javafx.scene.control.cell.ComboBoxTreeTableCell%1},boolean)
-supr javafx.scene.control.TreeTableCell<{javafx.scene.control.cell.ComboBoxTreeTableCell%0},{javafx.scene.control.cell.ComboBoxTreeTableCell%1}>
-hfds comboBox,comboBoxEditable,converter,items
-
 CLSS public javafx.scene.control.cell.MapValueFactory<%0 extends java.lang.Object>
 cons public init(java.lang.Object)
 intf javafx.util.Callback<javafx.scene.control.TableColumn$CellDataFeatures<java.util.Map,{javafx.scene.control.cell.MapValueFactory%0}>,javafx.beans.value.ObservableValue<{javafx.scene.control.cell.MapValueFactory%0}>>
@@ -10994,15 +9220,6 @@ cons public init()
 meth public static <%0 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TableColumn<{%%0},java.lang.Double>,javafx.scene.control.TableCell<{%%0},java.lang.Double>> forTableColumn()
 meth public void updateItem(java.lang.Double,boolean)
 supr javafx.scene.control.TableCell<{javafx.scene.control.cell.ProgressBarTableCell%0},java.lang.Double>
-hfds observable,progressBar
-
-CLSS public javafx.scene.control.cell.ProgressBarTreeTableCell<%0 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-meth public static <%0 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},java.lang.Double>,javafx.scene.control.TreeTableCell<{%%0},java.lang.Double>> forTreeTableColumn()
-meth public void updateItem(java.lang.Double,boolean)
-supr javafx.scene.control.TreeTableCell<{javafx.scene.control.cell.ProgressBarTreeTableCell%0},java.lang.Double>
 hfds observable,progressBar
 
 CLSS public javafx.scene.control.cell.PropertyValueFactory<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -11096,30 +9313,6 @@ meth public void applyTo(javafx.scene.control.cell.TextFieldTreeCell<{javafx.sce
 meth public {javafx.scene.control.cell.TextFieldTreeCellBuilder%1} converter(javafx.util.StringConverter<{javafx.scene.control.cell.TextFieldTreeCellBuilder%0}>)
 supr javafx.scene.control.TreeCellBuilder<{javafx.scene.control.cell.TextFieldTreeCellBuilder%0},{javafx.scene.control.cell.TextFieldTreeCellBuilder%1}>
 hfds __set,converter
-
-CLSS public javafx.scene.control.cell.TextFieldTreeTableCell<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="text")
-cons public init()
-cons public init(javafx.util.StringConverter<{javafx.scene.control.cell.TextFieldTreeTableCell%1}>)
-meth public final javafx.beans.property.ObjectProperty<javafx.util.StringConverter<{javafx.scene.control.cell.TextFieldTreeTableCell%1}>> converterProperty()
-meth public final javafx.util.StringConverter<{javafx.scene.control.cell.TextFieldTreeTableCell%1}> getConverter()
-meth public final void setConverter(javafx.util.StringConverter<{javafx.scene.control.cell.TextFieldTreeTableCell%1}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},{%%1}>,javafx.scene.control.TreeTableCell<{%%0},{%%1}>> forTreeTableColumn(javafx.util.StringConverter<{%%1}>)
-meth public static <%0 extends java.lang.Object> javafx.util.Callback<javafx.scene.control.TreeTableColumn<{%%0},java.lang.String>,javafx.scene.control.TreeTableCell<{%%0},java.lang.String>> forTreeTableColumn()
-meth public void cancelEdit()
-meth public void startEdit()
-meth public void updateItem({javafx.scene.control.cell.TextFieldTreeTableCell%1},boolean)
-supr javafx.scene.control.TreeTableCell<{javafx.scene.control.cell.TextFieldTreeTableCell%0},{javafx.scene.control.cell.TextFieldTreeTableCell%1}>
-hfds converter,textField
-
-CLSS public javafx.scene.control.cell.TreeItemPropertyValueFactory<%0 extends java.lang.Object, %1 extends java.lang.Object>
-cons public init(java.lang.String)
-intf javafx.util.Callback<javafx.scene.control.TreeTableColumn$CellDataFeatures<{javafx.scene.control.cell.TreeItemPropertyValueFactory%0},{javafx.scene.control.cell.TreeItemPropertyValueFactory%1}>,javafx.beans.value.ObservableValue<{javafx.scene.control.cell.TreeItemPropertyValueFactory%1}>>
-meth public final java.lang.String getProperty()
-meth public javafx.beans.value.ObservableValue<{javafx.scene.control.cell.TreeItemPropertyValueFactory%1}> call(javafx.scene.control.TreeTableColumn$CellDataFeatures<{javafx.scene.control.cell.TreeItemPropertyValueFactory%0},{javafx.scene.control.cell.TreeItemPropertyValueFactory%1}>)
-supr java.lang.Object
-hfds columnClass,previousProperty,property,propertyRef
 
 CLSS public javafx.scene.effect.Blend
 cons public init()
@@ -12770,22 +10963,6 @@ supr javafx.scene.input.InputEvent
 hfds altDown,button,clickCount,controlDown,flags,metaDown,middleButtonDown,popupTrigger,primaryButtonDown,sceneX,sceneY,screenX,screenY,secondaryButtonDown,shiftDown,stillSincePress,synthesized,x,y
 hcls Flags
 
-CLSS public javafx.scene.input.PickResult
-cons public init(javafx.event.EventTarget,double,double)
-cons public init(javafx.scene.Node,javafx.geometry.Point3D,double)
-cons public init(javafx.scene.Node,javafx.geometry.Point3D,double,int,javafx.geometry.Point2D)
-cons public init(javafx.scene.Node,javafx.geometry.Point3D,double,int,javafx.geometry.Point3D,javafx.geometry.Point2D)
-fld public final static int FACE_UNDEFINED = -1
-meth public final double getIntersectedDistance()
-meth public final int getIntersectedFace()
-meth public final javafx.geometry.Point2D getIntersectedTexCoord()
-meth public final javafx.geometry.Point3D getIntersectedNormal()
-meth public final javafx.geometry.Point3D getIntersectedPoint()
-meth public final javafx.scene.Node getIntersectedNode()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds distance,face,node,normal,point,texCoord
-
 CLSS public javafx.scene.input.RotateEvent
 fld public final static javafx.event.EventType<javafx.scene.input.RotateEvent> ANY
 fld public final static javafx.event.EventType<javafx.scene.input.RotateEvent> ROTATE
@@ -12960,115 +11137,6 @@ meth public javafx.scene.layout.AnchorPane build()
 meth public static javafx.scene.layout.AnchorPaneBuilder<?> create()
 supr javafx.scene.layout.PaneBuilder<{javafx.scene.layout.AnchorPaneBuilder%0}>
 
-CLSS public final javafx.scene.layout.Background
-cons public !varargs init(javafx.scene.layout.BackgroundFill[])
-cons public !varargs init(javafx.scene.layout.BackgroundImage[])
-cons public init(java.util.List<javafx.scene.layout.BackgroundFill>,java.util.List<javafx.scene.layout.BackgroundImage>)
-cons public init(javafx.scene.layout.BackgroundFill[],javafx.scene.layout.BackgroundImage[])
-fld public final static javafx.scene.layout.Background EMPTY
-meth public boolean equals(java.lang.Object)
-meth public boolean isFillPercentageBased()
-meth public final boolean isEmpty()
-meth public final java.util.List<javafx.scene.layout.BackgroundFill> getFills()
-meth public final java.util.List<javafx.scene.layout.BackgroundImage> getImages()
-meth public final javafx.geometry.Insets getOutsets()
-meth public int hashCode()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-supr java.lang.Object
-hfds BACKGROUND_COLOR,BACKGROUND_IMAGE,BACKGROUND_INSETS,BACKGROUND_POSITION,BACKGROUND_RADIUS,BACKGROUND_REPEAT,BACKGROUND_SIZE,STYLEABLES,fills,hasOpaqueFill,hasPercentageBasedFills,hasPercentageBasedOpaqueFills,hash,images,opaqueFillBottom,opaqueFillLeft,opaqueFillRight,opaqueFillTop,outsets
-
-CLSS public final javafx.scene.layout.BackgroundFill
-cons public init(javafx.scene.paint.Paint,javafx.scene.layout.CornerRadii,javafx.geometry.Insets)
-meth public boolean equals(java.lang.Object)
-meth public final javafx.geometry.Insets getInsets()
-meth public final javafx.scene.layout.CornerRadii getRadii()
-meth public final javafx.scene.paint.Paint getFill()
-meth public int hashCode()
-supr java.lang.Object
-hfds fill,hash,insets,radii
-
-CLSS public final javafx.scene.layout.BackgroundImage
-cons public init(javafx.scene.image.Image,javafx.scene.layout.BackgroundRepeat,javafx.scene.layout.BackgroundRepeat,javafx.scene.layout.BackgroundPosition,javafx.scene.layout.BackgroundSize)
-meth public boolean equals(java.lang.Object)
-meth public final javafx.scene.image.Image getImage()
-meth public final javafx.scene.layout.BackgroundPosition getPosition()
-meth public final javafx.scene.layout.BackgroundRepeat getRepeatX()
-meth public final javafx.scene.layout.BackgroundRepeat getRepeatY()
-meth public final javafx.scene.layout.BackgroundSize getSize()
-meth public int hashCode()
-supr java.lang.Object
-hfds hash,image,opaque,position,repeatX,repeatY,size
-
-CLSS public javafx.scene.layout.BackgroundPosition
-cons public init(javafx.geometry.Side,double,boolean,javafx.geometry.Side,double,boolean)
-fld public final static javafx.scene.layout.BackgroundPosition CENTER
-fld public final static javafx.scene.layout.BackgroundPosition DEFAULT
-meth public boolean equals(java.lang.Object)
-meth public final boolean isHorizontalAsPercentage()
-meth public final boolean isVerticalAsPercentage()
-meth public final double getHorizontalPosition()
-meth public final double getVerticalPosition()
-meth public final javafx.geometry.Side getHorizontalSide()
-meth public final javafx.geometry.Side getVerticalSide()
-meth public int hashCode()
-supr java.lang.Object
-hfds hash,horizontalAsPercentage,horizontalPosition,horizontalSide,verticalAsPercentage,verticalPosition,verticalSide
-
-CLSS public final !enum javafx.scene.layout.BackgroundRepeat
-fld public final static javafx.scene.layout.BackgroundRepeat NO_REPEAT
-fld public final static javafx.scene.layout.BackgroundRepeat REPEAT
-fld public final static javafx.scene.layout.BackgroundRepeat ROUND
-fld public final static javafx.scene.layout.BackgroundRepeat SPACE
-meth public static javafx.scene.layout.BackgroundRepeat valueOf(java.lang.String)
-meth public static javafx.scene.layout.BackgroundRepeat[] values()
-supr java.lang.Enum<javafx.scene.layout.BackgroundRepeat>
-
-CLSS public final javafx.scene.layout.BackgroundSize
-cons public init(double,double,boolean,boolean,boolean,boolean)
-fld public final static double AUTO = -1.0
-fld public final static javafx.scene.layout.BackgroundSize DEFAULT
-meth public boolean equals(java.lang.Object)
-meth public final boolean isContain()
-meth public final boolean isCover()
-meth public final boolean isHeightAsPercentage()
-meth public final boolean isWidthAsPercentage()
-meth public final double getHeight()
-meth public final double getWidth()
-meth public int hashCode()
-supr java.lang.Object
-hfds contain,cover,hash,height,heightAsPercentage,width,widthAsPercentage
-
-CLSS public final javafx.scene.layout.Border
-cons public !varargs init(javafx.scene.layout.BorderImage[])
-cons public !varargs init(javafx.scene.layout.BorderStroke[])
-cons public init(java.util.List<javafx.scene.layout.BorderStroke>,java.util.List<javafx.scene.layout.BorderImage>)
-cons public init(javafx.scene.layout.BorderStroke[],javafx.scene.layout.BorderImage[])
-fld public final static javafx.scene.layout.Border EMPTY
-meth public boolean equals(java.lang.Object)
-meth public final boolean isEmpty()
-meth public final java.util.List<javafx.scene.layout.BorderImage> getImages()
-meth public final java.util.List<javafx.scene.layout.BorderStroke> getStrokes()
-meth public final javafx.geometry.Insets getInsets()
-meth public final javafx.geometry.Insets getOutsets()
-meth public int hashCode()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-supr java.lang.Object
-hfds BORDER_COLOR,BORDER_IMAGE_INSETS,BORDER_IMAGE_REPEAT,BORDER_IMAGE_SLICE,BORDER_IMAGE_SOURCE,BORDER_IMAGE_WIDTH,BORDER_INSETS,BORDER_RADIUS,BORDER_STYLE,BORDER_WIDTH,STYLEABLES,hash,images,insets,outsets,strokes
-
-CLSS public javafx.scene.layout.BorderImage
-cons public init(javafx.scene.image.Image,javafx.scene.layout.BorderWidths,javafx.geometry.Insets,javafx.scene.layout.BorderWidths,boolean,javafx.scene.layout.BorderRepeat,javafx.scene.layout.BorderRepeat)
-meth public boolean equals(java.lang.Object)
-meth public final boolean isFilled()
-meth public final javafx.geometry.Insets getInsets()
-meth public final javafx.scene.image.Image getImage()
-meth public final javafx.scene.layout.BorderRepeat getRepeatX()
-meth public final javafx.scene.layout.BorderRepeat getRepeatY()
-meth public final javafx.scene.layout.BorderWidths getSlices()
-meth public final javafx.scene.layout.BorderWidths getWidths()
-meth public int hashCode()
-supr java.lang.Object
-hfds filled,hash,image,innerEdge,insets,outerEdge,repeatX,repeatY,slices,widths
-
 CLSS public javafx.scene.layout.BorderPane
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
  anno 0 javafx.beans.DefaultProperty(java.lang.String value="children")
@@ -13114,79 +11182,6 @@ meth public {javafx.scene.layout.BorderPaneBuilder%0} right(javafx.scene.Node)
 meth public {javafx.scene.layout.BorderPaneBuilder%0} top(javafx.scene.Node)
 supr javafx.scene.layout.PaneBuilder<{javafx.scene.layout.BorderPaneBuilder%0}>
 hfds __set,bottom,center,left,right,top
-
-CLSS public final !enum javafx.scene.layout.BorderRepeat
-fld public final static javafx.scene.layout.BorderRepeat REPEAT
-fld public final static javafx.scene.layout.BorderRepeat ROUND
-fld public final static javafx.scene.layout.BorderRepeat SPACE
-fld public final static javafx.scene.layout.BorderRepeat STRETCH
-meth public static javafx.scene.layout.BorderRepeat valueOf(java.lang.String)
-meth public static javafx.scene.layout.BorderRepeat[] values()
-supr java.lang.Enum<javafx.scene.layout.BorderRepeat>
-
-CLSS public javafx.scene.layout.BorderStroke
-cons public init(javafx.scene.paint.Paint,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.CornerRadii,javafx.scene.layout.BorderWidths)
-cons public init(javafx.scene.paint.Paint,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.CornerRadii,javafx.scene.layout.BorderWidths,javafx.geometry.Insets)
-cons public init(javafx.scene.paint.Paint,javafx.scene.paint.Paint,javafx.scene.paint.Paint,javafx.scene.paint.Paint,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.BorderStrokeStyle,javafx.scene.layout.CornerRadii,javafx.scene.layout.BorderWidths,javafx.geometry.Insets)
-fld public final static javafx.scene.layout.BorderWidths DEFAULT_WIDTHS
-fld public final static javafx.scene.layout.BorderWidths MEDIUM
-fld public final static javafx.scene.layout.BorderWidths THICK
-fld public final static javafx.scene.layout.BorderWidths THIN
-meth public boolean equals(java.lang.Object)
-meth public final boolean isStrokeUniform()
-meth public final javafx.geometry.Insets getInsets()
-meth public final javafx.scene.layout.BorderStrokeStyle getBottomStyle()
-meth public final javafx.scene.layout.BorderStrokeStyle getLeftStyle()
-meth public final javafx.scene.layout.BorderStrokeStyle getRightStyle()
-meth public final javafx.scene.layout.BorderStrokeStyle getTopStyle()
-meth public final javafx.scene.layout.BorderWidths getWidths()
-meth public final javafx.scene.layout.CornerRadii getRadii()
-meth public final javafx.scene.paint.Paint getBottomStroke()
-meth public final javafx.scene.paint.Paint getLeftStroke()
-meth public final javafx.scene.paint.Paint getRightStroke()
-meth public final javafx.scene.paint.Paint getTopStroke()
-meth public int hashCode()
-supr java.lang.Object
-hfds bottomStroke,bottomStyle,hash,innerEdge,insets,leftStroke,leftStyle,outerEdge,radii,rightStroke,rightStyle,strokeUniform,topStroke,topStyle,widths
-
-CLSS public final javafx.scene.layout.BorderStrokeStyle
-cons public init(javafx.scene.shape.StrokeType,javafx.scene.shape.StrokeLineJoin,javafx.scene.shape.StrokeLineCap,double,double,java.util.List<java.lang.Double>)
-fld public final static javafx.scene.layout.BorderStrokeStyle DASHED
-fld public final static javafx.scene.layout.BorderStrokeStyle DOTTED
-fld public final static javafx.scene.layout.BorderStrokeStyle NONE
-fld public final static javafx.scene.layout.BorderStrokeStyle SOLID
-meth public boolean equals(java.lang.Object)
-meth public final double getDashOffset()
-meth public final double getMiterLimit()
-meth public final java.util.List<java.lang.Double> getDashArray()
-meth public final javafx.scene.shape.StrokeLineCap getLineCap()
-meth public final javafx.scene.shape.StrokeLineJoin getLineJoin()
-meth public final javafx.scene.shape.StrokeType getType()
-meth public int hashCode()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds DASHED_LIST,DOTTED_LIST,dashArray,dashOffset,hash,lineCap,lineJoin,miterLimit,type
-
-CLSS public final javafx.scene.layout.BorderWidths
-cons public init(double)
-cons public init(double,double,double,double)
-cons public init(double,double,double,double,boolean,boolean,boolean,boolean)
-fld public final static double AUTO = -1.0
-fld public final static javafx.scene.layout.BorderWidths DEFAULT
-fld public final static javafx.scene.layout.BorderWidths EMPTY
-fld public final static javafx.scene.layout.BorderWidths FULL
-meth public boolean equals(java.lang.Object)
-meth public final boolean isBottomAsPercentage()
-meth public final boolean isLeftAsPercentage()
-meth public final boolean isRightAsPercentage()
-meth public final boolean isTopAsPercentage()
-meth public final double getBottom()
-meth public final double getLeft()
-meth public final double getRight()
-meth public final double getTop()
-meth public int hashCode()
-supr java.lang.Object
-hfds bottom,bottomAsPercentage,hash,left,leftAsPercentage,right,rightAsPercentage,top,topAsPercentage
 
 CLSS public javafx.scene.layout.ColumnConstraints
 cons public init()
@@ -13239,35 +11234,6 @@ fld public final static double CONSTRAIN_TO_PREF = -Infinity
 meth protected void requestLayout()
 supr java.lang.Object
 hfds impl_nodes
-
-CLSS public javafx.scene.layout.CornerRadii
-cons public init(double)
-cons public init(double,boolean)
-cons public init(double,double,double,double,boolean)
-cons public init(double,double,double,double,double,double,double,double,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean)
-fld public final static javafx.scene.layout.CornerRadii EMPTY
-meth public boolean equals(java.lang.Object)
-meth public final boolean isBottomLeftHorizontalRadiusAsPercentage()
-meth public final boolean isBottomLeftVerticalRadiusAsPercentage()
-meth public final boolean isBottomRightHorizontalRadiusAsPercentage()
-meth public final boolean isBottomRightVerticalRadiusAsPercentage()
-meth public final boolean isTopLeftHorizontalRadiusAsPercentage()
-meth public final boolean isTopLeftVerticalRadiusAsPercentage()
-meth public final boolean isTopRightHorizontalRadiusAsPercentage()
-meth public final boolean isTopRightVerticalRadiusAsPercentage()
-meth public final boolean isUniform()
-meth public final double getBottomLeftHorizontalRadius()
-meth public final double getBottomLeftVerticalRadius()
-meth public final double getBottomRightHorizontalRadius()
-meth public final double getBottomRightVerticalRadius()
-meth public final double getTopLeftHorizontalRadius()
-meth public final double getTopLeftVerticalRadius()
-meth public final double getTopRightHorizontalRadius()
-meth public final double getTopRightVerticalRadius()
-meth public int hashCode()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds bottomLeftHorizontalRadius,bottomLeftHorizontalRadiusAsPercentage,bottomLeftVerticalRadius,bottomLeftVerticalRadiusAsPercentage,bottomRightHorizontalRadius,bottomRightHorizontalRadiusAsPercentage,bottomRightVerticalRadius,bottomRightVerticalRadiusAsPercentage,hasPercentBasedRadii,hash,topLeftHorizontalRadius,topLeftHorizontalRadiusAsPercentage,topLeftVerticalRadius,topLeftVerticalRadiusAsPercentage,topRightHorizontalRadius,topRightHorizontalRadiusAsPercentage,topRightVerticalRadius,topRightVerticalRadiusAsPercentage,uniform
 
 CLSS public javafx.scene.layout.FlowPane
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -14160,9 +12126,6 @@ meth public {javafx.scene.media.MediaViewBuilder%0} y(double)
 supr javafx.scene.NodeBuilder<{javafx.scene.media.MediaViewBuilder%0}>
 hfds __set,fitHeight,fitWidth,mediaPlayer,onError,preserveRatio,smooth,viewport,x,y
 
-CLSS public javafx.scene.media.SubtitleTrack
-supr javafx.scene.media.Track
-
 CLSS public abstract javafx.scene.media.Track
 meth public final java.lang.String getName()
 supr java.lang.Object
@@ -14446,56 +12409,12 @@ meth public static javafx.scene.paint.LinearGradientBuilder create()
 supr java.lang.Object
 hfds cycleMethod,endX,endY,proportional,startX,startY,stops
 
-CLSS public abstract javafx.scene.paint.Material
-cons protected init()
-meth public abstract com.sun.javafx.sg.prism.NGPhongMaterial impl_getNGMaterial()
- anno 0 java.lang.Deprecated()
-meth public abstract void impl_updatePG()
- anno 0 java.lang.Deprecated()
-meth public final javafx.beans.property.BooleanProperty impl_dirtyProperty()
- anno 0 java.lang.Deprecated()
-supr java.lang.Object
-hfds dirty
-
 CLSS public abstract javafx.scene.paint.Paint
 cons public init()
 meth public abstract java.lang.Object impl_getPlatformPaint()
  anno 0 java.lang.Deprecated()
 meth public static javafx.scene.paint.Paint valueOf(java.lang.String)
 supr java.lang.Object
-
-CLSS public javafx.scene.paint.PhongMaterial
-cons public init()
-cons public init(javafx.scene.paint.Color)
-cons public init(javafx.scene.paint.Color,javafx.scene.image.Image,javafx.scene.image.Image,javafx.scene.image.Image,javafx.scene.image.Image)
-meth public com.sun.javafx.sg.prism.NGPhongMaterial impl_getNGMaterial()
- anno 0 java.lang.Deprecated()
-meth public final double getSpecularPower()
-meth public final javafx.beans.property.DoubleProperty specularPowerProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.image.Image> bumpMapProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.image.Image> diffuseMapProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.image.Image> selfIlluminationMapProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.image.Image> specularMapProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.paint.Color> diffuseColorProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.paint.Color> specularColorProperty()
-meth public final javafx.scene.image.Image getBumpMap()
-meth public final javafx.scene.image.Image getDiffuseMap()
-meth public final javafx.scene.image.Image getSelfIlluminationMap()
-meth public final javafx.scene.image.Image getSpecularMap()
-meth public final javafx.scene.paint.Color getDiffuseColor()
-meth public final javafx.scene.paint.Color getSpecularColor()
-meth public final void setBumpMap(javafx.scene.image.Image)
-meth public final void setDiffuseColor(javafx.scene.paint.Color)
-meth public final void setDiffuseMap(javafx.scene.image.Image)
-meth public final void setSelfIlluminationMap(javafx.scene.image.Image)
-meth public final void setSpecularColor(javafx.scene.paint.Color)
-meth public final void setSpecularMap(javafx.scene.image.Image)
-meth public final void setSpecularPower(double)
-meth public java.lang.String toString()
-meth public void impl_updatePG()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.paint.Material
-hfds bumpMap,bumpMapDirty,diffuseColor,diffuseColorDirty,diffuseMap,diffuseMapDirty,oldBumpMap,oldDiffuseMap,oldSelfIlluminationMap,oldSpecularMap,peer,platformImageChangeListener,selfIlluminationMap,selfIlluminationMapDirty,specularColor,specularColorDirty,specularMap,specularMapDirty,specularPower,specularPowerDirty
 
 CLSS public final javafx.scene.paint.RadialGradient
 cons public !varargs init(double,double,double,double,double,boolean,javafx.scene.paint.CycleMethod,javafx.scene.paint.Stop[])
@@ -14657,33 +12576,6 @@ meth public static javafx.scene.shape.ArcType valueOf(java.lang.String)
 meth public static javafx.scene.shape.ArcType[] values()
 supr java.lang.Enum<javafx.scene.shape.ArcType>
 
-CLSS public javafx.scene.shape.Box
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(double,double,double)
-fld public final static double DEFAULT_SIZE = 2.0
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final double getDepth()
-meth public final double getHeight()
-meth public final double getWidth()
-meth public final javafx.beans.property.DoubleProperty depthProperty()
-meth public final javafx.beans.property.DoubleProperty heightProperty()
-meth public final javafx.beans.property.DoubleProperty widthProperty()
-meth public final void setDepth(double)
-meth public final void setHeight(double)
-meth public final void setWidth(double)
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.shape.Shape3D
-hfds depth,height,mesh,width
-
 CLSS public javafx.scene.shape.Circle
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
 cons public init()
@@ -14833,46 +12725,6 @@ meth public {javafx.scene.shape.CubicCurveToBuilder%0} y(double)
 supr javafx.scene.shape.PathElementBuilder<{javafx.scene.shape.CubicCurveToBuilder%0}>
 hfds __set,controlX1,controlX2,controlY1,controlY2,x,y
 
-CLSS public final !enum javafx.scene.shape.CullFace
-fld public final static javafx.scene.shape.CullFace BACK
-fld public final static javafx.scene.shape.CullFace FRONT
-fld public final static javafx.scene.shape.CullFace NONE
-meth public static javafx.scene.shape.CullFace valueOf(java.lang.String)
-meth public static javafx.scene.shape.CullFace[] values()
-supr java.lang.Enum<javafx.scene.shape.CullFace>
-
-CLSS public javafx.scene.shape.Cylinder
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(double,double)
-cons public init(double,double,int)
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final double getHeight()
-meth public final double getRadius()
-meth public final javafx.beans.property.DoubleProperty heightProperty()
-meth public final javafx.beans.property.DoubleProperty radiusProperty()
-meth public final void setHeight(double)
-meth public final void setRadius(double)
-meth public int getDivisions()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.shape.Shape3D
-hfds DEFAULT_DIVISIONS,DEFAULT_HEIGHT,DEFAULT_RADIUS,divisions,height,mesh,radius
-
-CLSS public final !enum javafx.scene.shape.DrawMode
-fld public final static javafx.scene.shape.DrawMode FILL
-fld public final static javafx.scene.shape.DrawMode LINE
-meth public static javafx.scene.shape.DrawMode valueOf(java.lang.String)
-meth public static javafx.scene.shape.DrawMode[] values()
-supr java.lang.Enum<javafx.scene.shape.DrawMode>
-
 CLSS public javafx.scene.shape.Ellipse
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
 cons public init()
@@ -15017,33 +12869,6 @@ meth public {javafx.scene.shape.LineToBuilder%0} y(double)
 supr javafx.scene.shape.PathElementBuilder<{javafx.scene.shape.LineToBuilder%0}>
 hfds __set,x,y
 
-CLSS public abstract javafx.scene.shape.Mesh
-cons protected init()
-meth protected abstract boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser,javafx.scene.Node,javafx.scene.shape.CullFace,boolean)
- anno 0 java.lang.Deprecated()
-supr java.lang.Object
-hfds dirty
-
-CLSS public javafx.scene.shape.MeshView
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(javafx.scene.shape.Mesh)
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.shape.Mesh> meshProperty()
-meth public final javafx.scene.shape.Mesh getMesh()
-meth public final void setMesh(javafx.scene.shape.Mesh)
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.shape.Shape3D
-hfds mesh
-
 CLSS public javafx.scene.shape.MoveTo
 cons public init()
 cons public init(double,double)
@@ -15068,9 +12893,6 @@ meth public {javafx.scene.shape.MoveToBuilder%0} x(double)
 meth public {javafx.scene.shape.MoveToBuilder%0} y(double)
 supr javafx.scene.shape.PathElementBuilder<{javafx.scene.shape.MoveToBuilder%0}>
 hfds __set,x,y
-
-CLSS public abstract interface javafx.scene.shape.ObservableFaceArray
-intf javafx.collections.ObservableIntegerArray
 
 CLSS public javafx.scene.shape.Path
  anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
@@ -15429,29 +13251,6 @@ supr javafx.scene.Node
 hfds DEFAULT_PG_STROKE_DASH_ARRAY,DEFAULT_STROKE_DASH_OFFSET,DEFAULT_STROKE_LINE_CAP,DEFAULT_STROKE_LINE_JOIN,DEFAULT_STROKE_MITER_LIMIT,DEFAULT_STROKE_TYPE,DEFAULT_STROKE_WIDTH,MIN_STROKE_MITER_LIMIT,MIN_STROKE_WIDTH,fill,shapeChangeListener,smooth,stroke,strokeAttributes,strokeAttributesDirty
 hcls StrokeAttributes,StyleableProperties
 
-CLSS public abstract javafx.scene.shape.Shape3D
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons protected init()
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.paint.Material> materialProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.shape.CullFace> cullFaceProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.shape.DrawMode> drawModeProperty()
-meth public final javafx.scene.paint.Material getMaterial()
-meth public final javafx.scene.shape.CullFace getCullFace()
-meth public final javafx.scene.shape.DrawMode getDrawMode()
-meth public final void setCullFace(javafx.scene.shape.CullFace)
-meth public final void setDrawMode(javafx.scene.shape.DrawMode)
-meth public final void setMaterial(javafx.scene.paint.Material)
-meth public java.lang.Object impl_processMXNode(com.sun.javafx.jmx.MXNodeAlgorithm,com.sun.javafx.jmx.MXNodeAlgorithmContext)
- anno 0 java.lang.Deprecated()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.Node
-hfds DEFAULT_MATERIAL,cullFace,drawMode,key,manager,material
-
 CLSS public abstract javafx.scene.shape.ShapeBuilder<%0 extends javafx.scene.shape.ShapeBuilder<{javafx.scene.shape.ShapeBuilder%0}>>
 cons protected init()
 meth public !varargs {javafx.scene.shape.ShapeBuilder%0} strokeDashArray(java.lang.Double[])
@@ -15468,28 +13267,6 @@ meth public {javafx.scene.shape.ShapeBuilder%0} strokeType(javafx.scene.shape.St
 meth public {javafx.scene.shape.ShapeBuilder%0} strokeWidth(double)
 supr javafx.scene.NodeBuilder<{javafx.scene.shape.ShapeBuilder%0}>
 hfds __set,fill,smooth,stroke,strokeDashArray,strokeDashOffset,strokeLineCap,strokeLineJoin,strokeMiterLimit,strokeType,strokeWidth
-
-CLSS public javafx.scene.shape.Sphere
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
-cons public init()
-cons public init(double)
-cons public init(double,int)
-meth protected boolean impl_computeContains(double,double)
- anno 0 java.lang.Deprecated()
-meth protected boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser)
- anno 0 java.lang.Deprecated()
-meth protected com.sun.javafx.sg.prism.NGNode impl_createPeer()
- anno 0 java.lang.Deprecated()
-meth public com.sun.javafx.geom.BaseBounds impl_computeGeomBounds(com.sun.javafx.geom.BaseBounds,com.sun.javafx.geom.transform.BaseTransform)
- anno 0 java.lang.Deprecated()
-meth public final double getRadius()
-meth public final javafx.beans.property.DoubleProperty radiusProperty()
-meth public final void setRadius(double)
-meth public int getDivisions()
-meth public void impl_updatePeer()
- anno 0 java.lang.Deprecated()
-supr javafx.scene.shape.Shape3D
-hfds DEFAULT_DIVISIONS,DEFAULT_RADIUS,divisions,mesh,radius
 
 CLSS public final !enum javafx.scene.shape.StrokeLineCap
 fld public final static javafx.scene.shape.StrokeLineCap BUTT
@@ -15515,27 +13292,6 @@ meth public static javafx.scene.shape.StrokeType valueOf(java.lang.String)
 meth public static javafx.scene.shape.StrokeType[] values()
 supr java.lang.Enum<javafx.scene.shape.StrokeType>
 
-CLSS public javafx.scene.shape.TriangleMesh
-cons public init()
-cons public init(javafx.scene.shape.VertexFormat)
-meth protected boolean impl_computeIntersects(com.sun.javafx.geom.PickRay,com.sun.javafx.scene.input.PickResultChooser,javafx.scene.Node,javafx.scene.shape.CullFace,boolean)
- anno 0 java.lang.Deprecated()
-meth public final int getFaceElementSize()
-meth public final int getNormalElementSize()
-meth public final int getPointElementSize()
-meth public final int getTexCoordElementSize()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.shape.VertexFormat> vertexFormatProperty()
-meth public final javafx.collections.ObservableFloatArray getNormals()
-meth public final javafx.collections.ObservableFloatArray getPoints()
-meth public final javafx.collections.ObservableFloatArray getTexCoords()
-meth public final javafx.collections.ObservableIntegerArray getFaceSmoothingGroups()
-meth public final javafx.scene.shape.ObservableFaceArray getFaces()
-meth public final javafx.scene.shape.VertexFormat getVertexFormat()
-meth public final void setVertexFormat(javafx.scene.shape.VertexFormat)
-supr javafx.scene.shape.Mesh
-hfds cachedBounds,faceSmoothingGroups,faceSmoothingGroupsSyncer,faces,facesSyncer,isFaceSmoothingGroupValid,isFacesValid,isNormalsValid,isPointsValid,isPredefinedShape,isTexCoordsValid,isValidDirty,normals,normalsSyncer,peer,points,pointsSyncer,refCount,texCoords,texCoordsSyncer,vertexFormat
-hcls Listener
-
 CLSS public javafx.scene.shape.VLineTo
 cons public init()
 cons public init(double)
@@ -15556,17 +13312,6 @@ meth public void applyTo(javafx.scene.shape.VLineTo)
 meth public {javafx.scene.shape.VLineToBuilder%0} y(double)
 supr javafx.scene.shape.PathElementBuilder<{javafx.scene.shape.VLineToBuilder%0}>
 hfds __set,y
-
-CLSS public final javafx.scene.shape.VertexFormat
-fld public final static javafx.scene.shape.VertexFormat POINT_NORMAL_TEXCOORD
-fld public final static javafx.scene.shape.VertexFormat POINT_TEXCOORD
-meth public int getNormalIndexOffset()
-meth public int getPointIndexOffset()
-meth public int getTexCoordIndexOffset()
-meth public int getVertexIndexSize()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds NORMAL_ELEMENT_SIZE,POINT_ELEMENT_SIZE,TEXCOORD_ELEMENT_SIZE,name,normalIndexOffset,pointIndexOffset,texCoordIndexOffset,vertexIndexSize
 
 CLSS public final javafx.scene.text.Font
 cons public init(double)
@@ -15804,33 +13549,6 @@ meth public {javafx.scene.text.TextBuilder%0} y(double)
 supr javafx.scene.shape.ShapeBuilder<{javafx.scene.text.TextBuilder%0}>
 hfds __set,boundsType,font,fontSmoothingType,impl_caretBias,impl_caretPosition,impl_caretShape,impl_selectionEnd,impl_selectionShape,impl_selectionStart,strikethrough,text,textAlignment,textOrigin,underline,wrappingWidth,x,y
 
-CLSS public javafx.scene.text.TextFlow
- anno 0 com.sun.javafx.beans.IDProperty(java.lang.String value="id")
- anno 0 javafx.beans.DefaultProperty(java.lang.String value="children")
-cons public !varargs init(javafx.scene.Node[])
-cons public init()
-meth protected double computeMinHeight(double)
-meth protected double computePrefHeight(double)
-meth protected double computePrefWidth(double)
-meth protected void layoutChildren()
-meth protected void setWidth(double)
-meth public !varargs java.lang.Object queryAccessibleAttribute(javafx.scene.AccessibleAttribute,java.lang.Object[])
-meth public boolean usesMirroring()
-meth public final double getBaselineOffset()
-meth public final double getLineSpacing()
-meth public final javafx.beans.property.DoubleProperty lineSpacingProperty()
-meth public final javafx.beans.property.ObjectProperty<javafx.scene.text.TextAlignment> textAlignmentProperty()
-meth public final javafx.scene.text.TextAlignment getTextAlignment()
-meth public final void setLineSpacing(double)
-meth public final void setTextAlignment(javafx.scene.text.TextAlignment)
-meth public java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getCssMetaData()
-meth public javafx.geometry.Orientation getContentBias()
-meth public static java.util.List<javafx.css.CssMetaData<? extends javafx.css.Styleable,?>> getClassCssMetaData()
-meth public void requestLayout()
-supr javafx.scene.layout.Pane
-hfds inLayout,layout,lineSpacing,needsContent,textAlignment
-hcls EmbeddedSpan,StyleableProperties
-
 CLSS public javafx.scene.transform.Affine
 cons public init()
 meth public final double getMxx()
@@ -15897,24 +13615,6 @@ meth public {javafx.scene.transform.AffineBuilder%0} ty(double)
 meth public {javafx.scene.transform.AffineBuilder%0} tz(double)
 supr java.lang.Object
 hfds __set,mxx,mxy,mxz,myx,myy,myz,mzx,mzy,mzz,tx,ty,tz
-
-CLSS public final !enum javafx.scene.transform.MatrixType
-fld public final static javafx.scene.transform.MatrixType MT_2D_2x3
-fld public final static javafx.scene.transform.MatrixType MT_2D_3x3
-fld public final static javafx.scene.transform.MatrixType MT_3D_3x4
-fld public final static javafx.scene.transform.MatrixType MT_3D_4x4
-meth public boolean is2D()
-meth public int columns()
-meth public int elements()
-meth public int rows()
-meth public static javafx.scene.transform.MatrixType valueOf(java.lang.String)
-meth public static javafx.scene.transform.MatrixType[] values()
-supr java.lang.Enum<javafx.scene.transform.MatrixType>
-hfds cols,rows
-
-CLSS public javafx.scene.transform.NonInvertibleTransformException
-cons public init(java.lang.String)
-supr java.lang.Exception
 
 CLSS public javafx.scene.transform.Rotate
 cons public init()
@@ -16104,14 +13804,6 @@ meth public void impl_remove(javafx.scene.Node)
 supr java.lang.Object
 hfds impl_nodes
 
-CLSS public final javafx.scene.transform.TransformChangedEvent
-cons public init()
-cons public init(java.lang.Object,javafx.event.EventTarget)
-fld public final static javafx.event.EventType<javafx.scene.transform.TransformChangedEvent> ANY
-fld public final static javafx.event.EventType<javafx.scene.transform.TransformChangedEvent> TRANSFORM_CHANGED
-supr javafx.event.Event
-hfds serialVersionUID
-
 CLSS public javafx.scene.transform.Translate
 cons public init()
 cons public init(double,double)
@@ -16257,18 +13949,6 @@ meth public static javafx.scene.web.WebEngineBuilder create()
 meth public void applyTo(javafx.scene.web.WebEngine)
 supr java.lang.Object
 hfds confirmHandler,confirmHandlerSet,createPopupHandler,createPopupHandlerSet,location,locationSet,onAlert,onAlertSet,onResized,onResizedSet,onStatusChanged,onStatusChangedSet,onVisibilityChanged,onVisibilityChangedSet,promptHandler,promptHandlerSet
-
-CLSS public final javafx.scene.web.WebErrorEvent
-cons public init(java.lang.Object,javafx.event.EventType<javafx.scene.web.WebErrorEvent>,java.lang.String,java.lang.Throwable)
-fld public final static javafx.event.EventType<javafx.scene.web.WebErrorEvent> ANY
-fld public final static javafx.event.EventType<javafx.scene.web.WebErrorEvent> USER_DATA_DIRECTORY_ALREADY_IN_USE
-fld public final static javafx.event.EventType<javafx.scene.web.WebErrorEvent> USER_DATA_DIRECTORY_IO_ERROR
-fld public final static javafx.event.EventType<javafx.scene.web.WebErrorEvent> USER_DATA_DIRECTORY_SECURITY_ERROR
-meth public java.lang.String getMessage()
-meth public java.lang.String toString()
-meth public java.lang.Throwable getException()
-supr javafx.event.Event
-hfds exception,message
 
 CLSS public final javafx.scene.web.WebEvent<%0 extends java.lang.Object>
 cons public init(java.lang.Object,javafx.event.EventType<javafx.scene.web.WebEvent>,{javafx.scene.web.WebEvent%0})
@@ -16520,21 +14200,6 @@ meth public void show(javafx.stage.Window,double,double)
 supr javafx.stage.Window
 hfds autoFix,autoHide,autofixActive,autofixHandler,children,consumeAutoHidingEvents,hideOnEscape,onAutoHide,ownerFocusedListener,ownerNode,ownerWindow,rootBoundsListener,rootWindow
 hcls AutofixHandler,PopupEventRedirector
-
-CLSS public final static !enum javafx.stage.PopupWindow$AnchorLocation
- outer javafx.stage.PopupWindow
-fld public final static javafx.stage.PopupWindow$AnchorLocation CONTENT_BOTTOM_LEFT
-fld public final static javafx.stage.PopupWindow$AnchorLocation CONTENT_BOTTOM_RIGHT
-fld public final static javafx.stage.PopupWindow$AnchorLocation CONTENT_TOP_LEFT
-fld public final static javafx.stage.PopupWindow$AnchorLocation CONTENT_TOP_RIGHT
-fld public final static javafx.stage.PopupWindow$AnchorLocation WINDOW_BOTTOM_LEFT
-fld public final static javafx.stage.PopupWindow$AnchorLocation WINDOW_BOTTOM_RIGHT
-fld public final static javafx.stage.PopupWindow$AnchorLocation WINDOW_TOP_LEFT
-fld public final static javafx.stage.PopupWindow$AnchorLocation WINDOW_TOP_RIGHT
-meth public static javafx.stage.PopupWindow$AnchorLocation valueOf(java.lang.String)
-meth public static javafx.stage.PopupWindow$AnchorLocation[] values()
-supr java.lang.Enum<javafx.stage.PopupWindow$AnchorLocation>
-hfds contentLocation,xCoef,yCoef
 
 CLSS public abstract javafx.stage.PopupWindowBuilder<%0 extends javafx.stage.PopupWindowBuilder<{javafx.stage.PopupWindowBuilder%0}>>
 cons protected init()
@@ -16905,37 +14570,6 @@ cons public init()
 meth public java.lang.Integer fromString(java.lang.String)
 meth public java.lang.String toString(java.lang.Integer)
 supr javafx.util.StringConverter<java.lang.Integer>
-
-CLSS public javafx.util.converter.LocalDateStringConverter
-cons public init()
-cons public init(java.time.format.DateTimeFormatter,java.time.format.DateTimeFormatter)
-cons public init(java.time.format.FormatStyle)
-cons public init(java.time.format.FormatStyle,java.util.Locale,java.time.chrono.Chronology)
-meth public java.lang.String toString(java.time.LocalDate)
-meth public java.time.LocalDate fromString(java.lang.String)
-supr javafx.util.StringConverter<java.time.LocalDate>
-hfds ldtConverter
-
-CLSS public javafx.util.converter.LocalDateTimeStringConverter
-cons public init()
-cons public init(java.time.format.DateTimeFormatter,java.time.format.DateTimeFormatter)
-cons public init(java.time.format.FormatStyle,java.time.format.FormatStyle)
-cons public init(java.time.format.FormatStyle,java.time.format.FormatStyle,java.util.Locale,java.time.chrono.Chronology)
-meth public java.lang.String toString(java.time.LocalDateTime)
-meth public java.time.LocalDateTime fromString(java.lang.String)
-supr javafx.util.StringConverter<java.time.LocalDateTime>
-hfds ldtConverter
-hcls LdtConverter
-
-CLSS public javafx.util.converter.LocalTimeStringConverter
-cons public init()
-cons public init(java.time.format.DateTimeFormatter,java.time.format.DateTimeFormatter)
-cons public init(java.time.format.FormatStyle)
-cons public init(java.time.format.FormatStyle,java.util.Locale)
-meth public java.lang.String toString(java.time.LocalTime)
-meth public java.time.LocalTime fromString(java.lang.String)
-supr javafx.util.StringConverter<java.time.LocalTime>
-hfds ldtConverter
 
 CLSS public javafx.util.converter.LongStringConverter
 cons public init()

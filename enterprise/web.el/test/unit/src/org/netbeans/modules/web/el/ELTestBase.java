@@ -610,7 +610,7 @@ public class ELTestBase extends CslTestBase {
         }
 
         public Profile getJ2eeProfile() {
-            return Profile.JAVA_EE_6_FULL;
+            return Profile.JAVA_EE_8_FULL;
         }
 
         public FileObject getWebInf() {

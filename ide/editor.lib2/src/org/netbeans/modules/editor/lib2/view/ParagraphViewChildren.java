@@ -168,8 +168,8 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
                 view.setRawEndOffset(relEndOffset); // Below offset-gap
                 view.setParent(pView);
                 // Possibly assign text layout
-                if (view instanceof HighlightsView) {
-                    HighlightsView hView = (HighlightsView) view;
+                if (view instanceof HighlightsView || (view instanceof PrependedTextView && ((PrependedTextView) view).getDelegate() instanceof HighlightsView)) {
+                    HighlightsView hView = (HighlightsView) (view instanceof HighlightsView ? view : ((PrependedTextView) view).getDelegate());
                     // Fill in text layout if necessary
                     if (hView.getTextLayout() == null) { // Fill in text layout
                         if (docText == null) {

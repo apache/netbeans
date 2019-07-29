@@ -1076,7 +1076,7 @@ final class JavaActions implements ActionProvider {
      * @return the line number (0-based), or -1 if not found
      */
     static final int findLine(FileObject file, final String match, final String elementLocalName, final String elementAttributeName) throws IOException, SAXException, ParserConfigurationException {
-        InputSource in = new InputSource(file.getURL().toString());
+        InputSource in = new InputSource(file.toURL().toString());
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(true);
         SAXParser parser = factory.newSAXParser();
@@ -1172,7 +1172,7 @@ final class JavaActions implements ActionProvider {
                     FileObject nbjdkFO = helper.getProjectDirectory().getFileObject(JdkConfiguration.NBJDK_XML);
                     if (nbjdkFO != null) {
                         try {
-                            Document nbjdk = XMLUtil.parse(new InputSource(nbjdkFO.getURL().toString()), false, false, null, null);
+                            Document nbjdk = XMLUtil.parse(new InputSource(nbjdkFO.toURL().toString()), false, false, null, null);
                             NodeList nl = nbjdk.getElementsByTagName("target"); // NOI18N
                             for (int i = 0; i < nl.getLength(); i++) {
                                 if (((Element) nl.item(i)).getAttribute("name").equals(scriptPlusTargetNames.get(1))) { // NOI18N

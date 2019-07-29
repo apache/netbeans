@@ -20,6 +20,7 @@
 package org.netbeans.modules.editor.lib2.highlighting;
 
 import java.awt.Font;
+import java.util.Objects;
 import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import org.netbeans.lib.editor.util.ArrayUtilities;
@@ -117,9 +118,10 @@ public final class HighlightsList {
      * @param wsEndOffset whitespace end offset must be lower than or equal to maxEndOffset
      *  and when exceeded a first whitespace char in docText means that the cutting will end there.
      * @param docText document text in order properly handle wsEndOffset parameter.
+     * @param usePrependText reflect the prepended text setting.
      * @return either simple or compound attribute set.
      */
-    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText) {
+    public AttributeSet cutSameFont(Font defaultFont, int maxEndOffset, int wsEndOffset, CharSequence docText, boolean usePrependText) {
         assert (maxEndOffset <= endOffset()) :
                 "maxEndOffset=" + maxEndOffset + " > endOffset()=" + endOffset() + ", " + this; // NOI18N
         HighlightItem item = get(0);
@@ -157,12 +159,14 @@ public final class HighlightsList {
 
         // Extends beyond first highlight
         Font firstFont = ViewUtils.getFont(firstAttrs, defaultFont);
+        Object firstPrependText = usePrependText && firstAttrs != null ? firstAttrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
         int index = 1;
         while (true) {
             item = get(index);
             AttributeSet attrs = item.getAttributes();
             Font font = ViewUtils.getFont(attrs, defaultFont);
-            if (!font.equals(firstFont)) { // Stop at itemEndOffset
+            Object prependText = usePrependText && attrs != null ? attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) : null;
+            if (!font.equals(firstFont) || !Objects.equals(firstPrependText, prependText)) { // Stop at itemEndOffset
                 if (index == 1) { // Just single attribute set
                     cutStartItems(1);
                     startOffset = itemEndOffset; // end offset of first item

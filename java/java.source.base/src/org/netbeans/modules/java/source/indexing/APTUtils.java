@@ -105,6 +105,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     private static final boolean DISABLE_CLASSLOADER_CACHE = Boolean.getBoolean("java.source.aptutils.disable.classloader.cache");
     private static final int SLIDING_WINDOW = 1000; //1s
     private static final RequestProcessor RP = new RequestProcessor(APTUtils.class);
+    private static final RequestProcessor ROOT_CHANGE_RP = new RequestProcessor(APTUtils.class);
     private final FileObject root;
     private volatile ClassPath bootPath;
     private volatile ClassPath compilePath;
@@ -298,9 +299,11 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (ClassPath.PROP_ROOTS.equals(evt.getPropertyName())) {
             classLoaderCache = null;
-            if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
-                slidingRefresh.schedule(SLIDING_WINDOW);
-            }
+            ROOT_CHANGE_RP.execute(()-> {
+                if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
+                    slidingRefresh.schedule(SLIDING_WINDOW);
+                }
+            });
         }
     }
 

@@ -538,7 +538,11 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.modules.payara.micro</friend>
+                <package>org.netbeans.modules.maven.j2ee.utils</package>
+                <package>org.netbeans.modules.maven.j2ee.ui</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

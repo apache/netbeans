@@ -1,0 +1,10 @@
+Code completion result for source line:
+$array4 = array(...$array|1, ...$array2, 111);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   array $array0                   [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array1                   [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array2                   [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array2_a                 [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array3                   [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array3_a                 [PUBLIC]   spreadOperatorInArrayExpression.php
+VARIABLE   array $array4                   [PUBLIC]   spreadOperatorInArrayExpression.php

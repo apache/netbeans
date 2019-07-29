@@ -67,6 +67,7 @@
                 <friend>org.netbeans.modules.maven.apisupport</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>
                 <friend>org.netbeans.modules.nodejs</friend>
+                <friend>org.netbeans.modules.payara.micro</friend>
                 <package>org.netbeans.api.validation.adapters</package>
                 <package>org.netbeans.validation.api</package>
                 <package>org.netbeans.validation.api.builtin.indexvalidation</package>

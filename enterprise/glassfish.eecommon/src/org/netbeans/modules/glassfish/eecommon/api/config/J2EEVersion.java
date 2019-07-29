@@ -56,6 +56,18 @@ public final class J2EEVersion extends J2EEBaseVersion {
             "6.0", 6000,    // NOI18N
             "6.0", 6000);   // NOI18N
 
+    /** Represents JavaEE version 7.0
+     */
+    public static final J2EEVersion JAVAEE_7_0 = new J2EEVersion(
+            "7.0", 7000,    // NOI18N
+            "7.0", 7000);   // NOI18N
+    
+    /** Represents JavaEE version 8.0
+     */
+    public static final J2EEVersion JAVAEE_8_0 = new J2EEVersion(
+            "8.0", 8000,    // NOI18N
+            "8.0", 8000);   // NOI18N
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */
@@ -89,6 +101,10 @@ public final class J2EEVersion extends J2EEBaseVersion {
             result = JAVAEE_5_0;
         } else if(JAVAEE_6_0.toString().equals(version)) {
             result = JAVAEE_6_0;
+        } else if(JAVAEE_7_0.toString().equals(version)) {
+            result = JAVAEE_7_0;
+        } else if(JAVAEE_8_0.toString().equals(version)) {
+            result = JAVAEE_8_0;
         }
 
         return result;

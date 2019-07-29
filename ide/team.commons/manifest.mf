@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.team.commons
 OpenIDE-Module-Layer: org/netbeans/modules/team/commons/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/team/commons/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.55
+OpenIDE-Module-Specification-Version: 1.56

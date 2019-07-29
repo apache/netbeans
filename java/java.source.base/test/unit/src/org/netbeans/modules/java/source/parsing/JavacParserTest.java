@@ -28,7 +28,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,9 +45,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject.Kind;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -92,6 +97,7 @@ public class JavacParserTest extends NbTestCase {
     }
 
     private FileObject sourceRoot;
+    private FileObject cp;
 
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {settings});
@@ -517,6 +523,42 @@ public class JavacParserTest extends NbTestCase {
         assertEquals(input, JavacParser.validateCompilerOptions(input, com.sun.tools.javac.code.Source.lookup("10")));
     }
 
+    public void testMissingSupertype() throws Exception {
+        FileObject file = createFile("test/Test.java", "package test; class Test extends Super {}");
+
+        createFile("test/Super.java", "package test; class Super extends Missing {}");
+
+        List<String> missingCompileOptions = Arrays.asList("-source", "8", "-d", FileUtil.toFile(cp).getAbsolutePath());
+        SimpleJavaFileObject missingFO = new SimpleJavaFileObject(URI.create("mem://Missing.java"), Kind.SOURCE) {
+            @Override
+            public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+                return "package test; public class Missing {}";
+            }
+            @Override
+            public boolean isNameCompatible(String simpleName, Kind kind) {
+                return "Missing".equals(simpleName);
+            }
+        };
+
+        assertTrue(ToolProvider.getSystemJavaCompiler().getTask(null, null, null, missingCompileOptions, null, Arrays.asList(missingFO)).call());
+
+        FileObject testClass = cp.getFileObject("test/Missing.class");
+
+        assertNotNull(testClass);
+
+        JavaSource js = JavaSource.forFileObject(file);
+
+        SourceUtilsTestUtil.compileRecursively(sourceRoot);
+
+        testClass.delete();
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+            }
+        }, true);
+    }
+
     private FileObject createFile(String path, String content) throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, path);
         TestUtilities.copyStringToFile(file, content);
@@ -531,11 +573,12 @@ public class JavacParserTest extends NbTestCase {
         assertNotNull(workFO);
 
         sourceRoot = workFO.createFolder("src");
+        cp = workFO.createFolder("cp");
         
         FileObject buildRoot  = workFO.createFolder("build");
         FileObject cache = workFO.createFolder("cache");
 
-        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
+        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache, new FileObject[] {cp});
     }
     
     private static void copyResource(URL resource, File file) throws IOException {

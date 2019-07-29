@@ -38,7 +38,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.2</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -58,6 +58,12 @@
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.graalsdk</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages>
@@ -65,12 +71,16 @@
                 <package>com.oracle.js.parser.ir</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/js-1.0.0-rc12.jar</runtime-relative-path>
-                <binary-origin>external/js-1.0.0-rc12.jar</binary-origin>
+                <runtime-relative-path>ext/js-19.0.0.jar</runtime-relative-path>
+                <binary-origin>external/js-19.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/regex-1.0.0-rc12.jar</runtime-relative-path>
-                <binary-origin>external/regex-1.0.0-rc12.jar</binary-origin>
+                <runtime-relative-path>ext/regex-19.0.0.jar</runtime-relative-path>
+                <binary-origin>external/regex-19.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/icu4j-62.1.jar</runtime-relative-path>
+                <binary-origin>external/icu4j-62.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

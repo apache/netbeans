@@ -60,6 +60,7 @@ public class Logger {
      * @return GlassFish IDE SDK Logger
      * @deprecated  Instantiate Logger class!
      */
+    @Deprecated
     public static java.util.logging.Logger getLogger() {
         return java.util.logging.Logger.getLogger(LOGGER_NAME);
     }
@@ -74,6 +75,7 @@ public class Logger {
      *         logged or <code>false</code> otherwise.
      * @deprecated  Instantiate Logger class!
      */
+    @Deprecated
     public static boolean loggable(Level level) {
         return getLogger().isLoggable(level);
     }
@@ -95,6 +97,7 @@ public class Logger {
      * @param thrown <code>Throwable</code> associated with log message.
      * @deprecated  Instantiate Logger class!
      */
+    @Deprecated
     public static void log(Level level, String msg, Throwable thrown) {
         getLogger().log(level, msg, thrown);
     }
@@ -111,6 +114,7 @@ public class Logger {
      * @param   param	Parameter to the message.
      * @deprecated  Instantiate Logger class!
      */
+    @Deprecated
     public static void log(Level level, String msg, Object param) {
         getLogger().log(level, msg, param);
     }
@@ -127,6 +131,7 @@ public class Logger {
      * @param   params	Array of parameters to the message.
      * @deprecated  Instantiate Logger class!
      */
+    @Deprecated
     public static void log(Level level, String msg, Object params[]) {
         getLogger().log(level, msg, params);
     }

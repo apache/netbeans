@@ -27,9 +27,9 @@
     <property name="install.dir" value="/Applications/NetBeans"/>
     
     <!-- Base IDE properties   -->       
-    <property name="nbide.version" value="11.0"/>
+    <property name="nbide.version" value="${versionnumber}"/>
     <property name="nbide.id" value="${nbide.version}"/>
-    <property name="appname" value="Apache NetBeans 11.0"/> 
+    <property name="appname" value="Apache NetBeans ${nbide.version}"/> 
     <property name="mpkg.name_nb" value="${appname}"/> 
     <property name="app.name" value="${install.dir}/${appname}.app"/>
     <property name="nbClusterDir" value="nb"/>      

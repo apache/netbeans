@@ -156,6 +156,8 @@
                 <package>org.netbeans.api.server</package>
                 <package>org.netbeans.api.server.properties</package>
                 <package>org.netbeans.spi.server</package>
+                <package>org.netbeans.modules.server</package>
+                <package>org.netbeans.modules.server.ui.wizard</package>
             </public-packages>
         </data>
     </configuration>

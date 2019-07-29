@@ -67,7 +67,7 @@ public final class ProfilerStorageProviderImpl extends ProfilerStorageProvider.A
             // Maven projects, autoprojects, etc.
             d = ProjectUtils.getCacheDirectory(p, IDEUtils.class);
         }
-        if (d != null) d.setAttribute(SETTINGS_FOR_ATTR, p.getProjectDirectory().getURL());
+        if (d != null) d.setAttribute(SETTINGS_FOR_ATTR, p.getProjectDirectory().toURL());
         return d;
     }
 

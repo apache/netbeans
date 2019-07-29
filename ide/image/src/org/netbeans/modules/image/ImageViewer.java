@@ -95,8 +95,7 @@ public class ImageViewer extends CloneableTopComponent {
     private PropertyChangeListener nameChangeL;
     
     /** collection of all buttons in the toolbar */
-    private final Collection/*<JButton>*/ toolbarButtons
-                                          = new ArrayList/*<JButton>*/(11);
+    private final Collection<JButton> toolbarButtons = new ArrayList<JButton>(11);
     
     private Component view;
     

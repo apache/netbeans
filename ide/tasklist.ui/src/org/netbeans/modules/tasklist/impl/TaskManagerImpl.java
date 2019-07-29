@@ -278,10 +278,10 @@ public class TaskManagerImpl extends TaskManager {
             ArrayList<URL> toRefresh = new ArrayList<URL>(1);
             for( FileObject fo : resources ) {
                 toRefresh.clear();
-                toRefresh.add(fo.getURL());
+                toRefresh.add(fo.toURL());
                 Collection<FileObject> roots = QuerySupport.findRoots(fo, null, null, null);
                 for( FileObject root : roots ) {
-                    IndexingManager.getDefault().refreshIndex(root.getURL(), toRefresh);
+                    IndexingManager.getDefault().refreshIndex(root.toURL(), toRefresh);
                 }
             }
         } catch( IOException ioE ) {
@@ -447,22 +447,21 @@ public class TaskManagerImpl extends TaskManager {
     }
 
     private void cacheCurrentEditorFile() {
-        try {
-            Iterator<FileObject> it = scope.iterator();
-            FileObject fo;
-            if (it.hasNext()) {
-                fo = it.next();
-            } else {
-                return;
-            }
-            ArrayList<URL> toRefresh = new ArrayList<URL>(1);
-            toRefresh.add(fo.getURL());
-            Collection<FileObject> roots = QuerySupport.findRoots(fo, null, null, null);
-            for (FileObject root : roots) {
-                IndexingManager.getDefault().refreshIndex(root.getURL(), toRefresh);
-            }
-        } catch (FileStateInvalidException ex) {
-            getLogger().log(Level.INFO, "Error while refreshing files.", ex);
+        Iterator<FileObject> it = scope.iterator();
+        FileObject fo;
+
+        if (it.hasNext()) {
+            fo = it.next();
+        } else {
+            return;
+        }
+
+        ArrayList<URL> toRefresh = new ArrayList<URL>(1);
+        toRefresh.add(fo.toURL());
+
+        Collection<FileObject> roots = QuerySupport.findRoots(fo, null, null, null);
+        for (FileObject root : roots) {
+            IndexingManager.getDefault().refreshIndex(root.toURL(), toRefresh);
         }
     }
 }

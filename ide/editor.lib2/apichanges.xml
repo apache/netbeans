@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="PrependedTextOpt">
+            <summary>Prepended text for highlights</summary>
+            <version major="2" minor="24"/>
+            <date day="14" month="5" year="2019"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>If AttributeSet returned from HighlightsSequence contains key "virtual-text-prepend"
+                   with a value of type String, the UI may optionally render the value as a
+                   virtual text before the text of the highlight. It is recommended to make the
+                   span of length 1, to avoid problems when the AttributeSet with "virtual-text-prepend"
+                   is merged with other AttributeSets, which could lead to duplication.</p>
+            </description>
+            <class name="HighlightsSequence" package="org.netbeans.spi.editor.highlighting"/>
+        </change>
         <change id="EditorActionRegistration.category">
             <summary>Added category to EditorActionRegistration</summary>
             <version major="2" minor="15"/>

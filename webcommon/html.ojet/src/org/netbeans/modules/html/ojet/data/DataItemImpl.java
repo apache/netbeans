@@ -90,7 +90,7 @@ public class DataItemImpl implements DataItem {
     
         public Collection<DataItem> getProperies() {
             if (properties == null) {
-                properties = new ArrayList();
+                properties = new ArrayList<DataItem>();
                 InputStream in = null;
                 try {
                     in = getInputStream(new URL(getDocUrl()));
@@ -201,7 +201,7 @@ public class DataItemImpl implements DataItem {
 
         public Collection<DataItem> getOptions() {
             if (options == null) {
-                options = new ArrayList();
+                options = new ArrayList<DataItem>();
                 InputStream in = null;
                 try {
                     in = getInputStream(new URL(getDocUrl()));
@@ -254,7 +254,7 @@ public class DataItemImpl implements DataItem {
         
         public Collection<DataItem> getEvents() {
             if (events == null) {
-                events = new ArrayList();
+                events = new ArrayList<DataItem>();
                 InputStream in = null;
                 try {
                     in = getInputStream(new URL(getDocUrl()));

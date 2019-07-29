@@ -203,14 +203,10 @@ public class AntProjectSupport implements AntProjectCookie.ParseStatus, Document
             DataObject d = DataObject.find(fo);
             if (!d.isModified()) {
                 // #58194: no need to parse the live document.
-                try {
-                    InputSource s = new InputSource();
-                    s.setSystemId(fo.getURL().toExternalForm());
-                    s.setByteStream(fo.getInputStream());
-                    return s;
-                } catch (FileStateInvalidException e) {
-                    assert false : e;
-                }
+                InputSource s = new InputSource();
+                s.setSystemId(fo.toURL().toExternalForm());
+                s.setByteStream(fo.getInputStream());
+                return s;
             }
         }
         final String[] contents = new String[1];
@@ -225,11 +221,8 @@ public class AntProjectSupport implements AntProjectCookie.ParseStatus, Document
         });
         InputSource in = new InputSource(new StringReader(contents[0]));
         if (fo != null) { // #10348
-            try {
-                in.setSystemId(fo.getURL().toExternalForm());
-            } catch (FileStateInvalidException e) {
-                assert false : e;
-            }
+            in.setSystemId(fo.toURL().toExternalForm());
+
             // [PENDING] Ant's ProjectHelper has an elaborate set of work-
             // arounds for inconsistent parser behavior, e.g. file:foo.xml
             // works in Ant but not with Xerces parser. You must use just foo.xml

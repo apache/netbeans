@@ -3,4 +3,4 @@ OpenIDE-Module: org.netbeans.modules.j2ee.eclipselink/1
 OpenIDE-Module-Layer: org/netbeans/modules/j2ee/eclipselink/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/eclipselink/Bundle.properties
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38

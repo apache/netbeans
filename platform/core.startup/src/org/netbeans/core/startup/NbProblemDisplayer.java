@@ -31,10 +31,10 @@ import org.netbeans.InvalidException;
 import org.netbeans.Module;
 import org.openide.modules.Dependency;
 import org.openide.modules.SpecificationVersion;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.TopologicalSortException;
-import org.openide.util.Utilities;
 
 // XXX public for reflection from contrib/modulemanager; should be changed to friend dep!
 
@@ -218,7 +218,7 @@ public final class NbProblemDisplayer {
                 edges.put(m, m.getManager().getModuleInterdependencies(m, true, false, false));
             }
             try {
-                for (Module m : Utilities.topologicalSort(edges.keySet(), edges)) {
+                for (Module m : BaseUtilities.topologicalSort(edges.keySet(), edges)) {
                     reports.get(m).write();
                 }
             } catch (TopologicalSortException x) {

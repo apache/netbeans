@@ -40,6 +40,8 @@ webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/
 # javax.annotation-api is used by multiple modules.
 enterprise/websvc.restlib/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/external/javax.annotation-api-1.2.jar
+enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
+enterprise/javaee8.api/external/javax.annotation-api-1.2.jar enterprise/websvc.restlib/external/javax.annotation-api-1.2.jar
 
 #Struts taglib is used by both web.core.syntax and web.struts
 enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.struts/external/struts-taglib-1.3.10.jar

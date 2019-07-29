@@ -28,6 +28,9 @@ import java.util.regex.Pattern;
 import org.netbeans.junit.NbTestCase;
 
 public class ProxyAutoConfigDirectTest extends NbTestCase {
+    static {
+        System.setProperty("netbeans.security.nocheck", "true");
+    }
     public ProxyAutoConfigDirectTest(String name) {
         super(name);
     }

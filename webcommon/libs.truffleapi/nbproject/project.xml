@@ -41,6 +41,7 @@
                 <package>com.oracle.truffle.api.frame</package>
                 <package>com.oracle.truffle.api.instrumentation</package>
                 <package>com.oracle.truffle.api.interop</package>
+                <package>com.oracle.truffle.api.library</package>
                 <package>com.oracle.truffle.api.nodes</package>
                 <package>com.oracle.truffle.api.object</package>
                 <package>com.oracle.truffle.api.object.dsl</package>
@@ -49,8 +50,8 @@
                 <package>com.oracle.truffle.api.utilities</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/truffle-api-1.0.0-rc12.jar</runtime-relative-path>
-                <binary-origin>external/truffle-api-1.0.0-rc12.jar</binary-origin>
+                <runtime-relative-path>ext/truffle-api-19.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-api-19.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

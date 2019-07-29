@@ -430,12 +430,12 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
                     continue;
                 }
                 if (j2eeModuleType ==J2eeModule.Type.WAR) {
-                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile)) {
+                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile)) {
                         // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
                         continue;
                     }
                 } else {
-                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)) {
+                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)) {
                         // for EE apps always skip web profile
                         continue;
                     }
@@ -722,6 +722,8 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
         boolean sjasFound = false;
         boolean gfv3Found = false;
         boolean gfv3ee6Found = false;
+        boolean gfv5Found = false;
+        boolean gfv5ee8Found = false;
         for (String serverInstanceID : Deployment.getDefault().getServerInstanceIDs()) {
             try {
                 ServerInstance si = Deployment.getDefault().getServerInstance(serverInstanceID);
@@ -739,9 +741,15 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                             // preselect the best server ;)
                             // FIXME replace with PriorityQueue mechanism
                             String shortName = si.getServerID();
-                            if ("gfv3ee6".equals(shortName)) { // NOI18N
+                            if ("gfv5ee8".equals(shortName)) { // NOI18N
+                                selectedItem = serverWrapper;
+                                gfv5ee8Found = true;
+                            } else if ("gfv3ee6".equals(shortName)) { // NOI18N
                                 selectedItem = serverWrapper;
                                 gfv3ee6Found = true;
+                            } else if ("gfv5".equals(shortName) && !gfv5ee8Found) { // NOI18N
+                                selectedItem = serverWrapper;
+                                gfv5Found = true;
                             } else if ("gfv3".equals(shortName) && !gfv3ee6Found) { // NOI18N
                                 selectedItem = serverWrapper;
                                 gfv3Found = true;

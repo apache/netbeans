@@ -27,6 +27,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.netbeans.junit.MockServices;
 import org.netbeans.spi.scripting.EngineProvider;
@@ -52,6 +53,15 @@ public class ScriptingTest {
         assertNotNull(man.getEngineByExtension("ng"), "Ng engine found by ext");
         assertNotNull(man.getEngineByExtension("junit"), "JUnit engine found by ext");
 
+    }
+
+    @Test
+    public void testBuilderAllowAccess() {
+        // BEGIN: org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess
+        ScriptEngineManager manager = Scripting.newBuilder().
+            allowAllAccess(true).build();
+        assertEquals(Boolean.TRUE, manager.getBindings().get("allowAllAccess"));
+        // END: org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess
     }
 
     private static void assertMyFactory(List<ScriptEngineFactory> factories) {

@@ -1017,6 +1017,86 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/nullCoalescingAssignmentOperator_01");
     }
 
+    public void testTypedProperties20Class() throws Exception {
+        performTest("parser/php74/typedPropertiesClass");
+    }
+
+    public void testTypedProperties20Trait() throws Exception {
+        performTest("parser/php74/typedPropertiesTrait");
+    }
+
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_01");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_02");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_03");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_04");
+    }
+
+    public void testNumericLiteralSeparator_01() throws Exception {
+        performTest("parser/php74/numericLiteralSeparator_01");
+    }
+
+    public void testNumericLiteralSeparatorParseError_01() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_01");
+    }
+
+    public void testNumericLiteralSeparatorParseError_02() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_02");
+    }
+
+    public void testNumericLiteralSeparatorParseError_03() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_03");
+    }
+
+    public void testNumericLiteralSeparatorParseError_04() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_04");
+    }
+
+    public void testNumericLiteralSeparatorParseError_05() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_05");
+    }
+
+    public void testNumericLiteralSeparatorParseError_06() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_06");
+    }
+
+    public void testNumericLiteralSeparatorParseError_07() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_07");
+    }
+
+    public void testNumericLiteralSeparatorParseError_08() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_08");
+    }
+
+    public void testArrowFunctions_01() throws Exception {
+        performTest("parser/php74/arrowFunctions_01");
+    }
+
+    public void testArrowFunctionsParseError_01() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_01");
+    }
+
+    public void testArrowFunctionsParseError_02() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_02");
+    }
+
+    public void testArrowFunctionsParseError_03() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_03");
+    }
+
+    public void testArrowFunctionsParseError_04() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_04");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

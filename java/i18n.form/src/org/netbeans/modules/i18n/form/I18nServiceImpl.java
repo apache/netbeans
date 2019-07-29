@@ -545,9 +545,9 @@ public class I18nServiceImpl implements I18nService {
             dobj = getPropertiesDataObject(srcFile, bundleName);
             if (dobj != null) {
                 List<URL> list = new ArrayList<URL>();
-                list.add(dobj.getPrimaryEntry().getFile().getURL());
+                list.add(dobj.getPrimaryEntry().getFile().toURL());
                 for (MultiDataObject.Entry e : dobj.secondaryEntries()) {
-                    list.add(e.getFile().getURL());
+                    list.add(e.getFile().toURL());
                 }
                 return list;
             } else {

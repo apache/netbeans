@@ -24,22 +24,31 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.modules.java.api.common.classpath.ClassPathSupportFactory;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
 
+import static org.netbeans.api.java.classpath.ClassPath.*;
+import static org.netbeans.api.java.classpath.JavaClassPathConstants.*;
 /**
  *
  * @author Laszlo Kishalmi
@@ -48,16 +57,21 @@ import org.openide.filesystems.FileUtil;
         projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class ClassPathProviderImpl extends ProjectOpenedHook implements ClassPathProvider {
 
-    private static final Set<String> SUPPORTED_PATHS = new HashSet<>();
+    public static final String MODULE_INFO_JAVA = "module-info.java"; // NOI18N
+    private static final Set<String> SUPPORTED_PATHS = new HashSet<>(Arrays.asList(
+            SOURCE,
+            BOOT,
+            COMPILE,
+            EXECUTE,
+            PROCESSOR_PATH,
 
+            MODULE_BOOT_PATH,
+            MODULE_COMPILE_PATH,
+            MODULE_CLASS_PATH,
+            MODULE_EXECUTE_PATH,
+            MODULE_EXECUTE_CLASS_PATH
+    ));
 
-    static {
-        SUPPORTED_PATHS.add(ClassPath.SOURCE);
-        SUPPORTED_PATHS.add(ClassPath.BOOT);
-        SUPPORTED_PATHS.add(ClassPath.COMPILE);
-        SUPPORTED_PATHS.add(ClassPath.EXECUTE);
-        SUPPORTED_PATHS.add(JavaClassPathConstants.PROCESSOR_PATH);
-    }
 
     private final Map<String, SourceSetCP> groups = new HashMap<>();
     private final Project project;
@@ -77,6 +91,18 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                         //We are no longer a Java Project
                         updateGroups(Collections.<String>emptySet());
 
+                    }
+                }
+                if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
+                    URI uri = (URI) evt.getNewValue();
+                    if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(MODULE_INFO_JAVA)) {
+                        GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
+                        if (gjp != null) {
+                            GradleJavaSourceSet ss = gjp.containingSourceSet(Utilities.toFile(uri));
+                            if ((ss != null) && (groups.get(ss.getName()) != null)) {
+                                groups.get(ss.getName()).reset();
+                            }
+                        }
                     }
                 }
             }
@@ -133,29 +159,210 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
     }
 
     private class SourceSetCP {
-        final ClassPath boot;
-        final ClassPath source;
-        final ClassPath compile;
-        final ClassPath runtime;
+        ClassPath boot;
+        ClassPath source;
+        ClassPath compile;
+        ClassPath runtime;
+
+        ClassPath platformModules;
+
+        ClassPath compileTime;
+        ClassPath runTime;
+
+        ClassPath moduleBoot;
+        ClassPath moduleCompile;
+        ClassPath moduleLegacy;
+        ClassPath moduleExecute;
+        ClassPath moduleLegacyRuntime;
+
+        final String group;
+        List<SourceSetAwareSelector> selectors = new ArrayList<>();
 
         SourceSetCP(String group) {
-            boot = ClassPathFactory.createClassPath(new BootClassPathImpl(project));
-            source = ClassPathFactory.createClassPath(new SourceClassPathImpl(project, group));
-            compile = ClassPathFactory.createClassPath(new CompileClassPathImpl(project, group));
-            runtime = ClassPathFactory.createClassPath(new RuntimeClassPathImpl(project, group));
+            this.group = group;
         }
 
         public ClassPath getClassPath(String type) {
             switch (type) {
-                case ClassPath.BOOT: return boot;
-                case ClassPath.SOURCE: return source;
-                case ClassPath.COMPILE: return compile;
-                case ClassPath.EXECUTE: return runtime;
-                case JavaClassPathConstants.PROCESSOR_PATH: return compile;
+                case BOOT: return getBootClassPath();
+                case SOURCE: return getSourcepath();
+                case COMPILE: return getCompileTimeClasspath();
+                case EXECUTE: return getRuntimeClassPath();
+
+                case MODULE_BOOT_PATH: return getModuleBoothPath();
+                case MODULE_COMPILE_PATH: return getModuleCompilePath();
+                case MODULE_CLASS_PATH: return getModuleLegacyClassPath();
+                case MODULE_EXECUTE_PATH: return getModuleExecutePath();
+                case MODULE_EXECUTE_CLASS_PATH: return getModuleLegacyRuntimeClassPath();
+
+                case PROCESSOR_PATH: return getCompileTimeClasspath();
+
                 default: return null;
             }
         }
 
-    }
+        private synchronized ClassPath getCompileTimeClasspath() {
+            if (compileTime == null) {
+                compileTime = createMultiplexClassPath(
+                        ClassPathFactory.createClassPath(
+                            ClassPathSupportFactory.createModuleInfoBasedPath(
+                                    getModuleCompilePath(),
+                                    getSourcepath(),
+                                    getModuleBoothPath(),
+                                    getModuleCompilePath(),
+                                    getJava8CompileClassPath(),
+                                    null)
+                        ),
+                        getJava8CompileClassPath()
+                );
+            }
+            return compileTime;
+        }
 
+        private synchronized ClassPath getRuntimeClassPath() {
+            if (runTime == null) {
+                runTime = createMultiplexClassPath(
+                        ClassPathFactory.createClassPath(
+                            ClassPathSupportFactory.createModuleInfoBasedPath(
+                                    getJava8RuntimeClassPath(),
+                                    getSourcepath(),
+                                    getModuleBoothPath(),
+                                    getJava8RuntimeClassPath(),
+                                    getJava8RuntimeClassPath(),
+                                    null)
+                        ),
+                        getJava8CompileClassPath()
+                );
+            }
+            return runTime;
+        }
+
+        private synchronized ClassPath getModuleLegacyClassPath() {
+            if (moduleLegacy == null) {
+                moduleLegacy = createMultiplexClassPath(EMPTY, getJava8CompileClassPath());
+            }
+            return moduleLegacy;
+        }
+        private synchronized ClassPath getModuleExecutePath() {
+            if (moduleExecute == null) {
+                moduleExecute = createMultiplexClassPath(getJava8RuntimeClassPath(), EMPTY);
+            }
+            return moduleExecute;
+        }
+
+        private synchronized ClassPath getModuleLegacyRuntimeClassPath() {
+            if (moduleLegacyRuntime == null) {
+                moduleLegacyRuntime = createMultiplexClassPath(EMPTY, getJava8RuntimeClassPath());
+            }
+            return  moduleLegacyRuntime;
+        }
+
+        private synchronized ClassPath getBootClassPath() {
+            if (boot == null) {
+                boot = ClassPathFactory.createClassPath(new BootClassPathImpl(project, false));
+            }
+            return boot;
+        }
+
+        private synchronized ClassPath getSourcepath() {
+            if (source == null) {
+                source = ClassPathFactory.createClassPath(new SourceClassPathImpl(project, group));
+            }
+            return source;
+        }
+
+        private synchronized ClassPath getJava8CompileClassPath() {
+            if (compile == null) {
+                compile = ClassPathFactory.createClassPath(new CompileClassPathImpl(project, group));
+            }
+            return compile;
+        }
+
+        private synchronized ClassPath getPlatformModulesPath() {
+            if (platformModules == null) {
+                platformModules = ClassPathFactory.createClassPath(new BootClassPathImpl(project, true));
+            }
+            return platformModules;
+        }
+
+        private synchronized ClassPath getJava8RuntimeClassPath() {
+            if (runtime == null) {
+                runtime = ClassPathFactory.createClassPath(new RuntimeClassPathImpl(project, group));
+            }
+            return runtime;
+        }
+
+        private synchronized ClassPath getModuleBoothPath() {
+            if (moduleBoot == null) {
+                //TODO: Is this Ok? Made after the Maven's ClassPathProviderImpl.getModuleBootPath
+                moduleBoot = createMultiplexClassPath(getPlatformModulesPath(), getPlatformModulesPath());
+            }
+            return moduleBoot;
+        }
+
+        private synchronized ClassPath getModuleCompilePath() {
+            if (moduleCompile == null) {
+                moduleCompile = createMultiplexClassPath(getJava8CompileClassPath(), ClassPath.EMPTY);
+            }
+            return moduleCompile;
+        }
+
+        private ClassPath createMultiplexClassPath(ClassPath modulePath, ClassPath classPath) {
+            SourceSetAwareSelector selector = new SourceSetAwareSelector(modulePath, classPath);
+            selectors.add(selector);
+            return org.netbeans.spi.java.classpath.support.ClassPathSupport.createMultiplexClassPath(selector);
+        }
+
+        public boolean  hasModuleInfo() {
+            GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
+            GradleJavaSourceSet ss = gjp.getSourceSets().get(group);
+            return ss != null && ss.findResource(MODULE_INFO_JAVA, false, GradleJavaSourceSet.SourceType.JAVA) != null;
+        }
+
+        public void reset() {
+            for (SourceSetAwareSelector selector : selectors) {
+                selector.reset();
+            }
+        }
+
+        private class SourceSetAwareSelector implements ClassPathSupport.Selector {
+            PropertyChangeSupport support = new PropertyChangeSupport(this);
+
+            final ClassPath modulePath;
+            final ClassPath classPath;
+
+            ClassPath active;
+
+            public SourceSetAwareSelector(ClassPath modulePath, ClassPath classPath) {
+                this.modulePath = modulePath;
+                this.classPath = classPath;
+            }
+
+            @Override
+            public ClassPath getActiveClassPath() {
+                if (active == null) {
+                    active = hasModuleInfo() ? modulePath : classPath;
+                }
+                return active;
+            }
+
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
+                support.addPropertyChangeListener(listener);
+            }
+
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {
+                support.removePropertyChangeListener(listener);
+            }
+
+            private void reset() {
+                ClassPath oldActive = active;
+                active = hasModuleInfo() ? modulePath : classPath;
+                if (oldActive != active) {
+                    support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);
+                }
+            }
+        }
+    }
 }

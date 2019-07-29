@@ -231,8 +231,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     }
     
     private void addListenersToStatusProviders() {
-        for (Iterator p = statusProviders.iterator(); p.hasNext(); ) {
-            UpToDateStatusProvider provider = (UpToDateStatusProvider) p.next();
+        for (UpToDateStatusProvider provider : statusProviders) {
             
             // removePropertyChangeListener() is non-public but present in UpToDateStatusProvider - will the weak listener removal work??
             PropertyChangeListener weakL = WeakListeners.propertyChange(this, provider);
@@ -242,9 +241,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     }
         
     private void addListenersToMarkProviders() {
-        for (Iterator p = markProviders.iterator(); p.hasNext(); ) {
-            MarkProvider provider = (MarkProvider) p.next();
-            
+        for (MarkProvider provider : markProviders) {
             PropertyChangeListener weakL = WeakListeners.propertyChange(this, provider);
             provider.addPropertyChangeListener(weakL);
             statusProvidersWeakLs.add(weakL);
@@ -474,8 +471,7 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
         
         UpToDateStatus statusType = UpToDateStatus.UP_TO_DATE_OK;
         
-        for (Iterator p = statusProviders.iterator(); p.hasNext(); ) {
-            UpToDateStatusProvider provider = (UpToDateStatusProvider) p.next();
+        for ( UpToDateStatusProvider provider : statusProviders) {
             UpToDateStatus newType = provider.getUpToDate();
             
             if (newType.compareTo(statusType) > 0) {

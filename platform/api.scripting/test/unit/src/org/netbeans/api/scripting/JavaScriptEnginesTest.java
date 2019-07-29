@@ -27,10 +27,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ import org.junit.runners.Parameterized;
 
 @RunWith(Parameterized.class)
 public class JavaScriptEnginesTest {
-    @Parameterized.Parameters(name = "{0}")
+    @Parameterized.Parameters(name = "{0}@{1}")
     public static Object[][] engines() {
         List<Object[]> arr = new ArrayList<>();
         for (ScriptEngineFactory f : Scripting.createManager().getEngineFactories()) {
@@ -47,7 +47,16 @@ public class JavaScriptEnginesTest {
                 f.getMimeTypes().contains("text/javascript") ||
                 name.contains("Nashorn")
             ) {
-                arr.add(new Object[] { name, f.getScriptEngine() });
+                arr.add(new Object[] { name, false, f.getScriptEngine() });
+            }
+        }
+        for (ScriptEngineFactory f : Scripting.newBuilder().allowAllAccess(true).build().getEngineFactories()) {
+            final String name = f.getEngineName();
+            if (
+                f.getMimeTypes().contains("text/javascript") ||
+                name.contains("Nashorn")
+            ) {
+                arr.add(new Object[] { name, true, f.getScriptEngine() });
             }
         }
         return arr.toArray(new Object[0][]);
@@ -55,9 +64,11 @@ public class JavaScriptEnginesTest {
 
     private final String engineName;
     private final ScriptEngine engine;
+    private final boolean allowAllAccess;
 
-    public JavaScriptEnginesTest(String engineName, ScriptEngine engine) {
+    public JavaScriptEnginesTest(String engineName, boolean allowAllAccess, ScriptEngine engine) {
         this.engineName = engineName;
+        this.allowAllAccess = allowAllAccess;
         this.engine = engine;
     }
 
@@ -227,6 +238,40 @@ public class JavaScriptEnginesTest {
         assertEquals("a", list.get("2"));
         assertEquals(Math.PI, list.get("3"));
         assertEquals(sum, list.get("4"));
+    }
+
+    @Test
+    public void allowLoadAClassInJS() throws Exception {
+        Assume.assumeTrue("All access has to be allowed", allowAllAccess);
+        // BEGIN: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
+        Object fn = engine.eval("(function(obj) {\n"
+                + "  var Long = Java.type('java.lang.Long');\n"
+                + "  return new Long(33);\n"
+                + "})\n");
+        // END: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
+        assertNotNull(fn);
+
+        Object value = ((Invocable) engine).invokeMethod(fn, "call", null, null);
+        assertTrue("Is number: " + value, value instanceof Number);
+        assertEquals(33, ((Number) value).intValue());
+    }
+
+    @Test
+    public void preventLoadAClassInJS() throws Exception {
+        Assume.assumeFalse("All access has to be disabled", allowAllAccess);
+        Object fn = engine.eval("(function(obj) {\n"
+                + "  var Long = Java.type('java.lang.Long');\n"
+                + "  return new Long(33);\n"
+                + "})\n");
+        assertNotNull(fn);
+
+        Object value;
+        try {
+            value = ((Invocable) engine).invokeMethod(fn, "call", null, null);
+        } catch (ScriptException | RuntimeException ex) {
+            return;
+        }
+        fail("Access to Java.type classes shall be prevented: " + value);
     }
 
     public static interface ArrayLike {

@@ -22,6 +22,7 @@ package org.netbeans.core.windows.persistence;
 
 
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.Collection;
 import org.netbeans.core.windows.SplitConstraint;
 
@@ -211,6 +212,11 @@ public class ModeConfig {
         }
         hash = 37 * hash + previousSelectedTopComponentID.hashCode();
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "ModeConfig{" + "name=" + name + ", otherNames=" + otherNames + ", state=" + state + ", kind=" + kind + ", side=" + side + ", constraints=" + Arrays.asList(constraints).toString() + ", bounds=" + bounds + ", relativeBounds=" + relativeBounds + ", frameState=" + frameState + ", selectedTopComponentID=" + selectedTopComponentID + ", permanent=" + permanent + ", minimized=" + minimized + ", tcRefConfigs=" + Arrays.asList(tcRefConfigs).toString() + ", slideInSizes=" + slideInSizes + ", previousSelectedTopComponentID=" + previousSelectedTopComponentID + '}';
     }
     
 }

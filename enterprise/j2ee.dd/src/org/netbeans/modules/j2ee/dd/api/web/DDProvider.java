@@ -107,12 +107,12 @@ public final class DDProvider {
                         // preparsing
                         error = parse(fo);
                         original = DDUtils.createWebApp(fo, version);
-                        baseBeanMap.put(fo.getURL(), new WeakReference(original));
-                        errorMap.put(fo.getURL(), error);
+                        baseBeanMap.put(fo.toURL(), new WeakReference(original));
+                        errorMap.put(fo.toURL(), error);
                     }
                 } else {
                     version = original.getVersion();
-                    error = (SAXParseException) errorMap.get(fo.getURL());
+                    error = (SAXParseException) errorMap.get(fo.toURL());
                 }
             }
             if (version != null) {
@@ -155,7 +155,7 @@ public final class DDProvider {
             if (cached != null) {
                 return cached;
             }
-            ddMap.put(fo.getURL(), new WeakReference(webApp));
+            ddMap.put(fo.toURL(), new WeakReference(webApp));
         }
         return webApp;
     }
@@ -189,26 +189,26 @@ public final class DDProvider {
     }
     
     private WebAppProxy getFromCache(FileObject fo) throws IOException {
-        WeakReference wr = (WeakReference) ddMap.get(fo.getURL());
+        WeakReference wr = (WeakReference) ddMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }
         WebAppProxy webApp = (WebAppProxy) wr.get();
         if (webApp == null) {
-            ddMap.remove(fo.getURL());
+            ddMap.remove(fo.toURL());
         }
         return webApp;
     }
     
     private WebApp getOriginalFromCache(FileObject fo) throws IOException {
-        WeakReference wr = (WeakReference) baseBeanMap.get(fo.getURL());
+        WeakReference wr = (WeakReference) baseBeanMap.get(fo.toURL());
         if (wr == null) {
             return null;
         }        
         WebApp webApp = (WebApp) wr.get();
         if (webApp == null) {
-            baseBeanMap.remove(fo.getURL());
-            errorMap.remove(fo.getURL());
+            baseBeanMap.remove(fo.toURL());
+            errorMap.remove(fo.toURL());
         }
         return webApp;
     }
@@ -254,16 +254,12 @@ public final class DDProvider {
      * @param fo
      */
     private void removeFromCache(FileObject fo){
-        try{
-            URL foUrl = fo.getURL();
-            synchronized (ddMap){
-                ddMap.remove(foUrl);
-            }
-            baseBeanMap.remove(foUrl);
-            errorMap.remove(foUrl);
-        } catch (FileStateInvalidException ex) {
-            Exceptions.printStackTrace(ex);
+        URL foUrl = fo.toURL();
+        synchronized (ddMap){
+            ddMap.remove(foUrl);
         }
+        baseBeanMap.remove(foUrl);
+        errorMap.remove(foUrl);
     }
     
     private class FCA extends FileChangeAdapter {
@@ -293,8 +289,8 @@ public final class DDProvider {
                                     webApp.setStatus(WebApp.STATE_INVALID_OLD_VERSION);
                                     webApp.setError(null);
                                 }
-                                baseBeanMap.put(fo.getURL(), new WeakReference(original));
-                                errorMap.put(fo.getURL(), webApp.getError());
+                                baseBeanMap.put(fo.toURL(), new WeakReference(original));
+                                errorMap.put(fo.toURL(), webApp.getError());
                                 webApp.merge(original, WebApp.MERGE_UPDATE);
                             } catch (SAXException ex) {
                                 if (ex instanceof SAXParseException) {
@@ -312,16 +308,16 @@ public final class DDProvider {
                                 version = WebParseUtils.getVersion(fo);
                                 WebApp original = DDUtils.createWebApp(fo, version);
                                 if (original == null) {
-                                    baseBeanMap.remove(fo.getURL());
+                                    baseBeanMap.remove(fo.toURL());
                                 } else {
                                     if (original.getClass().equals(orig.getClass())) {
                                         orig.merge(original,WebApp.MERGE_UPDATE);
                                     } else {
-                                        baseBeanMap.put(fo.getURL(), new WeakReference(original));
+                                        baseBeanMap.put(fo.toURL(), new WeakReference(original));
                                     }
                                 }
                             } catch (SAXException ex) {
-                                baseBeanMap.remove(fo.getURL());
+                                baseBeanMap.remove(fo.toURL());
                             }
                         }
                     }

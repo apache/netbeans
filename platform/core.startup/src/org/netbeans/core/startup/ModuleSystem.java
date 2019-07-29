@@ -50,8 +50,8 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.OnStop;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
-import org.openide.util.Utilities;
 
 /** Controller of the IDE's whole module system.
  * Contains higher-level convenience methods to
@@ -237,7 +237,7 @@ public final class ModuleSystem {
                     /* #121777 */ jarURL.getPath().startsWith("/")) {
                 LOG.log(Level.FINE, "Considering JAR: {0}", jarURL);
                 try {
-                    if (ignoredJars.contains(Utilities.toFile(jarURL.toURI()))) {
+                    if (ignoredJars.contains(BaseUtilities.toFile(jarURL.toURI()))) {
                         LOG.log(Level.FINE, "ignoring JDK/JRE manifest: {0}", manifestUrl);
                         continue;
                     }

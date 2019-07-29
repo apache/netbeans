@@ -62,7 +62,7 @@ public class MavenRefactoringProviderImpl implements NbRefactoringProvider {
         Build build = pomModel.getProject().getBuild();
 
         if (build != null) {
-            Plugin nbmPlugin = build.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+            Plugin nbmPlugin = PluginBackwardPropertyUtils.findPluginFromBuild(build);
             if (nbmPlugin != null) {
                 Configuration config = nbmPlugin.getConfiguration();
                 if (config != null) {
@@ -90,7 +90,7 @@ public class MavenRefactoringProviderImpl implements NbRefactoringProvider {
                                                 Build build = model.getProject().getBuild();
 
                                                 if (build != null) {
-                                                    Plugin nbmPlugin = build.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+                                                    Plugin nbmPlugin = PluginBackwardPropertyUtils.findPluginFromBuild(build);
                                                     if (nbmPlugin != null) {
                                                         Configuration config = nbmPlugin.getConfiguration();
                                                         if (config != null) {

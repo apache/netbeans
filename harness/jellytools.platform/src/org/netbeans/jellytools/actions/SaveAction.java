@@ -55,6 +55,7 @@ public class SaveAction extends Action {
      * @deprecated Save menu item removed from popup on tab. Use TopComponentOperator.save() instead.
      */
     @Override
+    @Deprecated
     public void performPopup(ComponentOperator compOperator) {
         throw new UnsupportedOperationException("Save menu item removed from popup on tab. Use TopComponentOperator.save() instead.");
     }
@@ -65,6 +66,7 @@ public class SaveAction extends Action {
      * @param tco top component operator which should be activated and saved
      * @deprecated Save menu item removed from popup on tab. Use TopComponentOperator.save() instead.
      */
+    @Deprecated
     public void performPopup(TopComponentOperator tco) {
         throw new UnsupportedOperationException("Save menu item removed from popup on tab. Use TopComponentOperator.save() instead.");
     }

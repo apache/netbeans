@@ -470,6 +470,24 @@ Hg ID:    ${hg.id}
     </nbmerge>
   </target>
 
+  <target name="build-basic" description="Build the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="build" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="permit.jdk9.builds" value="true"/>
+      </ant>
+  </target>
+
+  <target name="test-basic" description="Test the NetBeans Basic cluster.">
+      <mkdir dir="${netbeans.dest.dir}"/>
+      <ant dir="." target="test" inheritAll="false">
+          <property name="cluster.config" value="basic"/>
+          <property name="test.type" value="test-unit"/>
+          <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+          <property name="permit.jdk9.builds" value="true"/>
+          <property name="vanilla.javac.exists" value="true"/>
+      </ant>
+  </target>
 
   <target name="-build-platform" depends="init">
       <delete file="${netbeans.dest.dir}/nb.cluster.platform.built"/>

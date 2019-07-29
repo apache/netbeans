@@ -42,6 +42,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
@@ -78,6 +79,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -89,7 +91,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -373,6 +374,13 @@ public class FormatVisitor extends DefaultVisitor {
 
     private static boolean isKeyValueOperator(Token<PHPTokenId> token) {
         return token.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=>", token.text()); // NOI18N
+    }
+
+    @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        scan(node.getFormalParameters());
+        addReturnType(node.getReturnType());
+        scan(node.getExpression());
     }
 
     @Override
@@ -991,7 +999,7 @@ public class FormatVisitor extends DefaultVisitor {
                 includeWSBeforePHPDoc = true;
             }
         }
-        while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_VARIABLE) {
+        while (ts.moveNext() && !isFieldTypeOrVariableToken(ts.token())) {
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
@@ -1156,8 +1164,8 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getLexicalVariables());
         Block body = node.getBody();
         if (body != null) {
-            // in case of (function(){echo "foo";})(), missing an indent
-            boolean addIndent = path.size() > 1 && (path.get(1) instanceof ParenthesisExpression);
+            // in case of (function(){echo "foo";})() and fn() => function() use ($y) {return $y;}, missing an indent
+            boolean addIndent = isParentParenthesisExpr() || isParentArrowFunctionParenthesisExpr();
             if (addIndent) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
             }
@@ -1175,6 +1183,17 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
             }
         }
+    }
+
+    private boolean isParentParenthesisExpr() {
+        return path.size() > 1
+                && (path.get(1) instanceof ParenthesisExpression);
+    }
+
+    private boolean isParentArrowFunctionParenthesisExpr() {
+        return path.size() > 2
+                && (path.get(1) instanceof ArrowFunctionDeclaration)
+                && (path.get(2) instanceof ParenthesisExpression);
     }
 
     private void addReturnType(@NullAllowed Expression returnType) {
@@ -1920,7 +1939,7 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_ANONYMOUS_CLASS_PARENS, ts.offset() + ts.token().length()));
-                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
+                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_METHOD_DEC_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
@@ -1959,7 +1978,7 @@ public class FormatVisitor extends DefaultVisitor {
                     if (isAnonymousClass(parent)) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_ANONYMOUS_CLASS_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
-                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration) {
+                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof FunctionInvocation || parent instanceof MethodInvocation || parent instanceof ClassInstanceCreation) {
@@ -2011,7 +2030,8 @@ public class FormatVisitor extends DefaultVisitor {
                 } else if (TokenUtilities.textEquals(":", txt)) { // NOI18N
                     if (parent instanceof FunctionDeclaration
                             || parent instanceof MethodDeclaration
-                            || parent instanceof LambdaFunctionDeclaration) {
+                            || parent instanceof LambdaFunctionDeclaration
+                            || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_RETURN_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
@@ -2484,6 +2504,24 @@ public class FormatVisitor extends DefaultVisitor {
                     && statements.get(0).equals(node);
         }
         return true;
+    }
+
+    private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
+        return PHPTokenId.PHP_VARIABLE == token.id()
+                || PHPTokenId.PHP_ARRAY == token.id()
+                || PHPTokenId.PHP_ITERABLE == token.id()
+                || PHPTokenId.PHP_PARENT == token.id()
+                || PHPTokenId.PHP_SELF == token.id()
+                || PHPTokenId.PHP_TYPE_BOOL == token.id()
+                || PHPTokenId.PHP_TYPE_INT == token.id()
+                || PHPTokenId.PHP_TYPE_FLOAT == token.id()
+                || PHPTokenId.PHP_TYPE_OBJECT == token.id()
+                || PHPTokenId.PHP_TYPE_STRING == token.id()
+                || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
+                || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
+                || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it
+                || PHPTokenId.PHP_CALLABLE == token.id() // not supported type but just check it
+                ;
     }
 
     private interface GroupAlignmentTokenHolder {

@@ -33,6 +33,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.netbeans.core.network.utils.FakeDns;
+import org.netbeans.core.network.utils.IpAddressUtils;
+import org.netbeans.junit.MockServices;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -63,7 +66,8 @@ public class PacHelperMethodsImplTest {
 
     @Before
     public void setUp() throws UnknownHostException {
-        fakeDns = new FakeDns();
+        MockServices.setServices(FakeDns.class);
+        fakeDns = Lookup.getDefault().lookup(FakeDns.class);
         fakeDns.install(true);
         ipv4Addr = InetAddress.getByName("172.217.17.36");    // just some random address
         ipv6Addr = InetAddress.getByName("2a00:1450:400e:804::2004"); // just some random address

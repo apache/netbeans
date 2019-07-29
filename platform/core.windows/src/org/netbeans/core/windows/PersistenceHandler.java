@@ -630,7 +630,7 @@ final public class PersistenceHandler implements PersistenceObserver {
         return wmc;
     }
 
-    private ModeConfig getConfigFromMode(ModeImpl mode) {
+    public ModeConfig getConfigFromMode(ModeImpl mode) {
         PersistenceManager pm = PersistenceManager.getDefault();
         WindowManagerImpl wm = WindowManagerImpl.getInstance();
         ModeConfig modeCfg = new ModeConfig();

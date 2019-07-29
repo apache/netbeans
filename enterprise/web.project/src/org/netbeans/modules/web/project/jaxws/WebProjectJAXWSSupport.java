@@ -603,6 +603,10 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 return JAVA_EE_VERSION_17;
             } else if (Profile.JAVA_EE_7_FULL.equals(webModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_17;
+            } else if (Profile.JAVA_EE_8_WEB.equals(webModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
+            } else if (Profile.JAVA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
             } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

@@ -1,0 +1,7 @@
+[[826,827]-Syntax error
+ unexpected:	;
+ after:	$
+ expected:	variable, {, $] 826-827:Syntax error
+ unexpected:	;
+ after:	$
+ expected:	variable, {, $

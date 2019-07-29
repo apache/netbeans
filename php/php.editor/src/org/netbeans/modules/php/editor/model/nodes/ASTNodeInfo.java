@@ -20,12 +20,13 @@ package org.netbeans.modules.php.editor.model.nodes;
 
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -42,11 +43,11 @@ import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
 
@@ -399,6 +400,8 @@ public class ASTNodeInfo<T extends ASTNode> {
         } else if (node instanceof ParenthesisExpression) {
             return toOffsetRange(((ParenthesisExpression) node).getExpression());
         } else if (node instanceof LambdaFunctionDeclaration) {
+            return new OffsetRange(node.getStartOffset(), node.getEndOffset());
+        } else if (node instanceof ArrowFunctionDeclaration) {
             return new OffsetRange(node.getStartOffset(), node.getEndOffset());
         } else if (node instanceof ArrayCreation) {
             return new OffsetRange(node.getStartOffset(), node.getEndOffset());

@@ -80,7 +80,9 @@ fi
 if [ -z ${LOCALES} ]; then
     export LOCALES=ja,zh_CN,pt_BR,ru
 fi
-
+if [ -z ${NB_VER_NUMBER} ]; then
+    export NB_VER_NUMBER=11
+fi
 if [ -z ${UPLOAD_ML} ]; then
     export UPLOAD_ML=0
 fi

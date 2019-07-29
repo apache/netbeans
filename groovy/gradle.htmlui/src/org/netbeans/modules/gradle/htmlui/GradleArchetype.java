@@ -21,24 +21,25 @@ package org.netbeans.modules.gradle.htmlui;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.api.templates.FileBuilder.Mode;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.MapFormat;
 
-final class GradleArchetype {
+public final class GradleArchetype {
     private final FileObject templates;
     private final FileObject projectFo;
     private final Map<String, Object> params;
 
-    GradleArchetype(FileObject templates, FileObject projectFo, Map<String, Object> params) {
+    public GradleArchetype(FileObject templates, FileObject projectFo, Map<String, Object> params) {
         this.templates = templates;
         this.projectFo = projectFo;
         this.params = params;
     }
 
-    final void copyTemplates() throws IOException {
+    public final void copyTemplates() throws IOException {
         MapFormat mf = new MapFormat(params);
         mf.setLeftBrace("${"); // NOI18N
         mf.setRightBrace("}"); // NOI18N
@@ -69,5 +70,7 @@ final class GradleArchetype {
 
             assert copied != null && copied.getNameExt().equals(template.getNameExt()) : "Created " + copied;
         }
+        ProjectManager.getDefault().clearNonProjectCache();
+        assert ProjectManager.getDefault().findProject(projectFo) != null : "Project found for " + projectFo;
     }
 }

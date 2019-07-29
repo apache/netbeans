@@ -156,6 +156,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.api.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>1.127</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -296,9 +305,29 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
+            <test-dependencies>
+                <test-type>
+                    <name>unit</name>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                </test-type>
+            </test-dependencies>
             <public-packages>
                 <package>org.netbeans.modules.gradle.java.api</package>
                 <package>org.netbeans.modules.gradle.java.api.output</package>
+                <package>org.netbeans.modules.gradle.java.spi.debug</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>

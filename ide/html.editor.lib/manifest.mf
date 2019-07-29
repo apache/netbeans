@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.html.editor.lib/3
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/html/editor/lib/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.37
+OpenIDE-Module-Specification-Version: 3.38
 AutoUpdate-Show-In-Client: false

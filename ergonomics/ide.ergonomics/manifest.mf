@@ -3,7 +3,7 @@ OpenIDE-Module: org.netbeans.modules.ide.ergonomics
 OpenIDE-Module-Install: org/netbeans/modules/ide/ergonomics/Installer.class
 OpenIDE-Module-Layer: org/netbeans/modules/ide/ergonomics/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ide/ergonomics/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.32
+OpenIDE-Module-Specification-Version: 1.33
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Recommends: org.netbeans.modules.server

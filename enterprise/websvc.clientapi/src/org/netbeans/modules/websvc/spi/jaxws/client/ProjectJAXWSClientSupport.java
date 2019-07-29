@@ -81,6 +81,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected static final String JAVA_EE_VERSION_15="java-ee-version-15"; //NOI18N
     protected static final String JAVA_EE_VERSION_16="java-ee-version-16"; //NOI18N
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
+    protected static final String JAVA_EE_VERSION_18="java-ee-version-18";
     
     Project project;
     private AntProjectHelper helper;
@@ -245,49 +246,44 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
 
                 // generate wsdl model immediately
                 final String clientName2 = finalClientName;
-                try {
-                    final WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(localWsdl.getURL());
-                    if (modeler!=null) {
-                        modeler.setPackageName(packageName);
-                        if (catalog != null) {
-                            modeler.setCatalog(catalog.getURL());
-                        }
-                        modeler.generateWsdlModel(new WsdlModelListener() {
-                            public void modelCreated(WsdlModel model) {
-                                if (model==null) {
-                                    RequestProcessor.getDefault().post(new Runnable() {
-                                       public void run() {
-                                           DialogDisplayer.getDefault().notify(new WsImportFailedMessage(modeler.getCreationException()));
-                                       }
-                                    });
-                                    
-                                } else {
-                                    Client client = jaxWsModel.findClientByName(clientName2);
-                                    String packName = client.getPackageName();                               
-                                    // this shuldn't normally happen
-                                    // this applies only for case when package name cannot be resolved for namespace
-                                    if(packName == null) {
-                                        if (model.getServices().size() > 0) {
-                                            WsdlService service = model.getServices().get(0);
-                                            String javaName = service.getJavaName();
-                                            int index = javaName.lastIndexOf(".");
-                                            if (index != -1){
-                                                packName = javaName.substring(0,index );
-                                            } else {
-                                                packName = javaName;
-                                            }                                 
-                                            client.setPackageName(packName);
-                                            writeJaxWsModel(jaxWsModel);
-                                        }
-                                    }
-                                    
-                                    runWsimport(clientName2);
-                                }
-                            }
-                        });
+                final WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(localWsdl.toURL());
+
+                if (modeler!=null) {
+                    modeler.setPackageName(packageName);
+                    if (catalog != null) {
+                        modeler.setCatalog(catalog.toURL());
                     }
-                } catch (IOException ex) {
-                    ErrorManager.getDefault().log(ex.getLocalizedMessage());
+                    modeler.generateWsdlModel(new WsdlModelListener() {
+                        public void modelCreated(WsdlModel model) {
+                            if (model==null) {
+                                RequestProcessor.getDefault().post(new Runnable() {
+                                    public void run() {
+                                        DialogDisplayer.getDefault().notify(new WsImportFailedMessage(modeler.getCreationException()));
+                                    }
+                                });
+                            } else {
+                                Client client = jaxWsModel.findClientByName(clientName2);
+                                String packName = client.getPackageName();                               
+                                // this shuldn't normally happen
+                                // this applies only for case when package name cannot be resolved for namespace
+                                if (packName == null) {
+                                    if (model.getServices().size() > 0) {
+                                        WsdlService service = model.getServices().get(0);
+                                        String javaName = service.getJavaName();
+                                        int index = javaName.lastIndexOf(".");
+                                        if (index != -1){
+                                            packName = javaName.substring(0,index );
+                                        } else {
+                                            packName = javaName;
+                                        }                                 
+                                        client.setPackageName(packName);
+                                        writeJaxWsModel(jaxWsModel);
+                                    }
+                                }
+                                runWsimport(clientName2);
+                            }
+                        }
+                    });
                 }
             }
             return finalClientName;
@@ -405,13 +401,8 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     }
     
     public URL getCatalog() {
-        try {
-            FileObject catalog = getCatalogFileObject();
-            return catalog==null?null:catalog.getURL();
-        } catch (FileStateInvalidException ex) {
-            return null;
-        }
-        
+        FileObject catalog = getCatalogFileObject();
+        return ((catalog==null) ? null : catalog.toURL());
     }
     
     protected abstract void addJaxWs20Library() throws Exception;

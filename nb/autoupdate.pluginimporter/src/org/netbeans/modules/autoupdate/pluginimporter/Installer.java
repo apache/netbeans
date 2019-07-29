@@ -51,7 +51,7 @@ public class Installer extends ModuleInstall {
     private static final List<String> VERSION_TO_CHECK =
             Arrays.asList (".netbeans/7.1.2", ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9"); //NOI18N
     private static final List<String> NEWER_VERSION_TO_CHECK =
-            Arrays.asList ("10.0", "9.0", "8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
+            Arrays.asList ("11.0", "10.0", "9.0", "8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
     private static final String IMPORTED = "imported"; // NOI18N
 
     @Override

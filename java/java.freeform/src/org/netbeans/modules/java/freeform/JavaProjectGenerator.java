@@ -520,9 +520,7 @@ public class JavaProjectGenerator {
                 }
             }
             if (cu.javadoc != null) {
-                Iterator it3 = cu.javadoc.iterator();
-                while (it3.hasNext()) {
-                    String javadoc = (String) it3.next();
+                for (String javadoc : cu.javadoc) {
                     assert JavaProjectNature.namespaceAtLeast(namespace, JavaProjectNature.NS_JAVA_2);
                     el = doc.createElementNS(data.getNamespaceURI(), "javadoc-built-to"); // NOI18N
                     el.appendChild(doc.createTextNode(javadoc));

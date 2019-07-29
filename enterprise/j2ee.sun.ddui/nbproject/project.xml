@@ -368,6 +368,8 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.glassfish.javaee</friend>
+                <friend>org.netbeans.modules.payara.jakartaee</friend>
+                <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.j2ee.sun.appsrv81</friend>
                 <friend>org.netbeans.modules.j2ee.sun.appsrv90</friend>
                 <friend>org.netbeans.modules.j2ee.sun.avk</friend>
@@ -375,6 +377,15 @@
                 <package>org.netbeans.modules.j2ee.sun.share</package>
                 <package>org.netbeans.modules.j2ee.sun.share.configbean</package>
                 <package>org.netbeans.modules.j2ee.sun.share.plan</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.api</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.appclient</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.common</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.ejb</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.jms</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.web</package>
+                <package>org.netbeans.modules.j2ee.sun.ddloaders.multiview.webservice</package>
             </friend-packages>
         </data>
     </configuration>

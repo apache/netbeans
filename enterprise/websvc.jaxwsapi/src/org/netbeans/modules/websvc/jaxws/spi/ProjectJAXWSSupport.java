@@ -77,6 +77,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     protected static final String JAVA_EE_VERSION_15="java-ee-version-15"; //NOI18N
     protected static final String JAVA_EE_VERSION_16="java-ee-version-16"; //NOI18N
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
+    protected static final String JAVA_EE_VERSION_18="java-ee-version-18"; //NOI18N
     
     private Project project;
     private AntProjectHelper antProjectHelper;
@@ -179,7 +180,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                     
                     WsdlWrapperHandler handler = null;
                     try {
-                        handler = WsdlWrapperGenerator.parse(localWsdl.getURL().toExternalForm());
+                        handler = WsdlWrapperGenerator.parse(localWsdl.toURL().toExternalForm());
                     } catch (ParserConfigurationException ex) {
                         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL,ex);
                     } catch (SAXException ex) {
@@ -188,9 +189,9 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL,ex);
                     }
                     if (!handler.isServiceElement()) {
-                        StreamSource source = new StreamSource(localWsdl.getURL().toExternalForm());
+                        StreamSource source = new StreamSource(localWsdl.toURL().toExternalForm());
                         try {
-                            File wrapperWsdlFile = new File(FileUtil.toFile(localWsdl.getParent()), WsdlWrapperGenerator.getWrapperName(localWsdl.getURL())); //NOI18N
+                            File wrapperWsdlFile = new File(FileUtil.toFile(localWsdl.getParent()), WsdlWrapperGenerator.getWrapperName(localWsdl.toURL())); //NOI18N
 
                             if(!wrapperWsdlFile.exists()) {
                                 try {

@@ -50,18 +50,18 @@ class AddOSGiParamToNbmPluginConfiguration implements ModelOperation<POMModel> {
             bld = model.getFactory().createBuild();
             p.setBuild(bld);
         }
-        Plugin plg = bld.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+        Plugin plg = PluginBackwardPropertyUtils.findPluginFromBuild(bld);
         if (plg == null) {
             //how come the plugin is not there? maybe using on wrong project?
             //check plugin management first.
             PluginManagement pm = bld.getPluginManagement();
             if (pm != null) {
-                plg = pm.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+                plg = PluginBackwardPropertyUtils.findPluginFromPluginManagement(pm);                
             }
             if (plg == null) { // should not happen to begin with
                 plg = model.getFactory().createPlugin();
                 bld.addPlugin(plg);
-                plg.setGroupId(MavenNbModuleImpl.GROUPID_MOJO);
+                plg.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
                 plg.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
                 plg.setVersion(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION);
             }

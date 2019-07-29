@@ -124,4 +124,20 @@ public interface Mode extends Serializable {
     /** Gets selected <code>TopComponent</code> in this mode.
      * @since 4.13 */
     public TopComponent getSelectedTopComponent();
+    
+    /**
+     * Extension to provide exposure of XML configuration.
+     * 
+     * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
+     * @since 6.82
+     */
+    public interface Xml extends Mode {
+        
+        /**
+         * Generates the Mode configuration as XML.
+         * @return an XML representation of the Mode's configuration.
+         * @since 6.82
+         */
+        public String toXml();
+    }
 }

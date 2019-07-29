@@ -1,0 +1,10 @@
+    public const |>MARK_OCCURRENCES:CONSTANT<| = ["1", "2", "3"];
+    public const CONSTANT1 = self::|>MARK_OCCURRENCES:CONSTANT<|;
+    public const CONSTANT2 = [...self::|>MARK_OCCURRENCES:CONSTANT<|];
+    public const CONSTANT3 = [...self::|>MARK_OCCURRENCES:CONSTANT<|, "4"];
+    public const CONSTANT4 = ["0", ...self::|>MARK_OCCURRENCES:CONSTANT<|, "4"];
+    public const CONSTANT5 = ["0", ...self::|>MARK_OCCURRENCES:CONSTANT<|, "4", self::CONSTANT1];
+    public const CHILD_CONSTANT = ["0", ...parent::|>MARK_OCCURRENCES:CONSTANT<|, ];
+    private const CONST1 = [...UnpackClass::|>MARK_OCCURRENCES:CONSTANT<|];
+    private const CONST2 = [1, ...UnpackClass::|>MARK_OCCURRENCES:CONSTANT<|];
+    private const CONST3 = [1, ...\Foo\UnpackClass::|>MARK_OCCURRENCES:C^ONSTANT<|, 4];

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle;
 
 import java.io.File;
@@ -42,7 +41,11 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
 
     @Override
     public ProjectManager.Result isProject2(FileObject dir) {
-        return isProject(dir) ? new ProjectManager.Result(NbGradleProject.getIcon()) : null;
+        return isProject(dir) ? new ProjectManager.Result(
+                dir.getName(),
+                NbGradleProject.GRADLE_PROJECT_TYPE,
+                NbGradleProject.getIcon())
+                : null;
     }
 
     @Override

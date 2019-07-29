@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42.1
+#Version 1.43
 
 CLSS public abstract interface org.netbeans.modules.search.project.spi.CompatibilityUtils
 meth public abstract org.netbeans.api.search.provider.SearchInfo getSearchInfoForLookup(org.openide.util.Lookup)

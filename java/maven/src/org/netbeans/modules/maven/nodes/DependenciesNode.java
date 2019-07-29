@@ -242,6 +242,7 @@ public class DependenciesNode extends AbstractNode {
                         lst.add(new DependencyWrapper(a, longLiving, () -> moduleInfoSupport != null ? moduleInfoSupport.canAddToModuleInfo(name) : false));
                     } else {
                         LOG.log(Level.WARNING, "Could not determine module name for artifact {0}", new Object[]{url}); // NOI18N
+                        lst.add(new DependencyWrapper(a, longLiving, () -> false));
                     }
                 }
             }

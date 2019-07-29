@@ -19,16 +19,13 @@
 package org.netbeans.modules.j2ee.deployment.devmodules.api;
 
 import java.awt.EventQueue;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.server.CommonServerUIs;
 import org.netbeans.api.server.ServerInstance;
-import org.netbeans.modules.j2ee.deployment.impl.ServerRegistry;
-import org.netbeans.modules.j2ee.deployment.impl.bridge.BridgingServerInstanceProvider;
-import org.netbeans.modules.j2ee.deployment.impl.bridge.ServerInstanceProviderLookup;
-import org.netbeans.modules.j2ee.deployment.impl.ui.wizard.AddServerInstanceWizard;
 import org.netbeans.modules.j2ee.deployment.plugins.api.CommonServerBridge;
+import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
+import org.netbeans.modules.server.ui.wizard.AddServerInstanceWizard;
 
 /**
  * ServerManager class provides access to the Server Manager dialog.
@@ -91,7 +88,8 @@ public final class ServerManager {
      */
     public static String showAddServerInstanceWizard(Map<String, String> props) {
         checkDispatchThread();
-        return AddServerInstanceWizard.showAddServerInstanceWizard(props);
+        ServerInstance instance = AddServerInstanceWizard.showAddServerInstanceWizard(props);
+        return instance.getProperty(InstanceProperties.URL_ATTR);
     }
     
     private static void checkDispatchThread() {

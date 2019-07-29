@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.debugger.jpda.js/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/js/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.15
+OpenIDE-Module-Specification-Version: 1.16
 OpenIDE-Module-Requires: org.netbeans.api.debugger.jpda.JPDADebuggerEngineImpl,
   org.netbeans.spi.debugger.ui
 OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]

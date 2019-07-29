@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.testng
 OpenIDE-Module-Layer: org/netbeans/modules/testng/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/testng/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.25
+OpenIDE-Module-Specification-Version: 2.26

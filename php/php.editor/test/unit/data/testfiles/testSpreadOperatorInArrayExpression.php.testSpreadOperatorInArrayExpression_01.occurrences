@@ -1,0 +1,5 @@
+$|>MARK_OCCURRENCES:a^rray1<| = [1, 2, 3];
+$array2 = [...$|>MARK_OCCURRENCES:array1<|];
+$array3 = [0, ...$|>MARK_OCCURRENCES:array1<|];
+$array4 = array(...$|>MARK_OCCURRENCES:array1<|, ...$array2, 111);
+$array5 = [...$|>MARK_OCCURRENCES:array1<|, ...$|>MARK_OCCURRENCES:array1<|];

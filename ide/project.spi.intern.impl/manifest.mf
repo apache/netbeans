@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.project.spi.intern.impl
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/project/spi/intern/impl/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.8
+OpenIDE-Module-Specification-Version: 1.9
 

@@ -243,15 +243,20 @@ public class ActionProviderImpl implements ActionProvider {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
-                OutputWriter out1 = task.getInputOutput().getOut();
-                boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
-                if (needReload && canReload) {
-                    String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                    prj.reloadProject(true, maxQualily, reloadArgs);
-                }
-                project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
-                for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
-                    l.afterAction(action, outerCtx, task.result(), out1);
+                try {
+                    OutputWriter out1 = task.getInputOutput().getOut();
+                    boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
+                    if (needReload && canReload) {
+                        String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                        prj.reloadProject(true, maxQualily, reloadArgs);
+                    }
+                    project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
+                    for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
+                        l.afterAction(action, outerCtx, task.result(), out1);
+                    }
+                } finally {
+                    task.getInputOutput().getOut().close();
+                    task.getInputOutput().getErr().close();
                 }
             });
         }

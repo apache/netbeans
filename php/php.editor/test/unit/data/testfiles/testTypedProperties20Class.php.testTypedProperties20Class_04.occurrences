@@ -1,0 +1,6 @@
+use Bar\|>MARK_OCCURRENCES:MyClass<|;
+    public |>MARK_OCCURRENCES:MyClass<| $myClass;
+    public ?|>MARK_OCCURRENCES:MyClass<| $myClass2;
+    public \Bar\|>MARK_OCCURRENCES:MyCla^ss<| $myClass3;
+    public ?\Bar\|>MARK_OCCURRENCES:MyClass<| $myClass4;
+class |>MARK_OCCURRENCES:MyClass<| {

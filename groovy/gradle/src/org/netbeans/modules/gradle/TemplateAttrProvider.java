@@ -69,14 +69,15 @@ public class TemplateAttrProvider implements  CreateFromTemplateAttributes {
             String license = prj.getLicense();
             String licensePath = findLicensePathInTemplates(license);
 
-            //Test it against local filesystem
-            if (licensePath == null) {
-                File local = new File(prj.getProjectDir(), license);
-                if (!local.isFile()) {
-                    local = new File(license);
-                }
-                if (local.isFile()) {
-                    licensePath = FileUtil.normalizeFile(local).toURI().toString();
+            File[] licenseFiles = new File[] {
+                new File(prj.getProjectDir(), license),
+                new File(prj.getRootDir(), license),
+                new File(license)
+            };
+            for (File licenseFile : licenseFiles) {
+                if (licenseFile.isFile()) {
+                    licensePath = FileUtil.normalizeFile(licenseFile).toURI().toString();
+                    break;
                 }
             }
             //Test it as if that were an URL
@@ -95,8 +96,8 @@ public class TemplateAttrProvider implements  CreateFromTemplateAttributes {
     }
 
     public static String findLicensePathInTemplates(String lic) {
-        FileObject fo = FileUtil.getConfigFile("Templates/Licenses/license-" + lic + ".txt");
-        return fo != null ? DEFAULT_LICENSE_PREFIX + lic + ".txt" : null;
+        FileObject fo = FileUtil.getConfigFile("Templates/Licenses/license-" + lic + ".txt"); //NOI18N
+        return fo != null ? DEFAULT_LICENSE_PREFIX + lic + ".txt" : null; //NOI18N
     }
 
     public static String findLicenseByMavenProjectContent(String url) {

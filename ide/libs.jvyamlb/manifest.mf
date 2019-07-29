@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.jvyamlb/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jvyamlb/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.34
+OpenIDE-Module-Specification-Version: 0.35

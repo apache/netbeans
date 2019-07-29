@@ -33,6 +33,14 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
  */
 public final class ActionMappingPropertyReader {
 
+
+    private static final String PARAM_ARGS        = ".args";        //NOI18N
+    private static final String PARAM_PLUGINS     = ".plugins";     //NOI18N
+    private static final String PARAM_PRIORITY    = ".priority";    //NOI18N
+    private static final String PARAM_RELOAD_ARGS = ".reload.args"; //NOI18N
+    private static final String PARAM_RELOAD_RULE = ".reload.rule"; //NOI18N
+    private static final String PARAM_REPEATABLE  = ".repeatable";  //NOI18N
+
     final Properties props;
     ActionMappingPropertyReader(Properties props) {
         this.props = props;
@@ -55,10 +63,11 @@ public final class ActionMappingPropertyReader {
         Set<String> ret = new HashSet<>();
         for (String key : props.stringPropertyNames()) {
             if (key.startsWith(ACTION_PROP_PREFIX)) {
-                int dot = key.indexOf('.', ACTION_PROP_PREFIX.length() + 1);
-                if (dot > 0) {
-                    String name = key.substring(ACTION_PROP_PREFIX.length(), dot);
-                    ret.add(name);
+                // args and/or reload.args shall be specified for defining an action.
+                if (key.endsWith(PARAM_RELOAD_ARGS)) {
+                    ret.add(key.substring(ACTION_PROP_PREFIX.length(), key.length() - PARAM_RELOAD_ARGS.length()));
+                } else if (key.endsWith(PARAM_ARGS)) {
+                    ret.add(key.substring(ACTION_PROP_PREFIX.length(), key.length() - PARAM_ARGS.length()));
                 }
             }
         }
@@ -67,28 +76,28 @@ public final class ActionMappingPropertyReader {
 
     private ActionMapping createMapping(String name) {
         DefaultActionMapping ret = new DefaultActionMapping(name);
-        String prefix = ACTION_PROP_PREFIX + name + '.';
+        String prefix = ACTION_PROP_PREFIX + name;
         ret.displayName = props.getProperty(ACTION_PROP_PREFIX + name);
-        ret.args = props.getProperty(prefix + "args");
-        ret.reloadArgs = props.getProperty(prefix + "reload.args");
-        String rule = props.getProperty(prefix + "reload.rule", ActionMapping.ReloadRule.DEFAULT.name());
+        ret.args = props.getProperty(prefix + PARAM_ARGS);
+        ret.reloadArgs = props.getProperty(prefix + PARAM_RELOAD_ARGS);
+        String rule = props.getProperty(prefix + PARAM_RELOAD_RULE, ActionMapping.ReloadRule.DEFAULT.name());
         try {
             ret.reloadRule = ActionMapping.ReloadRule.valueOf(rule.trim());
         } catch (IllegalArgumentException ex) {
 
         }
-        String repeatable = props.getProperty(prefix + "repeatable");
+        String repeatable = props.getProperty(prefix + PARAM_REPEATABLE);
         if (repeatable != null) {
             ret.repeatableAction = Boolean.valueOf(repeatable);
         }
-        if (props.containsKey(prefix + "plugins")) {
-            String[] plugins = props.getProperty(prefix + "plugins").split(",\\s");
+        if (props.containsKey(prefix + PARAM_PLUGINS)) {
+            String[] plugins = props.getProperty(prefix + PARAM_PLUGINS).split(",\\s"); //NOI18N
             ret.withPlugins = new LinkedHashSet<>();
             ret.withPlugins.addAll(Arrays.asList(plugins));
         }
-        if (props.containsKey(prefix + "priority")) {
+        if (props.containsKey(prefix + PARAM_PRIORITY)) {
             try {
-                ret.priority = Integer.parseInt(props.getProperty(prefix + "priority"));
+                ret.priority = Integer.parseInt(props.getProperty(prefix + PARAM_PRIORITY));
             } catch(NumberFormatException ex) {
 
             }

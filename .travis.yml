@@ -35,6 +35,7 @@ script:
   - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$EOL" == "xtrue" ]; then ./nbbuild/travis/check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
+  - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
   - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
   - if [ "x$RUN_TESTS_JDK8" == "xtrue" ]; then for MODULE in $TEST_MODULES; do cd $MODULE; ant test; done; fi
@@ -82,7 +83,8 @@ matrix:
             RUN_TESTS_JDK9PLUS=false 
             RUN_TESTS_JDK8=true 
             OPTS="-Dcluster.config=minimal -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-            TEST_MODULES="ide/api.xml.ui
+            TEST_MODULES="ide/api.xml
+             ide/api.xml.ui
              ide/bugtracking
              ide/bugtracking.bridge
              ide/bugtracking.commons

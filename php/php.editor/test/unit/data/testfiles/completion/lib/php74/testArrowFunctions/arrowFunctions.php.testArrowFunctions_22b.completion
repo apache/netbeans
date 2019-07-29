@@ -1,0 +1,4 @@
+Code completion result for source line:
+$af = fn() => self::clas|s;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   class \ArrowFunctions           [PUBLIC]   Magic Constant

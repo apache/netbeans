@@ -43,6 +43,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +62,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -619,7 +624,43 @@ public class JavacParser extends Parser {
                     return Phase.MODIFIED;
                 }
                 long start = System.currentTimeMillis();
-                currentInfo.getJavacTask().enter();
+                Supplier<Object> setJavacHandler = () -> null;
+                Consumer<Object> restoreHandler = h -> {};
+                try {
+                    //the DeferredCompletionFailureHandler should be set to javac mode:
+                    Class<?> dcfhClass = Class.forName("com.sun.tools.javac.code.DeferredCompletionFailureHandler");
+                    Class<?> dcfhHandlerClass = Class.forName("com.sun.tools.javac.code.DeferredCompletionFailureHandler$Handler");
+                    Object dcfh = dcfhClass.getDeclaredMethod("instance", Context.class).invoke(null, currentInfo.getJavacTask().getContext());
+                    Method setHandler = dcfhClass.getDeclaredMethod("setHandler", dcfhHandlerClass);
+                    Object javacCodeHandler = dcfhClass.getDeclaredField("javacCodeHandler").get(dcfh);
+
+                    setJavacHandler = () -> {
+                        try {
+                            return setHandler.invoke(dcfh, javacCodeHandler);
+                        } catch (ReflectiveOperationException ex) {
+                            LOGGER.log(Level.FINE, null, ex);
+                            return null;
+                        }
+                    };
+                    restoreHandler = h -> {
+                        if (h != null) {
+                            try {
+                                setHandler.invoke(dcfh, h);
+                            } catch (ReflectiveOperationException ex) {
+                                LOGGER.log(Level.WARNING, null, ex);
+                            }
+                        }
+                    };
+                } catch (ReflectiveOperationException | SecurityException ex) {
+                    //ignore
+                    LOGGER.log(Level.FINEST, null, ex);
+                }
+                Object oldHandler = setJavacHandler.get();
+                try {
+                    currentInfo.getJavacTask().enter();
+                } finally {
+                    restoreHandler.accept(oldHandler);
+                }
                 currentPhase = Phase.ELEMENTS_RESOLVED;
                 long end = System.currentTimeMillis();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));

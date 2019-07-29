@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.38.1
+#Version 1.39.0
 
 CLSS public com.ibm.icu.impl.Assert
 cons public init()

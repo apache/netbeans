@@ -257,11 +257,11 @@ import org.netbeans.modules.web.common.api.ByteStack;
 
 %}
 
-LNUM=[0-9]+
-DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
+LNUM=[0-9]+(_[0-9]+)*
+DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
-HNUM="0x"[0-9a-fA-F]+
-BNUM="0b"[01]+
+HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
+BNUM="0b"[01]+(_[01]+)*
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 WHITESPACE=[ \n\r\t]+
@@ -367,6 +367,12 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 
 <ST_PHP_IN_SCRIPTING>"die" {
     return PHPTokenId.PHP_DIE;
+}
+
+<ST_PHP_IN_SCRIPTING>"fn" {
+    // PHP 7.4 Arrow Functions 2.0
+    // https://wiki.php.net/rfc/arrow_functions_v2
+    return PHPTokenId.PHP_FN;
 }
 
 <ST_PHP_IN_SCRIPTING>"function" {

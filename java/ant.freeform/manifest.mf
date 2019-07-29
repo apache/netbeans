@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.ant.freeform/1
-OpenIDE-Module-Specification-Version: 1.51
+OpenIDE-Module-Specification-Version: 1.52
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ant/freeform/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/ant/freeform/resources/layer.xml
 AutoUpdate-Show-In-Client: false

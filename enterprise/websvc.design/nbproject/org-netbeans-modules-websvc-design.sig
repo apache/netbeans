@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.29.1
+#Version 1.30
 
 CLSS public java.lang.Object
 cons public init()
@@ -50,11 +50,7 @@ hfds faultType,name,targetNamespace
 
 CLSS public org.netbeans.modules.websvc.design.javamodel.JavadocModel
 meth public boolean isEqualTo(org.netbeans.modules.websvc.design.javamodel.JavadocModel)
-meth public java.lang.String getReturnJavadoc()
 meth public java.lang.String getText()
-meth public java.util.List<java.lang.String> getInlineJavadoc()
-meth public java.util.List<java.lang.String> getParamJavadoc()
-meth public java.util.List<java.lang.String> getThrowsJavadoc()
 supr java.lang.Object
 hfds inlineJavadoc,paramJavadoc,returnJavadoc,text,throwsJavadoc
 

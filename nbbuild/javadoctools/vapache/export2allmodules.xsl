@@ -24,8 +24,15 @@
     <xsl:output method="html"/>
     <xsl:param name="maturity" />
     <xsl:template name="listallmodules" >
-        
-        <TABLE BORDER="0" WIDTH="100%" SUMMARY="">
+        <ul class="moduleslist">
+            <xsl:for-each select="//module[not (@name = '_no module_')]" >
+                <xsl:sort order="ascending" select="@name" />
+                <li class="module">
+                    <xsl:call-template name="modulewithclass" />
+                </li>
+            </xsl:for-each>
+        </ul>
+        <!--<TABLE BORDER="0" WIDTH="100%" SUMMARY="">
             <TR>
                 <TD NOWRAP="">
                     <FONT CLASS="FrameItemFont">
@@ -36,10 +43,50 @@
                     </FONT>
                 </TD>
             </TR>
-        </TABLE>
+        </TABLE>-->
 
     </xsl:template>
-    
+    <xsl:template name="modulewithclass">
+        <xsl:attribute name="style">
+            <xsl:choose>
+                <xsl:when test="descendant::api[@category='stable' and @group='java']">background-color:#ffffff</xsl:when>
+                <xsl:when test="descendant::api[@category='official' and @group='java']">background-color:#ffffff</xsl:when>
+                <xsl:when test="descendant::api[@category='devel' and @group='java']">background-color:#ddcc80</xsl:when>
+                <xsl:when test="descendant::api[@category='deprecated' and @group='java']">text-decoration: line-through</xsl:when>
+                <xsl:otherwise>background-color:#e0c0c0</xsl:otherwise>
+            </xsl:choose>
+        </xsl:attribute>
+        <span class="modules">
+            <!--<xsl:attribute name="href">
+                <xsl:value-of select="substring-before(@target,'/')" />/allclasses-frame.html</xsl:attribute>-->
+            <xsl:value-of select="@name" />
+        </span>
+        (<a>
+            <xsl:attribute name="href">
+                <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
+            javadoc
+        </a>)
+        <ul class="modulesclasslist">
+            <xsl:variable name="modulename" select="substring-before(@target,'/')" />
+            <xsl:for-each select="//class[($modulename = substring-before(@url,'/'))]" >
+                <xsl:sort order="ascending" select="@name" />
+                <xsl:element name="li">
+                    <xsl:attribute name="class">
+                        <xsl:if test="@interface='false'">class</xsl:if>
+                        <xsl:if test="@interface='true'">interface</xsl:if>
+                    </xsl:attribute>                
+                    <xsl:call-template name="class" />
+                    
+                </xsl:element>
+            </xsl:for-each>
+        </ul>
+    </xsl:template>
+    <xsl:template name="class">
+        <a>
+            <xsl:attribute name="href"><xsl:value-of select="@url" /></xsl:attribute>
+            <xsl:value-of select="@name" />
+        </a>
+    </xsl:template>
     <xsl:template name="module">
         <span>
             <xsl:attribute name="style">

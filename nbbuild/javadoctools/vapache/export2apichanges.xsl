@@ -136,12 +136,15 @@
                 
                         </div>
                         <div class="apidocleft">
+                            <div class="apidocleft">
+                                <xsl:call-template name="listallmodules" />
+                            </div>
                             <!--<xsl:call-template name="listallmodules" />-->
                             <!--<xsl:template match="document($allmodule)">-->
                             <!--<xsl:apply-templates select="document($allmodule)" />-->
                             <!--</xsl:template>-->
                         </div>
-        
+                        <xsl:call-template name="htmlfooter" />
                     </body>
                 </html>
             </xsl:when>

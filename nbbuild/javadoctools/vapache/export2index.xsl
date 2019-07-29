@@ -108,7 +108,7 @@
                         <hr/>
                         <xsl:call-template name="list-modules" />
                         <hr/>
-                        <xsl:apply-templates />
+                        <xsl:apply-templates select="/alldata/apis" />
                     
                     </div>
                 
@@ -116,13 +116,16 @@
                 <div class="apidocleft">
                     <xsl:call-template name="listallmodules" />
                 </div>
+                
+                <xsl:call-template name="htmlfooter" />
+                
             </body>
         </html>
     </xsl:template>
     <xsl:template name="list-modules">
         <h2>Content</h2>
         <ul>
-            <xsl:for-each select="/apis/module" >
+            <xsl:for-each select="/alldata/apis/module" >
                 <xsl:sort select="@name" />
                 <xsl:choose>
                     <xsl:when test="api" >
@@ -161,7 +164,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
-            <xsl:for-each select="/apis/module" >
+            <xsl:for-each select="/alldata/apis/module" >
                 <xsl:sort select="api" order="descending" />
                 <xsl:sort select="@name" />
                 <xsl:choose>

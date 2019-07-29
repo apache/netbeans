@@ -128,9 +128,11 @@ committed to the repository for legal reasons. You need to download it:
                         </xsl:otherwise>
                     </xsl:choose>
                 </li>
+                <!--
                 <li> 
                     <a href="allclasses-frame.html">Index of all classes</a>
                 </li>
+                -->
                 <li> 
                     <xsl:choose>    
                         <xsl:when test="$menukey = 'layers'">
@@ -164,6 +166,15 @@ committed to the repository for legal reasons. You need to download it:
             </ul>
         </div>
     </xsl:template>
+    <xsl:template name="htmlfooter">
+        <script>
+            $('.modulesclasslist').hide();
+            
+            $('span.modules').click(function (event) {
+                $(this).next().next().toggle();
+            });
+        </script>
+    </xsl:template>
     <xsl:template name="htmlheader">
         <xsl:param name="title" />
         <xsl:param name="maturity" />
@@ -188,6 +199,7 @@ committed to the repository for legal reasons. You need to download it:
             <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
             <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" />
             <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         </head>
     </xsl:template>
     <xsl:template name="htmlmainmenu">

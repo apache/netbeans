@@ -107,7 +107,7 @@
                 <div class="apidocleft">
                     <xsl:call-template name="listallmodules" />
                 </div>
-                
+                <xsl:call-template name="htmlfooter" />
             </body>
         </html>
     </xsl:template>

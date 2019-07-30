@@ -173,6 +173,41 @@ committed to the repository for legal reasons. You need to download it:
             $('span.modules').click(function (event) {
                 $(this).next().next().toggle();
             });
+            function searchFunction() {
+            var input;
+            var searched;
+            // get information from seerch input
+            input = document.getElementById('searchinput');
+            searched = input.value.toUpperCase();
+            if (searched!="") {
+            // looking for something
+               $( ".modulesclasslist" ).each(function() {
+                    $(this).parent().hide();
+                    var found = false;
+                    $(this).children().each(function () {
+                        $(this).hide();
+                        if ($(this).text().toUpperCase().indexOf(searched)>-1) {
+                            found=true;
+                            $(this).show();
+                        }
+                    });
+                    if (found) {
+                        $(this).show();
+                        $(this).parent().show();
+                    }
+            
+            });
+            
+           
+            }
+            else {
+            // make page show only modules
+            $( ".modulesclasslist" ).children().each(function () {
+            $(this).parent().hide();
+            $(this).parent().parent().show();
+            });
+            }
+            }
         </script>
     </xsl:template>
     <xsl:template name="htmlheader">
@@ -221,7 +256,7 @@ committed to the repository for legal reasons. You need to download it:
                     </xsl:call-template> Documentation | <xsl:value-of select="$title" />
                 </a>
             </div>
-            <div class='top-bar-rigtht scroll'>
+            <div class='top-bar-right scroll'>
                 <xsl:variable name="currentversion" select="document($releaseinfo)/*/@position"/>
                 <xsl:for-each select="document($releaseinfo)//release">
                     <xsl:sort data-type="number" select="@position" order="descending" />

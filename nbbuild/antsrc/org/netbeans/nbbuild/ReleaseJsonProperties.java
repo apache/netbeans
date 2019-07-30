@@ -81,7 +81,7 @@ public class ReleaseJsonProperties extends Task {
         Document doc = XMLUtil.createDocument("releases");
         Element releasesxml = doc.getDocumentElement();
 
-        try (FileReader reader = new FileReader(jsonreleaseinfoFile)) {
+        try ( FileReader reader = new FileReader(jsonreleaseinfoFile)) {
             JSONObject releaseList = (JSONObject) jsonParser.parse(reader);
             log(releaseList.keySet().toString());
             for (Object object : releaseList.keySet()) {
@@ -115,10 +115,11 @@ public class ReleaseJsonProperties extends Task {
         getProject().setProperty("json.version", requiredbranchinfo.version);
         getProject().setProperty("modules-javadoc-date", ReleaseJsonProperties.makeDate(requiredbranchinfo.releaseDate));
         getProject().setProperty("atom-date", ReleaseJsonProperties.makeAtomDate(requiredbranchinfo.releaseDate));
-
+        getProject().setProperty("javaapidocurl", requiredbranchinfo.javaapidocurl);
+        
         log("Writing releasinfo file " + xmlFile);
         xmlFile.getParentFile().mkdirs();
-        try (OutputStream config = new FileOutputStream(xmlFile)) {
+        try ( OutputStream config = new FileOutputStream(xmlFile)) {
             XMLUtil.write(doc, config);
         } catch (IOException ex) {
             throw new BuildException("XML File for release cannot be created");
@@ -147,6 +148,7 @@ public class ReleaseJsonProperties extends Task {
         ri.setMaturity((String) jsonrelease.get("tlp"));
         ri.setVersion((String) jsonrelease.get("versionName"));
         ri.setApidocurl((String) jsonrelease.get("apidocurl"));
+        ri.setJavaApiDocurl((String) jsonrelease.get("jdk_apidoc"));
         return ri;
     }
 
@@ -169,6 +171,7 @@ public class ReleaseJsonProperties extends Task {
         private String maturity;
         private String version;
         private String apidocurl;
+        private String javaapidocurl;
 
         public ReleaseInfo(String key) {
             this.key = key;
@@ -194,7 +197,7 @@ public class ReleaseJsonProperties extends Task {
 
         private void setPreviousRelease(String day, String month, String year) {
             try {
-                
+
                 previousReleaseDate = LocalDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), 12, 0);
             } catch (NumberFormatException e) {
                 // not a date, use now we should be on master
@@ -225,6 +228,10 @@ public class ReleaseJsonProperties extends Task {
 
         private void setApidocurl(String apidocurl) {
             this.apidocurl = apidocurl;
+        }
+
+        private void setJavaApiDocurl(String javaapidocurl) {
+            this.javaapidocurl = javaapidocurl;
         }
 
     }

@@ -50,13 +50,22 @@
                     </xsl:call-template>
                 
                     <div class="innercontent">
-                        <p>
-                            Registration of various objects, files and hints into layer is 
-                            pretty central to the way NetBeans based applications handle 
-                            communication between modules. This page summarizes the list of such
-                            extension points defined by 
-                            <a href="index.html">modules with API</a>. 
-                        </p>
+                        <div class="abstract">
+                            <p>
+                                Registration of various objects, files and hints into layer is 
+                                pretty central to the way NetBeans based applications handle 
+                                communication between modules. This page summarizes the list of such
+                                extension points defined by 
+                                <a href="index.html">modules with API</a>.
+                            </p>
+                            <p>
+                                To get your API listed here, use 
+                                <code>&lt;api type='export' group='layer' ... /&gt;</code> in
+                                your module arch.xml document.
+                            </p>
+                        </div>
+                        <hr/>
+                        
 
                         <ul>
                             <xsl:for-each select="//api[@type='export' and @group='layer']" >
@@ -91,11 +100,7 @@
                             </xsl:for-each>
                         </ul>
             
-                        <p>
-                            To get your API listed here, use 
-                            <code>&lt;api type='export' group='layer' ... /&gt;</code> in
-                            your module arch.xml document.
-                        </p>
+                        
                     </div> 
                 </div>
                 <div class="apidocleft">

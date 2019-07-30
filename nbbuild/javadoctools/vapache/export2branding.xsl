@@ -51,15 +51,22 @@
                     </xsl:call-template>
                 
                     <div class="innercontent">
-
-                        <p>
-                            Applications built on top of NetBeans Platform may change configuration
-                            of various aspects via branding. E.g. by providing different values
-                            for certain keys in various <code>Bundle</code>. 
-                            This page summarizes the list of such
-                            branding APIs defined by <a href="index.html">modules with API</a>. 
-                        </p>
-
+                        <div class="abstract">
+                            <p>
+                                Applications built on top of NetBeans Platform may change configuration
+                                of various aspects via branding. E.g. by providing different values
+                                for certain keys in various <code>Bundle</code>. 
+                                This page summarizes the list of such
+                                branding APIs defined by <a href="index.html">modules with API</a>. 
+                            </p>
+                            <p>
+                                To get your API listed here, use 
+                                <code>&lt;api type='export' group='branding' ... /&gt;</code> in
+                                your module arch.xml document.
+                            </p>
+                        </div>
+                        <hr/>
+                    
                         <ul>
                             <xsl:for-each select="//api[@type='export' and @group='branding']" >
                                 <li>
@@ -93,11 +100,7 @@
                             </xsl:for-each>
                         </ul>
             
-                        <p>
-                            To get your API listed here, use 
-                            <code>&lt;api type='export' group='branding' ... /&gt;</code> in
-                            your module arch.xml document.
-                        </p>
+                        
                     </div>  
                 </div>
                 <div class="apidocleft">

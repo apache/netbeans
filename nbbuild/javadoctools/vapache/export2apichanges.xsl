@@ -61,28 +61,30 @@
                             </xsl:call-template>
                 
                             <div class="innercontent">
-
-                                This document highlights changes in <a href="index.html">NetBeans APIs</a> 
-                                since previous version (i.e.
-                                <xsl:value-of select="$changes-since-day" />
-                                <xsl:text> </xsl:text>
-                                <xsl:choose>
-                                    <xsl:when test="$changes-since-month=1">Jan</xsl:when>
-                                    <xsl:when test="$changes-since-month=2">Feb</xsl:when>
-                                    <xsl:when test="$changes-since-month=3">Mar</xsl:when>
-                                    <xsl:when test="$changes-since-month=4">Apr</xsl:when>
-                                    <xsl:when test="$changes-since-month=5">May</xsl:when>
-                                    <xsl:when test="$changes-since-month=6">Jun</xsl:when>
-                                    <xsl:when test="$changes-since-month=7">Jul</xsl:when>
-                                    <xsl:when test="$changes-since-month=8">Aug</xsl:when>
-                                    <xsl:when test="$changes-since-month=9">Sep</xsl:when>
-                                    <xsl:when test="$changes-since-month=10">Oct</xsl:when>
-                                    <xsl:when test="$changes-since-month=11">Nov</xsl:when>
-                                    <xsl:when test="$changes-since-month=12">Dec</xsl:when>
-                                </xsl:choose> 
-                                <xsl:text> </xsl:text>
-                                <xsl:value-of select="$changes-since-year" /> 
-                                <xsl:text>). </xsl:text>
+                                <div class="abstract">
+                                    This document highlights changes in <a href="index.html">NetBeans APIs</a> 
+                                    since previous version (i.e.
+                                    <xsl:value-of select="$changes-since-day" />
+                                    <xsl:text> </xsl:text>
+                                    <xsl:choose>
+                                        <xsl:when test="$changes-since-month=1">Jan</xsl:when>
+                                        <xsl:when test="$changes-since-month=2">Feb</xsl:when>
+                                        <xsl:when test="$changes-since-month=3">Mar</xsl:when>
+                                        <xsl:when test="$changes-since-month=4">Apr</xsl:when>
+                                        <xsl:when test="$changes-since-month=5">May</xsl:when>
+                                        <xsl:when test="$changes-since-month=6">Jun</xsl:when>
+                                        <xsl:when test="$changes-since-month=7">Jul</xsl:when>
+                                        <xsl:when test="$changes-since-month=8">Aug</xsl:when>
+                                        <xsl:when test="$changes-since-month=9">Sep</xsl:when>
+                                        <xsl:when test="$changes-since-month=10">Oct</xsl:when>
+                                        <xsl:when test="$changes-since-month=11">Nov</xsl:when>
+                                        <xsl:when test="$changes-since-month=12">Dec</xsl:when>
+                                    </xsl:choose> 
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="$changes-since-year" /> 
+                                    <xsl:text>). </xsl:text>
+                                </div>
+                                <hr/>
                                     <!--
                                     There are also other documents that list changes 
                                     made for releaso of the Oracle era: </xsl:text>

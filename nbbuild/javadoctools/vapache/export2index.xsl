@@ -70,41 +70,46 @@
                     </xsl:call-template>
                 
                     <div class="innercontent">
-                        This document provides a list of <em>NetBeans APIs</em> with a short description
-                        of what they are used for, and a table describing different types of interfaces
-                        (see <a href="http://wiki.netbeans.org/API_Design">What is
-                            an API?</a> to understand why we list DTDs, file formats, etc.) and with
-                        a stability category (<span style="background:#ffffff">stable and official</span>,
-                        <span style="background:#ddcc80">under development</span>,
-                        <span style="background:#afafaf;text-decoration:line-through">deprecated</span>,
-                        <span style="background:#e0c0c0">friend or private</span>;
-                        see <a href="http://wiki.netbeans.org/API_Stability">API stability</a> for more info).
-                        The aim is to provide as detailed a definition of NetBeans module 
-                        external interfaces as possible and give other developers a chance to decide
-                        whether they want to depend on a particular API or not.
-                        <p/>
-                        Some of these APIs are part of the 
-                        <a href="http://platform.netbeans.org/">NetBeans Platform</a>
-                        (for example lookup,
-                        loaders, utilities, nodes, explorer, window systems, multiview, etc.), some of them
-                        are specific to 
-                        <a href="http://www.netbeans.org/products/ide/index.html">NetBeans IDE</a> 
-                        (projects, javacore, diff, etc.) and some
-                        are not included in the release at all and are just provided for download
-                        (usually via autoupdate). Basically when building an application based on
-                        <em>NetBeans</em> one is free to choose the set of modules and their APIs 
-                        to satisfy one's needs.
-                        <p>
-                            This is a list of APIs for 
-                            <xsl:call-template name="apachenetbeansversion" >
-                                <xsl:with-param name="maturity">
-                                    <xsl:value-of select="$maturity"/>                
-                                </xsl:with-param>
-                                <xsl:with-param name="version">
-                                    <xsl:value-of select="$version"/>                
-                                </xsl:with-param>
-                            </xsl:call-template>
-                        </p>
+                        <div class="abstract">
+                            This document provides a list of <em>NetBeans APIs</em> with a short description
+                            of what they are used for, and a table describing different types of interfaces
+                            (see <a href="http://wiki.netbeans.org/API_Design">What is
+                                an API?</a> to understand why we list DTDs, file formats, etc.) and with
+                            a stability category (<span style="background:#ffffff">stable and official</span>,
+                            <span style="background:#ddcc80">under development</span>,
+                            <span style="background:#afafaf;text-decoration:line-through">deprecated</span>,
+                            <span style="background:#e0c0c0">friend or private</span>;
+                            see <a href="http://wiki.netbeans.org/API_Stability">API stability</a> for more info).
+                            The aim is to provide as detailed a definition of NetBeans module 
+                            external interfaces as possible and give other developers a chance to decide
+                            whether they want to depend on a particular API or not.
+                            <p/>
+                            Some of these APIs are part of the 
+                            <a href="http://platform.netbeans.org/">NetBeans Platform</a>
+                            (for example lookup,
+                            loaders, utilities, nodes, explorer, window systems, multiview, etc.), some of them
+                            are specific to 
+                            <a href="http://www.netbeans.org/products/ide/index.html">NetBeans IDE</a> 
+                            (projects, javacore, diff, etc.) and some
+                            are not included in the release at all and are just provided for download
+                            (usually via autoupdate). Basically when building an application based on
+                            <em>NetBeans</em> one is free to choose the set of modules and their APIs 
+                            to satisfy one's needs.
+                            <!--<p>
+                                This is a list of APIs for 
+                                <xsl:call-template name="apachenetbeansversion" >
+                                    <xsl:with-param name="maturity">
+                                        <xsl:value-of select="$maturity"/>                
+                                    </xsl:with-param>
+                                    <xsl:with-param name="version">
+                                        <xsl:value-of select="$version"/>                
+                                    </xsl:with-param>
+                                </xsl:call-template>
+                            </p>-->
+                            <p>To get the API of your module listed here, see the documentation for the Javadoc building <a href="http://wiki.netbeans.org/APIDevelopment">infrastructure</a>.</p>
+                        
+                            <p>Can't find what you're looking for? Try the <a href="https://netbeans.apache.org" target="_top">Apache NetBeans website</a>.</p>
+                        </div>
                         <hr/>
                         <xsl:call-template name="list-modules" />
                         <hr/>
@@ -123,7 +128,6 @@
         </html>
     </xsl:template>
     <xsl:template name="list-modules">
-        <h2>Content</h2>
         <ul>
             <xsl:for-each select="/alldata/apis/module" >
                 <xsl:sort select="@name" />
@@ -208,7 +212,7 @@
                     <xsl:call-template name="filedirapi" >
                         <xsl:with-param name="arch.target" select="$arch.target" />
                     </xsl:call-template>
-                    <xsl:text>/index.html</xsl:text>
+                    <xsl:text>/overview-summary.html</xsl:text>
                 </xsl:attribute>
                 <xsl:text>javadoc</xsl:text>
             </a>

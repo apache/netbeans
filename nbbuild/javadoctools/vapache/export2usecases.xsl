@@ -50,9 +50,10 @@
                     </xsl:call-template>
                 
                     <div class="innercontent">
-                        This page contains extracted usecases for some of the NetBeans modules
-                        that <a href="index.html">offer an API</a>. 
-
+                        <div class="abstract">
+                            This page contains extracted usecases for some of the NetBeans modules
+                            that <a href="index.html">offer an API</a>. 
+                        </div>
 
                         <xsl:for-each select="//module/arch-usecases[not(../@name='_no module_') and not(.='No answer')]" >
                             <hr/>
@@ -66,11 +67,11 @@
                                 </a>
                                 <a>
                                     <xsl:attribute name="href" >
-                                        <xsl:text>overview-summary.html#def-api-</xsl:text>
+                                        <xsl:text>index.html#def-api-</xsl:text>
                                         <xsl:value-of select="../@name"/>
                                     </xsl:attribute>
                                     <xsl:value-of select="../@name"/>
-                                </a>?
+                                ?</a>
                             </h2>
                             <xsl:apply-templates select="../description" />
                             <p/>

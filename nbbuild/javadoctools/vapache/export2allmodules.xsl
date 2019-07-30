@@ -61,11 +61,7 @@
                 <xsl:value-of select="substring-before(@target,'/')" />/allclasses-frame.html</xsl:attribute>-->
             <xsl:value-of select="@name" />
         </span>
-        (<a>
-            <xsl:attribute name="href">
-                <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
-            javadoc
-        </a>)
+        (<a><xsl:attribute name="href"><xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>javadoc</a>)
         <ul class="modulesclasslist">
             <xsl:variable name="modulename" select="substring-before(@target,'/')" />
             <xsl:for-each select="//class[($modulename = substring-before(@url,'/'))]" >
@@ -108,9 +104,7 @@
             (<a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
-                <xsl:attribute name="target">classFrame</xsl:attribute>
-                javadoc
-            </a>)
+                <xsl:attribute name="target">classFrame</xsl:attribute>javadoc</a>)
         </span>
         <br/>
     </xsl:template>

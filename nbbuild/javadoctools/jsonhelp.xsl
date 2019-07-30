@@ -188,8 +188,7 @@ committed to the repository for legal reasons. You need to download it:
                     <xsl:with-param name="version">
                         <xsl:value-of select="$version"/>
                     </xsl:with-param>
-                </xsl:call-template>
-                Documentation | <xsl:value-of select="$title" />
+                </xsl:call-template> Documentation | <xsl:value-of select="$title" />
             </xsl:element>
             <link rel="stylesheet" href="netbeans.css" type="text/css"/>
             <link type="application/atom+xml" rel="alternate" href="apichanges.atom"/>
@@ -219,8 +218,7 @@ committed to the repository for legal reasons. You need to download it:
                         <xsl:with-param name="version">
                             <xsl:value-of select="$version"/>
                         </xsl:with-param>
-                    </xsl:call-template>
-                    Documentation | <xsl:value-of select="$title" />
+                    </xsl:call-template> Documentation | <xsl:value-of select="$title" />
                 </a>
             </div>
             <div class='top-bar-rigtht scroll'>
@@ -245,6 +243,12 @@ committed to the repository for legal reasons. You need to download it:
                     
                 </xsl:for-each>
                 <xsl:element name="a">
+                    <xsl:attribute name="href">
+                        <xsl:text>http://bits.netbeans.org/</xsl:text>
+                    </xsl:attribute>
+                    8.2 and previous
+                </xsl:element>
+              <!--  <xsl:element name="a">
                     <xsl:attribute name="href">
                         <xsl:text>http://bits.netbeans.org/8.2/javadoc/</xsl:text><xsl:value-of select="$menukey"/><xsl:text>.html</xsl:text>
                     </xsl:attribute>
@@ -408,7 +412,7 @@ committed to the repository for legal reasons. You need to download it:
                         <xsl:text>.html</xsl:text>
                     </xsl:attribute>
                     5.0
-                </xsl:element>
+                </xsl:element>-->
                     <!-- 
                     
                 <li>

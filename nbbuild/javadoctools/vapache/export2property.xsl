@@ -55,14 +55,21 @@
                     </xsl:call-template>
                 
                     <div class="innercontent">
-
-                        <p>
-                            System properties can influence the behaviour of the running IDE in various
-                            ways. The most convenient place to specify them is in etc/netbeans.conf file.
-                            This page summarizes the list of such
-                            extension points defined by 
-                            <a href="index.html">modules with API</a>. 
-                        </p>
+                        <div class="abstract">
+                            <p>
+                                System properties can influence the behaviour of the running IDE in various
+                                ways. The most convenient place to specify them is in etc/netbeans.conf file.
+                                This page summarizes the list of such
+                                extension points defined by 
+                                <a href="index.html">modules with API</a>.
+                            </p>
+                            <p>
+                                To get your API listed here, use 
+                                <code>&lt;api type='export' group='systemproperty' ... /&gt;</code> in
+                                your module arch.xml document.
+                            </p>
+                        </div>
+                        <hr/>
 
                         <ul>
                             <xsl:for-each select="//api[@type='export' and @group='systemproperty']" >
@@ -97,11 +104,7 @@
                             </xsl:for-each>
                         </ul>
             
-                        <p>
-                            To get your API listed here, use 
-                            <code>&lt;api type='export' group='systemproperty' ... /&gt;</code> in
-                            your module arch.xml document.
-                        </p>
+                        
                     </div>
                 </div>
                 <div class="apidocleft">

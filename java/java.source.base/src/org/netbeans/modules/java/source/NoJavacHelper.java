@@ -48,7 +48,7 @@ public class NoJavacHelper {
             res = false;
         }
         hasWorkingJavac.compareAndSet(null, res);
-        return res;
+        return hasWorkingJavac.get();
     }
 
     public static boolean hasNbJavac() {

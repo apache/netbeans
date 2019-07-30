@@ -24,6 +24,7 @@
     <xsl:output method="html"/>
     <xsl:param name="maturity" />
     <xsl:template name="listallmodules" >
+        <input type="text" id="searchinput" onkeyup="searchFunction()" placeholder="Search for class..."/>
         <ul class="moduleslist">
             <xsl:for-each select="//module[not (@name = '_no module_')]" >
                 <xsl:sort order="ascending" select="@name" />

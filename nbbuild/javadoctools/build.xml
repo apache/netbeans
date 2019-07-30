@@ -198,15 +198,6 @@
             the export*.xsl templates.
         </fail>
 
-        <!--<style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="${xslversion}export2allclasses.xsl">
-            <param name="maturity" expression="${json.maturity}" />
-        </style>
-        -->
-        <!--<style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="${xslversion}export2allmodules.xsl">
-            <param name="date" expression="${modules-javadoc-date}"/>
-            <param name="maturity" expression="${json.maturity}" />
-        </style>
-        -->
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="${xslversion}export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
@@ -227,22 +218,7 @@
             <param name="version" expression="${json.version}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
-        
-        <!--<style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/overview-summary.html" style="${xslversion}export2index.xsl">
-            <param name="date" expression="${modules-javadoc-date}"/>
-            <param name="download" expression="true"/>
-            <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
-            <param name="releaseinfo" expression="${xmlrelease}" />
-        </style>
-        
-        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${nb_all}/nbbuild/build/tmp/overview-summary.html" style="${xslversion}export2index.xsl">
-            <param name="date" expression="${modules-javadoc-date}"/>
-            <param name="download" expression="false"/>
-            <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
-        </style>-->
-        
+             
         <!-- at the end generate the index.html so people know where to start --> 
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="${xslversion}export2index.xsl">
             <param name="maturity" expression="${json.maturity}" />
@@ -254,7 +230,7 @@
 
         <replace dir="${netbeans.javadoc.dir}">
             <include name="*.html"/>
-            <replacefilter token="@JDK@" value="https://docs.oracle.com/javase/8/docs/api/"/>
+            <replacefilter token="@JDK@" value="${javaapidocurl}"/>
             &replaces;   
             <replacefilter token="http://root/" value="."/>
             <replacefilter token="$${javadoc.web.root}" value="."/>

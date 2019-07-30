@@ -147,7 +147,6 @@
                                 <a>
                                     <xsl:attribute name="href">
                                         <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
-                                    <xsl:attribute name="target">classFrame</xsl:attribute>
                                     <xsl:value-of select="@name"/>
                                 </a> -
                                 <!-- XXX the following is crap; e.g. messes up descs of Dialogs API, I/O API, ... -->
@@ -200,13 +199,13 @@
         <xsl:variable name="arch.target" select="@target" />
 
         <xsl:if test="$interfaces">
-            <h3>
-                <a name="def-api-{$module.name}">
-                    <xsl:value-of select="$module.name"/>
-                </a>
-            </h3>
-
-                
+            <div>
+            <xsl:element name="h3">
+                <xsl:attribute name="id">
+                    <xsl:text>def-api-</xsl:text><xsl:value-of select="$module.name"/>
+                </xsl:attribute>
+                <xsl:value-of select="$module.name"/>
+            </xsl:element>            
             <a>
                 <xsl:attribute name="href">
                     <xsl:call-template name="filedirapi" >
@@ -305,10 +304,11 @@
                     </td>
                 </tr>
             </table>
+            </div>
         </xsl:if>
 
 
-        <P/>
+
 
     </xsl:template>
 

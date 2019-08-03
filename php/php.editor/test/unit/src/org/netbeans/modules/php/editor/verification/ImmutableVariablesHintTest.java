@@ -30,8 +30,17 @@ public class ImmutableVariablesHintTest extends PHPHintsTestBase {
         super(testName);
     }
 
+    @Override
+    protected String getTestDirectory() {
+        return TEST_DIRECTORY + "ImmutableVariablesHint/";
+    }
+
     public void testWith1AllowedAssignments() throws Exception {
         checkHints(new ImmutablevariablesHintStub(1), "testImmutableVariablesHint.php");
+    }
+
+    public void testArrowFunctionsWith1AllowedAssignments() throws Exception {
+        checkHints(new ImmutablevariablesHintStub(1), "testImmutableVariablesHintArrowFunctions.php");
     }
 
     private class ImmutablevariablesHintStub extends ImmutableVariablesHint {

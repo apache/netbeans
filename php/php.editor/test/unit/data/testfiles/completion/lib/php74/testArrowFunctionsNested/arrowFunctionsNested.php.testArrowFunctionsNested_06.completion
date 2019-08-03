@@ -1,0 +1,6 @@
+Code completion result for source line:
+echo (function($z) use ($object) {return $z + $object->|getNumber();})(2);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     new()                           [STATIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.hudson
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/hudson/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.18
+OpenIDE-Module-Specification-Version: 2.19
 

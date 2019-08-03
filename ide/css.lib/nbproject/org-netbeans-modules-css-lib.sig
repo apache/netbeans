@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86.1
+#Version 1.88
 
 CLSS public abstract interface java.io.Serializable
 
@@ -411,6 +411,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId SEMI
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId SOLIDUS
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId STAR
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId STRING
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId SUPPORTS_SYM
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId T
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId TILDE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId TIME
@@ -424,6 +425,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId UNICODE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URI
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId V
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId VARIABLE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId W
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId WEBKIT_KEYFRAMES_SYM
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId WS
@@ -606,6 +608,14 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType slAttribute
 fld public final static org.netbeans.modules.css.lib.api.NodeType slAttributeName
 fld public final static org.netbeans.modules.css.lib.api.NodeType slAttributeValue
 fld public final static org.netbeans.modules.css.lib.api.NodeType styleSheet
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsAtRule
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsCondition
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsConjunction
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsDecl
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsDisjunction
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsFeature
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsInParens
+fld public final static org.netbeans.modules.css.lib.api.NodeType supportsWithOperator
 fld public final static org.netbeans.modules.css.lib.api.NodeType syncToDeclarationsRule
 fld public final static org.netbeans.modules.css.lib.api.NodeType syncToFollow
 fld public final static org.netbeans.modules.css.lib.api.NodeType syncTo_RBRACE
@@ -1053,6 +1063,7 @@ innr public static Semitones
 innr public static StringAcceptor
 innr public static Time
 innr public static Uri
+innr public static Variable
 meth public abstract boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
 meth public final java.lang.String id()
 meth public static <%0 extends org.netbeans.modules.css.lib.api.properties.TokenAcceptor> {%%0} getAcceptor(java.lang.Class<{%%0}>)
@@ -1206,6 +1217,12 @@ cons public init(java.lang.String)
 meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
 hfds URL_TOKEN_IMAGE
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Variable
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
 
 CLSS public abstract interface org.netbeans.modules.css.lib.api.properties.TokenNode
 intf org.netbeans.modules.css.lib.api.properties.Node

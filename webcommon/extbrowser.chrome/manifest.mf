@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.extbrowser.chrome
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/extbrowser/chrome/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.15
+OpenIDE-Module-Specification-Version: 1.16
 AutoUpdate-Show-In-Client: false

@@ -101,11 +101,13 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                             versionCombo.setModel(new DefaultComboBoxModel(new Object[] {SEARCHING}));
                         }
                     });
-                RepositoryInfo info = MavenNbModuleImpl.netbeansRepo();
-                final Object key = this;
-                if (info == null) {
+                List<RepositoryInfo> info = MavenNbModuleImpl.netbeansRepo();               
+                final Object key = this;               
+                if (info == null || info.contains(null)) {
                     try {
                         RepositoryPreferences.getInstance().addTransientRepository(key, MavenNbModuleImpl.NETBEANS_REPO_ID, MavenNbModuleImpl.NETBEANS_REPO_ID, "http://bits.netbeans.org/maven2/", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
+                        //transient remove central, make central transient too
+                        RepositoryPreferences.getInstance().addTransientRepository(key, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
                         info = MavenNbModuleImpl.netbeansRepo();
                     } catch (URISyntaxException x) {
                         assert false : x;
@@ -113,7 +115,7 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                 }
                 if (info != null) {
                     final List<String> versions = new ArrayList<String>();
-                    final Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult("org.netbeans.cluster", "platform", Collections.singletonList(info));
+                    final Result<NBVersionInfo> result = RepositoryQueries.getVersionsResult("org.netbeans.cluster", "platform", Collections.unmodifiableList(info));
                     for (NBVersionInfo version : result.getResults()) { // NOI18N
                         versions.add(version.getVersion());
                     }

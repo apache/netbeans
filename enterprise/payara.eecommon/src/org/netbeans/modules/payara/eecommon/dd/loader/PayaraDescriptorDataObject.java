@@ -65,13 +65,13 @@ import org.xml.sax.SAXParseException;
 @MIMEResolver.Registration(
         displayName = "Bundle#PayaraResolver",
         resource = "../../dd/resources/payara-dd-mime-resolver.xml",
-        position = 300
+        position = 3500
 )
 @DataObject.Registration(
         displayName = "Bundle#PayaraResolver",
         mimeType = DD_MIME_TYPE,
         iconBase = DD_ICON,
-        position = 300
+        position = 3600
 )
 @ActionReferences({
     @ActionReference(

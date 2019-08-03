@@ -167,12 +167,13 @@ public class JavaPlatformsComboBox
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see JavaPlatform}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      * @param comboBoxModel Data model for this combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final ComboBoxModel comboBoxModel)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -182,12 +183,13 @@ public class JavaPlatformsComboBox
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see JavaPlatform}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      * @param items An array of objects to insert into the combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final Object items[])
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -197,12 +199,13 @@ public class JavaPlatformsComboBox
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see JavaPlatform}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      * @param items {@see Vector} of objects to insert into the combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(JavaPlatform[])} instead.
      */
+    @Deprecated
     public JavaPlatformsComboBox(final Vector<?> items)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);

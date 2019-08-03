@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.javaee.beanvalidation
 OpenIDE-Module-Layer: org/netbeans/modules/javaee/beanvalidation/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javaee/beanvalidation/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.24
+OpenIDE-Module-Specification-Version: 1.25
 

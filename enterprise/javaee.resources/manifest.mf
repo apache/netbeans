@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javaee.resources
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javaee/resources/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.15
+OpenIDE-Module-Specification-Version: 1.16
 

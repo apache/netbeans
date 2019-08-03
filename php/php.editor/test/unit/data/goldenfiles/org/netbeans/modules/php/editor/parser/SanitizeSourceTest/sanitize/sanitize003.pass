@@ -15,6 +15,8 @@
             </Interfaces>
             <Block start='19' end='54' isCurly='true'>
                 <FieldsDeclaration start='25' end='52' modifier='public'>
+                    <FieldType>
+                    </FieldType>
                     <VariableNames>
                         <Variable start='32' end='51' isDollared='true'>
                             <Identifier start='33' end='51' name='inherited_property'/>
@@ -38,6 +40,8 @@
             </Interfaces>
             <Block start='84' end='141' isCurly='true'>
                 <FieldsDeclaration start='90' end='107' modifier='public'>
+                    <FieldType>
+                    </FieldType>
                     <VariableNames>
                         <Variable start='97' end='106' isDollared='true'>
                             <Identifier start='98' end='106' name='property'/>

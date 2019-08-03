@@ -32,6 +32,7 @@ import org.openide.filesystems.FileObject;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  * @deprecated Use {@link CompletionProvider} instead.
  */
+@Deprecated
 public interface VariableCompletionProvider {
 
     /**

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <!--
 
@@ -62,12 +62,13 @@
           <Component id="chkUpdateJavadoc" alignment="0" min="-2" max="-2" attributes="0"/>
           <Component id="chkGenJavadoc" alignment="0" min="-2" max="-2" attributes="0"/>
           <Component id="lblCodeGeneration" alignment="0" min="-2" max="-2" attributes="0"/>
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rbUpdateMethod" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="rbOverloadMethod" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="rbUpdateMethod" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="rbOverloadMethod" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -75,7 +76,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="lblName" pref="22" max="32767" attributes="1"/>
+                  <Component id="lblName" max="32767" attributes="1"/>
                   <Component id="jScrollPane1" alignment="0" max="32767" attributes="1"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>

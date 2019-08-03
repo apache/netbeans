@@ -1,0 +1,721 @@
+<testresult testFile='spreadOperatorInArrayExpression_02.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='825' end='828'>
+            <text>Foo</text>
+        </token>
+        <token id='T_SEMICOLON' start='828' end='829'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='830' end='835'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='836' end='847'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='848' end='849'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='854' end='860'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='861' end='866'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='867' end='875'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='876' end='877'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='878' end='879'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='879' end='882'>
+            <text>"1"</text>
+        </token>
+        <token id='T_COMMA' start='882' end='883'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='884' end='887'>
+            <text>"2"</text>
+        </token>
+        <token id='T_COMMA' start='887' end='888'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='889' end='892'>
+            <text>"3"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='892' end='893'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='893' end='894'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='899' end='905'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='906' end='911'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='912' end='921'>
+            <text>CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='922' end='923'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='924' end='925'>
+            <text>[</text>
+        </token>
+        <token id='T_ELLIPSIS' start='925' end='928'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='928' end='932'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='932' end='934'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='934' end='942'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='942' end='943'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='943' end='944'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='949' end='955'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='956' end='961'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='962' end='971'>
+            <text>CONSTANT3</text>
+        </token>
+        <token id='T_EQUAL' start='972' end='973'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='974' end='975'>
+            <text>[</text>
+        </token>
+        <token id='T_ELLIPSIS' start='975' end='978'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='978' end='982'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='982' end='984'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='984' end='992'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_COMMA' start='992' end='993'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='994' end='997'>
+            <text>"4"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='997' end='998'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='998' end='999'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1004' end='1010'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1011' end='1016'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1017' end='1026'>
+            <text>CONSTANT4</text>
+        </token>
+        <token id='T_EQUAL' start='1027' end='1028'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1029' end='1030'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1030' end='1033'>
+            <text>"0"</text>
+        </token>
+        <token id='T_COMMA' start='1033' end='1034'>
+            <text>,</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1035' end='1038'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='1038' end='1042'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1042' end='1044'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1044' end='1052'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_COMMA' start='1052' end='1053'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1054' end='1057'>
+            <text>"4"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1057' end='1058'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1058' end='1059'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1060' end='1061'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1063' end='1068'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1069' end='1085'>
+            <text>UnpackChildClass</text>
+        </token>
+        <token id='T_EXTENDS' start='1086' end='1093'>
+            <text>extends</text>
+        </token>
+        <token id='T_STRING' start='1094' end='1105'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1106' end='1107'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1112' end='1118'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1119' end='1124'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1125' end='1139'>
+            <text>CHILD_CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='1140' end='1141'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1142' end='1143'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1143' end='1146'>
+            <text>"0"</text>
+        </token>
+        <token id='T_COMMA' start='1146' end='1147'>
+            <text>,</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1148' end='1151'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='1151' end='1157'>
+            <text>parent</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1157' end='1159'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1159' end='1167'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_COMMA' start='1167' end='1168'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1169' end='1170'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1170' end='1171'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1172' end='1173'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1175' end='1184'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='1185' end='1188'>
+            <text>Bar</text>
+        </token>
+        <token id='T_SEMICOLON' start='1188' end='1189'>
+            <text>;</text>
+        </token>
+        <token id='T_USE' start='1190' end='1193'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='1194' end='1197'>
+            <text>Foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1197' end='1198'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1198' end='1209'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_SEMICOLON' start='1209' end='1210'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='1211' end='1216'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1217' end='1244'>
+            <text>AnotherNamespaceUnpackClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1245' end='1246'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='1251' end='1258'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1259' end='1264'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1265' end='1271'>
+            <text>CONST1</text>
+        </token>
+        <token id='T_EQUAL' start='1272' end='1273'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1274' end='1275'>
+            <text>[</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1275' end='1278'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='1278' end='1289'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1289' end='1291'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1291' end='1299'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1299' end='1300'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1300' end='1301'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1306' end='1313'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1314' end='1319'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1320' end='1326'>
+            <text>CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1327' end='1328'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1329' end='1330'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1330' end='1331'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='1331' end='1332'>
+            <text>,</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1333' end='1336'>
+            <text>...</text>
+        </token>
+        <token id='T_STRING' start='1336' end='1347'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1347' end='1349'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1349' end='1357'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1357' end='1358'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1358' end='1359'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1364' end='1371'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1372' end='1377'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1378' end='1384'>
+            <text>CONST3</text>
+        </token>
+        <token id='T_EQUAL' start='1385' end='1386'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1387' end='1388'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1388' end='1389'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='1389' end='1390'>
+            <text>,</text>
+        </token>
+        <token id='T_ELLIPSIS' start='1391' end='1394'>
+            <text>...</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1394' end='1395'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1395' end='1398'>
+            <text>Foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='1398' end='1399'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='1399' end='1410'>
+            <text>UnpackClass</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1410' end='1412'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1412' end='1420'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_COMMA' start='1420' end='1421'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1422' end='1423'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1423' end='1424'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1424' end='1425'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1426' end='1427'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1428' end='1428'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1428'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='815' end='1173' isBracketed='false'>
+                <NamespaceName start='825' end='828' isCurrent='false' isGlobal='false'>
+                    <Identifier start='825' end='828' name='Foo'/>
+                </NamespaceName>
+                <Block start='829' end='1173' isCurly='true'>
+                    <ClassDeclaration start='830' end='1061' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='836' end='847' name='UnpackClass'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='848' end='1061' isCurly='true'>
+                            <ClassConstantDeclaration start='854' end='894' modifier='public'>
+                                <Names>
+                                    <Identifier start='867' end='875' name='CONSTANT'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='878' end='893' type='NEW'>
+                                        <ArrayElement start='879' end='882'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='879' end='882' type='STRING' value='"1"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='884' end='887'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='884' end='887' type='STRING' value='"2"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='889' end='892'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='889' end='892' type='STRING' value='"3"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <ClassConstantDeclaration start='899' end='944' modifier='public'>
+                                <Names>
+                                    <Identifier start='912' end='921' name='CONSTANT2'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='924' end='943' type='NEW'>
+                                        <UnpackableArrayElement start='925' end='942'>
+                                            <Value>
+                                                <StaticConstantAccess start='928' end='942'>
+                                                    <NamespaceName start='928' end='932' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='928' end='932' name='self'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='934' end='942' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='934' end='942' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <ClassConstantDeclaration start='949' end='999' modifier='public'>
+                                <Names>
+                                    <Identifier start='962' end='971' name='CONSTANT3'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='974' end='998' type='NEW'>
+                                        <UnpackableArrayElement start='975' end='992'>
+                                            <Value>
+                                                <StaticConstantAccess start='978' end='992'>
+                                                    <NamespaceName start='978' end='982' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='978' end='982' name='self'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='984' end='992' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='984' end='992' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                        <ArrayElement start='994' end='997'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='994' end='997' type='STRING' value='"4"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <ClassConstantDeclaration start='1004' end='1059' modifier='public'>
+                                <Names>
+                                    <Identifier start='1017' end='1026' name='CONSTANT4'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='1029' end='1058' type='NEW'>
+                                        <ArrayElement start='1030' end='1033'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1030' end='1033' type='STRING' value='"0"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <UnpackableArrayElement start='1035' end='1052'>
+                                            <Value>
+                                                <StaticConstantAccess start='1038' end='1052'>
+                                                    <NamespaceName start='1038' end='1042' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1038' end='1042' name='self'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='1044' end='1052' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='1044' end='1052' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                        <ArrayElement start='1054' end='1057'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1054' end='1057' type='STRING' value='"4"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                        </Block>
+                    </ClassDeclaration>
+                    <ClassDeclaration start='1063' end='1173' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='1069' end='1085' name='UnpackChildClass'/>
+                        </ClassName>
+                        <SuperClassName>
+                            <NamespaceName start='1094' end='1105' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1094' end='1105' name='UnpackClass'/>
+                            </NamespaceName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='1106' end='1173' isCurly='true'>
+                            <ClassConstantDeclaration start='1112' end='1171' modifier='public'>
+                                <Names>
+                                    <Identifier start='1125' end='1139' name='CHILD_CONSTANT'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='1142' end='1170' type='NEW'>
+                                        <ArrayElement start='1143' end='1146'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1143' end='1146' type='STRING' value='"0"'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <UnpackableArrayElement start='1148' end='1167'>
+                                            <Value>
+                                                <StaticConstantAccess start='1151' end='1167'>
+                                                    <NamespaceName start='1151' end='1157' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1151' end='1157' name='parent'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='1159' end='1167' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='1159' end='1167' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1175' end='1427' isBracketed='false'>
+                <NamespaceName start='1185' end='1188' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1185' end='1188' name='Bar'/>
+                </NamespaceName>
+                <Block start='1189' end='1427' isCurly='true'>
+                    <UseStatement start='1190' end='1210' type='TYPE'>
+                        <SingleUseStatementPart start='1194' end='1209'>
+                            <Name>
+                                <NamespaceName start='1194' end='1209' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1194' end='1197' name='Foo'/>
+                                    <Identifier start='1198' end='1209' name='UnpackClass'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <ClassDeclaration start='1211' end='1427' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='1217' end='1244' name='AnotherNamespaceUnpackClass'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='1245' end='1427' isCurly='true'>
+                            <ClassConstantDeclaration start='1251' end='1301' modifier='private'>
+                                <Names>
+                                    <Identifier start='1265' end='1271' name='CONST1'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='1274' end='1300' type='NEW'>
+                                        <UnpackableArrayElement start='1275' end='1299'>
+                                            <Value>
+                                                <StaticConstantAccess start='1278' end='1299'>
+                                                    <NamespaceName start='1278' end='1289' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1278' end='1289' name='UnpackClass'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='1291' end='1299' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='1291' end='1299' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <ClassConstantDeclaration start='1306' end='1359' modifier='private'>
+                                <Names>
+                                    <Identifier start='1320' end='1326' name='CONST2'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='1329' end='1358' type='NEW'>
+                                        <ArrayElement start='1330' end='1331'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1330' end='1331' type='INT' value='1'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <UnpackableArrayElement start='1333' end='1357'>
+                                            <Value>
+                                                <StaticConstantAccess start='1336' end='1357'>
+                                                    <NamespaceName start='1336' end='1347' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1336' end='1347' name='UnpackClass'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='1349' end='1357' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='1349' end='1357' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                            <ClassConstantDeclaration start='1364' end='1425' modifier='private'>
+                                <Names>
+                                    <Identifier start='1378' end='1384' name='CONST3'/>
+                                </Names>
+                                <Initializers>
+                                    <ArrayCreation start='1387' end='1424' type='NEW'>
+                                        <ArrayElement start='1388' end='1389'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1388' end='1389' type='INT' value='1'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <UnpackableArrayElement start='1391' end='1420'>
+                                            <Value>
+                                                <StaticConstantAccess start='1394' end='1420'>
+                                                    <NamespaceName start='1394' end='1410' isCurrent='false' isGlobal='true'>
+                                                        <Identifier start='1395' end='1398' name='Foo'/>
+                                                        <Identifier start='1399' end='1410' name='UnpackClass'/>
+                                                    </NamespaceName>
+                                                    <Constant>
+                                                        <Identifier start='1412' end='1420' name='CONSTANT'/>
+                                                    </Constant>
+                                                    <Member>
+                                                        <Identifier start='1412' end='1420' name='CONSTANT'/>
+                                                    </Member>
+                                                </StaticConstantAccess>
+                                            </Value>
+                                        </UnpackableArrayElement>
+                                        <ArrayElement start='1422' end='1423'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='1422' end='1423' type='INT' value='4'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Initializers>
+                            </ClassConstantDeclaration>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

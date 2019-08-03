@@ -211,17 +211,6 @@ public final class XMLFileSystem extends AbstractFileSystem {
         }
     }
 
-    /** Constructor. Allows user to provide own capabilities
-    * for this filesystem.
-    * @param cap capabilities for this filesystem
-     * @deprecated Useless.
-    @Deprecated
-    public XMLFileSystem(FileSystemCapability cap) {
-        this();
-        setCapability(cap);
-    }
-    */
-
     /** Getter of url field.
      * @return URL associated with XMLFileSystem or null if no URL was set.
      * In case that definition of XMLFileSystem

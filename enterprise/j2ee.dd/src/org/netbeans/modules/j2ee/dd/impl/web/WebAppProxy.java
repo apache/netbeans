@@ -954,6 +954,9 @@ public class WebAppProxy implements WebApp {
             } else if (WebApp.VERSION_3_1.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.web.model_3_1.WebApp)clonedWebApp)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd");
+            } else if (WebApp.VERSION_4_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd");
             }
         }
         proxy.setError(error);
@@ -968,17 +971,17 @@ public class WebAppProxy implements WebApp {
     public void setWriting(boolean writing) {
         this.writing=writing;
     }
-    
+
     public void setMetadataComplete(boolean value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
         if (webApp!=null) webApp.setMetadataComplete(value);
     }
-    
+
     public boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException{
         return webApp==null?false:webApp.isMetadataComplete();
     }
 
     public int addJspConfig(JspConfig valueInterface) throws VersionNotSupportedException {
-        return webApp == null ? 0 : webApp.addJspConfig(valueInterface); 
+        return webApp == null ? 0 : webApp.addJspConfig(valueInterface);
     }
 
     public int removeJspConfig(JspConfig valueInterface) throws VersionNotSupportedException {
@@ -996,7 +999,7 @@ public class WebAppProxy implements WebApp {
     public AbsoluteOrdering newAbsoluteOrdering() throws VersionNotSupportedException {
         return webApp != null ? webApp.newAbsoluteOrdering() : null;
     }
-    
+
     public void setAbsoluteOrdering(AbsoluteOrdering[] value) throws VersionNotSupportedException {
         if (webApp != null) webApp.setAbsoluteOrdering(value);
     }

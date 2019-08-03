@@ -41,6 +41,9 @@ public abstract class BaseWizardIterator implements WizardDescriptor.BackgroundI
 
     protected abstract WizardDescriptor.Panel[] createPanels(ValidationGroup validationGroup);
 
+    public BaseWizardIterator() {
+    }
+
     @Override
     public void initialize(WizardDescriptor descriptor) {
         this.descriptor = descriptor;

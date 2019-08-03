@@ -3,7 +3,7 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.debugger.jpda.visual/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/visual/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/debugger/jpda/visual/mf-layer.xml
-OpenIDE-Module-Specification-Version: 1.22
+OpenIDE-Module-Specification-Version: 1.23
 OpenIDE-Module-Requires: org.netbeans.modules.debugger.jpda.ui
 OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]
 

@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.javaee.api
 OpenIDE-Module-Layer: org/netbeans/modules/javaee/api/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javaee/api/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.25
+OpenIDE-Module-Specification-Version: 1.26
 

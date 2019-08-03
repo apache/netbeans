@@ -47,21 +47,27 @@ import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle.Messages;
 import static org.openide.util.NbBundle.getMessage;
 
 /**
  *
  * @author Gaurav Gupta <gaurav.gupta@payara.fish>
  */
-@TemplateRegistration(
-        folder = ArchetypeWizards.TEMPLATE_FOLDER,
-        position = 200,
-        displayName = "#TTL_NewProjectWizard",
-        iconBase = PROJECT_ICON,
-        description = "../resources/PayaraMicroProjectDescription.html"
-)
 public final class MicroProjectWizardIterator extends BaseWizardIterator {
+
+    public MicroProjectWizardIterator() {
+    }
+
+    @TemplateRegistration(
+            folder = ArchetypeWizards.TEMPLATE_FOLDER,
+            position = 550,
+            displayName = "#TTL_NewProjectWizard",
+            iconBase = PROJECT_ICON,
+            description = "../resources/PayaraMicroProjectDescription.html"
+    )
+    public static MicroProjectWizardIterator createWebAppIterator() {
+        return new MicroProjectWizardIterator();
+    }
 
     @Override
     public Set<FileObject> instantiate() throws IOException {

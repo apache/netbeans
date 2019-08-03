@@ -1,0 +1,5 @@
+Code completion result for source line:
+const CONSTANT4 = [...CONSTANT2, 100 => 0, ...\Bar\|BAR_CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Qux                             [PUBLIC]   Bar
+CONSTANT   BAR_CONSTANT ?                  [PUBLIC]   Bar

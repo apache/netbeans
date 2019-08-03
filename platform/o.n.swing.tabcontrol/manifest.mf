@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/swing/tabcontrol/Bundle.properties
 OpenIDE-Module: org.netbeans.swing.tabcontrol
-OpenIDE-Module-Specification-Version: 1.61
+OpenIDE-Module-Specification-Version: 1.62
 AutoUpdate-Essential-Module: true
 

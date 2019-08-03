@@ -133,4 +133,17 @@ public final class ServerInstance implements Lookup.Provider {
         }
         return Lookup.EMPTY;
     }
+
+    /**
+     * Returns property value to which the specified <code>key</code> is mapped,
+     * or <code>null</code> if this map contains no mapping for the
+     * <code>key</code>.
+     *
+     * @param key server property <code>key</code>.
+     * @return server property value or <code>null</code> if no value with given
+     * <code>key</code> is stored.
+     */
+    public String getProperty(String key) {
+        return delegate.getProperty(key);
+    }
 }

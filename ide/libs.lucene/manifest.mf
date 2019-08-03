@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.lucene/3
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/lucene/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.24
+OpenIDE-Module-Specification-Version: 3.25

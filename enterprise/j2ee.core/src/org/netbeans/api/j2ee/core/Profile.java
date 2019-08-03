@@ -142,7 +142,7 @@ public final class Profile {
             return JAVA_EE_6_WEB;
         } else if (JAVA_EE_7_FULL.toPropertiesString().equals(valueMinusQuotes)
                 || "EE_7_FULL".equals(value)) { // NOI18N
-            return JAVA_EE_8_FULL;
+            return JAVA_EE_7_FULL;
         } else if (JAVA_EE_7_WEB.toPropertiesString().equals(valueMinusQuotes)
                 || "EE_7_WEB".equals(value)) {
             return JAVA_EE_7_WEB;

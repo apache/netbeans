@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.maven.osgi/1
 OpenIDE-Module-Layer: org/netbeans/modules/maven/osgi/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/osgi/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.40
+OpenIDE-Module-Specification-Version: 1.41
 

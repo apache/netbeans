@@ -24,8 +24,6 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="files-init" depends="-prepare-lsp-server,projectized.files-init" />
     <target name="-prepare-lsp-server" depends="basic-init">
-        <ant dir="../java.lsp.server" target="build-lsp-server-classpath" inheritAll="false">
-            <property name="lsp.server.classpath.target" location="${build.dir}/classes/org/netbeans/modules/java/source/remote/classpath" />
-        </ant>
+        <chmod file="${cluster}/modules/scripts/org-netbeans-modules-java-source-remote/bin/nb-java-lsp-server" perm="u+x" />
     </target>
 </project>

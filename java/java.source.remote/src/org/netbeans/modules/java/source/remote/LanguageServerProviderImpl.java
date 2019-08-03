@@ -50,44 +50,10 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
             return null;
         }
         try {
-            try (InputStream cpInfoIn = getClass().getResourceAsStream("classpath");
-                 Reader cpInfo = new InputStreamReader(cpInfoIn)) {
-                StringBuilder content = new StringBuilder();
-                int r;
-                
-                while ((r = cpInfo.read()) != (-1)) {
-                    content.append((char) r);
-                }
-                
-                Map<String, String> fileNameToPath = new HashMap<>();
-                for (String nbDir : (System.getProperty("netbeans.dirs") + ":" + System.getProperty("netbeans.home")).split(":")) {
-                    if (nbDir.isEmpty()) {
-                        continue;
-                    }
-                    Path nbDirPath = Paths.get(nbDir);
-                    if (Files.isDirectory(nbDirPath)) {
-                        Files.find(nbDirPath, Integer.MAX_VALUE, (p, attr) -> true).forEach(p -> {
-                            fileNameToPath.put(p.getFileName().toString(), p.toAbsolutePath().toString());
-                        });
-                    }
-                }
-                
-                StringBuilder classpath = new StringBuilder();
-                String sep = "";
+            File launcher = InstalledFileLocator.getDefault().locate("modules/scripts/org-netbeans-modules-java-source-remote/bin/nb-java-lsp-server", "org.netbeans.modules.java.source.remote", false);
 
-                for (String shortName : content.toString().split(":")) {
-                    String path = fileNameToPath.get(shortName);
-                    if (path == null) {
-                        continue;
-                    }
-                    classpath.append(sep);
-                    classpath.append(path);
-                    sep = System.getProperty("path.separator");
-                }
-
-                Process process = new ProcessBuilder(remotePlatform.getJavaCommand(), "-classpath", classpath.toString(), "org.netbeans.modules.java.lsp.server.Server").redirectError(ProcessBuilder.Redirect.INHERIT).start();
-                return LanguageServerDescription.create(new InputStreamWrapper(process.getInputStream()), new OutputStreamWrapper(process.getOutputStream()), process);
-            }
+            Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", new File(remotePlatform.getJavaCommand()).getParentFile().getParentFile().getAbsolutePath(), "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath()).redirectError(ProcessBuilder.Redirect.INHERIT).start();
+            return LanguageServerDescription.create(new InputStreamWrapper(process.getInputStream()), new OutputStreamWrapper(process.getOutputStream()), process);
         } catch (Throwable t) {
             t.printStackTrace(); //TODO
             return null;

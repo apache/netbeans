@@ -45,12 +45,6 @@
         <delete file="${lsp.build.dir}/lib/nb-javac-9-impl.jar" />
         <delete file="${lsp.build.dir}/lib/org-netbeans-modules-java-source-nbjavac.jar" />
     </target>
-    <target name="build-lsp-server-classpath" depends="-set-use-jdk-javac,build,test-init">
-        <pathconvert refid="test.unit.run.cp" property="server.classpath">
-            <flattenmapper/>
-        </pathconvert>
-        <echo file="${lsp.server.classpath.target}">${server.classpath}:org-netbeans-modules-java-lsp-server.jar</echo>
-    </target>
     <target name="-set-use-jdk-javac">
         <property name="test.use.jdk.javac" value="true" />
     </target>

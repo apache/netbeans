@@ -233,6 +233,7 @@
                 <friend>org.netbeans.modules.db.sql.editor</friend>
                 <friend>org.netbeans.modules.edm.editor</friend>
                 <friend>org.netbeans.modules.etl.editor</friend>
+                <friend>io.github.jeddict.jpa.modeler</friend>
                 <package>org.netbeans.modules.db.api.sql.execute</package>
             </friend-packages>
         </data>

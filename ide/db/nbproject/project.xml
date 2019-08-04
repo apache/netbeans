@@ -222,6 +222,13 @@
                 <package>org.netbeans.api.db.explorer.support</package>
                 <package>org.netbeans.api.db.sql.support</package>
                 <package>org.netbeans.spi.db.explorer</package>
+                <package>org.netbeans.modules.db.explorer</package>
+                <package>org.netbeans.modules.db.explorer.action</package>
+                <package>org.netbeans.modules.db.explorer.node</package>
+                <package>org.netbeans.modules.db.explorer.sql.editor</package>
+                <package>org.netbeans.lib.ddl</package>
+                <package>org.netbeans.lib.ddl.impl</package>
+                <package>org.netbeans.lib.ddl.util</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/ddl.jar</runtime-relative-path>

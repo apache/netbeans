@@ -645,7 +645,15 @@
                 <package>org.netbeans.modules.j2ee.persistence.api.entity.generator</package>
                 <package>org.netbeans.modules.j2ee.persistence.dd</package>
                 <package>org.netbeans.modules.j2ee.persistence.dd.common</package>
+                <package>org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0</package>
+                <package>org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0</package>
+                <package>org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1</package>
+                <package>org.netbeans.modules.j2ee.persistence.editor</package>
+                <package>org.netbeans.modules.j2ee.persistence.editor.completion</package>
                 <package>org.netbeans.modules.j2ee.persistence.entitygenerator</package>
+                <package>org.netbeans.modules.j2ee.persistence.jpqleditor</package>
+                <package>org.netbeans.modules.j2ee.persistence.jpqleditor.lexer</package>
+                <package>org.netbeans.modules.j2ee.persistence.jpqleditor.ui</package>
                 <package>org.netbeans.modules.j2ee.persistence.provider</package>
                 <package>org.netbeans.modules.j2ee.persistence.spi.datasource</package>
                 <package>org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator</package>

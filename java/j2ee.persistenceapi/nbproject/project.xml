@@ -213,6 +213,9 @@
                 <friend>org.netbeans.modules.websvc.core</friend>
                 <friend>org.netbeans.modules.websvc.rest</friend>
                 <friend>org.netbeans.modules.websvc.restapi</friend>
+                <friend>io.github.jeddict.jcode.util</friend>
+                <friend>io.github.jeddict.jpa.modeler</friend>
+                <friend>io.github.jeddict.reveng</friend>
                 <package>org.netbeans.modules.j2ee.persistence.api</package>
                 <package>org.netbeans.modules.j2ee.persistence.api.metadata.orm</package>
                 <package>org.netbeans.modules.j2ee.persistence.spi</package>

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,19 +77,12 @@ public class AddServerInstanceWizard extends WizardDescriptor {
     private ServerRegistry registry;
 
     private AddServerInstanceWizard(ServerRegistry registry) {
-        this(registry, Collections.<String, String>emptyMap());
-    }
-
-    private AddServerInstanceWizard(ServerRegistry registry, Map<String, String> props) {
         this(new AddServerInstanceWizardIterator(registry));
         this.registry = registry;
-
+        
         putProperty(PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
         putProperty(PROP_CONTENT_DISPLAYED, Boolean.TRUE);
         putProperty(PROP_CONTENT_NUMBERED, Boolean.TRUE);
-        for (Map.Entry<String, String> entry : props.entrySet()) {
-            putProperty(entry.getKey(), entry.getValue());
-        }
 
         if (registry.isCloud()) {
             setTitle(NbBundle.getMessage(AddServerInstanceWizard.class, "LBL_ACIW_Title"));
@@ -113,23 +105,11 @@ public class AddServerInstanceWizard extends WizardDescriptor {
         return showAddServerInstanceWizard(ServerRegistry.getInstance());
     }
 
-    public static ServerInstance showAddServerInstanceWizard(Map<String, String> props) {
-        return showAddServerInstanceWizard(ServerRegistry.getInstance(), props);
-    }
-
     public static ServerInstance showAddCloudInstanceWizard() {
         return showAddServerInstanceWizard(ServerRegistry.getCloudInstance());
     }
 
-    public static ServerInstance showAddCloudInstanceWizard(Map<String, String> props) {
-        return showAddServerInstanceWizard(ServerRegistry.getCloudInstance(), props);
-    }
-
     private static ServerInstance showAddServerInstanceWizard(ServerRegistry registry) {
-        return showAddServerInstanceWizard(registry, Collections.<String, String>emptyMap());
-    }
-
-    private static ServerInstance showAddServerInstanceWizard(ServerRegistry registry, Map<String, String> props) {
         Collection<? extends ServerWizardProvider> providers = Lookups.forPath(
                 registry.getPath()).lookupAll(ServerWizardProvider.class);
         // this will almost never happen if this module will be autoload
@@ -196,7 +176,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
             }
         }
 
-        AddServerInstanceWizard wizard = new AddServerInstanceWizard(registry, props);
+        AddServerInstanceWizard wizard = new AddServerInstanceWizard(registry);
 
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizard);
         try {

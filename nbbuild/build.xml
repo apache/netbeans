@@ -117,7 +117,10 @@
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <get dest="${metabuild.releasejson}" skipexisting="false" src="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json" />
     <!-- get branches and git information -->
-    <antcall target="getgitinformation" />
+    <!--    <antcall target="getgitinformation" /> -->
+<echo file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=release111
+metabuild.hash=d9ec4e569177f19413439e1775707928cc93e1a5
+</echo>
     
     <!-- javadoc content filtering -->
     <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
@@ -136,7 +139,7 @@
         </classpath>
     </taskdef>
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" />
-    <fail />
+    <!--<fail />-->
   </target>
   <target name="-git.ispresent">
       <condition property="metabuild.isgitrepo" value="true" else="false">
@@ -447,6 +450,11 @@ metabuild.hash=${git.hash.properties}
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
     <copy file="../nb/ide.launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
+    <!-- replace -->
+    <replace file="${netbeans.dest.dir}/etc/netbeans.conf" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+        <replacefilter token="@@metabuild.RawVersion@@" property="metabuild.RawVersion"/>
+        <replacefilter token="@@metabuild.logcli@@" property="metabuild.logcli"/>
+    </replace>
     <copy file="../nb/ide.launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
 
     <mkdir dir="${nb.build.dir}/license-temp" />

@@ -95,30 +95,32 @@ public class ReleaseJsonProperties extends Task {
             log("Branch '" + branch + "' is not having good pattern defaulting to 'master'");
             branch = "master";
         }
+        // read all information and store each release in Rel
         try ( FileReader reader = new FileReader(jsonreleaseinfoFile)) {
             JSONObject releaseList = (JSONObject) jsonParser.parse(reader);
-            log(releaseList.keySet().toString());
+            log("Processing release: " + releaseList.keySet().toString());
             for (Object object : releaseList.keySet()) {
                 ri.add(manageRelease(object.toString(), releaseList.get(object)));
             }
-            Collections.sort(ri);
-            for (ReleaseInfo releaseInfo : ri) {
-                log(releaseInfo.toString());
-                Element releasexml = (Element) releasesxml.appendChild(doc.createElement("release"));
-
-                populatexml(releasexml, releaseInfo);
-                if (releaseInfo.getKey().equals(branch)) {
-                    requiredbranchinfo = releaseInfo;
-                    releasesxml.setAttribute("position", Integer.toString(releaseInfo.position));
-                    // attribute to know position of the requested current branch in the set of release
-                }
-            }
-
         } catch (ParseException | IOException ex) {
             throw new BuildException(ex);
         }
+        // sort all information
+        Collections.sort(ri);
+        // build a sorted xml 
+        for (ReleaseInfo releaseInfo : ri) {
+            log(releaseInfo.toString());
+            Element releasexml = (Element) releasesxml.appendChild(doc.createElement("release"));
+            populatexml(releasexml, releaseInfo);
+            if (releaseInfo.getKey().equals(branch)) {
+                requiredbranchinfo = releaseInfo;
+                releasesxml.setAttribute("position", Integer.toString(releaseInfo.position));
+                // attribute to know position of the requested current branch in the set of release
+            }
+        }
+
         if (requiredbranchinfo == null) {
-            throw new BuildException("No Release Information found for branch '" + branch + "', update json file");
+            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section");
         }
 // populate properties for api changes
         getProject().setProperty("previous.release.year", Integer.toString(requiredbranchinfo.previousReleaseDate.getYear()));
@@ -133,11 +135,21 @@ public class ReleaseJsonProperties extends Task {
         log("Writing releasinfo file " + propertiesFile);
         propertiesFile.getParentFile().mkdirs();
         try ( OutputStream config = new FileOutputStream(propertiesFile)) {
-            config.write(("metabuild.Distribution=https://netbeans.apache.org/nb/updates/" + requiredbranchinfo.version + "/updates.xml.gz\n").getBytes());
-            config.write(("metabuild.pluginportalurl=https://netbeans.apache.org/nb/plugins/" + requiredbranchinfo.version + "/catalog.xml.gz\n").getBytes());
-            //config.writepropertiesFile.setProperty("metabuild.updatecenter", requiredbranchinfo.version);
+            config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl + "\n").getBytes());
+            config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl + "\n").getBytes());
+            config.write(("metabuild.RawVersion=" + requiredbranchinfo.version + "\n").getBytes());
+
+            if (branch.equals("master")) {
+                config.write(("metabuild.ComputedSplashVersion=DEV (Build {0})\n").getBytes());
+                config.write(("metabuild.ComputedTitleVersion=DEV {0}\n").getBytes());
+                config.write(("metabuild.logcli=-J-Dnetbeans.logger.console=true -J-ea\n").getBytes());
+            } else {
+                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + "})\n").getBytes());
+                config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + "\n").getBytes());
+                config.write(("metabuild.logcli=\n").getBytes());
+            }
         } catch (IOException ex) {
-            throw new BuildException("Properies File for release cannot be created");
+            throw new BuildException("Properties File for release cannot be created");
         }
 
         log("Writing releasinfo file " + xmlFile);
@@ -150,6 +162,7 @@ public class ReleaseJsonProperties extends Task {
         }
     }
 
+// add attribute for xml building apidoc enhancement
     private void populatexml(Element releasesxml, ReleaseInfo releaseInfo) throws DOMException {
         releasesxml.setAttribute("year", Integer.toString(releaseInfo.releaseDate.getYear()));
         releasesxml.setAttribute("month", Integer.toString(releaseInfo.releaseDate.getMonthValue()));
@@ -172,6 +185,8 @@ public class ReleaseJsonProperties extends Task {
         ri.setVersion((String) jsonrelease.get("versionName"));
         ri.setApidocurl((String) jsonrelease.get("apidocurl"));
         ri.setJavaApiDocurl((String) jsonrelease.get("jdk_apidoc"));
+        ri.setUpdateUrl((String) jsonrelease.get("update_url"));
+        ri.setPluginsUrl((String) jsonrelease.get("plugin_url"));
         return ri;
     }
 
@@ -195,6 +210,8 @@ public class ReleaseJsonProperties extends Task {
         private String version;
         private String apidocurl;
         private String javaapidocurl;
+        private String updateurl;
+        private String pluginsurl;
 
         public ReleaseInfo(String key) {
             this.key = key;
@@ -243,7 +260,7 @@ public class ReleaseJsonProperties extends Task {
 
         private void setVersion(String version) {
             if (version.equals("-")) {
-                this.version = "Development version";
+                this.version = "dev";
             } else {
                 this.version = version;
             }
@@ -255,6 +272,14 @@ public class ReleaseJsonProperties extends Task {
 
         private void setJavaApiDocurl(String javaapidocurl) {
             this.javaapidocurl = javaapidocurl;
+        }
+
+        private void setUpdateUrl(String url) {
+            this.updateurl = url;
+        }
+
+        private void setPluginsUrl(String url) {
+            this.pluginsurl = url;
         }
 
     }

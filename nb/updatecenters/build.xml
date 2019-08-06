@@ -27,10 +27,8 @@
   <target name="compile" depends="projectized-common.compile,javafx-nbms,-branding"/>
   <target name="-branding">
       <replace file="${build.dir}/classes/org/netbeans/modules/updatecenters/resources/Bundle.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
-           <replacefilter token="@@metabuild.Distribution@@" property="metabuild.Distribution"/>
-           <replacefilter token="@@metabuild.pluginportalurl@@" property="metabuild.pluginportalurl"/> 
-           
-
+           <replacefilter token="@@metabuild.DistributionURL@@" property="metabuild.DistributionURL"/>
+           <replacefilter token="@@metabuild.PluginPortalURL@@" property="metabuild.PluginPortalURL"/> 
       </replace>
   </target>
   <target name="javafx-nbms" description="Prepare NBMs for 3rd party libraries" depends="projectized-common.compile">

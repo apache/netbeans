@@ -23,4 +23,4 @@ Exec=netbeans %F
 Categories=Development;IDE
 Icon=${SNAP}/meta/gui/icon.png
 Terminal=false
-
+StartupWMClass=Apache NetBeans 11.1

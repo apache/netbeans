@@ -144,7 +144,7 @@ public class ReleaseJsonProperties extends Task {
                 config.write(("metabuild.ComputedTitleVersion=DEV {0}\n").getBytes());
                 config.write(("metabuild.logcli=-J-Dnetbeans.logger.console=true -J-ea\n").getBytes());
             } else {
-                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + "})\n").getBytes());
+                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + "\n").getBytes());
                 config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + "\n").getBytes());
                 config.write(("metabuild.logcli=\n").getBytes());
             }

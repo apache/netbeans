@@ -3,4 +3,3 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.libs.nashorn/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/nashorn/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.40
-OpenIDE-Module-Needs: com.oracle.js.parser.implementation

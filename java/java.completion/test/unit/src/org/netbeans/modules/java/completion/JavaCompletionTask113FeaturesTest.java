@@ -49,6 +49,10 @@ public class JavaCompletionTask113FeaturesTest extends CompletionTestBase {
         performTest("SwitchExprForYieldWithValue", 1019, "yi", "SwitchExprYieldAutoCompletion.pass");
     }
 
+    public void testSwitchExprAutoCompleteYieldValue2() throws Exception {
+        performTest("SwitchExprForYieldWithValue2", 1023, "yi", "SwitchExprYieldAutoCompletion.pass");
+    }
+
     public void noop() {
     }
 

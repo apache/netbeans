@@ -1511,6 +1511,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         localResult(env);
         addKeywordsForBlock(env);
+        
+        String prefix = env.getPrefix();
+        if (SOURCE_VERSION_RELEASE_13 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
+                && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+            TreePath parentPath = env.getPath().getParentPath();
+            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                addKeyword(env, YIELD_KEYWORD, null, false);
+            }
+        }
     }
 
     private void insideMemberSelect(Env env) throws IOException {

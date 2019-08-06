@@ -405,7 +405,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 this.commentsEnabled = printComments;
                 if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                     visitSwitchExpression(t);
-                } else {
+                } 
+                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
+                    visitYield(t);
+                }
+                else {
                     t.accept(this);
                 }
                 this.commentsEnabled = saveComments;
@@ -1489,6 +1493,15 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         } else if (tree.getLabel() != null) {
             needSpace();
             print(tree.getLabel());
+        }
+        print(';');
+    }
+
+    public void visitYield(Tree tree) {
+        print("yield");
+        if (TreeShims.getYieldValue(tree) != null) {
+            needSpace();
+            print((JCTree) TreeShims.getYieldValue(tree));
         }
         print(';');
     }

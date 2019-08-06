@@ -99,6 +99,7 @@ public class DynamicVerifyTest extends NbTestCase {
 
     public void testNoUserDefinedFeaturesInStandardBuild() throws Exception {
         FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider();
+
         Map<String, UpdateItem> items = instance.getUpdateItems();
         assertNull("No user installed modules should be in standard build. If this happens,\n" +
                 "like in case of http://openide.netbeans.org/issues/show_bug.cgi?id=174052\n" +

@@ -75,15 +75,11 @@ public class AddServerInstanceWizard extends WizardDescriptor {
 
     private static final Logger LOGGER = Logger.getLogger(AddServerInstanceWizard.class.getName()); // NOI18N
     
-    private ServerRegistry registry;
+    private ServerRegistry[] registries;
 
-    private AddServerInstanceWizard(ServerRegistry registry) {
-        this(registry, Collections.<String, String>emptyMap());
-    }
-
-    private AddServerInstanceWizard(ServerRegistry registry, Map<String, String> props) {
-        this(new AddServerInstanceWizardIterator(registry));
-        this.registry = registry;
+    private AddServerInstanceWizard(Map<String, String> props, ServerRegistry... registries) {
+        this(new AddServerInstanceWizardIterator(registries[0]));
+        this.registries = registries;
 
         putProperty(PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
         putProperty(PROP_CONTENT_DISPLAYED, Boolean.TRUE);
@@ -92,7 +88,8 @@ public class AddServerInstanceWizard extends WizardDescriptor {
             putProperty(entry.getKey(), entry.getValue());
         }
 
-        if (registry.isCloud()) {
+        ServerRegistry primaryRegistry = registries[0];
+        if (primaryRegistry.isCloud()) {
             setTitle(NbBundle.getMessage(AddServerInstanceWizard.class, "LBL_ACIW_Title"));
             setTitleFormat(new MessageFormat(NbBundle.getMessage(AddServerInstanceWizard.class, "LBL_ACIW_TitleFormat")));
         } else {
@@ -110,35 +107,43 @@ public class AddServerInstanceWizard extends WizardDescriptor {
     }
     
     public static ServerInstance showAddServerInstanceWizard() {
-        return showAddServerInstanceWizard(ServerRegistry.getInstance());
+        return showAddServerInstanceWizard(Collections.<String, String>emptyMap());
     }
 
     public static ServerInstance showAddServerInstanceWizard(Map<String, String> props) {
-        return showAddServerInstanceWizard(ServerRegistry.getInstance(), props);
+        return showAddInstanceWizard(props, ServerRegistry.getInstance());
     }
 
     public static ServerInstance showAddCloudInstanceWizard() {
-        return showAddServerInstanceWizard(ServerRegistry.getCloudInstance());
+        return showAddCloudInstanceWizard(Collections.<String, String>emptyMap());
     }
 
     public static ServerInstance showAddCloudInstanceWizard(Map<String, String> props) {
-        return showAddServerInstanceWizard(ServerRegistry.getCloudInstance(), props);
+        return showAddInstanceWizard(props, ServerRegistry.getCloudInstance());
     }
 
-    private static ServerInstance showAddServerInstanceWizard(ServerRegistry registry) {
-        return showAddServerInstanceWizard(registry, Collections.<String, String>emptyMap());
+    public static ServerInstance showAddAllInstanceWizard() {
+        return showAddAllInstanceWizard(Collections.<String, String>emptyMap());
     }
 
-    private static ServerInstance showAddServerInstanceWizard(ServerRegistry registry, Map<String, String> props) {
-        Collection<? extends ServerWizardProvider> providers = Lookups.forPath(
-                registry.getPath()).lookupAll(ServerWizardProvider.class);
+    public static ServerInstance showAddAllInstanceWizard(Map<String, String> props) {
+        return showAddInstanceWizard(props, ServerRegistry.getInstance(), ServerRegistry.getCloudInstance());
+    }
+
+    private static ServerInstance showAddInstanceWizard(Map<String, String> props, ServerRegistry... registries) {
+        Collection<ServerWizardProvider> providers = new ArrayList<>();
+        for (ServerRegistry registry : registries) {
+            providers.addAll(Lookups.forPath(registry.getPath()).lookupAll(ServerWizardProvider.class));
+        }
+
         // this will almost never happen if this module will be autoload
         if (providers.isEmpty()) {
             // except we run in ergonomics mode and providers are not yet on
             // inspite there some are ready
-            JRadioButton[] ready = listAvailableProviders(registry.getPath());
-            
-            if (registry.isCloud()) {
+            ServerRegistry primaryRegistry = registries[0];
+            JRadioButton[] ready = listAvailableProviders(primaryRegistry.getPath());
+
+            if (primaryRegistry.isCloud()) {
                 String close = NbBundle.getMessage(AddServerInstanceWizard.class, "LBL_NoCloudPlugins_Close");
                 DialogDescriptor descriptor = new DialogDescriptor(
                         NbBundle.getMessage(AddServerInstanceWizard.class, "LBL_NoCloudPlugins_Text"),
@@ -196,7 +201,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
             }
         }
 
-        AddServerInstanceWizard wizard = new AddServerInstanceWizard(registry, props);
+        AddServerInstanceWizard wizard = new AddServerInstanceWizard(props, registries);
 
         Dialog dialog = DialogDisplayer.getDefault().createDialog(wizard);
         try {
@@ -260,13 +265,14 @@ public class AddServerInstanceWizard extends WizardDescriptor {
 
     private ServerWizardPanel getChooser() {
         if (chooser == null) {
-            chooser = new ServerWizardPanel(registry);
+            chooser = new ServerWizardPanel(registries);
         }
         return chooser;
     }
 
     private String[] getContentData() {
-        String[] firstContentData = getFirstPanelContentData(registry.isCloud());
+        ServerRegistry primaryRegistry = registries[0];
+        String[] firstContentData = getFirstPanelContentData(primaryRegistry.isCloud());
 
         if (iterator.current().equals(getChooser())) {
             return firstContentData;

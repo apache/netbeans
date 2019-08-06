@@ -88,8 +88,8 @@ public final class ServerManager {
      */
     public static String showAddServerInstanceWizard(Map<String, String> props) {
         checkDispatchThread();
-        ServerInstance instance = AddServerInstanceWizard.showAddServerInstanceWizard(props);
-        return instance.getProperty(InstanceProperties.URL_ATTR);
+        ServerInstance instance = AddServerInstanceWizard.showAddAllInstanceWizard(props);
+        return instance != null ? instance.getProperty(InstanceProperties.URL_ATTR) : null;
     }
     
     private static void checkDispatchThread() {

@@ -21,6 +21,8 @@ package org.netbeans.modules.server.ui.wizard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import static java.util.stream.Collectors.toList;
 import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -58,6 +61,8 @@ import org.openide.util.lookup.Lookups;
  */
 public class ServerWizardVisual extends javax.swing.JPanel {
 
+    private static final Logger LOGGER = Logger.getLogger(ServerWizardVisual.class.getName());
+
     private final CopyOnWriteArrayList<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
 
     private final Map<ServerWizardProvider, String> displayNames = new HashMap<ServerWizardProvider, String>();
@@ -66,17 +71,20 @@ public class ServerWizardVisual extends javax.swing.JPanel {
 
     private boolean updatingDisplayName = false;
     
-    private ServerRegistry registry;
+    private final ServerRegistry[] registries;
 
-    public ServerWizardVisual(ServerRegistry registry) {
-        this.registry = registry;
+
+    public ServerWizardVisual(ServerRegistry... registries) {
+        this.registries = registries;
         initComponents();
-        if (registry.isCloud()) {
-            Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getBundle(ServerWizardVisual.class).getString("LBL_SCV_Cloud")); // NOI18N
-            setName(NbBundle.getBundle(ServerWizardVisual.class).getString("LBL_CCV_Name")); // NOI18N
+
+        ServerRegistry primaryRegistry = registries[0];
+        if (primaryRegistry.isCloud()) {
+            Mnemonics.setLocalizedText(jLabel1, NbBundle.getMessage(ServerWizardVisual.class, "LBL_SCV_Cloud")); // NOI18N
+            setName(NbBundle.getMessage(ServerWizardVisual.class, "LBL_CCV_Name")); // NOI18N
         }
         Queue<WizardAdapter> selected = new PriorityQueue<WizardAdapter>(5, 
-                registry.isCloud() ? new WizardPriority(CLOUD_PRIORITY_LIST) : new WizardPriority(PRIORITY_LIST));
+                primaryRegistry.isCloud() ? new WizardPriority(CLOUD_PRIORITY_LIST) : new WizardPriority(PRIORITY_LIST));
         for (int i = 0; i < serverListBox.getModel().getSize(); i++) {
             selected.add((WizardAdapter) serverListBox.getModel().getElementAt(i));
         }
@@ -146,10 +154,11 @@ public class ServerWizardVisual extends javax.swing.JPanel {
     private boolean isServerValid() {
         boolean result = serverListBox.getSelectedValue() != null;
         if (!result) {
-            if (registry.isCloud()) {
-                wizard.setErrorMessage(NbBundle.getMessage(ServerWizardVisual.class, "MSG_SCV_ChooseServer"));
-            } else {
+            ServerRegistry primaryRegistry = registries[0];
+            if (primaryRegistry.isCloud()) {
                 wizard.setErrorMessage(NbBundle.getMessage(ServerWizardVisual.class, "MSG_CCV_ChooseServer"));
+            } else {
+                wizard.setErrorMessage(NbBundle.getMessage(ServerWizardVisual.class, "MSG_SCV_ChooseServer"));
             }
         }
         return result;
@@ -172,7 +181,12 @@ public class ServerWizardVisual extends javax.swing.JPanel {
     }
 
     private boolean existsDisplayName(String displayName) {
-        for (ServerInstanceProvider type : registry.getProviders()) {
+        Collection<ServerInstanceProvider> providers = new ArrayList<>();
+        for (ServerRegistry registry : registries) {
+            providers.addAll(registry.getProviders());
+        }
+
+        for (ServerInstanceProvider type : providers) {
             for (ServerInstance instance : type.getInstances()) {
                 assert instance != null : "ServerInstance returned by provider " + type + " is null";
                 if (instance == null) {
@@ -182,8 +196,7 @@ public class ServerWizardVisual extends javax.swing.JPanel {
                 if (null != instanceName && instanceName.equalsIgnoreCase(displayName)) {
                     return true;
                 } else if (null == instanceName) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-                            "corrupted ServerInstance: " + instance.toString());
+                    LOGGER.log(Level.FINE, "corrupted ServerInstance: {0}", instance.toString());
                 }
             }
         }
@@ -258,7 +271,7 @@ public class ServerWizardVisual extends javax.swing.JPanel {
             }
         });
 
-        serverListBox.setModel(new WizardListModel(registry));
+        serverListBox.setModel(new WizardListModel(registries));
         serverListBox.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         serverListBox.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -335,15 +348,18 @@ private void serverListBoxValueChanged(javax.swing.event.ListSelectionEvent evt)
 
     private static class WizardListModel implements ListModel, LookupListener {
 
-        private final List<WizardAdapter> serverWizards = Collections.synchronizedList(new ArrayList<WizardAdapter>());
+        private final List<WizardAdapter> serverWizards = Collections.synchronizedList(new ArrayList<>());
 
-        private final List<ListDataListener> listeners = new CopyOnWriteArrayList<ListDataListener>();
+        private final List<ListDataListener> listeners = new CopyOnWriteArrayList<>();
 
-        private final Lookup.Result<ServerWizardProvider> result;
+        private final List<Lookup.Result<ServerWizardProvider>> results = new ArrayList<>();
 
-        public WizardListModel(ServerRegistry registry) {
-            this.result = Lookups.forPath(registry.getPath()).lookupResult(ServerWizardProvider.class);
-            this.result.addLookupListener(WeakListeners.create(LookupListener.class, this, result));
+        public WizardListModel(ServerRegistry... registries) {
+            for (ServerRegistry registry : registries) {
+                Lookup.Result<ServerWizardProvider> result = Lookups.forPath(registry.getPath()).lookupResult(ServerWizardProvider.class);
+                result.addLookupListener(WeakListeners.create(LookupListener.class, this, result));
+                results.add(result);
+            }
             resultChanged(null);
         }
 
@@ -370,11 +386,13 @@ private void serverListBoxValueChanged(javax.swing.event.ListSelectionEvent evt)
         @Override
         public final void resultChanged(LookupEvent ev) {
             List<WizardAdapter> fresh = new ArrayList<WizardAdapter>();
-            for (ServerWizardProvider wizard : result.allInstances()) {
+            for (Lookup.Result<ServerWizardProvider> result : results) {
+                for (ServerWizardProvider wizard : result.allInstances()) {
 
-                // safety precaution shouldn't ever happen - used because of bridging
-                if (wizard.getInstantiatingIterator() != null) {
-                    fresh.add(new WizardAdapter(wizard));
+                    // safety precaution shouldn't ever happen - used because of bridging
+                    if (wizard.getInstantiatingIterator() != null) {
+                        fresh.add(new WizardAdapter(wizard));
+                    }
                 }
             }
             Collections.sort(fresh);

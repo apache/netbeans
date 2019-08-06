@@ -649,13 +649,15 @@ meth public static org.netbeans.api.server.ServerInstance showAddCloudInstanceWi
 meth public static org.netbeans.api.server.ServerInstance showAddCloudInstanceWizard(java.util.Map<java.lang.String,java.lang.String>)
 meth public static org.netbeans.api.server.ServerInstance showAddServerInstanceWizard()
 meth public static org.netbeans.api.server.ServerInstance showAddServerInstanceWizard(java.util.Map<java.lang.String,java.lang.String>)
+meth public static org.netbeans.api.server.ServerInstance showAddAllInstanceWizard()
+meth public static org.netbeans.api.server.ServerInstance showAddAllInstanceWizard(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setErrorMessage(java.lang.String)
 supr org.openide.WizardDescriptor
 hfds LOGGER,PROP_AUTO_WIZARD_STYLE,PROP_CONTENT_DATA,PROP_CONTENT_DISPLAYED,PROP_CONTENT_NUMBERED,PROP_CONTENT_SELECTED_INDEX,PROP_ERROR_MESSAGE,chooser,iterator,registry
 hcls AddServerInstanceWizardIterator
 
 CLSS public org.netbeans.modules.server.ui.wizard.ServerWizardVisual
-cons public init(org.netbeans.modules.server.ServerRegistry)
+cons public init(org.netbeans.modules.server.ServerRegistry[])
 meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void read(org.netbeans.modules.server.ui.wizard.AddServerInstanceWizard)
 meth public void removeChangeListener(javax.swing.event.ChangeListener)

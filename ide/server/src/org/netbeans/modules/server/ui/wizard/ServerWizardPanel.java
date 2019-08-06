@@ -37,17 +37,21 @@ class ServerWizardPanel implements WizardDescriptor.Panel, ChangeListener {
     private final CopyOnWriteArrayList<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
 
     private ServerWizardVisual component;
-    private ServerRegistry registry;
+    private ServerRegistry[] registries;
     
-    public ServerWizardPanel(ServerRegistry registry) {
+    public ServerWizardPanel(ServerRegistry... registries) {
         super();
-        assert registry != null;
-        this.registry = registry;
+        assert registries != null;
+        if(registries.length == 0) {
+            throw new IllegalArgumentException();
+        }
+        this.registries = registries;
     }
 
+    @Override
     public Component getComponent() {
         if (component == null) {
-            component = new ServerWizardVisual(registry);
+            component = new ServerWizardVisual(registries);
             component.addChangeListener(this);
         }
         return component;
@@ -57,30 +61,36 @@ class ServerWizardPanel implements WizardDescriptor.Panel, ChangeListener {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public void readSettings(Object settings) {
         getVisual().read((AddServerInstanceWizard) settings);
     }
 
+    @Override
     public void storeSettings(Object settings) {
         getVisual().store((AddServerInstanceWizard) settings);
     }
 
+    @Override
     public boolean isValid() {
         return getVisual().hasValidData();
     }
 
+    @Override
     public void addChangeListener(ChangeListener listener) {
         if (listener != null) {
             listeners.add(listener);
         }
     }
 
+    @Override
     public void removeChangeListener(ChangeListener listener) {
         if (listener != null) {
             listeners.remove(listener);
         }
     }
 
+    @Override
     public void stateChanged(ChangeEvent event) {
         fireChange(event);
     }

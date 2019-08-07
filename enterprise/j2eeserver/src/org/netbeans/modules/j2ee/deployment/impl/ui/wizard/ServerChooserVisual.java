@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -290,15 +293,29 @@ private void serverListBoxValueChanged(javax.swing.event.ListSelectionEvent evt)
     // End of variables declaration//GEN-END:variables
     
     private static class ServerModel implements ComboBoxModel {
-        private List servers;
+        private final List servers;
         private ServerAdapter selected;
                 
         public ServerModel() {
             servers = new ArrayList();
-            Collection allServers = ServerRegistry.getInstance().getServers();
-            Iterator iter = allServers.iterator();
+            /**
+             * Fetch the server list and remove the server entries with common
+             * platform and different URI fragment e.g [gfv3ee6, gfv5ee8] &
+             * [pfv3ee6, pfv4ee7, pfvee8].
+             *
+             */
+            List<Server> allServers = ServerRegistry.getInstance()
+                    .getServers()
+                    .stream()
+                    .collect(groupingBy(server -> server.getJ2eePlatformFactory().getClass()))
+                    .values()
+                    .stream()
+                    .flatMap(group -> group.stream().limit(1))
+                    .collect(toList());
+
+            Iterator<Server> iter = allServers.iterator();
             while (iter.hasNext()) {
-                Server server = (Server)iter.next();
+                Server server = iter.next();
                 OptionalDeploymentManagerFactory factory = server.getOptionalFactory();
                 if (factory != null && factory.getAddInstanceIterator() != null) {
                     ServerAdapter serverAdapter = new ServerAdapter(server);
@@ -317,7 +334,7 @@ private void serverListBoxValueChanged(javax.swing.event.ListSelectionEvent evt)
                 selected = (servers.size() > 0) ? (ServerAdapter)servers.get(0) : null;
             }
         }
-        
+
         public Object getElementAt(int index) {
             return servers.get(index);
         }

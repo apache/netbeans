@@ -147,8 +147,10 @@ public class ReleaseJsonProperties extends Task {
         propertiesFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(propertiesFile)) {
             String optionnalversion = "";
+            boolean found = false;
             for (MileStone m : requiredbranchinfo.milestones) {
                 if (m.hash.equals(hash)) {
+                    found = true;
                     log("found hash" + hash + "-" + m.vote);
                     // found a milestone
                     if (m.vote != -1) {
@@ -158,6 +160,10 @@ public class ReleaseJsonProperties extends Task {
                     }
 
                 }
+            }
+            if (!found && !branch.equals("master")) {
+                // hash no match we are building a dev version of specific branch
+                optionnalversion = "-dev";
             }
             config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());
             config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());

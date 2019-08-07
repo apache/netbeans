@@ -55,7 +55,7 @@ public class ParseGitBranch extends Task {
         Reader dataReader = new StringReader(data);
         String firstLine = null;
         String secondLine = null;
-        try ( LineNumberReader r = new LineNumberReader(dataReader);) {
+        try (LineNumberReader r = new LineNumberReader(dataReader);) {
             firstLine = r.readLine();
             secondLine = r.readLine();
         } catch (IOException ex) {
@@ -64,12 +64,17 @@ public class ParseGitBranch extends Task {
         if (secondLine != null) {
             throw new BuildException("Problem parsing git information for detached head : too many line");
         }
-        String[] splited = firstLine.trim().split(" ");
-        long count = splited[0].chars().filter(ch -> ch == '/').count();
-        if (count != 1) {
-            throw new BuildException("Problem parsing git information" + count);
+        if (firstLine == null || firstLine.trim().isEmpty()) {
+            // PullRequest assume master ?
+            getProject().setProperty(propertyName, "master");
         } else {
-            getProject().setProperty(propertyName, splited[0].split("/")[1]);
+            String[] splited = firstLine.trim().split(" ");
+            long count = splited[0].chars().filter(ch -> ch == '/').count();
+            if (count != 1) {
+                throw new BuildException("Problem parsing git information" + count);
+            } else {
+                getProject().setProperty(propertyName, splited[0].split("/")[1]);
+            }
         }
     }
 }

@@ -162,6 +162,7 @@ metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
           <arg value="--abbrev-ref"/>
           <arg value="HEAD"/>
       </gitexec>
+      <echo message="branch ${git.branch.properties}" />
       <gitexec outputproperty="git.branchdetached.bulk.properties">
           <arg value="branch"/>
           <arg value="--remote"/>
@@ -169,7 +170,7 @@ metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
           <arg value="--no-abbrev"/>
           <arg value="--contains"/>
       </gitexec>
-      
+      <echo message="detached ${git.branchdetached.bulk.properties}" />
       <!-- branch is HEAD implies detached -->
       <condition property="invalidbranch">
           <equals arg1="HEAD" arg2="${git.branch.properties}"/>

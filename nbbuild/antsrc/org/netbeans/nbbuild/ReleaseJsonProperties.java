@@ -49,6 +49,10 @@ public class ReleaseJsonProperties extends Task {
      */
     private String branch;
     /**
+     * current hash we works with
+     */
+    private String hash;
+    /**
      * cache of json file
      */
     private File jsonreleaseinfoFile;
@@ -64,6 +68,10 @@ public class ReleaseJsonProperties extends Task {
 
     public void setBranch(String branch) {
         this.branch = branch;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public void setFile(File file) {
@@ -96,7 +104,7 @@ public class ReleaseJsonProperties extends Task {
             branch = "master";
         }
         // read all information and store each release in Rel
-        try ( FileReader reader = new FileReader(jsonreleaseinfoFile)) {
+        try (FileReader reader = new FileReader(jsonreleaseinfoFile)) {
             JSONObject releaseList = (JSONObject) jsonParser.parse(reader);
             log("Processing release: " + releaseList.keySet().toString());
             for (Object object : releaseList.keySet()) {
@@ -110,6 +118,9 @@ public class ReleaseJsonProperties extends Task {
         // build a sorted xml 
         for (ReleaseInfo releaseInfo : ri) {
             log(releaseInfo.toString());
+            for (Object milestone : releaseInfo.milestones) {
+                log(milestone.toString());
+            }
             Element releasexml = (Element) releasesxml.appendChild(doc.createElement("release"));
             populatexml(releasexml, releaseInfo);
             if (releaseInfo.getKey().equals(branch)) {
@@ -134,18 +145,32 @@ public class ReleaseJsonProperties extends Task {
         getProject().setProperty("javaapidocurl", requiredbranchinfo.javaapidocurl);
         log("Writing releasinfo file " + propertiesFile);
         propertiesFile.getParentFile().mkdirs();
-        try ( OutputStream config = new FileOutputStream(propertiesFile)) {
-            config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl + "\n").getBytes());
-            config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl + "\n").getBytes());
-            config.write(("metabuild.RawVersion=" + requiredbranchinfo.version + "\n").getBytes());
+        try (OutputStream config = new FileOutputStream(propertiesFile)) {
+            String optionnalversion = "";
+            for (MileStone m : requiredbranchinfo.milestones) {
+                if (m.hash.equals(hash)) {
+                    log("found hash" + hash + "-" + m.vote);
+                    // found a milestone
+                    if (m.vote != -1) {
+                        // vote is set we want the full version
+                    } else {
+                        optionnalversion = "-" + m.version;
+                    }
+
+                }
+            }
+            config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());
+            config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());
+            // used for cache and user dir
+            config.write(("metabuild.RawVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
 
             if (branch.equals("master")) {
                 config.write(("metabuild.ComputedSplashVersion=DEV (Build {0})\n").getBytes());
                 config.write(("metabuild.ComputedTitleVersion=DEV {0}\n").getBytes());
                 config.write(("metabuild.logcli=-J-Dnetbeans.logger.console=true -J-ea\n").getBytes());
             } else {
-                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + "\n").getBytes());
-                config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + "\n").getBytes());
+                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
+                config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
                 config.write(("metabuild.logcli=\n").getBytes());
             }
         } catch (IOException ex) {
@@ -155,7 +180,7 @@ public class ReleaseJsonProperties extends Task {
         log("Writing releasinfo file " + xmlFile);
 
         xmlFile.getParentFile().mkdirs();
-        try ( OutputStream config = new FileOutputStream(xmlFile)) {
+        try (OutputStream config = new FileOutputStream(xmlFile)) {
             XMLUtil.write(doc, config);
         } catch (IOException ex) {
             throw new BuildException("XML File for release cannot be created");
@@ -175,18 +200,50 @@ public class ReleaseJsonProperties extends Task {
 
     private ReleaseInfo manageRelease(String key, Object arelease) {
         ReleaseInfo ri = new ReleaseInfo(key);
+        // mandatory element
         JSONObject jsonrelease = (JSONObject) arelease;
-        ri.setPosition(Integer.parseInt((String) jsonrelease.get("position")));
-        JSONObject previousrelease = (JSONObject) jsonrelease.get("previousreleasedate");
-        ri.setPreviousRelease((String) previousrelease.get("day"), (String) previousrelease.get("month"), (String) previousrelease.get("year"));
-        JSONObject releasedate = (JSONObject) jsonrelease.get("releasedate");
-        ri.setReleaseDate((String) releasedate.get("day"), (String) releasedate.get("month"), (String) releasedate.get("year"));
-        ri.setMaturity((String) jsonrelease.get("tlp"));
-        ri.setVersion((String) jsonrelease.get("versionName"));
-        ri.setApidocurl((String) jsonrelease.get("apidocurl"));
-        ri.setJavaApiDocurl((String) jsonrelease.get("jdk_apidoc"));
-        ri.setUpdateUrl((String) jsonrelease.get("update_url"));
-        ri.setPluginsUrl((String) jsonrelease.get("plugin_url"));
+        ri.setPosition(Integer.parseInt((String) getJSONInfo(jsonrelease, "position", "Order of release starting")));
+        // previous release date
+        JSONObject previousrelease = (JSONObject) getJSONInfo(jsonrelease, "previousreleasedate", "Apidoc: Date of previous Release");
+        ri.setPreviousRelease(
+                (String) getJSONInfo(previousrelease, "day", "Apidoc: day of previous Release"),
+                (String) getJSONInfo(previousrelease, "month", "Apidoc: month of previous Release"),
+                (String) getJSONInfo(previousrelease, "year", "Apidoc: year of previous Release"));
+        // date of release
+        JSONObject releasedate = (JSONObject) getJSONInfo(jsonrelease, "releasedate", "Apidoc: Date of Release vote");
+        ri.setReleaseDate(
+                (String) getJSONInfo(releasedate, "day", "Apidoc: day of previous Release"),
+                (String) getJSONInfo(releasedate, "month", "Apidoc: month of previous Release"),
+                (String) getJSONInfo(releasedate, "year", "Apidoc: year of previous Release"));
+
+        // tlp or not
+        ri.setMaturity((String) getJSONInfo(jsonrelease, "tlp", "Statut of release - TLP or not"));
+        // version name
+        ri.setVersion((String) getJSONInfo(jsonrelease, "versionName", "Version name"));
+        ri.setApidocurl((String) getJSONInfo(jsonrelease, "apidocurl", "Apidoc: URL"));
+        ri.setJavaApiDocurl((String) getJSONInfo(jsonrelease, "jdk_apidoc", "Apidoc: javadoc for java jdk"));
+        ri.setUpdateUrl((String) getJSONInfo(jsonrelease, "update_url", "Update catalog"));
+        ri.setPluginsUrl((String) getJSONInfo(jsonrelease, "plugin_url", "Plugin URL"));
+        // optional section
+        JSONObject milestone = (JSONObject) jsonrelease.get("milestones");
+        if (milestone != null) {
+            for (Object object : milestone.keySet()) {
+                // ri.add(manageRelease(object.toString(), releaseList.get(object)));
+                JSONObject milestonedata = (JSONObject) milestone.get(object);
+                MileStone m = new MileStone((String) object);
+                // mandatory
+                m.setPosition(Integer.parseInt((String) getJSONInfo(milestonedata, "position", "Order of milestone in release")));
+                // optional
+                Object vote = milestonedata.get("vote");
+                if (vote != null) {
+                    m.setVote(Integer.parseInt((String) vote));
+                }
+                m.setVersion((String) milestonedata.get("version"));
+                ri.addMileStone(m);
+            }
+            Collections.sort(ri.milestones);
+        }
+
         return ri;
     }
 
@@ -200,6 +257,53 @@ public class ReleaseJsonProperties extends Task {
         return date.format(formatter);
     }
 
+    private Object getJSONInfo(JSONObject json, String key, String info) {
+        Object result = json.get(key);
+        //log("Retriving " + key);
+        if (result == null) {
+            throw new BuildException("Cannot retrieve key " + key + ", this is for" + info);
+        }
+        return result;
+    }
+
+    private static class MileStone implements Comparable<MileStone> {
+
+        private int position;
+        private int vote = -1;
+        private final String hash;
+        private String version;
+
+        public MileStone(String hash) {
+            this.hash = hash;
+        }
+
+        @Override
+        public int compareTo(MileStone o) {
+            return (this.position - o.position);
+        }
+
+        private void setPosition(int position) {
+            this.position = position;
+        }
+
+        private void setVote(int vote) {
+            this.vote = vote;
+        }
+
+        private void setVersion(String version) {
+            this.version = version;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + hash + "," + position + "," + vote + "," + version + ")";
+        }
+    }
+
+    /**
+     *
+     * Comparable on position. Avoir randomness.
+     */
     private static class ReleaseInfo implements Comparable<ReleaseInfo> {
 
         private int position;
@@ -212,9 +316,11 @@ public class ReleaseJsonProperties extends Task {
         private String javaapidocurl;
         private String updateurl;
         private String pluginsurl;
+        private List<MileStone> milestones;
 
         public ReleaseInfo(String key) {
             this.key = key;
+            this.milestones = new ArrayList<>();
         }
 
         @Override
@@ -235,23 +341,21 @@ public class ReleaseJsonProperties extends Task {
             return key;
         }
 
-        private void setPreviousRelease(String day, String month, String year) {
+        private LocalDateTime setDate(String day, String month, String year) {
+            LocalDateTime tmp = LocalDateTime.now();
             try {
-
-                previousReleaseDate = LocalDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), 12, 0);
+                tmp = LocalDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), 12, 0);
             } catch (NumberFormatException e) {
-                // not a date, use now we should be on master
-                previousReleaseDate = LocalDateTime.now();
             }
+            return tmp;
+        }
+
+        private void setPreviousRelease(String day, String month, String year) {
+            previousReleaseDate = setDate(day, month, year);
         }
 
         private void setReleaseDate(String day, String month, String year) {
-            try {
-                releaseDate = LocalDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), 12, 0);
-            } catch (NumberFormatException e) {
-                // not a date, use now we should be on master
-                releaseDate = LocalDateTime.now();
-            }
+            releaseDate = setDate(day, month, year);
         }
 
         private void setMaturity(String tlp) {
@@ -280,6 +384,10 @@ public class ReleaseJsonProperties extends Task {
 
         private void setPluginsUrl(String url) {
             this.pluginsurl = url;
+        }
+
+        private void addMileStone(MileStone milestone) {
+            this.milestones.add(milestone);
         }
 
     }

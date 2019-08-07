@@ -36,6 +36,7 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
     </copy>
     
     <!-- copy to build folder to do replace -->
+    <delete dir="${build.dir}/branding/core.startup" quiet="true" />
     <copy todir="${build.dir}/branding/core.startup">
         <fileset dir="core.startup"/>
     </copy>
@@ -59,7 +60,8 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
       jarfile="${cluster}/modules/org-netbeans-core-netigso.jar">
       <branding name="nb"/>
     </locjar>
-
+    
+    <delete dir="${build.dir}/branding/core.windows" quiet="true" />
     <copy todir="${build.dir}/branding/core.windows">
         <fileset dir="core.windows"/>
     </copy>

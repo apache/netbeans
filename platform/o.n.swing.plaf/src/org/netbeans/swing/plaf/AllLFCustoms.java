@@ -26,9 +26,10 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +53,7 @@ final class AllLFCustoms extends LFCustoms {
     private static final int HI_DEF_MONITOR_QHD = 2560 * 1440;
     private static final int HI_DEF_MONITOR_4K = 3840 * 2160;
     private static final int HI_DEF_MONITOR_8K = 7680 * 4320;
-    private static final int DEFAULT_CHARS_PER_INCH = 10;
+    private static final int DEFAULT_CHARS_PER_INCH = 9;
 
     public Object[] createApplicationSpecificKeysAndValues() {
         Object[] uiDefaults = {
@@ -127,6 +128,44 @@ final class AllLFCustoms extends LFCustoms {
         };
         return uiDefaults;
     }
+    private static boolean sameResolution(DisplayMode a, DisplayMode b) {
+        return a.getWidth() == b.getWidth() && a.getHeight() == b.getHeight();
+    }
+
+    private static DisplayMode findLargestDisplayMode(DisplayMode[] mode) {
+        Arrays.sort(mode, new DisplayModeComparator());
+        return mode[0];
+    }
+
+    private static final class DisplayModeComparator implements Comparator<DisplayMode> {
+
+        @Override
+        public int compare(DisplayMode a, DisplayMode b) {
+            return Integer.compare(b.getWidth() * b.getHeight(), a.getWidth() * a.getHeight());
+        }
+    }
+
+    private static GraphicsDevice getLargestGraphicsDevice() {
+        java.util.List<GraphicsDevice> devices = new ArrayList<>();
+        for (GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+            if (device.getType() == GraphicsDevice.TYPE_RASTER_SCREEN) {
+                devices.add(device);
+            }
+        }
+        Collections.sort(devices, new GraphicsDeviceComparator());
+        return devices.isEmpty() ? null : devices.get(0);
+    }
+
+    private static AffineTransform createScalingTransform(DisplayMode a, DisplayMode b) {
+        double xScale = (double) a.getWidth() / (double) b.getWidth();
+        double yScale = (double) a.getHeight() / (double) b.getHeight();
+        return AffineTransform.getScaleInstance(xScale, yScale);
+    }
+
+    private static boolean osRequiresAdjustingFontSize() {
+        String os = System.getProperty("os.name"); //NOI18N
+        return os == null || !os.contains("win") && !os.contains("mac"); //NOI18N
+    }
 
     /**
      * Gets the default GraphicsDevice; uses it's configuration's transform
@@ -137,55 +176,62 @@ final class AllLFCustoms extends LFCustoms {
      * @param initialTarget The default font size if none is set
      * @return A font size tuned to the monitor
      */
-    private static int adjustFontSizeForScreenSize(int initialTarget) {
-        if (GraphicsEnvironment.isHeadless()) { // possible in tests
+    public static int adjustFontSizeForScreenSize(int initialTarget) {
+        if (GraphicsEnvironment.isHeadless() // possible in tests
+                // assume windows and mac are taken care of elsewhere
+                || !osRequiresAdjustingFontSize()) {
             return initialTarget;
         }
-        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] devices = env.getScreenDevices();
-        if (devices.length == 0) {
-            return initialTarget;
-        }
-        // Find the largest monitor - NetBeans being an IDE, it's fairly
-        // predictable that that's where it will run
-        Arrays.sort(devices, new GraphicsDeviceComparator());
-        GraphicsDevice largest = devices[0];
+        GraphicsDevice largest = getLargestGraphicsDevice();
+
+        // On Linux, anyway, the "normalizing" transform the graphics device
+        // will return will be the same at *all* resolutions.  So we should not
+        // assume that is useful.
+
+        // Instead, we get the largest possible graphics configuration - which
+        // is most likely to be the native monitor resolution, and scale based
+        // on that.
         DisplayMode dm = largest.getDisplayMode();
+        DisplayMode largestDisplayMode = findLargestDisplayMode(largest.getDisplayModes());
+
+        // It may be that the "default configuration" is not the one in use,
+        // which is why we always get the native screen resolution, but it
+        // is the one we get
+
         GraphicsConfiguration config = largest.getDefaultConfiguration();
+
         int diagonal = dm.getWidth() * dm.getHeight();
-        // Get a base font size hard coded to the diagonal to start from.
-        // If the OS is providing a substantial transform, it will
-        // not be quite right, but it is a starting place that can save
-        // much looping
-        int baseFontSize = baseFontSizeByDiagonal(diagonal, initialTarget);
+
+        // Get the screen dpi
+        int pixelsPerInch = java.awt.Toolkit.getDefaultToolkit().getScreenResolution();
 
         // Get the default transform for the device.
-        AffineTransform defaultTransfrom = config.getDefaultTransform();
-        // This gets us a transform to 72 dots per inch
-        AffineTransform normalizingTransform = config.getNormalizingTransform();
-        // We will invert this, so that we can scale a font with it rather
-        // than applying it to a graphics - that will let us measure the screen
-        // width of a font in inches
-        AffineTransform invertedTransform = new AffineTransform(defaultTransfrom);
-        invertedTransform.concatenate(normalizingTransform);
-        try {
-            invertedTransform.invert();
-        } catch (NoninvertibleTransformException ex) {
-            // Won't appen
-            Logger.getLogger(AllLFCustoms.class.getName()).log(Level.SEVERE, null, ex);
-            return baseFontSize;
+        AffineTransform defaultTransform = config.getDefaultTransform();
+
+        AffineTransform scalingTransform;
+        if (!sameResolution(largestDisplayMode, dm)) {
+            scalingTransform = createScalingTransform(largestDisplayMode, dm);
+        } else {
+            scalingTransform = new AffineTransform();
         }
-        // Create a temporary image in order to get a FontMetrics from its graphics
-        BufferedImage img = largest.getDefaultConfiguration().createCompatibleImage(1, 1);
+
+        // Start with a base font size based on the screen resolution.
+        int baseFontSize = baseFontSizeByDiagonal(diagonal, initialTarget);
+
+        // Then attempt to apply it in actual device space and scale it up or
+        // down until we have a font size that meets our target characters
+        // per physical screen insh
+        VolatileImage img = config.createCompatibleVolatileImage(1, 1);
         Graphics2D g = img.createGraphics();
+        g.setTransform(defaultTransform);
         try {
-            return findBestFontSize(g, invertedTransform, baseFontSize);
+            return findBestFontSize(g, scalingTransform, baseFontSize, pixelsPerInch);
         } finally {
             g.dispose();
         }
     }
 
-    private static int findBestFontSize(Graphics2D g, AffineTransform inverse72pxPerInchTransform, int baseFontSize) {
+    private static int findBestFontSize(Graphics2D g, AffineTransform scalingTransform, int baseFontSize, int pixelsPerInch) {
         int result = baseFontSize;
         // Get a ten character of X's which is a wide character in most fonts
         String test = cpiMeasurementString();
@@ -194,6 +240,7 @@ final class AllLFCustoms extends LFCustoms {
         // In practice, the default values are within 1-2 point sizes of the
         // ideal value, so this does not loop heavily unless an exception was
         // thrown earlier
+        int lastStringWidth = Integer.MAX_VALUE;
         for (int i = 0; i < 48; i++) {
             if (result + (i * adjustmentDirection) < 0) {
                 break;
@@ -204,19 +251,19 @@ final class AllLFCustoms extends LFCustoms {
             // get the value is likely to get one that will be replaced (and
             // it probably is Sans Serif anyway).
             Font f = new Font("Sans Serif", Font.PLAIN, result + (i * adjustmentDirection));
+            f = f.deriveFont(scalingTransform);
             // Transform it into our inverted 72dpi space
-            f = f.deriveFont(inverse72pxPerInchTransform);
             FontMetrics fm = g.getFontMetrics(f);
             // Get the width of this string - 72px = one inch, so we search
-            // for the nearest value between a string width < 72 and a string
-            // width > 72
+            // for the nearest value between a string width < dpi and a string
+            // width > dpi
             int w = fm.stringWidth(test);
             if (first) {
                 // First loop - unless it's exact, just figure out which
                 // direction we need to loop in
-                if (w > 72) {
+                if (w > pixelsPerInch) {
                     adjustmentDirection = -1;
-                } else if (w < 72) {
+                } else if (w < pixelsPerInch) {
                     adjustmentDirection = 1;
                 } else {
                     result += (i * adjustmentDirection);
@@ -225,14 +272,21 @@ final class AllLFCustoms extends LFCustoms {
                 first = false;
             } else {
                 // If we are at a boundary, set the value to return and break
-                if (w < 72 && adjustmentDirection == -1) {
-                    result += ((i + 1) * adjustmentDirection);
+                if (w < pixelsPerInch && adjustmentDirection == -1) {
+                    int newResult = result + (i * adjustmentDirection);
+                    if (Math.abs(pixelsPerInch - w) < Math.abs(pixelsPerInch - lastStringWidth)) {
+                        result = newResult;
+                    }
                     break;
-                } else if (w > 72 && adjustmentDirection == 1) {
-                    result += (i * adjustmentDirection);
+                } else if (w > pixelsPerInch && adjustmentDirection == 1) {
+                    int newResult = result + (i * adjustmentDirection);
+                    if (Math.abs(pixelsPerInch - w) < Math.abs(pixelsPerInch - lastStringWidth)) {
+                        result = newResult;
+                    }
                     break;
                 }
             }
+            lastStringWidth = w;
         }
         return result;
     }

@@ -168,7 +168,7 @@ final class AllLFCustoms extends LFCustoms {
     }
 
     /**
-     * Gets the default GraphicsDevice; uses it's configuration's transform
+     * Gets the default GraphicsDevice; uses its configuration's transform
      * to 72DPI to find a font size that fits as closely as possible within
      * 10 characters per inch (customizable with the system property
      * screenTargetCpi).

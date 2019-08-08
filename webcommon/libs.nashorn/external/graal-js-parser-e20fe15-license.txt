@@ -1,8 +1,8 @@
 Name: Graal.js Parser
-Version: 5122842
+Version: e20fe15
 Description: An ECMAScript 6 (ECMAScript 2015) compliant parser for JavaScript source code. Based on the parser of Graal.js (https://github.com/graalvm/graaljs).
 License: UPL
-Origin: https://github.com/JaroslavTulach/graaljs/commit/5122842fa5ff88ac3e1c8a77f2cb6e2f30988ecb
+Origin: https://github.com/JaroslavTulach/graaljs/commit/e20fe15dc14a42b5246901cefc524235e7b77505
 
 Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 

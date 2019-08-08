@@ -22,21 +22,4 @@
 <project basedir="." default="build" name="webcommon/libs.nashorn">
     <description>Builds, tests, and runs the project org.netbeans.libs.nashorn</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <import file="../../nbbuild/templates/common.xml"/>
-
-    <!-- Relative path to the jsparser module build -->
-    <property name="jsparser.module.dir" location="../../contrib/libs.oracle.jsparser/build/webcommon/modules"/>
-
-    <!-- For testing purposes, build distribution of JS parser in a separate directory -->
-    <target name="expand-test-jsparser-module">
-        <ant dir="../../contrib/libs.oracle.jsparser" inheritall="false" inheritrefs="false"/>
-        <mkdir dir="${build.test.unit.classes.dir}"/>
-        <mkdir dir="build/test/unit/classes"/>
-        <!-- Test infrastructure will zip the files again, into ${test.unit.out.folder} -->
-        <unzip src="${jsparser.module.dir}/org-netbeans-libs-oracle-jsparser.jar" dest="build/test/unit/classes"/>
-        <mkdir dir="${test.unit.out.folder}/ext"/>
-        <copy file="${jsparser.module.dir}/ext/com.oracle.js.parser.jar" todir="${test.unit.out.folder}/ext"/>
-    </target>
-
-    <target name="do-unit-test-build" depends="test-init,expand-test-jsparser-module,projectized.do-unit-test-build"/>
 </project>

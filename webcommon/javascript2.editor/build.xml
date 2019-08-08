@@ -40,15 +40,5 @@
         <copy file="external/js-domstubs-DOM3.zip" tofile="${cluster}/jsstubs/domstubs.zip"/>
     </target>
     <target name="release" depends="projectized.release,-bundle-corestubs,-bundle-domstubs,-bundle-reststubs"/>
-
-<!--    <target name="-verify-bootclasspath" depends="build-init">
-        <fail message="Nashorn is not on a bootclasspath">
-            <condition>
-                <not>
-                     <available file="${nashorn.prepend}" />
-                </not>
-            </condition>
-        </fail>
-    </target>-->
 </project>
 

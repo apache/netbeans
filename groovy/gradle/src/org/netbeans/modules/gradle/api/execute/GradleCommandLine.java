@@ -20,6 +20,15 @@
 package org.netbeans.modules.gradle.api.execute;
 
 import java.io.Serializable;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -803,7 +812,34 @@ public final class GradleCommandLine implements Serializable {
     }
 
     public void configure(ConfigurableLauncher launcher) {
-        launcher.setJvmArguments(getArgs(EnumSet.of(SYSTEM)));
+        List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
+        String userHomeDir = System.getProperty("user.home"); 
+        File gradlePropertiesFile = Paths.get(userHomeDir, ".gradle", "gradle.properties").toFile();
+        if (gradlePropertiesFile.exists()){
+            Properties pps = new Properties();
+            InputStream in = null;
+            try {
+                in = new BufferedInputStream(new FileInputStream(gradlePropertiesFile));
+                pps.load(in);
+                if (pps.containsKey("org.gradle.jvmargs")){
+                    String jvmargs_value = pps.getProperty("org.gradle.jvmargs"); 
+                    String [] jvmargs_values = jvmargs_value.split(" ");
+                    for (String value : jvmargs_values){
+                        jvmargs.add(value);
+                    }
+                }
+            }
+            catch(FileNotFoundException ex){}
+            catch(IOException ex){}
+            finally{
+                if (in != null) {
+                    try{
+                        in.close();
+                    }catch(IOException ex){}
+                }
+            }
+        }
+        launcher.setJvmArguments(jvmargs);
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
         args.addAll(tasks);
         launcher.withArguments(args);

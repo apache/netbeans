@@ -35,6 +35,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.Indent;
+//import static org.netbeans.modules.editor.java.Utilities.isTextBlockSupported;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;

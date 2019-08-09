@@ -164,7 +164,7 @@ public final class LibraryProvider {
      */
     private static final String LIBRARY_FILE_URL_PATTERN = System.getProperty(
             "netbeans.cdnjs.downloadurl", // NOI18N
-            "http://cdnjs.cloudflare.com/ajax/libs/{0}/{1}/{2}"); // NOI18N
+            "https://cdnjs.cloudflare.com/ajax/libs/{0}/{1}/{2}"); // NOI18N
 
     /**
      * Downloads the specified file of the given library version. The data are saved
@@ -202,7 +202,7 @@ public final class LibraryProvider {
     /** URL of the search web service. */
     static final String SEARCH_URL_PREFIX =
             System.getProperty("netbeans.cdnjs.searchurl", // NOI18N
-            "http://api.cdnjs.com/libraries?fields=description,homepage,assets&search="); // NOI18N
+            "https://api.cdnjs.com/libraries?fields=description,homepage,assets&search="); // NOI18N
 
     /**
      * Comparator that helps to sort library versions.

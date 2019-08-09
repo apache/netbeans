@@ -173,28 +173,31 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     while (true) {
                         switch (nextChar()) {
                             case '"': // NOI18N
-                                String text = input.readText().toString();
-                                if (text.length() == 2) {
-                                    if (nextChar() != '"') {
-                                        input.backup(1); //TODO: EOF???
-                                        return token(lookupId);
+                                if (this.version >= 13) {
+                                    String text = input.readText().toString();
+                                    if (text.length() == 2) {
+                                        if (nextChar() != '"') {
+                                            input.backup(1); //TODO: EOF???
+                                            return token(lookupId);
+                                        }
+                                        lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
                                     }
-                                    lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
-                                }
-                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
-                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
-                                        return token(lookupId);
-                                    } else {
-                                        break;
+                                    if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                        if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
+                                            return token(lookupId);
+                                        } else {
+                                            break;
+                                        }
                                     }
                                 }
+                                
                                 return token(lookupId);
                             case '\\':
                                 nextChar();
                                 break;
                             case '\r': consumeNewline();
                             case '\n':
-                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL && this.version >= 13) {
                                     break;
                                 }
                             case EOF:

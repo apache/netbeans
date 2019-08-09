@@ -22,17 +22,20 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.Indent;
+//import static org.netbeans.modules.editor.java.Utilities.isTextBlockSupported;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
@@ -144,7 +147,7 @@ class TypingCompletion {
             char insChr = context.getText().charAt(0);
             context.setText("" + insChr + matching(insChr), 1);  // NOI18N
         } else if (chr == '\"') {
-            if (context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\"")) {
+            if (isTextBlockSupported() && (context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\""))) {
                 context.setText("\"\n\"\"\"", 2);  // NOI18N
             } else {
                 context.setText("\"\"", 1);  // NOI18N
@@ -210,7 +213,6 @@ class TypingCompletion {
         TokenSequence<JavaTokenId> javaTS = javaTokenSequence(context, true);
         JavaTokenId id = (javaTS != null) ? javaTS.token().id() : null;
 
-
         // If caret within comment return false
         boolean caretInsideToken = (id != null)
                 && (javaTS.offset() + javaTS.token().length() > context.getOffset()
@@ -251,11 +253,22 @@ class TypingCompletion {
         }
 
         if ((completablePosition && !insideString) || eol) {
-            if (context.getText().equals("\"") && context.getOffset() >= 2 && context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"")) {
+            if (isTextBlockSupported() && context.getText().equals("\"") && context.getOffset() >= 2 && context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"")) {
                 context.setText("\"\n\"\"\"", 2);  // NOI18N
                 Thread.dumpStack();
             } else {
                 context.setText(context.getText() + context.getText(), 1);
+            }
+        } else if (isTextBlockSupported() && context.getText().equals("\"")) {
+            if ((javaTS != null) && javaTS.moveNext()) {
+                id = javaTS.token().id();
+                if ((id == JavaTokenId.STRING_LITERAL) && (javaTS.token().text().toString().equals("\"\""))) {
+                    if (context.getDocument().getText(context.getOffset(), 2).equals("\"\"")) {
+                        context.setText("\"\"\"\n\"", 4);
+                    }
+                }
+                javaTS.movePrevious();
+                id = javaTS.token().id();
             }
         }
         return -1;

@@ -26,6 +26,12 @@ public class ConvertToTextBlockTest {
 
     @Test
     public void testFixWorking() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -55,6 +61,12 @@ public class ConvertToTextBlockTest {
 
     @Test
     public void testNewLineAtEnd() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -84,7 +96,49 @@ public class ConvertToTextBlockTest {
     }
 
     @Test
+    public void testNewLinesAtEnd() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public static void main(String[] args) {\n" +
+                       "        assert args[0].equals(\"{\\n\" +\n" +
+                       "                              \"    int i = 0;\\n\" +\n" +
+                       "                              \"}\\n\\n\");\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertToTextBlock.class)
+                .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                        "public class Test {\n" +
+                        "    public static void main(String[] args) {\n" +
+                        "        assert args[0].equals(\"\"\"\n" +
+                        "                              {\n" +
+                        "                                  int i = 0;\n" +
+                        "                              }\n" +
+                        "                              \n"  +
+                        "                              \"\"\");\n" +
+                        "    }\n" +
+                        "}\n");
+    }
+
+    @Test
     public void testOnlyLiterals() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +

@@ -448,11 +448,11 @@ public class DetectorTest extends TestBase {
 
     public void testRawStringLiteral() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_11");
+            SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for raw string literals
         }
-        setSourceLevel("11");
+        setSourceLevel("13");
         performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
                     "    String s1 = \"\"\"\n" +

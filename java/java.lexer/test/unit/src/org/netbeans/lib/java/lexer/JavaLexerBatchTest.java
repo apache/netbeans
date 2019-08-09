@@ -699,9 +699,9 @@ public class JavaLexerBatchTest extends TestCase {
     }
 
     private void enableRawStringLiterals(InputAttributes attr) {
-        //any setup needed for raw string literals:
-        //e.g.:
-//        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(11), true);
+        attr.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> {
+            return "13";
+        }, true);
     }
 
     public void testMultilineLiteral() {

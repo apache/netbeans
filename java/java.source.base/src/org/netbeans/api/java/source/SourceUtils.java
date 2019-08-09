@@ -85,6 +85,7 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
@@ -563,7 +564,25 @@ public class SourceUtils {
         }
         return null;        
     }
-    
+
+    /**
+     * @since 13.0
+     */
+    public static boolean isTextBlockSupported() {
+        String version = System.getProperty("java.specification.version"); //NOI18n
+        if (!version.startsWith("1.")) { //NOI18n
+            int endIndex = version.indexOf(".");
+            if (endIndex != -1) {
+                version = version.substring(0, endIndex - 1);
+            }
+            Integer intVer = Integer.parseInt(version);
+            if (intVer >= 13) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg) throws IOException {
         FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();                        
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);

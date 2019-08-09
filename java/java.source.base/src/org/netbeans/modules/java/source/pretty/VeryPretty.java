@@ -102,6 +102,7 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyle.*;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
+import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.TreeShims;
@@ -238,6 +239,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void newline() {
 	out.nlTerm();
+    }
+
+    private void newLineNoTrim() {
+        out.nlTermNoTrim();
     }
 
     public void blankline() {
@@ -1875,7 +1880,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	   case CLASS:
              if (tree.value instanceof String) {
                  print("\"" + quote((String) tree.value, '\'') + "\"");
-             } else if (tree.value instanceof String[]) {
+             } else if (isTextBlockSupported() && tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
                  newline();
@@ -1894,7 +1899,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                          }
                      }
                      if (i + 1 < lines.length) {
-                         newline();
+                         newLineNoTrim();
                      }
                  }
                  print("\"\"\"");

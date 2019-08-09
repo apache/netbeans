@@ -25,6 +25,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import java.io.File;
+import javax.lang.model.SourceVersion;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -169,6 +170,12 @@ public class LiteralTest extends GeneratorTestMDRCompat {
     }
 
     public void testTextBlocksNew() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
             "package hierbas.del.litoral;\n" +

@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.editor.fold/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/fold/Bundle.properties
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.50
+OpenIDE-Module-Specification-Version: 1.51

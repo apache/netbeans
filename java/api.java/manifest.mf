@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.api.java/1
-OpenIDE-Module-Specification-Version: 1.70
+OpenIDE-Module-Specification-Version: 1.71
 OpenIDE-Module-Localizing-Bundle: org/netbeans/api/java/queries/Bundle.properties
 AutoUpdate-Show-In-Client: false
 

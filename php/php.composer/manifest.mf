@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.composer/0
 OpenIDE-Module-Layer: org/netbeans/modules/php/composer/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/composer/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.35
+OpenIDE-Module-Specification-Version: 0.36
 

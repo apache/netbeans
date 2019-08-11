@@ -32,11 +32,15 @@ public interface Visitor {
     //public void endVisit(ArrayCreation arrayCreation);
     public void visit(ArrayElement arrayElement);
 
+    public void visit(ArrowFunctionDeclaration arrowFunctionDeclaration);
+
     //public void endVisit(ArrayElement arrayElement);
     public void visit(Assignment assignment);
 
     //public void endVisit(Assignment assignment);
     public void visit(ASTError astError);
+
+    public void visit(ASTErrorExpression astErrorExpression);
 
     //public void endVisit(ASTError astError);
     public void visit(BackTickExpression backTickExpression);
@@ -256,6 +260,8 @@ public interface Visitor {
 
     //public void endVisit(TryStatement tryStatement);
     public void visit(UnaryOperation unaryOperation);
+
+    public void visit(UnpackableArrayElement unpackableArrayElement);
 
     public void visit(UseTraitStatement useTraitStatement);
 

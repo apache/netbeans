@@ -5220,6 +5220,7 @@ public class Term extends JComponent implements Accessible {
      * @param c
      * @deprecated
      */
+    @Deprecated
     public void setCustomColor(int number, Color c) {
 	if (c == null)
 	    throw new IllegalArgumentException();

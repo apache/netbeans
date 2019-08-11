@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.lib.uihandler
 _OpenIDE-Module-Layer: org/netbeans/lib/uihandler/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/uihandler/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.50
+OpenIDE-Module-Specification-Version: 1.51
 

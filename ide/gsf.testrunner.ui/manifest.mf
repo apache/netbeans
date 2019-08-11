@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.gsf.testrunner.ui
 OpenIDE-Module-Layer: org/netbeans/modules/gsf/testrunner/ui/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gsf/testrunner/ui/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.15
+OpenIDE-Module-Specification-Version: 1.16
 

@@ -57,6 +57,7 @@ import org.openide.util.Exceptions;
 * @author Jaroslav Tulach
  * @deprecated Use {@link org.openide.util.NbPreferences} instead.
 */
+@Deprecated
 public abstract class SystemOption extends SharedClassObject implements HelpCtx.Provider {
     /** generated Serialized Version UID */
     static final long serialVersionUID = 558589201969066966L;

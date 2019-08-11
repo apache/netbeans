@@ -1,0 +1,4 @@
+function(&$x) use ($y) {return $^x + $y;};
+-----------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

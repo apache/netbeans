@@ -1,0 +1,10 @@
+Code completion result for source line:
+public const CONSTANT2 = [...self::|CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONSTANT ?                      [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT1 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT3 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT4 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT5 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   class \Foo\UnpackClass          [PUBLIC]   Magic Constant

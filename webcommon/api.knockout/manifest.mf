@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.api.knockout
 OpenIDE-Module-Localizing-Bundle: org/netbeans/spi/knockout/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.6
+OpenIDE-Module-Specification-Version: 1.7
 AutoUpdate-Show-In-Client: false

@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.codeception
 OpenIDE-Module-Layer: org/netbeans/modules/php/codeception/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/codeception/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.9
+OpenIDE-Module-Specification-Version: 0.10
 

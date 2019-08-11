@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.jellytools.platform/3
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jellytools/platform/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.34
+OpenIDE-Module-Specification-Version: 3.35
 

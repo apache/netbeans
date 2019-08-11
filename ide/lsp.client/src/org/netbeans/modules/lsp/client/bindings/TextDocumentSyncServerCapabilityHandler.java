@@ -68,9 +68,9 @@ public class TextDocumentSyncServerCapabilityHandler {
         newOpened.removeAll(lastOpened);
         Set<JTextComponent> newClosed = Collections.newSetFromMap(new IdentityHashMap<>());
         newClosed.addAll(lastOpened);
-        newClosed.removeAll(newOpened);
-        lastOpened.removeAll(newClosed);
-        lastOpened.addAll(newOpened);
+        newClosed.removeAll(currentOpened);
+        lastOpened.clear();
+        lastOpened.addAll(currentOpened);
 
         for (JTextComponent opened : newOpened) {
             FileObject file = NbEditorUtilities.getFileObject(opened.getDocument());
@@ -85,6 +85,8 @@ public class TextDocumentSyncServerCapabilityHandler {
 
                 if (server == null)
                     return ; //ignore
+
+                doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
 
                 String uri = Utils.toURI(file);
                 String[] text = new String[1];

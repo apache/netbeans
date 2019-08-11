@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36.1
+#Version 1.37.0
 
 CLSS public com.sun.faces.RIConstants
 fld public final static int FLOW_DEFINITION_ID_SUFFIX_LENGTH
@@ -113,23 +113,12 @@ meth public abstract {javax.faces.FacesWrapper%0} getWrapped()
 
 CLSS public final javax.faces.FactoryFinder
 fld public final static java.lang.String APPLICATION_FACTORY = "javax.faces.application.ApplicationFactory"
-fld public final static java.lang.String CLIENT_WINDOW_FACTORY = "javax.faces.lifecycle.ClientWindowFactory"
-fld public final static java.lang.String EXCEPTION_HANDLER_FACTORY = "javax.faces.context.ExceptionHandlerFactory"
-fld public final static java.lang.String EXTERNAL_CONTEXT_FACTORY = "javax.faces.context.ExternalContextFactory"
-fld public final static java.lang.String FACELET_CACHE_FACTORY = "javax.faces.view.facelets.FaceletCacheFactory"
 fld public final static java.lang.String FACES_CONTEXT_FACTORY = "javax.faces.context.FacesContextFactory"
-fld public final static java.lang.String FLASH_FACTORY = "javax.faces.context.FlashFactory"
-fld public final static java.lang.String FLOW_HANDLER_FACTORY = "javax.faces.flow.FlowHandlerFactory"
 fld public final static java.lang.String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory"
-fld public final static java.lang.String PARTIAL_VIEW_CONTEXT_FACTORY = "javax.faces.context.PartialViewContextFactory"
 fld public final static java.lang.String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory"
-fld public final static java.lang.String TAG_HANDLER_DELEGATE_FACTORY = "javax.faces.view.facelets.TagHandlerDelegateFactory"
-fld public final static java.lang.String VIEW_DECLARATION_LANGUAGE_FACTORY = "javax.faces.view.ViewDeclarationLanguageFactory"
-fld public final static java.lang.String VISIT_CONTEXT_FACTORY = "javax.faces.component.visit.VisitContextFactory"
 meth public static java.lang.Object getFactory(java.lang.String)
 meth public static void releaseFactories()
 meth public static void setFactory(java.lang.String,java.lang.String)
 supr java.lang.Object
-hfds FACTORIES_CACHE,FACTORY_NAMES,LOGGER,factoryClasses
-hcls FactoryManager,FactoryManagerCache,FactoryManagerCacheKey
+hfds LOGGER,applicationMaps,factoryClasses,factoryNames
 

@@ -42,6 +42,7 @@ import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
@@ -430,7 +431,30 @@ public final class VariousUtils {
             String semiTypeName,
             int offset,
             boolean justDispatcher) {
+        if (varScope instanceof ArrowFunctionScope) {
+            return getArrowFunctionScopeType((ArrowFunctionScope) varScope, semiTypeName, offset, justDispatcher);
+        }
         return getType(varScope, semiTypeName, offset, justDispatcher, Collections.emptyList());
+    }
+
+    private static Collection<? extends TypeScope> getArrowFunctionScopeType(
+            final ArrowFunctionScope varScope,
+            String semiTypeName,
+            int offset,
+            boolean justDispatcher) {
+        assert varScope instanceof ArrowFunctionScope;
+        Collection<? extends TypeScope> types = Collections.emptyList();
+        Scope inScope = varScope;
+        // for nested arrow functions
+        while (types.isEmpty()
+                && (inScope instanceof FunctionScopeImpl || inScope instanceof NamespaceScopeImpl)) {
+            types = getType((VariableScope) inScope, semiTypeName, offset, justDispatcher, Collections.emptyList());
+            inScope = inScope.getInScope();
+            if (inScope == null) {
+                break;
+            }
+        }
+        return types;
     }
 
     public static Collection<? extends TypeScope> getType(

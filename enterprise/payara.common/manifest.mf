@@ -4,6 +4,6 @@ OpenIDE-Module: org.netbeans.modules.payara.common/0
 OpenIDE-Module-Install: org/netbeans/modules/payara/common/Installer.class
 OpenIDE-Module-Layer: org/netbeans/modules/payara/common/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/payara/common/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Specification-Version: 2.1
 OpenIDE-Module-Provides: org.netbeans.modules.payara.common
 

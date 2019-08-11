@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.svnClientAdapter/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/svnclientadapter/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 

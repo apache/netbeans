@@ -178,7 +178,7 @@ public class DatabaseUtils {
         //driverMap.put("jdbc:microsoft:sqlserver:", "com.microsoft.jdbc.sqlserver.SQLServerDriver");
         driverMap.put("jdbc:sqlserver:", "com.microsoft.sqlserver.jdbc.SQLServerDriver"); //NOI18N
         //MySQL (Connector/J driver)
-        driverMap.put("jdbc:mysql:", "com.mysql.jdbc.Driver");
+        driverMap.put("jdbc:mysql:", "com.mysql.cj.jdbc.Driver");
         //MySQL (MM.MySQL driver)
         //driverMap.put("jdbc:mysql:", "org.gjt.mm.mysql.Driver");
         

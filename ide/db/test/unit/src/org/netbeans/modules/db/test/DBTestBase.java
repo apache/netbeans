@@ -321,7 +321,8 @@ public abstract class DBTestBase extends TestBase {
     }
 
     protected final boolean isMySQL() {
-        return driverClassName.equals("com.mysql.jdbc.Driver");
+        return "com.mysql.jdbc.Driver".equals(driverClassName) || 
+                "com.mysql.cj.jdbc.Driver".equals(driverClassName);
     }
     
     protected final void createSchema() throws Exception {

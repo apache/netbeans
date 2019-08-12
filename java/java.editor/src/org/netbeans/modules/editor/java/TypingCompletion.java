@@ -254,7 +254,6 @@ class TypingCompletion {
         if ((completablePosition && !insideString) || eol) {
             if (isTextBlockSupported() && context.getText().equals("\"") && context.getOffset() >= 2 && context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"")) {
                 context.setText("\"\n\"\"\"", 2);  // NOI18N
-                Thread.dumpStack();
             } else {
                 context.setText(context.getText() + context.getText(), 1);
             }

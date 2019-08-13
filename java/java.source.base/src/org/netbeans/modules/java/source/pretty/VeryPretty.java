@@ -69,6 +69,7 @@ import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
+import com.sun.source.tree.ExpressionTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -1499,9 +1500,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void visitYield(Tree tree) {
         print("yield");
-        if (TreeShims.getYieldValue(tree) != null) {
+        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        if (expr != null) {
             needSpace();
-            print((JCTree) TreeShims.getYieldValue(tree));
+            print((JCTree) expr);
         }
         print(';');
     }

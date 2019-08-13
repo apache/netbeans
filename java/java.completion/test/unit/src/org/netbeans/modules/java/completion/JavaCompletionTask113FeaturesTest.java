@@ -27,8 +27,6 @@ import org.netbeans.junit.NbTestSuite;
  */
 public class JavaCompletionTask113FeaturesTest extends CompletionTestBase {
 
-    private static String SOURCE_LEVEL = "1.13"; //NOI18N
-
     public JavaCompletionTask113FeaturesTest(String testName) {
         super(testName);
     }

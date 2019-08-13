@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.openide.util.Exceptions;
 
 public class TreeShims {
 
@@ -118,12 +117,12 @@ public class TreeShims {
     }
 
     public static ExpressionTree getYieldValue(Tree node) {
-        if (!node.getKind().toString().equals("YIELD")) {
+        if (!node.getKind().toString().equals(YIELD)) {
             return null;
         }
         try {
-            Class yieldTreeClass = Class.forName("com.sun.source.tree.YieldTree");
-            Method getExpression = yieldTreeClass.getDeclaredMethod("getValue");
+            Class yieldTreeClass = Class.forName("com.sun.source.tree.YieldTree"); //NOI18N
+            Method getExpression = yieldTreeClass.getDeclaredMethod("getValue");  //NOI18N
             return (ExpressionTree) getExpression.invoke(node);
         } catch (NoSuchMethodException ex) {
             return null;

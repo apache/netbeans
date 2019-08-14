@@ -20,6 +20,13 @@
 package org.netbeans.modules.gradle.api.execute;
 
 import java.io.Serializable;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.FileNotFoundException;
+import java.util.Properties;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +43,7 @@ import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
  * Object representation of a Gradle command line.
@@ -802,11 +810,55 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
-    public void configure(ConfigurableLauncher launcher) {
-        launcher.setJvmArguments(getArgs(EnumSet.of(SYSTEM)));
+    private void addGradleSettingJvmargs(File projectDir, List<String> jvmargs) {
+        List<File> gpfs = null; 
+
+        if (projectDir == null){ 
+            File guh = GradleSettings.getDefault().getGradleUserHome();
+            File f = new File(guh, GradleFiles.GRADLE_PROPERTIES_NAME);
+            if (f.exists()){
+                gpfs = new ArrayList<File>();
+                gpfs.add(f);
+            }
+        } else {
+            GradleFiles gf = new GradleFiles(projectDir);
+            gpfs = gf.getPropertyFiles();
+        }
+        
+        if (gpfs == null || gpfs.isEmpty()){
+            return;
+        }
+
+        for (File gpf : gpfs){
+            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(gpf))){
+                Properties pps = new Properties();
+                pps.load(in);
+                final String jvmargsKey = "org.gradle.jvmargs"; // NOI18N
+                if (pps.containsKey(jvmargsKey)){
+                    String jvmargsProperty = pps.getProperty(jvmargsKey); 
+                    String [] jvmargsValues = jvmargsProperty.split(" "); //NOI18N
+                    for (String value : jvmargsValues){
+                        jvmargs.add(value);
+                    }
+                    return;
+                }
+            }
+            catch(FileNotFoundException ex){}
+            catch(IOException ex){}
+        } 
+    }
+
+    public void configure(ConfigurableLauncher launcher, File projectDir) {
+        List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
+        addGradleSettingJvmargs(projectDir, jvmargs);
+        launcher.setJvmArguments(jvmargs);
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
         args.addAll(tasks);
         launcher.withArguments(args);
+    }
+
+    public void configure(ConfigurableLauncher launcher) {
+        configure(launcher, null);
     }
 
     @Override

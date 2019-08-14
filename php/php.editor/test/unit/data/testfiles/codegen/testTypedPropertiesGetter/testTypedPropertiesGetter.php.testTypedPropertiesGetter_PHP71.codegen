@@ -1,0 +1,72 @@
+public  function getInstanceArray(): array  {
+return $$this->instanceArray;
+}
+
+public  function getInstanceInt(): int  {
+return $$this->instanceInt;
+}
+
+public  function getInstanceString(): string  {
+return $$this->instanceString;
+}
+
+public  function getInstanceBool(): bool  {
+return $$this->instanceBool;
+}
+
+public  function getInstanceNull() {
+return $$this->instanceNull;
+}
+
+public  function getInstanceNullable(): ?string  {
+return $$this->instanceNullable;
+}
+
+public  function getInstanceArrayNullable(): ?array  {
+return $$this->instanceArrayNullable;
+}
+
+public  function getInstanceClass(): Test53  {
+return $$this->instanceClass;
+}
+
+public static function getStaticInt(): int  {
+return self::$$staticInt;
+}
+
+public static function getStaticNullable(): ?int  {
+return self::$$staticNullable;
+}
+
+public  function getInstanceInt74() {
+return $$this->instanceInt74;
+}
+
+public  function getInstanceString74() {
+return $$this->instanceString74;
+}
+
+public  function getInstanceBool74() {
+return $$this->instanceBool74;
+}
+
+public  function getInstanceNullable74() {
+return $$this->instanceNullable74;
+}
+
+public static function getStaticInt74() {
+return self::$$staticInt74;
+}
+
+public static function getStaticString74() {
+return self::$$staticString74;
+}
+
+public static function getStaticBool74() {
+return self::$$staticBool74;
+}
+
+public static function getStaticNullable74() {
+return self::$$staticNullable74;
+}
+

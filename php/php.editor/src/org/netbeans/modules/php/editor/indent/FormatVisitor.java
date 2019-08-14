@@ -1326,10 +1326,12 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         while (ts.moveNext() && ts.offset() < node.getRight().getStartOffset()
-                && ts.token().id() != PHPTokenId.PHP_TOKEN && ts.token().id() != PHPTokenId.PHP_OPERATOR
+                && ts.token().id() != PHPTokenId.PHP_TOKEN && !LexUtilities.isPHPOperator(ts.token().id())
                 && lastIndex < ts.index()) {
             addFormatToken(formatTokens);
         }
+        // don't add to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
+        // see https://netbeans.org/bugzilla/show_bug.cgi?id=240274
         if (ts.token().id() == PHPTokenId.PHP_TOKEN || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
             formatTokens.add(new FormatToken(whitespaceBefore, ts.offset()));
             addFormatToken(formatTokens);
@@ -2558,4 +2560,5 @@ public class FormatVisitor extends DefaultVisitor {
     private static boolean isAnonymousClass(ASTNode astNode) {
         return astNode instanceof ClassInstanceCreation && ((ClassInstanceCreation) astNode).isAnonymous();
     }
+
 }

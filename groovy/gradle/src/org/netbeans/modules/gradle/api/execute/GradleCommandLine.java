@@ -22,12 +22,10 @@ package org.netbeans.modules.gradle.api.execute;
 import java.io.Serializable;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +43,7 @@ import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
  * Object representation of a Gradle command line.
@@ -65,7 +64,7 @@ public final class GradleCommandLine implements Serializable {
     public static final String TEST_TASK = "test"; //NOI18N
     /** The common name of the task which invokes checks. */
     public static final String CHECK_TASK = "check"; //NOI18N
-
+   
     /** Gradle command line flags */
     public enum Flag {
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
@@ -811,38 +810,55 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
-    public void configure(ConfigurableLauncher launcher) {
-        List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
-        String userHomeDir = System.getProperty("user.home"); 
-        File gradlePropertiesFile = Paths.get(userHomeDir, ".gradle", "gradle.properties").toFile();
-        if (gradlePropertiesFile.exists()){
-            Properties pps = new Properties();
-            InputStream in = null;
-            try {
-                in = new BufferedInputStream(new FileInputStream(gradlePropertiesFile));
+    private void addGradleSettingJvmargs(File projectDir, List<String> jvmargs) {
+        List<File> gpfs = null; 
+
+        if (projectDir == null){ 
+            File guh = GradleSettings.getDefault().getGradleUserHome();
+            File f = new File(guh, GradleFiles.GRADLE_PROPERTIES_NAME);
+            if (f.exists()){
+                gpfs = new ArrayList<File>();
+                gpfs.add(f);
+            }
+        } else {
+            GradleFiles gf = new GradleFiles(projectDir);
+            gpfs = gf.getPropertyFiles();
+        }
+        
+        if (gpfs == null || gpfs.isEmpty()){
+            return;
+        }
+
+        for (File gpf : gpfs){
+            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(gpf))){
+                Properties pps = new Properties();
                 pps.load(in);
-                if (pps.containsKey("org.gradle.jvmargs")){
-                    String jvmargs_value = pps.getProperty("org.gradle.jvmargs"); 
-                    String [] jvmargs_values = jvmargs_value.split(" ");
-                    for (String value : jvmargs_values){
+                final String jvmargsKey = "org.gradle.jvmargs"; // NOI18N
+                if (pps.containsKey(jvmargsKey)){
+                    String jvmargsProperty = pps.getProperty(jvmargsKey); 
+                    String [] jvmargsValues = jvmargsProperty.split(" "); //NOI18N
+                    for (String value : jvmargsValues){
                         jvmargs.add(value);
                     }
+                    return;
                 }
             }
             catch(FileNotFoundException ex){}
             catch(IOException ex){}
-            finally{
-                if (in != null) {
-                    try{
-                        in.close();
-                    }catch(IOException ex){}
-                }
-            }
-        }
+        } 
+    }
+
+    public void configure(ConfigurableLauncher launcher, File projectDir) {
+        List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
+        addGradleSettingJvmargs(projectDir, jvmargs);
         launcher.setJvmArguments(jvmargs);
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
         args.addAll(tasks);
         launcher.withArguments(args);
+    }
+
+    public void configure(ConfigurableLauncher launcher) {
+        configure(launcher, null);
     }
 
     @Override

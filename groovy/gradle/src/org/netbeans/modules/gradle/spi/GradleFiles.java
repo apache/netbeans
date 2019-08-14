@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -90,8 +91,19 @@ public final class GradleFiles implements Serializable {
         }
         projectDir = dir;
         rootDir = projectDir;
+        searchPropertyFiles();
         searchBuildScripts();
         searchWrapper();
+    }
+
+    private void searchPropertyFiles() {
+        propertyFiles = new ArrayList<File>();
+        for (Kind kind:Kind.PROPERTIES){
+            File f = getFile(kind);
+            if (f.exists()){
+                propertyFiles.add(f);
+            }
+        }
     }
 
     private void searchBuildScripts() {

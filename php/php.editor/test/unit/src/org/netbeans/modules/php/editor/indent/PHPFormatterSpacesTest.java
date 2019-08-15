@@ -1400,4 +1400,17 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_BEFORE_METHOD_DECL_PAREN, true);
         reformatFileContents("testfiles/formatting/spaces/spaceBeforeArrowFunctionParen01.php", options);
     }
+
+    // NETBEANS-2971
+    public void testSpacesWithinLambdaFunctionDeclParen01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2971_01.php", options);
+    }
+
+    public void testSpacesWithinLambdaFunctionDeclParen02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2971_02.php", options);
+    }
 }

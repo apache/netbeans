@@ -286,9 +286,23 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
     }
 
+    public void testTypedPropertiesSetter_PHP70Fluent() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(true);
+        cgsInfo.setFluentSetter(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
     public void testTypedPropertiesSetter_PHP71() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
         cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP71Fluent() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
+        cgsInfo.setPublicModifier(true);
+        cgsInfo.setFluentSetter(true);
         checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
     }
 

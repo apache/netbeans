@@ -760,9 +760,21 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             return;
         }
         Scope scope = modelBuilder.getCurrentScope();
+        ASTNodeInfo<Variable> varInfo = ASTNodeInfo.create(node);
+        // NETBEANS-2992
+        // when $this is used in anonymous function, change the current scope
+        if (ModelUtils.isAnonymousFunction(scope)
+                && "$this".equals(varInfo.getName())) { // NOI18N
+            Scope inScope = scope.getInScope();
+            while (!(inScope instanceof MethodScope) && inScope instanceof FunctionScope) {
+                inScope = inScope.getInScope();
+            }
+            if (inScope instanceof MethodScope) {
+                scope = inScope;
+            }
+        }
         prepareVariable(node, scope);
         if (scope instanceof VariableNameFactory) {
-            ASTNodeInfo<Variable> varInfo = ASTNodeInfo.create(node);
             if (scope instanceof MethodScope && "$this".equals(varInfo.getName())) { //NOI18N
                 scope = scope.getInScope();
             }

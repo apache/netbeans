@@ -159,6 +159,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports a void return type.
+     *
+     * @return {@code true} if this version supports a void return type,
+     * {@code false} otherwise
+     * @since 2.68
+     */
+    public boolean hasVoidReturnType() {
+        return this.compareTo(PhpVersion.PHP_71) >= 0;
+    }
+
+    /**
      * Check whether this version supports typed properties.
      *
      * @return {@code true} if this version supports typed properties,

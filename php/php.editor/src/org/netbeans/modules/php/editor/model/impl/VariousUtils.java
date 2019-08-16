@@ -593,7 +593,7 @@ public final class VariousUtils {
                             || (operation.startsWith(VariousUtils.ARRAY_TYPE_PREFIX))) {
                         Set<TypeScope> newRecentTypes = new HashSet<>();
                         String varName = frag;
-                        VariableName var = ModelUtils.getFirst(varScope.getDeclaredVariables(), varName);
+                        VariableName var = getVariableName(varScope, varName);
                         if (var != null) {
                             if (i + 2 < len && VariousUtils.FIELD_TYPE_PREFIX.startsWith(fragments[i + 1])) {
                                 fldVarStack.push(var);
@@ -682,6 +682,25 @@ public final class VariousUtils {
         }
 
         return recentTypes;
+    }
+
+    @CheckForNull
+    private static VariableName getVariableName(final VariableScope varScope, String varName) {
+        VariableName var = ModelUtils.getFirst(varScope.getDeclaredVariables(), varName);
+        // NETBEANS-2992
+        // when $this is used in anonymous function, check the parent scope
+        if (var == null
+                && ModelUtils.isAnonymousFunction(varScope)
+                && varName.equals("$this")) { // NOI18N
+            Scope inScope = varScope.getInScope();
+            while (ModelUtils.isAnonymousFunction(inScope)) {
+                inScope = inScope.getInScope();
+            }
+            if (inScope instanceof VariableScope) {
+                var = ModelUtils.getFirst(((VariableScope) inScope).getDeclaredVariables(), varName);
+            }
+        }
+        return var;
     }
 
     private static Collection<TypeScope> filterSuperTypes(final Collection<? extends TypeScope> typeScopes) {

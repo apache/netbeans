@@ -97,6 +97,7 @@ matrix:
              ide/css.lib
              ide/css.model
              ide/db.dataview
+             ide/db.metadata.model
              ide/db.sql.editor
              ide/docker.api
              ide/docker.ui

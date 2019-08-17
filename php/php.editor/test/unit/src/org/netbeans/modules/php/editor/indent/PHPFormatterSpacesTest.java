@@ -1413,4 +1413,17 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_WITHIN_METHOD_DECL_PARENS, false);
         reformatFileContents("testfiles/formatting/spaces/netbeans2971_02.php", options);
     }
+
+    // NETBEANS-2994
+    public void testSpacesAroundUnaryOperator_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNARY_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2994_01.php", options);
+    }
+
+    public void testSpacesAroundUnaryOperator_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNARY_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2994_02.php", options);
+    }
 }

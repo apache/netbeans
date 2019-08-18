@@ -22,6 +22,7 @@ package org.netbeans.test.versioning;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,11 +44,14 @@ import org.openide.filesystems.FileUtil;
  * @author Maros Sandor
  */
 public class VersioningSystemTest extends JellyTestCase {
+
+    private static final Logger LOG = Logger.getLogger(VersioningSystemTest.class.getName());
     
-    private File    propertiesFile;
     private String  versioningSystemClassName;
     private File    rootDir;
     private VersioningSystem testedSystem;
+    
+    private boolean defaultTest;
 
     public VersioningSystemTest(String testName) {
         super(testName);
@@ -58,27 +62,34 @@ public class VersioningSystemTest extends JellyTestCase {
     }
     
     public static Test suite() {
-//        NbTestSuite suite = new NbTestSuite();
-//        suite.addTest(new VersioningSystemTest("testOwnership"));
-//        suite.addTest(new VersioningSystemTest("testInterceptor"));
-//        return suite;
-        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration()
+        return NbModuleSuite.emptyConfiguration()
                 .addTest(VersioningSystemTest.class, 
                         "testOwnership",
                         "testInterceptor")
-                .enableModules(".*").clusters(".*"));
+                .enableModules(".*")
+                .clusters(".*")
+                .suite();
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        propertiesFile = new File(getDataDir(), "tck.properties");
-        Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(propertiesFile);
-        props.load(fis);
-        versioningSystemClassName = props.getProperty("test.vcs");
-        rootDir = new File(props.getProperty("test.root"));
-
-        testedSystem = VersioningManager.getInstance().getOwner(VCSFileProxy.createFileProxy(rootDir));
+        try {
+            File propertiesFile = new File(getDataDir(), "tck.properties");
+            Properties props = new Properties();
+            FileInputStream fis = new FileInputStream(propertiesFile);
+            props.load(fis);
+            versioningSystemClassName = props.getProperty("test.vcs");
+            rootDir = new File(props.getProperty("test.root"));
+            defaultTest = false;
+        } catch (FileNotFoundException fileNotFoundException) {
+            LOG.warning(String.format("Using default root folder and default vcs because; %s", fileNotFoundException.getMessage()));
+            versioningSystemClassName = "org.netbeans.modules.versioning.DelegatingVCS";
+            rootDir = getWorkDir();
+            defaultTest = true;
+        } finally {
+            testedSystem = VersioningManager.getInstance().getOwner(VCSFileProxy.createFileProxy(rootDir));
+        }
         assertNotNull(testedSystem);
         assertEquals(testedSystem.getClass().getName(), versioningSystemClassName);
     }
@@ -98,10 +109,14 @@ public class VersioningSystemTest extends JellyTestCase {
     }
     
     public void testOwnership() throws IOException {
-        VersioningSystem vs;
         VCSFileProxy rootProxy = VCSFileProxy.createFileProxy(rootDir);
-        vs = VersioningManager.getInstance().getOwner(rootProxy.getParentFile());
-        assertNull(vs);
+        VersioningSystem vs = VersioningManager.getInstance().getOwner(rootProxy.getParentFile());
+        
+        if (isDefaultTest()) {
+            assertEquals(testedSystem, vs);
+        } else {
+            assertNull(vs);
+        }
 
         testOwnershipRecursively(rootProxy);
     }
@@ -123,4 +138,9 @@ public class VersioningSystemTest extends JellyTestCase {
             testOwnershipRecursively(child);
         }
     }
+
+    private boolean isDefaultTest() {
+        return defaultTest;
+    }
+    
 }

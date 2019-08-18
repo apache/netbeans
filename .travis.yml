@@ -160,6 +160,7 @@ matrix:
              ide/team.commons
              ide/terminal.nb
              ide/utilities
+             ide/versioning.core
              ide/versioning.masterfs
              ide/versioning.util
              ide/web.common

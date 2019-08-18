@@ -44,6 +44,7 @@
 /harness/apisupport.harness/windows-launcher-src/nbproject/Makefile-*.mk
 /harness/apisupport.harness/windows-launcher-src/nbproject/Package-*.bash
 /harness/apisupport.harness/windows-launcher-src/nbproject/private/
+/ide/versioning.core/test/qa-functional/data/tck.properties
 /nb/ide.launcher/windows/nbproject/Makefile-*.mk
 /nb/ide.launcher/windows/nbproject/Package-*.bash
 /nb/ide.launcher/windows/nbproject/private/

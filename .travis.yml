@@ -162,6 +162,7 @@ matrix:
              ide/terminal.nb
              ide/utilities
              ide/versioning.masterfs
+             ide/versioning.ui
              ide/versioning.util
              ide/web.common
              ide/web.common.ui

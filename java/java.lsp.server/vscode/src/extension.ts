@@ -8,7 +8,7 @@
  */
 'use strict';
 
-import { workspace, ExtensionContext } from 'vscode';
+import { window, workspace, ExtensionContext } from 'vscode';
 
 import {
 	LanguageClient,
@@ -17,14 +17,31 @@ import {
 } from 'vscode-languageclient';
 
 import * as path from 'path';
+import { execSync } from 'child_process';
 
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
+    //verify acceptable JDK is available/set:
+    let specifiedJDK: string = workspace.getConfiguration('netbeans').get('jdkhome');
+
+    try {
+        let targetJava = specifiedJDK != null ? specifiedJDK + '/bin/java' : 'java';
+        execSync(targetJava + ' ' + context.extensionPath + '/src/VerifyJDK11.java');
+    } catch (e) {
+        window.showErrorMessage('The Java language server needs a JDK 11 to run, but none found. Please configure it under File/Preferences/Settings/Extensions/Java and restart VS Code.');
+        return ;
+    }
     let serverPath = path.resolve(context.extensionPath, "nb-java-lsp-server", "bin", "nb-java-lsp-server");
 
-    let serverOptions: ServerOptions = {
+    let serverOptions: ServerOptions;
+    let args: string[] = [];
+    if (specifiedJDK != null) {
+        args = ['--jdkhome', specifiedJDK];
+    }
+    serverOptions = {
         command: serverPath,
+        args: args,
         options: { cwd: workspace.rootPath }
     }
 

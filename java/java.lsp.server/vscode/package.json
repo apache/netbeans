@@ -35,5 +35,17 @@
 	},
 	"dependencies": {
 		"vscode-languageclient": "^4.1.4"
-	}
+	},
+        "contributes": {
+            "configuration": {
+                "title": "Java",
+                "properties": {
+                    "netbeans.jdkhome": {
+                         "type": ["string", "null"],
+                         "default": null,
+                         "description": "Specifies the JDK on which the Java language server should be run"
+                    }
+                }
+            }
+        }
 }

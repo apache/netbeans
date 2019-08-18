@@ -32,7 +32,8 @@ public abstract class DbSupport {
     public enum FEATURE { SEQUENCE, AUTOINCREMENT } ;
 
     public static VENDOR getVendor(String driverClass) {
-        if ( "com.mysql.jdbc.Driver".equals(driverClass)) {
+        if ( "com.mysql.jdbc.Driver".equals(driverClass) 
+                || "com.mysql.cj.jdbc.Driver".equals(driverClass)) {
             return VENDOR.MYSQL;
         } else if ("org.apache.derby.jdbc.ClientDriver".equals(driverClass)) {
             return VENDOR.JAVADB;
@@ -45,7 +46,8 @@ public abstract class DbSupport {
         }
     }
     public static DbSupport getInstance(String driverClass) {
-        if ( "com.mysql.jdbc.Driver".equals(driverClass)) {
+        if ( "com.mysql.jdbc.Driver".equals(driverClass) 
+                || "com.mysql.cj.jdbc.Driver".equals(driverClass)) {
             return MySQLDBSupport.getInstance();
         } else if ("org.apache.derby.jdbc.ClientDriver".equals(driverClass)) {
             return JavaDbSupport.getInstance();

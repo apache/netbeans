@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.db.metadata.model.jdbc;
 
 import java.sql.Connection;
@@ -25,6 +24,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Logger;
 import org.netbeans.modules.db.metadata.model.api.Catalog;
 import org.netbeans.modules.db.metadata.model.api.Column;
 import org.netbeans.modules.db.metadata.model.api.ForeignKey;
@@ -58,6 +58,8 @@ import org.netbeans.modules.db.metadata.model.jdbc.mysql.MySQLMetadata;
  */
 public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
 
+    private static final Logger LOG = Logger.getLogger(JDBCMetadataMySQLTest.class.getName());
+    
     private JDBCMetadata metadata;
     private String defaultCatalogName;
     private Connection conn;
@@ -70,6 +72,17 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
 
     public JDBCMetadataMySQLTest(String name) {
         super(name);
+    }
+
+    @Override
+    public boolean canRun() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            return super.canRun();
+        } catch (ClassNotFoundException e) {
+            LOG.warning(String.format("Test %s in %s disabled, %s not available", this.getName(), this.getClass().getName(), e.getMessage()));
+            return false;
+        }
     }
 
     @Override
@@ -90,39 +103,39 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
 
         conn = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + mysqlDatabase, mysqlUser, mysqlPassword);
         stmt.executeUpdate("USE test");
-        
-        stmt.executeUpdate("CREATE TABLE groucho (id INT NOT NULL, id2 INT NOT NULL, " +
-                "CONSTRAINT groucho_pk PRIMARY KEY (id2, id)) Engine=InnoDB");
+
+        stmt.executeUpdate("CREATE TABLE groucho (id INT NOT NULL, id2 INT NOT NULL, "
+                + "CONSTRAINT groucho_pk PRIMARY KEY (id2, id)) Engine=InnoDB");
 
         // Create a table in another database with references, let's see if this works
         stmt.executeUpdate("CREATE TABLE test2.harpo (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT) ENGINE=InnoDB");
-        
-        stmt.executeUpdate("CREATE TABLE foo (" +
-                "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, " +
-                "FOO_NAME VARCHAR(16), harpo_id INT NOT NULL, FOREIGN KEY(harpo_id) REFERENCES test2.harpo(id)) ENGINE=InnoDB");
-        
-        stmt.executeUpdate("CREATE TABLE bar (" +
-                "`i+d` INT NOT NULL PRIMARY KEY, " +
-                "foo_id INT NOT NULL, " +
-                "bar_name  VARCHAR(16), " +
-                "bar_digit DECIMAL(12,2) NOT NULL, " +
-                "FOREIGN KEY (foo_id) REFERENCES foo(id)) Engine=InnoDB");
 
-        stmt.executeUpdate("CREATE TABLE chico (id INT NOT NULL, groucho_id2 INT, groucho_id INT, foo_id INT, " +
-                "CONSTRAINT groucho_fk FOREIGN KEY (groucho_id2, groucho_id) REFERENCES groucho(id2, id), " +
-                "CONSTRAINT foo_fk FOREIGN KEY (foo_id) REFERENCES foo(id)) Engine=InnoDB");
-        
+        stmt.executeUpdate("CREATE TABLE foo ("
+                + "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+                + "FOO_NAME VARCHAR(16), harpo_id INT NOT NULL, FOREIGN KEY(harpo_id) REFERENCES test2.harpo(id)) ENGINE=InnoDB");
+
+        stmt.executeUpdate("CREATE TABLE bar ("
+                + "`i+d` INT NOT NULL PRIMARY KEY, "
+                + "foo_id INT NOT NULL, "
+                + "bar_name  VARCHAR(16), "
+                + "bar_digit DECIMAL(12,2) NOT NULL, "
+                + "FOREIGN KEY (foo_id) REFERENCES foo(id)) Engine=InnoDB");
+
+        stmt.executeUpdate("CREATE TABLE chico (id INT NOT NULL, groucho_id2 INT, groucho_id INT, foo_id INT, "
+                + "CONSTRAINT groucho_fk FOREIGN KEY (groucho_id2, groucho_id) REFERENCES groucho(id2, id), "
+                + "CONSTRAINT foo_fk FOREIGN KEY (foo_id) REFERENCES foo(id)) Engine=InnoDB");
+
         stmt.executeUpdate("CREATE VIEW barview AS SELECT * FROM bar");
 
         stmt.executeUpdate("CREATE UNIQUE INDEX groucho_index ON groucho(id2)");
 
         stmt.executeUpdate("CREATE INDEX bar_name_index ON bar(bar_name, bar_digit)");
         stmt.executeUpdate("CREATE UNIQUE INDEX bar_foo_index ON bar(foo_id)");
-        
-        stmt.executeUpdate("CREATE PROCEDURE barproc(IN param1 INT, OUT result VARCHAR(255), INOUT param2 DECIMAL(5,2)) " +
-                "BEGIN SELECT * from bar; END");
-        stmt.executeUpdate("CREATE PROCEDURE fooproc(IN param1 INT) " +
-                "BEGIN SELECT * from foo; END");
+
+        stmt.executeUpdate("CREATE PROCEDURE barproc(IN param1 INT, OUT result VARCHAR(255), INOUT param2 DECIMAL(5,2)) "
+                + "BEGIN SELECT * from bar; END");
+        stmt.executeUpdate("CREATE PROCEDURE fooproc(IN param1 INT) "
+                + "BEGIN SELECT * from foo; END");
         metadata = new MySQLMetadata(conn, null);
         defaultCatalogName = mysqlDatabase;
     }
@@ -155,9 +168,9 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
     }
 
     /**
-     * In MySQL it's possible to connect without specifying a database name, in which
-     * case there should be no default catalog and we should be able to get the full
-     * list of catalogs
+     * In MySQL it's possible to connect without specifying a database name, in
+     * which case there should be no default catalog and we should be able to
+     * get the full list of catalogs
      *
      * @throws java.lang.Exception
      */
@@ -175,9 +188,9 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         Collection<Table> tables = schema.getTables();
         assertNames(new HashSet<String>(Arrays.asList("foo", "bar", "groucho", "chico")), tables);
 
-        stmt.executeUpdate("CREATE TABLE testSchemaRefresh (" +
-        "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, " +
-        "FOO_NAME VARCHAR(16))");
+        stmt.executeUpdate("CREATE TABLE testSchemaRefresh ("
+                + "id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+                + "FOO_NAME VARCHAR(16))");
 
         schema.refresh();
 
@@ -223,7 +236,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         assertEquals(index, col.getParent());
         assertEquals(Ordering.ASCENDING, col.getOrdering());
         assertEquals(2, col.getPosition());
-        
+
         table = schema.getTable("bar");
         indexes = table.getIndexes();
         assertNames(new HashSet<String>(Arrays.asList("bar_name_index", "bar_foo_index", "PRIMARY")), indexes);
@@ -265,7 +278,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         fkeys = table.getForeignKeys();
         ForeignKey[] keys = table.getForeignKeys().toArray(new ForeignKey[0]);
         assertEquals(1, keys.length);
-        
+
         ForeignKey key = keys[0];
         // Don't know the name of this one, it's generated...
         assertNotNull(key.getName());
@@ -327,7 +340,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
 
         // MySQL does not tell you what the result columns are - bummer
         assertEquals(0, barProc.getColumns().size());
-        
+
         Procedure fooProc = schema.getProcedure("fooproc");
         Collection<Parameter> fooParams = fooProc.getParameters();
         assertNames(Arrays.asList("param1"), fooParams);

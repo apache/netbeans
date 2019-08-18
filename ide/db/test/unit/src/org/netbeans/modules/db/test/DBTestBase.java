@@ -679,7 +679,7 @@ public abstract class DBTestBase extends TestBase {
         }
         username = System.getProperty(USERNAME_PROPERTY, "DBTESTS");
         password = System.getProperty(PASSWORD_PROPERTY, "DBTESTS");
-        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///db/external/derby-10.2.2.0.jar");
+        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///ide/db/external/derby-10.2.2.0.jar");
 
         driverJar = convertPath(driverJar);
     }

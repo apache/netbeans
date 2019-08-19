@@ -42,7 +42,7 @@ script:
   - if [ "x$RUN_TESTS_JDK9PLUS" == "xtrue" ]; then wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh && export TEST_JDK=`bash install-jdk.sh $TEST_JDK_VERSION --emit-java-home --silent | tail -1` && for MODULE in $TEST_MODULES; do cd $MODULE; ant "-Dtest.nbjdk.home=$TEST_JDK" $TEST_RUN_OPTIONS test; done; fi
 
 matrix:
-    include:       
+    include:
         - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
           jdk: openjdk8
 

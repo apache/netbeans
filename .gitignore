@@ -53,6 +53,9 @@
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
 /platform/o.n.bootstrap/launcher/windows/nbproject/private/
 
+# Database logs
+derby.log
+
 
 # OS generated files #
 ######################

@@ -15,11 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
+F787C9B484CD7526F866C21D8925C4DACE467F8A org.apache.derby:derby:10.2.2.0
 
-test.unit.cp.extra=external/derby-10.2.2.0.jar\:external/mysql-connector-java-5.1.23.jar
-
-test.config.stableBTD.includes=**/*Test.class
-test.config.stableBTD.excludes=\
-    **/JDBCMetadataMySQLTest.class
+C264E2114579474D13DD808A510FC74E762DDA8C mysql:mysql-connector-java:5.1.23

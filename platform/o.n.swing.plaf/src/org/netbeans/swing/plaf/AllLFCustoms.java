@@ -104,10 +104,14 @@ final class AllLFCustoms extends LFCustoms {
     }
 
     public static void initCustomFontSize (int uiFontSize) {
-        Font nbDialogPlain = new FontUIResource("Dialog", Font.PLAIN, uiFontSize); // NOI18N
-        Font nbDialogBold = new FontUIResource("Dialog", Font.BOLD, uiFontSize); // NOI18N
+        String userSuppliedFontName = System.getProperty("uiFontName"); // NOI18N
+        String dialogFontName = userSuppliedFontName == null ? "Dialog" : userSuppliedFontName; // NOI18N
+        String sansSerifFontName = userSuppliedFontName == null ? "SansSerif" : userSuppliedFontName; // NOI18N
+
+        Font nbDialogPlain = new FontUIResource(dialogFontName, Font.PLAIN, uiFontSize);
+        Font nbDialogBold = new FontUIResource(dialogFontName, Font.BOLD, uiFontSize);
         Font nbSerifPlain = new FontUIResource("Serif", Font.PLAIN, uiFontSize); // NOI18N
-        Font nbSansSerifPlain = new FontUIResource("SansSerif", Font.PLAIN, uiFontSize); // NOI18N
+        Font nbSansSerifPlain = new FontUIResource(sansSerifFontName, Font.PLAIN, uiFontSize);
         Font nbMonospacedPlain = new FontUIResource("Monospaced", Font.PLAIN, uiFontSize); // NOI18N
         
         Map<Font, Font> fontTranslation = new HashMap<Font, Font>(5);
@@ -122,14 +126,18 @@ final class AllLFCustoms extends LFCustoms {
         switchFont("CheckBox.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("ColorChooser.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("ComboBox.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("DesktopIcon.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("Label.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("List.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("FileChooser.listFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("Menu.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("MenuBar.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("MenuItem.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("MenuItem.acceleratorFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("RadioButtonMenuItem.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("RadioButtonMenuItem.acceleratorFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("CheckBoxMenuItem.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("CheckBoxMenuItem.acceleratorFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("Menu.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("PopupMenu.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("OptionPane.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N

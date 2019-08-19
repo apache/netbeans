@@ -368,7 +368,7 @@
     <unzip src="../nb/ide.launcher/external/launchers-10.0.zip" dest="${netbeans.dest.dir}/bin" />
   </target>
 
-  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers" if="has.nb.cluster">
+  <target name="finish-build-nb" depends="init,-check-nb-cluster, -download-nb-windows-launchers, -build-nb-windows-launchers, -build-conf-file-configurer" if="has.nb.cluster">
     <loadproperties srcFile="${clusters.list.file}" />
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
@@ -1622,6 +1622,13 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </target>
 
     <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
+    </target>
+    
+    <target name="-build-conf-file-configurer" depends="init">
+        <ant antfile="${nb.build.dir}/../../nb/conf-file-configurer/build.xml" target="jar" useNativeBasedir="true"/>
+        <mkdir dir="${netbeans.dest.dir}/nb/configurer/"/>
+        <copy file="${nb.build.dir}/../../nb/conf-file-configurer/dist/conf-file-configurer.jar"
+           todir="${netbeans.dest.dir}/nb/configurer/" />
     </target>
 
   <target name="build-source-config"

@@ -65,7 +65,10 @@ public class GtkLFCustoms extends LFCustoms {
             if (i != null) {
                 sz = i.intValue();
             }
-            controlFont = new Font ("Dialog", Font.PLAIN, sz); //NOI18N
+            String userSuppliedFontName = System.getProperty("uiFontName");
+            String dlgFontName = userSuppliedFontName == null ? "Dialog"
+                    : userSuppliedFontName;
+            controlFont = new Font (dlgFontName, Font.PLAIN, sz);
         }
 
         Color borderColor = (Color) UIManager.get("InternalFrame.borderShadow");

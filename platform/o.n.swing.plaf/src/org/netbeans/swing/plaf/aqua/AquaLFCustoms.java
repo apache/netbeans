@@ -40,10 +40,13 @@ public final class AquaLFCustoms extends LFCustoms {
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
         Integer cus = (Integer) UIManager.get("customFontSize"); //NOI18N
         Object[] result;
+        String userSuppliedFontName = System.getProperty("uiFontName"); //NOI18N
+        String dlgFontName = userSuppliedFontName == null ? "Dialog" //NOI18N
+                : userSuppliedFontName;
         if (cus != null) {
             int uiFontSize = cus.intValue();
             Font controlFont = new GuaranteedValue (new String[] {"controlFont", "Tree.font", "Label.font"},
-                                                new FontUIResource("Dialog", Font.PLAIN, uiFontSize)).getFont(); //NOI18N
+                                                new FontUIResource(dlgFontName, Font.PLAIN, uiFontSize)).getFont(); //NOI18N
             result = new Object[] {
                 "Button.font", controlFont,
                 "Tree.font", controlFont,
@@ -67,7 +70,7 @@ public final class AquaLFCustoms extends LFCustoms {
             }; //NOI18N
         } else {
             result = new Object[] {
-                "controlFont", new GuaranteedValue (new String[] {"Label.font", "Tree.font"}, new FontUIResource("Dialog", Font.PLAIN, 14)).getFont(),
+                "controlFont", new GuaranteedValue (new String[] {"Label.font", "Tree.font"}, new FontUIResource(dlgFontName, Font.PLAIN, 14)).getFont(),
                 "PopupMenuSeparatorUI", "org.netbeans.swing.plaf.aqua.AquaSeparatorUI",
                 "SeparatorUI", "org.netbeans.swing.plaf.aqua.AquaSeparatorUI",
                 "PopupMenu.border", BorderFactory.createEmptyBorder(4, 0, 4, 0),

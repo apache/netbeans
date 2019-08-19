@@ -47,7 +47,10 @@ public final class MetalLFCustoms extends LFCustoms {
         }
         
         //XXX fetch the custom font size here instead
-        Font controlFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
+        String userSuppliedFontName = System.getProperty("uiFontName"); //NOI18N
+        String dlgFontName = userSuppliedFontName == null ? "Dialog" //NOI18N
+                : userSuppliedFontName;
+        Font controlFont = new Font(dlgFontName, Font.PLAIN, fontsize);
         Object[] result = {
             //The assorted standard NetBeans metal font customizations
             CONTROLFONT, controlFont,
@@ -58,7 +61,7 @@ public final class MetalLFCustoms extends LFCustoms {
             LISTFONT, controlFont,
             TREEFONT, controlFont,
             PANELFONT, controlFont,
-            SUBFONT, new Font ("Dialog", Font.PLAIN, Math.min(fontsize - 1, 6)),
+            SUBFONT, new Font (dlgFontName, Font.PLAIN, Math.min(fontsize - 1, 6)),
             //Bug in JDK 1.5 thru b59 - pale blue is incorrectly returned for this
             "textInactiveText", Color.GRAY, //NOI18N
             // #61395        

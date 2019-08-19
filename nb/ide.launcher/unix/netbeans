@@ -122,6 +122,68 @@ if [ ! -z "$netbeans_extraclusters" ] ; then
     netbeans_clusters="$netbeans_clusters:$netbeans_extraclusters"
 fi
 
+resolve_symlink () {
+    file="$1"
+    while [ -h "$file" ]; do
+        ls=`ls -ld "$file"`
+        link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+        if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+            file="$link"
+        else
+            file=`dirname "$1"`"/$link"
+        fi
+    done
+    echo "$file"
+}
+
+launchConfFileConfigurer() {
+    configJar="$basedir"/nb/configurer/conf-file-configurer.jar
+    configFile="$basedir"/etc/netbeans.conf
+    if [ -f "${userdir}"/etc/netbeans.conf ] ; then
+        configFile="${userdir}"/etc/netbeans.conf
+        fi
+
+    if [ -f "${configJar}" ] ; then
+        uname=`uname`;
+        if [ $uname != 'Darwin' ]; then
+            sh=sh
+            if [ -x /bin/bash ]
+            then
+                sh=/bin/bash
+            fi
+            jdk="${netbeans_jdkhome}"
+            if [ -z "${jdk}" ] ; then
+                javac=`which javac`
+                if [ -z "$javac" ] ; then
+                    java=`which java`
+                    if [ ! -z "$java" ] ; then
+                        java=`resolve_symlink "$java"`
+                        jdk=`dirname $java`"/.."
+                    fi
+                else
+                    javac=`resolve_symlink "$javac"`
+                    jdk=`dirname $javac`"/.."
+                fi
+            fi
+            if [ ! -x "${jdk}/bin/java" ] ; then
+                echo "Cannot find java. Not running configurer."
+            else
+                "${jdk}/bin/java" -jar "${configJar}" --file "${configFile}"
+                if [ $? -eq 10 ] ; then 
+                    # user cancelled, don't run it again
+                    echo "hw_sig=aborted" >> $configFile
+                fi
+                if [ $? -eq 0 ] ; then
+                    # Reload with the new settings
+                    . "${configFile}"
+                                        return 0
+                fi
+            fi
+        fi
+    fi
+    return 1
+}
+
 launchNbexec() {
     nbexec=`grep -v "^#" "$basedir"/etc/netbeans.clusters | grep -v "^$" | grep platform | while read X; do
         if expr "$X" : "/.*" >/dev/null; then
@@ -146,6 +208,16 @@ launchNbexec() {
         fi
     fi
 }
+
+if [ -z "$hw_sig" ] ; then
+    launchConfFileConfigurer
+    if [ $? -eq 0 ] ; then
+        . "$basedir"/etc/netbeans.conf
+            if [ -f "${userdir}"/etc/netbeans.conf ] ; then
+                    . "${userdir}"/etc/netbeans.conf
+            fi
+    fi
+fi
 
 # in case of macosx, the apple.laf.useScreenMenuBar property should be ideally in the Info.plist file
 # but it doesn't get propagated into the executed java VM. 

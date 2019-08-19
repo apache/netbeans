@@ -64,11 +64,13 @@ public final class VistaLFCustoms extends LFCustoms {
         if (in != null) {
             fontsize = in.intValue();
         }
-        
+        String userSuppliedFontName = System.getProperty("uiFontName"); //NOI18N
+        String dlgFontName = userSuppliedFontName == null ? "Dialog" //NOI18N
+                : userSuppliedFontName;
         Object[] result = new Object[] {
             //Work around a bug in windows which sets the text area font to
             //"MonoSpaced", causing all accessible dialogs to have monospaced text
-            "TextArea.font", new GuaranteedValue ("Label.font", new Font("Dialog", Font.PLAIN, fontsize)),
+            "TextArea.font", new GuaranteedValue ("Label.font", new Font(dlgFontName, Font.PLAIN, fontsize)), //NOI18N
 
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
         };

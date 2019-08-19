@@ -45,7 +45,11 @@ public final class NimbusLFCustoms extends LFCustoms {
         }
 
         //XXX fetch the custom font size here instead
-        Font controlFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
+        String userSuppliedFontName = System.getProperty("uiFontName"); //NOI18N
+        String dlgFontName = userSuppliedFontName == null ? "Dialog" //NOI18N
+                : userSuppliedFontName;
+
+        Font controlFont = new Font(dlgFontName, Font.PLAIN, fontsize);
         Object[] result = {
             "JXDateTimePicker.arrowIcon", UIUtils.loadImage("org/netbeans/swing/plaf/resources/nimbus_expander.png") //NOI18N
         };

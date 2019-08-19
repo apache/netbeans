@@ -38,6 +38,8 @@ import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  * This static class groups the whole aspect of bracket completion. It is
@@ -146,7 +148,8 @@ class TypingCompletion {
             char insChr = context.getText().charAt(0);
             context.setText("" + insChr + matching(insChr), 1);  // NOI18N
         } else if (chr == '\"') {
-            if (isTextBlockSupported() && (context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\""))) {
+            if ((context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\"")) &&
+                    isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
                 context.setText("\"\n\"\"\"", 2);  // NOI18N
             } else {
                 context.setText("\"\"", 1);  // NOI18N
@@ -252,12 +255,16 @@ class TypingCompletion {
         }
 
         if ((completablePosition && !insideString) || eol) {
-            if (isTextBlockSupported() && context.getText().equals("\"") && context.getOffset() >= 2 && context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"")) {
+            if (context.getText().equals("\"") && context.getOffset() >= 2 &&
+                    context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"") &&
+                    isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
                 context.setText("\"\n\"\"\"", 2);  // NOI18N
+                Thread.dumpStack();
             } else {
                 context.setText(context.getText() + context.getText(), 1);
             }
-        } else if (isTextBlockSupported() && context.getText().equals("\"")) {
+        } else if (context.getText().equals("\"") &&
+                isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
             if ((javaTS != null) && javaTS.moveNext()) {
                 id = javaTS.token().id();
                 if ((id == JavaTokenId.STRING_LITERAL) && (javaTS.token().text().toString().equals("\"\""))) {
@@ -837,7 +844,12 @@ class TypingCompletion {
         }
         return null;
     }
-    
+
+    private static FileObject getFileObject(BaseDocument doc) {
+        DataObject dob = NbEditorUtilities.getDataObject(doc);
+        return dob.getPrimaryFile();
+    }
+
     private static Set<JavaTokenId> STRING_AND_COMMENT_TOKENS = EnumSet.of(JavaTokenId.STRING_LITERAL, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT, JavaTokenId.BLOCK_COMMENT, JavaTokenId.CHAR_LITERAL, JavaTokenId.MULTILINE_STRING_LITERAL);
 
     private static boolean isStringOrComment(JavaTokenId javaTokenId) {

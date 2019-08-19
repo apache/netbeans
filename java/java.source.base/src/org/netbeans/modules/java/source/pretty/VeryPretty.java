@@ -1880,7 +1880,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	   case CLASS:
              if (tree.value instanceof String) {
                  print("\"" + quote((String) tree.value, '\'') + "\"");
-             } else if (isTextBlockSupported() && tree.value instanceof String[]) {
+             } else if (isTextBlockSupported(null) && tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
                  newline();

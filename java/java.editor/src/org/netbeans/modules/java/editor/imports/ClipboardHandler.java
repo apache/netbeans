@@ -664,7 +664,7 @@ public class ClipboardHandler {
                             return data;
                         }
                     });
-                } else if ((isTextBlockSupported()) && insideToken((JTextComponent) comp, JavaTokenId.MULTILINE_STRING_LITERAL)) {
+                } else if ((isTextBlockSupported(NbEditorUtilities.getFileObject(((JTextComponent)comp).getDocument()))) && insideToken((JTextComponent) comp, JavaTokenId.MULTILINE_STRING_LITERAL)) {
                     final Transferable t = support.getTransferable();
                     return delegate.importData(comp, new Transferable() {
                         @Override

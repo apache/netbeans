@@ -266,7 +266,7 @@ public final class HtmlRenderer {
      * @return A cell renderer that can render HTML.
      */
     public static final Renderer createRenderer() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(true);
     }
 
     /**
@@ -288,7 +288,7 @@ public final class HtmlRenderer {
      * @return a label which can render a subset of HTML very quickly
      */
     public static final JLabel createLabel() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(false);
     }
 
     /**

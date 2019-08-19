@@ -40,69 +40,72 @@ import org.openide.windows.TopComponent;
 })
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Markdown_LOADER",
-        mimeType = "text/x-markdown",
-        extension = {"md"}
+        mimeType = MarkdownDataObject.MIME_TYPE,
+        extension = {"md"},
+        position = 20367
 )
 @DataObject.Registration(
-        mimeType = "text/x-markdown",
+        mimeType = MarkdownDataObject.MIME_TYPE,
         iconBase = "org/netbeans/modules/markdown/markdown.png",
         displayName = "#LBL_Markdown_LOADER",
         position = 300
 )
 @ActionReferences({
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
             position = 100,
             separatorAfter = 200
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400,
             separatorAfter = 500
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
             position = 700,
             separatorAfter = 800
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
             position = 900,
             separatorAfter = 1000
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1100,
             separatorAfter = 1200
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
             position = 1300
     ),
     @ActionReference(
-            path = "Loaders/text/x-markdown/Actions",
+            path = "Loaders/text/" + MarkdownDataObject.MIME_TYPE + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
     )
 })
-@GrammarRegistration(mimeType="text/x-markdown", grammar="markdown.tmLanguage.json")
+@GrammarRegistration(mimeType=MarkdownDataObject.MIME_TYPE, grammar="markdown.tmLanguage.json")
 public class MarkdownDataObject extends MultiDataObject {
+
+    public static final String MIME_TYPE = "text/x-markdown-nb";
 
     public MarkdownDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);

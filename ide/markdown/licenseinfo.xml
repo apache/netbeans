@@ -22,7 +22,7 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/markdown/markdown.png</file>
-        <license ref="CC0-markdown" />
+        <license ref="CC0-v10" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
     <fileset>

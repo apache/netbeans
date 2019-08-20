@@ -218,9 +218,9 @@ public class DriverListUtil {
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
         
         url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MySQL"),
-                "com.mysql.jdbc.Driver", 
+                "com.mysql.cj.jdbc.Driver", 
                 "jdbc:mysql://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]", true); // NOI18N
-        url.setSampleUrl("jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=convertToNull");
+        url.setSampleUrl("jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL");
         url.setSampleUser("root");
         url.setSamplePassword("");
 

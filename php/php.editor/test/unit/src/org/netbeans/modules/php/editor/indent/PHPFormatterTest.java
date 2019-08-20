@@ -824,4 +824,8 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/arrowFunctions02.php", options);
     }
 
+    public void testNetBeans1047() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/netbeans1047.php", options);
+    }
 }

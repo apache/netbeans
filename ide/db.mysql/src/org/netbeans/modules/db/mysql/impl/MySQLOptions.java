@@ -68,7 +68,7 @@ public final class MySQLOptions {
             "refresh-thread-sleep-interval"; // NOI18N
     
     // Currently not modifiable...
-    private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+    private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     private static final String DEFAULT_PORT = "3306";
     private static final String DEFAULT_HOST = "localhost";
     private static final String DEFAULT_ADMIN_USER = "root";

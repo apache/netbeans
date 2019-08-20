@@ -76,6 +76,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
@@ -255,8 +256,8 @@ public class ActionProviderImpl implements ActionProvider {
                                             JPDAStart s = new JPDAStart(io, COMMAND_DEBUG_SINGLE); //XXX command
                                             s.setAdditionalSourcePath(fullSourcePath);
                                             try {
-                                                int connectTo = s.execute(prj);
-                                                Socket clientSocket = new Socket(InetAddress.getLocalHost(), connectTo);
+                                                Pair<String, Integer> connectTo = s.execute(prj);
+                                                Socket clientSocket = new Socket(connectTo.first() != null ? connectTo.first() : InetAddress.getLocalHost().getHostName(), connectTo.second());
                                                 BACKGROUND.post(new Copy(clientSocket.getInputStream(), server.getOutputStream(), clientSocket));
                                                 BACKGROUND.post(new Copy(server.getInputStream(), clientSocket.getOutputStream(), clientSocket));
                                             } catch (Throwable ex) {

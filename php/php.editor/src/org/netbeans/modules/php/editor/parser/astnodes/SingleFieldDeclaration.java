@@ -19,20 +19,26 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a fields declaration
- * <pre>e.g.<pre> var $a, $b;
+ * Represents a fields declaration.
+ * <pre>
+ * e.g.
+ * var $a, $b;
  * public $a = 3;
  * final private static $var;
+ * private int $int = 20; // PHP 7.4
+ * </pre>
  */
 public class SingleFieldDeclaration extends ASTNode {
 
-    private Variable name;
-    private Expression value;
+    private final Variable name;
+    private final Expression value;
+    private final Expression fieldType;
 
-    public SingleFieldDeclaration(int start, int end, Variable name, Expression value) {
+    public SingleFieldDeclaration(int start, int end, Variable name, Expression value, Expression fieldType) {
         super(start, end);
         this.name = name;
         this.value = value;
+        this.fieldType = fieldType;
     }
 
     /**
@@ -49,6 +55,10 @@ public class SingleFieldDeclaration extends ASTNode {
         return this.value;
     }
 
+    public Expression getFieldType() {
+        return fieldType;
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
@@ -56,7 +66,7 @@ public class SingleFieldDeclaration extends ASTNode {
 
     @Override
     public String toString() {
-        return getName() + " = " + getValue(); //NOI18N
+        return getFieldType() + " " + getName() + " = " + getValue(); //NOI18N
     }
 
 }

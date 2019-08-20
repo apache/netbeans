@@ -1,0 +1,6 @@
+    return function ($param2) use ($param1, $variable1)^ {
+---------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function
+HINT:You can use arrow function
+FIX:Use Arrow Function

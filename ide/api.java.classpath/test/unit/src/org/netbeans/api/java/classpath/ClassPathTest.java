@@ -655,10 +655,7 @@ public class ClassPathTest extends NbTestCase {
             try {
                 final Class<?> c = loader.loadClass(className);
                 noLoaded++;
-            } catch (ClassNotFoundException e) {
-                noFailed++;
-            }
-            catch (NoClassDefFoundError e) {
+            } catch (ClassNotFoundException | NoClassDefFoundError | SecurityException e) {
                 noFailed++;
             }
         }

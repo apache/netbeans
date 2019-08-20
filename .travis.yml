@@ -96,7 +96,9 @@ matrix:
              ide/css.editor
              ide/css.lib
              ide/css.model
+             ide/db
              ide/db.dataview
+             ide/db.metadata.model
              ide/db.sql.editor
              ide/docker.api
              ide/docker.ui
@@ -161,6 +163,7 @@ matrix:
              ide/terminal.nb
              ide/utilities
              ide/versioning.masterfs
+             ide/versioning.ui
              ide/versioning.util
              ide/web.common
              ide/web.common.ui

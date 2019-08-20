@@ -63,6 +63,9 @@
 		    </param>
 		</request>
 		<response>
+                    <representation>
+                        <mediaType></mediaType>
+                    </representation>
 		</response>
 	    </method>
 	    <method name="GET" id="youtube.listFeatured">

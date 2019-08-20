@@ -177,7 +177,7 @@ public class CustomClassLoader extends URLClassLoader {
                 if (f.exists()) {
                     try {
                         package2File.put(packageName, entry);
-                        return f.toURL();
+                        return f.toURI().toURL();
                     } catch (MalformedURLException ex) {
                         continue;
                     }

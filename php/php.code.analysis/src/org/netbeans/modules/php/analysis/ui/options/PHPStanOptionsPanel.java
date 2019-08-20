@@ -64,6 +64,9 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
     private void init() {
         phpStanHintLabel.setText(Bundle.PHPStanOptionsPanel_hint(PHPStan.NAME, PHPStan.LONG_NAME));
         phpStanLevelComboBox.removeAllItems();
+        // NETBEANS-2974
+        // allow empty level option to use a level of a configuration file
+        phpStanLevelComboBox.addItem(""); // NOI18N
         for (int i = AnalysisOptions.PHPSTAN_MIN_LEVEL; i <= AnalysisOptions.PHPSTAN_MAX_LEVEL; i++) {
             phpStanLevelComboBox.addItem(String.valueOf(i));
         }

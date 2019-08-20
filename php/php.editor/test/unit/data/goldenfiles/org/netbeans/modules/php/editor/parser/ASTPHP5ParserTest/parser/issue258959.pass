@@ -1319,6 +1319,8 @@
                         </Initializers>
                     </ClassConstantDeclaration>
                     <FieldsDeclaration start='119' end='177' modifier='public static'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='133' end='145' isDollared='true'>
                                 <Identifier start='134' end='145' name='staticField'/>

@@ -1,0 +1,7 @@
+[[816,821]-Syntax error
+ unexpected:	identifier 'x_123'
+ after:	integer '0'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 816-821:Syntax error
+ unexpected:	identifier 'x_123'
+ after:	integer '0'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??

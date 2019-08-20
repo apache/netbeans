@@ -45,7 +45,8 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Kt_LOADER",
         mimeType = "text/x-kotlin",
-        extension = {"kt", "kts"}
+        extension = {"kt", "kts"},
+        position = 80843
 )
 @DataObject.Registration(
         mimeType = "text/x-kotlin",

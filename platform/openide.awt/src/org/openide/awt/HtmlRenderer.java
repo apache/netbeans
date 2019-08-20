@@ -525,7 +525,6 @@ public final class HtmlRenderer {
         Object desktopHints
                 = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         if (desktopHints instanceof Map<?, ?>) {
-            System.out.println("add hints " + desktopHints);
             g.addRenderingHints((Map<?, ?>) desktopHints);
         } else if (HtmlLabelUI.antialias) {
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

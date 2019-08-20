@@ -54,7 +54,7 @@ public class EditAction extends CookieAction {
 
     protected void performAction(final Node[] activatedNodes) {
         for (int i = 0; i < activatedNodes.length; i++) {
-            EditCookie es = (EditCookie) activatedNodes[i].getCookie(EditCookie.class);
+            EditCookie es = activatedNodes[i].getCookie(EditCookie.class);
 
             if (es != null) {
                 es.edit();

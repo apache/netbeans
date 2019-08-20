@@ -152,9 +152,7 @@ public class ExplorerActions {
         if (c instanceof ExClipboard) {
             ExClipboard clip = (ExClipboard) c;
             clip.addClipboardListener(
-                (ClipboardListener) org.openide.util.WeakListeners.create(
-                    ClipboardListener.class, actionStateUpdater, clip
-                )
+                org.openide.util.WeakListeners.create(ClipboardListener.class, actionStateUpdater, clip)
             );
         }
 
@@ -235,10 +233,10 @@ public class ExplorerActions {
         Node[] path = manager.getSelectedNodes();
 
         if (copy == null) {
-            copy = (CopyAction) CopyAction.findObject(CopyAction.class, true);
-            cut = (CutAction) CutAction.findObject(CutAction.class, true);
-            paste = (PasteAction) PasteAction.findObject(PasteAction.class, true);
-            delete = (DeleteAction) DeleteAction.findObject(DeleteAction.class, true);
+            copy   = CopyAction.findObject(CopyAction.class, true);
+            cut    = CutAction.findObject(CutAction.class, true);
+            paste  = PasteAction.findObject(PasteAction.class, true);
+            delete = DeleteAction.findObject(DeleteAction.class, true);
         }
 
         int i;

@@ -28,7 +28,7 @@ import com.sun.jna.Structure;
  * @author lfischme
  */
 public interface MacCoreFoundationLibrary extends Library {
-    MacCoreFoundationLibrary LIBRARY = (MacCoreFoundationLibrary) Native.loadLibrary("CoreFoundation", MacCoreFoundationLibrary.class);
+    MacCoreFoundationLibrary LIBRARY = Native.loadLibrary("CoreFoundation", MacCoreFoundationLibrary.class);
 
     public boolean CFDictionaryGetValueIfPresent(Pointer dictionary, Pointer key, Pointer[] returnValue);
 

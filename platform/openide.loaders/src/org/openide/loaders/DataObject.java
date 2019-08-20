@@ -1581,7 +1581,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
             if (c == null || c.param == null) {
                 return Collections.emptyMap();
             }
-            return (Map<String, Object>)Collections.unmodifiableMap(c.param);
+            return Collections.unmodifiableMap(c.param);
         }
         
         static String getOrigName() {

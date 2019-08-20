@@ -71,7 +71,7 @@ class OSGiRepository extends Repository {
                 // Won't work anyway, so don't even try.
                 continue;
             }
-            String explicit = (String) b.getHeaders().get("OpenIDE-Module-Layer");
+            String explicit = b.getHeaders().get("OpenIDE-Module-Layer");
             if (explicit != null) {
                 String base, ext;
                 int idx = explicit.lastIndexOf('.'); // NOI18N

@@ -281,7 +281,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
             // Won't work anyway, so don't even try.
             return null;
         }
-        String respath = (String) b.getHeaders().get("OpenIDE-Module-Install");
+        String respath = b.getHeaders().get("OpenIDE-Module-Install");
         if (respath != null) {
             String fqn = respath.replaceFirst("[.]class$", "").replace('/', '.');
             try {

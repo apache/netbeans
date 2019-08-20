@@ -244,7 +244,7 @@ public final class WindowsNotifier extends Notifier<Void> {
 
     }
 
-    final static Kernel32 KERNEL32 = (Kernel32) Native.loadLibrary("kernel32", Kernel32.class,
+    final static Kernel32 KERNEL32 = Native.loadLibrary("kernel32", Kernel32.class,
             new HashMap() {{
                 put(Library.OPTION_TYPE_MAPPER, W32APITypeMapper.UNICODE);
                 put(Library.OPTION_FUNCTION_MAPPER, W32APIFunctionMapper.UNICODE);
@@ -448,7 +448,7 @@ public final class WindowsNotifier extends Notifier<Void> {
         KERNEL32.GetQueuedCompletionStatus(port, rcount, rkey, roverlap, INFINITE);
         
         synchronized (this) { 
-            return (FileInfo)handleMap.get(rkey.getValue());
+            return handleMap.get(rkey.getValue());
         }
     }
 

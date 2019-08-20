@@ -1623,9 +1623,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
     </target>
-    
+
     <target name="-build-conf-file-configurer" depends="init">
-        <ant antfile="${nb.build.dir}/../../nb/conf-file-configurer/build.xml" target="jar" useNativeBasedir="true"/>
+        <ant antfile="${nb_all}/nb/conf-file-configurer/build.xml" target="jar" useNativeBasedir="true">
+            <property name="platforms.JDK_1.8.home" value="${nbjdk.home}"/>
+			<property name="libs.CopyLibs.classpath" value="${nb_all}/java/java.j2seproject/copylibstask/dist/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+        </ant>
         <mkdir dir="${netbeans.dest.dir}/nb/configurer/"/>
         <copy file="${nb.build.dir}/../../nb/conf-file-configurer/dist/conf-file-configurer.jar"
            todir="${netbeans.dest.dir}/nb/configurer/" />

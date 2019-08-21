@@ -82,7 +82,7 @@ public class Simple {
 
 
     private static void testTree () throws Exception {
-        Class clazz = Class.forName ("org.netbeans.tax.TreeAttlistDeclAttributeDef"); // NOI18N
+        Class<?> clazz = Class.forName ("org.netbeans.tax.TreeAttlistDeclAttributeDef"); // NOI18N
         clazz = TreeAttlistDeclAttributeDef.class;
         System.out.println ("AttributeDef.class = " + clazz); // NOI18N
 

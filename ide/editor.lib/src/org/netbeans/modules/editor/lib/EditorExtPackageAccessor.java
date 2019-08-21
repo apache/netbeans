@@ -43,7 +43,7 @@ public abstract class EditorExtPackageAccessor {
     public static synchronized EditorExtPackageAccessor get() {
         // Trying to wake up ToolTipSupport ...
         try {
-            Class clazz = Class.forName(ToolTipSupport.class.getName());
+            Class<?> clazz = Class.forName(ToolTipSupport.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

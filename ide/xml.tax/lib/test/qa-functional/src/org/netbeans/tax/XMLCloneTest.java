@@ -124,7 +124,7 @@ public class XMLCloneTest extends XTest {
     
     private void nodeCloneTest(Object node, Object clone, boolean isCloneRoot) {
         dbg.println("\nNode: " + node + "\n<<<\n" + TestUtil.nodeToString(node) + "\n>>>");
-        Class clazz = node.getClass();
+        Class<?> clazz = node.getClass();
         do {
             cloneLevelCheck(clazz, node, clone, isCloneRoot);
             clazz = clazz.getSuperclass();

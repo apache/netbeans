@@ -120,7 +120,7 @@ public class SwingController extends Controller implements Executor, Runnable {
     static {
         // this is a compatibility hack: superclass is Controller, and its super
         // is either j.l.O or compat class in the compat mode.
-        Class clazz = SwingController.class.getSuperclass().getSuperclass();
+        Class<?> clazz = SwingController.class.getSuperclass().getSuperclass();
         Method m = null;
         try {
             m = clazz.getDeclaredMethod("compatPostInit", javax.swing.Timer.class);

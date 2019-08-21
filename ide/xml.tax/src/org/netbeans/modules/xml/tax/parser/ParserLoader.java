@@ -102,7 +102,7 @@ public final class ParserLoader extends URLClassLoader {
      * ASSUMPTION parentLoader see bootstrap resources
      */
     public Class loadClass(String name) throws ClassNotFoundException {
-        Class clazz = null;
+        Class<?> clazz = null;
         
         if (name.startsWith(PARSER_PACKAGE)) {
                 

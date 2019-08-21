@@ -76,10 +76,11 @@ matrix:
         - name: "Test ide modules"
           jdk: openjdk8
           env:
-            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-          script:
+            - OPTS="-quiet -Dcluster.config=basic -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
             - ant $OPTS clean
             - ant $OPTS build
+          script:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
             - ant $OPTS -f ide/bugtracking test

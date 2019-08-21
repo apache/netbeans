@@ -43,139 +43,141 @@ script:
 
 matrix:
     include:
-        - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
-          jdk: openjdk8
-
-        - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
-          jdk: openjdk8
-
-#        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
+#        - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+#          jdk: openjdk8
+#
+#        - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+#          jdk: openjdk8
+#
+##        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
+##          jdk: openjdk8
+#
+#        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+#          jdk: openjdk8
+#
+#        - env: OPTS="-quiet" TARGET="build-platform"
+#          jdk: openjdk11
+#
+#        - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
+#          jdk: openjdk8
+#
+#        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
+#          jdk: openjdk11
+#
+#        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+#          jdk: openjdk8
+#
+#        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+#          jdk: openjdk8
+#
+#        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
 #          jdk: openjdk8
 
-        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+        - name: "Test ide modules"
           jdk: openjdk8
-
-        - env: OPTS="-quiet" TARGET="build-platform"
-          jdk: openjdk11
-
-        - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
-          jdk: openjdk8
-
-        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
-          jdk: openjdk11
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          jdk: openjdk8
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          jdk: openjdk8
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          script:
+            - ant $OPTS clean
+            - ant $OPTS build
+            - ant $OPTS -f ide/api.xml test
+            - ant $OPTS -f ide/api.xml.ui test
+            - ant $OPTS -f ide/bugtracking test
+            - ant $OPTS -f ide/bugtracking.bridge test
           
-        - env: > 
-            SIGTEST=false 
-            COMPILETEST=false 
-            RAT=false 
-            EOL=false 
-            LICENSE=false 
-            CV=false 
-            RUN_TESTS_JDK9PLUS=false 
-            RUN_TESTS_JDK8=true 
-            OPTS="-Dcluster.config=minimal -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-            TEST_MODULES="ide/api.xml
-             ide/api.xml.ui
-             ide/bugtracking
-             ide/bugtracking.bridge
-             ide/bugtracking.commons
-             ide/bugzilla
-             ide/code.analysis
-             ide/core.ide
-             ide/csl.api
-             ide/csl.types
-             ide/css.editor
-             ide/css.lib
-             ide/css.model
-             ide/db
-             ide/db.dataview
-             ide/db.metadata.model
-             ide/db.sql.editor
-             ide/docker.api
-             ide/docker.ui
-             ide/editor.bookmarks
-             ide/editor.bracesmatching
-             ide/editor.document
-             ide/editor.fold
-             ide/editor.fold.nbui
-             ide/editor.guards
-             ide/editor.indent
-             ide/editor.indent.project
-             ide/editor.macros
-             ide/editor.search
-             ide/editor.settings
-             ide/editor.settings.storage
-             ide/editor.tools.storage
-             ide/editor.util
-             ide/extbrowser
-             ide/extexecution.base
-             ide/gsf.testrunner.ui
-             ide/html
-             ide/html.custom
-             ide/html.editor
-             ide/html.lexer
-             ide/html.parser
-             ide/html.validation
-             ide/hudson
-             ide/hudson.git
-             ide/hudson.mercurial
-             ide/hudson.subversion
-             ide/hudson.tasklist
-             ide/hudson.ui
-             ide/javascript2.debug
-             ide/languages.yaml
-             ide/lexer
-             ide/lib.terminalemulator
-             ide/libs.freemarker
-             ide/libs.git
-             ide/libs.graalsdk
-             ide/localhistory
-             ide/o.openidex.util
-             ide/parsing.api
-             ide/parsing.indexing
-             ide/parsing.lucene
-             ide/project.ant
-             ide/project.ant.compat8
-             ide/project.ant.ui
-             ide/project.libraries
-             ide/project.libraries.ui
-             ide/projectapi
-             ide/projectapi.nb
-             ide/projectuiapi.base
-             ide/refactoring.api
-             ide/schema2beans
-             ide/server
-             ide/spellchecker
-             ide/spi.editor.hints
-             ide/spi.palette
-             ide/spi.tasklist
-             ide/tasklist.ui
-             ide/team.commons
-             ide/terminal.nb
-             ide/utilities
-             ide/versioning.masterfs
-             ide/versioning.ui
-             ide/versioning.util
-             ide/web.common
-             ide/web.common.ui
-             ide/web.webkit.debugging
-             ide/xml
-             ide/xml.axi
-             ide/xml.core
-             ide/xml.lexer
-             ide/xml.multiview
-             ide/xml.text
-             ide/xml.text.obsolete90
-             ide/xml.xam
-             ide/xml.xdm
-             ide/xsl"
-          jdk: openjdk8
+#TEST_MODULES="
+#             
+#             
+#             
+#             ide/bugtracking.commons
+#             ide/bugzilla
+#             ide/code.analysis
+#             ide/core.ide
+#             ide/csl.api
+#             ide/csl.types
+#             ide/css.editor
+#             ide/css.lib
+#             ide/css.model
+#             ide/db
+#             ide/db.dataview
+#             ide/db.metadata.model
+#             ide/db.sql.editor
+#             ide/docker.api
+#             ide/docker.ui
+#             ide/editor.bookmarks
+#             ide/editor.bracesmatching
+#             ide/editor.document
+#             ide/editor.fold
+#             ide/editor.fold.nbui
+#             ide/editor.guards
+#             ide/editor.indent
+#             ide/editor.indent.project
+#             ide/editor.macros
+#             ide/editor.search
+#             ide/editor.settings
+#             ide/editor.settings.storage
+#             ide/editor.tools.storage
+#             ide/editor.util
+#             ide/extbrowser
+#             ide/extexecution.base
+#             ide/gsf.testrunner.ui
+#             ide/html
+#             ide/html.custom
+#             ide/html.editor
+#             ide/html.lexer
+#             ide/html.parser
+#             ide/html.validation
+#             ide/hudson
+#             ide/hudson.git
+#             ide/hudson.mercurial
+#             ide/hudson.subversion
+#             ide/hudson.tasklist
+#             ide/hudson.ui
+#             ide/javascript2.debug
+#             ide/languages.yaml
+#             ide/lexer
+#             ide/lib.terminalemulator
+#             ide/libs.freemarker
+#             ide/libs.git
+#             ide/libs.graalsdk
+#             ide/localhistory
+#             ide/o.openidex.util
+#             ide/parsing.api
+#             ide/parsing.indexing
+#             ide/parsing.lucene
+#             ide/project.ant
+#             ide/project.ant.compat8
+#             ide/project.ant.ui
+#             ide/project.libraries
+#             ide/project.libraries.ui
+#             ide/projectapi
+#             ide/projectapi.nb
+#             ide/projectuiapi.base
+#             ide/refactoring.api
+#             ide/schema2beans
+#             ide/server
+#             ide/spellchecker
+#             ide/spi.editor.hints
+#             ide/spi.palette
+#             ide/spi.tasklist
+#             ide/tasklist.ui
+#             ide/team.commons
+#             ide/terminal.nb
+#             ide/utilities
+#             ide/versioning.masterfs
+#             ide/versioning.ui
+#             ide/versioning.util
+#             ide/web.common
+#             ide/web.common.ui
+#             ide/web.webkit.debugging
+#             ide/xml
+#             ide/xml.axi
+#             ide/xml.core
+#             ide/xml.lexer
+#             ide/xml.multiview
+#             ide/xml.text
+#             ide/xml.text.obsolete90
+#             ide/xml.xam
+#             ide/xml.xdm
+#             ide/xsl"
+#          jdk: openjdk8

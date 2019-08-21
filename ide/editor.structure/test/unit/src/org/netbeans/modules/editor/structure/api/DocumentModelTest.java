@@ -262,7 +262,7 @@ public class DocumentModelTest extends NbTestCase {
      *
      * @author Marek Fukala
      */
-    private class FakeDocumentModelProvider implements DocumentModelProvider {
+    private static class FakeDocumentModelProvider implements DocumentModelProvider {
         
         @Override
         public void updateModel(DocumentModel.DocumentModelModificationTransaction dtm,
@@ -305,7 +305,7 @@ public class DocumentModelTest extends NbTestCase {
         
     }
     
-    private class DocumentModelListenerAdapter implements DocumentModelListener {
+    private static class DocumentModelListenerAdapter implements DocumentModelListener {
         @Override
         public void documentElementAdded(DocumentElement de) {
         }
@@ -320,7 +320,7 @@ public class DocumentModelTest extends NbTestCase {
         }
     }
     
-    private class DocumentElementListenerAdapter implements DocumentElementListener {
+    private static class DocumentElementListenerAdapter implements DocumentElementListener {
         @Override
         public void attributesChanged(DocumentElementEvent e) {
         }
@@ -338,7 +338,7 @@ public class DocumentModelTest extends NbTestCase {
         }
     }
     
-    private class DocumentModelStateListenerAdapter implements DocumentModelStateListener {
+    private static class DocumentModelStateListenerAdapter implements DocumentModelStateListener {
 
         @Override
         public void sourceChanged() {
@@ -358,7 +358,7 @@ public class DocumentModelTest extends NbTestCase {
         
     }
     
-    private class State {
+    private static class State {
         
         private int value;
 

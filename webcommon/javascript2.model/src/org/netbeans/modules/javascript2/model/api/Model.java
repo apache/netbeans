@@ -203,7 +203,7 @@ public final class Model {
         if (where.getProperties().isEmpty()) {
             return;
         }
-        List<JsObject> properties = new ArrayList(where.getProperties().values());
+        List<JsObject> properties = new ArrayList<>(where.getProperties().values());
         for (JsObject property : properties) {
             if (property instanceof JsWith) {
                 processWithObject((JsWith)property, jsIndex, null);
@@ -332,7 +332,7 @@ public final class Model {
         }
             
         boolean hasOuter = with.getOuterWith() != null;
-        List<JsObject> withProperties = new ArrayList(with.getProperties().values());
+        List<JsObject> withProperties = new ArrayList<>(with.getProperties().values());
         DeclarationScope withDS = ModelUtils.getDeclarationScope(with);
         for (JsObject jsWithProperty : withProperties) {
             if (!(jsWithProperty instanceof JsWith)) {
@@ -437,7 +437,7 @@ public final class Model {
             for (Occurrence occurrence : property.getOccurrences()) {
                 newProperty.addOccurrence(occurrence.getOffsetRange());
             }
-            List<JsObject>propertiesToMove = new ArrayList(property.getProperties().values());
+            List<JsObject>propertiesToMove = new ArrayList<>(property.getProperties().values());
             for (JsObject propOfProperty: propertiesToMove) {
                 moveProperty(newProperty, propOfProperty);
             }
@@ -571,13 +571,13 @@ public final class Model {
                 resolveWithObjects = true;
             }
         }
-        ArrayList<JsObject> copy = new ArrayList(object.getProperties().values());
-        ArrayList<String> namesBefore = new ArrayList(object.getProperties().keySet());
+        ArrayList<JsObject> copy = new ArrayList<>(object.getProperties().values());
+        ArrayList<String> namesBefore = new ArrayList<>(object.getProperties().keySet());
         Collections.reverse(copy);  // resolve the properties in revers order (how was added)
         for(JsObject property: copy) {
             resolveLocalTypes(property, docHolder, alreadyResolvedObjects);
         }
-        ArrayList<String> namesAfter = new ArrayList(object.getProperties().keySet());
+        ArrayList<String> namesAfter = new ArrayList<>(object.getProperties().keySet());
         // it's possible that some properties was moved to the object, then resolve them.
         for (String propertyName : namesAfter) {
             if (!namesBefore.contains(propertyName)) {

@@ -42,8 +42,8 @@ class WhatsNewTab extends AbstractTab {
         main.setOpaque(false);
         main.setBorder(BorderFactory.createEmptyBorder());
 
-        main.add( new ContentSection( BundleSupport.getLabel( "SectionNewsAndTutorials" ), //NOI18N
-                new ArticlesAndNews(), true ));
+//        main.add( new ContentSection( BundleSupport.getLabel( "SectionNewsAndTutorials" ), //NOI18N
+//                new ArticlesAndNews(), true ));
         
         main.add( new ContentSection( BundleSupport.getLabel( "SectionBlogs" ), //NOI18N
                 new Blogs(), true ) );

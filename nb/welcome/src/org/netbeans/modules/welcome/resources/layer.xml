@@ -65,7 +65,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="tutorial1-1.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial1-1.url">
+<!--            <file name="tutorial1-1.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial1-1.url">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="110"/>
             </file>
@@ -76,15 +76,15 @@
             <file name="tutorial3.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial3.url">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="300"/>
-            </file>
+            </file>-->
             <file name="tutorial4.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial4.url">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="400"/>
             </file>
-            <file name="tutorial5.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial5.url">
+<!--            <file name="tutorial5.url" url="nbresloc:/org/netbeans/modules/welcome/resources/tutorial5.url">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.welcome.resources.Bundle"/>
                 <attr name="position" intvalue="500"/>
-            </file>
+            </file>-->
         </folder>
     </folder>
 

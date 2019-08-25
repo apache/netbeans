@@ -72,6 +72,7 @@ import org.netbeans.modules.maven.api.output.OutputVisitor;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
 /**
@@ -79,6 +80,9 @@ import org.openide.util.Utilities;
  * @author mkleint
  */
 public class JUnitOutputListenerProvider implements OutputProcessor {
+    private static final String TESTTYPE_UNIT = "UNIT";  //NOI81N
+    private static final String TESTTYPE_INTEGRATION = "INTEGRATION";  //NOI81N
+
     private TestSession session;
     private String testType;
     private String reportNameSuffix;
@@ -264,7 +268,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
                 Constants.PLUGIN_SUREFIRE, "reportNameSuffix", "test", //NOI81N
                 "surefire.reportNameSuffix"); //NOI81N
-            testType = "UNIT"; //NOI81N
+            testType = TESTTYPE_UNIT;
 	} else if ("mojo-execute#failsafe:integration-test".equals(sequenceId)) {  //NOI81N
 	    reportsDirectory = getReportsDirectory(
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE,
@@ -273,7 +277,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
                 Constants.PLUGIN_FAILSAFE, "reportNameSuffix", "integration-test",  //NOI81N
                 "surefire.reportNameSuffix");  //NOI81N
-            testType = "INTEGRATION";  //NOI81N
+            testType = TESTTYPE_INTEGRATION;  //NOI81N
         }
         if (null != reportsDirectory) {
             File absoluteFile = new File(reportsDirectory);
@@ -313,17 +317,38 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
 
     //#179703 allow multiple sessions per project, in case there are multiple executions of surefire plugin.
+    @NbBundle.Messages({
+        "# {0} - projectId",
+        "LBL_TESTTYPE_UNIT={0} (Unit)",
+        "# {0} - projectId",
+        "LBL_TESTTYPE_INTEGRATION={0} (Integration)",
+        "# {0} - projectId",
+        "# {1} - index (1 based) of created session",
+        "LBL_TESTTYPE_UNIT_INDEXED={0} (Unit) #{1}",
+        "# {0} - projectId",
+        "# {1} - index (1 based) of created session",
+        "LBL_TESTTYPE_INTEGRATION_INDEXED={0} (Integration) #{1}"
+    })
     private String createSessionName(String projectId) {
-        String name = projectId;
+        String name;
+        if(testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+            name = Bundle.LBL_TESTTYPE_INTEGRATION(projectId);
+        } else {
+            name = Bundle.LBL_TESTTYPE_UNIT(projectId);
+        }
         int index = 2;
         while (usedNames.contains(name)) {
-            name = projectId + "_" + index;
-            index = index + 1;
+            if (testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+                name = Bundle.LBL_TESTTYPE_INTEGRATION_INDEXED(projectId, index);
+            } else {
+                name = Bundle.LBL_TESTTYPE_UNIT_INDEXED(projectId, index);
+            }
+            index++;
         }
         usedNames.add(name);
         return name;
-    } 
-    
+    }
+
     private CoreManager getManagerProvider() {
         Collection<? extends Lookup.Item<CoreManager>> providers = Lookup.getDefault().lookupResult(CoreManager.class).allItems();
         for (Lookup.Item<CoreManager> provider : providers) {

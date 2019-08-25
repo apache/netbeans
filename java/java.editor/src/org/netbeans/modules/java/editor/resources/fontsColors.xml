@@ -87,6 +87,7 @@
     <fontcolor name="mod-protected" />
     <fontcolor name="mod-public" />
     <fontcolor name="mod-keyword" default="keyword" />
+    <fontcolor name="mod-unindented-text-block" bgColor="EEDDDD" />
     
     <!--currently not used:-->
 <!--    <fontcolor name="mod-type-parameter-declaration" bgColor="lightGray"/>

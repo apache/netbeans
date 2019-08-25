@@ -48,6 +48,7 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
         def runSingle = project.tasks.create(RUN_SINGLE_TASK, JavaExec) {
             main = project.getProperty(RUN_SINGLE_MAIN)
             classpath = project.sourceSets.main.runtimeClasspath
+            standardInput = System.in
                     
             if (project.hasProperty(RUN_SINGLE_ARGS)) {
                 args = project.getProperty(RUN_SINGLE_ARGS).tokenize(' ')

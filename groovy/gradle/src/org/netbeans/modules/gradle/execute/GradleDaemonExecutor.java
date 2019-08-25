@@ -29,7 +29,9 @@ import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -55,6 +57,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
+import org.openide.util.io.ReaderInputStream;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
@@ -69,6 +72,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private static final Logger LOGGER = Logger.getLogger(GradleDaemonExecutor.class.getName());
 
     private final ProgressHandle handle;
+    private InputStream inStream;
     private OutputStream outStream;
     private OutputStream errStream;
     private boolean cancelling;
@@ -152,6 +156,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
             errStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, true));
+            try {
+                inStream = new ReaderInputStream(io.getIn(), "UTF-8"); //NOI18N
+                buildLauncher.setStandardInput(inStream);
+            } catch (IOException ex) {
+                // Unlikely but worst case we do not have the input set.
+            }
             buildLauncher.setStandardOutput(outStream);
             buildLauncher.setStandardError(errStream);
             buildLauncher.addProgressListener((ProgressEvent pe) -> {
@@ -182,7 +192,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (pconn != null) {
                 pconn.close();
             }
-            closeOutErr();
+            closeInOutErr();
             checkForExternalModifications();
             handle.finish();
             markFreeTab();
@@ -247,7 +257,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         }
     }
 
-    private synchronized void closeOutErr() {
+    private synchronized void closeInOutErr() {
+        if (inStream != null) try {inStream.close();} catch (IOException ex) {}
         if (outStream != null) try {outStream.close();} catch (IOException ex) {}
         if (errStream != null) try {errStream.close();} catch (IOException ex)  {}
     }
@@ -267,7 +278,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             handle.switchToIndeterminate();
             handle.setDisplayName(Bundle.LBL_ABORTING_BUILD());
             // Closing out and err streams to prevent ambigous output NETBEANS-2038
-            closeOutErr();
+            closeInOutErr();
             cancelling = true;
             cancelTokenSource.cancel();
         }

@@ -72,6 +72,7 @@ import org.netbeans.modules.maven.api.output.OutputVisitor;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
 /**
@@ -79,12 +80,17 @@ import org.openide.util.Utilities;
  * @author mkleint
  */
 public class JUnitOutputListenerProvider implements OutputProcessor {
-    TestSession session;
+    private static final String TESTTYPE_UNIT = "UNIT";  //NOI81N
+    private static final String TESTTYPE_INTEGRATION = "INTEGRATION";  //NOI81N
+
+    private TestSession session;
+    private String testType;
+    private String reportNameSuffix;
     private final Pattern runningPattern;
     private final Pattern outDirPattern2;
     private final Pattern outDirPattern;
     private File outputDir;
-    String runningTestClass;
+    private String runningTestClass;
     private final Set<String> usedNames;
     private final long startTimeStamp;
     
@@ -153,7 +159,8 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 
     public @Override String[] getRegisteredOutputSequences() {
         return new String[] {
-            "mojo-execute#surefire:test" //NOI18N
+            "mojo-execute#surefire:test", //NOI18N
+            "mojo-execute#failsafe:integration-test" //NOI18N
         };
     }
 
@@ -244,56 +251,104 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 
     public @Override void sequenceStart(String sequenceId, OutputVisitor visitor) {
         session = null;
-	// Fix for #257563 / SUREFIRE-1158, where surefire 2.19.x
-	// removed the printing of the output directory. Get the directory from
-	// the configuration directly or fallback to the plugin standard
-	if (usingSurefire219(this.config.getMavenProject())) {
-	    // http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#reportsDirectory
-	    String reportsDirectory = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
-		    Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "reportsDirectory", "test", null); // NOI18N
-	    if (null == reportsDirectory) {
-		// fallback to default value
-		try {
-		    Object defaultValue = PluginPropertyUtils.createEvaluator(config.getMavenProject())
-			    .evaluate("${project.build.directory}/surefire-reports");
-		    if (defaultValue instanceof String) {
-			reportsDirectory = (String) defaultValue;
-		    }
-		} catch (ExpressionEvaluationException ex) {
-		    // NOP could not resolved default value
-		}
-	    }
-	    if (null != reportsDirectory) {
-		File absoluteFile = new File(reportsDirectory);
-		// configuration might be "target/directory", which is relative
-		// to the maven project or an absolute path
-		File relativeFile = new File(this.config.getMavenProject().getBasedir(), reportsDirectory);
-		if (absoluteFile.exists() && absoluteFile.isDirectory()) {
-		    outputDir = absoluteFile;
-		} else {
-		    if (relativeFile.exists() && relativeFile.isDirectory()) {
-			outputDir = relativeFile;
-		    }
-		}
-		if (null != outputDir) {
-		    createSession(outputDir);
-		}
-	    }
-	}
+        reportNameSuffix = null;
+        testType = null;
+        String reportsDirectory = null;
+	if (("mojo-execute#surefire:test".equals(sequenceId))) {  // NOI18N
+            // Fix for #257563 / SUREFIRE-1158, where surefire 2.19.x
+            // removed the printing of the output directory. Get the directory from
+            // the configuration directly or fallback to the plugin standard
+            if (usingSurefire219(this.config.getMavenProject())) {
+                // http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#reportsDirectory
+                reportsDirectory = getReportsDirectory(
+                    Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE,
+                    "test", "${project.build.directory}/surefire-reports"); //NOI81N
+            }
+            reportNameSuffix = PluginPropertyUtils.getPluginProperty(
+                config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
+                Constants.PLUGIN_SUREFIRE, "reportNameSuffix", "test", //NOI81N
+                "surefire.reportNameSuffix"); //NOI81N
+            testType = TESTTYPE_UNIT;
+	} else if ("mojo-execute#failsafe:integration-test".equals(sequenceId)) {  //NOI81N
+	    reportsDirectory = getReportsDirectory(
+                Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE,
+                "integration-test", "${project.build.directory}/failsafe-reports");  //NOI81N
+            reportNameSuffix = PluginPropertyUtils.getPluginProperty(
+                config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
+                Constants.PLUGIN_FAILSAFE, "reportNameSuffix", "integration-test",  //NOI81N
+                "surefire.reportNameSuffix");  //NOI81N
+            testType = TESTTYPE_INTEGRATION;  //NOI81N
+        }
+        if (null != reportsDirectory) {
+            File absoluteFile = new File(reportsDirectory);
+            // configuration might be "target/directory", which is relative
+            // to the maven project or an absolute path
+            File relativeFile = new File(this.config.getMavenProject().getBasedir(), reportsDirectory);
+            if (absoluteFile.exists() && absoluteFile.isDirectory()) {
+                outputDir = absoluteFile;
+            } else {
+                if (relativeFile.exists() && relativeFile.isDirectory()) {
+                    outputDir = relativeFile;
+                }
+            }
+            if (null != outputDir) {
+                createSession(outputDir);
+            }
+        }
+    }
+
+    private String getReportsDirectory(String groupId, String artifactId, String goal, String fallbackExpression) {
+        String reportsDirectory = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+           groupId, artifactId, "reportsDirectory", goal, null); // NOI18N
+        if (null == reportsDirectory) {
+            // fallback to default value
+            try {
+                Object defaultValue = PluginPropertyUtils
+                    .createEvaluator(config.getMavenProject())
+                    .evaluate(fallbackExpression);
+                if (defaultValue instanceof String) {
+                    reportsDirectory = (String) defaultValue;
+                }
+            } catch (ExpressionEvaluationException ex) {
+                // NOP could not resolved default value
+            }
+        }
+        return reportsDirectory;
     }
 
     //#179703 allow multiple sessions per project, in case there are multiple executions of surefire plugin.
+    @NbBundle.Messages({
+        "# {0} - projectId",
+        "LBL_TESTTYPE_UNIT={0} (Unit)",
+        "# {0} - projectId",
+        "LBL_TESTTYPE_INTEGRATION={0} (Integration)",
+        "# {0} - projectId",
+        "# {1} - index (1 based) of created session",
+        "LBL_TESTTYPE_UNIT_INDEXED={0} (Unit) #{1}",
+        "# {0} - projectId",
+        "# {1} - index (1 based) of created session",
+        "LBL_TESTTYPE_INTEGRATION_INDEXED={0} (Integration) #{1}"
+    })
     private String createSessionName(String projectId) {
-        String name = projectId;
+        String name;
+        if(testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+            name = Bundle.LBL_TESTTYPE_INTEGRATION(projectId);
+        } else {
+            name = Bundle.LBL_TESTTYPE_UNIT(projectId);
+        }
         int index = 2;
         while (usedNames.contains(name)) {
-            name = projectId + "_" + index;
-            index = index + 1;
+            if (testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+                name = Bundle.LBL_TESTTYPE_INTEGRATION_INDEXED(projectId, index);
+            } else {
+                name = Bundle.LBL_TESTTYPE_UNIT_INDEXED(projectId, index);
+            }
+            index++;
         }
         usedNames.add(name);
         return name;
-    } 
-    
+    }
+
     private CoreManager getManagerProvider() {
         Collection<? extends Lookup.Item<CoreManager>> providers = Lookup.getDefault().lookupResult(CoreManager.class).allItems();
         for (Lookup.Item<CoreManager> provider : providers) {
@@ -535,9 +590,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         sequenceEnd(sequenceId, visitor);
     }
 
-    
     private void generateTest() {
-        String reportNameSuffix = PluginPropertyUtils.getPluginProperty(config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "reportNameSuffix", "test", "surefire.reportNameSuffix");
         String suffix = reportNameSuffix;
         if (suffix == null) {
             suffix = "";
@@ -611,8 +664,8 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                         break;
                     }
                 }
-                
-                Testcase test = new JUnitTestcase(methodName, displayName, null, session);
+
+                Testcase test = new JUnitTestcase(methodName, displayName, testType, session);
                 Element stdout = testcase.getChild("system-out"); //NOI18N
                 // If *-output.txt file exists do not log standard output here to avoid logging it twice.
                 // By default surefire only reports standard output for failing testcases.

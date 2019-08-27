@@ -72,7 +72,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        sourceLevel = "1.12";
+        sourceLevel = "1.13";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         EXTRA_OPTIONS.add("--enable-preview");
     }
@@ -113,7 +113,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
                 + "public class Test {\n"
                 + "     private void test(int p) {\n"
                 + "         var v = switch (p) {\n"
-                + "             case 1: break 1;\n"
+                + "             case 1: yield 1;\n"
                 + "             case 2 -> 2;\n"
                 + "             default -> 3;\n"
                 + "         }\n"
@@ -124,13 +124,13 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
                 + "     private void test(int p) {\n"
                 + "         var v = switch (p) {\n"
                 + "             case 1 -> {\n"
-                + "                 break 1;\n"
+                + "                 yield 1;\n"
                 + "             }\n"
                 + "             case 2 -> {\n"
-                + "                 break 2;\n"
+                + "                 yield 2;\n"
                 + "             }\n"
                 + "             default -> {\n"
-                + "                 break 3;\n"
+                + "                 yield 3;\n"
                 + "             }\n"
                 + "         }\n"
                 + "     }\n"

@@ -446,6 +446,21 @@ public class DetectorTest extends TestBase {
         performTest("IncDecReading230408");
     }
 
+    public void testYield() throws Exception {
+        enablePreview();
+        performTest("YieldTest.java",
+                    "public class YieldTest {\n" +
+                    "    private int map(int i) {\n" +
+                    "        return switch (i) { default -> { yield 0; } };\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:22\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 1:16-1:19\n" +
+                    "[PARAMETER, DECLARATION], 1:24-1:25\n" +
+                    "[PARAMETER], 2:23-2:24\n" +
+                    "[KEYWORD], 2:41-2:46\n");
+    }
+
     public void testRawStringLiteral() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_13");

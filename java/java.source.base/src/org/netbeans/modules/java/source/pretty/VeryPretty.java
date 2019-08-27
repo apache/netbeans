@@ -69,6 +69,7 @@ import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
+import com.sun.source.tree.ExpressionTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -410,7 +411,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 this.commentsEnabled = printComments;
                 if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                     visitSwitchExpression(t);
-                } else {
+                } 
+                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
+                    visitYield(t);
+                }
+                else {
                     t.accept(this);
                 }
                 this.commentsEnabled = saveComments;
@@ -1494,6 +1499,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         } else if (tree.getLabel() != null) {
             needSpace();
             print(tree.getLabel());
+        }
+        print(';');
+    }
+
+    public void visitYield(Tree tree) {
+        print("yield");
+        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        if (expr != null) {
+            needSpace();
+            print((JCTree) expr);
         }
         print(';');
     }

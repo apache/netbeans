@@ -474,7 +474,7 @@ public final class NbLoaderPool extends DataLoaderPool implements PropertyChange
                     // issue 38658)
                     continue;
                 }
-                Class clazz = loader.getClass();
+                Class<?> clazz = loader.getClass();
 
                 if (err.isLoggable(Level.FINE))
                     err.fine("reading modified " + clazz.getName());

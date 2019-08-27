@@ -103,6 +103,7 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyle.*;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
+import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.TreeShims;
@@ -239,6 +240,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void newline() {
 	out.nlTerm();
+    }
+
+    private void newLineNoTrim() {
+        out.nlTermNoTrim();
     }
 
     public void blankline() {
@@ -1888,7 +1893,34 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 		  "\'");
 	    break;
 	   case CLASS:
-	    print("\"" + quote((String) tree.value, '\'') + "\"");
+             if (tree.value instanceof String) {
+                 print("\"" + quote((String) tree.value, '\'') + "\"");
+             } else if (isTextBlockSupported(null) && tree.value instanceof String[]) {
+                 int indent = out.col;
+                 print("\"\"\"");
+                 newline();
+                 String[] lines = (String[]) tree.value;
+                 for (int i = 0; i < lines.length; i++) {
+                     out.toCol(indent);
+                     String line = lines[i];
+                     for (int c = 0; c < line.length(); c++) {
+                         if (line.startsWith("\"\"\"", c)) {
+                             print('\\');
+                             print('"');
+                         } else if (line.charAt(c) != '\'' && line.charAt(c) != '"') {
+                             print(Convert.quote(line.charAt(c)));
+                         } else {
+                             print(line.charAt(c));
+                         }
+                     }
+                     if (i + 1 < lines.length) {
+                         newLineNoTrim();
+                     }
+                 }
+                 print("\"\"\"");
+             } else {
+                 throw new IllegalStateException("Incorrect literal value.");
+             }
 	    break;
           case BOOLEAN:
             print(tree.getValue().toString());

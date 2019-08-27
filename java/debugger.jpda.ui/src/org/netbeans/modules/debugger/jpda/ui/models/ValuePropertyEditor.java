@@ -97,7 +97,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
         }
         String type = var.getType();
         try {
-            Class clazz = Class.forName(type);
+            Class<?> clazz = Class.forName(type);
             //return PropertyEditorManager.findEditor(clazz) != null;
             return hasPropertyEditorFor(clazz);
         } catch (ClassNotFoundException ex) {
@@ -258,7 +258,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
 
     boolean setValueWithMirror(Object value, Object valueMirror) {
         this.currentValue = value;
-        Class clazz = valueMirror.getClass();
+        Class<?> clazz = valueMirror.getClass();
         PropertyEditor propertyEditor = findPropertyEditor(clazz);
         propertyEditor = testPropertyEditorOnValue(propertyEditor, valueMirror);
         if (propertyEditor == null) {

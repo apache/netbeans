@@ -37,7 +37,7 @@ public abstract class SpiAccessor {
     
     public static synchronized SpiAccessor get() {
         try {
-            Class clazz = Class.forName(MatcherContext.class.getName());
+            Class<?> clazz = Class.forName(MatcherContext.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

@@ -118,7 +118,7 @@ public final class SerialDataNode extends DataNode {
         InstanceCookie inst = (InstanceCookie)dobj.getCookie(InstanceCookie.class);
         if (inst == null) return Children.LEAF;
         try {
-            Class clazz = inst.instanceClass();
+            Class<?> clazz = inst.instanceClass();
             if (BeanContext.class.isAssignableFrom(clazz) ||
                 BeanContextProxy.class.isAssignableFrom(clazz)) {
                 return new InstanceChildren ();
@@ -536,7 +536,7 @@ public final class SerialDataNode extends DataNode {
         try {
             InstanceCookie ic = ic();
             if (ic == null) return true;
-            Class clazz = ic.instanceClass();
+            Class<?> clazz = ic.instanceClass();
             return (!SharedClassObject.class.isAssignableFrom(clazz));
         } catch (Exception ex) {
             return true;
@@ -547,7 +547,7 @@ public final class SerialDataNode extends DataNode {
         try {
             InstanceCookie ic = ic();
             if (ic == null) return false;
-            Class clazz = ic.instanceClass();
+            Class<?> clazz = ic.instanceClass();
             return (!SharedClassObject.class.isAssignableFrom(clazz));
         } catch (Exception ex) {
             return false;
@@ -558,7 +558,7 @@ public final class SerialDataNode extends DataNode {
         try {
             InstanceCookie ic = ic();
             if (ic == null) return false;
-            Class clazz = ic.instanceClass();
+            Class<?> clazz = ic.instanceClass();
             return (!SharedClassObject.class.isAssignableFrom(clazz));
         } catch (Exception ex) {
             return false;
@@ -576,7 +576,7 @@ public final class SerialDataNode extends DataNode {
                 return getDataObject().getPrimaryFile().toString();
             }
             
-            Class clazz = ic.instanceClass();
+            Class<?> clazz = ic.instanceClass();
             BeanDescriptor bd = Utilities.getBeanInfo(clazz).getBeanDescriptor();
             String desc = bd.getShortDescription();
             return (desc.equals(bd.getDisplayName()))? getDisplayName(): desc;
@@ -879,7 +879,7 @@ public final class SerialDataNode extends DataNode {
                     bean = null;
                     return;
                 }
-                Class clazz = ic.instanceClass();
+                Class<?> clazz = ic.instanceClass();
                 if (BeanContext.class.isAssignableFrom(clazz)) {
                     bean = ic.instanceCreate();
                 } else if (BeanContextProxy.class.isAssignableFrom(clazz)) {

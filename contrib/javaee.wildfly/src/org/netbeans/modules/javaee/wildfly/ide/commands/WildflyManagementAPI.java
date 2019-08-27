@@ -51,7 +51,7 @@ public class WildflyManagementAPI {
     static Object createClient(WildflyDeploymentFactory.WildFlyClassLoader cl, Version version, final String serverAddress, final int serverPort,
             final CallbackHandler handler) throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, NoSuchAlgorithmException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.ModelControllerClient$Factory"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.ModelControllerClient$Factory"); // NOI18N
         if (version.compareTo(WildflyPluginUtils.WILDFLY_9_0_0) >= 0) {
             Method method = clazz.getDeclaredMethod("create", String.class, int.class, CallbackHandler.class, SSLContext.class, int.class, Map.class);
             return method.invoke(null, serverAddress, serverPort, handler, SSLContext.getDefault(), TIMEOUT, ENABLED_LOCAL_AUTH);
@@ -110,7 +110,7 @@ public class WildflyManagementAPI {
     // ModelNode
     static Object createOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object name, Object modelNode)
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("createOperation", new Class[]{String.class, modelClazz});
         return method.invoke(null, name, modelNode);
@@ -119,7 +119,7 @@ public class WildflyManagementAPI {
     // ModelNode
     static Object createReadResourceOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode, boolean recursive)
             throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("createReadResourceOperation", new Class[]{modelClazz, boolean.class});
         return method.invoke(null, modelNode, recursive);
@@ -128,7 +128,7 @@ public class WildflyManagementAPI {
     // ModelNode
     static Object createRemoveOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode) throws ClassNotFoundException,
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("createRemoveOperation", new Class[]{modelClazz});
         return method.invoke(null, modelNode);
@@ -137,7 +137,7 @@ public class WildflyManagementAPI {
     // ModelNode
     static Object createAddOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode) throws ClassNotFoundException,
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("createAddOperation", new Class[]{modelClazz});
         return method.invoke(null, modelNode);
@@ -146,7 +146,7 @@ public class WildflyManagementAPI {
     // ModelNode
     static Object readResult(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode) throws ClassNotFoundException,
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("readResult", new Class[]{modelClazz});
         return method.invoke(null, modelNode);
@@ -324,7 +324,7 @@ public class WildflyManagementAPI {
 
     static boolean isSuccessfulOutcome(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode) throws ClassNotFoundException,
             NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("isSuccessfulOutcome", modelClazz);
         return (Boolean) method.invoke(null, modelNode);

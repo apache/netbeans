@@ -71,7 +71,7 @@ public class CustomClassLoader extends URLClassLoader {
         if(name == null) {
             throw new IllegalArgumentException("class name cannot be null");
         }
-        Class clazz = findLoadedClass(name);
+        Class<?> clazz = findLoadedClass(name);
         if (clazz != null) {
             return clazz;
         }

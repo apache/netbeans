@@ -103,7 +103,7 @@ class ClassLoaderManager implements CommonConstants {
             return -1;
         }
 
-        Class clazz = man.getLoadedClassInThisLoaderOnly(className);
+        Class<?> clazz = man.getLoadedClassInThisLoaderOnly(className);
 
         if (clazz != null) {
             return registerLoader(clazz);
@@ -431,7 +431,7 @@ class ClassLoaderManager implements CommonConstants {
     }
 
     private Class getLoadedClassInThisLoaderOnly(String className) {
-        Class clazz = null;
+        Class<?> clazz = null;
         ClassLoader loader = (ClassLoader) targetLdrWeakRef.get();
         
         if (loader == null) {

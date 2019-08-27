@@ -114,6 +114,7 @@ matrix:
              ide/editor.search
              ide/editor.settings
              ide/editor.settings.storage
+             ide/editor.structure
              ide/editor.tools.storage
              ide/editor.util
              ide/extbrowser

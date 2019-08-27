@@ -215,6 +215,11 @@ public class BootClassPathUtil {
 
             javaBase.refresh();
             moduleBootOnJDK8 = ClassPathSupport.createClassPath(javaBase);
+        } else {
+            //Ensure the filesystem is registered in the current Repository:
+            FileSystem fs = moduleBootOnJDK8.getRoots()[0].getFileSystem();
+            Repository.getDefault().removeFileSystem(fs);
+            Repository.getDefault().addFileSystem(fs);
         }
 
         return moduleBootOnJDK8;

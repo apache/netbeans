@@ -17,13 +17,11 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.j2seplatform.wizard;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-public class SDKProbe {
+public class J2SEPlatformProbe {
     public static void main(String[] args) {
         Properties p = System.getProperties();
 

@@ -136,6 +136,50 @@ public enum PhpVersion {
         return namespaces;
     }
 
+    /**
+     * Check whether this version supports scalar and return type declarations.
+     *
+     * @return {@code true} if this version scalar and return type declarations,
+     * {@code false} otherwise
+     * @since 2.67
+     */
+    public boolean hasScalarAndReturnTypes() {
+        return this.compareTo(PhpVersion.PHP_70) >= 0;
+    }
+
+    /**
+     * Check whether this version supports nullable types.
+     *
+     * @return {@code true} if this version supports nullable types,
+     * {@code false} otherwise
+     * @since 2.67
+     */
+    public boolean hasNullableTypes() {
+        return this.compareTo(PhpVersion.PHP_71) >= 0;
+    }
+
+    /**
+     * Check whether this version supports a void return type.
+     *
+     * @return {@code true} if this version supports a void return type,
+     * {@code false} otherwise
+     * @since 2.68
+     */
+    public boolean hasVoidReturnType() {
+        return this.compareTo(PhpVersion.PHP_71) >= 0;
+    }
+
+    /**
+     * Check whether this version supports typed properties.
+     *
+     * @return {@code true} if this version supports typed properties,
+     * {@code false} otherwise
+     * @since 2.67
+     */
+    public boolean hasPropertyTypes() {
+        return this.compareTo(PhpVersion.PHP_74) >= 0;
+    }
+
     @Override
     public String toString() {
         return getDisplayName();

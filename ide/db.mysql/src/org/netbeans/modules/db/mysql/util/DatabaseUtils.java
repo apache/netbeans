@@ -61,7 +61,7 @@ public class DatabaseUtils {
     private static final String SQLSTATE_CLIENT_PREFIX = "20";
     // Default URL parameters
     private static final String DFLT_CONFIG_OPTIONS =
-            "?zeroDateTimeBehavior=convertToNull";                      //NOI18N
+            "?zeroDateTimeBehavior=CONVERT_TO_NULL";                      //NOI18N
     
     private static final Logger LOGGER = 
             Logger.getLogger(DatabaseUtils.class.getName());

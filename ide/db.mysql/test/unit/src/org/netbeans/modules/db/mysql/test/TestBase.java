@@ -20,6 +20,7 @@
 package org.netbeans.modules.db.mysql.test;
 
 import java.io.File;
+import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
@@ -35,6 +36,11 @@ import org.openide.util.Lookup;
  * @author David
  */
 public class TestBase extends NbTestCase  {
+    
+    private static final Logger LOG = Logger.getLogger(TestBase.class.getName());
+    
+    private static final String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
+    
     private String host;
     private String port;
     private String user;
@@ -43,8 +49,6 @@ public class TestBase extends NbTestCase  {
     private String schema;
     private String dbname;
 
-    private static String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
-
     private JDBCDriver jdbcDriver;
     private static DatabaseConnection dbconn;
 
@@ -52,6 +56,17 @@ public class TestBase extends NbTestCase  {
         super(testName);
     }
 
+    @Override
+    public boolean canRun() {
+        try {
+            Class.forName(DRIVER_CLASSNAME);
+            return super.canRun();
+        } catch (ClassNotFoundException e) {
+            LOG.warning(String.format("Test %s in %s disabled, %s not available", this.getName(), this.getClass().getName(), e.getMessage()));
+            return false;
+        }
+    }
+    
     @Override
     public void setUp() throws Exception {
         super.setUp();

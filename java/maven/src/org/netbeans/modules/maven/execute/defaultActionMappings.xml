@@ -91,6 +91,22 @@
             <test>${packageClassName}</test>
         </properties>
     </action>
+
+    <action>
+        <actionName>integration-test.single</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>integration-test</goal>
+        </goals>
+        <properties>
+            <test>DummyToSkipUnitTests</test>
+            <failIfNoTests>false</failIfNoTests>
+            <it.test>${packageClassName}</it.test>
+        </properties>
+    </action>
+
     <action>
         <actionName>run</actionName>
         <packagings>
@@ -166,6 +182,24 @@
             <test>${packageClassName}</test>
             <forkMode>once</forkMode>
             <maven.surefire.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.surefire.debug>
+            <jpda.listen>true</jpda.listen>
+        </properties>
+    </action>
+
+    <action>
+        <actionName>debug.integration-test.single</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>integration-test</goal>
+        </goals>
+        <properties>
+            <test>DummyToSkipUnitTests</test>
+            <failIfNoTests>false</failIfNoTests>
+            <it.test>${packageClassName}</it.test>
+            <forkMode>once</forkMode>
+            <maven.failsafe.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.failsafe.debug>
             <jpda.listen>true</jpda.listen>
         </properties>
     </action>

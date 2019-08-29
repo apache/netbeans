@@ -41,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Tomas Zezula
  */
-@ServiceProvider(service=Notifier.class, position=300)
+@ServiceProvider(service=Notifier.class, position=100)
 public final class OSXNotifier extends Notifier<Void> {
     private static final Level DEBUG_LOG_LEVEL = Level.FINE;
     private static final Level PERF_LOG_LEVEL = Level.FINE;
@@ -66,8 +66,8 @@ public final class OSXNotifier extends Notifier<Void> {
     private static final String ALL_CHANGE = "ALL-CHANGE";  //xxx - shouldn't be global in Notifier rather than using null?
 
     public OSXNotifier() {
-        cf = (CoreFoundation) Native.loadLibrary("CoreFoundation",CoreFoundation.class);    //NOI18N
-        cs = (CoreServices) Native.loadLibrary("CoreServices",CoreServices.class);          //NOI18N
+        cf = Native.loadLibrary("CoreFoundation",CoreFoundation.class);    //NOI18N
+        cs = Native.loadLibrary("CoreServices",CoreServices.class);          //NOI18N
         callback = new EventCallbackImpl();
         events = new LinkedBlockingQueue<String>();
     }

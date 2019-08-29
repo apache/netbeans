@@ -236,20 +236,33 @@ public class HtmlElementProperties {
 
         @Override
         public String getValue() throws IllegalAccessException, InvocationTargetException {
-            return attr.unquotedValue().toString();
+            return attr.unquotedValue() == null ? null : attr.unquotedValue().toString();
         }
 
         @Override
         public void setValue(final String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             int astFrom, astTo;
+            final String insertVal;
             if (val.length() == 0) {
                 //remove the whole attribute=value pair
                 astFrom = attr.nameOffset() - 1; //there must be a WS before so lets remove it
-                astTo = attr.valueOffset() + attr.value().length();
+                if(attr.valueOffset() == -1) {
+                    astTo = attr.nameOffset() + attr.name().length();
+                } else {
+                    astTo = attr.valueOffset() + attr.value().length();
+                }
+                insertVal = "";
             } else {
                 //modify
-                astFrom = attr.valueOffset() + (attr.isValueQuoted() ? 1 : 0);
-                astTo = astFrom + attr.unquotedValue().length();
+                if(attr.unquotedValue() != null) {
+                    astFrom = attr.valueOffset() + (attr.isValueQuoted() ? 1 : 0);
+                    astTo = astFrom + attr.unquotedValue().length();
+                    insertVal = val;
+                } else {
+                    astFrom = attr.nameOffset() + attr.name().length();
+                    insertVal = "=\"" + val + "\"";
+                    astTo = astFrom;
+                }
             }
 
             final int docFrom = snap.getOriginalOffset(astFrom);
@@ -261,8 +274,8 @@ public class HtmlElementProperties {
                     public void run() {
                         try {
                             doc.remove(docFrom, docTo - docFrom);
-                            if (val.length() > 0) {
-                                doc.insertString(docFrom, val, null);
+                            if (insertVal.length() > 0) {
+                                doc.insertString(docFrom, insertVal, null);
                             }
                         } catch (BadLocationException ex) {
                             Exceptions.printStackTrace(ex);

@@ -578,7 +578,7 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree,p) : super.scan(tree, p) : null;
+                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : super.scan(tree, p) : null;
                 return ret != null ? ret : true;
             }
             finally {
@@ -2573,6 +2573,21 @@ public class Reformatter implements ReformatTask {
          return handleSwitch(node,p);
         }
 
+        private Boolean scanYield(Tree node, Void p) {
+            return handleYield(node, p);
+        }
+
+        private Boolean handleYield(Tree node, Void p) {
+            ExpressionTree exprTree = TreeShims.getYieldValue(node);
+            if (exprTree != null) {
+                accept(IDENTIFIER);
+                space();
+                scan(exprTree, p);
+            }
+            accept(SEMICOLON);
+            return true;
+        }
+
         private boolean handleSwitch(Tree node, Void p) {
             accept(SWITCH);
             boolean oldContinuationIndent = continuationIndent;
@@ -2684,11 +2699,13 @@ public class Reformatter implements ReformatTask {
 
         @Override
         public Boolean visitCase(CaseTree node, Void p) {
-            ExpressionTree exp = node.getExpression();
-            if (exp != null) {
+            List<? extends ExpressionTree> exprs = TreeShims.getExpressions(node);
+            if (exprs.size() > 0) {
                 accept(CASE);
                 space();
-                scan(exp, p);
+                for (ExpressionTree exp : exprs) {
+                    scan(exp, p);
+                }
             } else {
                 accept(DEFAULT);
             }

@@ -20,6 +20,7 @@ package org.netbeans.modules.java.editor.base.semantic;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import junit.framework.Test;
@@ -27,10 +28,12 @@ import junit.framework.TestSuite;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.test.support.MemoryValidator;
+import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.base.semantic.TestBase.Performer;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.openide.text.NbDocument;
+import org.openide.util.Pair;
 
 /**XXX: constructors throwing an exception are not marked as exit points
  *
@@ -343,6 +346,9 @@ public class MarkOccDetTest extends TestBase {
         performTest(name, line, column, false);
     }
     
+    private static final Coloring MARK_OCCURRENCES =
+            ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
+
     private void performTest(String name, final int line, final int column, boolean doCompileRecursively) throws Exception {
         performTest(name,new Performer() {
             public void compute(CompilationController info, Document doc, SemanticHighlighterBase.ErrorDescriptionSetter setter) {
@@ -350,19 +356,18 @@ public class MarkOccDetTest extends TestBase {
                 List<int[]> spans = new MarkOccurrencesHighlighterBase() {
                     @Override
                     protected void process(CompilationInfo info, Document doc, SchedulerEvent event) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        throw new UnsupportedOperationException("Not supported yet.");
                     }
                 }.processImpl(info, MarkOccurencesSettings.getCurrentNode(), doc, offset);
                 
                 if (spans != null) {
-                    setter.setHighlights(doc, spans, Collections.<int[], String>emptyMap());
+                    setter.setHighlights(doc, spans.stream()
+                                                   .map(span -> Pair.of(span, MARK_OCCURRENCES))
+                                                   .collect(Collectors.toList()),
+                                         Collections.<int[], String>emptyMap());
                 }
             }
         }, doCompileRecursively);
-    }
-    
-    protected ColoringAttributes getColoringAttribute() {
-        return ColoringAttributes.MARK_OCCURRENCES;
     }
     
 }

@@ -43,11 +43,11 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
     @Override public boolean checkRunConfig(RunConfig config, ExecutionContext con) {
         String actionName = config.getActionName();
         StartupExtender.StartMode mode;
-        if (ActionProvider.COMMAND_RUN.equals(actionName) || ActionProviderImpl.RUN_MAIN.equals(actionName)) {
+        if (ActionProvider.COMMAND_RUN.equals(actionName) || ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.NORMAL;
-        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || ActionProviderImpl.DEBUG_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_DEBUG.equals(actionName) || ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.DEBUG;
-        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || ActionProvider.COMMAND_PROFILE_SINGLE.equals(actionName) || ActionProviderImpl.PROFILE_MAIN.equals(actionName)) {
+        } else if (ActionProvider.COMMAND_PROFILE.equals(actionName) || ActionProvider.COMMAND_PROFILE_SINGLE.equals(actionName) || ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName)) {
             mode = StartupExtender.StartMode.PROFILE;
         } else if (ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName)) {
             mode = StartupExtender.StartMode.TEST_PROFILE;

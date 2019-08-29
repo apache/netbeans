@@ -96,7 +96,9 @@ matrix:
              ide/css.editor
              ide/css.lib
              ide/css.model
+             ide/db
              ide/db.dataview
+             ide/db.metadata.model
              ide/db.sql.editor
              ide/docker.api
              ide/docker.ui
@@ -112,6 +114,7 @@ matrix:
              ide/editor.search
              ide/editor.settings
              ide/editor.settings.storage
+             ide/editor.structure
              ide/editor.tools.storage
              ide/editor.util
              ide/extbrowser
@@ -161,6 +164,7 @@ matrix:
              ide/terminal.nb
              ide/utilities
              ide/versioning.masterfs
+             ide/versioning.ui
              ide/versioning.util
              ide/web.common
              ide/web.common.ui
@@ -176,3 +180,31 @@ matrix:
              ide/xml.xdm
              ide/xsl"
           jdk: openjdk8
+          
+        - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
+          jdk: openjdk8
+          env:
+              - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+              - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+              - GIT_TEST_REPO="$HOME/git_test_repo"
+          script:
+              # Build sources
+              - ant $OPTS clean
+              - ant $OPTS build
+              # Run unit tests
+              - ant $OPTS $OPTS_TEST -f ide/versioning.core test-unit
+              - ant $OPTS $OPTS_TEST -f ide/versioning test-unit
+              #Prepare git repo for tests
+              - git init $GIT_TEST_REPO
+              # Prepare config file for ide/versioning.core module
+              - touch ide/versioning.core/test/qa-functional/data/tck.properties
+              - echo "test.root = $GIT_TEST_REPO" > ide/versioning.core/test/qa-functional/data/tck.properties
+              - echo "test.vcs = org.netbeans.modules.versioning.DelegatingVCS" >> ide/versioning.core/test/qa-functional/data/tck.properties
+              # Run functional tests for ide/versioning.core module  
+              - ant $OPTS $OPTS_TEST -f ide/versioning.core test-qa-functional
+              # Prepare config file for ide/versioning module
+              - touch ide/versioning/test/qa-functional/data/tck.properties
+              - echo "test.root = $GIT_TEST_REPO" > ide/versioning/test/qa-functional/data/tck.properties
+              - echo "test.vcs = org.netbeans.modules.git.GitVCS" >> ide/versioning/test/qa-functional/data/tck.properties
+              # Run functional tests for ide/versioning module  
+              - ant $OPTS $OPTS_TEST -f ide/versioning test-qa-functional

@@ -1,0 +1,13 @@
+Code completion result for source line:
+$fn1a = fn(|int $x) => $x + $y;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctions.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

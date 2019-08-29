@@ -1,0 +1,66 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: netbeans
+
+summary: Apache NetBeans IDE
+description: |
+  Apache NetBeans IDE lets you quickly and easily develop Java
+  desktop, enterprise, and  web applications, as well as HTML5 applications
+  with HTML, JavaScript, and CSS. The IDE also provides a great set of tools for
+  PHP and C/C++ developers.
+  It is free and open source and has a large community of users and developers
+  around the world.
+  
+  It requires Java 8 or later Java Development Kit installed.
+
+icon: ../../../platform/core.startup/src/org/netbeans/core/startup/frame512.png
+confinement: classic
+grade: devel
+architectures: [ amd64 ]
+adopt-info: netbeans-version
+
+parts:
+  netbeans-version:
+    plugin: dump 
+    source: .
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version "${VERSION}"
+      
+  build:
+    build-attributes: [ no-patchelf ]
+    build-packages:
+      - unzip
+      - openjdk-8-jdk-headless
+    plugin: ant
+    source: ../../../
+    filesets:
+        netbeans: [ netbeans/*, -netbeans/*.built ]
+    override-build: |
+        export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+        ant -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+        mv nbbuild/netbeans $SNAPCRAFT_PART_INSTALL/netbeans
+        # Make the default cache and data directory relative to Snap user directory
+        sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
+        sed -i 's/${HOME}\/.cache\/netbeans/${SNAP_USER_COMMON}\/cache/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
+        sed -i 's/-J-Dapple.laf.useScreenMenuBar=true/-J-Dplugin.manager.install.global=false -J-Dawt.useSystemAAFontSettings=on/' $SNAPCRAFT_PART_INSTALL/netbeans/etc/netbeans.conf
+    stage:
+        - $netbeans
+
+apps:
+  netbeans:
+    command: netbeans/bin/netbeans

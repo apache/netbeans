@@ -1,0 +1,5 @@
+Code completion result for source line:
+(clone $example)->| // test 1
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getDefault()                    [STATIC]   Example
+METHOD     testMethod()                    [PUBLIC]   Example

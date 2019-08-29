@@ -19,7 +19,20 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
+ * Represents array dimension. e.g.
+ * <pre>
+ * [1],
+ * ["test"],
+ * {1},
+ * {'key'}
+ * </pre>
  *
+ * Used classes:
+ * {@link ArrayAccess}, {@link ExpressionArrayAccess}, {@link DereferencedArrayAccess}
+ *
+ * Curly brace syntax ({}) is deprecated since PHP 7.4.
+ *
+ * @see https://wiki.php.net/rfc/deprecate_curly_braces_array_access
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class ArrayDimension extends Expression {

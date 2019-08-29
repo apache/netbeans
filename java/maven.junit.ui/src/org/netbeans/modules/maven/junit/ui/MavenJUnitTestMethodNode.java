@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.junit.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,51 +63,70 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
     @Override
     public Action[] getActions(boolean context) {
         List<Action> actions = new ArrayList<Action>();
-        Action preferred = getPreferredAction();
-        if (preferred != null) {
-            actions.add(preferred);
-        }
-        FileObject testFO = getTestcaseFileObject();                            
-        if (testFO != null){
+        FileObject testFO = getTestcaseFileObject();
+        if (testFO != null) {
+            boolean unitTest = getTestcase().getType() == null || "UNIT".equals(getTestcase().getType()); // NOI18N
+            boolean integrationTest = "INTEGRATION".equals(getTestcase().getType()); // NOI18N
             Project suiteProject = FileOwnerQuery.getOwner(testFO);
             if (suiteProject != null) {
                 ActionProvider actionProvider = suiteProject.getLookup().lookup(ActionProvider.class);
                 if (actionProvider != null) {
-                    boolean runSupported = false;
-                    boolean debugSupported = false;
-                    for (String action : actionProvider.getSupportedActions()) {
-                        if (!runSupported && action.equals(COMMAND_RUN_SINGLE_METHOD)) {
-                            runSupported = true;
-                            if (debugSupported) {
-                                break;
-                            }
-                        }
-                        if (!debugSupported && action.equals(COMMAND_DEBUG_SINGLE_METHOD)) {
-                            debugSupported = true;
-                            if (runSupported) {
-                                break;
-                            }
-                        }
-                    }
-
                     SingleMethod methodSpec = new SingleMethod(testFO, testcase.getName());
                     Lookup nodeContext = Lookups.singleton(methodSpec);
-                    if (runSupported && actionProvider.isActionEnabled(COMMAND_RUN_SINGLE_METHOD,
-                            nodeContext)) {
-                        actions.add(new TestMethodNodeAction(actionProvider,
+
+                    for (String action : actionProvider.getSupportedActions()) {
+                        if (unitTest
+                            && action.equals(COMMAND_RUN_SINGLE_METHOD)
+                            && actionProvider.isActionEnabled(action, nodeContext)) {
+                            actions.add(new TestMethodNodeAction(actionProvider,
                                 nodeContext,
                                 COMMAND_RUN_SINGLE_METHOD,
                                 Bundle.LBL_RerunTest()));
-                    }
-                    if (debugSupported && actionProvider.isActionEnabled(COMMAND_DEBUG_SINGLE_METHOD,
-                            nodeContext)) {
-                        actions.add(new TestMethodNodeAction(actionProvider,
+                        }
+                        if (unitTest
+                            && action.equals(COMMAND_DEBUG_SINGLE_METHOD)
+                            && actionProvider.isActionEnabled(action, nodeContext)) {
+                            actions.add(new TestMethodNodeAction(actionProvider,
                                 nodeContext,
                                 COMMAND_DEBUG_SINGLE_METHOD,
                                 Bundle.LBL_DebugTest()));
+                        }
+                        if (integrationTest
+                            && action.equals("integration-test.single")
+                            && actionProvider.isActionEnabled(action, nodeContext)) {
+                            actions.add(new TestMethodNodeAction(actionProvider,
+                                nodeContext,
+                                "integration-test.single",
+                                Bundle.LBL_RerunTest()));
+                        }
+                        if (integrationTest
+                            && action.equals("debug.integration-test.single")
+                            && actionProvider.isActionEnabled(action, nodeContext)) {
+                            actions.add(new TestMethodNodeAction(actionProvider,
+                                nodeContext,
+                                "debug.integration-test.single",
+                                Bundle.LBL_DebugTest()));
+                        }
                     }
                 }
             }
+        }
+
+        Collections.sort(actions, (a, b) -> {
+            String aName = (String)a.getValue(Action.NAME);
+            String bName = (String)b.getValue(Action.NAME);
+            if(aName == null) {
+                aName = "";
+            }
+            if(bName == null) {
+                bName = "";
+            }
+            return aName.compareTo(bName);
+        });
+
+        Action preferred = getPreferredAction();
+        if (preferred != null) {
+            actions.add(0, preferred);
         }
         actions.addAll(Arrays.asList(super.getActions(context)));
 

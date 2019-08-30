@@ -149,7 +149,10 @@ is divided into following sections:
                     </not>
                 </condition>
             </target>
-            <target name="-init-macrodef-modulename" depends="-init-modules-supported" if="modules.supported.internal">
+            <target name="-init-macrodef-modulename" depends="-init-modules-supported" if="
+                                                                                           
+                                                                                           
+                                                                                           .internal">
                 <macrodef name="modulename" uri="http://www.netbeans.org/ns/j2se-project/3">
                     <attribute name="property"/>
                     <attribute name="sourcepath"/>
@@ -300,9 +303,6 @@ is divided into following sections:
                         <isset property="libs.CopyLibs.classpath"/>
                         <not>
                             <istrue value="${{mkdist.disabled}}"/>
-                        </not>
-                        <not>
-                            <istrue value="${{modules.supported.internal}}"/>
                         </not>
                     </and>
                 </condition>

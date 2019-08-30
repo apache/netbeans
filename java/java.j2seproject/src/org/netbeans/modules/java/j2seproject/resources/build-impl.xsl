@@ -301,9 +301,6 @@ is divided into following sections:
                         <not>
                             <istrue value="${{mkdist.disabled}}"/>
                         </not>
-                        <not>
-                            <istrue value="${{modules.supported.internal}}"/>
-                        </not>
                     </and>
                 </condition>
                 <condition property="do.archive+manifest.available">

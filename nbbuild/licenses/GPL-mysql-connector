@@ -1,11 +1,3 @@
-Name: MySQL Connector/J
-Version: 8.0.17
-License: GPL-mysql-connector
-Type: compile-time
-Comment: Dependency required to run unit tests with DB support
-Description: MySQL Connector/J is the official JDBC driver for MySQL.
-Origin: https://dev.mysql.com/downloads/connector/j/
-
 Licensing Information User Manual
 
 MySQL Connector/J 8.0

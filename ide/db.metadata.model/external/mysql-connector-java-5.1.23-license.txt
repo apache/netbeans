@@ -1,6 +1,6 @@
 Name: MySQL Connector/J
 Version: 5.1.23
-License: GPLv2
+License: GPL
 Type: compile-time
 Comment: Dependency required to run the unittests of the DB support
 Description: MySQL Connector/J is the official JDBC driver for MySQL.
@@ -160,7 +160,7 @@ The source code for a work means the preferred form of the work for
 making modifications to it.  For an executable work, complete source
 code means all the source code for all modules it contains, plus any
 associated interface definition files, plus the scripts used to
-control compilation and installation of the executable.  However, as 
+control compilation and installation of the executable.  However, as
 a special exception, the source code distributed need not include
 anything that is normally distributed (in either source or binary
 form) with the major components (compiler, kernel, and so on) of the
@@ -241,7 +241,7 @@ the limitation as if written in the body of this License.
   9. The Free Software Foundation may publish revised and/or new versions of the General Public License from time to time.  Such new versions will be similar in spirit to the present version, but may differ in detail to address new problems or concerns.
 
 Each version is given a distinguishing version number.  If the Program
-specifies a version number of this License which applies to it and 
+specifies a version number of this License which applies to it and
 "any later version", you have the option of following the terms and conditions either of that version or of any later version published by the Free Software Foundation.  If the Program does not specify a version number of this License, you may choose any version ever published by the Free Software Foundation.
 
   10. If you wish to incorporate parts of the Program into other free
@@ -272,7 +272,7 @@ the "copyright" line and a pointer to where the full notice is found.
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
-    published by     the Free Software Foundation; either version 
+    published by     the Free Software Foundation; either version
     2 of the License, or (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
@@ -292,12 +292,12 @@ when it starts in an interactive mode:
 
     Gnomovision version 69, Copyright (C) year name of author
     Gnomovision comes with ABSOLUTELY NO WARRANTY; for details
-    type 'show w'. This is free software, and you are welcome 
-    to redistribute it under certain conditions; type 'show c' 
+    type `show w'. This is free software, and you are welcome
+    to redistribute it under certain conditions; type `show c'
     for details.
 
-The hypothetical commands 'show w' and 'show c' should show the appropriate parts of the General Public License.  Of course, the commands you use may be called something other than 'show w' and
-'show c'; they could even be mouse-clicks or menu items--whatever 
+The hypothetical commands `show w' and `show c' should show the appropriate parts of the General Public License.  Of course, the commands you use may be called something other than `show w' and
+`show c'; they could even be mouse-clicks or menu items--whatever
 suits your program.
 
 You should also get your employer (if you work as a programmer) or your
@@ -305,12 +305,12 @@ school, if any, to sign a "copyright disclaimer" for the program, if
 necessary.  Here is a sample; alter the names:
 
   Yoyodyne, Inc., hereby disclaims all copyright interest in the
-  program 'Gnomovision' (which makes passes at compilers) written 
+  program `Gnomovision' (which makes passes at compilers) written
   by James Hacker.
 
   <signature of Ty Coon>, 1 April 1989
   Ty Coon, President of Vice
 
-This General Public License does not permit incorporating your program into proprietary programs.  If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.  If this is what you want to do, use 
+This General Public License does not permit incorporating your program into proprietary programs.  If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library.  If this is what you want to do, use
 the GNU Lesser General Public License instead of this License.
 

@@ -217,10 +217,9 @@ matrix:
             - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
           before_script:
             - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
-            - wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar -O $HOME/mysql-connector-java-8.0.17.jar
-          script:
             - ant $OPTS clean
             - ant $OPTS build
+          script:
             - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
-            - ant $OPTS $OPTS_TEST -f ide/db.mysql -Dtest.unit.cp.extra=$HOME/mysql-connector-java-8.0.17.jar test
+            - ant $OPTS $OPTS_TEST -f ide/db.mysql test
 

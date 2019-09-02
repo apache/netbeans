@@ -14,8 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-spec.version.base=0.34.0
 
-test.unit.cp.extra=external/mysql-connector-java-8.0.17.jar
+53DA6AFDC5F7B45CAAA5BC3627028B2041A36CEE mysql:mysql-connector-java:8.0.17

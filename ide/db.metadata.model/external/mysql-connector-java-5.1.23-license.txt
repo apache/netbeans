@@ -2,7 +2,7 @@ Name: MySQL Connector/J
 Version: 5.1.23
 License: GPL
 Type: compile-time
-Comment: Dependency required to run the unittests of the DB support
+Comment: Dependency required to run unit tests with DB support
 Description: MySQL Connector/J is the official JDBC driver for MySQL.
 Origin: https://dev.mysql.com/downloads/connector/j/
 

@@ -221,6 +221,6 @@ matrix:
           script:
             - ant $OPTS clean
             - ant $OPTS build
-            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model -Dtest.unit.cp.extra=$TRAVIS_BUILD_DIR/ide/db.metadata.model/external/derby-10.2.2.0.jar\:$TRAVIS_BUILD_DIR/ide/db.metadata.model/external/mysql-connector-java-5.1.23.jar test
+            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - ant $OPTS $OPTS_TEST -f ide/db.mysql -Dtest.unit.cp.extra=$HOME/mysql-connector-java-8.0.17.jar test
 

@@ -31,8 +31,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.templates.TemplateRegistration;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.POM_TEMPLATE;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROJECT_ICON;
@@ -49,6 +47,7 @@ import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
 
 @TemplateRegistration(
         folder = "PayaraResources",
@@ -67,9 +66,10 @@ public final class MicroPluginWizardDescriptor implements WizardDescriptor.Insta
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     
-    public static void updateMicroMavenPlugin(Project project, String payaraMicroVersion, String autoBindHttp) throws IOException {
+    public static void updateMicroMavenPlugin(Project project, String payaraMicroVersion, String autoBindHttp, String contextRoot) throws IOException {
         Map<String, Object> params = new HashMap<>();
         params.put("autoBindHttp", autoBindHttp);
+        params.put("contextRoot", contextRoot);
         params.put("payaraMicroVersion", payaraMicroVersion);
 
         try (Reader sourceReader = new InputStreamReader(loadResource(POM_TEMPLATE))) {
@@ -114,8 +114,9 @@ public final class MicroPluginWizardDescriptor implements WizardDescriptor.Insta
     public Set instantiate() throws IOException {
         String payaraMicroVersion = (String) descriptor.getProperty(PROP_PAYARA_MICRO_VERSION);
         String autoBindHttp = (String) descriptor.getProperty(PROP_AUTO_BIND_HTTP);
-        
-        updateMicroMavenPlugin(project, payaraMicroVersion, autoBindHttp);
+        String contextRoot = (String) descriptor.getProperty(PROP_CONTEXT_ROOT);
+
+        updateMicroMavenPlugin(project, payaraMicroVersion, autoBindHttp, contextRoot);
         MicroApplication.registerInstance(project);
         new MicroProjectHook(project).projectOpened();
         NbMavenProject.fireMavenProjectReload(project);

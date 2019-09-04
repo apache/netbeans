@@ -38,15 +38,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SourceGroupModifierImplementation;
-import org.netbeans.spi.project.support.GenericSources;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle;
@@ -146,8 +149,8 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     @Override
     public synchronized SourceGroup[] getSourceGroups(String type) {
         if (Sources.TYPE_GENERIC.equals(type)) {
-            return new SourceGroup[]{GenericSources.group(proj, proj.getProjectDirectory(), "ProjectRoot", //NOI18N
-                ProjectUtils.getInformation(proj).getDisplayName(), null, null)};
+            return new SourceGroup[]{new GradleSourceGroup(proj.getProjectDirectory(), "ProjectRoot", //NOI18N
+                ProjectUtils.getInformation(proj).getDisplayName())};
         } else {
             checkChanges(false);
             ArrayList<SourceGroup> ret = new ArrayList<>();
@@ -162,13 +165,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                     }
                 }
             }
-            Collections.sort(ret, new Comparator<SourceGroup>() {
-
-                @Override
-                public int compare(SourceGroup o1, SourceGroup o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
+            Collections.sort(ret, Comparator.comparing(SourceGroup::getName));
             return ret.toArray(new SourceGroup[ret.size()]);
         }
     }
@@ -182,8 +179,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
             String sgDisplayName = !"gatling".equals(group) //NOI18N
                     ? sourceGroupDisplayName(unique, group, dir, lang)
                     : gatlingSourceGroupDisplayName(unique, dir, lang);
-            ret = GenericSources.group(proj,
-                    FileUtil.toFileObject(dir), groupKey, sgDisplayName, null, null);
+            ret = new GradleSourceGroup(FileUtil.toFileObject(dir), groupKey, sgDisplayName);
             cache.put(Pair.of(lang, dir), ret);
         }
         return ret;
@@ -321,4 +317,66 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         return ret && gp.getSourceSets().containsKey(hint);
     }
 
+    private final class GradleSourceGroup implements SourceGroup {
+
+        private final FileObject rootFolder;
+        private final String name;
+        private final String displayName;
+
+        public GradleSourceGroup(FileObject rootFolder, String name, String displayName) {
+            this.rootFolder = rootFolder;
+            this.name = name;
+            this.displayName = displayName;
+        }
+
+        @Override
+        public FileObject getRootFolder() {
+            return rootFolder;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        @Override
+        public Icon getIcon(boolean opened) {
+            return null;
+        }
+
+        @Override
+        public boolean contains(FileObject file) {
+            if (file != rootFolder && !FileUtil.isParentOf(rootFolder, file)) {
+                return false;
+            }
+            if (proj != null) {
+                if (file.isFolder() && file != proj.getProjectDirectory() && ProjectManager.getDefault().isProject(file)) {
+                    // #67450: avoid actually loading the nested project.
+                    return false;
+                }
+                if (FileOwnerQuery.getOwner(file) != proj) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+        }
+
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+        }
+
+        @Override
+        public String toString() {
+            return "GradleSourceGroup: " + getDisplayName() + ", " + rootFolder.toString();
+        }
+    }
 }

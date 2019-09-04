@@ -24,7 +24,12 @@ import java.util.Objects;
  *
  * @author Petr Hejl
  */
-public final class DockerContainer implements DockerEntity {
+public final class DockerContainer implements DockerInstanceEntity {
+
+    @Override
+    public DockerEntityType getType() {
+        return DockerEntityType.Container;
+    }
 
     public enum Status {
         RUNNING,
@@ -50,6 +55,7 @@ public final class DockerContainer implements DockerEntity {
         this.status = status;
     }
 
+    @Override
     public DockerInstance getInstance() {
         return instance;
     }

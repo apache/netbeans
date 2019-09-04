@@ -58,4 +58,28 @@ public class CommentExtractorTest extends PHPTestBase {
         assertEquals(description, documentation);
     }
 
+    // NETBEANS-1861
+    public void testStaticNoDescription() throws Exception {
+        PHPDocNode methodName = new PHPDocNode(1, 2, "where");
+        PHPDocMethodTag methodTag = new PHPDocMethodTag(1, 2, PHPDocTag.Type.METHOD, null, methodName, null, "@method static DibiConnection where($cond)");
+        String documentation = methodTag.getDocumentation();
+        assertEquals("", documentation);
+    }
+
+    public void testStaticExistingDescription() throws Exception {
+        PHPDocNode methodName = new PHPDocNode(1, 2, "where");
+        final String description = "My description.";
+        PHPDocMethodTag methodTag = new PHPDocMethodTag(1, 2, PHPDocTag.Type.METHOD, null, methodName, null, "@method static DibiConnection where($cond) " + description);
+        String documentation = methodTag.getDocumentation();
+        assertEquals(description, documentation);
+    }
+
+    public void testStaticExistingDescriptionWithMoreDeclarations() throws Exception {
+        PHPDocNode methodName = new PHPDocNode(1, 2, "where");
+        final String description = "My description.";
+        PHPDocMethodTag methodTag = new PHPDocMethodTag(1, 2, PHPDocTag.Type.METHOD, null, methodName, null, "@method static DibiConnection where() where($cond) " + description);
+        String documentation = methodTag.getDocumentation();
+        assertEquals(description, documentation);
+    }
+
 }

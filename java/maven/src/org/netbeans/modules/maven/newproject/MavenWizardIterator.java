@@ -84,6 +84,18 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     public static WizardDescriptor.InstantiatingIterator<?> javafxSample() {
         return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "sample-javafx", "0.5", null, LBL_Maven_JavaFx_Sample_Archetype());
     }
+    
+    @TemplateRegistration(folder = ArchetypeWizards.TEMPLATE_FOLDER, position = 925, displayName = "#LBL_Maven_FXML_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
+    @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype")
+    public static WizardDescriptor.InstantiatingIterator<?> openJFXFML() {
+       return ArchetypeWizards.definedArchetype("org.openjfx", "javafx-archetype-fxml", "0.0.2", null, LBL_Maven_FXML_Archetype());
+    }
+
+    @TemplateRegistration(folder = ArchetypeWizards.TEMPLATE_FOLDER, position = 926, displayName = "#LBL_Maven_Simple_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
+    @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype")
+    public static WizardDescriptor.InstantiatingIterator<?> openJFXSimple() {
+       return ArchetypeWizards.definedArchetype("org.openjfx", "javafx-archetype-simple", "0.0.2", null, LBL_Maven_Simple_Archetype());
+    }
 
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=980, displayName="#LBL_Maven_POM_Archetype", iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif", description="pom-root.html")
 //    @Messages("LBL_Maven_POM_Archetype=POM Project")

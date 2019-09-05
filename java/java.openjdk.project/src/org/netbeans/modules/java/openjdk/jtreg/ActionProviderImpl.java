@@ -329,21 +329,21 @@ public class ActionProviderImpl implements ActionProvider {
         FileObject jdkRoot;
         List<String> sourceDirPaths;
 
-        if (prj.getProjectDirectory().getFileObject("../../../modules.xml") != null ||
-            prj.getProjectDirectory().getFileObject("share/classes/module-info.java") != null) {
+        if (BuildUtils.getFileObject(prj.getProjectDirectory(), "../../../modules.xml") != null ||
+            BuildUtils.getFileObject(prj.getProjectDirectory(), "share/classes/module-info.java") != null) {
             File buildTarget = BuildUtils.getBuildTargetDir(file);
             jdkRoot = buildTarget != null ? FileUtil.toFileObject(buildTarget.getParentFile().getParentFile()) : null;
             if (jdkRoot == null) {
                 //should not happen, just last resort:
-                jdkRoot = prj.getProjectDirectory().getFileObject("../../..");
+                jdkRoot = BuildUtils.getFileObject(prj.getProjectDirectory(), "../../..");
             }
-            if (jdkRoot.getFileObject("src/java.base/share/classes/module-info.java") != null) {
+            if (BuildUtils.getFileObject(jdkRoot, "src/java.base/share/classes/module-info.java") != null) {
                 sourceDirPaths = Arrays.asList("src", "*", "*", "classes");
             } else {
                 sourceDirPaths = Arrays.asList("*", "src", "*", "*", "classes");
             }
         } else {
-            jdkRoot = prj.getProjectDirectory().getFileObject("../../..");
+            jdkRoot = BuildUtils.getFileObject(prj.getProjectDirectory(), "../../..");
             sourceDirPaths = Arrays.asList("src", "*", "*", "classes");
         }
 
@@ -368,7 +368,7 @@ public class ActionProviderImpl implements ActionProvider {
                 listAllRoots(c, remainders, roots);
             }
         } else {
-            FileObject child = currentDir.getFileObject(current);
+            FileObject child = BuildUtils.getFileObject(currentDir, current);
 
             if (child != null) {
                 listAllRoots(child, remainders, roots);
@@ -385,13 +385,13 @@ public class ActionProviderImpl implements ActionProvider {
     private static boolean newStyleXPatch(FileObject testFile) {
         Project prj = FileOwnerQuery.getOwner(testFile);
 
-        if (prj.getProjectDirectory().getFileObject("../../src/java.base/share/classes/java/lang/Object.java") != null &&
-            prj.getProjectDirectory().getFileObject("../../src/java.compiler/share/classes/javax/tools/ToolProvider.java") != null) {
+        if (BuildUtils.getFileObject(prj.getProjectDirectory(), "../../src/java.base/share/classes/java/lang/Object.java") != null &&
+            BuildUtils.getFileObject(prj.getProjectDirectory(), "../../src/java.compiler/share/classes/javax/tools/ToolProvider.java") != null) {
             //consolidated repo:
             return true;
         }
 
-        FileObject testRoot = prj.getProjectDirectory().getFileObject("../../test/TEST.ROOT");
+        FileObject testRoot = BuildUtils.getFileObject(prj.getProjectDirectory(), "../../test/TEST.ROOT");
 
         if (testRoot == null)
             return false;
@@ -415,14 +415,14 @@ public class ActionProviderImpl implements ActionProvider {
             FileObject repo = prj.getProjectDirectory().getParent().getParent();
             if (repo.getNameExt().equals("langtools") &&
                 ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile))) {
-                listAllRoots(prj.getProjectDirectory().getFileObject("../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
-                listAllRoots(prj.getProjectDirectory().getFileObject("../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
+                listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
+                listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
             } else {
                 listAllRoots(FileUtil.toFileObject(buildDir), new LinkedList<>(Arrays.asList("jdk", "modules", "*")), roots);
             }
         } else {
-            listAllRoots(prj.getProjectDirectory().getFileObject("../../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
-            listAllRoots(prj.getProjectDirectory().getFileObject("../../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
+            listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
+            listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
         }
 
         StringBuilder built = new StringBuilder();
@@ -459,10 +459,10 @@ public class ActionProviderImpl implements ActionProvider {
         FileObject repo = prj.getProjectDirectory().getParent().getParent();
         if (repo.getNameExt().equals("langtools") &&
             ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile))) {
-            buildClasses = prj.getProjectDirectory().getFileObject("../../build/modules");
+            buildClasses = BuildUtils.getFileObject(prj.getProjectDirectory(), "../../build/modules");
             if (buildClasses == null) {
                 //old style:
-                buildClasses = prj.getProjectDirectory().getFileObject("../../build/classes");
+                buildClasses = BuildUtils.getFileObject(prj.getProjectDirectory(), "../../build/classes");
             }
         } else {
             String inferredRepoName = ShortcutUtils.getDefault().inferLegacyRepository(prj);
@@ -470,11 +470,11 @@ public class ActionProviderImpl implements ActionProvider {
                 ShortcutUtils.getDefault().shouldUseCustomTest(inferredRepoName, FileUtil.getRelativePath(repo, testFile))) {
                 File buildDir = BuildUtils.getBuildTargetDir(testFile);
                 FileObject buildDirFO = FileUtil.toFileObject(buildDir);
-                buildClasses = buildDirFO != null ? buildDirFO.getFileObject("../langtools/modules") : null;
+                buildClasses = buildDirFO != null ? BuildUtils.getFileObject(buildDirFO, "../langtools/modules") : null;
             } else {
                 File buildDir = BuildUtils.getBuildTargetDir(testFile);
                 FileObject buildDirFO = FileUtil.toFileObject(buildDir);
-                buildClasses = buildDirFO != null ? buildDirFO.getFileObject("jdk/modules") : null;
+                buildClasses = buildDirFO != null ? BuildUtils.getFileObject(buildDirFO, "jdk/modules") : null;
             }
         }
 
@@ -484,7 +484,7 @@ public class ActionProviderImpl implements ActionProvider {
     static void printJTR(InputOutput io, File jtregWork, ClassPath fullSourcePath, FileObject testFile) {
         try {
             FileObject testRoot = testFile;
-            while (testRoot != null && testRoot.getFileObject("TEST.ROOT") == null)
+            while (testRoot != null && BuildUtils.getFileObject(testRoot, "TEST.ROOT") == null)
                 testRoot = testRoot.getParent();
             if (testRoot != null) {
                 String relPath = FileUtil.getRelativePath(testRoot, testFile);

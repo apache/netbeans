@@ -1,0 +1,66 @@
+<testresult testFile='magicMethodStatic02.php'>
+    <scanner>
+        <token id='T_CLASS' start='849' end='854'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='855' end='856'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='857' end='858'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='864' end='865'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='866' end='866'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='866'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='848'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='844' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='848'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='844' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='849' end='865' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='855' end='856' name='A'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='857' end='865' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

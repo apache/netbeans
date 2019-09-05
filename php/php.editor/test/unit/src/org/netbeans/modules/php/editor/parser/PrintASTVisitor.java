@@ -876,7 +876,7 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(PHPDocMethodTag node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "PHPDocMethodTag",
-                new String[] {"kind", node.getKind().getName()});
+                new String[] {"kind", node.getKind().getName(), "isStatic", node.isStatic() ? "true" : "false"});
         printNode.addChild("Name", node.getMethodName());
         printNode.addChildrenGroup("Return Types", node.getTypes());
         printNode.addChildrenGroup("Parameters", node.getParameters());

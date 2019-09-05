@@ -98,7 +98,6 @@ matrix:
              ide/css.model
              ide/db
              ide/db.dataview
-             ide/db.metadata.model
              ide/db.sql.editor
              ide/docker.api
              ide/docker.ui
@@ -180,7 +179,7 @@ matrix:
              ide/xml.xdm
              ide/xsl"
           jdk: openjdk8
-          
+
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
           env:
@@ -208,3 +207,19 @@ matrix:
               - echo "test.vcs = org.netbeans.modules.git.GitVCS" >> ide/versioning/test/qa-functional/data/tck.properties
               # Run functional tests for ide/versioning module  
               - ant $OPTS $OPTS_TEST -f ide/versioning test-qa-functional
+
+        - name: "Tests with mysql database"
+          jdk: openjdk8
+          services:
+            - mysql
+          env:
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
+          before_script:
+            - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+            - ant $OPTS $OPTS_TEST -f ide/db.mysql test
+

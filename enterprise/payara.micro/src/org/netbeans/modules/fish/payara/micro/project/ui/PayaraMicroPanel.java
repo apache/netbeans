@@ -27,6 +27,7 @@ import org.netbeans.modules.fish.payara.micro.project.MicroVersion;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.openide.WizardDescriptor;
 import static org.openide.util.NbBundle.getMessage;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
 
 /**
  *
@@ -56,11 +57,18 @@ class PayaraMicroPanel extends JPanel {
             autoBindHTTP = Boolean.TRUE.toString();
         }
         autoBindHttpCheckBox.setSelected(Boolean.valueOf(autoBindHTTP));
+
+        String contextRoot = (String) descriptor.getProperty(PROP_CONTEXT_ROOT);
+        if (contextRoot == null) {
+            contextRoot = "/";
+        }
+        contextRootTextField.setText(contextRoot);
     }
 
     void storeSettings(WizardDescriptor descriptor) {
         descriptor.putProperty(PROP_PAYARA_MICRO_VERSION, ((MicroVersion)microVersionCombobox.getSelectedItem()).getVersion());
         descriptor.putProperty(PROP_AUTO_BIND_HTTP, String.valueOf(autoBindHttpCheckBox.isSelected()));
+        descriptor.putProperty(PROP_CONTEXT_ROOT, String.valueOf(contextRootTextField.getText().trim()));
     }
 
     @SuppressWarnings("unchecked")
@@ -71,6 +79,8 @@ class PayaraMicroPanel extends JPanel {
         microVersionLabel = new javax.swing.JLabel();
         autoBindHttpLabel = new javax.swing.JLabel();
         autoBindHttpCheckBox = new javax.swing.JCheckBox();
+        contextRootLabel = new javax.swing.JLabel();
+        contextRootTextField = new javax.swing.JTextField();
 
         microVersionCombobox.setModel(new DefaultComboBoxModel(VersionRepository.getInstance().getMicroVersion().toArray()));
 
@@ -82,6 +92,11 @@ class PayaraMicroPanel extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(autoBindHttpCheckBox, org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.autoBindHttpCheckBox.text")); // NOI18N
         autoBindHttpCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "TLTP_AUTO_BIND_HTTP")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(contextRootLabel, org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.contextRootLabel.text")); // NOI18N
+        contextRootLabel.setToolTipText(org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.contextRootLabel.toolTipText")); // NOI18N
+
+        contextRootTextField.setText(org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.contextRootTextField.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,15 +104,16 @@ class PayaraMicroPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(microVersionLabel)
-                    .addComponent(autoBindHttpLabel))
+                    .addComponent(autoBindHttpLabel)
+                    .addComponent(contextRootLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(autoBindHttpCheckBox)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(microVersionCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(69, 69, 69))))
+                        .addGap(0, 91, Short.MAX_VALUE))
+                    .addComponent(microVersionCombobox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(contextRootTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,13 +125,19 @@ class PayaraMicroPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(autoBindHttpCheckBox)
                     .addComponent(autoBindHttpLabel))
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(contextRootLabel)
+                    .addComponent(contextRootTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(217, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox autoBindHttpCheckBox;
     private javax.swing.JLabel autoBindHttpLabel;
+    private javax.swing.JLabel contextRootLabel;
+    private javax.swing.JTextField contextRootTextField;
     private javax.swing.JComboBox microVersionCombobox;
     private javax.swing.JLabel microVersionLabel;
     // End of variables declaration//GEN-END:variables

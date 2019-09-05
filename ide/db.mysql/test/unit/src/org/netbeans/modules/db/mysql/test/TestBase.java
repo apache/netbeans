@@ -30,6 +30,7 @@ import org.netbeans.modules.db.api.sql.execute.SQLExecutionInfo;
 import org.netbeans.modules.db.api.sql.execute.StatementExecutionInfo;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -39,7 +40,7 @@ public class TestBase extends NbTestCase  {
     
     private static final Logger LOG = Logger.getLogger(TestBase.class.getName());
     
-    private static final String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
+    private static final String DRIVER_CLASSNAME = "com.mysql.cj.jdbc.Driver";
     
     private String host;
     private String port;
@@ -74,7 +75,7 @@ public class TestBase extends NbTestCase  {
 
         // We need to set up netbeans.dirs so that the NBInst URLMapper correctly
         // finds the driver jar file if the user is using the nbinst protocol
-        File jarFile = new File(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File jarFile = Utilities.toFile(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File clusterDir = jarFile.getParentFile().getParentFile();
         System.setProperty("netbeans.dirs", clusterDir.getAbsolutePath());
         

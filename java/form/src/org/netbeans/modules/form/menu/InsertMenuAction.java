@@ -54,7 +54,7 @@ public class InsertMenuAction extends NodeAction {
             //find the first JMenuBar item in the palette
             PaletteItem[] items = PaletteUtils.getAllItems();
             for (PaletteItem item : items) {
-                Class clazz = item.getComponentClass();
+                Class<?> clazz = item.getComponentClass();
                 if (clazz != null && JMenu.class.isAssignableFrom(clazz)) {
                     final PaletteItem it = item;
                     SwingUtilities.invokeLater(new Runnable() {

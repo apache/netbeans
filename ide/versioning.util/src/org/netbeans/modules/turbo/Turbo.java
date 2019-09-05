@@ -366,7 +366,7 @@ public final class Turbo {
 
     public void addTurboListener(TurboListener l) {
         synchronized(listeners) {
-            List copy = new ArrayList(listeners);
+            List<TurboListener> copy = new ArrayList<>(listeners);
             copy.add(l);
             listeners = copy;
         }
@@ -374,7 +374,7 @@ public final class Turbo {
 
     public void removeTurboListener(TurboListener l) {
         synchronized(listeners) {
-            List copy = new ArrayList(listeners);
+            List<TurboListener> copy = new ArrayList<>(listeners);
             copy.remove(l);
             listeners = copy;
         }

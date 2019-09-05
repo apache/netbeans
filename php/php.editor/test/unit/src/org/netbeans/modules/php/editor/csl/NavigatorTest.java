@@ -105,4 +105,8 @@ public class NavigatorTest extends PhpNavigatorTestBase{
         performTest("structure/nullableTypes_02");
     }
 
+    public void testMagicMethods_01() throws Exception {
+        performTest("structure/magicMethods");
+    }
+
 }

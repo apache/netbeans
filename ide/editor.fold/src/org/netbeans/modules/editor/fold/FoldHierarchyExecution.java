@@ -1501,7 +1501,7 @@ public final class FoldHierarchyExecution implements DocumentListener, Runnable 
                 return;
             }
         }
-        Class clazz = m.getDeclaringClass();
+        Class<?> clazz = m.getDeclaringClass();
         if (!clazz.isInstance(doc)) {
             return;
         }

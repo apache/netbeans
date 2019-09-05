@@ -19,12 +19,14 @@
 package org.netbeans.modules.java.openjdk.project;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
@@ -49,9 +51,12 @@ import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.nodes.NodeNotFoundException;
+import org.openide.nodes.NodeOp;
 import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -165,8 +170,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider  {
                     toPopulate.add(new Key(sg) {
                         @Override public Node createNode() {
                             try {
-                                DataObject od = DataObject.find(group.getRootFolder());
-                                return new FilterNode(od.getNodeDelegate()) {
+                                return new PathFindingNode(group) {
                                     @Override public String getDisplayName() {
                                         return group.getDisplayName();
                                     }
@@ -186,8 +190,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider  {
                     toPopulate.add(new Key(sg) {
                         @Override public Node createNode() {
                             try {
-                                DataObject od = DataObject.find(group.getRootFolder());
-                                return new FilterNode(od.getNodeDelegate()) {
+                                return new PathFindingNode(group) {
                                     @Override public Image getIcon(int type) {
                                         return ImageUtilities.loadImage("org/netbeans/modules/java/openjdk/project/resources/nativeFilesFolder.gif");
                                     }
@@ -254,5 +257,96 @@ public class LogicalViewProviderImpl implements LogicalViewProvider  {
             }
             
         }
+    }
+
+    /** Based on java/java.project.ui/src/org/netbeans/spi/java/project/support/ui/TreeRootNode.java. */
+    public static class PathFindingNode extends FilterNode {
+
+        public PathFindingNode(SourceGroup sg) throws DataObjectNotFoundException {
+            this(sg, DataObject.find(sg.getRootFolder()).getNodeDelegate());
+        }
+
+        private PathFindingNode(SourceGroup sg, Node delegate) {
+            super(delegate,
+                  new Children(delegate),
+                  new ProxyLookup(delegate.getLookup(),
+                                  Lookups.singleton(new TreeViewPathFinder(sg, false))));
+        }
+    }
+
+    /** Copied from java/java.project.ui/src/org/netbeans/spi/java/project/support/ui/TreeRootNode.java. */
+    public static final class TreeViewPathFinder implements org.netbeans.spi.project.ui.PathFinder {
+
+        private final SourceGroup g;
+        private final boolean reduced;
+
+        TreeViewPathFinder(SourceGroup g, boolean reduced) {
+            this.g = g;
+            this.reduced = reduced;
+        }
+
+        @Override
+        public Node findPath(Node rootNode, Object o) {
+            FileObject fo;
+            if (o instanceof FileObject) {
+                fo = (FileObject) o;
+            } else if (o instanceof DataObject) {
+                fo = ((DataObject) o).getPrimaryFile();
+            } else {
+                return null;
+            }
+            FileObject groupRoot = g.getRootFolder();
+            if (FileUtil.isParentOf(groupRoot, fo) /* && group.contains(fo) */) {
+                return reduced ? findPathReduced(fo, rootNode) : findPathPlain(fo, groupRoot, rootNode);
+            } else if (groupRoot.equals(fo)) {
+                return rootNode;
+            } else {
+                return null;
+            }
+        }
+
+        private Node findPathPlain(FileObject fo, FileObject groupRoot, Node rootNode) {
+            FileObject folder = fo.isFolder() ? fo : fo.getParent();
+            String relPath = FileUtil.getRelativePath(groupRoot, folder);
+            List<String> path = new ArrayList<String>();
+            StringTokenizer strtok = new StringTokenizer(relPath, "/"); // NOI18N
+            while (strtok.hasMoreTokens()) {
+                String token = strtok.nextToken();
+               path.add(token);
+            }
+            try {
+                Node folderNode =  folder.equals(groupRoot) ? rootNode : NodeOp.findPath(rootNode, Collections.enumeration(path));
+                if (fo.isFolder()) {
+                    return folderNode;
+                } else {
+                    Node[] childs = folderNode.getChildren().getNodes(true);
+                    for (int i = 0; i < childs.length; i++) {
+                       DataObject dobj = childs[i].getLookup().lookup(DataObject.class);
+                       if (dobj != null && dobj.getPrimaryFile().getNameExt().equals(fo.getNameExt())) {
+                           return childs[i];
+                       }
+                    }
+                }
+            } catch (NodeNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private Node findPathReduced(FileObject fo, Node n) {
+            FileObject f = n.getLookup().lookup(FileObject.class);
+            if (f == fo) {
+                return n;
+            } else if (f != null && FileUtil.isParentOf(f, fo)) {
+                for (Node child : n.getChildren().getNodes(true)) {
+                    Node found = findPathReduced(fo, child);
+                    if (found != null) {
+                        return found;
+                    }
+                }
+            }
+            return null;
+        }
+
     }
 }

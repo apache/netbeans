@@ -19,25 +19,22 @@
 
 package org.netbeans.modules.subversion.ui.update;
 
-import java.io.*;
-import java.util.*;
 import java.awt.*;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.util.*;
 import java.util.logging.Level;
 import javax.swing.*;
-import org.netbeans.modules.subversion.ui.commit.ConflictResolvedAction;
-import org.netbeans.spi.diff.*;
-
-import org.openide.util.*;
-import org.openide.windows.TopComponent;
-import org.openide.filesystems.*;
-
 import org.netbeans.api.diff.*;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.subversion.Subversion;
 import org.netbeans.modules.subversion.client.*;
+import org.netbeans.modules.subversion.ui.commit.ConflictResolvedAction;
 import org.netbeans.modules.versioning.util.Utils;
-
+import org.netbeans.spi.diff.*;
+import org.openide.filesystems.*;
+import org.openide.util.*;
+import org.openide.windows.TopComponent;
 import org.tigris.subversion.svnclientadapter.*;
 
 /**
@@ -48,16 +45,17 @@ import org.tigris.subversion.svnclientadapter.*;
  * @author  Martin Entlicher
  */
 public class ResolveConflictsExecutor extends SvnProgressSupport {
-    
+
     private static final String TMP_PREFIX = "merge"; // NOI18N
-    
+
     static final String CHANGE_LEFT = "<<<<<<< "; // NOI18N
     static final String CHANGE_RIGHT = ">>>>>>> "; // NOI18N
     static final String CHANGE_DELIMETER = "======="; // NOI18N
+    static final String CHANGE_BASE_DELIMETER = "|||||||"; // NOI18N
 
     static final String LOCAL_FILE_SUFFIX = ".mine"; // NOI18N
     static final String WORKING_FILE_SUFFIX = ".working"; // NOI18N
-    
+
     private String leftFileRevision = null;
     private String rightFileRevision = null;
 
@@ -77,7 +75,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         if (merge == null) {
             throw new IllegalStateException("No Merge engine found."); // NOI18N
         }
-        
+
         try {
             FileObject fo = FileUtil.toFileObject(file);
             if(fo == null) {
@@ -86,12 +84,12 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
             FileLock lock = fo.lock();
             boolean mergeWriterCreated = false;
-            try { 
+            try {
                 mergeWriterCreated = handleMergeFor(file, fo, lock, merge);
             } finally {
                 if(!mergeWriterCreated && lock != null) {
                     lock.releaseLock();
-                }    
+                }
             }
         } catch (FileAlreadyLockedException e) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -108,8 +106,8 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             });
         } catch (IOException ioex) {
             if (NESTED_CONFLICT.equals(ioex.getMessage())) {
-                JOptionPane.showMessageDialog(null, NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts"), 
-                                              NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts_Title"), 
+                JOptionPane.showMessageDialog(null, NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts"),
+                                              NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts_Title"),
                                               JOptionPane.WARNING_MESSAGE);
                 Utils.openFile(file);
             } else {
@@ -117,7 +115,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
         }
     }
-    
+
     private boolean handleMergeFor(final File file, FileObject fo, FileLock lock,
                                 final MergeVisualizer merge) throws IOException {
         String mimeType = (fo == null) ? "text/plain" : fo.getMIMEType(); // NOI18N
@@ -128,9 +126,9 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         f1.deleteOnExit();
         f2.deleteOnExit();
         f3.deleteOnExit();
-        
+
         newLineString = Utils.getLineEnding(fo, lock);
-        
+
         Charset encoding = FileEncodingQuery.getEncoding(fo);
         final Difference[] diffs = copyParts(true, file, f1, true, encoding);
         if (diffs.length == 0) {
@@ -163,7 +161,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         } else {
             rightFileRevision = org.openide.util.NbBundle.getMessage(ResolveConflictsExecutor.class, "Diff.titleRevision", rightFileRevision); // NOI18N
         }
-        
+
         final StreamSource s1;
         final StreamSource s2;
         Utils.associateEncoding(file, f1);
@@ -201,12 +199,24 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             String line;
             boolean isChangeLeft = false;
             boolean isChangeRight = false;
+            boolean isChangeBase = false;
             int f1l1 = 0, f1l2 = 0, f2l1 = 0, f2l2 = 0;
             StringBuilder text1 = new StringBuilder();
             StringBuilder text2 = new StringBuilder();
             int i = 1, j = 1;
             while ((line = r.readLine()) != null) {
-                int pos;
+                // As the Graphical Merge Visualizer does not support 3 way diff,
+                // remove the base diff itself.
+                // Only show the diffs of the two heads against the base
+                if (line.startsWith(CHANGE_BASE_DELIMETER)) {
+                    isChangeBase = true;
+                    continue;
+                }
+                if (isChangeBase && line.startsWith(CHANGE_DELIMETER)) {
+                    isChangeBase = false;
+                } else if (isChangeBase) {
+                    continue;
+                }
                 if (line.startsWith(CHANGE_LEFT)) {
                     if (isChangeLeft || isChangeRight) {
                         // nested conflicts are not supported
@@ -380,10 +390,10 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
     public void run() {
         throw new RuntimeException("Not implemented"); // NOI18N
     }
-    
-    
+
+
     private static class MergeResultWriterInfo extends StreamSource {
-        
+
         private File tempf1, tempf2, tempf3, outputFile;
         private File fileToRepairEntriesOf;
         private String mimeType;
@@ -393,7 +403,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         private FileLock lock;
         private Charset encoding;
         private final String newLineString;
-        
+
         public MergeResultWriterInfo(File tempf1, File tempf2, File tempf3,
                                      File outputFile, String mimeType,
                                      String leftFileRevision, String rightFileRevision,
@@ -414,27 +424,27 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
             this.encoding = encoding;
         }
-        
+
         @Override
         public String getName() {
             return outputFile.getName();
         }
-        
+
         @Override
         public String getTitle() {
             return org.openide.util.NbBundle.getMessage(ResolveConflictsExecutor.class, "Merge.titleResult"); // NOI18N
         }
-        
+
         @Override
         public String getMIMEType() {
             return mimeType;
         }
-        
+
         @Override
         public Reader createReader() throws IOException {
             throw new IOException("No reader of merge result"); // NOI18N
         }
-        
+
         /**
          * Create a writer, that writes to the source.
          * @param conflicts The list of conflicts remaining in the source.
@@ -457,7 +467,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
                                                    leftFileRevision, rightFileRevision, newLineString);
             }
         }
-        
+
         /**
          * This method is called when the visual merging process is finished.
          * All possible writting processes are finished before this method is called.
@@ -480,16 +490,16 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
 
         private void repairEntries(File file) {
             try {
-                ConflictResolvedAction.perform(file);    
+                ConflictResolvedAction.perform(file);
             } catch (SVNClientException ex) {
                 // XXX consolidate with the progresssuport
                 SvnClientExceptionHandler.notifyException(ex, true, true);
-            }            
+            }
         }
     }
-    
+
     private static class MergeConflictFileWriter extends FilterWriter {
-        
+
         private Difference[] conflicts;
         private int lineNumber;
         private int currentConflict;
@@ -497,7 +507,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         private String rightName;
         private FileObject fo;
         private final String newLineString;
-        
+
         public MergeConflictFileWriter(Writer delegate, FileObject fo,
                                        Difference[] conflicts, String leftName,
                                        String rightName, String newLineString) throws IOException {
@@ -514,7 +524,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
             this.fo = fo;
         }
-        
+
         @Override
         public void write(String str) throws IOException {
             if (!SYSTEM_LINE_SEPARATOR.equals(newLineString)) {
@@ -527,7 +537,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
                 currentConflict++;
             }
         }
-        
+
         private void writeConflict(Difference conflict) throws IOException {
             super.write(CHANGE_LEFT + leftName + newLineString); // NOI18N
             super.write(conflict.getFirstText());
@@ -535,7 +545,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             super.write(conflict.getSecondText());
             super.write(CHANGE_RIGHT + rightName + newLineString); // NOI18N
         }
-        
+
         private static int numChars(String s, String str) {
             int n = 0;
             for (int pos = str.indexOf(s); pos >= 0 && pos < str.length(); pos = str.indexOf(s, pos + 1)) {
@@ -543,7 +553,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
             return n;
         }
-        
+
         public void close() throws IOException {
             super.close();
             if (fo != null) fo.refresh(true);
@@ -557,7 +567,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             super(outputStreamWriter);
             this.lineEnding = lineEnding;
         }
-        
+
         @Override
         public void write(String str) throws IOException {
             if (!SYSTEM_LINE_SEPARATOR.equals(lineEnding)) {
@@ -567,4 +577,3 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
         }
     }
 }
-

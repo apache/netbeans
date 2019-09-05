@@ -398,11 +398,27 @@
                 <file name="org.netbeans.modules.java.hints.jdk.ConvertToVarHint.properties" url="enabled.properties"/>
                 <file name="org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch.properties" url="enabled.properties"/>
             </folder>
+            <folder name="rule_config_jdk13">
+                <file name="Javac_canUseDiamond.properties" url="enabled.properties"/>
+                <file name="Javac_canUseLambda.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.IteratorToFor.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryUnboxing.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.ConvertToARM.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.JoinCatches.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.Tiny.containsForIndexOf.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.StaticImport.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.ConvertToStringSwitch.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.UnnecessaryBoxing.run.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.ConvertToVarHint.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.ConvertSwitchToRuleSwitch.properties" url="enabled.properties"/>
+                <file name="org.netbeans.modules.java.hints.jdk.ConvertToTextBlock.properties" url="enabled.properties"/>
+            </folder>
             <folder name="ui">
                 <file name="rule_config_default.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/default.properties"/>
                 <file name="rule_config_jdk8.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk8.properties"/>
                 <file name="rule_config_jdk11.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk11.properties"/>
                 <file name="rule_config_jdk12.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk12.properties"/>
+                <file name="rule_config_jdk13.properties" url="nbresloc:/org/netbeans/modules/java/hints/resources/jdk13.properties"/>
             </folder>
         </folder></folder></folder></folder></folder>
     </folder>

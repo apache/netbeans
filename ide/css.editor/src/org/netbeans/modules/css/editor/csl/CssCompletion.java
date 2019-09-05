@@ -245,7 +245,7 @@ public class CssCompletion implements CodeCompletionHandler {
 
     private List<CompletionProposal> completeHtmlSelectors(CompletionContext context, String prefix, int offset) {
         List<CompletionProposal> proposals = new ArrayList<>(20);
-        Collection<String> items = new ArrayList(Arrays.asList(HtmlTags.getTags()));
+        Collection<String> items = new ArrayList<>(Arrays.asList(HtmlTags.getTags()));
         items.add(UNIVERSAL_SELECTOR);
         for (String tagName : items) {
             if (tagName.startsWith(prefix.toLowerCase(Locale.ENGLISH))) {

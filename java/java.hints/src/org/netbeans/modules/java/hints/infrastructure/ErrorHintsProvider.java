@@ -91,7 +91,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
     public static ErrorManager ERR = ErrorManager.getDefault().getInstance("org.netbeans.modules.java.hints"); // NOI18N
     public static Logger LOG = Logger.getLogger("org.netbeans.modules.java.hints"); // NOI18N
     
-    ErrorHintsProvider() {
+    public ErrorHintsProvider() {
         super(Phase.RESOLVED);
     }
     
@@ -109,7 +109,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
     /**
      * @return errors for whole file
      */
-    List<ErrorDescription> computeErrors(CompilationInfo info, Document doc, String mimeType) throws IOException {
+    public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc, String mimeType) throws IOException {
         return computeErrors(info, doc, null, mimeType);
     }
     

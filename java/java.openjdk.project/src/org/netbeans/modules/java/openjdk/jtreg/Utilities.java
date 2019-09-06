@@ -60,10 +60,15 @@ public class Utilities {
     }
 
     public static FileObject getLangtoolsKeyRoot(FileObject root) {
-        FileObject javaBase = BuildUtils.getFileObject(root, "src/jdk.compiler/share/classes");
+        FileObject jdkCompiler = BuildUtils.getFileObject(root, "src/jdk.compiler/share/classes");
 
-        if (javaBase != null)
-            return javaBase;
+        if (jdkCompiler != null)
+            return jdkCompiler;
+
+        jdkCompiler = root.getFileObject("src/jdk.compiler/share/classes");
+
+        if (jdkCompiler != null)
+            return jdkCompiler;
 
         return BuildUtils.getFileObject(root, "src/share/classes");
     }

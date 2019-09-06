@@ -313,7 +313,7 @@ matrix:
           services:
             - mysql
           env:
-            - OPTS="-Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
             - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
           before_script:
             - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
@@ -321,5 +321,6 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+            - sleep 5
             - ant $OPTS $OPTS_TEST -f ide/db.mysql test
 

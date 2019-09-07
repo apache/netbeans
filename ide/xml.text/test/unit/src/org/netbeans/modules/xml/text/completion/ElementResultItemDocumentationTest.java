@@ -77,7 +77,7 @@ public class ElementResultItemDocumentationTest extends NbTestCase {
     }
     
     private CompletionResultSetImpl createCompletionResultImpl(CompletionTask task, int type) throws Exception {
-        Class clazz = CompletionResultSetImpl.class;
+        Class<?> clazz = CompletionResultSetImpl.class;
         Constructor ctor = clazz.getDeclaredConstructor(CompletionImpl.class, Object.class, CompletionTask.class, Integer.TYPE);
         ctor.setAccessible(true);
         return (CompletionResultSetImpl)ctor.newInstance(CompletionImpl.get(), "", task, type);

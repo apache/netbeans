@@ -294,18 +294,6 @@ is divided into following sections:
                         <istrue value="${{not.archive.disabled}}" />
                     </or>
                 </condition>
-                <condition property="do.mkdist">
-                    <and>
-                        <isset property="do.archive"/>
-                        <isset property="libs.CopyLibs.classpath"/>
-                        <not>
-                            <istrue value="${{mkdist.disabled}}"/>
-                        </not>
-                        <not>
-                            <istrue value="${{modules.supported.internal}}"/>
-                        </not>
-                    </and>
-                </condition>
                 <condition property="do.archive+manifest.available">
                     <and>
                         <isset property="manifest.available"/>
@@ -2202,8 +2190,24 @@ is divided into following sections:
                 </manifest>
             </target>
             
+            <target name="-check-do-mkdist">
+                <xsl:attribute name="depends">init,compile</xsl:attribute>
+                <condition property="do.mkdist">
+                    <and>
+                        <isset property="do.archive"/>
+                        <isset property="libs.CopyLibs.classpath"/>
+                        <not>
+                            <istrue value="${{mkdist.disabled}}"/>
+                        </not>
+                        <not>
+                            <available file="${{build.classes.dir}}/module-info.class"/>
+                        </not>
+                    </and>
+                </condition>
+            </target>
+
             <target name="-do-jar-copylibs">
-                <xsl:attribute name="depends">init,-init-macrodef-copylibs,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen</xsl:attribute>
+                <xsl:attribute name="depends">init,-init-macrodef-copylibs,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen,-check-do-mkdist</xsl:attribute>
                 <xsl:attribute name="if">do.mkdist</xsl:attribute>
                 <j2seproject3:copylibs manifest="${{tmp.manifest.file}}"/>
                 <echo level="info">To run this application from the command line without Ant, try:</echo>
@@ -2215,7 +2219,7 @@ is divided into following sections:
             </target>
 
             <target name="-do-jar-jar">
-                <xsl:attribute name="depends">init,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen</xsl:attribute>
+                <xsl:attribute name="depends">init,compile,-pre-pre-jar,-pre-jar,-do-jar-create-manifest,-do-jar-copy-manifest,-do-jar-set-mainclass,-do-jar-set-profile,-do-jar-set-splashscreen,-check-do-mkdist</xsl:attribute>
                 <xsl:attribute name="if">do.archive</xsl:attribute>
                 <xsl:attribute name="unless">do.mkdist</xsl:attribute>
                 <j2seproject1:jar manifest="${{tmp.manifest.file}}"/>

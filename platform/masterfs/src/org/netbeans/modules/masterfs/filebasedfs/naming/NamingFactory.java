@@ -47,7 +47,7 @@ public final class NamingFactory {
 
         List<FileInfo> checkDirs = new ArrayList<FileInfo>();
         FileNaming fileName = null;
-        final List<FileInfo> list = new ArrayList(queue);
+        final List<FileInfo> list = new ArrayList<>(queue);
         for (int i = 0; i < list.size(); ) {
             FileInfo f = list.get(i);
             if("\\\\".equals(f.getFile().getPath())) {

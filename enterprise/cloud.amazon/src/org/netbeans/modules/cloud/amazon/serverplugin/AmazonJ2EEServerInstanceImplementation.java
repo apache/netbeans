@@ -19,6 +19,7 @@
 package org.netbeans.modules.cloud.amazon.serverplugin;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import org.netbeans.modules.cloud.amazon.ui.AmazonJ2EEInstanceNode;
 import org.netbeans.modules.cloud.amazon.ui.serverplugin.AmazonJ2EEServerWizardComponent;
 import org.netbeans.spi.server.ServerInstanceImplementation;
@@ -69,11 +70,6 @@ public class AmazonJ2EEServerInstanceImplementation implements ServerInstanceImp
     @Override
     public boolean isRemovable() {
         return false;
-    }
-
-    @Override
-    public String getProperty(String key) {
-        return aij.getInstance().getProperty(key);
     }
 
 }

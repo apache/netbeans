@@ -140,7 +140,15 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         }
 
         final boolean hasFile(String relative) {
-            return dir.getFileObject(relative) != null;
+            FileObject d = dir;
+            int pos = 0;
+
+            while (relative.startsWith("../", pos) && d != null) {
+                d = d.getParent();
+                pos += 3;
+            }
+
+            return d != null && d.getFileObject(relative) != null;
         }
 
         final boolean isDeepCheck() {

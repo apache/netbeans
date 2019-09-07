@@ -180,7 +180,7 @@ final class ColorUtil {
                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
                 }
             }
-            if (shouldAntialias()) {
+            if (shouldAntialias() && (hintsMap == null || !hintsMap.containsKey(RenderingHints.KEY_TEXT_ANTIALIASING))) {
                 hintsMap.put(RenderingHints.KEY_ANTIALIASING,
                          RenderingHints.VALUE_ANTIALIAS_ON);
             }

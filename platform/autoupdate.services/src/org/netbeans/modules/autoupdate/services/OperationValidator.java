@@ -357,7 +357,7 @@ abstract class OperationValidator {
         @Override
         List<UpdateElement> getRequiredElementsImpl (UpdateElement uElement, List<ModuleInfo> moduleInfos, Collection<String> brokenDependencies, Collection<UpdateElement> recommendedElements) {
             UpdateElementImpl uElementImpl = Trampoline.API.impl(uElement);
-            List<ModuleInfo> expandedModuleInfos = new ArrayList(moduleInfos);
+            List<ModuleInfo> expandedModuleInfos = new ArrayList<>(moduleInfos);
             expandedModuleInfos.addAll(uElementImpl.getModuleInfos(true));
             ModuleManager mm = null;
             final Set<Module> modules = new LinkedHashSet<Module>();

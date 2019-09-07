@@ -53,7 +53,7 @@ public class ReorderAction extends CookieAction {
 
     protected void performAction(Node[] activatedNodes) {
         Node n = activatedNodes[0]; // we supposed that one node is activated
-        Index order = (Index) n.getCookie(Index.class);
+        Index order = n.getCookie(Index.class);
         order.reorder();
     }
 

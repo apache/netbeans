@@ -1045,7 +1045,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
     }
 
     private List<String> getQueryResolutions(BugzillaConfiguration bc) {
-        List<String> l = new ArrayList(bc.getResolutions());
+        List<String> l = new ArrayList<>(bc.getResolutions());
         l.add(0, "---");
         return l;
     }

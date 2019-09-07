@@ -287,7 +287,7 @@ public final class IntrospectedInfo {
             }
             String clazzname = entry.getValue();
             try {
-                Class clazz = cl.loadClass (clazzname);
+                Class<?> clazz = cl.loadClass (clazzname);
                 register(name, clazz, kind, false);
             } catch (ClassNotFoundException cnfe) {
                 // This is normal, e.g. Ant's taskdefs include optional tasks we don't have.
@@ -537,7 +537,7 @@ public final class IntrospectedInfo {
                 AntModule.err.log("Skipping pseudodef of <description>");
                 continue;
             }
-            Class clazz = entry.getValue();
+            Class<?> clazz = entry.getValue();
             if (clazz.getName().equals("org.apache.tools.ant.taskdefs.MacroInstance")) { // NOI18N
                 continue;
             }

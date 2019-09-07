@@ -56,6 +56,7 @@ under the License.
                 <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
+                <include name="mimepull.+\.jar"/>
             </fileset>            
             <fileset dir="modules/endorsed">
                 <include name=".+\.jar"/>

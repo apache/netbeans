@@ -27,4 +27,9 @@
         <file>vscode/src/extension.ts</file>
         <license ref="MIT-vscode-ext" />
     </fileset>
+    <fileset>
+        <file>script/etc/nb-java-lsp-server.clusters</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

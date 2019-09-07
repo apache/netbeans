@@ -72,3 +72,6 @@ ide/libs.bytelist/external/jcodings-1.0.18.jar ide/textmate.lexer/external/jcodi
 ide/lsp.client/external/org.eclipse.xtend.lib-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.14.0.jar
 ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.14.0.jar
 ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.14.0.jar
+
+# Derby jar is used when run tests, so we can ignore the duplicates
+ide/db/external/derby-10.2.2.0.jar ide/db.metadata.model/external/derby-10.2.2.0.jar

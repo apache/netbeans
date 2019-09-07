@@ -19,12 +19,15 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Holds a variable and an index that point to array or hashtable
- * <pre>e.g. $a[],
+ * Holds a variable and an index that point to array or hashtable. e.g.
+ * <pre>
+ * $a[],
  * $a[1],
  * $a[$b],
- * $a{'name'}
+ * $a{'name'} // deprecate since PHP 7.4
  * </pre>
+ *
+ * @see https://wiki.php.net/rfc/deprecate_curly_braces_array_access
  */
 public class ArrayAccess extends Variable {
 

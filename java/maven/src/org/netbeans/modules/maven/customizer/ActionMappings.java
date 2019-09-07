@@ -186,22 +186,24 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         titles.put(ActionProvider.COMMAND_CLEAN, NbBundle.getMessage(ActionMappings.class, "COM_Clean_project"));
         titles.put(ActionProvider.COMMAND_COMPILE_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Compile_file"));
         titles.put(ActionProvider.COMMAND_DEBUG, NbBundle.getMessage(ActionMappings.class, "COM_Debug_project"));
-        titles.put(ActionProvider.COMMAND_DEBUG_SINGLE + ".main", NbBundle.getMessage(ActionMappings.class, "COM_Debug_file_main"));
+        titles.put(ActionProviderImpl.COMMAND_DEBUG_MAIN, NbBundle.getMessage(ActionMappings.class, "COM_Debug_file_main"));
         titles.put(ActionProvider.COMMAND_DEBUG_SINGLE + ".deploy", NbBundle.getMessage(ActionMappings.class, "COM_Debug_file_deploy"));
         titles.put(ActionProvider.COMMAND_DEBUG_STEP_INTO, null);
         titles.put(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Debug_test"));
         titles.put(ActionProvider.COMMAND_REBUILD, NbBundle.getMessage(ActionMappings.class, "COM_ReBuild_project"));
         titles.put(ActionProvider.COMMAND_RUN, NbBundle.getMessage(ActionMappings.class, "COM_Run_project"));
-        titles.put(ActionProvider.COMMAND_RUN_SINGLE + ".main", NbBundle.getMessage(ActionMappings.class, "COM_Run_file_main"));
+        titles.put(ActionProviderImpl.COMMAND_RUN_MAIN, NbBundle.getMessage(ActionMappings.class, "COM_Run_file_main"));
         titles.put(ActionProvider.COMMAND_RUN_SINGLE + ".deploy", NbBundle.getMessage(ActionMappings.class, "COM_Run_file_deploy"));
         titles.put(ActionProvider.COMMAND_TEST, NbBundle.getMessage(ActionMappings.class, "COM_Test_project"));
         titles.put(ActionProvider.COMMAND_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Test_file"));
         titles.put(ActionProvider.COMMAND_PROFILE, NbBundle.getMessage(ActionMappings.class, "COM_Profile_project"));
-        titles.put(ActionProvider.COMMAND_PROFILE_SINGLE + ".main", NbBundle.getMessage(ActionMappings.class, "COM_Profile_file_main"));
+        titles.put(ActionProviderImpl.COMMAND_PROFILE_MAIN, NbBundle.getMessage(ActionMappings.class, "COM_Profile_file_main"));
         titles.put(ActionProvider.COMMAND_PROFILE_SINGLE + ".deploy", NbBundle.getMessage(ActionMappings.class, "COM_Profile_file_deploy"));
         titles.put(ActionProvider.COMMAND_PROFILE_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Profile_test"));
         titles.put("javadoc", NbBundle.getMessage(ActionMappings.class, "COM_Javadoc_project"));
         titles.put(ActionProviderImpl.BUILD_WITH_DEPENDENCIES, NbBundle.getMessage(ActionMappings.class, "COM_Build_WithDeps_project"));
+        titles.put(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Integration_Test_file"));
+        titles.put(ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Debug_Integration_test"));
 
         comConfiguration.setEditable(false);
         comConfiguration.setRenderer(new DefaultListCellRenderer() {
@@ -768,6 +770,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             addSingleAction(ActionProviderImpl.BUILD_WITH_DEPENDENCIES, model);
             addSingleAction(ActionProvider.COMMAND_TEST, model);
             addSingleAction(ActionProvider.COMMAND_TEST_SINGLE, model);
+            addSingleAction(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, model);
             addSingleAction(ActionProvider.COMMAND_RUN, model);
             addSingleAction(ActionProvider.COMMAND_RUN_SINGLE + ".main", model); //NOI18N
             if (isWar) {
@@ -779,6 +782,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 addSingleAction(ActionProvider.COMMAND_DEBUG_SINGLE + ".deploy", model); //NOI18N
             }
             addSingleAction(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, model);
+            addSingleAction(ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE, model);
             addSingleAction(ActionProvider.COMMAND_PROFILE, model);
             addSingleAction(ActionProvider.COMMAND_PROFILE_SINGLE + ".main", model); // NOI18N
             if (isWar) {

@@ -245,7 +245,7 @@ public interface ModelElementListener {
     public static class Support {
 
         private static void fireElementEvent(Element element, ModelElementListener listener, boolean add) {
-            Class clazz = element.getClass();
+            Class<?> clazz = element.getClass();
             Class[] interfaces = clazz.getInterfaces();
             for (Class in : interfaces) {
                 if (Element.class.isAssignableFrom(in)) {

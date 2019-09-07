@@ -22,16 +22,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
+import static junit.framework.TestCase.assertEquals;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.structure.api.DocumentModel.DocumentChange;
 import org.netbeans.modules.editor.structure.api.DocumentModel.DocumentModelTransactionCancelledException;
 import org.netbeans.modules.editor.structure.spi.DocumentModelProvider;
-import org.openide.util.Exceptions;
 
 
 /** DocumentModel unit tests
@@ -40,12 +39,13 @@ import org.openide.util.Exceptions;
  */
 public class DocumentModelTest extends NbTestCase {
     
-    DocumentModelProvider dmProvider = null;
+    private DocumentModelProvider dmProvider;
     
     public DocumentModelTest() {
         super("document-model-test");
     }
     
+    @Override
     public void setUp() throws BadLocationException {
         dmProvider = new FakeDocumentModelProvider();
     }
@@ -53,7 +53,7 @@ public class DocumentModelTest extends NbTestCase {
     //--------- test methods -----------
     public void testModelBasis() throws DocumentModelException, BadLocationException {
         //set the document content
-        Document doc = new BaseDocument(DefaultEditorKit.class, false);
+        Document doc = new BaseDocument(false, "text/plain");
         doc.insertString(0,"abcde|fgh|ij|k",null); //4 elements should be created
         
         DocumentModel model = new DocumentModel(doc, dmProvider);
@@ -88,27 +88,30 @@ public class DocumentModelTest extends NbTestCase {
     }
     
     public void testAddElementEvent() throws DocumentModelException, BadLocationException, InterruptedException {
-        Document doc = new BaseDocument(DefaultEditorKit.class, false);
+        Document doc = new BaseDocument(false, "text/plain");
         final DocumentModel model = new DocumentModel(doc, dmProvider);
         
         
         //listen to model
-        final Vector addedElements = new Vector();
+        final List<DocumentElement> addedElements = new CopyOnWriteArrayList<DocumentElement>();
         model.addDocumentModelListener(new DocumentModelListenerAdapter() {
+            @Override
             public void documentElementAdded(DocumentElement de) {
                 addedElements.add(de);
             }
         });
         
         //listen to element
-        final Vector addedElements2 = new Vector();
+        final List<DocumentElement> addedElements2 = new CopyOnWriteArrayList<DocumentElement>();
         model.getRootElement().addDocumentElementListener(new DocumentElementListenerAdapter() {
+            @Override
             public void elementAdded(DocumentElementEvent e) {
                 addedElements2.add(e.getChangedChild());
             }
         });
         
         model.addDocumentModelStateListener(new DocumentModelStateListenerAdapter() {
+            @Override
             public void updateFinished() {
                 assertEquals(4, addedElements.size());
                 assertEquals(4, addedElements2.size());
@@ -121,7 +124,7 @@ public class DocumentModelTest extends NbTestCase {
     }
     
      public void testMoreDocumentElementListeners() throws DocumentModelException, BadLocationException, InterruptedException {
-        Document doc = new BaseDocument(DefaultEditorKit.class, false);
+        Document doc = new BaseDocument(false, "text/plain");
         DocumentModel model = new DocumentModel(doc, dmProvider);
         
         DocumentElement root = model.getRootElement();
@@ -167,7 +170,7 @@ public class DocumentModelTest extends NbTestCase {
     }
     
     public void testRemoveElementEvent() throws DocumentModelException, BadLocationException, InterruptedException {
-        Document doc = new BaseDocument(DefaultEditorKit.class, false);
+        Document doc = new BaseDocument(false, "text/plain");
         doc.insertString(0,"abcde|fgh|ij|k",null); //4 elements should be created
         final DocumentModel model = new DocumentModel(doc, dmProvider);
         
@@ -175,22 +178,25 @@ public class DocumentModelTest extends NbTestCase {
         DocumentModelUtils.dumpElementStructure(model.getRootElement());
         
         //listen to model
-        final Vector removedElements = new Vector();
+        final List<DocumentElement> removedElements = new CopyOnWriteArrayList<DocumentElement>();
         model.addDocumentModelListener(new DocumentModelListenerAdapter() {
+            @Override
             public void documentElementRemoved(DocumentElement de) {
                 removedElements.add(de);
             }
         });
         
         //listen to element
-        final Vector removedElements2 = new Vector();
+        final List<DocumentElement> removedElements2 = new CopyOnWriteArrayList<DocumentElement>();
         model.getRootElement().addDocumentElementListener(new DocumentElementListenerAdapter() {
+            @Override
             public void elementRemoved(DocumentElementEvent e) {
                 removedElements2.add(e.getChangedChild());
             }
         });
         
         model.addDocumentModelStateListener(new DocumentModelStateListenerAdapter() {
+            @Override
             public void updateFinished() {
                 assertEquals(4,removedElements2.size());
                 assertEquals(4, removedElements.size());
@@ -203,27 +209,31 @@ public class DocumentModelTest extends NbTestCase {
     }
     
     public void testDocumentModelStateListener() throws DocumentModelException, BadLocationException {
-        Document doc = new BaseDocument(DefaultEditorKit.class, false);
+        Document doc = new BaseDocument(false, "text/plain");
         final DocumentModel model = new DocumentModel(doc, dmProvider);
         final State s = new State();
-        s.value = -1;
+        s.setValue(-1);
 
         model.addDocumentModelStateListener(new DocumentModelStateListener() {
+            @Override
             public void sourceChanged() {
-                assert s.value == -1;
-                s.value = 0;
+                assertEquals(-1, s.getValue());
+                s.setValue(0);
             }
+            @Override
             public void scanningStarted() {
-                assert s.value == 0;
-                s.value = 1;
+                assertEquals(0, s.getValue());
+                s.setValue(1);
             }
+            @Override
             public void updateStarted() {
-                assert s.value == 1;
-                s.value = 2;
+                assertEquals(1, s.getValue());
+                s.setValue(2);
             }
+            @Override
             public void updateFinished() {
-                assert s.value == 2;
-                s.value = 3;
+                assertEquals(2, s.getValue());
+                s.setValue(3);
                 synchronized (s) {
                     s.notifyAll();
                 }
@@ -241,8 +251,7 @@ public class DocumentModelTest extends NbTestCase {
             }
         }
         
-        assert s.value == 3;
-        
+        assertEquals(3, s.getValue());
     }
     
     /**
@@ -255,6 +264,7 @@ public class DocumentModelTest extends NbTestCase {
      */
     private static class FakeDocumentModelProvider implements DocumentModelProvider {
         
+        @Override
         public void updateModel(DocumentModel.DocumentModelModificationTransaction dtm,
                 DocumentModel model, DocumentChange[] changes)
                 throws DocumentModelException, DocumentModelTransactionCancelledException {
@@ -268,7 +278,8 @@ public class DocumentModelTest extends NbTestCase {
                         //create element if doesn't exist
                         DocumentElement test = model.getDocumentElement(lastElementEnd, i);
                         if( test == null) {
-                            foundElements.add(dtm.addDocumentElement("element"+(elCount++), FAKE_ELEMENT_TYPE, Collections.EMPTY_MAP, lastElementEnd, i));
+                            foundElements.add(dtm.addDocumentElement("element" + elCount, FAKE_ELEMENT_TYPE, Collections.EMPTY_MAP, lastElementEnd, i));
+                            elCount++;
                         } else {
                             foundElements.add(test);
                         }
@@ -295,47 +306,69 @@ public class DocumentModelTest extends NbTestCase {
     }
     
     private static class DocumentModelListenerAdapter implements DocumentModelListener {
+        @Override
         public void documentElementAdded(DocumentElement de) {
         }
+        @Override
         public void documentElementAttributesChanged(DocumentElement de) {
         }
+        @Override
         public void documentElementChanged(DocumentElement de) {
         }
+        @Override
         public void documentElementRemoved(DocumentElement de) {
         }
     }
     
     private static class DocumentElementListenerAdapter implements DocumentElementListener {
+        @Override
         public void attributesChanged(DocumentElementEvent e) {
         }
+        @Override
         public void childrenReordered(DocumentElementEvent e) {
         }
+        @Override
         public void contentChanged(DocumentElementEvent e) {
         }
+        @Override
         public void elementAdded(DocumentElementEvent e) {
         }
+        @Override
         public void elementRemoved(DocumentElementEvent e) {
         }
     }
     
     private static class DocumentModelStateListenerAdapter implements DocumentModelStateListener {
 
+        @Override
         public void sourceChanged() {
         }
 
+        @Override
         public void scanningStarted() {
         }
 
+        @Override
         public void updateStarted() {
         }
 
+        @Override
         public void updateFinished() {
         }
         
     }
     
     private static class State {
-        public int value;
+        
+        private int value;
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
     }
     
 }

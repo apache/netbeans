@@ -97,7 +97,7 @@ readClusters() {
   fi
   while read X; do
     if [ "$X" \!= "" ]; then
-      $echo "$progdir/../$X"
+      $echo "$installdir/$X"
     fi
   done
 }

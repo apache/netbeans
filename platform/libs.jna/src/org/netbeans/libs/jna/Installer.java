@@ -19,7 +19,6 @@
 package org.netbeans.libs.jna;
 
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Utilities;
 
 public class Installer extends ModuleInstall {
 

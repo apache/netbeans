@@ -90,7 +90,7 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
 
         public ULONG_PTR(long value) {
-                super(Pointer.SIZE, value);
+                super(Native.POINTER_SIZE, value);
         }
     }
 
@@ -114,7 +114,7 @@ public final class WindowsNotifier extends Notifier<Void> {
     }
 
     public static HANDLE INVALID_HANDLE_VALUE = new HANDLE(Pointer.createConstant(
-    		Pointer.SIZE == 8 ? -1 : 0xFFFFFFFFL));
+    		Native.POINTER_SIZE == 8 ? -1 : 0xFFFFFFFFL));
 
 
 
@@ -125,7 +125,7 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
 
         public HANDLEByReference(HANDLE h) {
-            super(Pointer.SIZE);
+            super(Native.POINTER_SIZE);
             setValue(h);
         }
 

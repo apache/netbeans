@@ -85,7 +85,7 @@ public interface GnomeKeyringLibrary extends Library {
     /*GnomeKeyringItemType*/int GNOME_KEYRING_ITEM_GENERIC_SECRET = 0;
 
     // GnomeKeyringAttributeList gnome_keyring_attribute_list_new() = g_array_new(FALSE, FALSE, sizeof(GnomeKeyringAttribute))
-    int GnomeKeyringAttribute_SIZE = Pointer.SIZE * 3; // conservatively: 2 pointers + 1 enum
+    int GnomeKeyringAttribute_SIZE = Native.POINTER_SIZE * 3; // conservatively: 2 pointers + 1 enum
 
     void gnome_keyring_attribute_list_append_string(
             /*GnomeKeyringAttributeList*/Pointer attributes,

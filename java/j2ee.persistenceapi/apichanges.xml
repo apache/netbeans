@@ -77,15 +77,15 @@ is the proper place.
 
     <!-- First, a list of API names you may use: -->
     <apidefs>
-        <apidef name="database_explorer_api">Java Persistence API Support API</apidef>
+        <apidef name="j2ee.persistence.api">Java Persistence API Support API</apidef>
         <!-- etc. -->
     </apidefs>
 
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change>
-            <api name="database_explorer_api"/>
+        <change name="initial-api">
+            <api name="j2ee.persistence.api"/>
             <summary>Initial version released</summary>
             <version major="1" minor="0"/>
             <date day="9" month="8" year="2006"/>
@@ -93,6 +93,21 @@ is the proper place.
             <compatibility addition="yes"/>
             <description>
                 First initial release of the Java Persistence API Support API.
+            </description>
+        </change>
+        <change id="public-api">
+            <api name="j2ee.persistence.api"/>
+            <summary>Making public API</summary>
+            <version major="1" minor="42" subminor="1"/>
+            <date day="03" month="11" year="2019"/>
+            <author login="jgauravgupta"/>
+            <compatibility addition="no" deletion="no" modification="no" binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    The packages <code>o.n.m.j2ee.persistence.api.*</code> and <code>o.n.m.j2ee.persistence.spi.*</code> changed to 
+                    public API from the friend API. They contained API and SPI classes which are used by Jeddict plugin to 
+                    locate and resolve persistence.xml and JPA entities.
+                </p>
             </description>
         </change>
     </changes>

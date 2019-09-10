@@ -14,6 +14,16 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-8BFEBCD4B39B87BBE788B4EECED068C8DBE75822 com.amazonaws:aws-java-sdk:1.2.1
-3D1D918F32709E33BA7DDB2C4E8D1C543EBE713E org.apache.httpcomponents:httpclient:4.1.1
-33FC26C02F8043AB0EDE19EADC8C9885386B255C org.apache.httpcomponents:httpcore:4.1
+8F212989F934A378A5A9CE6BA04EE7CD4786419A com.amazonaws:aws-java-sdk-elasticbeanstalk:1.11.569
+1F0F2303C07C939CBE67708B094A84CC3D96D0D8 com.amazonaws:aws-java-sdk-s3:1.11.569
+0B27C314669F67FB6696826CF35DB842DC1C4BE3 com.amazonaws:aws-java-sdk-core:1.11.569
+EC8C51965DF3D885FD86F1B10BB01DD9C5259D60 com.amazonaws:aws-java-sdk-kms:1.11.569
+68FABCF08493C3554BB22D845FB7E9E64F38D61A com.amazonaws:jmespath-java:1.11.569
+F5BFC718C95A7B1D3C371BB02A188A4DF18361A9 joda-time:joda-time:2.8.1
+1603DFD56EBCD583CCDF337B6C3984AC55D89E58 org.apache.httpcomponents:httpclient:4.5.5
+A86CE739E5A7175B4B234C290A00A5FDB80957A0 org.apache.httpcomponents:httpcore:4.4.9
+EE9DACEA7726E495F8352B81C12C23834FFBC564 software.amazon.ion:ion-java:1.0.2
+A0990E2E812AC6639B6CE955C91B13228500476E com.fasterxml.jackson.core:jackson-annotations:2.6.0
+81838E08D5E10E33CDEE7299F9682D836B78C63E com.fasterxml.jackson.core:jackson-core:2.6.7
+7E405A7EA9AA34C8477C10E1CCC023D931E1D76D com.fasterxml.jackson.core:jackson-databind:2.6.7.2
+BA9E74B11135B18248E960DF657A2B86AE77A079 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.6.7

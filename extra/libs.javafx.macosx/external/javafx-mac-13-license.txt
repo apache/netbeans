@@ -1,10 +1,10 @@
 Name: JavaFX
 Description: JavaFX API and Implementation
-Version: 11
+Version: 13
 License: GPL-2-CP
 Origin: https://github.com/javafxports/openjdk-jfx/
-Source: https://github.com/javafxports/openjdk-jfx/blob/2b92eb2cd7d5676411276c6734369cc19dff8c57/LICENSE
-Files: javafx-base-11-linux.jar, javafx-controls-11-linux.jar, javafx-graphics-11-linux.jar, javafx-media-11-linux.jar, javafx-swing-11-linux.jar, javafx-web-11-linux.jar
+Source: https://github.com/javafxports/openjdk-jfx/commit/4d761fef36644d007c595fdc21f3d36b9709a672
+Files: javafx-base-13-mac.jar, javafx-controls-13-mac.jar, javafx-graphics-13-mac.jar, javafx-media-13-mac.jar, javafx-swing-13-mac.jar, javafx-web-13-mac.jar
 Type: compile-time,optional
 Comment: Used at compile. Possibly downloaded later.
 

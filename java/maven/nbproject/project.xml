@@ -583,51 +583,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.javeleon.netbeans</friend>
-                <!-- sven reimers -->
-                <friend>org.nbheaven.sqe.core.maven</friend>
-                <friend>org.nbheaven.sqe.core.maven3</friend>
-                <friend>org.netbeans.modules.apisupport.installer.maven</friend>
-                <friend>org.netbeans.modules.groovy.support</friend>
-                <friend>org.netbeans.modules.hudson.maven</friend>
-                <friend>org.netbeans.modules.jbi.fuji.support</friend>
-                <friend>org.netbeans.modules.kenai.maven</friend>
-                <friend>org.netbeans.api.maven</friend>
-                <friend>org.netbeans.modules.maven.apisupport</friend>
-                <friend>org.netbeans.modules.maven.checkstyle</friend>
-                <friend>org.netbeans.modules.maven.coverage</friend>
-                <friend>org.netbeans.modules.maven.grammar</friend>
-                <friend>org.netbeans.modules.maven.graph</friend>
-                <friend>org.netbeans.modules.maven.groovy</friend>
-                <friend>org.netbeans.modules.maven.hints</friend>
-                <friend>org.netbeans.modules.maven.htmlui</friend>
-                <friend>org.netbeans.modules.maven.j2ee</friend>
-                <friend>org.netbeans.modules.maven.jaxws</friend>
-                <friend>org.netbeans.modules.maven.junit</friend>
-                <friend>org.netbeans.modules.maven.osgi</friend>
-                <friend>org.netbeans.modules.maven.persistence</friend>
-                <friend>org.netbeans.modules.maven.profiler</friend>
-                <friend>org.netbeans.modules.maven.refactoring</friend>
-                <friend>org.netbeans.modules.maven.repository</friend>
-                <friend>org.netbeans.modules.maven.samples</friend>
-                <friend>org.netbeans.modules.maven.spring</friend>
-                <friend>org.netbeans.modules.selenium.maven</friend>
-                <friend>org.netbeans.modules.selenium2.maven</friend>
-                <friend>org.netbeans.modules.ko4j.debugging</friend>
-                <friend>org.netbeans.modules.testng.maven</friend>
-                <!-- radim kubacki -->
-                <friend>org.netbeans.modules.android.maven</friend>
-                <!-- dcaoyuan@gmail.com -->
-                <friend>org.netbeans.modules.scala.maven</friend>
-                <!-- danis@netbeans.org -->
-                <friend>org.vaadin.netbeans.maven</friend>
-                <friend>org.netbeans.modules.payara.micro</friend>
-                <!-- NetBeans support for Google App Engine -->
-                <friend>org.netbeans.modules.j2ee.appengine</friend>
-                <friend>org.netbeans.modules.maven.util</friend>
-                <!-- JShel support -->
-                <friend>org.netbeans.modules.jshell.support</friend>
+            <public-packages>
                 <package>org.netbeans.modules.maven.api</package>
                 <package>org.netbeans.modules.maven.api.archetype</package>
                 <package>org.netbeans.modules.maven.api.classpath</package>
@@ -649,7 +605,7 @@
                 <package>org.netbeans.modules.maven.spi.newproject</package>
                 <package>org.netbeans.modules.maven.spi.nodes</package>
                 <package>org.netbeans.modules.maven.spi.queries</package>
-            </friend-packages>
+            </public-packages>
             <extra-compilation-unit>
                 <package-root>mavensrc</package-root>
                 <classpath>${antsrc.cp}</classpath>

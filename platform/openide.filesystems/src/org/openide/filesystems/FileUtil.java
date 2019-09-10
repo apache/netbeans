@@ -1047,11 +1047,7 @@ public final class FileUtil extends Object {
         //
         // apply all extended attributes
         //
-        Iterator it = attributes.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-
+        for (Map.Entry entry : attributes.entrySet()) { 
             String fileName = (String) entry.getKey();
             int last = fileName.lastIndexOf('/');
             String dirName;

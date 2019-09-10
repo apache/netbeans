@@ -149,8 +149,7 @@ public class DataObjectSyncSupport extends SyncSupport implements Synchronizator
             // check whether tree representation is loaded
             
             synchronized (reps) {
-                for (Iterator it = reps.iterator(); it.hasNext();) {
-                    Representation next = (Representation) it.next();
+                for (Representation next : reps) {
                     if (next.level() > 1) {
                         modelLoaded = true;
                     }                               

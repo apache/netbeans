@@ -116,10 +116,4 @@ public final class MockInstanceImplementation implements ServerInstanceImplement
     public ServerInstance getServerInstance() {
         return serverInstance;
     }
-
-    @Override
-    public String getProperty(String key) {
-        return serverInstance.getProperty(key);
-    }
-
 }

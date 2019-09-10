@@ -1400,4 +1400,60 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_BEFORE_METHOD_DECL_PAREN, true);
         reformatFileContents("testfiles/formatting/spaces/spaceBeforeArrowFunctionParen01.php", options);
     }
+
+    // NETBEANS-2971
+    public void testSpacesWithinLambdaFunctionDeclParen01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2971_01.php", options);
+    }
+
+    public void testSpacesWithinLambdaFunctionDeclParen02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2971_02.php", options);
+    }
+
+    // NETBEANS-2994
+    public void testSpacesAroundUnaryOperator_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNARY_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2994_01.php", options);
+    }
+
+    public void testSpacesAroundUnaryOperator_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNARY_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2994_02.php", options);
+    }
+
+    // NETBEANS-2149
+    public void testSpacesAroundBinaryOperatorsOnly() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, true);
+        options.put(FmtOptions.SPACE_AROUND_ASSIGN_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2149_01.php", options);
+    }
+
+    public void testSpacesAroundAssignmentOperatorsOnly() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, false);
+        options.put(FmtOptions.SPACE_AROUND_ASSIGN_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2149_02.php", options);
+    }
+
+    public void testSpacesAroundAssignmentAndBinaryOperators() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, true);
+        options.put(FmtOptions.SPACE_AROUND_ASSIGN_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2149_03.php", options);
+    }
+
+    public void testSpacesWithoutAroundAssignmentAndBinaryOperators() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, false);
+        options.put(FmtOptions.SPACE_AROUND_ASSIGN_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/netbeans2149_04.php", options);
+    }
+
 }

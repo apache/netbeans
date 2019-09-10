@@ -50,8 +50,8 @@ public class SampleManagerTest extends TestBase {
     public void setUp() throws Exception {
         super.setUp();
         DatabaseConnection dbconn = getDatabaseConnection(true);
-            SQLExecutor.execute(dbconn, "DROP TABLE triptype");
-        SQLExecutor.execute(dbconn, "DROP TABLE customer");
+        SQLExecutor.execute(dbconn, "DROP TABLE IF EXISTS triptype");
+        SQLExecutor.execute(dbconn, "DROP TABLE IF EXISTS customer");
         setUpProviders();
     }
 
@@ -173,7 +173,7 @@ public class SampleManagerTest extends TestBase {
 
         public void create(String sampleName, DatabaseConnection dbconn) throws DatabaseException {
             if (sampleName.equals(SAMPLE_NAME)) {
-                String sql = "DROP TABLE triptype; ";
+                String sql = "DROP TABLE IF EXISTS triptype; ";
                 SQLExecutor.execute(dbconn, sql);
 
                 sql = "create table triptype ( " +
@@ -219,7 +219,7 @@ public class SampleManagerTest extends TestBase {
                 throw new DatabaseException("Sample not supported");
             }
             
-            SQLExecutor.execute(dbconn, "DROP TABLE triptype;");
+            SQLExecutor.execute(dbconn, "DROP TABLE IF EXISTS triptype;");
             
             String sql = "CREATE TABLE customer (" +
                    "customer_id INTEGER PRIMARY KEY NOT NULL," +

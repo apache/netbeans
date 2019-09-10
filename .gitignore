@@ -35,6 +35,8 @@
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
 /harness/apisupport.harness/windows-launcher-src/*.exe
 /harness/apisupport.harness/windows-launcher-src/*.res
+/ide/versioning/test/qa-functional/data/tck.properties
+/ide/versioning.core/test/qa-functional/data/tck.properties
 /nb/ide.launcher/windows/*.exe
 /nb/ide.launcher/windows/*.res
 /platform/o.n.bootstrap/launcher/windows/*.dll
@@ -50,6 +52,9 @@
 /platform/o.n.bootstrap/launcher/windows/nbproject/Makefile-*.mk
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
 /platform/o.n.bootstrap/launcher/windows/nbproject/private/
+
+# Database logs
+derby.log
 
 
 # OS generated files #

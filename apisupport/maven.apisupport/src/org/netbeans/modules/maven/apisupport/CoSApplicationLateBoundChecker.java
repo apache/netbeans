@@ -86,7 +86,7 @@ public class CoSApplicationLateBoundChecker implements LateBoundPrerequisitesChe
         if (!nonModules.isEmpty()) {
             for (DependencyProjectsProvider.Pair pair : nonModules) {
                 //TODO what to do for OSGI (netbeans.patches. doesn't work here) and for non module jars (find where they belong?)
-                List<String> trail = new ArrayList(pair.getArtifact().getDependencyTrail());
+                List<String> trail = new ArrayList<>(pair.getArtifact().getDependencyTrail());
                 Collections.reverse(trail); //we go from the artifact itself up, first module project artifact is our boy..
                 trail.remove(0); //first one is the actual artifact.
                 for (String s : trail) {

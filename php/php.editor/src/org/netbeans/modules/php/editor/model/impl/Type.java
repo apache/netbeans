@@ -80,6 +80,17 @@ public final class Type {
     }
 
     /**
+     * Check whether propety type is invalid ({@code null}, {@code void}).
+     *
+     * @param typeName type name
+     * @return {@code true} if type is invalid, otherwise {@code false}
+     */
+    public static boolean isInvalidPropertyType(String typeName) {
+        return VOID.equals(typeName)
+                || NULL.equals(typeName);
+    }
+
+    /**
      * Get valid types for the "editor". It means all the types
      * that are valid to be used in source code (like "int" for PHP 7 etc.).
      * <p>

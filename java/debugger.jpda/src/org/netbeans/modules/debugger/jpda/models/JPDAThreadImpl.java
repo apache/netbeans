@@ -2096,7 +2096,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
             if (lockerThreadsList == null) {
                 return ;//false;
             }
-            blockingThreads = new ArrayList(lockerThreadsList);
+            blockingThreads = new ArrayList<>(lockerThreadsList);
         }
         List<ThreadReference> resumedThreads = new ArrayList<ThreadReference>(blockingThreads.size());
         for (JPDAThread t : blockingThreads) {

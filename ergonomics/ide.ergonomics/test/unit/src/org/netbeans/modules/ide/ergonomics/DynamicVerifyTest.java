@@ -98,17 +98,8 @@ public class DynamicVerifyTest extends NbTestCase {
     }
 
     public void testNoUserDefinedFeaturesInStandardBuild() throws Exception {
-        // remove the javascript parser from the checklist: it has to be user-installed
-        // through AU when HTML5 is enabled
-        FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider() {
-            @Override
-            protected boolean acceptsModule(ModuleInfo mi) {
-                if (!super.acceptsModule(mi)) {
-                    return false;
-                }
-                return !"org.netbeans.libs.oracle.jsparser".equals(mi.getCodeNameBase());
-            }
-        };
+        FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider();
+
         Map<String, UpdateItem> items = instance.getUpdateItems();
         assertNull("No user installed modules should be in standard build. If this happens,\n" +
                 "like in case of http://openide.netbeans.org/issues/show_bug.cgi?id=174052\n" +

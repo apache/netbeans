@@ -88,8 +88,8 @@ public class DriverListUtilTest extends TestCase {
      * @throws MalformedURLException
      */
     public void testGetJdbcUrls() throws MalformedURLException {
-        JDBCDriver driver = JDBCDriver.create("Mysql 1", "Mysql 1", "com.mysql.jdbc.Driver", new URL[] {new URL("file://demo1")});
-        JDBCDriver driver2 = JDBCDriver.create("Mysql 2", "Mysql 2", "com.mysql.jdbc.Driver", new URL[] {new URL("file://demo1")});
+        JDBCDriver driver = JDBCDriver.create("Mysql 1", "Mysql 1", "com.mysql.cj.jdbc.Driver", new URL[] {new URL("file://demo1")});
+        JDBCDriver driver2 = JDBCDriver.create("Mysql 2", "Mysql 2", "com.mysql.cj.jdbc.Driver", new URL[] {new URL("file://demo1")});
         assertEquals(1, DriverListUtil.getJdbcUrls(driver).size());
         assertEquals(1, DriverListUtil.getJdbcUrls(driver2).size());
         assertEquals(1, DriverListUtil.getJdbcUrls(driver).size());
@@ -190,7 +190,7 @@ public class DriverListUtilTest extends TestCase {
 
     public void testMySQL() throws Exception {
         ArrayList<String> requiredProps = new ArrayList<String>();
-        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MySQL"), null, "com.mysql.jdbc.Driver", 
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MySQL"), null, "com.mysql.cj.jdbc.Driver", 
                 "jdbc:mysql://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]",
                 STD_SUPPORTED_PROPS, requiredProps);
         

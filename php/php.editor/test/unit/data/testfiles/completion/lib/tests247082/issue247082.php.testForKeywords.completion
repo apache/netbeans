@@ -3,7 +3,6 @@ echo |self::MY_CONST . PHP_EOL;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      A                               [PUBLIC]   issue247082.php
 CLASS      ParentA                         [PUBLIC]   issue247082.php
-VARIABLE   ? $this                         [PUBLIC]   issue247082.php
 VARIABLE   ? $val                          [PUBLIC]   issue247082.php
 KEYWORD    A $this->                                  null
 KEYWORD    parent::                                   null

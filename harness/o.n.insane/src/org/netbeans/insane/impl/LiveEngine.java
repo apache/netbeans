@@ -130,6 +130,8 @@ public class LiveEngine implements ObjectMap, Visitor {
         Object oo = objects.get(to);
         if (oo instanceof Object[]) {
             return Arrays.asList((Object[])oo).iterator();
+        } else if (oo == null) {
+            return Collections.emptyIterator();
         } else {
             return Collections.singleton(oo).iterator();
         }

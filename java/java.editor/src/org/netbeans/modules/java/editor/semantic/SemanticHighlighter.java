@@ -43,6 +43,7 @@ import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.Er
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.openide.loaders.DataObject;
+import org.openide.util.Pair;
 
 /**
  *
@@ -62,13 +63,12 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
         
         public void setErrors(Document doc, List<ErrorDescription> errors, List<TreePathHandle> allUnusedImports) {}
         
-        public void setHighlights(final Document doc, final Collection<int[]> highlights, Map<int[], String> preText) {
+        public void setHighlights(final Document doc, final Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     OffsetsBag bag = new OffsetsBag(doc);
-                    Coloring unused = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.UNUSED);
-                    for (int[] highlight : highlights) {
-                        bag.addHighlight(highlight[0], highlight[1], ColoringManager.getColoringImpl(unused));
+                    for (Pair<int[], Coloring> highlight : highlights) {
+                        bag.addHighlight(highlight.first()[0], highlight.first()[1], ColoringManager.getColoringImpl(highlight.second()));
                     }
                     getImportHighlightsBag(doc).setHighlights(bag);
                     

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -33,6 +34,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.ElementQueryFactory;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -46,11 +48,10 @@ import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.codegen.CGSGenerator.GenWay;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
+import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
-import org.netbeans.modules.php.editor.NavUtils;
-import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
@@ -61,6 +62,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
@@ -75,6 +77,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
+ * Constructor Getter Setter Info.
  *
  * @author Petr Pisl
  */
@@ -90,6 +93,7 @@ public final class CGSInfo {
     private final List<Property> possibleGettersSetters;
     private final List<MethodProperty> possibleMethods;
     private final JTextComponent textComp;
+    private final PhpVersion phpVersion;
     /**
      * how to generate  getters and setters method name
      */
@@ -97,10 +101,9 @@ public final class CGSInfo {
     private boolean generateDoc;
     private boolean fluentSetter;
     private boolean isPublicModifier;
-    private PhpVersion phpVersion;
 
 
-    private CGSInfo(JTextComponent textComp) {
+    private CGSInfo(JTextComponent textComp, PhpVersion phpVersion) {
         properties = new ArrayList<>();
         instanceProperties = new ArrayList<>();
         possibleGetters = new ArrayList<>();
@@ -114,10 +117,21 @@ public final class CGSInfo {
         fluentSetter = false;
         isPublicModifier = false;
         this.howToGenerate = CGSGenerator.GenWay.AS_JAVA;
+        this.phpVersion = phpVersion != null ? phpVersion : PhpVersion.getDefault();
     }
 
     public static CGSInfo getCGSInfo(JTextComponent textComp) {
-        CGSInfo info = new CGSInfo(textComp);
+        PhpVersion phpVersion = null;
+        FileObject file = NavUtils.getFile(textComp.getDocument());
+        if (file != null) {
+            phpVersion = CodeUtils.getPhpVersion(file);
+        }
+        return getCGSInfo(textComp, phpVersion);
+    }
+
+    // for unit tests
+    static CGSInfo getCGSInfo(JTextComponent textComp, PhpVersion phpVersion) {
+        CGSInfo info = new CGSInfo(textComp, phpVersion);
         info.findPropertyInScope();
         return info;
     }
@@ -194,11 +208,6 @@ public final class CGSInfo {
         return phpVersion;
     }
 
-    // for unit tests
-    void setPhpVersion(PhpVersion phpVersion) {
-        this.phpVersion = phpVersion;
-    }
-
     public TypeNameResolver createTypeNameResolver(MethodElement method) {
         TypeNameResolver result;
         if (method.getParameters().isEmpty()) {
@@ -222,7 +231,6 @@ public final class CGSInfo {
         if (file == null) {
             return;
         }
-        phpVersion = CodeUtils.getPhpVersion(file);
         try {
             ParserManager.parse(Collections.singleton(Source.create(textComp.getDocument())), new UserTask() {
 
@@ -337,13 +345,34 @@ public final class CGSInfo {
                 Variable variable = singleFieldDeclaration.getName();
                 if (variable != null && variable.getName() instanceof Identifier) {
                     String name = ((Identifier) variable.getName()).getName();
-                    Property property = new Property(name, node.getModifier(), getPropertyType(singleFieldDeclaration));
+                    String type = getPropertyType(node, singleFieldDeclaration);
+                    Property property = new Property(name, node.getModifier(), type);
                     if (!BodyDeclaration.Modifier.isStatic(node.getModifier())) {
                         getInstanceProperties().add(property);
                     }
                     getProperties().add(property);
                 }
             }
+        }
+
+        private String getPropertyType(FieldsDeclaration fieldsDeclaration, SingleFieldDeclaration singleFieldDeclaration) {
+            String type = ""; // NOI18N
+            if (fieldsDeclaration.getFieldType() == null || !phpVersion.hasPropertyTypes()) {
+                type = getPropertyType(singleFieldDeclaration);
+            } else {
+                // PHP 7.4 or newer
+                QualifiedName qualifiedName = QualifiedName.create(fieldsDeclaration.getFieldType());
+                if (qualifiedName != null) {
+                    type = qualifiedName.toString();
+                    if (fieldsDeclaration.getFieldType() instanceof NullableType) {
+                        type = CodeUtils.NULLABLE_TYPE_PREFIX + type;
+                    }
+                }
+                assert !type.isEmpty() : "couldn't get the qualified name from the field type(" + fieldsDeclaration.getFieldType() + ")"; // NOI18N
+                // if type is empty, check QualifiedName.create method (and fix it if posiible)
+                // or get type name using another way
+            }
+            return type;
         }
 
         private String getPropertyType(final ASTNode node) {
@@ -369,15 +398,38 @@ public final class CGSInfo {
         }
 
         private String getFirstTypeFromTag(final PHPDocTypeTag typeTag) {
+            boolean canBeNull = canBeNull(typeTag);
             String result = ""; //NOI18N
             for (PHPDocTypeNode typeNode : typeTag.getTypes()) {
                 String type = typeNode.getValue();
-                if (!Type.isPrimitive(type) && !VariousUtils.isSpecialClassName(type)) {
+                if (phpVersion.hasScalarAndReturnTypes()
+                        && !VariousUtils.isSpecialClassName(type)
+                        && !Type.isInvalidPropertyType(type)) {
+                    result = typeNode.isArray() ? Type.ARRAY : type;
+                    if (canBeNull && phpVersion.hasNullableTypes()) {
+                        result = CodeUtils.NULLABLE_TYPE_PREFIX + result;
+                    }
+                    break;
+                } else if (!Type.isPrimitive(type) && !VariousUtils.isSpecialClassName(type)) {
                     result = typeNode.isArray() ? Type.ARRAY : type;
                     break;
                 }
             }
             return result;
+        }
+
+        private boolean canBeNull(final PHPDocTypeTag typeTag) {
+            boolean canBeNull = false;
+            if (typeTag.getTypes().size() > 1) {
+                for (PHPDocTypeNode typeNode : typeTag.getTypes()) {
+                    String type = typeNode.getValue().toLowerCase(new Locale("en_US")); // NOI18N
+                    if (type.equals(Type.NULL)) {
+                        canBeNull = true;
+                        break;
+                    }
+                }
+            }
+            return canBeNull;
         }
 
         @Override

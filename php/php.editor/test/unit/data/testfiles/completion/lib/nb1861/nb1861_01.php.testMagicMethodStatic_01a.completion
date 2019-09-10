@@ -1,0 +1,8 @@
+Code completion result for source line:
+self::|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     staticTest()                    [STATIC]   Example
+METHOD     staticTestNullable(?string $pa  [STATIC]   Example
+METHOD     staticTestType(Test $param1, $  [STATIC]   Example
+METHOD     staticTestVoid(Test $test)      [STATIC]   Example
+CONSTANT   class \Example                  [PUBLIC]   Magic Constant

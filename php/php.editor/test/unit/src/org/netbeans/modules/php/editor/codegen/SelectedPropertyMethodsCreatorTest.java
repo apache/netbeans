@@ -54,13 +54,17 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
     }
 
     private CGSInfo getCgsInfo(String caretLine) {
+        return getCgsInfo(caretLine, PhpVersion.PHP_56);
+    }
+
+    private CGSInfo getCgsInfo(String caretLine, PhpVersion phpVersion) {
         assert caretLine != null;
         FileObject testFile = getTestFile(getTestPath());
         Source testSource = getTestSource(testFile);
         JTextArea ta = new JTextArea(testSource.getDocument(false));
         int caretOffset = getCaretOffset(testSource.createSnapshot().getText().toString(), caretLine);
         ta.setCaretPosition(caretOffset);
-        return CGSInfo.getCGSInfo(ta);
+        return CGSInfo.getCGSInfo(ta, phpVersion);
     }
 
     private <T extends Property> List<T> selectAllProperties(List<T> properties) {
@@ -157,87 +161,75 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
     }
 
     public void testInstanceImplementMethod_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_70);
+        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^", PhpVersion.PHP_70);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testInstanceImplementMethod_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_55);
+        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^", PhpVersion.PHP_55);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     // #270237
     public void testInstanceImplementMethodWithNullableType_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_71);
+        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^", PhpVersion.PHP_71);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testInstanceImplementMethodWithNullableType_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_55);
+        CGSInfo cgsInfo = getCgsInfo("class Bar implements Foo {^", PhpVersion.PHP_55);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testInstanceOverrideMethod_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_70);
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_70);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testInstanceOverrideMethod_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_56);
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_56);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     // #270237
     public void testInstanceOverrideMethodWithNullableType_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_71);
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_71);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testInstanceOverrideMethodWithNullableType_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_56);
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_56);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
     public void testGetterWithType_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_70);
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithType_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_55);
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_55);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_01() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_70);
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_02() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
-        cgsInfo.setPhpVersion(PhpVersion.PHP_56);
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_56);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
@@ -250,9 +242,103 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
 
     // PHP 7.4
     public void testSerializeUnserializeMagicMethod() throws Exception {
-        CGSInfo cgsInfo = getCgsInfo("class Foo {^");
+        CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_74);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "__serialize", "__unserialize"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
+    // NETBEANS-53
+    // getter
+    public void testTypedPropertiesGetter_PHP56() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_56);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesGetter_PHP70() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesGetter_PHP71() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesGetter_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
+    }
+
+    // setter
+    public void testTypedPropertiesSetter_PHP56() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_56);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP70() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP70Fluent() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(true);
+        cgsInfo.setFluentSetter(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP71() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP71Fluent() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
+        cgsInfo.setPublicModifier(true);
+        cgsInfo.setFluentSetter(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    // constructor
+    public void testTypedPropertiesConstructor_PHP56() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_56);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    public void testTypedPropertiesConstructor_PHP70() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    public void testTypedPropertiesConstructor_PHP71() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_71);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    public void testTypedPropertiesConstructor_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
     }
 
 }

@@ -1326,10 +1326,12 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         while (ts.moveNext() && ts.offset() < node.getRight().getStartOffset()
-                && ts.token().id() != PHPTokenId.PHP_TOKEN && ts.token().id() != PHPTokenId.PHP_OPERATOR
+                && ts.token().id() != PHPTokenId.PHP_TOKEN && !LexUtilities.isPHPOperator(ts.token().id())
                 && lastIndex < ts.index()) {
             addFormatToken(formatTokens);
         }
+        // don't add to AND, OR, and XOR (PHPTokenId.PHP_TEXTUAL_OPERATOR)
+        // see https://netbeans.org/bugzilla/show_bug.cgi?id=240274
         if (ts.token().id() == PHPTokenId.PHP_TOKEN || ts.token().id() == PHPTokenId.PHP_OPERATOR) {
             formatTokens.add(new FormatToken(whitespaceBefore, ts.offset()));
             addFormatToken(formatTokens);
@@ -1943,6 +1945,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_METHOD_DEC_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof LambdaFunctionDeclaration) {
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
                     } else if (parent instanceof FunctionInvocation || parent instanceof MethodInvocation || parent instanceof ClassInstanceCreation) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_METHOD_CALL_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -1978,7 +1983,8 @@ public class FormatVisitor extends DefaultVisitor {
                     if (isAnonymousClass(parent)) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_ANONYMOUS_CLASS_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
-                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration || parent instanceof ArrowFunctionDeclaration) {
+                    } else if (parent instanceof FunctionDeclaration || parent instanceof MethodDeclaration
+                            || parent instanceof LambdaFunctionDeclaration || parent instanceof ArrowFunctionDeclaration) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof FunctionInvocation || parent instanceof MethodInvocation || parent instanceof ClassInstanceCreation) {
@@ -2052,7 +2058,8 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_DECLARE_EQUAL, ts.offset() + ts.token().length()));
                     break;
                 }
-                if (TokenUtilities.endsWith(txt2, "=")) { // NOI18N
+                if (!TokenUtilities.startsWith(txt2, "==") // NOI18N NETBEANS-2149
+                        && TokenUtilities.endsWith(txt2, "=")) { // NOI18N
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ASSIGN_OP, ts.offset()));
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_ASSIGN_OP, ts.offset() + ts.token().length()));
@@ -2077,10 +2084,14 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_KEY_VALUE_OP, ts.offset() + ts.token().length()));
                 } else if (TokenUtilities.textEquals(txt2, "++") // NOI18N
                         || TokenUtilities.textEquals(txt2, "--")) { // NOI18N
-                    if (ts.movePrevious()) {
-                        if (ts.token().id() == PHPTokenId.PHP_VARIABLE || ts.token().id() == PHPTokenId.PHP_STRING) {
+                    Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.PHP_OPERATOR, PHPTokenId.WHITESPACE));
+                    if (previousToken != null) {
+                        if (previousToken.id() == PHPTokenId.PHP_VARIABLE
+                                || previousToken.id() == PHPTokenId.PHP_STRING
+                                || (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.equals(previousToken.text(), "]"))) { // NOI18N
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNARY_OP, ts.offset() + ts.token().length()));
-                        } else if (ts.token().id() != PHPTokenId.WHITESPACE) {
+                        } else if (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.equals(previousToken.text(), ".")) { // NOI18N
+                            // see PHPFormatterBrokenTest.testIssue197074_02
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE, ts.offset() + ts.token().length()));
                         }
                         ts.move(origOffset);
@@ -2558,4 +2569,5 @@ public class FormatVisitor extends DefaultVisitor {
     private static boolean isAnonymousClass(ASTNode astNode) {
         return astNode instanceof ClassInstanceCreation && ((ClassInstanceCreation) astNode).isAnonymous();
     }
+
 }

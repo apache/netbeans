@@ -80,7 +80,7 @@ public class SemanticHighlightTest extends JavaEditorTestCase {
 
     public void dumpColorsForDocument(StyledDocument doc) {
         try {
-            Class clazz = Class.forName("org.netbeans.modules.java.editor.semantic.LexerBasedHighlightLayer");
+            Class<?> clazz = Class.forName("org.netbeans.modules.java.editor.semantic.LexerBasedHighlightLayer");
             assertNotNull("Color layer class was not found");
             Method method = clazz.getMethod("getLayer", Class.class, Document.class);
             Object invoke = method.invoke(null, Class.forName("org.netbeans.modules.java.editor.semantic.SemanticHighlighter"), doc);

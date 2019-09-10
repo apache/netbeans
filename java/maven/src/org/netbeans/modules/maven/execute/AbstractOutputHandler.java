@@ -108,8 +108,8 @@ public abstract class AbstractOutputHandler {
             case ActionProvider.COMMAND_RUN_SINGLE:
             case ActionProvider.COMMAND_DEBUG:
             case ActionProvider.COMMAND_DEBUG_SINGLE:
-            case ActionProviderImpl.DEBUG_MAIN:
-            case ActionProviderImpl.RUN_MAIN:
+            case ActionProviderImpl.COMMAND_DEBUG_MAIN:
+            case ActionProviderImpl.COMMAND_RUN_MAIN:
                 return true;
             default:
                 return false;

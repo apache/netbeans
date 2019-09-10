@@ -592,6 +592,7 @@
                 <package>org.netbeans.modules.maven.api.execute</package>
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
+                <package>org.netbeans.modules.maven.configurations</package>
                 <package>org.netbeans.modules.maven.execute</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>

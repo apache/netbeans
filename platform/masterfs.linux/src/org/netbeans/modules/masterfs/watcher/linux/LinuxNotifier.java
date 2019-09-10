@@ -45,7 +45,7 @@ public final class LinuxNotifier extends Notifier<LinuxNotifier.LKey> {
 	public int inotify_init();
 	public int inotify_init1(int flags);
 	public int close(int fd);
-    public int read(int fd, ByteBuffer buff, int count);
+        public int read(int fd, ByteBuffer buff, int count);
 	public int inotify_add_watch(int fd, String pathname, int mask);
 	public int inotify_rm_watch(int fd, int wd);
 
@@ -73,23 +73,21 @@ public final class LinuxNotifier extends Notifier<LinuxNotifier.LKey> {
     }
 
     final InotifyImpl IMPL;
-    int fd;
-    private ByteBuffer buff = ByteBuffer.allocateDirect(4096);
+    private int fd;
+    private final ByteBuffer buff = ByteBuffer.allocateDirect(4096);
 
     // An array would serve nearly as well
-    private Map<Integer, LKey> map = new HashMap<Integer, LKey>();
+    private final Map<Integer, LKey> map = new HashMap<Integer, LKey>();
 
     public LinuxNotifier() {
-        IMPL = (InotifyImpl) Native.loadLibrary("c", InotifyImpl.class);
+        IMPL = (InotifyImpl) Native.load("c", InotifyImpl.class);
     }
 
     private String getString(int maxLen) {
         if (maxLen < 1) return null; // no name field
-        int stop = maxLen - 1;
         byte[] temp = new byte[maxLen];
         buff.get(temp);
-        while (temp[stop] == 0) stop--;
-        return new String(temp, 0, stop+1);
+        return Native.toString(temp);
     }
 
     @Override public String nextEvent() throws IOException {
@@ -149,7 +147,6 @@ public final class LinuxNotifier extends Notifier<LinuxNotifier.LKey> {
         
         return key.path;
     }
-
 
     static class LKey {
         int id;

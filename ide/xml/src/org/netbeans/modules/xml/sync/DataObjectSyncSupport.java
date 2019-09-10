@@ -115,10 +115,9 @@ public class DataObjectSyncSupport extends SyncSupport implements Synchronizator
 
         if (rep.represents(Document.class)) {
             synchronized (reps) {
-                for (Iterator it = reps.iterator(); it.hasNext();) {
-                    Representation next = (Representation) it.next();
+                for (Representation next : reps) {
                     if (next.represents(FileObject.class)) {
-                        it.remove();
+                        reps.remove(next);
                     }                               
                 }
             }
@@ -152,7 +151,7 @@ public class DataObjectSyncSupport extends SyncSupport implements Synchronizator
                 for (Representation next : reps) {
                     if (next.level() > 1) {
                         modelLoaded = true;
-                    }                               
+                    }
                 }
 
                 if (modelLoaded == false) {

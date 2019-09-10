@@ -213,9 +213,7 @@ public final class MethodModelSupport {
                     annotationTree = genUtils.createAnnotation(annotation.getType());
                 } else {
                     List<ExpressionTree> annotationArgs = new ArrayList<ExpressionTree>();
-                    Iterator it = annotation.getArguments().entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pairs = (Map.Entry)it.next();
+                    for (Map.Entry pairs : annotation.getArguments().entrySet()) {
                         annotationArgs.add(genUtils.createAnnotationArgument((String) pairs.getKey(),pairs.getValue()));
                     }
                     annotationTree = genUtils.createAnnotation(annotation.getType(), annotationArgs);

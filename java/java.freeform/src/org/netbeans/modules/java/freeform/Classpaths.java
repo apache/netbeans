@@ -172,9 +172,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
             classpaths.put(type, classpathsByType);
         }
         // Check for cached value.
-        Iterator it = classpathsByType.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry)it.next();
+        for (Map.Entry entry : classpathsByType.entrySet()) {
             FileObject root = (FileObject)entry.getKey();
             if (root == file || FileUtil.isParentOf(root, file)) {
                 // Already have it.
@@ -187,20 +185,16 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
             return null;
         }
         List<Element> compilationUnits = XMLUtil.findSubElements(java);
-        it = compilationUnits.iterator();
-        while (it.hasNext()) {
-            Element compilationUnitEl = (Element)it.next();
+
+        for (Element compilationUnitEl : compilationUnits) {
             assert compilationUnitEl.getLocalName().equals("compilation-unit") : compilationUnitEl;
             List<FileObject> packageRoots = findPackageRoots(helper, evaluator, compilationUnitEl);
-            Iterator it2 = packageRoots.iterator();
-            while (it2.hasNext()) {
-                FileObject root = (FileObject)it2.next();
+            for (FileObject root : packageRoots) {
                 if (root == file || FileUtil.isParentOf(root, file)) {
                     // Got it. Compute classpath and cache it (for each root).
                     ClassPath cp = getPath(compilationUnitEl, packageRoots, type);
-                    it2 = packageRoots.iterator();
-                    while (it2.hasNext()) {
-                        FileObject root2 = (FileObject)it2.next();
+
+                    for (FileObject root2 : packageRoots) {
                         classpathsByType.put(root2, cp);
                     }
                     return cp;
@@ -330,9 +324,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
     
     static List<String> findPackageRootNames(Element compilationUnitEl) {
         List<String> names = new ArrayList<String>();
-        Iterator it = XMLUtil.findSubElements(compilationUnitEl).iterator();
-        while (it.hasNext()) {
-            Element e = (Element) it.next();
+        for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (!e.getLocalName().equals("package-root")) { // NOI18N
                 continue;
             }
@@ -344,9 +336,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
     
     static Map<String,FileObject> findPackageRootsByName(AntProjectHelper helper, PropertyEvaluator evaluator, List<String> packageRootNames) {
         Map<String,FileObject> roots = new LinkedHashMap<String,FileObject>();
-        Iterator it = packageRootNames.iterator();
-        while (it.hasNext()) {
-            String location = (String) it.next();
+        for (String location : packageRootNames) {
             String locationEval = evaluator.evaluate(location);
             if (locationEval != null) {
                 File locationFile = helper.resolveFile(locationEval);
@@ -563,9 +553,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
                 return null;
             }
             List<Element> compilationUnits = XMLUtil.findSubElements(java);
-            Iterator it = compilationUnits.iterator();
-            while (it.hasNext()) {
-                Element compilationUnitEl = (Element)it.next();
+            for (Element compilationUnitEl : compilationUnits) {
                 assert compilationUnitEl.getLocalName().equals("compilation-unit") : compilationUnitEl;
                 if (packageRootNames.equals(findPackageRootNames(compilationUnitEl))) {
                     // Found a matching compilation unit.

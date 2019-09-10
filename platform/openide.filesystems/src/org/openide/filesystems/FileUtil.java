@@ -41,7 +41,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -1047,11 +1046,7 @@ public final class FileUtil extends Object {
         //
         // apply all extended attributes
         //
-        Iterator it = attributes.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-
+        for (Map.Entry entry : attributes.entrySet()) {
             String fileName = (String) entry.getKey();
             int last = fileName.lastIndexOf('/');
             String dirName;
@@ -1065,6 +1060,7 @@ public final class FileUtil extends Object {
             String prefix = fo.isRoot() ? dirName : (fo.getPath() + '/' + dirName);
 
             DefaultAttributes.Table t = (DefaultAttributes.Table) entry.getValue();
+            
             Iterator files = t.keySet().iterator();
 
             while (files.hasNext()) {
@@ -2324,24 +2320,17 @@ public final class FileUtil extends Object {
     }
 
     private static Iterable<? extends ArchiveRootProvider> getArchiveRootProviders() {
-        if (archiveRootProviderCache == null) {
-            Lookup.Result<ArchiveRootProvider> res = archiveRootProviders.get();
-            if (res == null) {
-                res = new ProxyLookup(
-                    Lookups.singleton(new JarArchiveRootProvider()),
-                    Lookup.getDefault()).lookupResult(ArchiveRootProvider.class);
-                if (!archiveRootProviders.compareAndSet(null, res)) {
-                    res = archiveRootProviders.get();
-                    res.addLookupListener((ev) -> {
-                        archiveRootProviderCache = null;
-                    });
-                }
+        Lookup.Result<ArchiveRootProvider> res = archiveRootProviders.get();
+        if (res == null) {
+            res = new ProxyLookup(
+                Lookups.singleton(new JarArchiveRootProvider()),
+                Lookup.getDefault()).lookupResult(ArchiveRootProvider.class);
+            if (!archiveRootProviders.compareAndSet(null, res)) {
+                res = archiveRootProviders.get();
             }
-            archiveRootProviderCache = new LinkedList<>(res.allInstances());
         }
-        return archiveRootProviderCache;
+        return res.allInstances();
     }
 
-    private static Iterable<? extends ArchiveRootProvider> archiveRootProviderCache;
     private static final AtomicReference<Lookup.Result<ArchiveRootProvider>> archiveRootProviders = new AtomicReference<>();
 }

@@ -617,22 +617,7 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.form.j2ee</friend>
-                <friend>org.netbeans.modules.gradle.javaee</friend>
-                <friend>org.netbeans.modules.hibernate</friend>
-                <friend>org.netbeans.modules.j2ee.common</friend>
-                <friend>org.netbeans.modules.j2ee.ejbcore</friend>
-                <friend>org.netbeans.modules.j2ee.ejbjarproject</friend>
-                <friend>org.netbeans.modules.j2ee.jpa.refactoring</friend>
-                <friend>org.netbeans.modules.j2ee.jpa.verification</friend>
-                <friend>org.netbeans.modules.javaee.project</friend>
-                <friend>org.netbeans.modules.javaee.specs.support</friend>
-                <friend>org.netbeans.modules.maven.j2ee</friend>
-                <friend>org.netbeans.modules.profiler.j2ee</friend>
-                <friend>org.netbeans.modules.web.jsf</friend>
-                <friend>org.netbeans.modules.web.project</friend>
-                <friend>org.netbeans.modules.websvc.rest</friend>
+            <public-packages>
                 <package>org.netbeans.modules.j2ee.persistence.action</package>
                 <package>org.netbeans.modules.j2ee.persistence.api.entity.generator</package>
                 <package>org.netbeans.modules.j2ee.persistence.dd</package>
@@ -653,7 +638,7 @@
                 <package>org.netbeans.modules.j2ee.persistence.wizard.jpacontroller</package>
                 <package>org.netbeans.modules.j2ee.persistence.wizard.library</package>
                 <package>org.netbeans.modules.j2ee.persistence.wizard.unit</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

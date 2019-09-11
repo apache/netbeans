@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,13 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 
--->
-<project basedir="." default="build" name="webcommon/javascript2.doc">
-    <description>Builds, tests, and runs the project org.netbeans.modules.javascript2.doc</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
-
-    <target name="build-init" depends="projectized.build-init">
-        <mkdir dir="build/testfiles" />
-        <unzip src="external/testfiles-jsdoc-1.zip" dest="build/testfiles"/>
-    </target>
-</project>
+*/
+/**
+ * Here you would place unit tests
+ */

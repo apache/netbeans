@@ -50,7 +50,7 @@ public class HtmlTagProviderTest extends NbTestCase {
 
 
     public void testHtmlTagConversion() {
-        HtmlTag t = HtmlTagProvider.getTagForElement(ElementName.HTML.name);
+        HtmlTag t = HtmlTagProvider.getTagForElement(ElementName.HTML.getName());
         assertNotNull(t);
 
         assertEquals(ElementDescriptor.HTML.getName(), t.getName());
@@ -58,10 +58,10 @@ public class HtmlTagProviderTest extends NbTestCase {
 
         Collection<HtmlTag> children = t.getChildren();
         assertNotNull(children);
-        assertTrue(children.contains(HtmlTagProvider.getTagForElement(ElementName.BODY.name)));
-        assertTrue(children.contains(HtmlTagProvider.getTagForElement(ElementName.HEAD.name)));
+        assertTrue(children.contains(HtmlTagProvider.getTagForElement(ElementName.BODY.getName())));
+        assertTrue(children.contains(HtmlTagProvider.getTagForElement(ElementName.HEAD.getName())));
         
-        assertFalse(children.contains(HtmlTagProvider.getTagForElement(ElementName.VIDEO.name)));
+        assertFalse(children.contains(HtmlTagProvider.getTagForElement(ElementName.VIDEO.getName())));
 
     }
 
@@ -81,7 +81,7 @@ public class HtmlTagProviderTest extends NbTestCase {
     }
 
     public void testHelp() {
-        HtmlTag t = HtmlTagProvider.getTagForElement(ElementName.VIDEO.name);
+        HtmlTag t = HtmlTagProvider.getTagForElement(ElementName.VIDEO.getName());
         assertNotNull(t);
 
 

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.javascript2.jade/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/jade/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.11
+OpenIDE-Module-Specification-Version: 0.12
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/jade/layer.xml

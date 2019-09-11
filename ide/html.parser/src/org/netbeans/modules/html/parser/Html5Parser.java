@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nu.validator.htmlparser.common.XmlViolationPolicy;
 import nu.validator.htmlparser.impl.ErrorReportingTokenizer;
 import nu.validator.htmlparser.impl.Tokenizer;
 import nu.validator.htmlparser.io.Driver;
@@ -68,6 +69,9 @@ public class Html5Parser implements HtmlParser {
             }
             
             final ParseTreeBuilder treeBuilder = new ParseTreeBuilder(sourceCode, lookup);
+            // Needed for HTML5 parsing - without this, parser mangles
+            // names to comply with XML rules
+            treeBuilder.setNamePolicy(XmlViolationPolicy.ALLOW);
             final Tokenizer tokenizer = new ErrorReportingTokenizer(treeBuilder);
 
             Driver driver = new Driver(tokenizer);
@@ -148,6 +152,7 @@ public class Html5Parser implements HtmlParser {
      * @deprecated 
      */
     @Override
+    @Deprecated
     public HtmlModel getModel(HtmlVersion version) {
         return null;
     }
@@ -156,6 +161,7 @@ public class Html5Parser implements HtmlParser {
      * @deprecated 
      */
     @Override
+    @Deprecated
     public String getName() {
         return null;
     }

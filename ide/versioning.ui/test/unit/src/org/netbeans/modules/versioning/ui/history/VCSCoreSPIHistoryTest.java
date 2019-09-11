@@ -22,18 +22,14 @@ package org.netbeans.modules.versioning.ui.history;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
-import javax.swing.Action;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
-import org.netbeans.modules.versioning.core.spi.VCSHistoryProvider;
 import org.netbeans.modules.versioning.core.spi.VCSHistoryProvider.HistoryEntry;
 import org.netbeans.modules.versioning.core.util.Utils;
 import org.netbeans.modules.versioning.core.util.VCSSystemProvider;
 import org.netbeans.modules.versioning.core.util.VCSSystemProvider.VersioningSystem;
 import org.netbeans.modules.versioning.spi.testvcs.TestVCSHistoryProvider;
 import org.openide.nodes.Node;
-
 import org.openide.util.Lookup;
 import org.openide.util.test.MockLookup;
 
@@ -50,6 +46,7 @@ public class VCSCoreSPIHistoryTest extends NbTestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         dataRootDir = getDataDir(); 
@@ -105,39 +102,4 @@ public class VCSCoreSPIHistoryTest extends NbTestCase {
             }
         }
     }
-    
-    private class RevisionProviderImpl implements VCSHistoryProvider.RevisionProvider {
-        boolean revisionprovided = false;
-        @Override
-        public void getRevisionFile(VCSFileProxy originalFile, VCSFileProxy revisionFile) {
-            revisionprovided = true;
-        }
-    }
-    
-    private class MessageEditProviderImpl implements VCSHistoryProvider.MessageEditProvider {
-        String message;
-        @Override
-        public void setMessage(String message) throws IOException {
-            this.message = message;
-        }
-    }       
-    
-    private class ParentProviderImpl implements VCSHistoryProvider.ParentProvider {
-        static final String PARENT_MSG = "im.the.parent";
-        @Override
-        public HistoryEntry getParentEntry(VCSFileProxy file) {
-            return new HistoryEntry(
-                    new VCSFileProxy[] {file}, 
-                    new Date(System.currentTimeMillis()), 
-                    PARENT_MSG, 
-                    "user", 
-                    "username", 
-                    "12345", 
-                    "1234567890", 
-                    new Action[0], 
-                    null,
-                    null);
-}
-    }
-
 }

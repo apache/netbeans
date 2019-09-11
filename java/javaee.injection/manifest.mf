@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javaee.injection
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javaee/injection/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Specification-Version: 1.12
 AutoUpdate-Show-In-Client: false
 

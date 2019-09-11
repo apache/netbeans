@@ -48,9 +48,12 @@ public final class Type {
     public static final String RESOURCE = "resource"; //NOI18N
     public static final String VOID = "void"; //NOI18N
     public static final String MIXED = "mixed"; //NOI18N
+    public static final String SELF = "self"; //NOI18N
+    public static final String PARENT = "parent"; //NOI18N
 
     private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT);
     private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT);
+    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT); // PHP 7.4 Typed Properties 2.0
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, "false", "true", "self"); // NOI18N
 
@@ -77,6 +80,17 @@ public final class Type {
     }
 
     /**
+     * Check whether propety type is invalid ({@code null}, {@code void}).
+     *
+     * @param typeName type name
+     * @return {@code true} if type is invalid, otherwise {@code false}
+     */
+    public static boolean isInvalidPropertyType(String typeName) {
+        return VOID.equals(typeName)
+                || NULL.equals(typeName);
+    }
+
+    /**
      * Get valid types for the "editor". It means all the types
      * that are valid to be used in source code (like "int" for PHP 7 etc.).
      * <p>
@@ -95,6 +109,15 @@ public final class Type {
      */
     public static List<String> getTypesForReturnType() {
         return TYPES_FOR_RETURN_TYPE;
+    }
+
+    /**
+     * Get valid types for the field type. This does not contain "void" and "callable".
+     *
+     * @return valid types for the field type
+     */
+    public static List<String> getTypesForFieldType() {
+        return TYPES_FOR_FIELD_TYPE;
     }
 
     public static List<String> getTypesForPhpDoc() {

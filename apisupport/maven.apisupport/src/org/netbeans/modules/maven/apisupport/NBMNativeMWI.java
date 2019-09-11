@@ -27,7 +27,9 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import javax.xml.namespace.QName;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.PluginManagement;
 import org.apache.maven.project.MavenProject;
@@ -39,7 +41,9 @@ import org.netbeans.modules.maven.api.archetype.ProjectInfo;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.pom.Build;
 import org.netbeans.modules.maven.model.pom.Configuration;
+import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.Project;
 import org.netbeans.modules.maven.model.pom.Repository;
@@ -158,23 +162,20 @@ final class NBMNativeMWI {
                 //add repository
                 boolean addRepository = true;
                 boolean isSnapshot = NbmWizardIterator.SNAPSHOT_VERSION.equals(netbeansDependencyVersion);
-                String repoUrl = isSnapshot ? "http://bits.netbeans.org/nexus/content/repositories/snapshots" : "http://bits.netbeans.org/nexus/content/groups/netbeans";
-                String oldRepoUrl = isSnapshot ? "http://bits.netbeans.org/netbeans/trunk/maven-snapshot" : "http://bits.netbeans.org/maven2";
+                String snapshotRepoUrl = "https://repository.apache.org/content/repositories/snapshots/";
                 if (parent != null) {
                     List<ArtifactRepository> repos = parent.getRemoteArtifactRepositories();
                     if (repos != null) {
                         OUTER : 
                         for (ArtifactRepository repo : repos) {
-                            if (repoUrl.equals(repo.getUrl()) || (repoUrl + "/").equals(repo.getUrl()) || 
-                                oldRepoUrl.equals(repo.getUrl()) || (oldRepoUrl + "/").equals(repo.getUrl()))
+                            if (snapshotRepoUrl.equals(repo.getUrl()) || (snapshotRepoUrl + "/").equals(repo.getUrl()))
                             {
                                 addRepository = false;
                                 break;
                             }
                             if (repo.getMirroredRepositories() != null) {
                                 for (ArtifactRepository mirr : repo.getMirroredRepositories()) {
-                                    if (repoUrl.equals(mirr.getUrl()) || (repoUrl + "/").equals(mirr.getUrl()) || 
-                                        oldRepoUrl.equals(mirr.getUrl()) || (oldRepoUrl + "/").equals(mirr.getUrl()))
+                                    if (snapshotRepoUrl.equals(mirr.getUrl()) || (snapshotRepoUrl + "/").equals(mirr.getUrl()))
                                     {
                                         addRepository = false;
                                         break OUTER;
@@ -184,20 +185,14 @@ final class NBMNativeMWI {
                         }
                     }
                 }
-                if (addRepository) {
+                if (addRepository && isSnapshot ) {
                     Repository repo = model.getFactory().createRepository();
-                    repo.setId(isSnapshot ? MavenNbModuleImpl.NETBEANS_SNAPSHOT_REPO_ID : MavenNbModuleImpl.NETBEANS_REPO_ID);
+                    repo.setId(MavenNbModuleImpl.APACHE_SNAPSHOT_REPO_ID);
                     repo.setName("Repository hosting NetBeans modules");
-                    repo.setUrl(repoUrl);
-                    if (isSnapshot) {
-                        RepositoryPolicy policy = model.getFactory().createReleaseRepositoryPolicy();
-                        policy.setEnabled(false);
-                        repo.setReleases(policy);
-                    } else {
-                        RepositoryPolicy policy = model.getFactory().createSnapshotRepositoryPolicy();
-                        policy.setEnabled(false);
-                        repo.setSnapshots(policy);
-                    }
+                    repo.setUrl(snapshotRepoUrl);
+                    RepositoryPolicy policy = model.getFactory().createReleaseRepositoryPolicy();
+                    policy.setEnabled(false);
+                    repo.setReleases(policy);
                     root.addRepository(repo);
                 }
                 
@@ -259,7 +254,7 @@ final class NBMNativeMWI {
                     PluginManagement pm = parent.getPluginManagement();
                     if (pm != null) {
                         for (org.apache.maven.model.Plugin p : pm.getPlugins()) {
-                            if (MavenNbModuleImpl.GROUPID_MOJO.equals(p.getGroupId()) && MavenNbModuleImpl.NBM_PLUGIN.equals(p.getArtifactId())) {
+                            if ((MavenNbModuleImpl.GROUPID_MOJO.equals(p.getGroupId()) || MavenNbModuleImpl.GROUPID_APACHE.equals(p.getGroupId())) && MavenNbModuleImpl.NBM_PLUGIN.equals(p.getArtifactId())) {
                                 managedPVersion = p.getVersion();
 //                                Xpp3Dom conf = (Xpp3Dom) p.getConfiguration();
 //                                if (conf != null) {
@@ -276,7 +271,7 @@ final class NBMNativeMWI {
                 }
                 if (addPlugin) {
                     Plugin p = model.getFactory().createPlugin();
-                    p.setGroupId(MavenNbModuleImpl.GROUPID_MOJO);
+                    p.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
                     p.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
                     if (managedPVersion == null) {
                         p.setVersion(pVersion);
@@ -295,7 +290,7 @@ final class NBMNativeMWI {
                 managedPVersion = null;
                 String source = null;
                 String target = null;
-                pVersion = "2.5.1";
+                pVersion = "3.8.1";
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?
                     PluginManagement pm = parent.getPluginManagement();
@@ -328,8 +323,8 @@ final class NBMNativeMWI {
                         p.setVersion(pVersion);
                     }
                     Configuration c = model.getFactory().createConfiguration();
-                    c.setSimpleParameter("source", "1.6");
-                    c.setSimpleParameter("target", "1.6");
+                    c.setSimpleParameter("source", "1.8");
+                    c.setSimpleParameter("target", "1.8");
                     p.setConfiguration(c);
                     getOrCreateBuild(model).addPlugin(p);
                 }
@@ -338,7 +333,7 @@ final class NBMNativeMWI {
                 addPlugin = true;
                 managedPVersion = null;
                 String useManifest = null;
-                pVersion = "2.4";
+                pVersion = "3.1.2";
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?
                     PluginManagement pm = parent.getPluginManagement();
@@ -348,9 +343,19 @@ final class NBMNativeMWI {
                                 managedPVersion = p.getVersion();
                                 Xpp3Dom conf = (Xpp3Dom) p.getConfiguration();
                                 if (conf != null) {
-                                    Xpp3Dom useEl = conf.getChild("useDefaultManifestFile");
-                                    if (useEl != null) {
-                                        useManifest = useEl.getValue();
+                                    if (new ComparableVersion(managedPVersion).compareTo(new ComparableVersion(JAR_PLUGIN_VERSION_MANIFEST_CONFIG_CHANGE)) >= 0) {
+                                        Xpp3Dom archive = conf.getChild("archive");
+                                        if (archive != null) {
+                                            Xpp3Dom manifestFile = archive.getChild("manifestFile");
+                                            if (manifestFile != null) {
+                                                useManifest = manifestFile.getValue();
+                                            }
+                                        }
+                                    } else {
+                                        Xpp3Dom useEl = conf.getChild("useDefaultManifestFile");
+                                        if (useEl != null) {
+                                            useManifest = useEl.getValue();
+                                        }
                                     }
                                 }
                                 break;
@@ -365,9 +370,22 @@ final class NBMNativeMWI {
                     p.setArtifactId(Constants.PLUGIN_JAR);
                     if (managedPVersion == null) {
                         p.setVersion(pVersion);
+                        managedPVersion = pVersion;
                     }
                     Configuration c = model.getFactory().createConfiguration();
-                    c.setSimpleParameter("useDefaultManifestFile", "true");
+                    if (new ComparableVersion(managedPVersion).compareTo(new ComparableVersion(JAR_PLUGIN_VERSION_MANIFEST_CONFIG_CHANGE)) >= 0) {
+                        QName archiveqname = POMQName.createQName("archive", model.getPOMQNames().isNSAware());
+                        POMExtensibilityElement archiveelement = model.getFactory().createPOMExtensibilityElement(archiveqname);
+                        
+                        QName manifestqname = POMQName.createQName("manifestFile", model.getPOMQNames().isNSAware());
+                        POMExtensibilityElement manifestelement = model.getFactory().createPOMExtensibilityElement(manifestqname);
+                        manifestelement.setElementText("${project.build.outputDirectory}/META-INF/MANIFEST.MF");
+                        archiveelement.addAnyElement(manifestelement, 0);
+                        
+                        c.addExtensibilityElement(archiveelement);
+                    } else {
+                        c.setSimpleParameter("useDefaultManifestFile", "true");
+                    }
                     p.setConfiguration(c);
                     getOrCreateBuild(model).addPlugin(p);
                 }
@@ -375,6 +393,7 @@ final class NBMNativeMWI {
 
             }
         }
+        private static final String JAR_PLUGIN_VERSION_MANIFEST_CONFIG_CHANGE = "3.0.0";
 
         private Build getOrCreateBuild(POMModel model) {
             Build bld = model.getProject().getBuild();

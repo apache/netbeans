@@ -34,6 +34,7 @@ import java.net.UnknownHostException;
 * @author Petr Jiricka
 * @deprecated The <code>httpserver</code> module should provide a replacement for this API if necessary.
 */
+@Deprecated
 public abstract class HttpServer {
     /** regular server to be used */
     private static HttpServer.Impl registeredServer = null;
@@ -67,6 +68,7 @@ public abstract class HttpServer {
     * @throws SecurityException if there was already one registered
     * @deprecated As of 2.11 use Lookup instead of registering HTTP server
     */
+    @Deprecated
     public static void registerServer(HttpServer.Impl server)
     throws SecurityException {
         if (registeredServer != null) {
@@ -82,6 +84,7 @@ public abstract class HttpServer {
     * @throws SecurityException if the specified server was not the installed one
     * @deprecated As of 2.11 use Lookup instead of registering and derigistering HTTP server
     */
+    @Deprecated
     public static void deregisterServer(HttpServer.Impl server)
     throws SecurityException {
         if (registeredServer == null) {
@@ -103,6 +106,7 @@ public abstract class HttpServer {
     * @throws UnknownHostException for the usual reasons, or if there is no registered server
     * @deprecated Use {@link org.openide.filesystems.URLMapper} instead.
     */
+    @Deprecated
     public static URL getRepositoryURL(FileObject fo) throws MalformedURLException, UnknownHostException {
         return getServer().getRepositoryURL(fo);
     }
@@ -116,6 +120,7 @@ public abstract class HttpServer {
     * @throws UnknownHostException for the usual reasons, or if there is no registered server
     * @deprecated Assumes repository equals classpath.
     */
+    @Deprecated
     public static URL getRepositoryRoot() throws MalformedURLException, UnknownHostException {
         return getServer().getRepositoryRoot();
     }
@@ -129,6 +134,7 @@ public abstract class HttpServer {
     * @throws UnknownHostException for the usual reasons, or if there is no registered server
     * @deprecated Use {@link org.openide.filesystems.URLMapper} with a URL protocol <code>nbres</code>.
     */
+    @Deprecated
     public static URL getResourceURL(String resourcePath)
     throws MalformedURLException, UnknownHostException {
         return getServer().getResourceURL(resourcePath);
@@ -141,6 +147,7 @@ public abstract class HttpServer {
     * @see HttpServer#getResourceURL
     * @deprecated Use {@link org.openide.filesystems.URLMapper} with a URL protocol <code>nbres</code>.
     */
+    @Deprecated
     public static URL getResourceRoot() throws MalformedURLException, UnknownHostException {
         return getServer().getResourceRoot();
     }
@@ -154,6 +161,7 @@ public abstract class HttpServer {
     *  @return <code>true</code> if access has been granted
     * @deprecated Should be replaced by an API in the <code>httpserver</code> module if still required.
     */
+    @Deprecated
     public static boolean allowAccess(InetAddress addr)
     throws UnknownHostException {
         return getServer().allowAccess(addr);
@@ -173,6 +181,7 @@ public abstract class HttpServer {
     * handler.
     * @deprecated Useful only for {@link HttpServer} which is itself deprecated.
     */
+    @Deprecated
     public interface Impl {
         /** Get the URL for a file object.
         * @param fo the file object

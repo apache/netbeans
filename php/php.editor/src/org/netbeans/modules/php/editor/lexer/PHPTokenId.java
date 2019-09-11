@@ -101,6 +101,7 @@ public enum PHPTokenId implements TokenId {
     PHP_ENDFOR(null, "keyword"), //NOI18N
     PHP_REQUIRE_ONCE(null, "keyword"), //NOI18N
     PHP_NAMESPACE(null, "keyword"), //NOI18N
+    PHP_FN(null, "keyword"), //NOI18N PHP 7.4
     PHP_FUNCTION(null, "keyword"), //NOI18N
     PHP_PROTECTED(null, "keyword"), //NOI18N
     PHP_PRIVATE(null, "keyword"), //NOI18N
@@ -155,8 +156,8 @@ public enum PHPTokenId implements TokenId {
     PHP__LINE__(null, "constant"), //NOI18N
     PHP__DIR__(null, "constant"), //NOI18N
     PHP__NAMESPACE__(null, "constant"), //NOI18N
-    PHP_OPERATOR(null, "operator"), //NOI18N
-    PHP_TEXTUAL_OPERATOR(null, "operator"), //NOI18N
+    PHP_OPERATOR(null, "operator"), //NOI18N e.g. ||, &&
+    PHP_TEXTUAL_OPERATOR(null, "operator"), //NOI18N e.g. OR, AND
     PHP_PARENT(null, "keyword"), //NOI18N
     PHP__CLASS__(null, "constant"), //NOI18N
     PHP__TRAIT__(null, "constant"), //NOI18N

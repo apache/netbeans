@@ -79,6 +79,9 @@ public class PHPStanCustomizerPanel extends JPanel {
     private void setLevelComboBox() {
         assert EventQueue.isDispatchThread();
         phpStanLevelComboBox.removeAllItems();
+        // NETBEANS-2974
+        // allow empty level option to use a level of a configuration file
+        phpStanLevelComboBox.addItem(""); // NOI18N
         for (int i = AnalysisOptions.PHPSTAN_MIN_LEVEL; i <= AnalysisOptions.PHPSTAN_MAX_LEVEL; i++) {
             phpStanLevelComboBox.addItem(String.valueOf(i));
         }

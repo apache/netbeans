@@ -60,7 +60,7 @@ public abstract class ResourceHolder {
             return;
         }
 
-        Class clazz = resource.getClass();
+        Class<?> clazz = resource.getClass();
 
         // Check if the class of parameter is valid for this ResourceHolder.
         if(!Arrays.asList(resourceClasses).contains(clazz))

@@ -26,9 +26,10 @@ import javax.swing.text.Document;
  * Updates given css Document in live webkit browser.
  * Instance to be registered in Lookup.
  * 
- * @deprecated 
  * @author Jan Becicka
+ * @deprecated 
  */
+@Deprecated
 public interface LiveUpdater {
     
     public boolean update(Document file);

@@ -42,7 +42,7 @@ public class PrintAction extends CookieAction {
 
     protected void performAction(final Node[] activatedNodes) {
         for (int i = 0; i < activatedNodes.length; i++) {
-            PrintCookie pc = (PrintCookie) activatedNodes[i].getCookie(PrintCookie.class);
+            PrintCookie pc = activatedNodes[i].getCookie(PrintCookie.class);
 
             if (pc != null) {
                 pc.print();

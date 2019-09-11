@@ -249,7 +249,7 @@ class SamplesOutputStream {
                 out.writeLong(tid.longValue());
             }
             out.writeInt(newThreads.size());
-            for (Object t : (Object[]) toCompositeData(newThreads)) {
+            for (Object t : toCompositeData(newThreads)) {
                 out.writeObject(t);
             }
         }

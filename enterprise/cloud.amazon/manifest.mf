@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.cloud.amazon/0
 OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cloud/amazon/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/cloud/amazon/resources/layer.xml
-OpenIDE-Module-Specification-Version: 1.17
+OpenIDE-Module-Specification-Version: 1.18
 

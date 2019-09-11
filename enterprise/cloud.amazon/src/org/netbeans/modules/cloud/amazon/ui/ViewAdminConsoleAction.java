@@ -34,14 +34,8 @@ public class ViewAdminConsoleAction extends NodeAction {
     @Override
     protected void performAction(Node[] activatedNodes) {
         AmazonInstance ai = activatedNodes[0].getLookup().lookup(AmazonInstance.class);
-        String region = ai.getRegionURL();
-        if (region != null) {
-            if (region.startsWith("elasticbeanstalk.") && region.endsWith(".amazonaws.com")) { // NOI18N
-                region = region.substring(17, region.length()-14);
-            } else {
-                region = null;
-            }
-        }
+        String region = ai.getRegionCode();
+
         URL url = WebUtils.stringToUrl("https://console.aws.amazon.com/elasticbeanstalk/home" + 
                 (region != null ? "?region="+region : "")); // NOI18N
         HtmlBrowser.URLDisplayer.getDefault().showURL(url);

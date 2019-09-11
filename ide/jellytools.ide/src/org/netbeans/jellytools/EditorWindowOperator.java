@@ -66,6 +66,7 @@ public class EditorWindowOperator {
     /** Creates new instance of EditorWindowOperator.
      * @deprecated Use static methods instead.
      */
+    @Deprecated
     public EditorWindowOperator() {
         // useless now because all methods are static
     }

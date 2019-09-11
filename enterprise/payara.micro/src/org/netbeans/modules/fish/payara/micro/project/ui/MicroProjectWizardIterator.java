@@ -47,21 +47,28 @@ import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle.Messages;
 import static org.openide.util.NbBundle.getMessage;
+import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
 
 /**
  *
  * @author Gaurav Gupta <gaurav.gupta@payara.fish>
  */
-@TemplateRegistration(
-        folder = ArchetypeWizards.TEMPLATE_FOLDER,
-        position = 200,
-        displayName = "#TTL_NewProjectWizard",
-        iconBase = PROJECT_ICON,
-        description = "../resources/PayaraMicroProjectDescription.html"
-)
 public final class MicroProjectWizardIterator extends BaseWizardIterator {
+
+    public MicroProjectWizardIterator() {
+    }
+
+    @TemplateRegistration(
+            folder = ArchetypeWizards.TEMPLATE_FOLDER,
+            position = 550,
+            displayName = "#TTL_NewProjectWizard",
+            iconBase = PROJECT_ICON,
+            description = "../resources/PayaraMicroProjectDescription.html"
+    )
+    public static MicroProjectWizardIterator createWebAppIterator() {
+        return new MicroProjectWizardIterator();
+    }
 
     @Override
     public Set<FileObject> instantiate() throws IOException {
@@ -73,12 +80,14 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
         );
         String payaraMicroVersion = (String) descriptor.getProperty(PROP_PAYARA_MICRO_VERSION);
         String autoBindHttp = (String) descriptor.getProperty(PROP_AUTO_BIND_HTTP);
+        String contextRoot = (String) descriptor.getProperty(PROP_CONTEXT_ROOT);
         Archetype archetype = createMojoArchetype();
 
         Map<String, String> properties = new HashMap<>();
         properties.put(PROP_PAYARA_MICRO_VERSION, payaraMicroVersion);
         properties.put(PROP_JAVA_EE_VERSION, VersionRepository.getInstance().getJavaEEVersion(payaraMicroVersion));
         properties.put(PROP_AUTO_BIND_HTTP, autoBindHttp);
+        properties.put(PROP_CONTEXT_ROOT, contextRoot);
 
         ArchetypeWizards.logUsage(archetype.getGroupId(), archetype.getArtifactId(), archetype.getVersion());
 
@@ -92,7 +101,7 @@ public final class MicroProjectWizardIterator extends BaseWizardIterator {
                 continue;
             }
             MavenProjectSupport.changeServer(project, true);
-            updateMicroMavenPlugin(project, payaraMicroVersion, autoBindHttp);
+            updateMicroMavenPlugin(project, payaraMicroVersion, autoBindHttp, contextRoot);
         }
 
         return projects;

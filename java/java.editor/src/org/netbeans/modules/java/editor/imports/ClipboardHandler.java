@@ -89,6 +89,7 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
+import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -98,6 +99,7 @@ import org.netbeans.editor.BaseKit;
 import org.netbeans.editor.BaseKit.CutAction;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
@@ -621,46 +623,102 @@ public class ClipboardHandler {
         
         private boolean delegatedImportData(final TransferSupport support) {
             JComponent comp = (JComponent) support.getComponent();
-            if (comp instanceof JTextComponent && !support.isDataFlavorSupported(COPY_FROM_STRING_FLAVOR) && insideToken((JTextComponent) comp, JavaTokenId.STRING_LITERAL)) {
-                final Transferable t = support.getTransferable();
-                return delegate.importData(comp, new Transferable() {
-                    @Override
-                    public DataFlavor[] getTransferDataFlavors() {
-                        return t.getTransferDataFlavors();
-                    }
-
-                    @Override
-                    public boolean isDataFlavorSupported(DataFlavor flavor) {
-                        return t.isDataFlavorSupported(flavor);
-                    }
-
-                    @Override
-                    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-                        Object data = t.getTransferData(flavor);
-                        if (data instanceof String) {
-                            String s = (String) data;
-                            s = s.replace("\\","\\\\"); //NOI18N
-                            s = s.replace("\"","\\\""); //NOI18N
-                            s = s.replace("\r\n","\n"); //NOI18N
-                            s = s.replace("\n","\\n\" +\n\""); //NOI18N
-                            data = s;
-                        } else if (data instanceof Reader) {
-                            BufferedReader br = new BufferedReader((Reader)data);
-                            StringBuilder sb = new StringBuilder();
-                            String line;
-                            while ((line = br.readLine()) != null) {
-                                line = line.replace("\\","\\\\"); //NOI18N
-                                line = line.replace("\"","\\\""); //NOI18N
-                                if (sb.length() > 0) {
-                                    sb.append("\\n\" +\n\""); //NOI18N
-                                }
-                                sb.append(line);
-                            }
-                            data = new StringReader(sb.toString());
+            if (comp instanceof JTextComponent && !support.isDataFlavorSupported(COPY_FROM_STRING_FLAVOR) ) {
+                if (insideToken((JTextComponent) comp, JavaTokenId.STRING_LITERAL)) {
+                    final Transferable t = support.getTransferable();
+                    return delegate.importData(comp, new Transferable() {
+                        @Override
+                        public DataFlavor[] getTransferDataFlavors() {
+                            return t.getTransferDataFlavors();
                         }
-                        return data;
-                    }
-                });
+
+                        @Override
+                        public boolean isDataFlavorSupported(DataFlavor flavor) {
+                            return t.isDataFlavorSupported(flavor);
+                        }
+
+                        @Override
+                        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                            Object data = t.getTransferData(flavor);
+                            if (data instanceof String) {
+                                String s = (String) data;
+                                s = s.replace("\\","\\\\"); //NOI18N
+                                s = s.replace("\"","\\\""); //NOI18N
+                                s = s.replace("\r\n","\n"); //NOI18N
+                                s = s.replace("\n","\\n\" +\n\""); //NOI18N
+                                data = s;
+                            } else if (data instanceof Reader) {
+                                BufferedReader br = new BufferedReader((Reader)data);
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+                                while ((line = br.readLine()) != null) {
+                                    line = line.replace("\\","\\\\"); //NOI18N
+                                    line = line.replace("\"","\\\""); //NOI18N
+                                    if (sb.length() > 0) {
+                                        sb.append("\\n\" +\n\""); //NOI18N
+                                    }
+                                    sb.append(line);
+                                }
+                                data = new StringReader(sb.toString());
+                            }
+                            return data;
+                        }
+                    });
+                } else if ((isTextBlockSupported(NbEditorUtilities.getFileObject(((JTextComponent)comp).getDocument()))) && insideToken((JTextComponent) comp, JavaTokenId.MULTILINE_STRING_LITERAL)) {
+                    final Transferable t = support.getTransferable();
+                    return delegate.importData(comp, new Transferable() {
+                        @Override
+                        public DataFlavor[] getTransferDataFlavors() {
+                            return t.getTransferDataFlavors();
+                        }
+
+                        @Override
+                        public boolean isDataFlavorSupported(DataFlavor flavor) {
+                            return t.isDataFlavorSupported(flavor);
+                        }
+
+                        @Override
+                        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                            Object data = t.getTransferData(flavor);
+                            JTextComponent c = (JTextComponent) comp;
+                            int indent = 0;
+                            try {
+                                indent = IndentUtils.lineIndent(c.getDocument(), IndentUtils.lineStartOffset(c.getDocument(), c.getCaretPosition()));
+                            } catch (BadLocationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            }
+                            if (data instanceof String) {
+                                String s = (String) data;
+                                s = s.replace("\"\"\"","\\\"\"\""); //NOI18N
+                                StringBuilder sb = new StringBuilder("");
+                                for (int i = 0; i < indent; i++) {
+                                     sb.append(" "); //NOI18N
+                                }
+                                String emptySpaces = sb.toString();
+                                s = s.replace("\r\n","\n"); //NOI18N
+                                s = s.replace("\n",System.lineSeparator() + emptySpaces); //NOI18N
+                                data = s;
+                            } else if (data instanceof Reader) {
+                                BufferedReader br = new BufferedReader((Reader)data);
+                                StringBuilder sb = new StringBuilder();
+                                String line;
+
+                                while ((line = br.readLine()) != null) {
+                                    line = line.replace("\"\"\"", "\\\"\"\""); //NOI18N
+                                    if (sb.length() > 0) {
+                                        sb.append(System.lineSeparator()); //NOI18N
+                                        for (int i = 0; i < indent; i++) {
+                                            sb.append(" "); //NOI18N
+                                        }
+                                    }
+                                    sb.append(line);
+                                }
+                                data = new StringReader(sb.toString());
+                            }
+                            return data;
+                        }
+                    });
+                }
             }
             return delegate.importData(support);
         }

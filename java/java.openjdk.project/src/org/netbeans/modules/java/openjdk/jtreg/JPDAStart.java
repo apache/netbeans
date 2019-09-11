@@ -40,6 +40,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.InputOutput;
 
@@ -66,7 +67,7 @@ public class JPDAStart implements Runnable {
     private ClassPath additionalSourcePath;
     
     
-    private final Object[] lock = new Object[2];
+    private final Object[] lock = new Object[3];
     
     private Project project;
     private final String actionName;
@@ -80,7 +81,7 @@ public class JPDAStart implements Runnable {
     /**
      * returns the port/address that the debugger listens to..
      */
-    public int execute(Project project) throws Throwable {
+    public Pair<String, Integer> execute(Project project) throws Throwable {
         this.project = project;
         io.getOut().println("NetBeans: JPDA Listening Start..."); //NOI18N
 //            getLog().debug("Entering synch lock"); //NOI18N
@@ -94,7 +95,7 @@ public class JPDAStart implements Runnable {
                 throw ((Throwable) lock[1]); //NOI18N
             }
         }
-        return (Integer)lock[0];
+        return Pair.of((String) lock[2], (Integer)lock[0]);
     }
     
     @Override
@@ -123,11 +124,13 @@ public class JPDAStart implements Runnable {
                 final Map args = lc.defaultArguments();
                 String address = lc.startListening(args);
 //                try {
-                    int port = Integer.parseInt(address.substring(address.indexOf(':') + 1));
+                    int colon = address.indexOf(':');
+                    int port = Integer.parseInt(address.substring(colon + 1));
 //                    getProject ().setNewProperty (getAddressProperty (), "localhost:" + port);
                     Connector.IntegerArgument portArg = (Connector.IntegerArgument) args.get("port"); //NOI18N
                     portArg.setValue(port);
                     lock[0] = port;
+                    lock[2] = colon != (-1) ? address.substring(0, colon) : null;
 //                } catch (NumberFormatException e) {
                     // this address format is not known, use default
 //                    getProject ().setNewProperty (getAddressProperty (), address);

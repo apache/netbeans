@@ -80,13 +80,16 @@ import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.matching.Matcher;
@@ -120,6 +123,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
@@ -563,7 +567,27 @@ public class SourceUtils {
         }
         return null;        
     }
-    
+
+    /**
+     * @since 13.0
+     */
+    public static boolean isTextBlockSupported(
+            @NullAllowed FileObject fileObject) {
+        SpecificationVersion supportedVer = new SpecificationVersion("13"); //NOI18N
+
+        SpecificationVersion runtimeVer = new SpecificationVersion(System.getProperty("java.specification.version")); //NOI18N
+        if (runtimeVer.compareTo(supportedVer) >= 0) {
+            if (fileObject != null) {
+                SpecificationVersion sourceVer = new SpecificationVersion(SourceLevelQuery.getSourceLevel(fileObject));
+                if (sourceVer.compareTo(supportedVer) < 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg) throws IOException {
         FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();                        
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);

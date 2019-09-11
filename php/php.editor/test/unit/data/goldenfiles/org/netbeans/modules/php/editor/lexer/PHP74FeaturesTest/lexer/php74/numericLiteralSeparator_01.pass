@@ -1,0 +1,169 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_VARIABLE $billion1
+token #7 WHITESPACE  
+token #8 PHP_OPERATOR =
+token #9 WHITESPACE  
+token #10 PHP_NUMBER 1000000000
+token #11 PHP_SEMICOLON ;
+token #12 WHITESPACE \n
+token #13 PHP_VARIABLE $billion2
+token #14 WHITESPACE  
+token #15 PHP_OPERATOR =
+token #16 WHITESPACE  
+token #17 PHP_NUMBER 1_000_000_000
+token #18 PHP_SEMICOLON ;
+token #19 WHITESPACE \n\n
+token #20 PHP_CONST const
+token #21 WHITESPACE  
+token #22 PHP_STRING CONSTANT1
+token #23 WHITESPACE  
+token #24 PHP_OPERATOR =
+token #25 WHITESPACE  
+token #26 PHP_NUMBER 123456789.88
+token #27 PHP_SEMICOLON ;
+token #28 WHITESPACE \n
+token #29 PHP_CONST const
+token #30 WHITESPACE  
+token #31 PHP_STRING CONSTANT2
+token #32 WHITESPACE  
+token #33 PHP_OPERATOR =
+token #34 WHITESPACE  
+token #35 PHP_NUMBER 123_456_789.88
+token #36 PHP_SEMICOLON ;
+token #37 WHITESPACE \n
+token #38 PHP_CONST const
+token #39 WHITESPACE  
+token #40 PHP_STRING CONSTANT1
+token #41 WHITESPACE  
+token #42 PHP_OPERATOR =
+token #43 WHITESPACE  
+token #44 PHP_NUMBER 1_234_5678_9.88_888_8_88
+token #45 PHP_SEMICOLON ;
+token #46 WHITESPACE \n\n
+token #47 PHP_VARIABLE $value1
+token #48 WHITESPACE  
+token #49 PHP_OPERATOR =
+token #50 WHITESPACE  
+token #51 PHP_NUMBER 13500
+token #52 PHP_SEMICOLON ;
+token #53 WHITESPACE \n
+token #54 PHP_VARIABLE $value2
+token #55 WHITESPACE  
+token #56 PHP_OPERATOR =
+token #57 WHITESPACE  
+token #58 PHP_NUMBER 135_00
+token #59 PHP_SEMICOLON ;
+token #60 WHITESPACE \n\n
+token #61 PHP_NUMBER .88
+token #62 PHP_SEMICOLON ;
+token #63 WHITESPACE \n
+token #64 PHP_NUMBER .88_00
+token #65 PHP_SEMICOLON ;
+token #66 WHITESPACE \n
+token #67 PHP_NUMBER .88_000_0
+token #68 PHP_SEMICOLON ;
+token #69 WHITESPACE \n
+token #70 PHP_NUMBER 33.
+token #71 PHP_SEMICOLON ;
+token #72 WHITESPACE \n
+token #73 PHP_NUMBER 33_44.
+token #74 PHP_SEMICOLON ;
+token #75 WHITESPACE \n
+token #76 PHP_NUMBER 33_44_5_6666.
+token #77 PHP_SEMICOLON ;
+token #78 WHITESPACE \n\n
+token #79 PHP_NUMBER 1.234567e-11
+token #80 PHP_SEMICOLON ;
+token #81 WHITESPACE  
+token #82 PHP_LINE_COMMENT //
+token #83 PHP_LINE_COMMENT  float\n
+token #84 PHP_NUMBER 1.234_567e-11
+token #85 PHP_SEMICOLON ;
+token #86 WHITESPACE  
+token #87 PHP_LINE_COMMENT //
+token #88 PHP_LINE_COMMENT  float\n
+token #89 PHP_NUMBER 1.2_34_567e-1_1
+token #90 PHP_SEMICOLON ;
+token #91 WHITESPACE  
+token #92 PHP_LINE_COMMENT //
+token #93 PHP_LINE_COMMENT  float\n
+token #94 PHP_NUMBER 1.2_3456_7E1_11
+token #95 PHP_SEMICOLON ;
+token #96 WHITESPACE  
+token #97 PHP_LINE_COMMENT //
+token #98 PHP_LINE_COMMENT  float\n
+token #99 WHITESPACE \n
+token #100 PHP_NUMBER 123456789
+token #101 PHP_SEMICOLON ;
+token #102 WHITESPACE  
+token #103 PHP_LINE_COMMENT //
+token #104 PHP_LINE_COMMENT  decimal\n
+token #105 PHP_NUMBER 123_456_789
+token #106 PHP_SEMICOLON ;
+token #107 WHITESPACE  
+token #108 PHP_LINE_COMMENT //
+token #109 PHP_LINE_COMMENT  decimal\n
+token #110 PHP_NUMBER 12_3456_7_89
+token #111 PHP_SEMICOLON ;
+token #112 WHITESPACE  
+token #113 PHP_LINE_COMMENT //
+token #114 PHP_LINE_COMMENT  decimal\n
+token #115 WHITESPACE \n
+token #116 PHP_NUMBER 0x1234ABCD
+token #117 PHP_SEMICOLON ;
+token #118 WHITESPACE  
+token #119 PHP_LINE_COMMENT //
+token #120 PHP_LINE_COMMENT  hexadecimal\n
+token #121 PHP_NUMBER 0x1234_ABCD
+token #122 PHP_SEMICOLON ;
+token #123 WHITESPACE  
+token #124 PHP_LINE_COMMENT //
+token #125 PHP_LINE_COMMENT  hexadecimal\n
+token #126 PHP_NUMBER 0x1_23_4ABC_D
+token #127 PHP_SEMICOLON ;
+token #128 WHITESPACE  
+token #129 PHP_LINE_COMMENT //
+token #130 PHP_LINE_COMMENT  hexadecimal\n
+token #131 WHITESPACE \n
+token #132 PHP_NUMBER 0b01011111
+token #133 PHP_SEMICOLON ;
+token #134 WHITESPACE  
+token #135 PHP_LINE_COMMENT //
+token #136 PHP_LINE_COMMENT  binary\n
+token #137 PHP_NUMBER 0b0101_1111
+token #138 PHP_SEMICOLON ;
+token #139 WHITESPACE  
+token #140 PHP_LINE_COMMENT //
+token #141 PHP_LINE_COMMENT  binary\n
+token #142 PHP_NUMBER 0b010_11_1_11
+token #143 PHP_SEMICOLON ;
+token #144 WHITESPACE  
+token #145 PHP_LINE_COMMENT //
+token #146 PHP_LINE_COMMENT  binary\n
+token #147 WHITESPACE \n
+token #148 PHP_NUMBER 0123456
+token #149 PHP_SEMICOLON ;
+token #150 WHITESPACE  
+token #151 PHP_LINE_COMMENT //
+token #152 PHP_LINE_COMMENT  octal\n
+token #153 PHP_NUMBER 0123_456
+token #154 PHP_SEMICOLON ;
+token #155 WHITESPACE  
+token #156 PHP_LINE_COMMENT //
+token #157 PHP_LINE_COMMENT  octal\n
+token #158 PHP_NUMBER 01_2_345_6
+token #159 PHP_SEMICOLON ;
+token #160 WHITESPACE  
+token #161 PHP_LINE_COMMENT //
+token #162 PHP_LINE_COMMENT  octal\n
+token #163 WHITESPACE \n
+token #164 PHP_STRING _100
+token #165 PHP_SEMICOLON ;
+token #166 WHITESPACE  
+token #167 PHP_LINE_COMMENT //
+token #168 PHP_LINE_COMMENT  constant name\n

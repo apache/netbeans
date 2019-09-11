@@ -32,7 +32,6 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.apisupport.project.spi.NbModuleProvider;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.classpath.DependencyProjectsProvider;
 import org.netbeans.modules.maven.api.execute.ExecutionContext;
 import org.netbeans.modules.maven.api.execute.LateBoundPrerequisitesChecker;
@@ -87,7 +86,7 @@ public class CoSApplicationLateBoundChecker implements LateBoundPrerequisitesChe
         if (!nonModules.isEmpty()) {
             for (DependencyProjectsProvider.Pair pair : nonModules) {
                 //TODO what to do for OSGI (netbeans.patches. doesn't work here) and for non module jars (find where they belong?)
-                List<String> trail = new ArrayList(pair.getArtifact().getDependencyTrail());
+                List<String> trail = new ArrayList<>(pair.getArtifact().getDependencyTrail());
                 Collections.reverse(trail); //we go from the artifact itself up, first module project artifact is our boy..
                 trail.remove(0); //first one is the actual artifact.
                 for (String s : trail) {
@@ -103,7 +102,7 @@ public class CoSApplicationLateBoundChecker implements LateBoundPrerequisitesChe
                 }
             }
         }
-        String branding = PluginPropertyUtils.getPluginProperty(config.getProject(), MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, "brandingToken", "cluster-app", "netbeans.branding.token");
+        String branding = PluginBackwardPropertyUtils.getPluginProperty(config.getProject(), "brandingToken", "cluster-app", "netbeans.branding.token");       
         //TODO care about figuring out build.outputdir?
         //only relativize path on windows
         assert config.getExecutionDirectory() != null : "RunConfig for " + config.getActionName() + " is missing executionDirectory"; //#243564 we need to learn which 

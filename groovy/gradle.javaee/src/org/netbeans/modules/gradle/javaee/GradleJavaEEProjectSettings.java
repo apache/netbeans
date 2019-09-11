@@ -31,13 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 import org.netbeans.api.j2ee.core.Profile;
-import static org.netbeans.api.j2ee.core.Profile.J2EE_13;
-import static org.netbeans.api.j2ee.core.Profile.J2EE_14;
-import static org.netbeans.api.j2ee.core.Profile.JAVA_EE_5;
-import static org.netbeans.api.j2ee.core.Profile.JAVA_EE_6_FULL;
-import static org.netbeans.api.j2ee.core.Profile.JAVA_EE_6_WEB;
-import static org.netbeans.api.j2ee.core.Profile.JAVA_EE_7_FULL;
-import static org.netbeans.api.j2ee.core.Profile.JAVA_EE_7_WEB;
+import static org.netbeans.api.j2ee.core.Profile.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.javaee.project.spi.JavaEEProjectSettingsImplementation;
@@ -61,10 +55,13 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
     static final Map<String, Profile> PROFILE_DEPENDENCIES = new LinkedHashMap<>();
 
     static {
+        PROFILE_DEPENDENCIES.put("javax:javaee-api:8.*", JAVA_EE_8_FULL);
+        PROFILE_DEPENDENCIES.put("javax:javaee-web-api:8.*", JAVA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax:javaee-api:7.*", JAVA_EE_7_FULL);
         PROFILE_DEPENDENCIES.put("javax:javaee-web-api:7.*", JAVA_EE_7_WEB);
         PROFILE_DEPENDENCIES.put("javax:javaee-api:6.*", JAVA_EE_6_FULL);
         PROFILE_DEPENDENCIES.put("javax:javaee-web-api:6.*", JAVA_EE_6_WEB);
+        PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:4\\.0.*", JAVA_EE_8_WEB);
         PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:3\\.1.*", JAVA_EE_7_WEB);
         PROFILE_DEPENDENCIES.put("javax\\.servlet:javax\\.servlet-api:3\\.0.*", JAVA_EE_6_WEB);
 

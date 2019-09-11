@@ -97,10 +97,9 @@ public class FieldRedeclarationHintError extends HintErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return Collections.emptySet();
             }
-            // if property type-hints are added in future, FiledElement should be improved
-            // e.g. check whether a field is an annotation, then add the field for it
-            Collection<? extends String> defaultTypeNames = declaredField.getDefaultTypeNames();
-            if (defaultTypeNames.isEmpty()) {
+            // some declaredFields may be annotations e.g. @property int $count Description
+            // So, check whether a field is an annotation
+            if (!declaredField.isAnnotation()) {
                 String fieldName = declaredField.getName();
                 FieldElement firstDeclaredField = firstDeclaredFields.get(fieldName);
                 if (firstDeclaredField == null) {

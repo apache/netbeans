@@ -1693,6 +1693,7 @@ public class Actions {
         * @deprecated use {@link #CheckboxMenuItem(javax.swing.Action, boolean)}. 
         * Have your action to implement properly {@link Action#getValue} for {@link Action#SELECTED_KEY}
         */
+        @Deprecated
         public CheckboxMenuItem(BooleanStateAction aAction, boolean useMnemonic) {
             Actions.connect(this, aAction, !useMnemonic);
         }

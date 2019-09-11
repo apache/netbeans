@@ -23,18 +23,4 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="probe" depends="init">
-        <mkdir dir="build/probe/classes"/>
-        <javac srcdir="probesrc" destdir="build/probe/classes" source="${javac.source}" debug="true" deprecation="true" target="${javac.target}"/>
-        <mkdir dir="${cluster}/modules/ext"/>
-        <nb-ext-jar jarfile="${cluster}/modules/ext/org-netbeans-modules-java-j2seplatform-probe.jar">
-            <manifest>
-                <attribute name="NetBeans-Own-Library" value="true"/>
-            </manifest>
-            <fileset dir="build/probe/classes"/>
-        </nb-ext-jar>
-    </target>
-
-    <target name="netbeans-extra" depends="probe"/>
-
 </project>

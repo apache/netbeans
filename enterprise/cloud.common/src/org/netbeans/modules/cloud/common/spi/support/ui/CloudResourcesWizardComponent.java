@@ -65,7 +65,7 @@ public class CloudResourcesWizardComponent extends javax.swing.JPanel {
         private List<ServerResourceDescriptor> resources;
 
         public ResourceModel(List<ServerResourceDescriptor> resources) {
-            this.resources = new ArrayList(resources);
+            this.resources = new ArrayList<>(resources);
             if (this.resources.isEmpty()) {
                 this.resources.add(new ServerResourceDescriptor("", "none available yet", "", null));
             }

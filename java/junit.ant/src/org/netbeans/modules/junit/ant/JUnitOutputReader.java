@@ -991,7 +991,7 @@ final class JUnitOutputReader {
             }
 
         } else {
-            List<String> stList = new ArrayList(Arrays.asList(testcase.getTrouble().getStackTrace()));
+            List<String> stList = new ArrayList<>(Arrays.asList(testcase.getTrouble().getStackTrace()));
             if (!line.startsWith(stList.get(stList.size()-1))){
                 stList.add(line);
                 trouble.setStackTrace(stList.toArray(new String[stList.size()]));

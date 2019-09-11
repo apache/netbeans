@@ -859,7 +859,7 @@ public class BeanClass extends AbstractCodeGeneratorClass implements CodeGenerat
                 AttrProp attrProp = a.getAttrProp();
                 jw.comment("If our element does not exist, then the attribute does not exist.");
                 jw.beginIf("size("+attributeOwner.constName+") == 0");
-                jw.writeEol("return null");
+                jw.writeEol("return " + JavaUtil.nullValueForType(a.getType()));
                 jw.endElseBegin();
                 jw.write("return ");
                 jw.writeEol(JavaUtil.genParseText(a.getType(), "getAttributeValue("+attributeOwner.constName+ ((attributeOwner.isIndexed()) ? ", index" : "") +", \""+attrProp.getName()+"\")", config.isForME()));

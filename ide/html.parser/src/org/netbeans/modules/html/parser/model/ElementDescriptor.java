@@ -4724,7 +4724,7 @@ HANDLER(
     }
 
     public static ElementDescriptor forElementName(ElementName elementName) {
-        return forName(elementName.name);
+        return forName(elementName.getName());
     }
 
     public Collection<Attribute> getAttributes() {

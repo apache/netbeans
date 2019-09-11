@@ -147,6 +147,20 @@ public class JsonParserTest extends JsonTestBase {
         parse("{ \"a\" : [{\"w\":1}, {\"e\":2},] }", false, Collections.singletonList("no viable alternative at input ']'"));
     }
 
+    public void testEmpty() throws Exception {
+        try {
+            // NETBEANS-2881
+            String original = "";
+            JsonParser parser = new JsonParser(false);
+            Document doc = getDocument(original);
+            Snapshot snapshot = Source.create(doc).createSnapshot();
+            JsErrorManager manager = new JsErrorManager(snapshot, JsTokenId.jsonLanguage());
+            parser.parseSource(snapshot, null, JsParser.Sanitize.NEVER, manager);
+        } catch (StringIndexOutOfBoundsException e) {
+            fail("StringIndexOutOfBoundsException occurred: " + e.getMessage());
+        }
+    }
+
     private void parse(
             String original,
             boolean allowComments,

@@ -63,7 +63,7 @@ public class ViewAction extends CookieAction {
             return;
         }
         for (int i = 0; i < activatedNodes.length; i++) {
-            ViewCookie es = (ViewCookie) activatedNodes[i].getCookie(ViewCookie.class);
+            ViewCookie es = activatedNodes[i].getCookie(ViewCookie.class);
             if (es != null) {
                 es.view();
             }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.127.1
+#Version 1.128
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -806,6 +806,15 @@ meth public static org.netbeans.modules.java.api.common.Roots propertyBased(java
 supr java.lang.Object
 hfds hint,isSourceRoot,support,supportIncludes,type
 hcls MyAccessor,NonSourceRoots,PropSourceRoots
+
+CLSS public final org.netbeans.modules.java.api.common.SingleJavaSourceRunActionProvider
+cons public init()
+intf org.netbeans.spi.project.ActionProvider
+meth public boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)
+meth public java.lang.String[] getSupportedActions()
+meth public void invokeAction(java.lang.String,org.openide.util.Lookup)
+supr java.lang.Object
+hfds FILE_ARGUMENTS,FILE_VM_OPTIONS
 
 CLSS public org.netbeans.modules.java.api.common.SourceRoots
 fld public final static java.lang.String DEFAULT_SOURCE_LABEL

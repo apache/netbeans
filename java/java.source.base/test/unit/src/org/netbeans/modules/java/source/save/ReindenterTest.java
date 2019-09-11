@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.save;
 
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -1909,18 +1910,18 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationInsideSwExpCase2() throws Exception {
-        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:|\n                break 5;\n        }\n    }\n}\n",
-                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                \n                break 5;\n        }\n    }\n}\n");
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:|\n                yield 5;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                \n                yield 5;\n        }\n    }\n}\n");
     }
 
     public void testNewLineIndentationInsideSwExpCase3() throws Exception {
-        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                {break 5;}\n        }\n    }\n}\n",
-                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                {break 5;}\n        }\n    }\n}\n");
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                {yield 5;}\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                {yield 5;}\n        }\n    }\n}\n");
     }
 
     public void testNewLineIndentationInsideSwExpIllegalCase() throws Exception {
-        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                break 5;\n        }\n    }\n}\n",
-                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                break 5;\n        }\n    }\n}\n");
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->|\n                yield 5;\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1->\n                \n                yield 5;\n        }\n    }\n}\n");
     }
 
     public void testNewLineIndentationInsideSwExpIllegalCase2() throws Exception {
@@ -1929,8 +1930,8 @@ public class ReindenterTest extends NbTestCase {
     }
 
     public void testNewLineIndentationAfterSwExprCase() throws Exception {
-        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                break 5;|\n        }\n    }\n}\n",
-                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                break 5;\n                \n        }\n    }\n}\n");
+        performNewLineIndentationTest("package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                yield 5;|\n        }\n    }\n}\n",
+                "package t;\npublic class T {\n    public void op() {\n        int a = switch(get()) {\n            case 1:\n                yield 5;\n                \n        }\n    }\n}\n");
     }
 
     public void testNewLineIndentationAfterSwExprRule() throws Exception {
@@ -1943,7 +1944,39 @@ public class ReindenterTest extends NbTestCase {
                 "package t;\npublic class T {\n    public void op() {\n        int a = switch(get())\n        {\n        }\n    }\n}\n");
     }
 
-    
+    public void testNewLineIndentationTextBlock1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        performNewLineIndentationTest("package t;\npublic class T {\n    private final String s = \"\"\"|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             \n}\n");
+    }
+
+    public void testSpanIndentationTextBlock1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        performSpanIndentationTest("package t;\npublic class T {\n|private final String s = \"\"\"\n\"\"\";|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             \"\"\";\n}\n");
+    }
+
+    public void testSpanIndentationTextBlock2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        performSpanIndentationTest("package t;\npublic class T {\n|private final String s = \"\"\"\n1\n  2\n 3\n\"\"\";|\n}\n",
+                "package t;\npublic class T {\n    private final String s = \"\"\"\n                             1\n                               2\n                              3\n                             \"\"\";\n}\n");
+    }
+
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
         int pos = code.indexOf('|');
 

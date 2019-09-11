@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.jsch.agentproxy/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jsch/agentproxy/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.19
+OpenIDE-Module-Specification-Version: 0.20
 

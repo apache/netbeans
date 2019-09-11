@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
         iconResource = "org/netbeans/modules/jshell/resources/reset.png",
         mimeType = "text/x-repl",
         menuPath = "Edit",
-        toolBarPosition = 20000,
+        toolBarPosition = 20002,
         menuPosition = 20000
 )
 @ActionID(category = "Edit", id = "org.netbeans.modules.jshell.editor.ResetAction")

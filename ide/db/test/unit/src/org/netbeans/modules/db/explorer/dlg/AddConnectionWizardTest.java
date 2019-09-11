@@ -24,42 +24,44 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import org.netbeans.api.db.explorer.*;
-import org.netbeans.modules.db.test.Util;
+import org.netbeans.modules.db.explorer.DatabaseConnection;
 import org.netbeans.modules.db.test.DBTestBase;
+import org.netbeans.modules.db.test.Util;
 import org.openide.WizardDescriptor;
 
 public class AddConnectionWizardTest extends DBTestBase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        Util.clearConnections();
-    }
+
+    private static final Logger LOG = Logger.getLogger(AddConnectionWizardTest.class.getName());
     
     public AddConnectionWizardTest(String testName) {
         super(testName);
     }
-
-    public void testAddConnectionWizdardReturnsNullOnCancel() throws Exception {
+    
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
         Util.clearConnections();
         Util.deleteDriverFiles();
-        
+    }
+
+    public void testAddConnectionWizdardReturnsNullOnCancel() throws Exception {
         final CountDownLatch finalLock = new CountDownLatch(1);
         final JDBCDriver driver = Util.createDummyDriver();
-        final org.netbeans.modules.db.explorer.DatabaseConnection dummyConnection 
-                = new org.netbeans.modules.db.explorer.DatabaseConnection(
-                driver.getName(),
-                driver.getClassName(),
-                "database", "schema", "user", "password", true);
+        final DatabaseConnection dummyConnection = new DatabaseConnection(driver.getName(), 
+                driver.getClassName(), "database", "schema", "user", "password", true);
         
-        final DatabaseConnection[] result = new DatabaseConnection[1];
+        final DatabaseConnection[] result = new DatabaseConnection[]{dummyConnection};
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
                     AddConnectionWizard wiz = reflectiveConstruct(AddConnectionWizard.class,
                             new Class[] {JDBCDriver.class, String.class, String.class, String.class},
                             new Object[] {driver, "jdbc:mysql://dummy", "dummy", "dummy"});
@@ -70,8 +72,11 @@ public class AddConnectionWizardTest extends DBTestBase {
                     wd.doCancelClick();
                     
                     result[0] = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
-
+                } catch (Throwable throwable) {
+                    LOG.log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+                } finally {
                     finalLock.countDown();
+                } 
             }
         });
         
@@ -83,22 +88,17 @@ public class AddConnectionWizardTest extends DBTestBase {
 
     
     public void testAddConnectionWizdardReturnsNonNullOnFinish() throws Exception {
-        Util.clearConnections();
-        Util.deleteDriverFiles();
-        
         final CountDownLatch finalLock = new CountDownLatch(1);
         final JDBCDriver driver = Util.createDummyDriver();
-        final org.netbeans.modules.db.explorer.DatabaseConnection dummyConnection 
-                = new org.netbeans.modules.db.explorer.DatabaseConnection(
-                driver.getName(),
-                driver.getClassName(),
-                "database", "schema", "user", "password", true);
+        final DatabaseConnection dummyConnection = new DatabaseConnection(driver.getName(), 
+                driver.getClassName(), "database", "schema", "user", "password", true);
         
         final DatabaseConnection[] result = new DatabaseConnection[1];
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
                     AddConnectionWizard wiz = reflectiveConstruct(AddConnectionWizard.class,
                             new Class[] {JDBCDriver.class, String.class, String.class, String.class},
                             new Object[] {driver, "jdbc:mysql://dummy", "dummy", "dummy"});
@@ -109,8 +109,11 @@ public class AddConnectionWizardTest extends DBTestBase {
                     wd.doFinishClick();
                     
                     result[0] = reflectiveCall(AddConnectionWizard.class, wiz, "getResult", new Class[0], new Object[0]);
-
+                } catch (Throwable throwable) {
+                    LOG.log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+                } finally {
                     finalLock.countDown();
+                }
             }
         });
         
@@ -131,16 +134,6 @@ public class AddConnectionWizardTest extends DBTestBase {
     }
     
     private <T> T reflectiveFieldGet(Class clazz, Object instance, String fieldname) {
-        try {
-            Field f = clazz.getDeclaredField(fieldname);
-            f.setAccessible(true);
-            return (T) f.get(instance);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-    
-    private <T> T reflectiveFieldSet(Class clazz, Object instance, String fieldname) {
         try {
             Field f = clazz.getDeclaredField(fieldname);
             f.setAccessible(true);

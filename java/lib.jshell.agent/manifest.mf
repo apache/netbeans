@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.lib.jshell.agent
 OpenIDE-Module-Localizing-Bundle: org/netbeans/lib/jshell/agent/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.4
+OpenIDE-Module-Specification-Version: 1.5
 Premain-class: org.netbeans.lib.jshell.agent.NbJShellAgent
 Can-Redefine-Classes: true
 Can-Retransform-Classes: true

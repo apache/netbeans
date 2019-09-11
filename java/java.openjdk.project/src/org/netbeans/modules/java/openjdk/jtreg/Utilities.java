@@ -37,16 +37,16 @@ public class Utilities {
         if (root == null)
             return false;
 
-        FileObject srcDir = root.getFileObject("src");
+        FileObject srcDir = BuildUtils.getFileObject(root, "src");
 
         if (srcDir == null)
             return false;
 
-        if (srcDir.getFileObject("share/classes") != null)
+        if (BuildUtils.getFileObject(srcDir, "share/classes") != null)
             return true;
 
         for (FileObject mod : srcDir.getChildren()) {
-            if (mod.getFileObject("share/classes") != null)
+            if (BuildUtils.getFileObject(mod, "share/classes") != null)
                 return true;
         }
 
@@ -54,18 +54,23 @@ public class Utilities {
     }
 
     public static boolean isLangtoolsRepository(FileObject root) {
-        return (root.getFileObject("src/share/classes/com/sun/tools/javac/main/Main.java") != null ||
-                root.getFileObject("src/jdk.compiler/share/classes/com/sun/tools/javac/main/Main.java") != null) &&
-                root.getFileObject("src/java.base/share/classes/java/lang/Object.java") == null;
+        return (BuildUtils.getFileObject(root, "src/share/classes/com/sun/tools/javac/main/Main.java") != null ||
+                BuildUtils.getFileObject(root, "src/jdk.compiler/share/classes/com/sun/tools/javac/main/Main.java") != null) &&
+                BuildUtils.getFileObject(root, "src/java.base/share/classes/java/lang/Object.java") == null;
     }
 
     public static FileObject getLangtoolsKeyRoot(FileObject root) {
-        FileObject javaBase = root.getFileObject("src/jdk.compiler/share/classes");
+        FileObject jdkCompiler = BuildUtils.getFileObject(root, "src/jdk.compiler/share/classes");
 
-        if (javaBase != null)
-            return javaBase;
+        if (jdkCompiler != null)
+            return jdkCompiler;
 
-        return root.getFileObject("src/share/classes");
+        jdkCompiler = root.getFileObject("src/jdk.compiler/share/classes");
+
+        if (jdkCompiler != null)
+            return jdkCompiler;
+
+        return BuildUtils.getFileObject(root, "src/share/classes");
     }
     
     public static File jtregOutputDir(FileObject testFile) {

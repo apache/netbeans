@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->myClass->|publicTestMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTestMethod()        [STATIC]   \Bar\MyClass
+METHOD     publicTestMethod()              [PUBLIC]   \Bar\MyClass

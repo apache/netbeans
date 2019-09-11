@@ -1,0 +1,51 @@
+{
+	"name": "netbeans-java",
+	"description": "A NetBeans Java plugin for Visual Studio Code",
+	"author": "Jan Lahoda",
+	"license": "MIT",
+	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "TBD"
+	},
+	"publisher": "jlahoda",
+	"categories": [],
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.26.0"
+	},
+	"activationEvents": [
+		"onLanguage:java"
+	],
+	"main": "./out/extension",
+	"scripts": {
+		"vscode:prepublish": "npm run update-vscode && npm run compile",
+		"compile": "tsc -p ./tsconfig.json",
+		"watch": "tsc -w -p ./tsconfig.json",
+		"postinstall": "vscode-install",
+		"update-vscode": "vscode-install"
+	},
+	"devDependencies": {
+		"@types/mocha": "^5.2.0",
+		"@types/node": "^8.0.0",
+		"typescript": "2.8.3",
+		"vscode": "^1.1.21"
+	},
+	"dependencies": {
+		"vscode-languageclient": "^4.1.4"
+	},
+        "contributes": {
+            "configuration": {
+                "title": "Java",
+                "properties": {
+                    "netbeans.jdkhome": {
+                         "type": ["string", "null"],
+                         "default": null,
+                         "description": "Specifies the JDK on which the Java language server should be run"
+                    }
+                }
+            }
+        }
+}

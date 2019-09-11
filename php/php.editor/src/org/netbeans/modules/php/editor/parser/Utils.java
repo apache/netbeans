@@ -213,6 +213,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_FINAL:
                 name = "T_FINAL"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_FN:
+                name = "T_FN"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_FOR:
                 name = "T_FOR"; //NOI18N
                 break;

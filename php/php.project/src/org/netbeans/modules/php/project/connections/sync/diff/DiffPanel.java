@@ -84,13 +84,13 @@ public final class DiffPanel extends JPanel {
         this.charsetName = charsetName;
 
         initComponents();
-        setPreferredSize(new Dimension(600, 450));
+        setPreferredSize(new Dimension(1024, 768));
     }
 
     @NbBundle.Messages({
         "# {0} - file path",
         "DiffPanel.title=Remote Diff for {0}",
-        "DiffPanel.button.titleWithMnemonics=&Take Over Local Changes"
+        "DiffPanel.button.titleWithMnemonics=&Upload Local Changes"
     })
     public boolean open() throws IOException {
         assert SwingUtilities.isEventDispatchThread();

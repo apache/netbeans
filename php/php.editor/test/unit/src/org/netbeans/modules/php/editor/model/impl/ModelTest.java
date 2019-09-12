@@ -246,7 +246,7 @@ public class ModelTest extends ModelTestBase {
         assertNotNull(functionScope);
         Collection<? extends String> returnTypeNames = functionScope.getReturnTypeNames();
         assertEquals(1, returnTypeNames.size());
-        assertEquals("DateTime", ModelUtils.getFirst(returnTypeNames));
+        assertEquals("\\DateTime", ModelUtils.getFirst(returnTypeNames));
     }
 
     public void testReturnTypes02() throws Exception {
@@ -301,7 +301,7 @@ public class ModelTest extends ModelTestBase {
         assertNotNull(foo);
         Collection<? extends String> fooReturnTypeNames = foo.getReturnTypeNames();
         assertEquals(1, fooReturnTypeNames.size());
-        assertEquals("Iterator", ModelUtils.getFirst(fooReturnTypeNames));
+        assertEquals("\\Iterator", ModelUtils.getFirst(fooReturnTypeNames));
         FunctionScope bar = ModelUtils.getFirst(ModelUtils.filter(ModelUtils.getDeclaredFunctions(program), "bar"));
         assertNotNull(bar);
         Collection<? extends String> barReturnTypeNames = bar.getReturnTypeNames();

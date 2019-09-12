@@ -518,7 +518,7 @@ public final class Splash implements Stamps.Updater {
                         return;
                     }
 
-                    if (statusBox.fm == null) {
+                    if (statusBox == null || statusBox.fm == null) {
                         return;
                     }
 
@@ -544,7 +544,7 @@ public final class Splash implements Stamps.Updater {
             if (text == null)
                 return ;
 
-            if (statusBox.fm == null)
+            if (statusBox == null ||statusBox.fm == null)
                 return;
             
             int width = statusBox.fm.stringWidth(text);

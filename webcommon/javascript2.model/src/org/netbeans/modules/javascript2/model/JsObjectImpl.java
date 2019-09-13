@@ -563,7 +563,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         if (prototype != null) {
             Collection<? extends TypeUsage> protoAssignments = prototype.getAssignments();
             if (protoAssignments != null && !protoAssignments.isEmpty()) {
-                protoAssignments = new ArrayList(protoAssignments);
+                protoAssignments = new ArrayList<>(protoAssignments);
                 Collection<? extends JsObject> variables = ModelUtils.getVariables(ModelUtils.getDeclarationScope(this));
                 for (TypeUsage typeUsage : protoAssignments) {
                     for (JsObject variable : variables) {
@@ -787,7 +787,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     protected void correctTypes(String fromType, String toType) {
         for (Integer offset: assignments.keySet()) {
             Collection<TypeUsage> types = assignments.get(offset);
-            List<TypeUsage> copy = new ArrayList(types);
+            List<TypeUsage> copy = new ArrayList<>(types);
             String typeR = null;
             for (TypeUsage type : copy) {
                 typeR = replaceTypeInFQN(type.getType(), fromType, toType);

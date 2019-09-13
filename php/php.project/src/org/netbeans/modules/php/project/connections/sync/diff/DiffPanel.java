@@ -62,6 +62,8 @@ public final class DiffPanel extends JPanel {
     static final Logger LOGGER = Logger.getLogger(DiffPanel.class.getName());
 
     private static final RequestProcessor RP = new RequestProcessor(DiffPanel.class);
+    // @GuardedBy(AWT)
+    private static Dimension PREFERRED_SIZE = new Dimension(1024, 768);
 
     final SyncItem syncItem;
     final RemoteClient remoteClient;
@@ -84,13 +86,13 @@ public final class DiffPanel extends JPanel {
         this.charsetName = charsetName;
 
         initComponents();
-        setPreferredSize(new Dimension(600, 450));
+        setPreferredSize(PREFERRED_SIZE);
     }
 
     @NbBundle.Messages({
         "# {0} - file path",
         "DiffPanel.title=Remote Diff for {0}",
-        "DiffPanel.button.titleWithMnemonics=&Take Over Local Changes"
+        "DiffPanel.button.titleWithMnemonics=&Upload Local Changes"
     })
     public boolean open() throws IOException {
         assert SwingUtilities.isEventDispatchThread();
@@ -112,6 +114,7 @@ public final class DiffPanel extends JPanel {
         try {
             dialog.setVisible(true);
         } finally {
+            PREFERRED_SIZE = getSize();
             dialog.dispose();
             DiffFileEncodingQueryImpl.clear();
         }

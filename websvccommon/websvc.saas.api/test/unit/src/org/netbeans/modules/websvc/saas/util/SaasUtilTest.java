@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
-import javax.xml.bind.JAXBElement;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.websvc.saas.model.Saas;
 import org.netbeans.modules.websvc.saas.model.SaasGroup;
@@ -32,14 +31,14 @@ import org.netbeans.modules.websvc.saas.model.jaxb.SaasMetadata;
 import org.netbeans.modules.websvc.saas.model.jaxb.SaasServices;
 import org.netbeans.modules.websvc.saas.model.wadl.Application;
 import org.netbeans.modules.websvc.saas.model.wadl.Method;
+import org.netbeans.modules.websvc.saas.model.wadl.Representation;
+import org.netbeans.modules.websvc.saas.model.wadl.Response;
 
 /**
  *
  * @author nam
  */
 public class SaasUtilTest extends NbTestCase {
-
-    File output;
     
     public SaasUtilTest(String testName) {
         super(testName);
@@ -53,9 +52,6 @@ public class SaasUtilTest extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        if (output != null && output.isFile()) {
-            output.delete();
-        }
     }
 
     public void testLoadSaasGroup() throws Exception {
@@ -81,7 +77,7 @@ public class SaasUtilTest extends NbTestCase {
         assertEquals("test3", result.getChildrenGroups().get(2).getName());
     }
 
-    /*public void testXpath() throws Exception {
+    public void testXpath() throws Exception {
         InputStream in = this.getClass().getResourceAsStream("testwadl.xml");
         Application app = SaasUtil.loadJaxbObject(in, Application.class);
         assertNotNull(SaasUtil.wadlMethodFromXPath(app, "//resource[1]/method[1]"));
@@ -95,49 +91,54 @@ public class SaasUtilTest extends NbTestCase {
         InputStream in = this.getClass().getResourceAsStream("testwadl.xml");
         Application app = SaasUtil.loadJaxbObject(in, Application.class);
         Method method = SaasUtil.wadlMethodFromXPath(app, "//resource[1]/method[1]");
-        List<JAXBElement<RepresentationType>> elements = method.getResponse().getRepresentationOrFault();
-        //TODO none of the wadl's has response representation
-        //assertEquals(1, SaasUtil.getMediaTypesFromJAXBElement(elements).size());
-    }*/
+        List<Response> resposes = method.getResponse();
+        assertEquals(1, resposes.size());
+        
+        List<Representation> representation = resposes.get(0).getRepresentation();
+        assertEquals(1, representation.size());
+
+        assertEquals(1, SaasUtil.getMediaTypes(representation).size());
+    }
     
     public void testSaveSaasGroup() throws Exception {
-        output = new File(getWorkDir(), "testSaveSaasGroup");
+        File output = new File(getWorkDir(), "testSaveSaasGroup");
         InputStream in = this.getClass().getResourceAsStream("rootGroup.xml");
         SaasGroup rootGroup = SaasUtil.loadSaasGroup(in);
-        SaasGroup test2 = rootGroup.getChildrenGroups().get(1);
-        test2.addService(new Saas(test2, new SaasServices()));
-        test2.getServices().get(0).getDelegate().setDisplayName("Test2Service1");
-        SaasUtil.saveSaasGroup(rootGroup, output);
+        SaasGroup test2Group = rootGroup.getChildrenGroups().get(1);
         
+        SaasServices newSaasServices = new SaasServices();
+        newSaasServices.setDisplayName("Test2Service1");
+        Saas newSaas = new Saas(test2Group, newSaasServices);
+        test2Group.addService(newSaas);
+        
+        SaasUtil.saveSaasGroup(rootGroup, output);
+                
         verifyRootGroup(new FileInputStream(output));
+        output.delete();
     }
 
     public void testSaasMetaData() throws Exception {
         SetupUtil.commonSetUp(super.getWorkDir());
 
-        InputStream in = this.getClass().getResourceAsStream("/org/netbeans/modules/websvc/saas/services/zillow/resources/Zillow.xml");
+        InputStream in = this.getClass().getResourceAsStream("FakeSaas.xml");
         SaasServices service = SaasUtil.loadJaxbObject(in, SaasServices.class);
         SaasMetadata metadata = service.getSaasMetadata();
-        assertEquals("Zillow", metadata.getGroup().getName());
-        assertEquals("Zillow", metadata.getGroup().getName());
-        assertEquals("org.netbeans.modules.websvc.saas.services.zillow.Bundle", metadata.getLocalizingBundle());
-        //assertEquals("SaaSServices/Zillow/profile.properties", metadata.getAuthentication().getProfile());
+        assertEquals("FakeSaas", metadata.getGroup().getName());
+        assertEquals("org.netbeans.modules.websvc.saas.services.fakesaas.Bundle", metadata.getLocalizingBundle());
         assertEquals("zws-id", metadata.getAuthentication().getApiKey().getId());
-
+        
         SetupUtil.commonTearDown();
     }
 
     public void testSaasServices() throws Exception {
         SetupUtil.commonSetUp(super.getWorkDir());
 
-        InputStream in = this.getClass().getResourceAsStream("/org/netbeans/modules/websvc/saas/services/zillow/resources/Zillow.xml");
+        InputStream in = this.getClass().getResourceAsStream("FakeSaas.xml");
         SaasServices ss = SaasUtil.loadSaasServices(in);
-        assertEquals("Real Estate Service", ss.getDisplayName());
+        assertEquals("Fake Saas Service", ss.getDisplayName());
         
-        //TODO fixme this only works if we have absolute include/href=<absolute-URI>
         assertNotNull(ss.getSaasMetadata());
-        //No Sub-group for now
-        //assertEquals("Videos", ss.getSaasMetadata().getGroup().getGroup().get(0).getName());
+        assertEquals("Videos", ss.getSaasMetadata().getGroup().getGroup().get(0).getName());
 
         SetupUtil.commonTearDown();
     }

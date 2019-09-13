@@ -1472,7 +1472,7 @@ public class NPECheckTest extends NbTestCase {
                         "            }\n" +
                         "        } while (var == null);\n" +
                         "\n" +
-                        "        Class clazz = var.getClass(); \n" +
+                        "        Class<?> clazz = var.getClass(); \n" +
                         "    }\n" +
                         "\n" +
                         "    public static Test createNullDereferenceHint() {\n" +

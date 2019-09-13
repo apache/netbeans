@@ -1421,6 +1421,7 @@ fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion P
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_184
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_191
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_192
+fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_193
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public java.lang.String toFullString()
@@ -1441,7 +1442,7 @@ meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion toValu
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>
-hfds PF_4_1_144_STR,PF_4_1_144_STR_NEXT,PF_4_1_151_STR,PF_4_1_151_STR_NEXT,PF_4_1_152_STR,PF_4_1_152_STR_NEXT,PF_4_1_153_STR,PF_4_1_153_STR_NEXT,PF_4_1_1_154_STR,PF_4_1_1_154_STR_NEXT,PF_4_1_1_161_STR,PF_4_1_1_161_STR_NEXT,PF_4_1_1_162_STR,PF_4_1_1_162_STR_NEXT,PF_4_1_1_163_STR,PF_4_1_1_163_STR_NEXT,PF_4_1_1_164_STR,PF_4_1_1_164_STR_NEXT,PF_4_1_1_171_STR,PF_4_1_1_171_STR_NEXT,PF_4_1_2_172_STR,PF_4_1_2_172_STR_NEXT,PF_4_1_2_173_STR,PF_4_1_2_173_STR_NEXT,PF_4_1_2_174_STR,PF_4_1_2_174_STR_NEXT,PF_4_1_2_181_STR,PF_4_1_2_181_STR_NEXT,PF_5_181_STR,PF_5_181_STR_NEXT,PF_5_182_STR,PF_5_182_STR_NEXT,PF_5_183_STR,PF_5_183_STR_NEXT,PF_5_184_STR,PF_5_184_STR_NEXT,PF_5_191_STR,PF_5_191_STR_NEXT,PF_5_192_STR,PF_5_192_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds PF_4_1_144_STR,PF_4_1_144_STR_NEXT,PF_4_1_151_STR,PF_4_1_151_STR_NEXT,PF_4_1_152_STR,PF_4_1_152_STR_NEXT,PF_4_1_153_STR,PF_4_1_153_STR_NEXT,PF_4_1_1_154_STR,PF_4_1_1_154_STR_NEXT,PF_4_1_1_161_STR,PF_4_1_1_161_STR_NEXT,PF_4_1_1_162_STR,PF_4_1_1_162_STR_NEXT,PF_4_1_1_163_STR,PF_4_1_1_163_STR_NEXT,PF_4_1_1_164_STR,PF_4_1_1_164_STR_NEXT,PF_4_1_1_171_STR,PF_4_1_1_171_STR_NEXT,PF_4_1_2_172_STR,PF_4_1_2_172_STR_NEXT,PF_4_1_2_173_STR,PF_4_1_2_173_STR_NEXT,PF_4_1_2_174_STR,PF_4_1_2_174_STR_NEXT,PF_4_1_2_181_STR,PF_4_1_2_181_STR_NEXT,PF_5_181_STR,PF_5_181_STR_NEXT,PF_5_182_STR,PF_5_182_STR_NEXT,PF_5_183_STR,PF_5_183_STR_NEXT,PF_5_184_STR,PF_5_184_STR_NEXT,PF_5_191_STR,PF_5_191_STR_NEXT,PF_5_192_STR,PF_5_192_STR_NEXT,PF_5_193_STR,PF_5_193_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.StartupArgs
 meth public abstract java.lang.String getJavaHome()

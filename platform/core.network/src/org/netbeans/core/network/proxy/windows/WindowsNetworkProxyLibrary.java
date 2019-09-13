@@ -30,7 +30,7 @@ import java.util.List;
  * @author lfischme
  */
 public interface WindowsNetworkProxyLibrary extends Library {
-    WindowsNetworkProxyLibrary LIBRARY = (WindowsNetworkProxyLibrary) Native.loadLibrary("winhttp.dll", WindowsNetworkProxyLibrary.class);
+    WindowsNetworkProxyLibrary LIBRARY = Native.loadLibrary("winhttp.dll", WindowsNetworkProxyLibrary.class);
     
     public class ProxyConfig extends Structure {
 

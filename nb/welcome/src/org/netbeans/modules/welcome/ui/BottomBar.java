@@ -45,8 +45,6 @@ class BottomBar extends JPanel {
         add( new JLabel(), new GridBagConstraints(1,0,1,1,1.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0 ) );
         
-        add( Logo.createIncubatorLogo(), new GridBagConstraints(4,0,1,1,0.0,0.0,
-                GridBagConstraints.EAST,GridBagConstraints.NONE,new Insets(5,5,5,12),0,0 ) );
     }
 
 }

@@ -1,0 +1,82 @@
+<testresult testFile='magicMethodStatic05.php'>
+    <scanner>
+        <token id='T_CLASS' start='880' end='885'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='886' end='887'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='888' end='889'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='895' end='896'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='897' end='897'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='897'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='879'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='875' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                            <PHPDocVarTypeTag start='842' end='856' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='849' end='856' value='$param1'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='842' end='848' value='string' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPDocBlock start='818' end='879'>
+                <Tags>
+                    <PHPDocMethodTag start='822' end='875' kind='method' isStatic='true'>
+                        <Name>
+                            <PHPDocNode start='839' end='841' value='m1'/>
+                        </Name>
+                        <Return Types>
+                            <PHPDocTypeNode start='837' end='838' value='A' isArray='false'/>
+                        </Return Types>
+                        <Parameters>
+                            <PHPDocVarTypeTag start='842' end='856' kind='param'>
+                                <Variable>
+                                    <PHPDocNode start='849' end='856' value='$param1'/>
+                                </Variable>
+                                <Types>
+                                    <PHPDocTypeNode start='842' end='848' value='string' isArray='false'/>
+                                </Types>
+                            </PHPDocVarTypeTag>
+                        </Parameters>
+                    </PHPDocMethodTag>
+                </Tags>
+            </PHPDocBlock>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='880' end='896' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='886' end='887' name='A'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='888' end='896' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

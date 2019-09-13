@@ -118,11 +118,6 @@ public class BridgingServerInstance implements ServerInstanceImplementation, Loo
     }
 
     @Override
-    public String getProperty(String key) {
-        return instance.getInstanceProperties().getProperty(key);
-    }
-
-    @Override
     public Lookup getLookup() {
         // FIXME why is the platform written in such strange way ?
         J2eePlatform platform = Deployment.getDefault().getJ2eePlatform(instance.getUrl());

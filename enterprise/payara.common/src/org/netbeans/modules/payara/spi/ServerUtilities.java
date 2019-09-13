@@ -40,7 +40,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 
-
 /**
  * General helper methods for accessing Payara server objects.
  *
@@ -57,27 +56,21 @@ public final class ServerUtilities {
     public static final String VERSION_MATCHER = "(?:-[0-9bSNAPHOT]+(?:\\.[0-9]+(?:_[0-9]+|)|).*|).jar"; // NOI18N
     public static final String GF_JAR_MATCHER = "glassfish" + VERSION_MATCHER; // NOI18N
     public static final String PROP_FIRST_RUN = "first_run";
-    private PayaraInstanceProvider pip;
-    private PayaraWizardProvider gwp;
+    private final PayaraInstanceProvider pip;
+    private final PayaraWizardProvider pwp;
     
     
-    private ServerUtilities(PayaraInstanceProvider pip, PayaraWizardProvider gwp) {
+    private ServerUtilities(PayaraInstanceProvider pip, PayaraWizardProvider pwp) {
         assert null != pip;
         this.pip = pip;
-        this.gwp = gwp;
+        this.pwp = pwp;
     }
 
-//    public static ServerUtilities getPreludeUtilities() {
-//        PayaraInstanceProvider pip = PayaraInstanceProvider.getPrelude();
-//        return null == pip ? null : new ServerUtilities(pip,null);
-//    }
-    
     public static ServerUtilities getEe6Utilities() {
         PayaraInstanceProvider pip = PayaraInstanceProvider.getProvider();
         return null == pip ? null : new ServerUtilities(pip,
                 PayaraWizardProvider.createEe6());
     }
-    
         
     public static ServerUtilities getEe7Utilities() {
         PayaraInstanceProvider pip = PayaraInstanceProvider.getProvider();
@@ -91,12 +84,6 @@ public final class ServerUtilities {
                 PayaraWizardProvider.createEe8());
     }
 
-//    public static ServerUtilities getEe6WCUtilities() {
-//        PayaraInstanceProvider pip = PayaraInstanceProvider.getProvider();
-//        return null == pip ? null : new ServerUtilities(pip,
-//                PayaraWizardProvider.createEe6WC());
-//    }
-    
     /**
      * Returns the ServerInstance object for the server with the specified URI.
      * 
@@ -137,7 +124,7 @@ public final class ServerUtilities {
      * Returns the lookup object for a server instance when the caller only has
      * the public handle available via common server API.
      *
-     * @param ServerInstance object for this server instance.
+     * @param instance object for this server instance.
      *
      * @return Lookup object maintained by backing instance implementation
      */
@@ -200,24 +187,28 @@ public final class ServerUtilities {
      /**
      * Returns the fqn jar name with the correct version 
      * 
+     * @param payaraHome
+     * @param jarNamePattern
      * @return the File with full path of the jar or null
      */
-    public static File getJarName(String payaraInstallRoot, String jarNamePattern) {
-        return getJarName(payaraInstallRoot, jarNamePattern, PF_MODULES_DIR_NAME);
+    public static File getJarName(String payaraHome, String jarNamePattern) {
+        return getJarName(payaraHome, jarNamePattern, PF_MODULES_DIR_NAME);
     }
 
-    public static File getJarName(String payaraInstallRoot, String jarNamePattern, String subdirectoryName) {
-        File searchDirectory = new File(payaraInstallRoot + File.separatorChar + subdirectoryName);
+    public static File getJarName(String payaraHome, String jarNamePattern, String subdirectoryName) {
+        File searchDirectory = new File(payaraHome + File.separatorChar + subdirectoryName);
         return Utils.getFileFromPattern(jarNamePattern, searchDirectory);
     }
 
      /**
      * Returns the fqn jar name with the correct version
      *
+     * @param payaraHome
+     * @param jarNamePattern
      * @return the File with full path of the jar or null
      */
-    public static File getWsJarName(String payaraInstallRoot, String jarNamePattern) {
-        File modulesDir = new File(payaraInstallRoot + File.separatorChar + PF_MODULES_DIR_NAME);
+    public static File getWsJarName(String payaraHome, String jarNamePattern) {
+        File modulesDir = new File(payaraHome + File.separatorChar + PF_MODULES_DIR_NAME);
         File retVal = Utils.getFileFromPattern(jarNamePattern, modulesDir);
         if (null == retVal) {
             retVal = Utils.getFileFromPattern(jarNamePattern,

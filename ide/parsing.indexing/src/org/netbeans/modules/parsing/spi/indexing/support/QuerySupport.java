@@ -45,6 +45,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -844,11 +845,9 @@ public final class QuerySupport {
             @NonNull final FileObject sourceRoot,
             @NonNull final Map<URL, List<URL>> binaryDeps) {
         Set<URL> result = new HashSet<>();
-        for (URL bin : binaryDeps.keySet()) {
-            for (FileObject fo : SourceForBinaryQuery.findSourceRoots(bin).getRoots()) {
-                if (sourceRoot.equals(fo)) {
-                    result.add(bin);
-                }
+        for (URL binRoot : BinaryForSourceQuery.findBinaryRoots(sourceRoot.toURL()).getRoots()) {
+            if (binaryDeps.containsKey(binRoot)) {
+                result.add(binRoot);
             }
         }
         return result;

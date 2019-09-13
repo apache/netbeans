@@ -168,8 +168,8 @@ public class ThreadsCache implements Executor {
 
     private void initGroups(ThreadGroupReference group) {
         try {
-            List<ThreadGroupReference> groups = new ArrayList(ThreadGroupReferenceWrapper.threadGroups0(group));
-            List<ThreadReference> threads = new ArrayList(ThreadGroupReferenceWrapper.threads0(group));
+            List<ThreadGroupReference> groups = new ArrayList<>(ThreadGroupReferenceWrapper.threadGroups0(group));
+            List<ThreadReference> threads = new ArrayList<>(ThreadGroupReferenceWrapper.threads0(group));
             filterThreads(threads);
             groupMap.put(group, groups);
             threadMap.put(group, threads);
@@ -197,7 +197,7 @@ public class ThreadsCache implements Executor {
         groups = groupMap.get(null);
         if (groups == null) {
             try {
-                groups = new ArrayList(VirtualMachineWrapper.topLevelThreadGroups(vm));
+                groups = new ArrayList<>(VirtualMachineWrapper.topLevelThreadGroups(vm));
             } catch (InternalExceptionWrapper ex) {
                 return ;
             }
@@ -206,7 +206,7 @@ public class ThreadsCache implements Executor {
         for (ThreadGroupReference group : groups) {
             initGroups(group);
         }
-        List<ThreadReference> mainThreads = new ArrayList();
+        List<ThreadReference> mainThreads = new ArrayList<>();
         threadMap.put(null, mainThreads);
         for (ThreadReference thread : allThreads) {
             try {
@@ -237,7 +237,7 @@ public class ThreadsCache implements Executor {
             if (vm == null) {
                 return Collections.EMPTY_LIST;
             }
-            topGroups = new ArrayList(VirtualMachineWrapper.topLevelThreadGroups0(vm));
+            topGroups = new ArrayList<>(VirtualMachineWrapper.topLevelThreadGroups0(vm));
             groupMap.put(null, topGroups);
             if (uninitialized) {
                 for (ThreadGroupReference g : topGroups) {
@@ -279,7 +279,7 @@ public class ThreadsCache implements Executor {
         }
         List<ThreadGroupReference> groups = groupMap.get(group);
         if (groups == uninitializedGroupList) {
-            groups = new ArrayList(ThreadGroupReferenceWrapper.threadGroups0(group));
+            groups = new ArrayList<>(ThreadGroupReferenceWrapper.threadGroups0(group));
             groupMap.put(group, groups);
         }
         if (groups == null) {
@@ -309,7 +309,7 @@ public class ThreadsCache implements Executor {
         List<ThreadGroupReference> gs = groupMap.get(g);
         if (gs != null) {
             if (gs == uninitializedGroupList) {
-                gs = new ArrayList(ThreadGroupReferenceWrapper.threadGroups0(g));
+                gs = new ArrayList<>(ThreadGroupReferenceWrapper.threadGroups0(g));
                 groupMap.put(g, gs);
             }
             groups.addAll(gs);
@@ -340,7 +340,7 @@ public class ThreadsCache implements Executor {
             if (parent != null) {
                 addedGroups.addAll(addGroups(parent));
             } else {
-                List<ThreadGroupReference> topGroups = new ArrayList(VirtualMachineWrapper.topLevelThreadGroups0(vm));
+                List<ThreadGroupReference> topGroups = new ArrayList<>(VirtualMachineWrapper.topLevelThreadGroups0(vm));
                 groupMap.put(null, topGroups);
                 addedGroups.addAll(topGroups);
             }
@@ -348,14 +348,14 @@ public class ThreadsCache implements Executor {
         List<ThreadGroupReference> parentsGroups = groupMap.get(parent);
         if (parentsGroups != null && !parentsGroups.contains(group)) {
             if (parentsGroups == uninitializedGroupList) {
-                parentsGroups = new ArrayList(ThreadGroupReferenceWrapper.threadGroups0(parent));
+                parentsGroups = new ArrayList<>(ThreadGroupReferenceWrapper.threadGroups0(parent));
                 groupMap.put(parent, parentsGroups);
                 addedGroups.addAll(parentsGroups);
             } else {
                 parentsGroups.add(group);
                 addedGroups.add(group);
             }
-            List<ThreadGroupReference> groups = new ArrayList();
+            List<ThreadGroupReference> groups = new ArrayList<>();
             groupMap.put(group, groups);
         }
         return addedGroups;

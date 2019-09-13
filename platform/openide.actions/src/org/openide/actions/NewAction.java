@@ -215,7 +215,7 @@ public final class NewAction extends NodeAction {
             Node[] arr;
 
             if (lookup != null) {
-                arr = (Node[]) lookup.lookupAll(Node.class).toArray(new Node[0]);
+                arr = lookup.lookupAll(Node.class).toArray(new Node[0]);
             } else {
                 arr = WindowManager.getDefault().getRegistry().getCurrentNodes();
             }

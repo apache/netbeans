@@ -2058,7 +2058,8 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_DECLARE_EQUAL, ts.offset() + ts.token().length()));
                     break;
                 }
-                if (TokenUtilities.endsWith(txt2, "=")) { // NOI18N
+                if (!TokenUtilities.startsWith(txt2, "==") // NOI18N NETBEANS-2149
+                        && TokenUtilities.endsWith(txt2, "=")) { // NOI18N
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ASSIGN_OP, ts.offset()));
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_ASSIGN_OP, ts.offset() + ts.token().length()));
@@ -2083,10 +2084,14 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_KEY_VALUE_OP, ts.offset() + ts.token().length()));
                 } else if (TokenUtilities.textEquals(txt2, "++") // NOI18N
                         || TokenUtilities.textEquals(txt2, "--")) { // NOI18N
-                    if (ts.movePrevious()) {
-                        if (ts.token().id() == PHPTokenId.PHP_VARIABLE || ts.token().id() == PHPTokenId.PHP_STRING) {
+                    Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.PHP_OPERATOR, PHPTokenId.WHITESPACE));
+                    if (previousToken != null) {
+                        if (previousToken.id() == PHPTokenId.PHP_VARIABLE
+                                || previousToken.id() == PHPTokenId.PHP_STRING
+                                || (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.equals(previousToken.text(), "]"))) { // NOI18N
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNARY_OP, ts.offset() + ts.token().length()));
-                        } else if (ts.token().id() != PHPTokenId.WHITESPACE) {
+                        } else if (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.equals(previousToken.text(), ".")) { // NOI18N
+                            // see PHPFormatterBrokenTest.testIssue197074_02
                             tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE, ts.offset() + ts.token().length()));
                         }
                         ts.move(origOffset);

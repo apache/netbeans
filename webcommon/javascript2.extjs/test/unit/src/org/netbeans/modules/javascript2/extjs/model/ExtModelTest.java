@@ -18,6 +18,11 @@
  */
 package org.netbeans.modules.javascript2.extjs.model;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import org.netbeans.modules.javascript2.model.ModelTestBase;
 
 /**
@@ -29,7 +34,24 @@ public class ExtModelTest extends ModelTestBase {
     public ExtModelTest(String testName) {
         super(testName);
     }
-    
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        File classManagerJs = new File(getDataDir(), "testfiles/completion/applyMethod/ClassManager.js");
+        if(! classManagerJs.exists()) {
+            URL source = new URL("https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/src/class/ClassManager.js");
+            try(InputStream is = source.openStream();
+                OutputStream os = new FileOutputStream(classManagerJs)) {
+                byte[] buffer = new byte[1024 * 10];
+                int read;
+                while((read = is.read(buffer)) >= 0) {
+                    os.write(buffer, 0, read);
+                }
+            }
+        }
+    }
+
     public void testExtDefineMethod() throws Exception {
         checkModel("testfiles/completion/defineMethod/defineMethod.js");
     }

@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="indent.given.indent">
+            <summary>Indent can be given as a string</summary>
+            <version major="1" minor="49"/>
+            <date day="16" month="6" year="2019"/>
+            <author login="jlahoda"/>
+            <compatibility source="compatible" binary="compatible"/>
+            <description>
+                Added method org.netbeans.modules.editor.indent.spi.Context.modifyIndent(int, int, String),
+                which allows to set indent by specifying particular indent string.
+            </description>
+            <class package="org.netbeans.modules.editor.indent.spi" name="Context"/>
+        </change>
         <change id="indent.support">
             <summary>Indentation Support module created</summary>
             <version major="1" minor="39"/>

@@ -354,7 +354,7 @@ NodeActionsProviderFilter, TableModel, Constants {
                 if (SHOW_MONITORS.equals(key)) {
                     List<JPDAThread> threads;
                     synchronized (threadsAskedForMonitors) {
-                        threads = new ArrayList(threadsAskedForMonitors);
+                        threads = new ArrayList<>(threadsAskedForMonitors);
                     }
                     for (JPDAThread t : threads) {
                         modelEventSource.doRefreshCache(dvSupport.get(t));

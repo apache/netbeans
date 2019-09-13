@@ -1,0 +1,23 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+30A271A6787BA2A9E9DD3A453A480FFDCC3DEDC4 org.eclipse.lsp4j:org.eclipse.lsp4j:0.5.0
+23800C88EE887571B43A4F08041922107843E506 org.eclipse.lsp4j:org.eclipse.lsp4j.generator:0.5.0
+4FE4E91D47494B73DED7E420806661F7C36A1B05 org.eclipse.lsp4j:org.eclipse.lsp4j.jsonrpc:0.5.0
+56459301B64C92BBBB6E13988B91CDBE1FC6264E org.eclipse.xtend:org.eclipse.xtend.lib:2.14.0
+F2FCA7A70C8A29374E79487417CEFB5F51A84867 org.eclipse.xtend:org.eclipse.xtend.lib.macro:2.14.0
+C40FFE7E5E6244DD094AE95009AA45072C629254 org.eclipse.xtext:org.eclipse.xtext.xbase.lib:2.14.0

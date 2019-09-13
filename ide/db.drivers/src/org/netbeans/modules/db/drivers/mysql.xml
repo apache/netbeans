@@ -23,5 +23,5 @@
 <driver>
   <name value='MySQL'/>
   <display-name value='MySQL (Connector/J driver)'/>
-  <class value='com.mysql.jdbc.Driver'/>
+  <class value='com.mysql.cj.jdbc.Driver'/>
 </driver>

@@ -593,7 +593,7 @@ public final class VariousUtils {
                             || (operation.startsWith(VariousUtils.ARRAY_TYPE_PREFIX))) {
                         Set<TypeScope> newRecentTypes = new HashSet<>();
                         String varName = frag;
-                        VariableName var = ModelUtils.getFirst(varScope.getDeclaredVariables(), varName);
+                        VariableName var = getVariableName(varScope, varName);
                         if (var != null) {
                             if (i + 2 < len && VariousUtils.FIELD_TYPE_PREFIX.startsWith(fragments[i + 1])) {
                                 fldVarStack.push(var);
@@ -682,6 +682,25 @@ public final class VariousUtils {
         }
 
         return recentTypes;
+    }
+
+    @CheckForNull
+    private static VariableName getVariableName(final VariableScope varScope, String varName) {
+        VariableName var = ModelUtils.getFirst(varScope.getDeclaredVariables(), varName);
+        // NETBEANS-2992
+        // when $this is used in anonymous function, check the parent scope
+        if (var == null
+                && ModelUtils.isAnonymousFunction(varScope)
+                && varName.equals("$this")) { // NOI18N
+            Scope inScope = varScope.getInScope();
+            while (ModelUtils.isAnonymousFunction(inScope)) {
+                inScope = inScope.getInScope();
+            }
+            if (inScope instanceof VariableScope) {
+                var = ModelUtils.getFirst(((VariableScope) inScope).getDeclaredVariables(), varName);
+            }
+        }
+        return var;
     }
 
     private static Collection<TypeScope> filterSuperTypes(final Collection<? extends TypeScope> typeScopes) {
@@ -1073,6 +1092,7 @@ public final class VariousUtils {
         int leftBraces = 0;
         int rightBraces = State.PARAMS.equals(state) ? 1 : 0;
         int arrayBrackets = 0;
+        CloneExpressionInfo cloneInfo = new CloneExpressionInfo();
         StringBuilder metaAll = new StringBuilder();
         while (!state.equals(State.INVALID) && !state.equals(State.STOP) && tokenSequence.movePrevious() && skipWhitespaces(tokenSequence)) {
             Token<PHPTokenId> token = tokenSequence.token();
@@ -1085,9 +1105,11 @@ public final class VariousUtils {
                         if (isReference(token)) {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.METHOD_TYPE_PREFIX);
                             state = State.REFERENCE;
+                            cloneInfo.setReference(state);
                         } else if (isStaticReference(token)) {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.METHOD_TYPE_PREFIX);
                             state = State.STATIC_REFERENCE;
+                            cloneInfo.setReference(state);
                         } else if (state.equals(State.STOP)) {
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FUNCTION_TYPE_PREFIX);
                         }
@@ -1111,6 +1133,7 @@ public final class VariousUtils {
                         if (isRightBracket(token)) {
                             rightBraces++;
                             state = State.PARAMS;
+                            cloneInfo.setEndOffset(tokenSequence.offset());
                         } else if (isRightArryBracket(token)) {
                             arrayBrackets++;
                             state = State.IDX;
@@ -1133,6 +1156,7 @@ public final class VariousUtils {
                         } else if (isRightBracket(token)) {
                             rightBraces++;
                             state = State.PARAMS;
+                            cloneInfo.setEndOffset(tokenSequence.offset());
                         } else if (isRightArryBracket(token)) {
                             arrayBrackets++;
                             state = State.IDX;
@@ -1159,6 +1183,15 @@ public final class VariousUtils {
                         }
                         if (leftBraces == rightBraces) {
                             state = State.FUNCTION;
+                        }
+                        // NETBEANS-501
+                        if (PHPTokenId.PHP_CLONE == token.id()
+                                && cloneInfo.getEndOffset() != -1
+                                && cloneInfo.getReference() != null) {
+                            tokenSequence.move(cloneInfo.getEndOffset());
+                            tokenSequence.moveNext();
+                            state = cloneInfo.getReference();
+                            rightBraces--;
                         }
                         break;
                     case FUNCTION:
@@ -1775,5 +1808,28 @@ public final class VariousUtils {
 
     public static boolean isSemiType(String typeName) {
         return typeName != null && typeName.contains(PRE_OPERATION_TYPE_DELIMITER);
+    }
+
+    //~ inner class
+    private static class CloneExpressionInfo {
+
+        private int endOffset = -1;
+        private State reference = null;
+
+        public int getEndOffset() {
+            return endOffset;
+        }
+
+        public void setEndOffset(int endOffset) {
+            this.endOffset = endOffset;
+        }
+
+        public State getReference() {
+            return reference;
+        }
+
+        public void setReference(State reference) {
+            this.reference = reference;
+        }
     }
 }

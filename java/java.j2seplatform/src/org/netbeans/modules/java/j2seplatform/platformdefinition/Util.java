@@ -377,7 +377,7 @@ public class Util {
         if (p != null) {
             final String val = p.get(J2SEPlatformImpl.SYSPROP_JAVA_CLASS_PATH);
             if (val != null) {
-                p.put(J2SEPlatformImpl.SYSPROP_JAVA_CLASS_PATH, filterProbe(val, null));
+                p.put(J2SEPlatformImpl.SYSPROP_JAVA_CLASS_PATH, filterProbe(val, probePath));
             }
         }
         return p;

@@ -44,7 +44,7 @@ public class TagParser {
             "test", "bug", "summary", "library", "author", "modules", "requires", "key", "library", "modules"
     );
 
-    private static final Pattern TAG_PATTERN = Pattern.compile("@([a-zA-Z]+)(\\s+|$)");
+    private static final Pattern TAG_PATTERN = Pattern.compile("@([a-zA-Z]+)(\\s+|/|$)");
 
     public static Result parseTags(CompilationInfo info) {
         return parseTags(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()));
@@ -91,7 +91,7 @@ public class TagParser {
                             start = pos;
                             tagStart = pos + m.start();
                             tagEnd = pos + m.end(1);
-                            tagText.append(line.substring(m.end()));
+                            tagText.append(line.substring(m.end(1)));
                         } else if (tagName != null) {
                             int asterisk = line.indexOf('*');
                             tagText.append(line.substring(asterisk + 1));

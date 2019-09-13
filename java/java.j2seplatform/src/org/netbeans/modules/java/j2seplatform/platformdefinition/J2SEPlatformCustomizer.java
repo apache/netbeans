@@ -797,7 +797,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
             if ("jar".equals(url.getProtocol())) {      //NOI18N
                 iconKind = IconKind.ARCHVIVE;
                 URL fileURL = FileUtil.getArchiveFile (url);
-                if (FileUtil.getArchiveRoot(fileURL).equals(url)) {
+                if ((fileURL != null) && FileUtil.getArchiveRoot(fileURL).equals(url)) {
                     // really the root
                     url = fileURL;
                 } else {

@@ -20,11 +20,13 @@
 package org.netbeans.modules.cloud.amazon.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.cloud.amazon.AmazonInstance;
+import org.netbeans.modules.cloud.amazon.AmazonRegion;
 import org.openide.util.NbBundle;
 
 /**
@@ -33,7 +35,7 @@ import org.openide.util.NbBundle;
 public class AmazonWizardComponent extends javax.swing.JPanel implements DocumentListener {
 
     private AmazonWizardPanel panel;
-    private List<Region> regions;
+    private List<AmazonRegion> regions;
     
     /** Creates new form AmazonWizardComponent */
     public AmazonWizardComponent(AmazonWizardPanel panel, AmazonInstance ai) {
@@ -48,24 +50,14 @@ public class AmazonWizardComponent extends javax.swing.JPanel implements Documen
             accessKey.setEditable(false);
             secret.setEditable(false);
             jRegionComboBox.setEnabled(false);
-            jRegionComboBox.setSelectedItem(findRegion(ai.getRegionURL()));
+            jRegionComboBox.setSelectedItem(AmazonRegion.findRegion(ai.getRegionURL()));
         }
         accessKey.getDocument().addDocumentListener(this);
         secret.getDocument().addDocumentListener(this);
     }
     
     private void initRegions() {
-        regions = new ArrayList<Region>();
-        regions.add(new Region("US East (Northern Virginia) Region", "elasticbeanstalk.us-east-1.amazonaws.com"));
-        regions.add(new Region("US West (Northern California) Region", "elasticbeanstalk.us-west-1.amazonaws.com"));
-        regions.add(new Region("US West (Oregon) Region", "elasticbeanstalk.us-west-2.amazonaws.com"));
-        regions.add(new Region("EU (Ireland) Region", "elasticbeanstalk.eu-west-1.amazonaws.com"));
-        regions.add(new Region("EU (Frankfurt) Region", "elasticbeanstalk.eu-central-1.amazonaws.com"));
-        regions.add(new Region("Asia Pacific (Tokyo) Region", "elasticbeanstalk.ap-northeast-1.amazonaws.com"));
-        regions.add(new Region("Asia Pacific (Seoul) Region", "elasticbeanstalk.ap-northeast-2.amazonaws.com"));
-        regions.add(new Region("Asia Pacific (Singapore) Region", "elasticbeanstalk.ap-southeast-1.amazonaws.com"));
-        regions.add(new Region("Asia Pacific (Sydney) Region", "elasticbeanstalk.ap-southeast-2.amazonaws.com"));
-        regions.add(new Region("South America (Sao Paulo) Region", "elasticbeanstalk.sa-east-1.amazonaws.com"));
+        regions = new ArrayList<AmazonRegion>(Arrays.asList(AmazonRegion.values()));
     }
 
     /** This method is called from within the constructor to
@@ -144,7 +136,11 @@ public class AmazonWizardComponent extends javax.swing.JPanel implements Documen
     }
 
     public String getRegionUrl() {
-        return ((Region)jRegionComboBox.getSelectedItem()).getUrl();
+        return ((AmazonRegion)jRegionComboBox.getSelectedItem()).getUrl();
+    }
+    
+    public String getRegionCode() {
+        return ((AmazonRegion)jRegionComboBox.getSelectedItem()).getCode();
     }
     
     @Override
@@ -166,39 +162,5 @@ public class AmazonWizardComponent extends javax.swing.JPanel implements Documen
         if (panel != null) {
             panel.fireChange();
         }
-    }
-
-    private Object findRegion(String regionURL) {
-        for (Region r : regions) {
-            if (r.getUrl().equals(regionURL)) {
-                return r;
-            }
-        }
-        return regions.get(0);
-    }
-    
-    private static class Region {
-        private String name;
-        private String url;
-
-        public Region(String name, String url) {
-            this.name = name;
-            this.url = url;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-
-        
     }
 }

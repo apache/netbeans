@@ -19,13 +19,11 @@
 
 package org.netbeans.modules.db.explorer;
 
-import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -199,7 +197,7 @@ public class DbDriverManagerTest extends TestBase {
     }
     
     public void testJDBCDriverCached() throws Exception {
-        JDBCDriver drv = createDummyJDBCDriver(getDataDir());
+        JDBCDriver drv = createJDBCDriver();
         Driver driver1 = DbDriverManager.getDefault().getDriver(DriverImpl.DEFAULT_URL, drv);
         Driver driver2 = DbDriverManager.getDefault().getDriver(DriverImpl.DEFAULT_URL, drv);
         assertSame(driver1.getClass(), driver2.getClass());
@@ -217,11 +215,6 @@ public class DbDriverManagerTest extends TestBase {
     private static JDBCDriver createJDBCDriver() {
         URL url = DbDriverManagerTest.class.getProtectionDomain().getCodeSource().getLocation();
         return JDBCDriver.create("test_driver", "DbDriverManagerTest Driver", "org.netbeans.modules.db.explorer.DbDriverManagerTest$DriverImpl", new URL[] { url });
-    }
-    
-    private static JDBCDriver createDummyJDBCDriver(File dataDir) throws MalformedURLException {
-        URL url = dataDir.toURL();
-        return JDBCDriver.create("test_driver", "DbDriverManagerTest DummyDriver", "DummyDriver", new URL[] { url });
     }
     
     public static final class DriverImpl implements Driver {

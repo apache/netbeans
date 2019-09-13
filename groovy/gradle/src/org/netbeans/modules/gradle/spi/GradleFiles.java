@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi;
 
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -74,7 +73,6 @@ public final class GradleFiles implements Serializable {
     File buildScript;
     File parentScript;
     File settingsScript;
-    List<File> propertyFiles;
     File gradlew;
     File wrapperProperties;
 
@@ -91,19 +89,19 @@ public final class GradleFiles implements Serializable {
         }
         projectDir = dir;
         rootDir = projectDir;
-        searchPropertyFiles();
         searchBuildScripts();
         searchWrapper();
     }
 
-    private void searchPropertyFiles() {
-        propertyFiles = new ArrayList<File>();
+    private List<File> searchPropertyFiles() {
+        List<File> ret = new ArrayList<>(3);
         for (Kind kind:Kind.PROPERTIES){
             File f = getFile(kind);
             if (f.exists()){
-                propertyFiles.add(f);
+                ret.add(f);
             }
         }
+        return Collections.unmodifiableList(ret);
     }
 
     private void searchBuildScripts() {
@@ -161,7 +159,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public List<File> getPropertyFiles() {
-        return propertyFiles;
+        return searchPropertyFiles();
     }
 
     public File getProjectDir() {

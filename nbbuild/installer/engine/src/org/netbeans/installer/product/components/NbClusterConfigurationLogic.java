@@ -48,7 +48,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
     /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String BASE_IDE_UID =
-            "nb-base"; // NOI18N
+            "nb-all"; // NOI18N
     
     /////////////////////////////////////////////////////////////////////////////////
     // Instance

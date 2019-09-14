@@ -27,7 +27,7 @@
                 <folder name="Standard">
                     <folder name="JavaFX">
                         <attr name="position" intvalue="110"/>
-                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.samples.Bundle#Templates/Project/Samples/JavaFX"/>
+                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.samples.Bundle#Templates/Project/Samples/Standard/JavaFX"/>
                         <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/samples/resources/samples.html"/>
 
                         <file name="AdvancedMedia.zip" url="AdvancedMedia.zip">

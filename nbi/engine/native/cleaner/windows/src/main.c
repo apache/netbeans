@@ -257,6 +257,7 @@ void readStringList(HANDLE fileHandle, WCHAR *** list, DWORD *number) {
 }
 
 void deleteFile(WCHAR * filePath) {
+    BOOL canDelete = TRUE;
     DWORD count = 0 ;
     WIN32_FILE_ATTRIBUTE_DATA attrs;
     DWORD filePathLength = lstrlenW(filePath);
@@ -271,15 +272,30 @@ void deleteFile(WCHAR * filePath) {
         file[i+prefixLength] = filePath[i];
     }
 
+    // Implementation note:
+    // GetFileAttributesExW() is used not only to get file attributes
+    // but also as a way to check if the file/dir (still) exist.
+
     if(GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) {
-        if(attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            while((!RemoveDirectoryW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEMPTS))
-                Sleep(SLEEP_DELAY);
-        else
-            while((!DeleteFileW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEMPTS))
-                Sleep(SLEEP_DELAY);
+      if (attrs.dwFileAttributes & FILE_ATTRIBUTE_READONLY) { // if read-only attrib is set
+            if (SetFileAttributesW(file, FILE_ATTRIBUTE_NORMAL) == 0) { // remove read-only attrib
+                // The read-only attrib could not be deleted. No point in continuing.
+                canDelete = FALSE;
+            }
+        }
+        if (canDelete) {
+            if (attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                while ((!RemoveDirectoryW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
+                        ((count++) < MAX_ATTEMPTS)) {
+                    Sleep(SLEEP_DELAY);
+                }
+            } else {
+                while ((!DeleteFileW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
+                        ((count++) < MAX_ATTEMPTS)) {
+                    Sleep(SLEEP_DELAY);
+                }
+            }
+        }
     }
     LocalFree(file);
 }

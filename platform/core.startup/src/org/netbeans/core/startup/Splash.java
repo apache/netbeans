@@ -244,10 +244,12 @@ public final class Splash implements Stamps.Updater {
         if (about) {
             ret = ImageUtilities.loadImage("org/netbeans/core/startup/about.png", true);
         }
-        if (ret == null)
+        if (ret == null) {
             ret = ImageUtilities.loadImage("org/netbeans/core/startup/splash.gif", true);
-        if (ret == null)
+        }
+        if (ret == null) {
             return null;
+        }
         return new ScaledBitmapIcon(ret,
                 Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_WIDTH")),
                 Integer.parseInt(NbBundle.getMessage(Splash.class, "SPLASH_HEIGHT")));
@@ -541,11 +543,13 @@ public final class Splash implements Stamps.Updater {
             String newText = null;
             String newString;
             
-            if (text == null)
+            if (text == null) {
                 return ;
+            }
 
-            if (statusBox == null ||statusBox.fm == null)
+            if (statusBox == null || statusBox.fm == null) {           
                 return;
+            }
             
             int width = statusBox.fm.stringWidth(text);
             

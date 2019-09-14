@@ -23,7 +23,7 @@
 
 
 const DWORD SLEEP_DELAY   = 200;
-const DWORD MAX_ATTEPTS   = 15;
+const DWORD MAX_ATTEMPTS   = 15;
 const DWORD THREAD_FINISHED = 100;
 const DWORD INITIAL_DELAY = 2000; // 2 seconds is seems to be enough to finish java process
 const WCHAR * LINE_SEPARATOR = L"\r\n";
@@ -290,11 +290,11 @@ void deleteFile(WCHAR * filePath) {
     if(GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) {
         if(attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             while((!RemoveDirectoryW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEPTS))
+                ((count++) < MAX_ATTEMPTS))
                 Sleep(SLEEP_DELAY);
         else
             while((!DeleteFileW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEPTS))
+                ((count++) < MAX_ATTEMPTS))
                 Sleep(SLEEP_DELAY);
     }
     LocalFree(file);

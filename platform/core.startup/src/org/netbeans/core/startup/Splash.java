@@ -637,7 +637,10 @@ public final class Splash implements Stamps.Updater {
         }
 	
         void paint() {
-            image.paintIcon(comp, graphics, 0, 0);
+            // loadContentIcon may return a null image
+            if (image != null) {
+                image.paintIcon(comp, graphics, 0, 0);
+            }
             // turn anti-aliasing on for the splash text
             graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

@@ -188,7 +188,7 @@ public class ServerTest extends NbTestCase {
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         assertTrue(completion.isRight());
         List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Method:hashCode"), actualItems);
+        assertEquals(Arrays.asList("Method:hashCode() : int"), actualItems);
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(src.toURI().toString());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "hashCode".length())), "hashCode".length(), "equ"))));
@@ -196,7 +196,7 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags, "Error:0:31-0:34");//hints
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Method:equals", "Method:equalsIgnoreCase"), actualItems);
+        assertEquals(Arrays.asList("Method:equals(Object anObject) : boolean", "Method:equalsIgnoreCase(String anotherString) : boolean"), actualItems);
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, 0))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertTrue(actualItems.contains("Keyword:interface"));

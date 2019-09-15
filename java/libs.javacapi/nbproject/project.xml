@@ -40,7 +40,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path />
-                <binary-origin>external/nb-javac-12-api.jar</binary-origin>
+                <binary-origin>external/nb-javac-13-api.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

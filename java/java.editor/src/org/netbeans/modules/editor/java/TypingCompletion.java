@@ -145,18 +145,10 @@ class TypingCompletion {
             return;
         }
         
-        //XXX:
         char chr = context.getDocument().getText(context.getOffset(), 1).charAt(0);
-        if (chr == ')' || chr == ',' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
+        if (chr == ')' || chr == ',' || chr == '\"' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
             char insChr = context.getText().charAt(0);
             context.setText("" + insChr + matching(insChr), 1);  // NOI18N
-        } else if (chr == '\"') {
-            if ((context.getOffset() > 2 && context.getDocument().getText(context.getOffset() - 2, 3).equals("\"\"\"")) &&
-                    isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
-                context.setText("\"\n\"\"\"", 2);  // NOI18N
-            } else {
-                context.setText("\"\"", 1);  // NOI18N
-            }
         }
     }
 

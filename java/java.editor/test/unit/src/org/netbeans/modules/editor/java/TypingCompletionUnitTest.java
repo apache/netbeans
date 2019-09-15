@@ -1154,18 +1154,46 @@ public class TypingCompletionUnitTest extends NbTestCase {
         ctx.assertDocumentTextEquals("()|");
     }
     
-    public void testRemoveQuotesBackSpace() throws Exception {
+    public void testRemoveQuotesBackSpace1() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"|\"");
+        ctx.typeChar('\b');
+        ctx.assertDocumentTextEquals("|");
+    }
+    
+    public void testRemoveQuotesBackSpace2() throws Exception {
         Context ctx = new Context(new JavaKit(),
                 "\"\"\"|\"");
         ctx.typeChar('\b');
         ctx.assertDocumentTextEquals("\"\"|");
     }
     
-    public void testRemoveQuotesDelete() throws Exception {
+    public void testRemoveQuotesBackSpace3() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"\"\"|\";");
+        ctx.typeChar('\b');
+        ctx.assertDocumentTextEquals("\"\"|;");
+    }
+    
+    public void testRemoveQuotesDelete1() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "|\"\"");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("|");
+    }
+    
+    public void testRemoveQuotesDelete2() throws Exception {
         Context ctx = new Context(new JavaKit(),
                 "\"\"|\"\"");
         ctx.typeChar('\f');
         ctx.assertDocumentTextEquals("\"\"|");
+    }
+    
+    public void testRemoveQuotesDelete3() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"\"|\"\";");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("\"\"|;");
     }
     
     public void testRemoveQuotes2BackSpace() throws Exception {

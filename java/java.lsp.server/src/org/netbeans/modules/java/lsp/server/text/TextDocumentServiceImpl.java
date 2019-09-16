@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -40,8 +39,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -109,9 +106,6 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.support.ReferencesCount;
-import org.netbeans.api.java.source.ui.ElementOpen;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
@@ -136,16 +130,12 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
-import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
-import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.Places;
-import org.openide.text.Line;
 import org.openide.text.NbDocument;
-import org.openide.text.PositionRef;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
@@ -167,7 +157,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         try {
-            FileObject file = fromUri(params.getTextDocument().getUri());
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromUri(uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             int caret = getOffset(doc, params.getPosition());
@@ -248,28 +239,29 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
             Iterator<? extends VariableElement> it = elem.getParameters().iterator();
             Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
-            StringBuilder details = new StringBuilder();
+            StringBuilder label = new StringBuilder();
             String sep = "";
-            details.append("(");
+            label.append(elem.getSimpleName().toString());
+            label.append("(");
             while(it.hasNext() && tIt.hasNext()) {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
                     break;
                 }
-                details.append(sep);
-                details.append(Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString());
-                details.append(' ');
-                details.append(it.next().getSimpleName().toString());
+                label.append(sep);
+                label.append(Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString());
+                label.append(' ');
+                label.append(it.next().getSimpleName().toString());
                 sep = ", ";
             }
-            details.append(")");
+            label.append(") : ");
             TypeMirror retType = type.getReturnType();
-            details.append(Utilities.getTypeName(info, retType, false).toString());
-            item.setDetail(details.toString());
+            label.append(Utilities.getTypeName(info, retType, false).toString());
+            CompletionItem item = new CompletionItem(label.toString());
+            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            item.setInsertText(elem.getSimpleName().toString());
             return item;
         }
 

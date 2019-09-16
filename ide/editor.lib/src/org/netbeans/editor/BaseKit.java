@@ -1250,9 +1250,10 @@ public class BaseKit extends DefaultEditorKit {
                                         Object[] r = transaction.textTyped();
                                         String insertionText = r == null ? cmd : (String) r[0];
                                         int caretPosition = r == null ? -1 : (Integer) r[1];
+                                        boolean formatNewLines = r == null ? false : (Boolean) r[2];
 
                                         try {
-                                            performTextInsertion(target, insertionOffset.getOffset(), insertionText, caretPosition);
+                                            performTextInsertion(target, insertionOffset.getOffset(), insertionText, caretPosition, formatNewLines);
                                             result[0] = Boolean.TRUE;
                                             result[1] = insertionText;
                                         } catch (BadLocationException ble) {
@@ -1357,7 +1358,7 @@ public class BaseKit extends DefaultEditorKit {
         // Private implementation
         // --------------------------------------------------------------------
 
-        private void performTextInsertion(JTextComponent target, int insertionOffset, String insertionText, int caretPosition) throws BadLocationException {
+        private void performTextInsertion(JTextComponent target, int insertionOffset, String insertionText, int caretPosition, boolean formatNewLines) throws BadLocationException {
             final BaseDocument doc = (BaseDocument)target.getDocument();
             
             try {
@@ -1378,7 +1379,7 @@ public class BaseKit extends DefaultEditorKit {
                 int targetCaretOffset = caretPosition;
                 for (int i = 0; i < insertionText.length();) {
                     int end = insertionText.indexOf('\n', i);
-                    if (end == (-1)) end = insertionText.length();
+                    if (end == (-1) || !formatNewLines) end = insertionText.length();
                     String currentLine = insertionText.substring(i, end);
                     if (i == 0) {
                         if (Utilities.isSelectionShowing(caret)) { // valid selection

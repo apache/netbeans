@@ -89,7 +89,6 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
-import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -664,7 +663,7 @@ public class ClipboardHandler {
                             return data;
                         }
                     });
-                } else if ((isTextBlockSupported(NbEditorUtilities.getFileObject(((JTextComponent)comp).getDocument()))) && insideToken((JTextComponent) comp, JavaTokenId.MULTILINE_STRING_LITERAL)) {
+                } else if (insideToken((JTextComponent) comp, JavaTokenId.MULTILINE_STRING_LITERAL)) {
                     final Transferable t = support.getTransferable();
                     return delegate.importData(comp, new Transferable() {
                         @Override

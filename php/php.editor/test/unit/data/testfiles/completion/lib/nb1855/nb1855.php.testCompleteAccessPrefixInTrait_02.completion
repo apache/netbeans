@@ -1,9 +1,14 @@
 Code completion result for source line:
-echo "class property: $|this->name\n";
+$|p; // trait 2
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-VARIABLE   ? $name                         [PUBLIC]   issue153707.php
-VARIABLE   ? name                          [PUBLIC]   Book
-KEYWORD    Book $this->                               null
+VARIABLE   ? $param                        [PUBLIC]   nb1855.php
+VARIABLE   ? $privateTraitStaticProperty   [PRIVATE,  Trait1855
+VARIABLE   ? $protectedTraitStaticPropert  [PROTECTE  Trait1855
+VARIABLE   ? $publicStaticTraitProperty    [STATIC]   Trait1855
+VARIABLE   ? privateTraitProperty          [PRIVATE]  Trait1855
+VARIABLE   ? protectedTraitProperty        [PROTECTE  Trait1855
+VARIABLE   ? publicTraitProperty           [PUBLIC]   Trait1855
+KEYWORD    Trait1855 $this->                          null
 ------------------------------------
 VARIABLE   $GLOBALS                                   PHP Platform
 VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform

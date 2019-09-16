@@ -1,6 +1,7 @@
 Code completion result for source line:
 |;// HERE
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   MyTrait
 KEYWORD    MyTrait $this->                            null
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null

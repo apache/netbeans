@@ -2,6 +2,9 @@ Code completion result for source line:
 $af = fn(): ?ArrowFunctions => |$this;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctions.php
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     new()                           [STATIC]   ArrowFunctions
+METHOD     test()                          [PUBLIC]   ArrowFunctions
 VARIABLE   ? $af                           [PUBLIC]   arrowFunctions.php
 VARIABLE   int $test                       [PUBLIC]   arrowFunctions.php
 CONSTANT   CONSTANT_INT 1000               [PUBLIC]   arrowFunctions.php

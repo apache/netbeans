@@ -6,6 +6,12 @@ PACKAGE    Foo                             [PUBLIC]   null
 CLASS      BarUnpackClass                  [PUBLIC]   Bar
 CLASS      UnpackChildClass                [PUBLIC]   Foo
 CLASS      UnpackClass                     [PUBLIC]   Foo
+CONSTANT   CONSTANT ?                      [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT1 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT3 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT4 ?                     [PUBLIC]   \Foo\UnpackClass
+CONSTANT   CONSTANT5 ?                     [PUBLIC]   \Foo\UnpackClass
 CONSTANT   F_CONST "test"                  [PUBLIC]   Foo
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.26.0
+#Version 8.26.1
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind
@@ -308,7 +308,6 @@ meth public abstract java.util.List<? extends com.sun.source.tree.StatementTree>
 
 CLSS public abstract interface com.sun.source.tree.BreakTree
 intf com.sun.source.tree.StatementTree
-meth public abstract com.sun.source.tree.ExpressionTree getValue()
  anno 0 java.lang.Deprecated()
 meth public abstract javax.lang.model.element.Name getLabel()
 
@@ -795,6 +794,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.sourc
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
 
 CLSS public abstract interface com.sun.source.tree.TryTree
 intf com.sun.source.tree.StatementTree
@@ -1112,6 +1112,7 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitUses(com.sun.source.t
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.SimpleTreeVisitor%1})
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.source.util.SourcePositions
@@ -1238,6 +1239,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.Us
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
 supr java.lang.Object
 
 CLSS public abstract com.sun.source.util.Trees

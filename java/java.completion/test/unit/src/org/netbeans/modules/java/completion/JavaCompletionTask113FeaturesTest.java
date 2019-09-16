@@ -20,12 +20,14 @@ package org.netbeans.modules.java.completion;
 
 import javax.lang.model.SourceVersion;
 import org.netbeans.junit.NbTestSuite;
-
+import org.netbeans.modules.java.source.parsing.JavacParser;
 /**
  *
  * @author arusinha
  */
 public class JavaCompletionTask113FeaturesTest extends CompletionTestBase {
+
+    private static String SOURCE_LEVEL = "1.13"; //NOI18N
 
     public JavaCompletionTask113FeaturesTest(String testName) {
         super(testName);
@@ -44,14 +46,17 @@ public class JavaCompletionTask113FeaturesTest extends CompletionTestBase {
     }
 
     public void testSwitchExprAutoCompleteYieldValue() throws Exception {
-        performTest("SwitchExprForYieldWithValue", 1019, "yi", "SwitchExprYieldAutoCompletion.pass");
+        performTest("SwitchExprForYieldWithValue", 1019, "yi", "SwitchExprYieldAutoCompletion.pass", SOURCE_LEVEL);
     }
 
     public void testSwitchExprAutoCompleteYieldValue2() throws Exception {
-        performTest("SwitchExprForYieldWithValue2", 1023, "yi", "SwitchExprYieldAutoCompletion.pass");
+        performTest("SwitchExprForYieldWithValue2", 1023, "yi", "SwitchExprYieldAutoCompletion.pass", SOURCE_LEVEL);
     }
 
     public void noop() {
     }
 
+    static {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
 }

@@ -111,11 +111,11 @@ final class ActionPasteType {
 
     private final static class PasteTypeImpl extends PasteType {
         final private DataFolder targetFolder;
-        final private Collection/*<DataObject>*/  sourceDataObjects;
+        final private Collection<DataObject>  sourceDataObjects;
         final private int pasteOperation;
 
     
-        private PasteTypeImpl(final Collection/*<DataObject>*/ sourceDataObjects, final DataFolder targetFolder, final int pasteOperation) {
+        private PasteTypeImpl(final Collection<DataObject> sourceDataObjects, final DataFolder targetFolder, final int pasteOperation) {
             this.targetFolder = targetFolder;
             this.sourceDataObjects = sourceDataObjects;
             this.pasteOperation = pasteOperation;

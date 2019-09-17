@@ -439,7 +439,8 @@ public final class Splash implements Stamps.Updater {
 
         final void init() throws MissingResourceException, NumberFormatException {
             assert SwingUtilities.isEventDispatchThread();
-            if (maxSteps > 0) {
+            // check if init has already been called
+            if (statusBox != null) {
                 return;
             }
             // 100 is allocated for module system that will adjust this when number
@@ -520,7 +521,7 @@ public final class Splash implements Stamps.Updater {
                         return;
                     }
 
-                    if (statusBox == null || statusBox.fm == null) {
+                    if (statusBox.fm == null) {
                         return;
                     }
 
@@ -547,7 +548,7 @@ public final class Splash implements Stamps.Updater {
                 return ;
             }
 
-            if (statusBox == null || statusBox.fm == null) {           
+            if (statusBox.fm == null) {           
                 return;
             }
             

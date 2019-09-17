@@ -46,7 +46,7 @@ public final class CCTResultsFilter extends RuntimeCCTNodeProcessor.PluginAdapte
     }
     
     public static interface EvaluatorProvider {
-        Set/*<Evaluator>*/ getEvaluators();
+        Set<Evaluator> getEvaluators();
     }
 
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------

@@ -255,7 +255,7 @@ public final class RunTargetsAction extends AbstractAction implements ContextAwa
     private static final class AdvancedAction extends AbstractAction {
         
         private final AntProjectCookie project;
-        private final Set/*<TargetLister.Target>*/ allTargets;
+        private final Set<TargetLister.Target> allTargets;
         
         public AdvancedAction(AntProjectCookie project, Set/*<TargetLister.Target>*/ allTargets) {
             super(NbBundle.getMessage(RunTargetsAction.class, "LBL_run_advanced"));

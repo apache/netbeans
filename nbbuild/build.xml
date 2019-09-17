@@ -115,7 +115,12 @@
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
     <!-- get all json info we have on apache gitbox  -->
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
-    <get dest="${metabuild.releasejson}" skipexisting="false" src="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json" />
+    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+        <not>
+            <isset property="metabuild.jsonurl"/>
+        </not>
+    </condition>
+    <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
     <!-- get branches and git information -->
     <antcall target="getgitinformation" />
     <!-- hardcoded item for testing

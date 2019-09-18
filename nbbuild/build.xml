@@ -77,6 +77,7 @@
             <include name="nbbuild/external/binaries-list"/>
             <include name="platform/libs.junit4/external/binaries-list"/>
             <include name="platform/javahelp/external/binaries-list"/>
+            <include name="ide/libs.json_simple/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <!--
@@ -94,7 +95,7 @@
         <!-- For JavaHelp indexing and link checking: -->
         <include name="platform/javahelp/external/jhall*.jar"/>
         <!-- For json parsing -->
-        <include name="nbbuild/external/json-simple*.jar"/>
+        <include name="ide/libs.json_simple/external/json-simple*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -138,7 +139,7 @@ metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
     <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
         <classpath>
             <pathelement location="${nbantext.jar}"/>
-            <fileset dir="${nb_all}/nbbuild/external">
+            <fileset dir="${nb_all}/ide/libs.json_simple/external">
                 <include name="json*.jar"/>
             </fileset>
         </classpath>

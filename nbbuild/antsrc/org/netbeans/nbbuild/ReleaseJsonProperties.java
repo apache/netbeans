@@ -20,7 +20,6 @@ package org.netbeans.nbbuild;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -147,7 +146,7 @@ public class ReleaseJsonProperties extends Task {
         log("Writing releasinfo file " + propertiesFile);
         propertiesFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(propertiesFile)) {
-            String optionalversion = "";
+            String optionnalversion = "";
             boolean found = false;
             for (MileStone m : requiredbranchinfo.milestones) {
                 if (m.hash.equals(hash)) {
@@ -157,48 +156,40 @@ public class ReleaseJsonProperties extends Task {
                     if (m.vote != -1) {
                         // vote is set we want the full version
                     } else {
-                        optionalversion = "-" + m.version;
+                        optionnalversion = "-" + m.version;
                     }
 
                 }
             }
             if (!found && !branch.equals("master")) {
                 // hash no match we are building a dev version of specific branch
-                optionalversion = "-dev";
+                optionnalversion = "-dev";
             }
-            config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl + "\n").getBytes());
-            config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl + "\n").getBytes());
+            config.write(("metabuild.DistributionURL=" + requiredbranchinfo.updateurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());
+            config.write(("metabuild.PluginPortalURL=" + requiredbranchinfo.pluginsurl.replace(requiredbranchinfo.version, requiredbranchinfo.version + optionnalversion) + "\n").getBytes());
             // used for cache and user dir
-            config.write(("metabuild.RawVersion=" + requiredbranchinfo.version + optionalversion + "\n").getBytes());
+            config.write(("metabuild.RawVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
 
             if (branch.equals("master")) {
                 config.write(("metabuild.ComputedSplashVersion=DEV (Build {0})\n").getBytes());
                 config.write(("metabuild.ComputedTitleVersion=DEV {0}\n").getBytes());
                 config.write(("metabuild.logcli=-J-Dnetbeans.logger.console=true -J-ea\n").getBytes());
             } else {
-                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + optionalversion + "\n").getBytes());
-                config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + optionalversion + "\n").getBytes());
+                config.write(("metabuild.ComputedSplashVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
+                config.write(("metabuild.ComputedTitleVersion=" + requiredbranchinfo.version + optionnalversion + "\n").getBytes());
                 config.write(("metabuild.logcli=\n").getBytes());
             }
         } catch (IOException ex) {
             throw new BuildException("Properties File for release cannot be created");
         }
 
-        log("Writing releasinfo file " + xmlFile );
+        log("Writing releasinfo file " + xmlFile);
 
         xmlFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(xmlFile)) {
             XMLUtil.write(doc, config);
         } catch (IOException ex) {
             throw new BuildException("XML File for release cannot be created");
-        }
-        String configline;
-        try (FileReader config = new FileReader(propertiesFile); BufferedReader configStream = new BufferedReader(config);) {
-            while ((configline = configStream.readLine()) != null) {
-                log("Branding computed info: " + configline);
-            }
-        } catch (IOException ex) {
-            throw new BuildException("propertiesFile for release cannot be read");
         }
     }
 

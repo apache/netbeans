@@ -24,8 +24,13 @@
 
   <import file="../../nbbuild/templates/projectized.xml"/>
 
-  <target name="compile" depends="projectized-common.compile,javafx-nbms"/>
-
+  <target name="compile" depends="projectized-common.compile,javafx-nbms,-branding"/>
+  <target name="-branding">
+      <replace file="${build.dir}/classes/org/netbeans/modules/updatecenters/resources/Bundle.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+           <replacefilter token="@@metabuild.DistributionURL@@" property="metabuild.DistributionURL"/>
+           <replacefilter token="@@metabuild.PluginPortalURL@@" property="metabuild.PluginPortalURL"/> 
+      </replace>
+  </target>
   <target name="javafx-nbms" description="Prepare NBMs for 3rd party libraries" depends="projectized-common.compile">
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".ks" property="netbeans.bundled.ks" deleteonexit="true" />
       <tempfile destdir="${build.dir}" prefix="sign" suffix=".cert" property="netbeans.bundled.cert" deleteonexit="true"/>

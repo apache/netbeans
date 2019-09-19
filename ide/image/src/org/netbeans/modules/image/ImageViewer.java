@@ -601,7 +601,7 @@ public class ImageViewer extends CloneableTopComponent {
     }
 
     protected boolean closeLast() {
-        ((ImageOpenSupport)storedObject.getCookie(ImageOpenSupport.class)).lastClosed();
+        (storedObject.getCookie(ImageOpenSupport.class)).lastClosed();
         return true;
     }
 
@@ -625,7 +625,7 @@ public class ImageViewer extends CloneableTopComponent {
         super.readExternal(in);
         storedObject = (ImageDataObject)in.readObject();
         // to reset the listener for FileObject changes
-        ((ImageOpenSupport)storedObject.getCookie(ImageOpenSupport.class)).prepareViewer();
+        (storedObject.getCookie(ImageOpenSupport.class)).prepareViewer();
         initialize(storedObject);
     }
     
@@ -639,7 +639,7 @@ public class ImageViewer extends CloneableTopComponent {
         SystemAction[] oldValue = super.getSystemActions();
         SystemAction fsa = null;
         try {
-            ClassLoader l = (ClassLoader) Lookup.getDefault().lookup(ClassLoader.class);
+            ClassLoader l = Lookup.getDefault().lookup(ClassLoader.class);
             if (l == null) {
                 l = getClass().getClassLoader();
             }
@@ -772,7 +772,7 @@ public class ImageViewer extends CloneableTopComponent {
         button.getAccessibleContext().setAccessibleDescription(NbBundle.getBundle(ImageViewer.class).getString("ACS_Zoom_BTN"));
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                CustomZoomAction sa = (CustomZoomAction) SystemAction.get(CustomZoomAction.class);
+                CustomZoomAction sa = SystemAction.get(CustomZoomAction.class);
                 sa.performAction ();
             }
         });

@@ -226,7 +226,7 @@ class ModelItem implements PropertyChangeListener {
     public JSONObject getRequestHeaders() {
         if (request != null) {
             JSONObject requestHeaders = (JSONObject)request.getRequest().get("headers");
-            JSONObject r = (JSONObject)request.getResponse();
+            JSONObject r = request.getResponse();
             if (r != null) {
                 r = (JSONObject)r.get("requestHeaders");
                 if (r != null) {
@@ -238,7 +238,7 @@ class ModelItem implements PropertyChangeListener {
             }
             return requestHeaders;
         } else {
-            JSONObject r = (JSONObject)wsRequest.getHandshakeRequest();
+            JSONObject r = wsRequest.getHandshakeRequest();
             if (r == null) {
                 return null;
             }
@@ -248,13 +248,13 @@ class ModelItem implements PropertyChangeListener {
 
     public JSONObject getResponseHeaders() {
         if (request != null) {
-            JSONObject r = (JSONObject)request.getResponse();
+            JSONObject r = request.getResponse();
             if (r == null) {
                 return null;
             }
             return (JSONObject)r.get("headers");
         } else {
-            JSONObject r = (JSONObject)wsRequest.getHandshakeResponse();
+            JSONObject r = wsRequest.getHandshakeResponse();
             if (r == null) {
                 return null;
             }

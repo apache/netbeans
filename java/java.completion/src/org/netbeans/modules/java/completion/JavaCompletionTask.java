@@ -3036,7 +3036,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         final DeclaredType type = (DeclaredType) st;
                         final TypeElement element = (TypeElement) type.asElement();
                         if (element.getKind() == ANNOTATION_TYPE && (Utilities.isShowDeprecatedMembers() || !elements.isDeprecated(element))) {
-                            results.add(itemFactory.createAnnotationItem(env.getController(), element, (DeclaredType) type, anchorOffset, env.getReferencesCount(), elements.isDeprecated(element)));
+                            results.add(itemFactory.createAnnotationItem(env.getController(), element, type, anchorOffset, env.getReferencesCount(), elements.isDeprecated(element)));
                         }
                         if (JAVA_LANG_CLASS.contentEquals(element.getQualifiedName())) {
                             addTypeDotClassMembers(env, type);
@@ -3914,7 +3914,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         };
         for (TypeElement e : controller.getElementUtilities().getGlobalTypes(acceptor)) {
-            results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+            results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
         }
     }
 

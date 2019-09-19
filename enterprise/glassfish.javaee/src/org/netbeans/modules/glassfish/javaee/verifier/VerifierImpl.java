@@ -102,7 +102,7 @@ public  class VerifierImpl extends org.netbeans.modules.j2ee.deployment.plugins.
         J2eeModuleProvider modProvider = null;
         Project holdingProj = FileOwnerQuery.getOwner(target);
         if (holdingProj != null){
-            modProvider = (J2eeModuleProvider) holdingProj.getLookup().lookup(J2eeModuleProvider.class);
+            modProvider = holdingProj.getLookup().lookup(J2eeModuleProvider.class);
         }
         return modProvider;
     }

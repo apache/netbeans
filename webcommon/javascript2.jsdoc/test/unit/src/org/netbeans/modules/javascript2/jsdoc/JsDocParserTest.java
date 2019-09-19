@@ -78,12 +78,6 @@ public class JsDocParserTest extends JsTestBase {
         assertEquals("This could be description", ((DescriptionElement) tags.get(0)).getDescription());
     }
 
-    public void testParsingLongComments() throws Exception {
-        Source source = getTestSource(getTestFile("testfiles/jsdoc/windowStub.js"));
-        List<? extends JsDocElement> tags = getFirstJsDocBlock(source.createSnapshot()).getTags();
-        assertEquals(JsDocElementType.CONTEXT_SENSITIVE, tags.get(0).getType());
-    }
-
     public void testNoTagsInBlockComment() throws Exception {
         Source source = getTestSource(getTestFile("testfiles/jsdoc/blockComment.js"));
         Iterator<Entry<Integer, JsDocComment>> iterator = JsDocParser.parse(source.createSnapshot()).entrySet().iterator();

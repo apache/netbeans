@@ -78,9 +78,7 @@ final class JavaFreeformFileBuiltQuery implements FileBuiltQueryImplementation, 
         
         if (java != null) {
             List<Element> compilationUnits = XMLUtil.findSubElements(java);
-            Iterator it = compilationUnits.iterator();
-            while (it.hasNext()) {
-                Element compilationUnitEl = (Element)it.next();
+            for (Element compilationUnitEl : compilationUnits) {
                 assert compilationUnitEl.getLocalName().equals("compilation-unit") : compilationUnitEl;
                 List<String> rootNames = Classpaths.findPackageRootNames(compilationUnitEl);
                 List<String> builtToNames = findBuiltToNames(compilationUnitEl);

@@ -68,7 +68,7 @@ public class HgExec extends ExecTask {
                 }
             }
         }
-        return Collections.singletonList("hg");
+        return Collections.singletonList("git");
     }
 
 }

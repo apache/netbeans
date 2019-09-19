@@ -380,9 +380,9 @@ public class ImageViewer extends CloneableTopComponent {
     private void setToolbarButtonsEnabled(final boolean enabled) {
         assert toolbarButtons != null;
         
-        final Iterator/*<JButton>*/ it = toolbarButtons.iterator();
+        final Iterator<JButton> it = toolbarButtons.iterator();
         while (it.hasNext()) {
-            ((JButton) it.next()).setEnabled(enabled);
+            it.next().setEnabled(enabled);
         }
     }
     
@@ -556,8 +556,8 @@ public class ImageViewer extends CloneableTopComponent {
             toolBar.add(new JLabel(NbBundle.getMessage(ImageViewer.class, label, formatter.format(size))));
         }
 
-        for (Iterator it = toolbarButtons.iterator(); it.hasNext(); ) {
-            ((JButton) it.next()).setFocusable(false);
+        for (JButton jb : toolbarButtons) {
+            jb.setFocusable(false);
         }
 
         return toolBar;

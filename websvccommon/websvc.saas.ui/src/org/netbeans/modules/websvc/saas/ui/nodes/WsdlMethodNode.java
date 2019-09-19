@@ -80,9 +80,10 @@ public class WsdlMethodNode extends AbstractNode {
         String signature;
         if (javaMethod != null) {
             signature = javaMethod.getReturnType().getFormalName() + " " + javaMethod.getName() + "(";
-            Iterator parameterIterator = javaMethod.getParametersList().iterator();
+            
+            Iterator<JavaParameter> parameterIterator = javaMethod.getParametersList().iterator();
             while (parameterIterator.hasNext()) {
-                JavaParameter currentParam = (JavaParameter) parameterIterator.next();
+                JavaParameter currentParam = parameterIterator.next();
                 String parameterType = TypeUtil.getParameterType(currentParam);
                 signature += parameterType + " " + currentParam.getName();
                 if (parameterIterator.hasNext()) {
@@ -178,9 +179,9 @@ public class WsdlMethodNode extends AbstractNode {
             String signature = javaMethod.getReturnType().getRealName() + " " +
                     javaMethod.getName() + "(";
 
-            Iterator tempIterator = javaMethod.getParametersList().iterator();
+            Iterator<JavaParameter> tempIterator = javaMethod.getParametersList().iterator();
             while (tempIterator.hasNext()) {
-                JavaParameter currentparam = (JavaParameter) tempIterator.next();
+                JavaParameter currentparam = tempIterator.next();
                 signature += currentparam.getType().getRealName() + " " + currentparam.getName();
                 if (tempIterator.hasNext()) {
                     signature += ", ";
@@ -223,7 +224,9 @@ public class WsdlMethodNode extends AbstractNode {
                 paramSet.setShortDescription(NbBundle.getMessage(WsdlMethodNode.class, "METHOD_PARAMDIVIDER")); // NOI18N
                 sheet.put(paramSet);
             }
-            Iterator paramIterator = javaMethod.getParametersList().iterator();
+            
+            
+            Iterator<JavaParameter> paramIterator = javaMethod.getParametersList().iterator();
             if (paramIterator.hasNext()) {
                 p = new Reflection(NbBundle.getMessage(WsdlMethodNode.class, "METHOD_PARAMTYPE"), // NOI18N
                         String.class,
@@ -232,7 +235,7 @@ public class WsdlMethodNode extends AbstractNode {
                 p.setName("paramdivider2"); // NOI18N
 
                 for (int ii = 0; paramIterator.hasNext(); ii++) {
-                    JavaParameter currentParameter = (JavaParameter) paramIterator.next();
+                    JavaParameter currentParameter = paramIterator.next();
                     if (currentParameter.getType().isHolder()) {
                         p = new Reflection(TypeUtil.getParameterType(currentParameter), String.class, "toString", null); // NOI18N
                     } else {

@@ -23,12 +23,17 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 
 /**
  *
@@ -59,7 +64,7 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
         if (sourceSetNames != null) {
             for (String name : sourceSetNames) {
                 GradleJavaSourceSet sourceSet = prj.createSourceSet(name);
-                for (GradleJavaSourceSet.SourceType type : GradleJavaSourceSet.SourceType.values()) {
+                for (SourceType type : SourceType.values()) {
                     Set<File> dirs = (Set<File>) info.get("sourceset_" + name + "_" + type.name());
                     if (dirs != null) {
                         Set<File> normalizedDirs = new LinkedHashSet<>();
@@ -75,8 +80,27 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                 sourceSet.runtimeConfigurationName = (String) info.get("sourceset_" + name + "_configuration_runtime");
                 sourceSet.outputClassDirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
                 sourceSet.outputResources = (File) info.get("sourceset_" + name + "_output_resources");
-                sourceSet.sourcesCompatibility = (String) info.get("sourceset_" + name + "_source_compatibility");
-                sourceSet.targetCompatibility = (String) info.get("sourceset_" + name + "_target_compatibility");
+                Map<SourceType, String> sourceComp = new EnumMap<>(SourceType.class);
+                Map<SourceType, String> targetComp = new EnumMap<>(SourceType.class);
+                Map<SourceType, List<String>> compilerArgs = new EnumMap<>(SourceType.class);
+                for (SourceType lang : Arrays.asList(JAVA, GROOVY, SCALA)) {
+                    String sc = (String) info.get("sourceset_" + name + "_" + lang.name() + "_source_compatibility");
+                    String tc = (String) info.get("sourceset_" + name + "_" + lang.name() + "_target_compatibility");
+                    if (sc != null) {
+                        sourceComp.put(lang, sc);
+                    }
+                    if (tc != null) {
+                        targetComp.put(lang, tc);
+                    }
+                    List<String> compArgs = (List<String>) info.get("sourceset_" + name + "_" + lang.name() + "_compiler_args");
+                    if (compArgs != null) {
+                        compilerArgs.put(lang, Collections.unmodifiableList(compArgs));
+                    }
+                }
+                sourceSet.sourcesCompatibility = Collections.unmodifiableMap(sourceComp);
+                sourceSet.targetCompatibility = Collections.unmodifiableMap(targetComp);
+                sourceSet.compilerArgs = Collections.unmodifiableMap(compilerArgs);
+                
                 for (File out : sourceSet.getOutputClassDirs()) {
                     if (prj.getTestClassesRoots().contains(out)) {
                         sourceSet.testSourceSet = true;

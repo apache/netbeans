@@ -140,7 +140,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
                 cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
             }
-            cmd.configure(buildLauncher);
+            cmd.configure(buildLauncher, projectDir);
 
             printCommandLine();
 

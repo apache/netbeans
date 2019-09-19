@@ -41,44 +41,15 @@
                         <specification-version>9.3</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.openide.util</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>9.3</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
-            <friend-packages>
-                <friend>com.sun.tools.swdev.sunstudio</friend>
-                <friend>org.jruby</friend>
-                <friend>org.netbeans.core.browser.xulrunner</friend>
-                <friend>org.netbeans.core.nativeaccess</friend>
-                <friend>org.netbeans.core.network</friend>
-                <friend>org.netbeans.libs.djnsswt.gtklinuxx64</friend>
-                <friend>org.netbeans.libs.djnsswt.gtklinuxx86</friend>
-                <friend>org.netbeans.libs.djnsswt.win32x64</friend>
-                <friend>org.netbeans.libs.djnsswt.win32x86</friend>
-                <friend>org.netbeans.libs.jsch.agentproxy</friend>
-                <friend>org.netbeans.libs.jna.platform</friend>
-                <friend>org.netbeans.libs.svnClientAdapter.svnkit</friend>
-                <friend>org.netbeans.modules.dlight.nativeexecution</friend>
-                <friend>org.netbeans.modules.extbrowser.chrome</friend>
-                <friend>org.netbeans.modules.extexecution.process</friend>
-                <friend>org.netbeans.modules.keyring.impl</friend>
-                <friend>org.netbeans.modules.libs.djnsswt</friend>
-                <friend>org.netbeans.modules.masterfs.linux</friend>
-                <friend>org.netbeans.modules.masterfs.macosx</friend>
-                <friend>org.netbeans.modules.masterfs.windows</friend>
-                <friend>org.netbeans.modules.python.qshell</friend>
+            <public-packages>
                 <package>com.sun.jna</package>
                 <package>com.sun.jna.ptr</package>
                 <package>com.sun.jna.win32</package>
-            </friend-packages>
+            </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jna-4.4.0.jar</runtime-relative-path>
-                <binary-origin>external/jna-4.4.0.jar</binary-origin>
+                <runtime-relative-path>ext/jna-5.4.0.jar</runtime-relative-path>
+                <binary-origin>external/jna-5.4.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

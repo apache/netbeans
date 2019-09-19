@@ -53,4 +53,24 @@ public class PHPFormatterBrokenTest extends PHPFormatterTestBase {
         options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
         reformatFileContents("testfiles/formatting/broken/issue197074_04.php", options);
     }
+
+    public void testNetBeans3103SelectedSelf_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/netbeans3103_self_01.php", options);
+    }
+
+    public void testNetBeans3103SelectedSelf_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/netbeans3103_self_02.php", options);
+    }
+
+    public void testNetBeans3103SelectedParent_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/netbeans3103_parent_01.php", options);
+    }
+
+    public void testNetBeans3103SelectedParent_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/netbeans3103_parent_02.php", options);
+    }
 }

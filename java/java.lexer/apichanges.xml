@@ -85,13 +85,13 @@ is the proper place.
     <changes>
         <change id="RawStringLiteral">
              <api name="general"/>
-             <summary>Added RAW_STRING_LITERAL JavaTokenKind</summary>
+             <summary>Added MULTILINE_STRING_LITERAL JavaTokenKind</summary>
              <version major="1" minor="41"/>
              <date day="22" month="4" year="2018"/>
              <author login="jlahoda"/>
             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
              <description>
-                 Added JavaTokenId.RAW_STRING_LITERAL.
+                 Added JavaTokenId.MULTILINE_STRING_LITERAL.
              </description>
              <class package="org.netbeans.api.java.lexer" name="JavaTokenId"/>
         </change>

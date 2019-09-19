@@ -1,0 +1,3 @@
+    private static function |>MARK_OCCURRENCES:ge^tIndex<|() {
+        $instance1 = new self::$staticProperty[self::|>MARK_OCCURRENCES:getIndex<|()];
+        $instance2 = new $this->property[$this->|>MARK_OCCURRENCES:getIndex<|()];

@@ -575,7 +575,9 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             }
         } else {
             Expression name = node.getClassName().getName();
-            if (name instanceof Variable) {
+            if (name instanceof Variable
+                    || name instanceof StaticFieldAccess // NETBEANS-3108 e.g. new self::staticProperty[self::getIndex()];
+                    || name instanceof FieldAccess) { // NETBEANS-3108 e.g. new $this->property[$this->getIndex()];
                 scan(name);
             } else {
                 ScopeImpl currentScope = modelBuilder.getCurrentScope();

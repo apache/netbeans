@@ -103,7 +103,6 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyle.*;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
-import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.TreeShims;
@@ -1895,7 +1894,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	   case CLASS:
              if (tree.value instanceof String) {
                  print("\"" + quote((String) tree.value, '\'') + "\"");
-             } else if (isTextBlockSupported(null) && tree.value instanceof String[]) {
+             } else if (tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
                  newline();

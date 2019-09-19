@@ -67,9 +67,7 @@ final class CodeTemplatesModel {
         columns.add(loc("Expanded_Text_Title")); //NOI18N
         columns.add(loc("Description_Title")); //NOI18N
 
-        Set mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
-        for(Iterator i = mimeTypes.iterator(); i.hasNext(); ) {
-            String mimeType = (String) i.next();
+        for (String mimeType : EditorSettings.getDefault().getAllMimeTypes()) {
             
             // Load the code templates
             MimePath mimePath = MimePath.parse(mimeType);

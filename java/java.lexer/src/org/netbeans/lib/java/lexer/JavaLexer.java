@@ -173,21 +173,28 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     while (true) {
                         switch (nextChar()) {
                             case '"': // NOI18N
-                                if (this.version >= 13) {
-                                    String text = input.readText().toString();
-                                    if (text.length() == 2) {
-                                        if (nextChar() != '"') {
-                                            input.backup(1); //TODO: EOF???
-                                            return token(lookupId);
-                                        }
-                                        lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
+                                String text = input.readText().toString();
+                                if (text.length() == 2) {
+                                    int mark = input.readLength();
+                                    if (nextChar() != '"') {
+                                        input.backup(1); //TODO: EOF???
+                                        return token(lookupId);
                                     }
-                                    if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
-                                        if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
-                                            return token(lookupId);
-                                        } else {
-                                            break;
-                                        }
+                                    int c2 = nextChar();
+                                    while (Character.isWhitespace(c2) && c2 != '\n') {
+                                        c2 = nextChar();
+                                    }
+                                    if (c2 != '\n') {
+                                        input.backup(input.readLengthEOF()- mark);
+                                        return token(lookupId);
+                                    }
+                                    lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
+                                }
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
+                                        return token(lookupId);
+                                    } else {
+                                        break;
                                     }
                                 }
                                 
@@ -197,7 +204,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                 break;
                             case '\r': consumeNewline();
                             case '\n':
-                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL && this.version >= 13) {
+                                if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
                                     break;
                                 }
                             case EOF:

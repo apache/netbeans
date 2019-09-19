@@ -23,10 +23,10 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+import com.sun.jna.Structure.FieldOrder;
 import com.sun.jna.WString;
 import com.sun.jna.win32.StdCallLibrary;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class Win32Protect implements EncryptionProvider {
 
     private static final Logger LOG = Logger.getLogger(Win32Protect.class.getName());
-    
+
     public @Override boolean enabled() {
         if (!Utilities.isWindows()) {
             LOG.fine("not running on Windows");
@@ -110,7 +110,7 @@ public class Win32Protect implements EncryptionProvider {
     public @Override void freshKeyring(boolean fresh) {}
 
     public interface CryptLib extends StdCallLibrary {
-        CryptLib INSTANCE = Native.loadLibrary("Crypt32", CryptLib.class); // NOI18N
+        CryptLib INSTANCE = Native.load("Crypt32", CryptLib.class); // NOI18N
         /** @see <a href="http://msdn.microsoft.com/en-us/library/aa380261(VS.85,printer).aspx">Reference</a> */
         boolean CryptProtectData(
                 CryptIntegerBlob pDataIn,
@@ -132,7 +132,9 @@ public class Win32Protect implements EncryptionProvider {
                 CryptIntegerBlob pDataOut
         )/* throws LastErrorException*/;
     }
-    
+
+    @SuppressWarnings("PublicField")
+    @FieldOrder({"cbData", "pbData"})
     public static class CryptIntegerBlob extends Structure {
         public int cbData;
         public /*byte[]*/Pointer pbData;
@@ -147,14 +149,6 @@ public class Win32Protect implements EncryptionProvider {
         }
         void zero() {
             ((Memory) pbData).clear();
-        }
-
-        @Override
-        protected List getFieldOrder() {
-            return Arrays.asList( new String[] {
-                "cbData",
-                "pbData",
-            } );
         }
     }
 

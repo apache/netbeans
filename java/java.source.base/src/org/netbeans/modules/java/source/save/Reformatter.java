@@ -2647,7 +2647,6 @@ public class Reformatter implements ReformatTask {
                     break;
             }
             if (node.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                old = indent;
                 indent = lastIndent + indentSize;
             }
             List<? extends CaseTree> caseTrees = TreeShims.getCases(node);

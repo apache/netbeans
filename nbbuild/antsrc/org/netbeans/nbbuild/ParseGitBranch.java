@@ -61,11 +61,11 @@ public class ParseGitBranch extends Task {
         } catch (IOException ex) {
             throw new BuildException("Problem reading information for detached head");
         }
-        if (secondLine != null) {
-            throw new BuildException("Problem parsing git information for detached head : too many line");
-        }
-        if (firstLine == null || firstLine.trim().isEmpty()) {
-            // PullRequest assume master ?
+        //if (secondLine != null) {
+        //    throw new BuildException("Problem parsing git information for detached head : too many line");
+        //}
+        if (secondLine != null || firstLine == null || firstLine.trim().isEmpty()) {
+            // Assume master if PR or detached HEAD on Travis, etc.
             getProject().setProperty(propertyName, "master");
         } else {
             String[] splited = firstLine.trim().split(" ");

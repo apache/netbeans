@@ -34,6 +34,9 @@ ide/o.apache.commons.lang/external/commons-lang-2.6.jar java/maven.embedder/exte
 # upstream problem
 nbbuild/external/langtools-9.zip nbbuild/external/langtools-9.zip
 
+# Used to parse data during build, but need to as a lib for ide cluster
+nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar
+
 # JFlex is used by multiple modules.
 webcommon/javascript2.jade/external/jflex-1.4.3.jar webcommon/javascript2.lexer/external/jflex-1.4.3.jar
 

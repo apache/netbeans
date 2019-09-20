@@ -138,7 +138,7 @@ metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
     <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
         <classpath>
             <pathelement location="${nbantext.jar}"/>
-            <fileset dir="${nb_all}/ide/libs.json_simple/external">
+            <fileset dir="${nb_all}/nbbuild/external">
                 <include name="json*.jar"/>
             </fileset>
         </classpath>

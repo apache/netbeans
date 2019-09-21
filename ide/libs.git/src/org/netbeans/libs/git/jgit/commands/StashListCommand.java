@@ -55,8 +55,7 @@ public class StashListCommand extends GitCommand {
     @Override
     protected void run () throws GitException {
         Repository repository = getRepository();
-        RevWalk fullWalk = new RevWalk(repository);
-        try {
+        try (RevWalk fullWalk = new RevWalk(repository);) {
             Collection<RevCommit> stashes = new Git(repository).stashList().call();
             for (RevCommit stash : stashes) {
                 addRevision(getClassFactory().createRevisionInfo(fullWalk.parseCommit(stash), repository));
@@ -65,8 +64,6 @@ public class StashListCommand extends GitCommand {
             throw new GitException(Utils.getBundle(CatCommand.class).getString("MSG_Error_StashMissingCommit"), ex);
         } catch (GitAPIException | IOException ex) {
             throw new GitException(ex);
-        } finally {
-            fullWalk.release();
         }
     }
 

@@ -34,7 +34,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>com-jcraft-jsch.jar</runtime-relative-path>
-                <binary-origin>external/jsch-0.1.54.jar</binary-origin>
+                <binary-origin>external/jsch-0.1.55.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

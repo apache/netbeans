@@ -50,14 +50,14 @@ public class UpdateRefCommand extends GitCommand {
         Repository repository = getRepository();
         try {
             
-            Ref ref = repository.getRef(refName);
+            Ref ref = repository.findRef(refName);
             if (ref == null || ref.isSymbolic()) {
                 // currently unable to update symbolic references
                 result = GitRefUpdateResult.valueOf(RefUpdate.Result.NOT_ATTEMPTED.name());
                 return;
             }
             
-            Ref newRef = repository.getRef(revision);
+            Ref newRef = repository.findRef(revision);
             String name;
             if (newRef == null) {
                 ObjectId id = repository.resolve(revision);

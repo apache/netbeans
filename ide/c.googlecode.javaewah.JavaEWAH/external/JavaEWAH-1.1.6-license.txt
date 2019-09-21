@@ -1,5 +1,5 @@
 Name: JavaEWAH
-Version: 0.7.9
+Version: 1.1.6
 License: Apache-2.0
 Origin: JavaEWAH Project
 URL: https://github.com/lemire/javaewah

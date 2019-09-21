@@ -34,14 +34,46 @@
                     <code-name-base>com.googlecode.javaewah.JavaEWAH</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.7.9</specification-version>
+                        <specification-version>1.1.6</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.slf4j.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.6.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.slf4j.jdk14</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.6.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.bouncycastle.bcprov</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.63</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.bouncycastle.bcpg</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.63</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-3.6.2.201501210735-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit-5.5.0.201909110433-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

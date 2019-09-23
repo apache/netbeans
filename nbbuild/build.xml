@@ -60,14 +60,10 @@
         <classpath>
             <pathelement location="${ant.core.lib}"/>
         </classpath>
-        <include name="org/netbeans/nbbuild/HgExec.java"/>
-        <include name="org/netbeans/nbbuild/ValidateHgConfiguration.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DeregisterExternalHook.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DownloadBinaries.java"/>
         <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
-    <taskdef name="validate-hg-configuration" classname="org.netbeans.nbbuild.ValidateHgConfiguration" classpath="${build.ant.classes.dir}"/>
-    <validate-hg-configuration root=".."/>
     <taskdef name="deregisterexternalhook" classname="org.netbeans.nbbuild.extlibs.DeregisterExternalHook" classpath="${build.ant.classes.dir}"/>
     <deregisterexternalhook root=".."/>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>

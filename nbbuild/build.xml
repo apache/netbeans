@@ -1311,7 +1311,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <fileset dir="${java.io.tmpdir}" includes="nb-scan-cache-*-standard.ser,nb-scan-cache-*-full.ser"/>
     </delete>
     <!-- This step must be last (tries to delete nbantext.jar): -->
-    <delete dir="${nb.build.dir}" quiet="true"/>  
+    <delete dir="${nb.build.dir}" quiet="true"/>
   </target>
 
   <target name="clean-cluster-flags" unless="do-not-rebuild-clusters">
@@ -1777,8 +1777,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
-      <zipfileset file="nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
-      <zipfileset file="nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
+      <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
+      <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
     </zip>
   </target>
 

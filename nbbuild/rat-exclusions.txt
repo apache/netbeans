@@ -23,6 +23,8 @@ nbbuild/licenses/**
 nbbuild/netbeans/**
 nbbuild/testuserdir/**
 nbbuild/user.build.properties
+###### generated build artefact
+nbbuild/gitinfo.properties
 
 ###### user-specific files  
 **/nbproject/private/**

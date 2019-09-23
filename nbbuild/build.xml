@@ -120,8 +120,11 @@
     <antcall target="getgitinformation" />
     <!-- javadoc content filtering -->
     <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
-    <!-- read info from gitinfo.properties -->
-    <property file="${nb_all}/nbbuild/gitinfo.properties"/>
+    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
+    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
+    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <setjavadoc branch="${metabuild.branch}"/>
     <echo message="Building branch: ${metabuild.branch}"/>
     <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
@@ -138,13 +141,8 @@
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
     <!--<fail />-->
   </target>
-  <target name="-git.ispresent">
-      <condition property="metabuild.isgitrepo" value="true" else="false">
-          <available type="dir" file="../.git"/>
-      </condition>
-  </target>
   <target name="-gitinfo.ispresent">
-      <available file="${nb_all}/nbbuild/gitinfo.properties" property="gitinfo.present" />      
+      <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
   </target>
   <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
       <!-- try to get information from jenkins or travis -->
@@ -157,6 +155,11 @@
       </condition>
       <condition property="metabuild.branch" value="${metabuild.branch}" >
           <isset property="metabuild.branch" />
+      </condition>
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
       </condition>
       <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
           <isset property="env.GIT_COMMIT" />
@@ -176,12 +179,12 @@
               </not>
           </condition>
       </fail>
-      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
-      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/gitinfo.properties" >metabuild.branch=${metabuild.branch}
+      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}
 metabuild.hash=${metabuild.hash}</echo>
   </target>
   <target name="-git.up" if="${gitinfo.present}" depends="-gitinfo.ispresent">
-      <property file="${nb_all}/nbbuild/gitinfo.properties"/>
+      <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
       <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
   </target>
   <target name="getgitinformation" depends="-git.up,-git.down" />
@@ -1308,7 +1311,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <fileset dir="${java.io.tmpdir}" includes="nb-scan-cache-*-standard.ser,nb-scan-cache-*-full.ser"/>
     </delete>
     <!-- This step must be last (tries to delete nbantext.jar): -->
-    <delete dir="${nb.build.dir}" quiet="true"/>
+    <delete dir="${nb.build.dir}" quiet="true"/>  
   </target>
 
   <target name="clean-cluster-flags" unless="do-not-rebuild-clusters">
@@ -1774,6 +1777,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
+      <zipfileset file="nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
+      <zipfileset file="nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
     </zip>
   </target>
 

@@ -179,8 +179,10 @@
                   <isset property="metabuild.branch"/>
               </not>
           </condition>
-      </fail>      
-      <echo file="${nb_all}/nbbuild/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      </fail>
+      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/gitinfo.properties" >metabuild.branch=${metabuild.branch}
+metabuild.hash=${metabuild.hash}</echo>
   </target>
   <target name="-git.up" if="${gitinfo.present}" depends="-gitinfo.ispresent">
       <property file="${nb_all}/nbbuild/gitinfo.properties"/>

@@ -30,6 +30,7 @@
 /nbbuild/testuserdir/
 /nbbuild/*.zip
 /nbbuild/user.build.properties
+/nbbuild/gitinfo.properties
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/

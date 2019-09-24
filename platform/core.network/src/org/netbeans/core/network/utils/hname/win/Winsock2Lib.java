@@ -26,7 +26,7 @@ import com.sun.jna.Native;
  */
 public interface Winsock2Lib extends Library {
 
-    Winsock2Lib INSTANCE = (Winsock2Lib) Native.loadLibrary("ws2_32", Winsock2Lib.class);
+    Winsock2Lib INSTANCE = Native.load("ws2_32", Winsock2Lib.class);
 
     public int gethostname(byte[] name, int namelen);
 }

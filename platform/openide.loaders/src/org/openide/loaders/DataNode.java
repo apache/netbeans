@@ -1026,9 +1026,8 @@ public class DataNode extends AbstractNode {
                 }
             } else {
                 thisChanged = false;
-                Iterator it = obj.files().iterator();
-                while (it.hasNext()) {
-                    FileObject fo = (FileObject)it.next();
+                
+                for (FileObject fo : obj.files()) {
                     if (ev.hasChanged(fo)) {
                         thisChanged = true;
                         break;

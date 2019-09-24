@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +20,7 @@
     under the License.
 
 -->
+
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
@@ -39,18 +41,18 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="microVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="autoBindHttpLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="contextRootLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="autoBindHttpCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="91" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="microVersionCombobox" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="microVersionCombobox" alignment="0" max="32767" attributes="0"/>
+                  <Component id="contextRootTextField" alignment="1" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -66,7 +68,12 @@
                   <Component id="autoBindHttpCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="autoBindHttpLabel" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="255" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="contextRootLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="contextRootTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="217" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -103,6 +110,23 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/ui/Bundle.properties" key="TLTP_AUTO_BIND_HTTP" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="contextRootLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/ui/Bundle.properties" key="PayaraMicroPanel.contextRootLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/ui/Bundle.properties" key="PayaraMicroPanel.contextRootLabel.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="contextRootTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/ui/Bundle.properties" key="PayaraMicroPanel.contextRootTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

@@ -258,7 +258,7 @@ public class ImportAnalysis2 {
 
     //Note: this method should return either "orig" or a IdentifierTree or MemberSelectTree
     //no other tree type is not allowed - see ImmutableTreeTranslator.translateStable(Tree)
-    public ExpressionTree resolveImport(MemberSelectTree orig, Element element) {
+    public ExpressionTree resolveImport(MemberSelectTree orig, final Element element) {
         if (visibleThroughClasses == null || element == null || cs != null && cs.useFQNs()) {
             //may happen for package clause
             return orig;
@@ -390,7 +390,7 @@ public class ImportAnalysis2 {
     }
 
     private PackageElement getPackageOf(Element el) {
-        while (el.getKind() != ElementKind.PACKAGE) el = el.getEnclosingElement();
+        while ((el != null) && (el.getKind() != ElementKind.PACKAGE)) el = el.getEnclosingElement();
 
         return (PackageElement) el;
     }

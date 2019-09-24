@@ -22,39 +22,27 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
-import java.util.Arrays;
-import java.util.List;
+import com.sun.jna.Structure.FieldOrder;
 
 /**
  *
  * @author lfischme
  */
 public interface WindowsNetworkProxyLibrary extends Library {
-    WindowsNetworkProxyLibrary LIBRARY = Native.loadLibrary("winhttp.dll", WindowsNetworkProxyLibrary.class);
-    
+    WindowsNetworkProxyLibrary LIBRARY = Native.load("winhttp.dll", WindowsNetworkProxyLibrary.class);
+
+    @SuppressWarnings("PublicField")
+    @FieldOrder({"autoDetect", "pacFile", "proxy", "proxyBypass"})
     public class ProxyConfig extends Structure {
-
-        @Override
-        protected List getFieldOrder() {
-            return Arrays.asList( new String[] {
-                "autoDetect",
-                "pacFile",
-                "proxy",
-                "proxyBypass"
-            } );
-        }
-
         public static class ByReference extends ProxyConfig implements Structure.ByReference { }
-        
+
         public boolean autoDetect;
         public Pointer pacFile;
         public Pointer proxy;
-        public Pointer proxyBypass;        
+        public Pointer proxyBypass;
+    }
 
-
-    } 
-    
     public boolean WinHttpGetIEProxyConfigForCurrentUser(
-            ProxyConfig proxyConfig
-            );
+        ProxyConfig proxyConfig
+    );
 }

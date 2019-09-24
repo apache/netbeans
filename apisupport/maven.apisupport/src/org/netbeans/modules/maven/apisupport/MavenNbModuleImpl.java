@@ -107,7 +107,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     public static final String GROUPID_MOJO = "org.codehaus.mojo";
     public static final String GROUPID_APACHE = "org.apache.netbeans.utilities";
     public static final String NBM_PLUGIN = "nbm-maven-plugin";
-    public static final String LATEST_NBM_PLUGIN_VERSION = "4.12";
+    public static final String LATEST_NBM_PLUGIN_VERSION = "4.2";
     
     public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";  
     

@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.annotation.PhpAnnotations;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode;
@@ -221,13 +222,14 @@ public class PHPDocCommentParser {
             } else if (type.equals(PHPDocTag.Type.METHOD)) {
                 String name = getMethodName(description);
                 if (name != null) {
+                    boolean isStatic = description.trim().startsWith("static"); // NOI18N
                     int startOfVariable = findStartOfDocNode(originalComment, originalCommentStart, name, start);
                     if (startOfVariable != -1) {
                         PHPDocNode methodNode = new PHPDocNode(startOfVariable, startOfVariable + name.length(), name);
                         int startOfDescription = findStartOfDocNode(originalComment, originalCommentStart, description, start);
                         if (startOfDescription != -1) {
                             List<PHPDocVarTypeTag> params = findMethodParams(description, startOfDescription);
-                            return new PHPDocMethodTag(start, end, type, docTypes, methodNode, params, description);
+                            return new PHPDocMethodTag(start, end, type, docTypes, methodNode, params, description, isStatic);
                         }
                     }
                 }
@@ -287,6 +289,9 @@ public class PHPDocCommentParser {
 
     private List<String> getTypes(String description, boolean isReturnTag) {
         String[] tokens = description.trim().split("[ ]+"); //NOI18N
+        if (tokens.length > 0 && tokens[0].equals("static")) { // NOI18N
+            tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+        }
         ArrayList<String> types = new ArrayList<>();
         if (tokens.length > 0 && (isReturnTag || !tokens[0].startsWith("$"))) { //NOI18N
             if (tokens[0].indexOf('|') > -1) {
@@ -294,6 +299,11 @@ public class PHPDocCommentParser {
                 for (String ttoken : ttokens) {
                     types.add(ttoken.trim());
                 }
+            } else if (tokens[0].indexOf('(') > 0) {
+                // e.g. @method getSomething(int $i)
+                // NOTE: add void type but it is not shown as a return type in doc popup
+                // because it doesn't exist
+                types.add(Type.VOID);
             } else {
                 types.add(tokens[0].trim());
             }
@@ -326,7 +336,11 @@ public class PHPDocCommentParser {
         } else {
             // probably defined without () after the name
             // then we expect that the name is after the first space
-            String[] tokens = description.trim().split("[ \n\t]+"); //NOI18N
+            String desc = description.trim();
+            if (desc.startsWith("static ")) { // NOI18N
+                desc = desc.substring("static ".length()); // NOI18N
+            }
+            String[] tokens = desc.trim().split("[ \n\t]+"); //NOI18N
             if (tokens.length > 1) {
                 name = tokens[1];
             }

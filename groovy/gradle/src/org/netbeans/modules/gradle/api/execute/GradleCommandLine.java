@@ -16,10 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.api.execute;
 
 import java.io.Serializable;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,32 +36,52 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.gradle.tooling.ConfigurableLauncher;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Argument.Kind.*;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
- * Object representation of a Gradle command line.
- * This object can be used to add remove different flags, options and properties
- * in a Gradle command line. It can be used to merge and subtract command lines.
+ * Object representation of a Gradle command line. This object can be used to
+ * add remove different flags, options and properties in a Gradle command line.
+ * It can be used to merge and subtract command lines.
  *
  * @since 1.0
  * @author Laszlo Kishalmi
  */
 public final class GradleCommandLine implements Serializable {
 
-    /** Gradle log levels. */
-    public enum LogLevel {DEBUG, INFO, LIFECYCLE, WARN, QUIET}
-    /** Gradle stacktrace output levels. */
-    public enum StackTrace {NONE, SHORT, FULL}
+    private static final Logger LOGGER = Logger.getLogger(GradleCommandLine.class.getName());
+    private static final String PROP_JVMARGS = "org.gradle.jvmargs"; // NOI18N
+    /**
+     * Gradle log levels.
+     */
+    public enum LogLevel {
+        DEBUG, INFO, LIFECYCLE, WARN, QUIET
+    }
 
-    /** The common name of the task which invokes tests. */
+    /**
+     * Gradle stacktrace output levels.
+     */
+    public enum StackTrace {
+        NONE, SHORT, FULL
+    }
+
+    /**
+     * The common name of the task which invokes tests.
+     */
     public static final String TEST_TASK = "test"; //NOI18N
-    /** The common name of the task which invokes checks. */
+    /**
+     * The common name of the task which invokes checks.
+     */
     public static final String CHECK_TASK = "check"; //NOI18N
 
-    /** Gradle command line flags */
+    /**
+     * Gradle command line flags
+     */
     public enum Flag {
         NO_REBUILD(PARAM, "-a", "--no-rebuild"),
         BUILD_CACHE(PARAM, "--build-cache"),
@@ -68,22 +92,18 @@ public final class GradleCommandLine implements Serializable {
         PARALLEL(PARAM, "--parallel"),
         REFRESH_DEPENDENCIES(PARAM, "--refresh-dependencies"),
         RERUN_TASKS(PARAM, "--rerun-tasks"),
-
         LOG_DEBUG(PARAM, "-d", "--debug"),
         LOG_INFO(PARAM, "-i", "--info"),
         LOG_WARN(PARAM, "-w", "--warn"),
         LOG_QUIET(PARAM, "-q", "--quiet"),
-
         STACKTRACE(PARAM, "-s", "--stacktrace"),
         STACKTRACE_FULL(PARAM, "-S", "--full-stacktrace"),
-
         PROFILE(PARAM, "--profile"),
         NO_BUILD_CACHE(PARAM, "--no-build-cache"),
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
         NO_PARALLEL(PARAM, "--no-parallel"),
         SCAN(PARAM, "--scan"),
         NO_SCAN(PARAM, "--no-scan"),
-
         DAEMON(UNSUPPORTED, "--no-daemon"),
         NO_DAEMON(UNSUPPORTED, "--daemon"),
         HELP(UNSUPPORTED, "--help", "-h", "-?"),
@@ -99,6 +119,7 @@ public final class GradleCommandLine implements Serializable {
         private Set<Flag> incompatible = Collections.emptySet();
         private final Argument.Kind kind;
         private final List<String> flags;
+
         static {
             DAEMON.incompatibleWith(NO_DAEMON);
             NO_DAEMON.incompatibleWith(DAEMON);
@@ -204,6 +225,7 @@ public final class GradleCommandLine implements Serializable {
 
         final Flag flag;
         private static final EnumMap<Flag, FlagArgument> FLAG_ARGS = new EnumMap<>(Flag.class);
+
         static {
             for (Flag flag : Flag.values()) {
                 FLAG_ARGS.put(flag, new FlagArgument(flag));
@@ -302,12 +324,12 @@ public final class GradleCommandLine implements Serializable {
             return this.prop == other.prop;
         }
 
-
     }
 
     static class PropertyParser implements ArgumentParser<PropertyArgument> {
 
         final Property prop;
+
         PropertyParser(Property prop) {
             this.prop = prop;
         }
@@ -401,6 +423,7 @@ public final class GradleCommandLine implements Serializable {
     }
 
     static final List<ArgumentParser<? extends Argument>> PARSERS = new LinkedList<>();
+
     static {
         for (Flag flag : Flag.values()) {
             PARSERS.add(FlagArgument.of(flag));
@@ -448,7 +471,7 @@ public final class GradleCommandLine implements Serializable {
         char quote = 0;
         StringBuilder buf = new StringBuilder();
         List<String> args = new ArrayList<>();
-        for(int i = 0; i < cli.length(); i++) {
+        for (int i = 0; i < cli.length(); i++) {
             char ch = cli.charAt(i);
             if (quote == 0) {
                 if (Character.isWhitespace(ch)) {
@@ -488,8 +511,8 @@ public final class GradleCommandLine implements Serializable {
     }
 
     /**
-     * Retrieve the command line which is actually supported to be executed
-     * from the IDE.
+     * Retrieve the command line which is actually supported to be executed from
+     * the IDE.
      *
      * @return the list of IDE supported arguments.
      */
@@ -500,10 +523,10 @@ public final class GradleCommandLine implements Serializable {
     }
 
     /**
-     * Retrieve the command line as a list of strings.
-     * This list can contain arguments which is no meaning or not supported
-     * in the IDE, like '--no-daemon' as due to the nature of Gradle tooling,
-     * Gradle daemon is always being used.
+     * Retrieve the command line as a list of strings. This list can contain
+     * arguments which is no meaning or not supported in the IDE, like
+     * '--no-daemon' as due to the nature of Gradle tooling, Gradle daemon is
+     * always being used.
      *
      * @return the list of Gradle arguments.
      */
@@ -682,7 +705,7 @@ public final class GradleCommandLine implements Serializable {
             }
             if (argument instanceof ParametricArgument) {
                 ParametricArgument parg = (ParametricArgument) argument;
-                if (hasParameter(parg.param) && getParameters(parg.param).contains(parg.value)){
+                if (hasParameter(parg.param) && getParameters(parg.param).contains(parg.value)) {
                     removeParameter(parg.param, parg.value);
                     ret.addParameter(parg.param, parg.value);
                 }
@@ -712,7 +735,7 @@ public final class GradleCommandLine implements Serializable {
         for (Argument arg : arguments) {
             if (arg instanceof PropertyArgument) {
                 PropertyArgument parg = (PropertyArgument) arg;
-                if ((parg.prop == type) && parg.key.equals(key)){
+                if ((parg.prop == type) && parg.key.equals(key)) {
                     return parg.value;
                 }
             }
@@ -743,7 +766,7 @@ public final class GradleCommandLine implements Serializable {
 
     public void setLogLevel(LogLevel level) {
         arguments.removeAll(Arrays.asList(Flag.LOG_DEBUG, Flag.LOG_INFO, Flag.LOG_QUIET, Flag.LOG_WARN));
-        switch(level) {
+        switch (level) {
             case DEBUG:
                 addFlag(Flag.LOG_DEBUG);
                 break;
@@ -802,11 +825,60 @@ public final class GradleCommandLine implements Serializable {
         }
     }
 
-    public void configure(ConfigurableLauncher launcher) {
-        launcher.setJvmArguments(getArgs(EnumSet.of(SYSTEM)));
+    private void addGradleSettingJvmargs(File projectDir, List<String> jvmargs) {
+        List<File> propFiles = new ArrayList<>();
+
+        if (projectDir == null) {
+            File gradleHome = GradleSettings.getDefault().getGradleUserHome();
+            File f = new File(gradleHome, GradleFiles.GRADLE_PROPERTIES_NAME);
+            if (f.exists()) {
+                propFiles.add(f);
+            }
+        } else {
+            propFiles.addAll(new GradleFiles(projectDir).getPropertyFiles());
+        }
+
+        for (File f : propFiles) {
+            try (InputStream in = new FileInputStream(f)) {
+                Properties props = new Properties();
+                props.load(in);
+                if (props.containsKey(PROP_JVMARGS)) {
+                    jvmargs.addAll(Arrays.asList(props.getProperty(PROP_JVMARGS).split("\\s+"))); //NOI18N
+                }
+            } catch (IOException ex) {
+                LOGGER.log(Level.INFO, "Cannot read property file: '" + f.getAbsolutePath() + "' as: " + ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Configures the given Gradle Launcher considering the options set in this
+     * command line and the Java VM arguments specified by the given project
+     * dir.
+     *
+     * @since 1.3
+     * @param launcher the Launcher instance to configure.
+     * @param projectDir can be {@code null} if the project properties for JVM
+     * arguments shall not be evaluated.
+     */
+    public void configure(ConfigurableLauncher launcher, File projectDir) {
+        List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
+        addGradleSettingJvmargs(projectDir, jvmargs);
+        launcher.setJvmArguments(jvmargs);
         List<String> args = new LinkedList<>(getArgs(EnumSet.of(PARAM)));
         args.addAll(tasks);
         launcher.withArguments(args);
+    }
+
+    /**
+     * Configures the given Gradle Launcher considering the options set in this
+     * command line.
+     *
+     * @since 1.0
+     * @param launcher the Launcher instance to configure.
+     */
+    public void configure(ConfigurableLauncher launcher) {
+        configure(launcher, null);
     }
 
     @Override

@@ -234,7 +234,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
     private static class ReferenceSpanFinder {
 
         private static final int RECURSION_LIMIT = 100;
-        // e.g.  @var VarType $variable 
+        // e.g.  @var VarType $variable
         private static final Pattern INLINE_PHP_VAR_COMMENT_PATTERN = Pattern.compile("^[ \t]*@var[ \t]+.+[ \t]+\\$.+$"); // NOI18N
         private static final Logger LOGGER = Logger.getLogger(DeclarationFinderImpl.class.getName());
 
@@ -317,19 +317,20 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                                 if (node != null) {
                                     return node.getRange().containsInclusive(caretOffset) ? node.getRange() : OffsetRange.NONE;
                                 }
+                                if (typeTag instanceof PHPDocMethodTag) {
+                                    OffsetRange magicMethodRange = getMagicMethodRange((PHPDocMethodTag) typeTag, caretOffset);
+                                    if (magicMethodRange != OffsetRange.NONE) {
+                                        return magicMethodRange;
+                                    }
+                                }
                             }
                         } else {
                             List<PHPDocTag> tags = docBlock.getTags();
                             for (PHPDocTag phpDocTag : tags) {
                                 if (phpDocTag instanceof PHPDocMethodTag) {
-                                    PHPDocMethodTag methodTag = (PHPDocMethodTag) phpDocTag;
-                                    MagicMethodDeclarationInfo methodInfo = MagicMethodDeclarationInfo.create(methodTag);
-                                    if (methodInfo != null) {
-                                        if (methodInfo.getRange().containsInclusive(caretOffset)) {
-                                            return methodInfo.getRange();
-                                        } else if (methodInfo.getTypeRange().containsInclusive(caretOffset)) {
-                                            return methodInfo.getTypeRange();
-                                        }
+                                    OffsetRange magicMethodRange = getMagicMethodRange((PHPDocMethodTag) phpDocTag, caretOffset);
+                                    if (magicMethodRange != OffsetRange.NONE) {
+                                        return magicMethodRange;
                                     }
                                 }
                             }
@@ -354,6 +355,19 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 }
             }
             return OffsetRange.NONE;
+        }
+
+        private OffsetRange getMagicMethodRange(PHPDocMethodTag methodTag, final int caretOffset) {
+            OffsetRange offsetRange = OffsetRange.NONE;
+            MagicMethodDeclarationInfo methodInfo = MagicMethodDeclarationInfo.create(methodTag);
+            if (methodInfo != null) {
+                if (methodInfo.getRange().containsInclusive(caretOffset)) {
+                    offsetRange = methodInfo.getRange();
+                } else if (methodInfo.getTypeRange().containsInclusive(caretOffset)) {
+                    offsetRange = methodInfo.getTypeRange();
+                }
+            }
+            return offsetRange;
         }
 
         @CheckForNull

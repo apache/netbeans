@@ -69,6 +69,7 @@ import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
+import com.sun.source.tree.ExpressionTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -102,7 +103,6 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyle.*;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
-import static org.netbeans.api.java.source.SourceUtils.isTextBlockSupported;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.TreeShims;
@@ -410,7 +410,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 this.commentsEnabled = printComments;
                 if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
                     visitSwitchExpression(t);
-                } else {
+                } 
+                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
+                    visitYield(t);
+                }
+                else {
                     t.accept(this);
                 }
                 this.commentsEnabled = saveComments;
@@ -1498,6 +1502,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         print(';');
     }
 
+    public void visitYield(Tree tree) {
+        print("yield");
+        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        if (expr != null) {
+            needSpace();
+            print((JCTree) expr);
+        }
+        print(';');
+    }
+
     @Override
     public void visitContinue(JCContinue tree) {
 	print("continue");
@@ -1880,7 +1894,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	   case CLASS:
              if (tree.value instanceof String) {
                  print("\"" + quote((String) tree.value, '\'') + "\"");
-             } else if (isTextBlockSupported(null) && tree.value instanceof String[]) {
+             } else if (tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
                  newline();

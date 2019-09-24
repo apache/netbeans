@@ -83,12 +83,26 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change>
+            <api name="gradle.java.api"/>
+            <summary>Compiler arguments are accessible for SourceSet-s and minor enhancements</summary>
+            <version major="1" minor="4"/>
+            <date day="16" month="9" year="2019"/>
+            <author login="lkishalmi"/>
+            <compatibility addition="yes"/>
+            <description>
+                Sourcsets can return the used compiler arguments on it's default
+                compiler tasks for Java, Groovy and Scala as well.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+            <issue number="NETBEANS-2941"/>
+        </change>
     </changes>
 
     <!-- Now the surrounding HTML text and document structure: -->
 
     <htmlcontents>
-<!--
+        <!--
 
                             NO NO NO NO NO!
 

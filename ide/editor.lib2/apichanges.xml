@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="TypedTextInterceptorIndent">
+            <summary>Ability to indent text set to TypedTextInterceptor</summary>
+            <version major="2" minor="26"/>
+            <date day="15" month="9" year="2019"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>Added TypedTextInterceptor.MutableContext.setText overload, which
+                   optionally re-indents the provided text.</p>
+            </description>
+            <class name="TypedTextInterceptor" package="org.netbeans.spi.editor.typinghooks"/>
+        </change>
         <change id="PrependedTextOpt">
             <summary>Prepended text for highlights</summary>
             <version major="2" minor="24"/>

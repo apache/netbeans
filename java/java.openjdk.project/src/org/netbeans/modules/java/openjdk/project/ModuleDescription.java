@@ -44,6 +44,7 @@ import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Pair;
 import org.openide.xml.XMLUtil;
@@ -96,12 +97,12 @@ public class ModuleDescription {
 
         boolean hasModuleInfos;
         List<ModuleDescription> moduleDescriptions;
-        FileObject modulesXML = jdkRoot.getFileObject("modules.xml");
+        FileObject modulesXML = BuildUtils.getFileObject(jdkRoot, "modules.xml");
 
         if (modulesXML != null) {
             moduleDescriptions = new ArrayList<>();
             readModulesXml(modulesXML, moduleDescriptions);
-            readModulesXml(jdkRoot.getFileObject("closed/modules.xml"), moduleDescriptions);
+            readModulesXml(BuildUtils.getFileObject(jdkRoot, "closed/modules.xml"), moduleDescriptions);
             hasModuleInfos = false;
         } else {
             moduleDescriptions = readModuleInfos(jdkRoot);
@@ -123,19 +124,19 @@ public class ModuleDescription {
     }
 
     private static Pair<FileObject, Pair<Boolean, Boolean>> findJDKRoot(FileObject projectDirectory) {
-        if (projectDirectory.getFileObject("../../../open/src/java.base/share/classes/module-info.java") != null && 
-            projectDirectory.getFileObject("../../../open/src/java.base/share/classes/module-info.java") != null &&
-            projectDirectory.getFileObject("../../../open/src/java.compiler/share/classes/module-info.java") != null)
-            return Pair.of(projectDirectory.getFileObject("../../.."), Pair.of(true, true));
-        if (projectDirectory.getFileObject("../../src/java.base/share/classes/module-info.java") != null &&
-            projectDirectory.getFileObject("../../src/java.compiler/share/classes/module-info.java") != null)
-            return Pair.of(projectDirectory.getFileObject("../.."), Pair.of(true, false));
-        if (projectDirectory.getFileObject("../../../modules.xml") != null ||
-            (projectDirectory.getFileObject("../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
-            return Pair.of(projectDirectory.getFileObject("../../.."), Pair.of(false, false));
-        if (projectDirectory.getFileObject("../../../../modules.xml") != null ||
-            (projectDirectory.getFileObject("../../../../jdk/src/java.base/share/classes/module-info.java") != null && projectDirectory.getFileObject("../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
-            return Pair.of(projectDirectory.getFileObject("../../../.."), Pair.of(false, false));
+        if (BuildUtils.getFileObject(projectDirectory, "../../../open/src/java.base/share/classes/module-info.java") != null && 
+            BuildUtils.getFileObject(projectDirectory, "../../../open/src/java.base/share/classes/module-info.java") != null &&
+            BuildUtils.getFileObject(projectDirectory, "../../../open/src/java.compiler/share/classes/module-info.java") != null)
+            return Pair.of(BuildUtils.getFileObject(projectDirectory, "../../.."), Pair.of(true, true));
+        if (BuildUtils.getFileObject(projectDirectory, "../../src/java.base/share/classes/module-info.java") != null &&
+            BuildUtils.getFileObject(projectDirectory, "../../src/java.compiler/share/classes/module-info.java") != null)
+            return Pair.of(BuildUtils.getFileObject(projectDirectory, "../.."), Pair.of(true, false));
+        if (BuildUtils.getFileObject(projectDirectory, "../../../modules.xml") != null ||
+            (BuildUtils.getFileObject(projectDirectory, "../../../jdk/src/java.base/share/classes/module-info.java") != null && BuildUtils.getFileObject(projectDirectory, "../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
+            return Pair.of(BuildUtils.getFileObject(projectDirectory, "../../.."), Pair.of(false, false));
+        if (BuildUtils.getFileObject(projectDirectory, "../../../../modules.xml") != null ||
+            (BuildUtils.getFileObject(projectDirectory, "../../../../jdk/src/java.base/share/classes/module-info.java") != null && BuildUtils.getFileObject(projectDirectory, "../../../langtools/src/java.compiler/share/classes/module-info.java") != null))
+            return Pair.of(BuildUtils.getFileObject(projectDirectory, "../../../.."), Pair.of(false, false));
 
         return null;
     }
@@ -235,7 +236,7 @@ public class ModuleDescription {
                 }
             }
 
-            if (current.getFileObject("TEST.ROOT") != null) {
+            if (BuildUtils.getFileObject(current, "TEST.ROOT") != null) {
                 continue; //do not look inside test folders
             }
 
@@ -247,7 +248,7 @@ public class ModuleDescription {
 
     private static FileObject getModuleInfo(FileObject project) {
         for (FileObject c : project.getChildren()) {
-            FileObject moduleInfo = c.getFileObject("classes/module-info.java");
+            FileObject moduleInfo = BuildUtils.getFileObject(c, "classes/module-info.java");
 
             if (moduleInfo != null)
                 return moduleInfo;
@@ -262,7 +263,7 @@ public class ModuleDescription {
         try (Reader r = new InputStreamReader(f.getInputStream())) {
             ModuleDescription desc = parseModuleInfo(r);
 
-            if (desc == null || !desc.name.equals(f.getFileObject("../../..").getNameExt()))
+            if (desc == null || !desc.name.equals(BuildUtils.getFileObject(f, "../../..").getNameExt()))
                 return null;
 
             return desc;
@@ -369,22 +370,22 @@ public class ModuleDescription {
                 FileObject module;
 
                 if (explicitOpen) {
-                    module = root.getFileObject("open/src/" + moduleName);
+                    module = BuildUtils.getFileObject(root, "open/src/" + moduleName);
                     if (module == null) {
-                        module = root.getFileObject("closed/src/" + moduleName);
+                        module = BuildUtils.getFileObject(root, "closed/src/" + moduleName);
                     }
                 } else {
-                    module = root.getFileObject("src/" + moduleName);
+                    module = BuildUtils.getFileObject(root, "src/" + moduleName);
                 }
 
                 if (module != null && module.isFolder())
                     return module;
             } else {
                 for (FileObject repo : root.getChildren()) {
-                    FileObject module = repo.getFileObject("src/" + moduleName);
+                    FileObject module = BuildUtils.getFileObject(repo, "src/" + moduleName);
 
                     if (module == null)
-                        module = repo.getFileObject("src/closed/" + moduleName);
+                        module = BuildUtils.getFileObject(repo, "src/closed/" + moduleName);
 
                     if (module != null && module.isFolder() && validate(repo, module))
                         return module;

@@ -142,6 +142,9 @@ public final class HighlightImpl {
         ColoringAttributes.DECLARATION,
         
         ColoringAttributes.MARK_OCCURRENCES,
+
+        ColoringAttributes.KEYWORD,
+        
         ColoringAttributes.UNINDENTED_TEXT_BLOCK,
     });
  

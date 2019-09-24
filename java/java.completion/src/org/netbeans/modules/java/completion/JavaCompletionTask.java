@@ -198,7 +198,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String VOLATILE_KEYWORD = "volatile"; //NOI18N
     private static final String WHILE_KEYWORD = "while"; //NOI18N
     private static final String WITH_KEYWORD = "with"; //NOI18N
-
+    private static final String YIELD_KEYWORD = "yield"; //NOI18N
+    
     private static final String JAVA_LANG_CLASS = "java.lang.Class"; //NOI18N
     private static final String JAVA_LANG_OBJECT = "java.lang.Object"; //NOI18N
     private static final String JAVA_LANG_ITERABLE = "java.lang.Iterable"; //NOI18N
@@ -235,9 +236,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private static final SourceVersion SOURCE_VERSION_RELEASE_10;
     private static final SourceVersion SOURCE_VERSION_RELEASE_11;
+    private static final SourceVersion SOURCE_VERSION_RELEASE_13;
 
     static {
-        SourceVersion r10, r11;
+        SourceVersion r10, r11, r13;
 
         try {
             r10 = SourceVersion.valueOf("RELEASE_10");
@@ -249,9 +251,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
         } catch (IllegalArgumentException ex) {
             r11 = null;
         }
+        try {
+            r13 = SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            r13 = null;
+        }
 
         SOURCE_VERSION_RELEASE_10 = r10;
         SOURCE_VERSION_RELEASE_11 = r11;
+        SOURCE_VERSION_RELEASE_13 = r13;
     }
 
     private final ItemFactory<T> itemFactory;
@@ -490,6 +498,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 break;
             case STRING_LITERAL:
                 insideStringLiteral(env);
+                break;
+            default:
+                if (path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                    insideSwitch(env);
+                }
                 break;
         }
     }
@@ -1498,6 +1511,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         localResult(env);
         addKeywordsForBlock(env);
+        
+        String prefix = env.getPrefix();
+        if (SOURCE_VERSION_RELEASE_13 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
+                && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+            TreePath parentPath = env.getPath().getParentPath();
+            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                addKeyword(env, YIELD_KEYWORD, null, false);
+            }
+        }
     }
 
     private void insideMemberSelect(Env env) throws IOException {
@@ -2279,12 +2301,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private void insideSwitch(Env env) throws IOException {
         int offset = env.getOffset();
         TreePath path = env.getPath();
-        SwitchTree st = (SwitchTree) path.getLeaf();
+        ExpressionTree exprTree = null;
+        if (path.getLeaf().getKind() == Tree.Kind.SWITCH) {
+            exprTree = ((SwitchTree) path.getLeaf()).getExpression();
+
+        } else {
+            List<? extends ExpressionTree> exprTrees = TreeShims.getExpressions(path.getLeaf());
+            if (!exprTrees.isEmpty()) {
+                exprTree = exprTrees.get(0);
+            }
+        }
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        if (sourcePositions.getStartPosition(root, st.getExpression()) < offset) {
+        if (sourcePositions.getStartPosition(root, exprTree) < offset) {
             CaseTree lastCase = null;
-            for (CaseTree t : st.getCases()) {
+            for (CaseTree t : TreeShims.getCases(path.getLeaf())) {
                 int pos = (int) sourcePositions.getStartPosition(root, t);
                 if (pos == Diagnostic.NOPOS || offset <= pos) {
                     break;
@@ -2324,8 +2355,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
                 localResult(env);
                 addKeywordsForBlock(env);
+                String prefix = env.getPrefix();
+                if (SOURCE_VERSION_RELEASE_13 != null && (env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_13) >= 0
+                        && path.getLeaf().getKind().toString().equals(TreeShims.SWITCH_EXPRESSION) && Utilities.startsWith(YIELD_KEYWORD, prefix))) {
+                    addKeyword(env, YIELD_KEYWORD, null, false);
+                }
+
             } else {
-                TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, st, offset);
+                TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
                 if (ts != null && ts.token().id() == JavaTokenId.LBRACE) {
                     addKeyword(env, CASE_KEYWORD, SPACE, false);
                     addKeyword(env, DEFAULT_KEYWORD, COLON, false);

@@ -44,6 +44,7 @@ import org.netbeans.modules.php.editor.model.nodes.FunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.GroupUseStatementPartInfo;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleUseStatementPartInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
@@ -85,8 +86,14 @@ final class NamespaceScopeImpl extends ScopeImpl implements NamespaceScope, Vari
     }
 
     FunctionScopeImpl createElement(Program program, FunctionDeclaration node) {
+        // NETBEANS-1859 add qualified return type
+        Expression returnType = node.getReturnType();
+        String qualifiedReturnType = VariousUtils.getReturnType(program, node);
+        if (returnType != null) {
+            qualifiedReturnType = VariousUtils.qualifyTypeNames(VariousUtils.getReturnType(program, node), returnType.getStartOffset(), this);
+        }
         FunctionScopeImpl retval = new FunctionScopeImpl(this, FunctionDeclarationInfo.create(program, node),
-                VariousUtils.getReturnType(program, node), VariousUtils.isDeprecatedFromPHPDoc(program, node));
+                qualifiedReturnType, VariousUtils.isDeprecatedFromPHPDoc(program, node));
         return retval;
     }
 

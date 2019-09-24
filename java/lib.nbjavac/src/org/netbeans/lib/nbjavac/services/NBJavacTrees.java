@@ -27,8 +27,13 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
@@ -55,7 +60,14 @@ public class NBJavacTrees extends JavacTrees {
     protected Copier createCopier(TreeMaker make) {
         return new Copier(make) {
             @Override public JCTree visitClass(ClassTree node, JCTree p) {
-                JCTree result = super.visitClass(node, p);
+                JCTree result;
+                try {
+                    MethodHandle superVisitClass = MethodHandles.lookup().findSpecial(Copier.class, "visitClass", MethodType.methodType(JCTree.class, new Class[]{ClassTree.class, JCTree.class}), getClass());
+                    result = (JCTree) superVisitClass.invokeExact(this, node, p);
+                } catch (Throwable ex) {
+                    Logger.getLogger(NBJavacTrees.class.getName()).log(Level.FINE, null, ex);
+                    result = super.visitClass(node, p);
+                }
 
                 if (node instanceof IndexedClassDecl && result instanceof IndexedClassDecl) {
                     ((IndexedClassDecl) result).index = ((IndexedClassDecl) node).index;

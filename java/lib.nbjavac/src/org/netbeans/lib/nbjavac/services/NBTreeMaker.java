@@ -71,12 +71,16 @@ public class NBTreeMaker extends TreeMaker {
     }
 
     @Override
-    public IndexedClassDecl ClassDef(JCModifiers mods, Name name, List<JCTypeParameter> typarams, JCExpression extending, List<JCExpression> implementing, List<JCTree> defs) {
-        IndexedClassDecl result = new IndexedClassDecl(mods, name, typarams, extending, implementing, defs, null);
+    public JCClassDecl ClassDef(JCModifiers mods, Name name, List<JCTypeParameter> typarams, JCExpression extending, List<JCExpression> implementing, List<JCTree> defs) {
+        try {
+            IndexedClassDecl result = new IndexedClassDecl(mods, name, typarams, extending, implementing, defs, null);
 
-        result.pos = pos;
+            result.pos = pos;
 
-        return result;
+            return result;
+        } catch (NoSuchMethodError err) {
+            return super.ClassDef(mods, name, typarams, extending, implementing, defs);
+        }
     }
 
     public static class IndexedClassDecl extends JCClassDecl {

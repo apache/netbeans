@@ -322,13 +322,13 @@
     <target name="-validate-layers" depends="init">
         <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Layer" property="layer.file"/>
         <!-- DTD from sources -->
-        <available file="${nb_all}/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
-                   property="dtd.cp" value="${nb_all}/openide.filesystems/src"/>
+        <available file="${nb_all}/platform/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
+                   property="dtd.cp" value="${nb_all}/platform/openide.filesystems/src"/>
         <!-- DTD from platform -->
         <pathconvert property="dtd.cp">
             <pathfileset>
                 <path refid="cluster.path.id"/>
-                <filename name="core/org-openide-filesystems.jar"/>
+                <filename name="platform/core/org-openide-filesystems.jar"/>
             </pathfileset>
         </pathconvert>
 

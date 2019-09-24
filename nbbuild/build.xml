@@ -60,14 +60,10 @@
         <classpath>
             <pathelement location="${ant.core.lib}"/>
         </classpath>
-        <include name="org/netbeans/nbbuild/HgExec.java"/>
-        <include name="org/netbeans/nbbuild/ValidateHgConfiguration.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DeregisterExternalHook.java"/>
         <include name="org/netbeans/nbbuild/extlibs/DownloadBinaries.java"/>
         <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
-    <taskdef name="validate-hg-configuration" classname="org.netbeans.nbbuild.ValidateHgConfiguration" classpath="${build.ant.classes.dir}"/>
-    <validate-hg-configuration root=".."/>
     <taskdef name="deregisterexternalhook" classname="org.netbeans.nbbuild.extlibs.DeregisterExternalHook" classpath="${build.ant.classes.dir}"/>
     <deregisterexternalhook root=".."/>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>
@@ -77,7 +73,6 @@
             <include name="nbbuild/external/binaries-list"/>
             <include name="platform/libs.junit4/external/binaries-list"/>
             <include name="platform/javahelp/external/binaries-list"/>
-            <include name="ide/libs.json_simple/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <!--
@@ -95,7 +90,7 @@
         <!-- For JavaHelp indexing and link checking: -->
         <include name="platform/javahelp/external/jhall*.jar"/>
         <!-- For json parsing -->
-        <include name="ide/libs.json_simple/external/json-simple*.jar"/>
+        <include name="nbbuild/external/json-simple*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -123,23 +118,22 @@
     <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
     <!-- get branches and git information -->
     <antcall target="getgitinformation" />
-    <!-- hardcoded item for testing
-<echo file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=release111
-metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
-</echo>
-    -->
     <!-- javadoc content filtering -->
     <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
+    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
+    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
+    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
     <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <setjavadoc branch="${metabuild.branch}"/>
-    <echo message="${metabuild.branch}"/>
+    <echo message="Building branch: ${metabuild.branch}"/>
     <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
     <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
         <classpath>
             <pathelement location="${nbantext.jar}"/>
-            <fileset dir="${nb_all}/ide/libs.json_simple/external">
+            <fileset dir="${nb_all}/nbbuild/external">
                 <include name="json*.jar"/>
             </fileset>
         </classpath>
@@ -147,48 +141,51 @@ metabuild.hash=f56623c16cc2cbc4a381508562545b13de91437e
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
     <!--<fail />-->
   </target>
-  <target name="-git.ispresent">
-      <condition property="metabuild.isgitrepo" value="true" else="false">
-          <available type="dir" file="../.git"/>
-      </condition>
+  <target name="-gitinfo.ispresent">
+      <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
   </target>
-  <target name="-git.down" unless="${metabuild.isgitrepo}" depends="-git.ispresent">
-      <!-- no git, assuming master, but should try other option -->
-      <echo file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=master</echo>
-  </target>
-  <target name="-git.up" if="${metabuild.isgitrepo}" depends="-git.ispresent">
-      <taskdef name="gitexec" classname="org.netbeans.nbbuild.HgExec" classpath="${nbantext.jar}"/>
-      <gitexec outputproperty="git.hash.properties">
-          <arg value="rev-parse"/>
-          <arg value="HEAD"/>
-      </gitexec>
-      <gitexec outputproperty="git.branch.properties">
-          <arg value="rev-parse"/>
-          <arg value="--abbrev-ref"/>
-          <arg value="HEAD"/>
-      </gitexec>
-      <echo message="branch ${git.branch.properties}" />
-      <gitexec outputproperty="git.branchdetached.bulk.properties">
-          <arg value="branch"/>
-          <arg value="--remote"/>
-          <arg value="--verbose"/>
-          <arg value="--no-abbrev"/>
-          <arg value="--contains"/>
-      </gitexec>
-      <echo message="detached ${git.branchdetached.bulk.properties}" />
-      <!-- branch is HEAD implies detached -->
-      <condition property="invalidbranch">
-          <equals arg1="HEAD" arg2="${git.branch.properties}"/>
+  <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <!-- try to get information from jenkins or travis -->
+      <property environment="env"/>
+      <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
+          <isset property="env.GIT_BRANCH" />
       </condition>
-      <taskdef name="parsebranch" classname="org.netbeans.nbbuild.ParseGitBranch" classpath="${nbantext.jar}"/>
-      <parsebranch if:set="invalidbranch" data="${git.branchdetached.bulk.properties}" property="git.branchdetached.parsed.properties" />
-      <!-- keep echo file at begining of line, build git data -->
-      <echo unless:set="invalidbranch" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${git.branch.properties}
-metabuild.hash=${git.hash.properties}
-</echo>
-      <echo if:set="invalidbranch" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${git.branchdetached.parsed.properties}
-metabuild.hash=${git.hash.properties}
-</echo>
+      <condition property="metabuild.branch" value="${env.TRAVIS_BRANCH}" >
+          <isset property="env.TRAVIS_BRANCH" />
+      </condition>
+      <condition property="metabuild.branch" value="${metabuild.branch}" >
+          <isset property="metabuild.branch" />
+      </condition>
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
+      </condition>
+      <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
+          <isset property="env.GIT_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${env.TRAVIS_COMMIT}" >
+          <isset property="env.TRAVIS_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${metabuild.hash}" >
+          <isset property="metabuild.hash" />
+      </condition>
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
+      <!-- if hash not present do not fail -->
+      <fail message="Branch not found use -Dmetabuild.branch=branchName " >
+          <condition>
+              <not>
+                  <isset property="metabuild.branch"/>
+              </not>
+          </condition>
+      </fail>
+      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}
+metabuild.hash=${metabuild.hash}</echo>
+  </target>
+  <target name="-git.up" if="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
   </target>
   <target name="getgitinformation" depends="-git.up,-git.down" />
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
@@ -1780,6 +1777,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
+      <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
+      <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
     </zip>
   </target>
 

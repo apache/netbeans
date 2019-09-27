@@ -966,11 +966,13 @@ public final class XMLUtil extends Object {
      * Extract nested text from a node.
      * Currently does not handle coalescing text nodes, CDATA sections, etc.
      * @param parent a parent element
-     * @return the nested text, or null if none was found
+     * @return the nested text, or null if parent is null or none was found
      * 
      * @since 8.4
      */
     public static String findText(Node parent) {
+    	if (parent == null)
+    		return null;
         NodeList l = parent.getChildNodes();
         for (int i = 0; i < l.getLength(); i++) {
             if (l.item(i).getNodeType() == Node.TEXT_NODE) {

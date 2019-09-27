@@ -515,6 +515,10 @@ public final class ModuleList {
         assert root != null ^ type != NbModuleType.NETBEANS_ORG;
         assert path != null ^ type != NbModuleType.NETBEANS_ORG;
         String cnb = XMLUtil.findText(XMLUtil.findElement(data, "code-name-base", NbModuleProject.NAMESPACE_SHARED)); // NOI18N
+        if (cnb == null) {
+            LOG.log(Level.WARNING, "Error getting code base name, malformed xml");        
+        	return;
+        }
         PropertyEvaluator eval = parseProperties(basedir, root, type, cnb);
         String module = eval.getProperty("module.jar"); // NOI18N
         // Cf. ParseProjectXml.computeClasspath:

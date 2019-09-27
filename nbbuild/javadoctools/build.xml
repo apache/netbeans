@@ -140,10 +140,16 @@
     </target>
     
     <target name="generate-html" depends="init">
+        <!-- reformulate dev version from json to more human version -->
+        <condition property="json.uversion" value="${json.version}" else="Development Version">
+            <not>
+                <equals arg1="${json.version}" arg2="dev"/>
+            </not>
+        </condition>
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
@@ -154,7 +160,7 @@
             <param name="changes-since-month" expression="${previous.release.month}"/>
             <param name="include-introduction" expression="true"/>
             <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
             <param name="allmodule" expression="${netbeans.javadoc.dir}/modules.xml" />
         </style>
@@ -190,28 +196,28 @@
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
              <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
 
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
         <!-- at the end generate the index.html so people know where to start -->      
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
             <param name="maturity" expression="${json.maturity}" />
-            <param name="version" expression="${json.version}" />
+            <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         &properties;

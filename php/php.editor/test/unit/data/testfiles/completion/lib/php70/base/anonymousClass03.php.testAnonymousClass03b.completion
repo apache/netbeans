@@ -1,0 +1,7 @@
+Code completion result for source line:
+return new class($this->|prop) extends Outer {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     func1()                         [PROTECTE  \My\Outer
+METHOD     func2()                         [PUBLIC]   \My\Outer
+VARIABLE   ? prop                          [PRIVATE]  \My\Outer
+VARIABLE   ? prop2                         [PROTECTE  \My\Outer

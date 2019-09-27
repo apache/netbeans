@@ -1,0 +1,2 @@
+        |>MARK_OCCURRENCES:f^1<|(false); // inner f1 is called
+    function |>MARK_OCCURRENCES:f1<|() { // inner f1

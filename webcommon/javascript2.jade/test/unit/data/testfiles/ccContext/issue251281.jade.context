@@ -1,0 +1,12 @@
+[TAG_AND_KEYWORD]html
+    title [NONE]TODO supply a title
+[TAG_AND_KEYWORD]    #[CSS_ID]
+[TAG_AND_KEYWORD]    
+    body
+    
+html
+    title [NONE]TODO supply a title
+[TAG_AND_KEYWORD]    .[CSS_CLASS]
+[TAG_AND_KEYWORD]    
+    body
+    

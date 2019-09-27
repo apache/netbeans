@@ -1,0 +1,4 @@
+class |>MARK_OCCURRENCES:VarType<|
+/** @var |>MARK_OCCURRENCES:VarT^ype<| $varType */
+/* @var  $varType2   |>MARK_OCCURRENCES:VarType<|  */
+/** @var    |>MARK_OCCURRENCES:VarType<|    $value */

@@ -80,7 +80,9 @@ fi
 if [ -z ${LOCALES} ]; then
     export LOCALES=ja,zh_CN,pt_BR,ru
 fi
-
+if [ -z ${NB_VER_NUMBER} ]; then
+    export NB_VER_NUMBER=11
+fi
 if [ -z ${UPLOAD_ML} ]; then
     export UPLOAD_ML=0
 fi
@@ -91,16 +93,22 @@ if [ -z ${GLASSFISH_BUILDS_HOST} ]; then
     export GLASSFISH_BUILDS_HOST
 fi
 
-#JDK_BUILDS_HOST=http://jre.us.oracle.com
-if [ -z ${JDK_BUILDS_HOST} ]; then
-    JDK_BUILDS_HOST=http://jre.us.oracle.com
-    export JDK_BUILDS_HOST
+#JRE_BUILDS_HOST=http://jre.us.oracle.com
+if [ -z ${JRE_BUILDS_HOST} ]; then
+    JRE_BUILDS_HOST=http://jre.us.oracle.com
+    export JRE_BUILDS_HOST
 fi
 
-#JDK_BUILDS_HOST=http://jre.us.oracle.com
+#JRE_BUILDS_PATH=http://jre.us.oracle.com
 if [ -z ${JRE_BUILDS_PATH} ]; then
     JRE_BUILDS_PATH=java/re/jdk/8u101/promoted/
     export JRE_BUILDS_PATH
+fi
+
+#JDK_BUILDS_HOST=http://jre.us.oracle.com
+if [ -z ${JDK_BUILDS_HOST} ]; then
+    JDK_BUILDS_HOST=https://java.se.oracle.com/
+    export JDK_BUILDS_HOST
 fi
 
 #JDK7_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/7u75/promoted/all
@@ -109,10 +117,16 @@ if [ -z ${JDK7_BUILDS_PATH} ]; then
     export JDK7_BUILDS_PATH
 fi
 
-#JDK8_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/8u121/promoted/all/
+#JDK8_BUILDS_PATH=http://jre.us.oracle.com/java/re/jdk/8u141/promoted/all/
 if [ -z ${JDK8_BUILDS_PATH} ]; then
-    JDK8_BUILDS_PATH=java/re/jdk/8u121/promoted/
+#    JDK8_BUILDS_PATH=java/re/jdk/8u141/promoted/ #for builds before 8u141
+    JDK8_BUILDS_PATH=artifactory/re-release-local/jdk/8u171/b11/bundles/
     export JDK8_BUILDS_PATH
+fi
+
+if [ -z ${JDK11_BUILDS_PATH} ]; then
+    JDK11_BUILDS_PATH=artifactory/re-release-local/jdk/11.0.1/13/bundles/
+    export JDK11_BUILDS_PATH
 fi
 
 if [ -z ${DEBUGLEVEL} ]; then
@@ -142,7 +156,7 @@ if [ -z ${DATESTAMP} ]; then
     fi
 fi
 
-BUILDNUM=$BUILD_DESC-$DATESTAMP
+BUILDNUM=$BUILD_DESC
 BUILDNUMBER=$DATESTAMP
 
 if [ -z $BASE_DIR ]; then
@@ -159,8 +173,8 @@ fi
 
 DIST=$BASE_DIR/dist
 LOGS=$DIST/logs
-BASENAME=netbeans-$BUILDNUM
-export BASENAME_PREFIX=netbeans-$BUILD_DESC
+BASENAME=$BUILDNUM
+export BASENAME_PREFIX=$BUILD_DESC
 
 mkdir -p $DIST/zip
 mkdir -p $LOGS

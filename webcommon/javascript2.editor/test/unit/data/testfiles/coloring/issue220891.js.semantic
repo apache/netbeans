@@ -1,0 +1,12 @@
+var |>GLOBAL:hiddenComponents<| = true;
+
+function |>METHOD:toggleComponents<|() {
+    if (|>GLOBAL:hiddenComponents<|) {
+        |>GLOBAL:$<|("tr[data-hidden=\"1\"]").css("display", "table-row");
+        |>GLOBAL:hiddenComponents<| = false;
+    }
+    else {
+        |>GLOBAL:$<|("tr[data-hidden=\"1\"]").css("display", "none");
+        |>GLOBAL:hiddenComponents<| = true;
+    }
+}

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<?xml-stylesheet href="../o.n.co../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+[most of contents snipped - see openide's apichanges for how-to instructions]
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="TaskListSPI">Task List SPI</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change id="callback_api" >
+        <api name="TaskListSPI"/>
+        <summary>PushTaskScanner.Callback provides additional information.</summary>
+        <version major="1" minor="24"/>
+        <date day="6" month="3" year="2013"/>
+        <author login="jpeska"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                PushTaskScanner.Callback provides information whether the framework is observed and whether the current editor scope is set.
+                Both these methods are needed for performance improvements of NB PushTaskScanners.
+            </p>
+        </description>
+        <issue number="227107"/>
+    </change>
+    <change id="issue_support" >
+        <api name="TaskListSPI"/>
+        <summary>Task List implementation uses Indexing API to cache scanned tasks.</summary>
+        <version major="1" minor="6"/>
+        <date day="7" month="8" year="2009"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+             Task List API and user interface has been extended to support a generic URL
+             as the resource the task is associated with. This allows for example
+             bug tracking issues to be displayed in Task List window.
+            </p>
+        </description>
+        <issue number="169975"/>
+    </change>
+    <change id="indexing_api" >
+        <api name="TaskListSPI"/>
+        <summary>Task List implementation uses Indexing API to cache scanned tasks.</summary>
+        <version major="1" minor="4"/>
+        <date day="31" month="3" year="2009"/>
+        <author login="saubrecht"/>
+        <compatibility/>
+        <description>
+            <p>
+             Task List implementation uses Indexing API to persist tasks created
+             by FileTaskScanners. If a file hasn't changed since the last scan
+             then the tasks associated with that file are loaded from cache to improve
+             Task List performance. Therefore task's ActionListener isn't available when
+             the task is restored from cache. Task providers must switch to PushTaskScanner
+             if ActionListener is required to be available at all times.
+            </p>
+        </description>
+    </change>
+    <change id="api_review" >
+        <api name="TaskListSPI"/>
+        <summary>API changes to reflect the results of API inception review.</summary>
+        <version major="1" minor="0"/>
+        <date day="11" month="4" year="2007"/>
+        <author login="saubrecht"/>
+        <compatibility/>
+        <description>
+            <p>
+                API has changed due to the results of API inception review.
+            </p>
+        </description>
+    </change>          
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Options Dialog API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Task List APIs. Please ask on the 
+    <code>nbdev@netbeans.org</code>
+    mailing list if you have any questions about the details of a
+    change, or are wondering how to convert existing code to be compatible.
+</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.spi.tasklist/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

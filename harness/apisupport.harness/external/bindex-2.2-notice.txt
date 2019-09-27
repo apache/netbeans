@@ -1,0 +1,7 @@
+OSGi OBR BIndex Program
+
+OSGi™ is a trademark, registered trademark, or service mark of The OSGi Alliance
+in the US and other countries. Java™ is a trademark, registered trademark, or
+service mark of Sun Microsystems, Inc. in the US and other countries. All other
+trademarks, registered trademarks, or service marks used in the Content are the
+property of their respective owners and are hereby recognized.

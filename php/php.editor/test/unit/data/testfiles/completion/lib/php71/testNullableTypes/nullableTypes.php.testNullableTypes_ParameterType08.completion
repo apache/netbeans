@@ -1,0 +1,5 @@
+Code completion result for source line:
+public static function traitParameterTypeStatic(?Foo $foo, ?st|ring $stirng) { // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

@@ -1,0 +1,73 @@
+
+
+Document 0
+Searchable Keys:
+  clz : c1;C1;52;;A;;1;;0;<TESTURL>/testMixin.php;\A\B\C3,\A\C2;
+  top : c1
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : c2;C2;66;;A;;1;;0;<TESTURL>/testMixin.php;;
+  top : c2
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : c3;C3;95;;A\B;;1;;0;<TESTURL>/testMixin.php;;
+  top : c3
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : mixin;Mixin;200;MixinParent|\Mixin\MixinParent;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\C1;
+  superclz : mixinparent;MixinParent;Mixin
+  top : mixin
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz : mixinparent;MixinParent;153;;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\B\C3;
+  top : mixinparent
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  identifier_used : a;
+  identifier_used : a;
+  identifier_used : b;
+  identifier_used : c1;
+  identifier_used : c1;
+  identifier_used : c2;
+  identifier_used : c2;
+  identifier_used : c3;
+  identifier_used : c3;
+  identifier_used : c3;
+  identifier_used : mixin;
+  identifier_used : mixin;
+  identifier_used : mixinparent;
+  identifier_used : mixinparent;
+
+Not Searchable Keys:
+
+
+Document 6
+Searchable Keys:
+  ns : a;A;;0;<TESTURL>/testMixin.php;
+  ns : b;B;A;0;<TESTURL>/testMixin.php;
+  ns : mixin;Mixin;;0;<TESTURL>/testMixin.php;
+  top : a
+  top : a\b
+  top : mixin
+
+Not Searchable Keys:

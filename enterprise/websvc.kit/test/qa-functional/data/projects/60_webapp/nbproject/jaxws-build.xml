@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xalan="http://xml.apache.org/xslt" xmlns:webproject2="http://www.netbeans.org/ns/web-project/2" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
+    <!--
+                ===================
+                JAX-WS WSIMPORT SECTION
+                ===================
+            -->
+    <target name="wsgen-init" depends="init, -do-compile">
+        <mkdir dir="${build.generated.dir}/wsgen/service"/>
+        <mkdir dir="${build.generated.dir}/wsgen/binaries"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
+            <classpath path="${java.home}/../lib/tools.jar:${build.classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+        </taskdef>
+    </target>
+    <target name="wsgen-EmptyWs" depends="wsgen-init">
+        <wsgen fork="true" xendorsed="true" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" destdir="${build.generated.dir}/wsgen/binaries" keep="true" genwsdl="true" sei="samples.EmptyWs">
+            <classpath path="${java.home}/../lib/tools.jar:${build.classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-WsImpl" depends="wsgen-init">
+        <wsgen fork="true" xendorsed="true" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" destdir="${build.generated.dir}/wsgen/binaries" keep="true" genwsdl="true" sei="samples.WsImpl">
+            <classpath path="${java.home}/../lib/tools.jar:${build.classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-SampleWs" depends="wsgen-init">
+        <wsgen fork="true" xendorsed="true" sourcedestdir="${build.generated.dir}/wsgen/service" resourcedestdir="${build.generated.dir}/wsgen/service" destdir="${build.generated.dir}/wsgen/binaries" keep="true" genwsdl="true" sei="samples.SampleWs">
+            <classpath path="${java.home}/../lib/tools.jar:${build.classes.dir}:${j2ee.platform.wsgen.classpath}:${javac.classpath}"/>
+            <jvmarg value="-Djava.endorsed.dirs=${jaxws.endorsed.dir}"/>
+        </wsgen>
+    </target>
+    <target name="wsgen-service-compile" depends="wsgen-EmptyWs, wsgen-WsImpl, wsgen-SampleWs">
+        <webproject2:javac srcdir="${build.generated.dir}/wsgen/service" classpath="${j2ee.platform.wsimport.classpath}:${javac.classpath}" destdir="${build.classes.dir}"/>
+    </target>
+</project>

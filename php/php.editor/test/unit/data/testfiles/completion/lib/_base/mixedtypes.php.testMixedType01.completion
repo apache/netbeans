@@ -1,0 +1,7 @@
+Code completion result for source line:
+getBookMagazine()->|pages;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     createBook($title)              [STATIC]   Book
+VARIABLE   ? pages                         [PUBLIC]   Magazine
+VARIABLE   Author author                   [PUBLIC]   Book
+VARIABLE   string title                    [PUBLIC]   Book

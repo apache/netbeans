@@ -1,0 +1,14 @@
+FUNCTION simpleCall [ANONYMOUS: false, DECLARED: true - simpleCall, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Backbone : OBJECT Backbone [ANONYMOUS: false, DECLARED: false - Backbone, MODIFIERS: PUBLIC, OBJECT]
+         # PROPERTIES
+         Collection : OBJECT Collection [ANONYMOUS: false, DECLARED: false - Collection, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    extend : FUNCTION extend [ANONYMOUS: false, DECLARED: false - extend, MODIFIERS: PUBLIC, METHOD]
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+window   : OBJECT window [ANONYMOUS: false, DECLARED: false - window, MODIFIERS: PUBLIC, OBJECT]
+         # PROPERTIES
+         ManufacturerList : OBJECT ManufacturerList [ANONYMOUS: false, DECLARED: true - ManufacturerList, MODIFIERS: PUBLIC, PROPERTY]

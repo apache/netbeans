@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.j2ee.jboss4/1
+OpenIDE-Module-Layer: org/netbeans/modules/j2ee/jboss4/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/jboss4/resources/Bundle.properties
+OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
+OpenIDE-Module-Specification-Version: 1.41
+

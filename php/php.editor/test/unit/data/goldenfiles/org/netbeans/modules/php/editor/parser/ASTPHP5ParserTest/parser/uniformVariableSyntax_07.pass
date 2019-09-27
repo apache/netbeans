@@ -1,0 +1,153 @@
+<testresult testFile='uniformVariableSyntax_07.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OPEN_RECT' start='11' end='12'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='12' end='17'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='17' end='18'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='18' end='20'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='20' end='23'>
+            <text>baz</text>
+        </token>
+        <token id='T_OPEN_RECT' start='23' end='24'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='24' end='25'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='25' end='26'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='26' end='28'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='28' end='31'>
+            <text>oof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='31' end='32'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='32' end='33'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='33' end='35'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='35' end='45'>
+            <text>staticTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='45' end='46'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='46' end='47'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='47' end='49'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='49' end='55'>
+            <text>myTest</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='55' end='56'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='56' end='57'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='57' end='58'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='59' end='59'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='59'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='58'>
+                <MethodInvocation start='7' end='57'>
+                    <StaticMethodInvocation start='7' end='47'>
+                        <MethodInvocation start='7' end='33'>
+                            <FieldAccess start='7' end='26'>
+                                <ArrayAccess start='7' end='18' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='11' end='18'>
+                                        <Index>
+                                            <Scalar start='12' end='17' type='STRING' value='&apos;bar&apos;'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='7' end='11' isDollared='true'>
+                                            <Identifier start='8' end='11' name='foo'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                                <Field>
+                                    <ArrayAccess start='20' end='26' type='VARIABLE_ARRAY' isDollared='false'>
+                                        <ArrayDimension start='23' end='26'>
+                                            <Index>
+                                                <Scalar start='24' end='25' type='INT' value='0'/>
+                                            </Index>
+                                        </ArrayDimension>
+                                        <Name>
+                                            <Variable start='20' end='23' isDollared='false'>
+                                                <Identifier start='20' end='23' name='baz'/>
+                                            </Variable>
+                                        </Name>
+                                    </ArrayAccess>
+                                </Field>
+                            </FieldAccess>
+                            <Method>
+                                <FunctionInvocation start='28' end='33'>
+                                    <FucntionName start='28' end='31'>
+                                        <Variable start='28' end='31' isDollared='false'>
+                                            <Identifier start='28' end='31' name='oof'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Member>
+                            <FunctionInvocation start='35' end='47'>
+                                <FucntionName start='35' end='45'>
+                                    <Identifier start='35' end='45' name='staticTest'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='35' end='47'>
+                            <FucntionName start='35' end='45'>
+                                <Identifier start='35' end='45' name='staticTest'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                    <Method>
+                        <FunctionInvocation start='49' end='57'>
+                            <FucntionName start='49' end='55'>
+                                <Variable start='49' end='55' isDollared='false'>
+                                    <Identifier start='49' end='55' name='myTest'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

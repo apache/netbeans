@@ -1,0 +1,4 @@
+class |>MARK_OCCURRENCES:ExceptionType2<| extends \Exception {
+} catch (\Test\Sub\ExceptionType1 | \Test\Sub\^|>MARK_OCCURRENCES:ExceptionType2<| $ex) {
+} catch (\Test\Sub\ExceptionType1 | \Test\Sub\|>MARK_OCCURRENCES:ExceptionType2<| | \Test\Sub\ExceptionType3 $ex) {
+} catch (\Test\Sub\|>MARK_OCCURRENCES:ExceptionType2<| | \Test\Sub\ExceptionType3 $ex) {

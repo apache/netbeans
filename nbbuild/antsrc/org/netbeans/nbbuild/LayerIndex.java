@@ -45,6 +45,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -345,6 +346,11 @@ public class LayerIndex extends Task {
     implements ResourceCollection {
         public boolean isFilesystemOnly() {
             return false;
+        }
+
+        @Override
+        public Stream<Resource> stream() {
+            return super.stream();
         }
     }
 

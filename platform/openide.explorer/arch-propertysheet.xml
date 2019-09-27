@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.23"
+  author="tboudreau@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!-- Question: arch-what
+
+     <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+The property sheet is a generic user interface component and infrastructure
+for displaying and editing properties of objects.
+</answer>
+
+
+
+<!-- Question: compat-i18n
+
+     <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes.
+</answer>
+
+
+
+<!-- Question: compat-standards
+
+     <question id="compat-standards">
+            Does the module implements or defines any standards? Is the 
+            implementation exact or it deviates somehow?
+        </question>
+-->
+<answer id="compat-standards">
+<api 
+	name="PropertySheetAPI" 
+  group="java" 
+  type="export" 
+  category="official" 
+  url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/explorer/doc-files/api.html" 
+/>
+defines an extension to java.beans.PropertyEditor,
+ExPropertyEditor which allows property editors implementing
+this interface to access information about the context in which
+a property is being rendered.
+</answer>
+
+
+
+<!-- Question: compat-version
+
+     <question id="compat-version">
+            Does your module properly coexists with earlier and future
+            versions? Can you correctly read settings? Will future
+            versions be able to read settings?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+Yes it is compatible with older versions.  Legacy settings are supported
+for backward compatibility, but ignored.
+</answer>
+
+
+
+<!-- Question: dep-jre
+
+     <question id="dep-jre">
+            Which version of JRE you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+It uses JRE 1.4.
+</answer>
+
+
+
+<!-- Question: dep-jrejdk
+
+     <question id="dep-jrejdk">
+            Do you require JDK or is JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE is enough.
+</answer>
+
+
+
+<!-- Question: dep-nb
+
+     <question id="dep-nb">
+            What other NetBeans projects this one depends on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+It uses various kinds of API's:
+<ul>
+    <li><api 
+        type="import" name="NodesAPI" group="java" category="official" 
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/nodes/doc-files/api.html">
+        Property sheets primarily render the properties of objects encapsulated by nodes.</api>
+    </li>
+
+    <li><api 
+        type="import" name="ActionsAPI" group="java" category="official" 
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/actions/doc-files/api.html"/>
+    </li>
+
+    <li><api 
+        type="import" name="WindowSystemAPI" group="java" category="official" 
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/nodes/doc-files/api.html"/>
+    </li>
+
+    <li><api 
+        type="import" name="OptionsAPI" group="java" category="official" 
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/options/doc-files/api.html"/>
+    </li>
+
+    <li><api 
+        type="import" name="UtilitiesAPI" group="java" category="official"
+        url="http://www.netbeans.org/download/dev/javadoc/OpenAPIs/org/openide/util/doc-files/api.html"/>
+    </li>
+</ul>
+</answer>
+
+
+
+<!-- Question: dep-non-nb
+
+     <question id="dep-non-nb">
+            What other non-NetBeans projects this one depends on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+None.
+</answer>
+
+
+
+<!-- Question: dep-platform
+
+     <question id="dep-platform">
+            On which platforms your module run? Any? Does it run in the same
+            way?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+100% pure Java. It should run anywhere.
+</answer>
+
+
+
+<!-- Question: deploy-jar
+
+     <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or some other files?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+Classes belonging to this module do not reside in a standalone library.
+They are bundled together with other parts of the openide in <code>openide.jar</code>.
+</answer>
+
+
+
+<!-- Question: deploy-nbm
+
+     <question id="deploy-nbm">
+            Can you deploy NBM via AutoUpdate center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+Openide.jar can be deployed via AU center.
+</answer>
+
+
+
+<!-- Question: deploy-packages
+
+     <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+No.
+</answer>
+
+
+
+<!-- Question: deploy-shared
+
+     <question id="deploy-shared">
+            Do you need to be installed in shared location or only in user directory?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+<code>openide.jar</code> needs to be in the system directory. 
+</answer>
+
+
+
+<!-- Question: exec-classloader
+
+     <question id="exec-classloader">
+            Does your code uses own classloader?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+
+
+
+<!-- Question: exec-component
+
+     <question id="exec-component">
+            Is execution of your code influenced by (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+<api name="PropertyEditorsProperties" category="devel" group="property" type="export" 
+  url="@TOP@org/openide/explorer/doc-files/api.html#custom_property_editors" 
+>
+A variety of hints that can be supplied to property editors to influence their
+behavior. The usual usage is to create a feature descriptor and set parameters 
+on it:
+<pre>
+Node.Property prop = new Node.Property (Boolean.TYPE, ...);
+prop.setValue ("stringValue", new String[] { "yes", "no" });
+</pre>
+</api>
+
+
+<p>The property sheet's display can be customized to a degree by a look and feel
+providing netbeans-specific keyed values.  Principally this is useful in that
+the XML theme file for metal look and feel can be used to add these values to
+any look and feel that subclasses javax.swing.plaf.metal.MetalLookAndFeel; 
+authors of look and feels which wish to provide customizations when their
+look and feel is used to provide UI display and behaviors for NetBeans may
+also provide custom values for these:</p>
+<ul>
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="Tree.altbackground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults,
+    provides an alternate background color that
+    should be used for every other row in the property sheet</api></li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.setBackground"/>(java.awt.Color)
+    Background color for expandable property sets</li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.selectionBackground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    background color for selected
+    properties in the property sheet, overriding the default table selection 
+    color if present.  Used to fulfil HIE color requirements on various
+    platforms.</api></li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.selectionForeground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults,
+    sets foreground color for selected
+    properties in the property sheet, overriding the default table selection
+    color if present.  Used to fulfil HIE color requirements on various
+    platforms.</api></li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.selectedSetBackground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults,
+    sets the background color for expandable
+    property sets when selected in the UI</api></li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.selectedSetForeground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    foreground color for expandable
+    property sets when selected in the UI</api></li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.gridColor">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    color for the grid of the property sheet
+    table</api></li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.disabledForeground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    foreground color for disabled 
+    properties.  May or may not be used, depending on the look and feel's
+    implementation.</api></li>
+        
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="netbeans.ps.iconmargin">(java.lang.Integer)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    integer spacing that should be used to 
+    left of the expansion handle for property sets.</api></li>
+    
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="netbeans.ps.rowheight">(java.lang.Integer)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    sets a fixed row height for all elements
+    in the property sheet.  If not set, the value will be determined based on
+    the font and/or the expansion handle icon, whichever is taller, the first
+    time the property sheet is painted</api></li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.customButtonForeground">(java.awt.Color)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    color for the custom editor button of the property sheet table.</api>
+</li>
+
+<li><api category="friend" type="export" group="javax.swing.UIManager" name="PropSheet.customButtonIcon">(javax.swing.Icon)
+    UIManager key for a value which, if non null in UIDefaults, sets the
+    ellipsis icon to use for the custom editor button of the property sheet table</api></li>
+
+</ul>
+<p>
+Additionally, client properties may be used to affect behavior of PropertyPanel,
+a component for displaying individual properties.  They are as follows:
+</p>
+<ul>
+<li><api category="deprecated" type="export" group="property" name="flat">(java.lang.Boolean)
+    Client property of PropertyPanel applied using putClientProperty, to instruct a PropertyPanel instance to
+    use a borderless UI suitable for use as a table renderer/editor.
+    Also affects the behavior of combo boxes, enabling them to open on first click or focus,
+    as appropriate for combo boxes displayed in a table.  <i>This property is obsoleted by
+    PropertyPanel.PREF_TABLEUI which performs the same function when set as part of the
+    PropertyPanel preferences bitmask, but is supported for backward compatibility</i></api></li>
+<li><api category="friend" type="export" group="property" name="suppressCustomEditor">(java.lang.Boolean)
+    Client property of PropertyPanel applied using putClientProperty, to instruct a PropertyPanel instance to
+    suppresses the presence of the custom editor button
+    even if the property editor supports a custom editor.</api></li>
+<li><api category="friend" type="export" group="property" name="radioButtonMax">(java.lang.Integer n)
+    Client property of PropertyPanel applied using putClientProperty, to instruct a PropertyPanel instance to
+    use radio buttons
+    instead of a combo box for properties whose property editor supports tags but supplies
+    less than n tags.</api></li>
+<li><api category="friend" type="export" group="property" name="useLabels">(java.lang.Boolean)  
+    Client property of PropertyPanel applied using putClientProperty, to instruct a PropertyPanel instance to
+    use the property's
+    display name as the caption for checkboxes, and as the title of a TitledBorder in the
+    case of radiobuttons (this latter usage only applies if radioButtonMax is also used).
+    The use of labels is important for checkboxes, as it is the natural way to display
+    the meaning of a checkbox in a panel, and the label of a checkbox is what checkboxes
+    use to indicate they have keyboard focus.</api></li>
+</ul>
+
+Further, there are a few properties what affect the behaviors of inline editors in the
+property sheet:
+<ul>
+<li><api category="devel" type="export" group="property" name="postSetAction">
+(javax.swing.Action) Object which, if provided from <code>Property.getValue(&quot;postSetAction&quot;)</code>
+will be run if and when the user changes the property value via the property sheet.</api></li>
+
+<li><api category="devel" type="export" group="property" name="initialEditValue">
+(java.lang.String) String which, if provided from <code>Property.getValue(&quot;initialEditValue&quot;)</code>
+will be used as the initial value when the user initiates editing the property.  This is used
+to, for example, suggest values for code completion, without showing the suggested value
+when the property sheet is simply painted</api>api></li>
+</ul>
+
+        <p>
+            <strong>XXX</strong> document the following keys passed sometimes to
+            <code>Feature.getValue(String)</code> from <code>org.openide.explorer.propertysheet</code> code:
+            <code>stringValues</code>, <code>valueIcon</code>, <code>nodeDescription</code>,
+            <code>propertiesHelpID</code>, <code>nameIcon</code>
+        </p>
+        
+
+</answer>
+
+
+
+<!-- Question: exec-privateaccess
+
+     <question id="exec-privateaccess">
+            Are you aware of any other part of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!-- Question: exec-property
+
+     <question id="exec-property">
+            Is execution of your code influenced by any environment of
+            system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <PRE>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </PRE>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+<p>The following system properties are currently used by the property
+sheet implementation to affect its behavior in various ways.  These are subject
+to change and should not be relied upon, but may prove useful in some situations:</p>
+<ul>
+<li><api category="devel" type="export" group="systemproperty" name="ps.quickSearch.disabled.global">
+    When set to true, globally disables quick search feature in property sheets.  If this value is
+    unset or set to a value which Boolean.parseBoolean does not evaluate to true, then quick search
+    is not globally disabled, though may still be disabled on a per-instance basis by the 
+    PropertySheet's setQuickSearchAllowed method.</api></li>
+
+<li><api category="private" type="export" group="property" name="netbeans.ps.noCustomButtons">
+    Boolean system property for the property sheet which, when true, hide the custom editor
+    button that appears in the property 
+    sheet unless the cell is in edit mode.</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.forceRadioButtons">
+    Boolean system property for the property sheet which, when true,
+    instructs the property sheet to use a radio button editor instead
+    of the default checkbox editor for boolean values</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.checkboxCaption">
+    Boolean system property for the property sheet which, if true, 
+    means that a caption will be provided alongside checkboxes in the boolean editor</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.hideSingleExpansion">
+    Boolean system property for the property 
+    sheet which, when true, instructs the property sheet to hide the expansion handle for
+    nodes that have only one property set (do not show a category called &quot;
+    properties&quot; if it is the only category)</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.neverMargin">
+    Boolean system property for the property sheet 
+    which, when true, instructs the property sheet never to show a left-hand margin 
+    alongside the list of properties.  This increases the available space to 
+    display property names and values at some aesthetic expense; it is useful
+    on laptops with small screens.</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.combohack">
+    Boolean system property for the property sheet which, when true,
+    forces the property sheet's combo box editor to use a 
+    heavyweight popup window, used to solve the above window manager problem
+    in which the created heavyweight popup dimensions differ from those of the
+    lightweight popup enough that the heavyweight popup could fit in the bounds
+    of the parent, resulting in endless flipping between lightweight and 
+    heavyweight popups.  This problem occurs on some pre-release versions of
+    KDE for Linux.</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.forcetabs">
+    Boolean system property for the property sheet which, when true, 
+    forces each property set to be displayed
+    in a separate tab (normally this is done only by providing a hint from
+    a PropertySet via getValue(&quot;tabName&quot;).</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.ps.nevertabs">
+    Boolean system property for the property sheet which, when true,
+    disables use of tabs in the property sheet
+    even if the property set provides a tab name via the above-mentioned hint</api></li>
+    
+<li><api category="private" type="export" group="property" name="netbeans.reusable.strictthreads">
+    Boolean system property for the property sheet which, if true, 
+    causes an ISE to be thrown if
+    any attempt is made to access or paint the property sheet from a thread other than
+    the AWT event thread</api></li>
+
+<li><api category="friend" type="export" group="property" name="netbeans.ps.showHiddenProperties">
+    Boolean system property for the property sheet which, when true, 
+    will cause it to display Node.Property objects even if they return
+    true from isHidden().  The original behavior of the property sheet was
+    to show these properties.
+</api></li>
+
+ </ul>
+<p>The code that handles these settings is in the class org.openide.explorer.propertysheet.PropUtils.</p>
+</answer>
+
+
+
+<!-- Question: exec-reflection
+
+     <question id="exec-reflection">
+            Does your code uses java.lang.reflect to execute some other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+Reflection is used to invoke JavaHelp if present, when the user invokes help.
+Reflection is used to try to attach action listeners to the component supplied
+by legacy (deprecated) EnhancedPropertyEditor implementations to supply their
+own inline editor component. Reflection is used by the deprecated 
+DefaultPropertyModel to attempt to locate getter and setter methods on a random
+bean. Reflection is used during decision-making whether "Restore Default Value"
+Action should be disabled or enabled. This is due to the backward compatibility
+with properties in old modules (or new incorrectly implemented properties). See
+<a href="http://www.netbeans.org/issues/show_bug.cgi?id=51907">#51907</a> for
+detailed description why we do so.
+</answer>
+
+
+
+<!-- Question: format-clipboard
+
+     <question id="format-clipboard">
+            Which protocols your code reads/inserts when communicating with
+            clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+Cut/copy/paste functionality is supplied via standard Swing components.
+No special implementation is done.
+</answer>
+
+
+
+<!-- Question: format-dnd
+
+     <question id="format-dnd">
+            Which protocols your code understands during drag-n-drop?
+        </question>
+-->
+<answer id="format-dnd">
+See format-clibpoard.
+</answer>
+
+
+
+<!-- Question: format-types
+
+     <question id="format-types">
+            Which file formats your code reads or writes on disk?
+        </question>
+-->
+<answer id="format-types">
+None.
+</answer>
+
+<!-- Question: lookup-lookup
+
+     <question id="lookup-lookup">
+            Does your module uses <code>org.openide.util.Lookup</code>
+            to find any components to communicate to? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+Lookup is used along with reflection to invoke help, which may or may
+not be available depending on the presence of a help integration.
+</answer>
+
+
+
+<!-- Question: lookup-register
+
+     <question id="lookup-register">
+            Do you register anything into the lookup for other to find? 
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+No.
+</answer>
+
+
+
+<!-- Question: lookup-remove
+
+     <question id="lookup-remove">
+            Are removing entries of other modules from the lookup? 
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!-- Question: perf-exit
+
+     <question id="perf-exit">
+            Does your module executes anything on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!-- Question: perf-huge_dialogs
+
+     <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with huge
+            amount of GUI controls like combo boxes, lists, trees, text
+            areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+
+
+
+<!-- Question: perf-limit
+
+     <question id="perf-limit">
+            Are there any limits in number/size of elements your code
+            can handle?
+        </question>
+-->
+<answer id="perf-limit">
+None defined by PropertySheet code.
+</answer>
+
+
+
+<!-- Question: perf-mem
+
+     <question id="perf-mem">
+            What is the amount of memory your component occupies? Estimate
+            with a relaction to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+Minimal - that of a JTable, a few renderer components and a couple of
+lists.  Renderers, editors and menus are shared between all property
+sheet instances in the JVM.
+</answer>
+
+
+
+<!-- Question: perf-menus
+
+     <question id="perf-menus">
+            Does your module use dynamically changing context menus or
+            context sensitive actions with complicated logic for enable/disable?
+        </question>
+-->
+<answer id="perf-menus">
+No.
+</answer>
+
+
+
+<!-- Question: perf-progress
+
+     <question id="perf-progress">
+            Does your module executes some long running task?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+No.
+</answer>
+
+
+
+<!-- Question: perf-scale
+
+     <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+The property sheet is designed to perform minimal memory consumption
+as it paints, by reusing renderers, etc., and by and large it is
+quite efficient.
+
+<br/>  There may be some overhead to selecting a large 
+number of objects with some common properties, since the property
+sheet will display the intersection of properties common to all
+selected nodes.  In practice it is unusual for more than a few
+objects to be simultaneously selected.
+</answer>
+
+
+
+<!-- Question: perf-startup
+
+     <question id="perf-startup">
+            Does your module executes anything on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+
+
+
+<!-- Question: perf-wakeup
+
+     <question id="perf-wakeup">
+            Is any piece of your code waking up periodically?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+
+
+
+<!-- Question: resources-file
+
+     <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+No.
+</answer>
+
+
+
+<!-- Question: resources-layer
+
+     <question id="resources-layer">
+            Does your module provide own layer? Does it create some files or
+            folders on it? What it is trying to communicate by that and with which 
+            component?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+No. 
+</answer>
+
+
+
+<!-- Question: resources-mask
+
+     <question id="resources-mask">
+            Does your module mask/hide/override any resource provided by another one in
+            module layer? 
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+
+
+
+<!-- Question: resources-read
+
+     <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+No.
+</answer>
+
+</api-answers>

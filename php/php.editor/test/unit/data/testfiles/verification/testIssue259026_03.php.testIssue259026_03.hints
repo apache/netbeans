@@ -1,0 +1,4 @@
+    $test1 = 1;;
+               -
+HINT:Empty Statement
+FIX:Remove Empty Statement

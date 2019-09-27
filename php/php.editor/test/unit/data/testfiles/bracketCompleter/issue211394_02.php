@@ -1,0 +1,5 @@
+<?php
+
+$test = test();^ // Test
+
+?>

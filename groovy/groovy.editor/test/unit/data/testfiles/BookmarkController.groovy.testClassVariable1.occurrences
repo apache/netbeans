@@ -1,0 +1,24 @@
+    Map |>MARK_OCCURRENCES:par^ams<| = [:]
+        b.properties = |>MARK_OCCURRENCES:params<|
+        def b = Bookmark.get(|>MARK_OCCURRENCES:params<|.id)
+        def b = Bookmark.get(|>MARK_OCCURRENCES:params<|.id) 
+            render "bookmark not found for id ${|>MARK_OCCURRENCES:params<|.id}"
+        def b = Bookmark.get(|>MARK_OCCURRENCES:params<|.id)
+        def b = Bookmark.get(|>MARK_OCCURRENCES:params<|.id)
+            b.properties = |>MARK_OCCURRENCES:params<| 
+        b.properties = |>MARK_OCCURRENCES:params<|
+            if(|>MARK_OCCURRENCES:params<|.tagTokens) {
+        def tags = |>MARK_OCCURRENCES:params<|.tagTokens?.trim()
+        if(!|>MARK_OCCURRENCES:params<|.max)|>MARK_OCCURRENCES:params<|.max=10        
+        [bookmarkList: Bookmark.findAllByUser(User.get(session['user'].id), |>MARK_OCCURRENCES:params<| ), deliciousList: fromDelicious ]
+        def t = Tag.findByName(|>MARK_OCCURRENCES:params<|.q)
+                ilike('title',"%${|>MARK_OCCURRENCES:params<|.q}%".toString())
+                ilike('notes',"%${|>MARK_OCCURRENCES:params<|.q}%".toString())
+            fromDelicious = deliciousService?.findAllForTag(|>MARK_OCCURRENCES:params<|.q,session.user) 
+        def b = Bookmark.get(|>MARK_OCCURRENCES:params<|.id)
+            b.notes = |>MARK_OCCURRENCES:params<|.notes
+        render( |>MARK_OCCURRENCES:params<|.notes )
+        if(|>MARK_OCCURRENCES:params<|.value?.trim()) {
+            if(!|>MARK_OCCURRENCES:params<|.value?.startsWith("http://")) |>MARK_OCCURRENCES:params<|.value = "http://${|>MARK_OCCURRENCES:params<|.value}"
+            def bookmark = |>MARK_OCCURRENCES:params<|.id ? Bookmark.get(|>MARK_OCCURRENCES:params<|.id) : null 
+                def url = bookmark ? bookmark.url : new URI(|>MARK_OCCURRENCES:params<|.value)

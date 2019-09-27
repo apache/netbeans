@@ -1,0 +1,45 @@
+<testresult testFile='returnTypes_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='19'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='19' end='20'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='20' end='21'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='21' end='22'>
+            <text>:</text>
+        </token>
+        <token id='T_ARRAY' start='23' end='28'>
+            <text>array</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='29' end='30'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='31' end='32'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='33' end='33'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='33'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='32' isReference='false'>
+                <Identifier start='16' end='19' name='foo'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Identifier start='23' end='28' name='array'/>
+                <Block start='29' end='32' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

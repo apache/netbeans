@@ -1,0 +1,6 @@
+class |>MARK_OCCURRENCES:clsDeclaration<| implements ifaceDeclaration {}
+class clsDeclaration3 extends |>MARK_OCCURRENCES:clsDec^laration<| {}
+    |>MARK_OCCURRENCES:clsDeclaration<|  $clsDeclarationVar,
+    } catch (|>MARK_OCCURRENCES:clsDeclaration<| $cex) {
+        if ($cex instanceof |>MARK_OCCURRENCES:clsDeclaration<|) {
+            $cex = new |>MARK_OCCURRENCES:clsDeclaration<|;

@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="Mac Installer" basedir="." default="build-all-dmg">
+
+    
+    <import file="${basedir}/build.pro"/>
+    <property file="${basedir}/Bundle.properties"/>
+    <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}">
+        <filterchain>
+            <striplinebreaks/>
+        </filterchain>
+    </loadfile>    
+    <target name="build-jre-nested-pkg">
+        <echo message="Building nested JRE into ${basedir}/jre-nested"/>
+        <ant dir="netbeans/jre-nested" target="build-pkg"/>              
+    </target>
+
+    <target name="build-glassfish-pkg" >
+        <echo message="Building ${glassfish-title} into ${basedir}/glassfish"/>
+        <ant dir="glassfish"/>      
+    </target>
+
+    <target name="build-tomcat-pkg">
+        <echo message="Building ${tomcat-title} into ${basedir}/tomcat"/>
+        <ant dir="tomcat" target="build-pkg"/>              
+    </target>
+    
+    <target name="build-jdk-pkg">
+        <ant dir="jdk" target="build-pkg"/>              
+        <copy todir="${basedir}/build/">
+            <fileset description="Copy jdk.pkg and javaappletplugin.pkg." dir="${basedir}/jdk/build/" includes="*.pkg"/>
+        </copy>
+        <echo message="Copy jdk.pkg and javaappletplugin.pkg into ${basedir}/jdk/build/"/>
+    </target>
+        
+    <target name="clean">
+        <delete dir="${basedir}/build" failonerror="no"/>
+        <delete dir="${basedir}/dist" failonerror="no"/>
+        <ant dir="${basedir}/netBeans/nbide" target="clean"/>
+        <delete dir="${basedir}/netBeans/ruby/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/cpp/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/javase/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/javafx/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/javaee/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/groovy/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/php/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/javame/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/webcommon/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/websvccommon/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/extide/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/nb/build" failonerror="no"/>
+        <delete dir="${basedir}/netBeans/ergonomics/build" failonerror="no"/>
+        <delete dir="${basedir}/tools/classes" failonerror="no"/>
+    </target>
+    
+    <target name="init">    
+        <mkdir dir="${basedir}/tools/classes"/>
+        <mkdir dir="build"/>
+        <mkdir dir="dist"/>
+        <javac 
+            srcdir="${basedir}/tools/src" 
+            destdir="${basedir}/tools/classes"          
+            debug="true"/>  
+        <taskdef 
+           name="for-each" 
+           classname="org.netbeans.installer.mac.ant.ForEach" 
+           classpath="${basedir}/tools/classes/"/>           
+        <property
+           name="VerifyFile.class.name" 
+           value="org.netbeans.installer.mac.ant.VerifyFile"/>
+        <property
+           name="VerifyFile.classpath" 
+           value="${basedir}/tools/classes"/>
+        <condition property="do.build.jdk">
+            <or>
+                <equals arg1="${build.jdk7}" arg2="1"/>
+                <equals arg1="${build.jdk8}" arg2="1"/>
+                <equals arg1="${build.jdk11}" arg2="1"/>
+            </or>
+        </condition>
+        <condition property="do.build.jdk7">
+	    <equals arg1="${build.jdk7}" arg2="1"/>
+        </condition>
+        <condition property="do.build.jdk8">
+	    <equals arg1="${build.jdk8}" arg2="1"/>
+        </condition>
+        <condition property="do.build.jdk11">
+            <equals arg1="${build.jdk11}" arg2="1"/>
+        </condition>
+    </target>        
+
+    <target name="init-clusters">
+        <property name="clusters" value="
+                                         java(javase),
+                                         php(php),
+                                         enterprise(javaee), websvccommon(javaee),
+                                         webcommon(webcommon), websvccommon(webcommon),
+                                         base(nbide)
+                                         "/>
+    </target>
+
+    <target name="unzip-nb" description="Unzip clusters to modules" depends="init-clusters">
+        <for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="module.name">
+            <ant target="unzip-cluster"/>
+            <exec executable="sh" failonerror="no">
+                <arg value="-c"/>
+                <arg value="cd ${basedir}/netBeans/${module.name}/build/netbeans ; rm -rf META-INF"/>
+            </exec>        
+        </for-each>
+
+
+    </target>
+    
+    <target name="unzip-cluster">
+        <mkdir dir="${basedir}/netBeans/${module.name}/build/netbeans"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="unzip -o -d ${basedir}/netBeans/${module.name}/build/netbeans ${common.name}${nb.binary.name}-${cluster.name}.zip"/>
+        </exec>    
+    </target>
+    
+    <target name="size-pack-module" description="Count up size of the module, pack200">           
+        <exec executable="sh" failonerror="no" outputproperty="size">
+            <arg value="-c"/>
+            <arg value="cd ${basedir}/netBeans/${module.name}; du -sk build | sed 's/[\t]*build//'"/>
+        </exec>        
+        <echo message="sizeof.${module.name}=${size}${line.separator}" file="${basedir}/build/sizes.pro" append="true"/>                    
+        <!--exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="sh ${basedir}/pack200.sh ${module.builddir} ${VerifyFile.class.name} ${VerifyFile.classpath}"/>
+        </exec>
+        <ant target="update-crc32-info-module"/-->
+    </target>
+
+    <target name="update-crc32-info-module" description="Update crc32 info in the update_tracking files for the module (Issue #159657)">
+        <echo message="Update crc32 info in module ${module.name}"/>
+        <property name="tmpDir" value="${module.builddir}/tmp"/>
+        <property name="nbDir" value="${module.builddir}/netbeans"/>
+        <mkdir dir="${tmpDir}"/>
+
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="sh ${basedir}/commonfiles/update_crc32.sh ${tmpDir} ${nbDir}"/>
+        </exec>
+    </target>
+
+
+    <target name="build-pkg" depends="unzip-nb" description="Builds NB and packs packages" >                  
+        <ant target="size-pack-module">
+            <property name="module.name" value="nbide"/>
+            <property name="module.builddir" value="${basedir}/netBeans/nbide/build"/>
+        </ant>
+        <ant dir="${basedir}/netBeans/nbide"/>          
+        <ant target="build-modules"/>
+    </target>
+
+
+    <target name="init-modules">
+        <property name="main.modules" value="
+                                        javase(${javase-title}),
+                                        javaee(${javaee-title}),
+                                        webcommon(${webcommon-title}),
+                                        php(${php-title})
+                                        "/>
+        <property name="jdk-bundle.modules" value="
+                                        javase(${javase-title}),
+                                        extide(${extide-title})
+                                        "/>
+        <property name="fx.module" value="javafx(${javafx-title})"/>
+
+        <condition property="all.modules" value="${main.modules},${fx.module}" else="${main.modules}"> 
+            <equals arg1="${javafx.build}" arg2="1"/>
+        </condition>
+        <condition property="modules" value="${jdk-bundle.modules}" else="${all.modules}"> 
+            <istrue value="${do.build.jdk}"/>
+        </condition>
+    </target>    
+
+    <target name="build-modules" depends="init-modules">        
+        <for-each list="${modules}" separator="," property="module.name"  propertyArg="module.title">
+            <ant target="build-module"/>                           
+        </for-each>                        
+    </target>
+    
+    <target name="build-module">
+
+        <property name="module.builddir" value="${basedir}/netBeans/${module.name}/build"/>       
+        
+        <ant target="size-pack-module"/>        
+
+        <property name="scriptsdir" value="${module.builddir}/scripts"/>
+        <mkdir dir="${scriptsdir}"/>
+
+        <copy  todir="${scriptsdir}" failonerror="false">
+            <fileset dir="${basedir}/netBeans/${module.name}/pkg/scripts"/>
+        </copy>
+        
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/build/scripts/addproduct_id.sh" todir="${scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${scriptsdir}"/>
+        <!--copy file="${basedir}/commonfiles/unpack200.sh" todir="${scriptsdir}"/-->
+        <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${scriptsdir}/postupgrade" overwrite="false"/>
+        <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall" overwrite="false"/>
+        <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall_generic" overwrite="false"/>
+
+        <chmod dir="${scriptsdir}" perm="ugo+x" includes="**/*"/> 
+        
+        <echo message="Building ${module.name} into ${basedir}/build/${module.name}-${nb.id}.pkg"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>            
+            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --sign '${sign_iden_name}' --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
+        </exec>
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/${module.name}-${nb.id}.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
+        </java-->
+    </target>          
+
+
+    <target name="copy-packages-scripts" depends="init-clusters">        
+        <for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="package.name">
+            <ant target="copy-scripts"/>                           
+        </for-each>
+    </target>
+    
+    <target name="copy-scripts">
+
+        <property name="pkgdir" value="${basedir}/netBeans/${package.name}/pkg"/>
+        <property name="source.scriptsdir" value="${pkgdir}/scripts"/>
+        <property name="target.scriptsdir" value="${basedir}/build/${package.name}-${nb.id}.pkg/Contents/Resources"/>
+
+        <mkdir dir="${target.scriptsdir}"/>
+        
+        <copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
+            <fileset dir="${source.scriptsdir}"/>
+        </copy>
+        
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/netBeans/nbide/pkg/scripts/addproduct_id.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>
+        <!--copy file="${basedir}/commonfiles/unpack200.sh" todir="${target.scriptsdir}"/-->
+        <copy file="${basedir}/commonfiles/postupgrade_generic" tofile="${target.scriptsdir}/postupgrade" overwrite="false"/>
+        <copy file="${basedir}/commonfiles/postinstall_generic" tofile="${target.scriptsdir}/postinstall" overwrite="false"/>
+
+        <chmod dir="${target.scriptsdir}" perm="ugo+x" includes="**/*"/>
+        
+    </target>          
+
+    <target name="init-bundles">
+        <property name="main.bundles" value="(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg  ./build/javaee-${nb.id}.pkg ./build/php-${nb.id}.pkg)"/>
+        <property name="fx.bundles" value="    
+                                               -javafx-full(./build/*pkg),
+                                               -javafx(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/javafx-${nb.id}.pkg)
+                                          "/>
+
+        <property name="jdk-bundle.bundles" value="-jdk(./build/nbide-${nb.id}.pkg ./build/jdk.pkg)"/>
+
+        <condition property="all.bundles" value="${main.bundles},${fx.bundles}" else="${main.bundles}"> 
+            <equals arg1="${javafx.build}" arg2="1"/>
+        </condition>
+        <condition property="bundles" value="${jdk-bundle.bundles}" else="${all.bundles}">
+            <istrue value="${do.build.jdk}"/>
+        </condition>
+        
+    </target>
+
+    <target name="build-nb-dmg" depends="clean,init,build-pkg,init-bundles">
+        <for-each list="${bundles}" separator="," property="bundle.type"  propertyArg="packages">
+            <delete dir="${basedir}/dist_pkg" failonerror="false"/>
+            <ant target="build-dmg">
+                 <property name="dmg.name" value="${dmg.prefix.name}-macosx"/>
+                 <property name="pkg.name" value="${mpkg.name_nb}"/>
+                 <property name="background.name" value="bgimage.tif"/>
+                 <property name="license.file" value="${basedir}/dmg/Resources/license.txt"/>
+            </ant>
+        </for-each>
+
+        <delete file="${basedir}/build/sizes.pro"/>
+    </target>
+    
+    <target name="build-all-dmg" depends="clean,init,build-pkg,build-jre-nested-pkg,build-glassfish-pkg,build-tomcat-pkg,init-bundles">
+        <for-each list="${bundles}" separator="," property="bundle.type"  propertyArg="packages">
+            <delete dir="${basedir}/dist_pkg" failonerror="false"/>                          
+            <ant target="build-dmg">
+                 <property name="dmg.name" value="${dmg.prefix.name}${bundle.type}-macosx"/>  
+                 <property name="pkg.name" value="${mpkg.name_nb}"/>
+                 <property name="background.name" value="bgimage.tif"/>
+                 <property name="license.file" value="${basedir}/dmg/Resources/license.txt"/>                                  
+            </ant>     
+        </for-each>
+        
+        <!-- for html distro, just create symlink to php -->
+        <echo message="Creating symlink: ${basedir}/dist/${dmg.prefix.name}-html-macosx.dmg -> ${dmg.prefix.name}-php-macosx.dmg"/>
+        <symlink link="${basedir}/dist/${dmg.prefix.name}-html-macosx.dmg" resource="${dmg.prefix.name}-php-macosx.dmg"/>
+                 
+        <delete file="${basedir}/build/sizes.pro"/>
+    </target>     
+            
+    <target name="build-jdk-bundle-dmg" depends="clean,init,build-jdk-pkg,build-pkg,init-bundles">
+        <for-each list="${bundles}" separator="," property="bundle.type"  propertyArg="packages">
+            <delete dir="${basedir}/dist_pkg" failonerror="false"/>                          
+            <ant target="build-dmg">
+                 <property name="dmg.name" value="${jdk.bundle.files.prefix}-${jdk.bundle.files.suffix}-macosx-x64"/>
+                 <property name="pkg.name" value="${mpkg.name_nb}${mpkg.prefix_nb_jdk}${mpkg.version_jdk}"/>
+                 <property name="background.name" value="background-jdk.tif"/>
+            </ant>     
+        </for-each>                
+        <delete file="${basedir}/build/sizes.pro"/>
+    </target>     
+            
+    <target name="prepare-lproj-dirs">  
+        <mkdir dir="${basedir}/dmg/Resources_full"/>
+        <property name="resources.full.dir" value="${basedir}/dmg/Resources_full"/> 
+        <copy file="${basedir}/Bundle.properties" todir="${resources.full.dir}"/>
+        <copy  todir="${resources.full.dir}">
+            <fileset dir="${basedir}/dmg/Resources/" includes="*.html"/>
+        </copy>
+       
+        <echo message="locales are: ${locales}"/>        
+        
+        <copy todir="${resources.full.dir}" flatten="true" includeEmptyDirs="false" failonerror="false">                    
+            <fileset dir="${translatedfiles.src}"> 
+                <include name="**/mac/newbuild/**"/>
+            </fileset>
+        </copy>               
+        
+        <for-each list="${locales}" separator="," property="locale">
+            <ant target="build-lproj-dir"/>                           
+        </for-each>            
+        <delete dir="${resources.full.dir}" failonerror="false"/>
+    </target> 
+       
+    <target name="init-locale-propeties">
+        <echo message="Init locale properties for locale: ${locale}"/>
+        <!-- set the name of the locale suffix-->                                   
+        <condition property="locale.suffix" value="" else="_${locale}">
+            <equals arg1="${locale}" arg2=""/>
+        </condition>
+        <condition property="locale.name" value="english" else="${locale}">
+            <equals arg1="${locale}" arg2=""/>
+        </condition>                                                            
+        <!-- find out name of lproj dir from the map file-->
+        <exec executable="sh" failonerror="yes" outputproperty="locale.dir">
+            <arg value="-c"/>
+            <arg value="cat ${basedir}/dmg/lprojdirnames.map  | sed '/'${locale.name}'=/!d;s/'${locale.name}'=//'"/>
+        </exec>                     
+    </target>  
+
+    <target name="build-lproj-dir" depends="init-locale-propeties">
+        <echo message="Building ${locale.dir}.lproj dir..."/>        
+        <!-- create lproj dir -->
+        <mkdir dir="${pkg.file}/resources/${locale.dir}.lproj"/>
+        <!-- copy Welcome.html and Localizable.strings -->
+        <condition property="bundle.type.suffix" value="_noupdate" else="">
+            <and>
+                <istrue value="${do.build.jdk}"/>
+                <equals arg1="${jdk.update.number}" arg2="0"/>
+            </and>
+        </condition>
+        <condition property="jdk.update.number.long" value="0${jdk.update.number}" else="${jdk.update.number}">
+            <length string="${jdk.update.number}" length="1"/>  
+        </condition>
+        <copy file="${resources.full.dir}/Welcome${bundle.type}${bundle.type.suffix}${locale.suffix}.html"
+              tofile="${pkg.file}/resources/${locale.dir}.lproj/Welcome.html" failonerror="false">
+            <filterset>
+                <filter token="JDK_VERSION_NUMBER" value="${jdk.version.number}"/>
+                <filter token="JDK_UPDATE_NUMBER" value="${jdk.update.number.long}"/>
+            </filterset>
+        </copy>
+
+        <exec executable="sh" failonerror="no">
+            <arg value="-c"/>
+            <arg value="cat ${resources.full.dir}/Bundle${locale.suffix}.properties |
+                sed 's/#.*$//;s/^/&quot;/;s/$/&quot;;/;s/=/&quot; = &quot;/;s/^&quot;&quot;;//' 
+                > ${resources.full.dir}/Localizable.strings"/>
+        </exec>
+	<loadfile property="Localizable.strings.content" srcFile="${resources.full.dir}/Localizable.strings">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </loadfile>
+
+	<echo message="${Localizable.strings.content}" file="${resources.full.dir}/Localizable.strings" append="false"/>
+
+        <native2ascii encoding="UTF-16" src="${resources.full.dir}" dest="${pkg.file}/resources/${locale.dir}.lproj" 
+                      reverse="true" includes="Localizable.strings"/>                        
+    </target>     
+  
+    <target name="size-package" description="Count up size of the package">        
+        <exec executable="sh" failonerror="no" outputproperty="size">
+            <arg value="-c"/>
+            <arg value="cd ${package}/Contents; cat Info.plist | sed -n '/IFPkgFlagInstalledSize/{n;p;}' | sed 's/\&lt;integer\&gt;//' | sed 's/\&lt;\/integer\&gt;//'"/>
+        </exec>        
+        <echo message="sizeof.${module.name}=${size}${line.separator}" file="${basedir}/build/sizes.pro" append="true"/>                                     
+    </target>    
+    
+        
+    <target name="build-dmg" depends="create-postinstallscripts-package">   
+        <mkdir dir="dist"/>
+        <property file="${basedir}/build/sizes.pro"/>         
+        <echo message="Building dmg for ${dmg.name}.dmg..."/>                    
+        <property name="pkg.file" value="${basedir}/dist_pkg"/>
+       
+        <copy file="${basedir}/dmg/Resources/${background.name}" 
+              tofile="${pkg.file}/resources/background.tif"/>  
+        <copy file="${license.file}" 
+              tofile="${pkg.file}/resources/License.txt" failonerror="false"/>
+
+              <ant target="prepare-lproj-dirs"/>
+        
+        <condition property="bundle.type.suffix" value="_noupdate" else="">
+            <and>
+                <istrue value="${do.build.jdk}"/>
+                <equals arg1="${jdk.update.number}" arg2="0"/>
+            </and>
+        </condition>
+        
+        <condition property="jdk.update.number.long" value="0${jdk.update.number}" else="${jdk.update.number}">
+            <length string="${jdk.update.number}" length="1"/>  
+        </condition>
+        <copy file="dmg/distribution${bundle.type}${bundle.type.suffix}.dist" tofile="${pkg.file}/distribution.xml">                                    
+            <filterset>
+                <filter token="NB_ID" value="${nb.id}"/>
+                <filter token="GLASSFISH_ID" value="${glassfish.id}"/>
+                <filter token="JDK_VERSION_NUMBER" value="${jdk.version.number}"/>                
+                <filter token="JDK_UPDATE_NUMBER" value="${jdk.update.number.long}"/>                       
+                <filter token="JDK_UPDATE_NUMBER_SHORT" value="${jdk.update.number}"/>
+                <filter token="JDK_BUILD_NUMBER" value="${jdk.build.number}"/>
+                <filter token="JRE_VERSION" value="${jre.version.string.long}"/>
+                <filter token="TOMCAT_ID" value="${tomcat.id}"/>
+                <filter token="SIZE_CPP" value="${sizeof.cpp}"/>                
+                <filter token="SIZE_JAVASE" value="${sizeof.javase}"/> 
+                <filter token="SIZE_JAVAFX" value="${sizeof.javafx}"/> 
+                <filter token="SIZE_WEBCOMMON" value="${sizeof.webcommon}"/>
+                <filter token="SIZE_EXTIDE" value="${sizeof.extide}"/>
+                <filter token="SIZE_JRENESTED" value="${sizeof.jrenested}"/>
+                <filter token="SIZE_JAVAEE" value="${sizeof.javaee}"/>
+                <filter token="SIZE_JAVAME" value="${sizeof.javame}"/>
+                <filter token="SIZE_GROOVY" value="${sizeof.groovy}"/>
+                <filter token="SIZE_ERGONOMICS" value="${sizeof.ergonomics}"/>
+                <filter token="SIZE_GLASSFISH" value="${sizeof.glassfish}"/>
+                <filter token="SIZE_TOMCAT" value="${sizeof.tomcat}"/>                
+                <filter token="SIZE_BASEIDE" value="${sizeof.nbide}"/>                
+                <filter token="SIZE_NBIDE" value="${sizeof.nbide}"/>
+                <filter token="SIZE_PHP" value="${sizeof.php}"/>    
+            </filterset>
+        </copy> 
+
+        <mkdir dir="${pkg.file}/packages"/>         
+        <echo message="Copying ${packages} to '${pkg.file}'/packages..."/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="cp -RPf ${packages} ${basedir}/build/postinstallscripts.pkg '${pkg.file}'/packages"/>
+        </exec>
+        
+        <antcall target="pack-bundle"/>
+        <exec executable="sh" failonerror="no">
+            <arg value="-c"/>
+            <arg value="cd ${basedir}"/>
+        </exec>
+        <condition property="output.dir" value="${output.jdk.dir}" else="">
+	     <istrue value="${do.build.jdk}"/>
+        </condition>
+        
+        <exec executable="sh" failonerror="yes">
+          <arg value="-c"/>
+          <arg value="sh dmg/createdmg.sh '${dmg.name}'.dmg '${pkg.name}' '${output.dir}'"/>
+        </exec>  
+        <delete dir="dist_pkg" failonerror="false"/>
+    </target>
+    
+    <target name="create-postinstallscripts-package">        
+        <property name="target.scriptsdir" value="${basedir}/build/postinstallscripts/"/>
+        
+        <mkdir dir="${target.scriptsdir}"/>        
+        
+        <copy file="${basedir}/netBeans/nbide/build/scripts/env.sh" todir="${target.scriptsdir}"/>        
+        <copy file="${basedir}/commonfiles/get_current_jdk.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/perm.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/populate_caches.sh" todir="${target.scriptsdir}"/>
+        <copy file="${basedir}/commonfiles/postinstall/postinstall" todir="${target.scriptsdir}"/>
+        <!--copy todir="${target.scriptsdir}" failonerror="false" verbose="true" overwrite="true">
+          <fileset dir="${basedir}/commonfiles/postinstall/"/>
+        </copy-->
+
+        <chmod dir="${target.scriptsdir}" perm="ugo+x" includes="**/*"/>
+        
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>            
+            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts --sign '${sign_iden_name}' '${basedir}/build/postinstallscripts.pkg'"/>
+        </exec>
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/postinstallscripts.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
+        </java-->
+    </target>
+
+    <target name="pack-bundle" description="Packs nested packages into the main one">
+        <mkdir dir="${pkg.file}/inst_package"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-cv"/>
+            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' --sign '${sign_iden_name}' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
+        </exec>
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${pkg.file}/inst_package/${pkg.name}.pkg' -signed_location '${pkg.file}/inst_package' -sign_method mac_pkg -server UK" />
+        </java-->
+    </target>    
+</project>

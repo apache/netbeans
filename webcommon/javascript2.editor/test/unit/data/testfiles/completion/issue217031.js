@@ -1,0 +1,3 @@
+var Core = {};
+
+Core.needModules();

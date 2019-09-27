@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:my2<|(): UVS1 {
+UVS3::myStatic3()->|>MARK_OCCURRENCES:m^y2<|()::myStatic1()->my1();

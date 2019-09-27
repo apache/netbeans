@@ -1,0 +1,8 @@
+level0:METHOD:[PUBLIC]:ESCAPED{level0}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  first:VARIABLE:[PRIVATE]:ESCAPED{first}<font color="#999999">ESCAPED{ : }String</font>:
+  level1_1:METHOD:[PRIVATE]:ESCAPED{level1_1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  level1_2:METHOD:[PRIVATE]:ESCAPED{level1_2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  level1_3:METHOD:[PRIVATE]:ESCAPED{level1_3}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  level1_4:CONSTRUCTOR:[PRIVATE]:ESCAPED{level1_4}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }level0.level1_4</font>:
+    level2_1:METHOD:[PROTECTED]:ESCAPED{level2_1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  level4:VARIABLE:[PRIVATE]:ESCAPED{level4}<font color="#999999">ESCAPED{ : }level0.level1_4</font>:

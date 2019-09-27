@@ -1,0 +1,3 @@
+var myF = function MyLib_Function (path, ref, pfx, |>MARK_OCCURRENCES:opt^ions<|) {
+   var v = expand(path, ref, pfx, |>MARK_OCCURRENCES:options<|);
+   if( |>MARK_OCCURRENCES:options<| && |>MARK_OCCURRENCES:options<|.option1 && (v === path) )

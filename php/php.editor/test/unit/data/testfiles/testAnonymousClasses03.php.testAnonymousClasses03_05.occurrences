@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:fun^c2<|() {
+echo (new Outer)->|>MARK_OCCURRENCES:func2<|()->func3() . PHP_EOL;

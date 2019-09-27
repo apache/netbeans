@@ -1,0 +1,10 @@
+[[13,22]-Syntax error
+ unexpected:	__TRAIT__
+ after:	const
+ expected:	identifier, define] 13-22:Syntax error
+ unexpected:	__TRAIT__
+ after:	const
+ expected:	identifier, define
+[[23,24]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=] 23-24:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	=

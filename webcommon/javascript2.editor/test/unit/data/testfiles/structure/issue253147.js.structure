@@ -1,0 +1,8 @@
+test:CLASS:[PUBLIC]:ESCAPED{test}:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    getTest:METHOD:[PRIVATE]:ESCAPED{getTest}ESCAPED{(}ESCAPED{)}:
+      method2:METHOD:[PUBLIC]:ESCAPED{method2}:
+      property1:CLASS:[PUBLIC]:ESCAPED{property1}:
+        aaa:FIELD:[PUBLIC]:ESCAPED{aaa}<font color="#999999">ESCAPED{ : }Number</font>:
+        abb:FIELD:[PUBLIC]:ESCAPED{abb}<font color="#999999">ESCAPED{ : }String</font>:
+    run:METHOD:[PUBLIC]:ESCAPED{run}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

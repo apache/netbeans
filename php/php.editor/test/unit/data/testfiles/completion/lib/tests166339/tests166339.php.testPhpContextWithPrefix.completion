@@ -1,0 +1,5 @@
+Code completion result for source line:
+$test->_testObject->|testIf1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testIf1()                       [PUBLIC,   If1
+METHOD     testIf2()                       [PUBLIC,   If2

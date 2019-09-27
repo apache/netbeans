@@ -1,0 +1,4 @@
+        Bat::$bar^z;
+        ----------
+HINT:Introduce Hint
+FIX:Create Field "$barz" in Class "Bat" (Issue239277.php)

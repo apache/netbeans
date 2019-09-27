@@ -1,0 +1,1 @@
+fn&(&$^|>MARK_OCCURRENCES:x<|) => $|>MARK_OCCURRENCES:x<|; // reference

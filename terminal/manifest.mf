@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.terminal
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/terminal/Bundle.properties
-OpenIDE-Module-Provides: org.openide.windows.IOProvider
-OpenIDE-Module-Specification-Version: 1.28
-

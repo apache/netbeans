@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div data-bind="foreach: game">
+            Game: <strong data-bind="text: name"></strong>, Priority: <strong data-bind="text: priority"></strong>
+            <br/>
+        </div>
+
+        
+        <!--cc;9;<div data-bind="text: ";1;pureGamesCount,Date,ko,document,foo,foo2,names,pureName,purePrintName;foo;foo;params-->
+        
+        
+        <!--cc;9;<div data-bind="text: foo, visible: ";1;pureGamesCount,Date,ko,document,foo,names,foo2,pureName,purePrintName;foo;foo;params-->
+        
+
+        <!--cc;9;<div data-bind="template: {name 'a', data : }";2;pureGamesCount,Date,names,ko,document,foo,foo2,pureName,purePrintName;foo;foo;params-->
+        
+               
+        
+        <div data-bind="template: { name: 'person-template4', data: foo }"></div>
+        
+        <p data-bind="text: purePrintName, disable: foo"></p>
+
+        <script src="purecomp.js" type="text/javascript"></script>
+    </body>
+</html>

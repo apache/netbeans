@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ae" abbreviation="ae" contexts="twig-code">
+        <code>
+<![CDATA[autoescape]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eae" abbreviation="eae" contexts="twig-code">
+        <code>
+<![CDATA[endautoescape]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.bl" abbreviation="bl" contexts="twig-code">
+        <code>
+<![CDATA[block ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ebl" abbreviation="ebl" contexts="twig-code">
+        <code>
+<![CDATA[endblock]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.em" abbreviation="em" contexts="twig-code">
+        <code>
+<![CDATA[embed "${template.twig}"]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eem" abbreviation="eem" contexts="twig-code">
+        <code>
+<![CDATA[endembed]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ex" abbreviation="ex" contexts="twig-code">
+        <code>
+<![CDATA[extends "${template.twig}"]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fi" abbreviation="fi" contexts="twig-code">
+        <code>
+<![CDATA[filter ${name}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.efi" abbreviation="efi" contexts="twig-code">
+        <code>
+<![CDATA[endfilter]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fl" abbreviation="fl" contexts="twig-code">
+        <code>
+<![CDATA[flush]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fo" abbreviation="fo" contexts="twig-code">
+        <code>
+<![CDATA[for ${item} in ${array}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.efo" abbreviation="efo" contexts="twig-code">
+        <code>
+<![CDATA[endfor]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.fr" abbreviation="fr" contexts="twig-code">
+        <code>
+<![CDATA[from]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.if" abbreviation="fif" contexts="twig-code">
+        <code>
+<![CDATA[if ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.el" abbreviation="el" contexts="twig-code">
+        <code>
+<![CDATA[else]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eli" abbreviation="eli" contexts="twig-code">
+        <code>
+<![CDATA[elseif ${true}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.eif" abbreviation="eif" contexts="twig-code">
+        <code>
+<![CDATA[endif]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.im" abbreviation="im" contexts="twig-code">
+        <code>
+<![CDATA[import '${page.html}' as ${alias}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.in" abbreviation="in" contexts="twig-code">
+        <code>
+<![CDATA[include '${page.html}']]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ma" abbreviation="ma" contexts="twig-code">
+        <code>
+<![CDATA[macro ${name}()]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ema" abbreviation="ema" contexts="twig-code">
+        <code>
+<![CDATA[endmacro]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ra" abbreviation="ra" contexts="twig-code">
+        <code>
+<![CDATA[raw]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.era" abbreviation="era" contexts="twig-code">
+        <code>
+<![CDATA[endraw]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.sb" abbreviation="sb" contexts="twig-code">
+        <code>
+<![CDATA[sandbox]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.esb" abbreviation="esb" contexts="twig-code">
+        <code>
+<![CDATA[endsandbox]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.se" abbreviation="se" contexts="twig-code">
+        <code>
+<![CDATA[set ${variable}]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.ese" abbreviation="ese" contexts="twig-code">
+        <code>
+<![CDATA[endset]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.sl" abbreviation="sl" contexts="twig-code">
+        <code>
+<![CDATA[spaceless]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.esl" abbreviation="esl" contexts="twig-code">
+        <code>
+<![CDATA[endspaceless]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.twig.editor.codetemplate.us" abbreviation="us" contexts="twig-code">
+        <code>
+<![CDATA[use "${page.html}"]]>
+        </code>
+    </codetemplate>
+</codetemplates>

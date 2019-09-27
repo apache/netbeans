@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="org-netbeans-api-project-libraries">
+        <folder name="LibraryTypeProviders">
+            <file name="j2se_library_provider.instance">
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.project.libraries.LibraryTypeProvider"/>
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.java.j2seplatform.libraries.J2SELibraryTypeProvider"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.j2seplatform.libraries.J2SELibraryTypeProvider.create"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="org-netbeans-api-java">
+        <folder name="platform">
+            <folder name="installers">
+                <file name=".default.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.java.platform.GeneralPlatformInstall,org.netbeans.spi.java.platform.PlatformInstall"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.j2seplatform.J2SEInstallImpl.create"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Loaders">
+        <folder name="application">
+            <folder name="x-java-archive">
+                <folder name="Actions">
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="org-openide-actions-PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="org-openide-actions-RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                </folder>
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-java-jarloader-JarDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.j2seplatform.Bundle"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+
+    <folder name="Services">
+        <folder name="Platforms">
+            <folder name="org-netbeans-api-java-Platform">
+                 <!-- Placeholder, installed platforms will be created in this folder -->
+                <file name="default_platform.xml" url="templates/defaultPlatform.xml">
+                    <attr name="default-platform" boolvalue="true"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="NetBeans">
+                <file name="DTD_Java_PlatformDefinition_1_0" url="nbres:/org/netbeans/modules/java/j2seplatform/platformdefinition/platformdefinition.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Java PlatformDefinition 1.0//EN"/>
+                </file>
+            </folder>
+        </folder>
+
+        <folder name="lookups">
+            <folder name="NetBeans">
+                <file name="DTD_Java_PlatformDefinition_1_0.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.j2seplatform.platformdefinition.PlatformConvertor"/>
+                    <attr name="instanceOf" stringvalue="org.openide.loaders.Environment$Provider"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.j2seplatform.platformdefinition.PlatformConvertor.createProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="WarmUp">
+      <file name="org-netbeans-modules-java-j2seplatform-J2SEPlatformWarmUp.instance"/>
+    </folder>
+
+</filesystem>

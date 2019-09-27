@@ -1,0 +1,27 @@
+export default class A {
+        
+        constructor() {
+            
+        }
+        
+        method(x, y) {
+            56
+            + 77;
+        }
+}
+
+export class A2 {
+        
+        constructor() {
+            
+        }
+        
+        method(x, y) {
+            56
+            + 77;
+        }
+}
+
+class X {
+    
+}

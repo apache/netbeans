@@ -1,0 +1,13 @@
+<?php
+
+class ClassName {
+
+    function __construct() {
+        $closure = function ($param) {
+            return 1;
+        };
+    }
+
+}
+
+?>

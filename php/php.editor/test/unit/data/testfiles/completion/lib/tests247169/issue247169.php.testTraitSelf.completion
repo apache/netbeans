@@ -1,0 +1,10 @@
+Code completion result for source line:
+$traitSelf->|publicBMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getClassSelf()                  [STATIC]   A
+METHOD     getClassStatic()                [STATIC]   A
+METHOD     getTraitSelf()                  [STATIC]   T
+METHOD     getTraitStatic()                [STATIC]   T
+METHOD     publicAMethod()                 [PUBLIC]   A
+METHOD     publicBMethod()                 [PUBLIC]   B
+METHOD     publicTMethod()                 [PUBLIC]   T

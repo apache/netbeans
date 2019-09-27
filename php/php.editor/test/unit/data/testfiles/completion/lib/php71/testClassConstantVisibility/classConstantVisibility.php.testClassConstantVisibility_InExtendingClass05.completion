@@ -1,0 +1,10 @@
+Code completion result for source line:
+self::|IMPLICIT_INTERFACE_PUBLIC_CONST; // CC in impl
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_INTERFACE_PUBLIC_CONS  [PUBLIC]   TestInterface
+CONSTANT   IMPLICIT_PUBLIC_INTERFACE_IMPL  [PUBLIC]   TestInterfaceImpl
+CONSTANT   PRIVATE_INTERFACE_IMPL_CONST 0  [PRIVATE]  TestInterfaceImpl
+CONSTANT   PROTECTED_INTERFACE_IMPL_CONST  [PROTECTE  TestInterfaceImpl
+CONSTANT   PUBLIC_INTERFACE_CONST 1        [PUBLIC]   TestInterface
+CONSTANT   PUBLIC_INTERFACE_IMPL_CONST 0   [PUBLIC]   TestInterfaceImpl
+CONSTANT   class \TestInterfaceImpl        [PUBLIC]   Magic Constant

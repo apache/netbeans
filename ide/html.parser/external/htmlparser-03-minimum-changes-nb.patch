@@ -1,0 +1,226 @@
+#   Licensed to the Apache Software Foundation (ASF) under one
+#   or more contributor license agreements.  See the NOTICE file
+#   distributed with this work for additional information
+#   regarding copyright ownership.  The ASF licenses this file
+#   to you under the Apache License, Version 2.0 (the
+#   "License"); you may not use this file except in compliance
+#   with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing,
+#   software distributed under the License is distributed on an
+#   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#   KIND, either express or implied.  See the License for the
+#   specific language governing permissions and limitations
+#   under the License.
+#
+# HG changeset patch
+# Parent  d4c267a15aa0ac57d2f00ccd68eb46eb463738a7
+Minimal changes to integrate html parser with netbeans infrastructure
+- create a unique version
+- disable the HotSpot workaound, as we need the detailed transition informations
+- track the global position of the parser
+- make startTage and end Tag overrideable in TreeBuilder
+
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml
++++ b/pom.xml
+@@ -20,17 +20,17 @@
+  * DEALINGS IN THE SOFTWARE.
+ -->
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>nu.validator.htmlparser</groupId>
+   <artifactId>htmlparser</artifactId>
+   <packaging>bundle</packaging>
+-  <version>1.4</version>
++  <version>1.4.20190624</version>
+   <name>htmlparser</name>
+   <url>http://about.validator.nu/htmlparser/</url>
+   <description>The Validator.nu HTML Parser is an implementation of the HTML5 parsing algorithm in Java for applications. The parser is designed to work as a drop-in replacement for the XML parser in applications that already support XHTML 1.x content with an XML parser and use SAX, DOM or XOM to interface with the parser.</description>
+   <!--
+     Usage notes for this POM:
+ 
+     To build without signing, run:
+     mvn clean source:jar javadoc:jar repository:bundle-create
+@@ -68,16 +68,17 @@
+       <distribution>repo</distribution>
+     </license>
+   </licenses>
+   <scm>
+     <connection>scm:hg:http://hg.mozilla.org/projects/htmlparser/</connection>
+     <url>http://hg.mozilla.org/projects/htmlparser/</url>
+   </scm>
+   <build>
++    <!--<sourceDirectory>${basedir}/src</sourceDirectory>-->
+     <sourceDirectory>${project.build.directory}/src</sourceDirectory>
+     <testSourceDirectory>${basedir}/test-src</testSourceDirectory>
+     <plugins>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+           <source>1.5</source>
+@@ -108,17 +109,17 @@
+                 <delete dir="${project.build.sourceDirectory}"/>
+                 <mkdir dir="${project.build.sourceDirectory}"/>
+                 <copy todir="${project.build.sourceDirectory}">
+                   <fileset dir="${basedir}/src"/>
+                 </copy>
+               </target>
+             </configuration>
+           </execution>
+-          <execution>
++<!--          <execution>
+             <id>tokenizer-hotspot-workaround</id>
+             <phase>process-sources</phase>
+             <goals>
+               <goal>run</goal>
+             </goals>
+             <configuration>
+               <target>
+                 <property name="translator.sources" value="${basedir}/translator-src"/>
+@@ -129,17 +130,17 @@
+                   <classpath>
+                     <pathelement location="${translator.classes}"/>
+                   </classpath>
+                   <arg value="${project.build.sourceDirectory}/nu/validator/htmlparser/impl/Tokenizer.java"/>
+                   <arg value="${project.build.sourceDirectory}/nu/validator/htmlparser/impl/HotSpotWorkaround.txt"/>
+                 </java>
+               </target>
+             </configuration>
+-          </execution>
++          </execution>-->
+         </executions>
+       </plugin>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-surefire-plugin</artifactId>
+         <configuration>
+           <skip>true</skip>
+         </configuration>
+diff --git a/src/nu/validator/htmlparser/impl/Tokenizer.java b/src/nu/validator/htmlparser/impl/Tokenizer.java
+--- a/src/nu/validator/htmlparser/impl/Tokenizer.java
++++ b/src/nu/validator/htmlparser/impl/Tokenizer.java
+@@ -504,16 +504,19 @@ public class Tokenizer implements Locato
+     private final boolean newAttributesEachTime;
+ 
+     private boolean shouldSuspend;
+ 
+     protected boolean confident;
+ 
+     private int line;
+ 
++    //holds the offset of the current buffer relative to the beginning of the input source
++    protected int currentBufferGlobalOffset;
++
+     /*
+      * The line number of the current attribute. First set to the line of the
+      * attribute name and if there is a value, set to the line the value
+      * started on.
+      */
+     // CPPONLY: private int attributeLine;
+ 
+     private Interner interner;
+@@ -1371,16 +1374,18 @@ public class Tokenizer implements Locato
+         initializeWithoutStarting();
+         tokenHandler.startTokenization(this);
+         // [NOCPP[
+         startErrorReporting();
+         // ]NOCPP]
+     }
+ 
+     public boolean tokenizeBuffer(UTF16Buffer buffer) throws SAXException {
++        setTransitionBaseOffset(currentBufferGlobalOffset);
++
+         int state = stateSave;
+         int returnState = returnStateSave;
+         char c = '\u0000';
+         shouldSuspend = false;
+         lastCR = false;
+ 
+         int start = buffer.getStart();
+         int end = buffer.getEnd();
+@@ -1443,16 +1448,21 @@ public class Tokenizer implements Locato
+                 end);
+         // ]NOCPP]
+         if (pos == end) {
+             // exiting due to end of buffer
+             buffer.setStart(pos);
+         } else {
+             buffer.setStart(pos + 1);
+         }
++
++        if(! buffer.hasMore()) {
++            currentBufferGlobalOffset += buffer.getEnd();
++        }
++
+         return lastCR;
+     }
+ 
+     // [NOCPP[
+     private void ensureBufferSpace(int inputLength) throws SAXException {
+         // Add 2 to account for emissions of LT_GT, LT_SOLIDUS and RSQB_RSQB.
+         // Adding to the general worst case instead of only the
+         // TreeBuilder-exposed worst case to avoid re-introducing a bug when
+@@ -6924,16 +6934,17 @@ public class Tokenizer implements Locato
+         html4 = false;
+         metaBoundaryPassed = false;
+         wantsComments = tokenHandler.wantsComments();
+         if (!newAttributesEachTime) {
+             attributes = new HtmlAttributes(mappingLangToXmlLang);
+         }
+         // ]NOCPP]
+         resetToDataState();
++        currentBufferGlobalOffset = 0;
+     }
+ 
+     protected void errGarbageAfterLtSlash() throws SAXException {
+     }
+ 
+     protected void errLtSlashGt() throws SAXException {
+     }
+ 
+diff --git a/src/nu/validator/htmlparser/impl/TreeBuilder.java b/src/nu/validator/htmlparser/impl/TreeBuilder.java
+--- a/src/nu/validator/htmlparser/impl/TreeBuilder.java
++++ b/src/nu/validator/htmlparser/impl/TreeBuilder.java
+@@ -1666,17 +1666,17 @@ public abstract class TreeBuilder<T> imp
+         }
+         // [NOCPP[
+         idLocations.clear();
+         // ]NOCPP]
+         charBuffer = null;
+         end();
+     }
+ 
+-    public final void startTag(ElementName elementName,
++    public void startTag(ElementName elementName,
+             HtmlAttributes attributes, boolean selfClosing) throws SAXException {
+         flushCharacters();
+ 
+         // [NOCPP[
+         if (errorHandler != null) {
+             // ID uniqueness
+             @IdType String id = attributes.getId();
+             if (id != null) {
+@@ -3330,17 +3330,17 @@ public abstract class TreeBuilder<T> imp
+                 if (tokenizer.internalEncodingDeclaration(extract)) {
+                     requestSuspension();
+                 }
+             }
+             Portability.releaseString(extract);
+         }
+     }
+ 
+-    public final void endTag(ElementName elementName) throws SAXException {
++    public void endTag(ElementName elementName) throws SAXException {
+         flushCharacters();
+         needToDropLF = false;
+         int eltPos;
+         int group = elementName.getGroup();
+         @Local String name = elementName.getName();
+         endtagloop: for (;;) {
+             if (isInForeign()) {
+                 if (stack[currentPtr].name != name) {

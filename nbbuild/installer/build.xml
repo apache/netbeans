@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="installer" default="clean" basedir=".">
+
+  <target name="clean" description="clean all subprojects">
+    <ant antfile="asbundle/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="cdc/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="cnd/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="coreide/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="j2ee/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="jbossbundle/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="jdkbundle/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="mac/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="mobility/build.xml" target="clean" inheritAll="false"/>
+    <ant antfile="profiler/build.xml" target="clean" inheritAll="false"/>
+  </target>
+
+  <target name="runtests" description="Run automatic test">
+    <ant antfile="build.xml" dir="./test" target="all" inheritAll="false"/>
+  </target>
+
+</project>

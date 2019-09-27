@@ -1,0 +1,16 @@
+Code completion result for source line:
+define(['|'], function () {});
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      text!                                      
+FILE       OMessages.js                               
+FILE       Options.js                                 
+FILE       api                                        
+FILE       api                                        
+FILE       config                                     
+FILE       folder1                                    
+FILE       js                                         
+FILE       lib/api                                    
+FILE       lib2                                       
+FILE       utils                                      
+FILE       v0.1                                       

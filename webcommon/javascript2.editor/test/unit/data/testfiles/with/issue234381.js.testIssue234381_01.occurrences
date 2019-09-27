@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:times<| = 3;
+    var z = test() * |>MARK_OCCURRENCES:ti^mes<|;

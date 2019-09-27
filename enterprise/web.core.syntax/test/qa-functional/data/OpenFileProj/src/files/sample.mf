@@ -1,0 +1,9 @@
+Name: java/util/
+Specification-Title: "Java Utility Classes" 
+Specification-Version: "1.2"
+Specification-Vendor: "Sun Microsystems, Inc.".
+Implementation-Title: "java.util" 
+Implementation-Version: "build57"
+Implementation-Vendor: "Sun Microsystems, Inc."
+
+

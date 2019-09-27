@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- Probably should not be used much: -->
+    <apidef name="util">Editor Utilities API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+      <change id="DocumentUtilities.addWeakPropertyChangeListener">
+          <summary>Added support for adding weak property change listeners to documents</summary>
+          <version major="1" minor="68"/>
+          <date day="6" month="9" year="2018"/>
+          <author login="matthiasblaesing"/>
+          <compatibility addition="yes" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  Added support for adding weak property change listeners to documents
+                  by providing
+                  <code>DocumentUtilities.addWeakPropertyChangeListener(doc, listenerImplementation)</code>.
+                  The supplied <code>listenerImplementation</code> is not held via
+                  a strong reference, but a weak reference and so can be GCed
+                  independendly of the referencing document.
+              </p>
+          </description>
+          <issue number="NETBEANS-406"/>
+      </change>
+      <change id="GapListAddAll">
+          <summary>Added methods to append elements to a GapList</summary>
+          <version major="1" minor="64"/>
+          <date day="22" month="2" year="2016"/>
+          <author login="mmetelka"/>
+          <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible"/>
+          <description>
+              Added supplementary methods to GapList to accompany the existing
+              methods to add elements.
+          </description>
+          <class name="GapList" package="org.netbeans.lib.editor.util"/>
+          <issue number="257888"/>
+      </change>
+      <change id="EventPropertyStorage.test">
+          <summary>Added test for property storage support on events</summary>
+          <version major="1" minor="60"/>
+          <date day="20" month="5" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible"/>
+          <description>
+              Presence of property storage depends on the event publisher or document implementation. A client that
+              wants to attach property to the event should be able to check whether the feature is available. In past
+              the check was done by testing the implementation document type, which is not desirable.
+          </description>
+      </change>
+      <change id="StringEscapeUtils">
+          <summary>Added String escape utils</summary>
+          <version major="1" minor="52"/>
+          <date day="10" month="12" year="2012"/>
+          <author login="mkristofic"/>
+          <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  Added <code>StringEscapeUtils.escapeHtml</code> and <code>StringEscapeUtil.unescapeHtml</code>
+                  to escape text to html.
+              </p>
+          </description>
+      </change>
+    <change id="BlockCompare-invalidX">
+      <summary>Added BlockCompare.invalidX() and invalidY()</summary>
+        <version major="1" minor="49"/>
+        <date day="30" month="7" year="2012"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Added <code>BlockCompare.invalidX()</code> and <code>BlockCompare.invalidY()</code>
+            to check for invalid bounds of compared blocks.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.document-property-listeners">
+      <summary>Added support for document property listeners</summary>
+        <version major="1" minor="35"/>
+        <date day="9" month="3" year="2010"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding <code>DocumentUtilities.addPropertyChangeListener(Document, PropertyChangeListener)</code>
+            and <code>DocumentUtilities.removePropertyChangeListener(Document, PropertyChangeListener)</code> in order
+            to support listening on document property changes.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.getDocumentTimestamp-added">
+      <summary>Added DocumentUtilities.getDocumentTimestamp(Document)</summary>
+        <version major="1" minor="34"/>
+        <date day="14" month="1" year="2010"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding DocumentUtilities.getDocumentTimestamp(Document) to provide access
+            to documents' timestamp property.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.getDocumentVersion-added">
+      <summary>Added DocumentUtilities.getDocumentVersion(Document)</summary>
+        <version major="1" minor="28"/>
+        <date day="1" month="2" year="2009"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding DocumentUtilities.getDocumentVersion(Document) to provide access
+            to documents' version property.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.debugOffset-added">
+      <summary>Added DocumentUtilities.debugOffset(Document, int)</summary>
+        <version major="1" minor="25"/>
+        <date day="16" month="6" year="2008"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding DocumentUtilities.debugOffset(Document, int) to dump both the integer offset
+            and line and column as seen in editor's status bar.
+            PositionRegion.toString(doc) debugs its bounds using debugOffset().
+            Added PositionRegion.getText() and PositionRegion.getString() to obtain text of the region.
+        </p>
+        </description>
+    </change>
+
+    <change id="getMimeType-added">
+      <summary>Added DocumentUtilities.getMimeType</summary>
+        <version major="1" minor="23"/>
+        <date day="10" month="1" year="2008"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding <code>DocumentUtilities.getMimeType(Document)</code> and
+            <code>DocumentUtilities.getMimeType(JTextComponent)</code> in order
+            to standardize access to documents' mimetype.
+        </p>
+        </description>
+    </change>
+
+    <change id="CharacterConversions-added">
+      <summary>Added CharacterConversions class</summary>
+        <version major="1" minor="21"/>
+        <date day="17" month="10" year="2007"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Adding <code>CharacterConversions</code> as a replacement for
+            <code>org.netbeans.editor.LineSeparatorConversion</code>, which was
+            deprecated.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentListenerPriority.FIRST-added">
+      <summary>Added DocumentListenerPriority.FIRST</summary>
+        <version major="1" minor="20"/>
+        <date day="21" month="9" year="2007"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            <code>DocumentListenerPriority.FIRST</code> is called prior any other
+            priority levels.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.getDocumentListenerCount-added">
+      <summary>Added DocumentUtilities.getDocumentListenerCount().</summary>
+        <version major="1" minor="19"/>
+        <date day="17" month="9" year="2007"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            DocumentUtilities.getDocumentListenerCount() returns total count
+            of document listeners attached to a document covering the case when
+            the document priority listening is used.
+        </p>
+        </description>
+    </change>
+
+    <change id="ArrayUtilities.binarySearch-added">
+      <summary>Added ArrayUtilities.binarySearch(...) methods.</summary>
+        <version major="1" minor="18"/>
+        <date day="4" month="9" year="2007"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            ArrayUtilities.binarySearch(int [] array, int key) and its variants
+            can be used for searching in sorted integer array (eg. containing
+            document offsets, etc.).
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentUtilities.isReadLocked-isWriteLocked">
+      <summary>Added DocumentUtilities.isReadLocked() and isWriteLocked().</summary>
+        <version major="1" minor="17"/>
+        <date day="27" month="3" year="2007"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            DocumentUtilities.isReadLocked() and isWriteLocked() allow to check
+            whether AbstractDocument based documents are currently read/write-locked.
+        </p>
+        </description>
+    </change>
+
+    <change id="FlyOffsetGapList.elementOrEndOffset">
+      <summary>Added FlyOffsetGapList.elementOrEndOffset().</summary>
+        <version major="1" minor="16"/>
+        <date day="16" month="1" year="2007"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            <code>FlyOffsetGapList.elementOrEndOffset()</code> added for use by lexer module
+            to get either an element's offset or end offset of the last element.
+        </p>
+        </description>
+    </change>
+
+    <change id="DocumentListenerPriority.LEXER">
+      <summary><code>DocumentListenerPriority.LEXER</code> added</summary>
+        <version major="1" minor="15"/>
+        <date day="6" month="12" year="2006"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            <code>DocumentListenerPriority.LEXER</code> added for use by lexer module to update
+            token list for a document.
+        </p>
+        </description>
+    </change>
+
+    <change id="ArrayUtilities.unmodifiableList">
+      <summary>Added ArrayUtilities.unmodifiableList().</summary>
+        <version major="1" minor="14"/>
+        <date day="16" month="11" year="2006"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            ArrayUtilities.unmodifiableList() return simple unmodifiable list
+            for the given object array. 
+        </p>
+        </description>
+    </change>
+
+    <change id="ListenerList.getListeners">
+      <summary>ListenerList.getListeners() return type changed.</summary>
+        <version major="1" minor="13"/>
+        <date day="17" month="10" year="2006"/>
+        <author login="vstejskal"/>
+        <compatibility addition="no" deletion="no" modification="yes" binary="incompatible" semantic="incompatible" />
+        <description>
+        <p>
+            ListenerList.getListeners now returns List&lt;T&gt; instead of T[]. The listeners
+            are returned in exactly the same order as they were added to the ListenerList.
+        </p>
+        </description>
+    </change>
+
+    <change id="CompactMap.MapEntry-abstract">
+      <summary>CompactMap.MapEntry made an abstract class (not interface).</summary>
+        <version major="1" minor="12"/>
+        <date day="11" month="10" year="2006"/>
+        <author login="mmetelka"/>
+        <compatibility addition="no" deletion="yes" modification="yes" binary="incompatible" semantic="incompatible" />
+        <description>
+        <p>
+            CompactMap.MapEntry was made an abstract class (instead of original interface)
+            to prevent misuse of CompactMap.MapEntry.setNextMapEntry(). CompactMap.AbstractMapEntry was removed.
+        </p>
+        </description>
+    </change>
+
+    <change id="ListenerList-DocumentListenerPriority.VIEW">
+      <summary>Added ListenerList and DocumentListenerPriority.VIEW.</summary>
+        <version major="1" minor="11"/>
+        <date day="13" month="9" year="2006"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Added ListenerList and added DocumentListenerPriority.VIEW.
+        </p>
+        </description>
+    </change>
+
+    <change id="PositionComparator-PositionRegion">
+      <summary>Added PositionComparator and PositionRegion</summary>
+        <version major="1" minor="6"/>
+        <date day="14" month="6" year="2005"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Added two new classes PositionComparator and PositionRegion
+            and a new level AFTER_CARET_UPDATE to DocumentListenerPriority class.
+        </p>
+        </description>
+        <issue number="59388"/>
+    </change>
+
+    <change id="org.netbeans.lib.editor.util">
+      <summary>Repackaged to org.netbeans.lib.editor.util package</summary>
+        <version major="1" minor="5"/>
+        <date day="13" month="3" year="2005"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" binary="incompatible" semantic="incompatible" />
+        <description>
+        <p>
+            The present classes were repackaged from org.netbeans.modules.editor.util
+            into org.netbeans.lib.editor.util package to fulfil the editor module
+            split proposal <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51486">#51486</a>
+            according to which the editor classes independent of the NB IDE
+            should be placed under org.netbeans.lib package.
+        </p>
+        </description>
+        <issue number="56339"/>
+    </change>
+
+    <change id="DocumentUtilities.addDocumentListener-priority">
+      <summary>Added document listeners ordering support</summary>
+        <version major="1" minor="4"/>
+        <date day="24" month="3" year="2005"/>
+        <author login="mmetelka"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Added document listeners ordering support through
+            <code>DocumentUtilities.addDocumentListener(doc, listener, priority)</code>.
+        </p>
+        </description>
+        <issue number="35034"/>
+    </change>
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE editor/util/api/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Editor Utilities API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@">Editor Utilities
+API</a>. Please ask on the <code>dev@openide.netbeans.org</code> mailing list
+if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.editor.util"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

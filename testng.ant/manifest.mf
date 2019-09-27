@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.testng.ant
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/testng/ant/Bundle.properties
-OpenIDE-Module-Provides: org.netbeans.modules.testng.ant.AntTestNGSupport
-OpenIDE-Module-Specification-Version: 2.16

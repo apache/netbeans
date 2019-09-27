@@ -1,0 +1,21 @@
+Code completion result for source line:
+$this->|privateTraitedTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateBaseTrait1Method()       [PRIVATE]  BaseTrait1
+METHOD     privateStaticBaseTrait1Method(  [PRIVATE,  BaseTrait1
+METHOD     privateStaticTraitedTraitMetho  [PRIVATE,  TraitedTrait
+METHOD     privateTraitedTraitMethod()     [PRIVATE]  TraitedTrait
+METHOD     protectedBaseTrait1Method()     [PROTECTE  BaseTrait1
+METHOD     protectedStaticBaseTrait1Metho  [PROTECTE  BaseTrait1
+METHOD     protectedStaticTraitedTraitMet  [PROTECTE  TraitedTrait
+METHOD     protectedTraitedTraitMethod()   [PROTECTE  TraitedTrait
+METHOD     publicBaseTrait1Method()        [PUBLIC]   BaseTrait1
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticTraitedTraitMethod  [STATIC]   TraitedTrait
+METHOD     publicTraitedTraitMethod()      [PUBLIC]   TraitedTrait
+VARIABLE   ? privateBaseTrait1Field        [PRIVATE]  BaseTrait1
+VARIABLE   ? privateTraitedTraitField      [PRIVATE]  TraitedTrait
+VARIABLE   ? protectedBaseTrait1Field      [PROTECTE  BaseTrait1
+VARIABLE   ? protectedTraitedTraitField    [PROTECTE  TraitedTrait
+VARIABLE   ? publicBaseTrait1Field         [PUBLIC]   BaseTrait1
+VARIABLE   ? publicTraitedTraitField       [PUBLIC]   TraitedTrait

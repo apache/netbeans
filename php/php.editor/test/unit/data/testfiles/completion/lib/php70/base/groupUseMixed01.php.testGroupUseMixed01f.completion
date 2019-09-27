@@ -1,0 +1,4 @@
+Code completion result for source line:
+function te|stA,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testA()                         [PUBLIC]   A

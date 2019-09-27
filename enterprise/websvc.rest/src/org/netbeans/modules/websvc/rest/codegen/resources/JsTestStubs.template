@@ -1,0 +1,57 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml version="1.0" encoding="__FILE_ENCODING__"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+    <head>
+        <title>${rest_client_stubs} - ${test_page}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=${encoding}" />
+        <link rel="stylesheet" href="./css/clientstubs.css" type="text/css"/>
+        <link rel="stylesheet" href="./css/css_master-all.css" type="text/css"/>
+        <!-- JS_DECLARE_START - DO NOT REMOVE-->
+        <script type="text/javascript" src="./Support.js"></script>
+        ${js_scripts_declaration}
+        <!-- JS_DECLARE_END - DO NOT REMOVE-->
+	<!--<script type="text/javascript">
+            //rest debug, uncomment to enable debugging
+            var rjsConfig = {
+                isDebug: true
+            };
+	</script>-->
+    </head>
+    <body>
+        <div class="outerBorder">
+            <div class="header">
+                <div id="subheader" class="subheader"></div> <!-- sub-header -->
+                <div class="banner"><img src="./css/images/pname-clientstubs.png"/></div>
+            </div> <!-- header -->
+            <div id="main" class="main">
+              <h2>${rest_client_stubs} - ${test_page}</h2>
+              <div id="containerContent"> </div>
+              <!-- JS_USAGE_START - DO NOT REMOVE-->
+              ${js_usage}
+              <!-- JS_USAGE_END - DO NOT REMOVE--> 
+            </div> <!-- main -->
+        </div> <!-- outerborder -->
+    </body>
+</html>

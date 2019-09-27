@@ -1,0 +1,82 @@
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (item.items)[0];
+var item = (item.items)[0];
+}
+with ($data) {
+({'oj-disabled': item.disabled});}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (item.items)[0];
+var item = (item.items)[0];
+}
+with ($data) {
+(name);}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (item.items)[0];
+var item = (item.items)[0];
+}
+with ($data) {
+({name: 'menuItemTemplate', foreach: item.items, as: 'item'});}
+});
+

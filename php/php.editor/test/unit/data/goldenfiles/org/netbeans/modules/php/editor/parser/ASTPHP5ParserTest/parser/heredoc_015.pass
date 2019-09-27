@@ -1,0 +1,169 @@
+<testresult testFile='heredoc_015.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='66'>
+            <text>--TEST--\nHeredocs can be used as default property value.\n--FILE--\n</text>
+        </token>
+        <token id='T_CLASS' start='73' end='78'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='79' end='80'>
+            <text>e</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='81' end='82'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='88' end='94'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='95' end='97'>
+            <text>$e</text>
+        </token>
+        <token id='T_EQUAL' start='98' end='99'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='100' end='120'>
+            <text>&lt;&lt;&lt;THISMUSTNOTERROR\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='120' end='155'>
+            <text>If you see this, everything is ok.\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='155' end='171'>
+            <text>THISMUSTNOTERROR</text>
+        </token>
+        <token id='T_SEMICOLON' start='171' end='172'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='174' end='175'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='175' end='176'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='177' end='179'>
+            <text>$e</text>
+        </token>
+        <token id='T_EQUAL' start='180' end='181'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='182' end='185'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='186' end='187'>
+            <text>e</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='187' end='188'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='188' end='189'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='189' end='190'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='191' end='196'>
+            <text>print</text>
+        </token>
+        <token id='T_VARIABLE' start='197' end='199'>
+            <text>$e</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='199' end='201'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='201' end='202'>
+            <text>e</text>
+        </token>
+        <token id='T_NEKUDA' start='203' end='204'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='205' end='209'>
+            <text>"\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='209' end='210'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='212' end='215'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='215' end='261'>
+            <text>--EXPECT--\nIf you see this, everything is ok.\n</text>
+        </token>
+        <token id='EOF' start='261' end='261'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='261'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='66'/>
+            <ClassDeclaration start='73' end='175' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='79' end='80' name='e'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='81' end='175' isCurly='true'>
+                    <FieldsDeclaration start='88' end='172' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='95' end='97' isDollared='true'>
+                                <Identifier start='96' end='97' name='e'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Quote start='100' end='171' type='HEREDOC'>
+                                <Expressions>
+                                    <Scalar start='120' end='155' type='STRING' value='If you see this, everything is ok.\n'/>
+                                </Expressions>
+                            </Quote>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='175' end='176'/>
+            <ExpressionStatement start='177' end='190'>
+                <Assignment start='177' end='189' operator='EQUAL'>
+                    <Variable start='177' end='179' isDollared='true'>
+                        <Identifier start='178' end='179' name='e'/>
+                    </Variable>
+                    <ClassInstanceCreation start='182' end='189' anonymous='false'>
+                        <ClassName start='186' end='187'>
+                            <NamespaceName start='186' end='187' isCurrent='false' isGlobal='false'>
+                                <Identifier start='186' end='187' name='e'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='191' end='210'>
+                <FunctionInvocation start='191' end='209'>
+                    <FucntionName start='191' end='196'>
+                        <Identifier start='191' end='196' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <InfixExpression start='197' end='209' operator='CONCAT'>
+                            <FieldAccess start='197' end='202'>
+                                <Variable start='197' end='199' isDollared='true'>
+                                    <Identifier start='198' end='199' name='e'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='201' end='202' isDollared='false'>
+                                        <Identifier start='201' end='202' name='e'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Scalar start='205' end='209' type='STRING' value='"\n"'/>
+                        </InfixExpression>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='212' end='215'/>
+            <InLineHtml start='215' end='261'/>
+        </Statements>
+    </Program>
+</testresult>

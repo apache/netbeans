@@ -1,0 +1,8 @@
+myFunction:METHOD:[PUBLIC]:ESCAPED{myFunction}ESCAPED{(}ESCAPED{param}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  a:VARIABLE:[PRIVATE]:ESCAPED{a}<font color="#999999">ESCAPED{ : }Number</font>:
+  f:METHOD:[PRIVATE]:ESCAPED{f}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  g:METHOD:[PRIVATE]:ESCAPED{g}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+myFunction2:METHOD:[PUBLIC]:ESCAPED{myFunction2}ESCAPED{(}ESCAPED{param}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  a2:VARIABLE:[PRIVATE]:ESCAPED{a2}<font color="#999999">ESCAPED{ : }Number</font>:
+  f2:METHOD:[PRIVATE]:ESCAPED{f2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  g2:METHOD:[PRIVATE]:ESCAPED{g2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

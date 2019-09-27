@@ -1,0 +1,7 @@
+Point:CLASS:[PUBLIC]:ESCAPED{Point}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{x}ESCAPED{, }ESCAPED{y}ESCAPED{)}<font color="#999999">ESCAPED{ : }Point</font>:
+  distance:METHOD:[PUBLIC, STATIC]:ESCAPED{distance}ESCAPED{(}<font color="#999999">ESCAPED{Point}ESCAPED{ }</font>ESCAPED{a}ESCAPED{, }<font color="#999999">ESCAPED{Point}ESCAPED{ }</font>ESCAPED{b}ESCAPED{)}:
+  x:FIELD:[PUBLIC]:ESCAPED{x}:
+  y:FIELD:[PUBLIC]:ESCAPED{y}:
+p1:CONSTANT:[PUBLIC]:ESCAPED{p1}<font color="#999999">ESCAPED{ : }Point</font>:
+p2:CONSTANT:[PUBLIC]:ESCAPED{p2}<font color="#999999">ESCAPED{ : }Point</font>:

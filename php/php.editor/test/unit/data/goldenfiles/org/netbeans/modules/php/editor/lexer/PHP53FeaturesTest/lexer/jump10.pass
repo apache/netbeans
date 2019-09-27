@@ -1,0 +1,36 @@
+token #0 T_INLINE_HTML --TEST--\njump 10: goto into switch (forward)\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_GOTO goto
+token #4 WHITESPACE  
+token #5 PHP_STRING L1
+token #6 PHP_SEMICOLON ;
+token #7 WHITESPACE \n
+token #8 PHP_SWITCH switch
+token #9 WHITESPACE  
+token #10 PHP_TOKEN (
+token #11 PHP_NUMBER 0
+token #12 PHP_TOKEN )
+token #13 WHITESPACE  
+token #14 PHP_CURLY_OPEN {
+token #15 WHITESPACE \n\t
+token #16 PHP_CASE case
+token #17 WHITESPACE  
+token #18 PHP_NUMBER 1
+token #19 PHP_TOKEN :
+token #20 WHITESPACE \n\t\t
+token #21 PHP_STRING L1
+token #22 PHP_TOKEN :
+token #23 WHITESPACE  
+token #24 PHP_ECHO echo
+token #25 WHITESPACE  
+token #26 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #27 PHP_SEMICOLON ;
+token #28 WHITESPACE \n\t\t
+token #29 PHP_BREAK break
+token #30 PHP_SEMICOLON ;
+token #31 WHITESPACE \n
+token #32 PHP_CURLY_CLOSE }
+token #33 WHITESPACE \n
+token #34 PHP_CLOSETAG ?>
+token #35 T_INLINE_HTML \n--EXPECTF--\nFatal error: 'goto' into loop or switch statement is disallowed in %sjump10.php on line 2\n

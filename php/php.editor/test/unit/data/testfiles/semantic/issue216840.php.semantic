@@ -1,0 +1,21 @@
+<?php
+
+class |>CLASS:ClassName<| {
+
+    private $|>FIELD:foo<|;
+    private $|>FIELD,UNUSED:bar<|;
+
+    function |>METHOD:__construct<|() {
+        $this->|>FIELD:foo<|;
+    }
+
+}
+
+class |>CLASS:ClassName1<| {
+
+    function |>METHOD:__construct<|() {
+        $this->|>FIELD:bar<|;
+    }
+
+}
+?>

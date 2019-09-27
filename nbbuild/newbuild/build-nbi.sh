@@ -32,6 +32,10 @@ if [ -z $BUILD_NBJDK8 ]; then
     BUILD_NBJDK8=0
 fi
 
+if [ -z $BUILD_NBJDK11 ]; then
+    BUILD_NBJDK11=0
+fi
+
 OUTPUT_DIR="$DIST/installers"
 export OUTPUT_DIR
 
@@ -44,7 +48,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
    fi
    ssh $NATIVE_MAC_MACHINE mkdir -p $MAC_PATH/installer
    cd $NB_ALL
-   gtar c installer/mac | ssh $NATIVE_MAC_MACHINE "( cd $MAC_PATH; tar x )"
+   gtar c nbbuild/installer/mac | ssh $NATIVE_MAC_MACHINE "( cd $MAC_PATH; tar x )"
 
     cd $NB_ALL/l10n
     gtar c src/*/other/installer/mac/* | ssh $NATIVE_MAC_MACHINE "( cd $MAC_PATH; tar x)"
@@ -57,7 +61,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
        exit $ERROR_CODE;
    fi
    ssh $NATIVE_MAC_MACHINE mkdir -p $MAC_PATH/zip/moduleclusters
-   ls $DIST/zip/moduleclusters | grep -v "all-in-one" | xargs -I {} scp -q -v $DIST/zip/moduleclusters/{} $NATIVE_MAC_MACHINE:$MAC_PATH/zip/moduleclusters/
+   ls $DIST/zip/moduleclusters | xargs -I {} scp -q -v $DIST/zip/moduleclusters/{} $NATIVE_MAC_MACHINE:$MAC_PATH/zip/moduleclusters/
 
    ERROR_CODE=$?
    if [ $ERROR_CODE != 0 ]; then
@@ -66,23 +70,25 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
    fi
 
    # Run new builds
-   sh $NB_ALL/installer/mac/newbuild/init.sh | ssh $NATIVE_MAC_MACHINE "cat > $MAC_PATH/installer/mac/newbuild/build-private.sh"
-   ssh $NATIVE_MAC_MACHINE chmod a+x $MAC_PATH/installer/mac/newbuild/build.sh
+   sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | ssh $NATIVE_MAC_MACHINE "cat > $MAC_PATH/nbbuild/installer/mac/newbuild/build-private.sh"
+   ssh $NATIVE_MAC_MACHINE chmod a+x $MAC_PATH/nbbuild/installer/mac/newbuild/build.sh
 
-   if [ ! -z $SIGNING_PASSWORD ] ; then
-       UNLOCK_COMMAND="security unlock-keychain -p $SIGNING_PASSWORD ;"
-   else
-       SIGNING_IDENTITY=0
-   fi
-
-   BASE_COMMAND="$MAC_PATH/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 '"$SIGNING_IDENTITY"' $LOCALES"
+   BASE_COMMAND="$MAC_PATH/nbbuild/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $MAC_SIGN_CLIENT $MAC_SIGN_USER $MAC_SIGN_GUID $CODESIGNBUREAU_CREDFILE $LOCALES $BINARY_NAME $NB_VER_NUMBER"
    
    ssh $NATIVE_MAC_MACHINE "$UNLOCK_COMMAND $BASE_COMMAND" > $MAC_LOG_NEW 2>&1 &
    REMOTE_MAC_PID=$!
 
 fi
+if [ ! -z $BUILD_MAC ]; then
+   # Run new builds
+   sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | cat > $NB_ALL/nbbuild/installer/mac/newbuild/build-private.sh
+   chmod a+x $NB_ALL/nbbuild/installer/mac/newbuild/build.sh
 
-cd $NB_ALL/installer/infra/build
+   BASE_COMMAND="$NB_ALL/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $BINARY_NAME $MAC_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES"
+
+   $BASE_COMMAND
+fi
+cd $NB_ALL/nbbuild/installer/infra/build
 
 bash build.sh
 ERROR_CODE=$?
@@ -124,7 +130,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
         #copy the bits back
         mkdir -p $DIST/bundles
 
-        rsync -avz -e ssh $NATIVE_MAC_MACHINE:$MAC_PATH/installer/mac/newbuild/dist_en/* $DIST/bundles
+        rsync -avz -e ssh $NATIVE_MAC_MACHINE:$MAC_PATH/nbbuild/installer/mac/newbuild/dist_en/* $DIST/bundles
         ERROR_CODE=$?
         if [ $ERROR_CODE != 0 ]; then
             echo "ERROR: $ERROR_CODE - Connection to MAC machine $NATIVE_MAC_MACHINE failed, can't get installers"
@@ -137,6 +143,13 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
     fi
 fi
 
+if [ ! -z $BUILD_MAC ]; then
+        rsync -avz $NB_ALL/nbbuild/installer/mac/newbuild/dist_en/*.dmg $DIST/bundles
+        ERROR_CODE=$?
+        if [ $ERROR_CODE != 0 ]; then
+            exit $ERROR_CODE;
+        fi
+fi
 ###################################################################
 #
 # Sign Windows ML installers

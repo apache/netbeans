@@ -1,0 +1,3 @@
+function outer(|>MARK_OCCURRENCES:foo22<|) {
+    |>MARK_OCCURRENCES:fo^o22<| = "fasfdas";
+        foobar = (typeof |>MARK_OCCURRENCES:foo22<| == "undefined") ? bar : foo;

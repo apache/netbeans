@@ -1,0 +1,5 @@
+Code completion result for source line:
+$a = tru|e;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CONSTANT   TRUE true                       [PUBLIC]   constants.php

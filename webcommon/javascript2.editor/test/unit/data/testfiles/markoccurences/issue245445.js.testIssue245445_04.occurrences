@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:myMeth^od<| = function MyLib_myMethod(array) {
+myLib.|>MARK_OCCURRENCES:myMethod<|([1, 2, 3, 4]);

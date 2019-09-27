@@ -1,0 +1,4 @@
+            return count($test1)+ count($test2) + count($test3) + count($test4) + $param;^
+-----------------------------------------------------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

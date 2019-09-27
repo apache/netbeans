@@ -1,0 +1,63 @@
+    private $foo = "foo";
+             ---
+HINT:Field "$foo" has already been declared
+    protected $foo;
+               ---
+HINT:Field "$foo" has already been declared
+    var $foo;
+         ---
+HINT:Field "$foo" has already been declared
+    public static $foo;
+                   ---
+HINT:Field "$foo" has already been declared
+    private static $foo;
+                    ---
+HINT:Field "$foo" has already been declared
+    protected static $foo;
+                      ---
+HINT:Field "$foo" has already been declared
+    static $foo;
+            ---
+HINT:Field "$foo" has already been declared
+    protected $bar;
+               ---
+HINT:Field "$bar" has already been declared
+    var $bar;
+         ---
+HINT:Field "$bar" has already been declared
+    public $bar = 'bar';
+            ---
+HINT:Field "$bar" has already been declared
+    public static $bar;
+                   ---
+HINT:Field "$bar" has already been declared
+    private static $bar;
+                    ---
+HINT:Field "$bar" has already been declared
+    protected static $bar;
+                      ---
+HINT:Field "$bar" has already been declared
+    static $bar;
+            ---
+HINT:Field "$bar" has already been declared
+    public $baz;
+            ---
+HINT:Field "$baz" has already been declared
+    var $baz;
+         ---
+HINT:Field "$baz" has already been declared
+    private $baz;
+             ---
+HINT:Field "$baz" has already been declared
+    public static $baz;
+                   ---
+HINT:Field "$baz" has already been declared
+    protected static $baz;
+                      ---
+HINT:Field "$baz" has already been declared
+    private static $baz;
+                    ---
+HINT:Field "$baz" has already been declared
+    static $baz;
+            ---
+HINT:Field "$baz" has already been declared

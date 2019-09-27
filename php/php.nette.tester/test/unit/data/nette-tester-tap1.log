@@ -1,0 +1,36 @@
+TAP version 13
+ok nette-tester/tests/MyTests.phpt
+ok nette-tester/tests/SkippedTests.phpt #skip
+not ok nette-tester/tests/Greeting.test.phpt
+# Failed: 'Hello JohnX' should be 10
+#
+# in Tester/Framework/Assert.php(365)
+# in Tester/Framework/Assert.php(57) Tester\Assert::fail()
+# in nette-tester/tests/Greeting.test.phpt(16) Tester\Assert::same()
+not ok nette-tester/tests/Greeting2.test.phpt
+# Failed: 'Hello JohnX' should be
+#     ... 'Hello John'
+#
+# diff "%DIFF_BASE_DIR%Greeting.test.expected" "%DIFF_BASE_DIR%Greeting.test.actual"
+#
+# in Tester/Framework/Assert.php(365)
+# in Tester/Framework/Assert.php(57) Tester\Assert::fail()
+# in nette-tester/tests/Greeting2.test.phpt(15) Tester\Assert::same()
+not ok nette-tester/tests/Greeting3.test.phpt
+# Failed: InvalidArgumentException was expected, but none was thrown
+#
+# in Tester/Framework/Assert.php(365)
+# in Tester/Framework/Assert.php(244) Tester\Assert::fail()
+# in nette-tester/tests/Greeting3.test.phpt(15) Tester\Assert::exception()
+not ok nette-tester/tests/Greeting4.test.phpt
+# Failed: E_NOTICE with a message matching 'Undefined property: Greeting::$abc'
+#                 ... was expected but got 'Undefined property: Greeting::$say'
+#
+# in Tester/Framework/Assert.php(365)
+# in Tester/Framework/Assert.php(300) Tester\Assert::fail()
+# in nette-tester/tests/Greeting4.test.phpt(14) Tester\Assert::Tester\{closure}()
+# in [internal function] {closure}()
+# in Tester/Framework/Assert.php(304) call_user_func()
+# in nette-tester/tests/Greeting4.test.phpt(15) Tester\Assert::error()
+ok nette-tester/tests/VerboseSkippedTests.phpt #skip My skip message
+1..7

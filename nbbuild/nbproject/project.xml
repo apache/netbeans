@@ -205,7 +205,7 @@
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/4">
             <compilation-unit>
                 <package-root>antsrc</package-root>
-                <classpath mode="compile">${ant.core.lib}:${nb_all}/javahelp/external/jhall-2.0_05.jar</classpath>
+                <classpath mode="compile">${ant.core.lib}:${nb_all}/platform/javahelp/external/jhall-2.0_05.jar</classpath>
                 <classpath mode="boot">${nbjdk.bootclasspath}</classpath>
                 <built-to>${nb.build.dir}/antclasses</built-to>
                 <built-to>${nbantext.jar}</built-to>

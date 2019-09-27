@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<WebServiceSupportJars>
+<Jar file="{InstalledFileLocator}/xercesImpl.jar"
+     runtime="true"
+     designtime="false"
+     deploy="false" 
+ />
+<Jar file="{InstalledFileLocator}/dom.jar"
+     runtime="true"
+     designtime="false" 
+     deploy="false" 
+/>
+<Jar file="{InstalledFileLocator}/sax.jar"
+     runtime="true"
+     designtime="false" 
+     deploy="false" 
+/>
+<Jar file="{InstalledFileLocator}/xalan.jar"
+     runtime="true"
+     designtime="false" 
+     deploy="false" 
+/>
+<Jar file="{InstalledFileLocator}/commons-logging.jar"
+     runtime="true"
+     designtime="false" 
+     deploy="false" 
+/>
+<Jar file="{InstalledFileLocator}/ant.jar"
+     runtime="true"
+     designtime="false" 
+     deploy="false" 
+/>
+<Jar file="{InstalledFileLocator}/rave-mail.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-jax-qname.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-activation.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-xsdlib.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-relaxngDatatype.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-jaxp-api.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-jaxrpc-api.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-jaxrpc-spi.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-jaxrpc-impl.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-saaj-api.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+<Jar file="{InstalledFileLocator}/rave-saaj-impl.jar"
+     runtime="true"
+     designtime="true" 
+     deploy="true" 
+/>
+</WebServiceSupportJars>
+

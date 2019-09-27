@@ -1,0 +1,3 @@
+    protected static $|>MARK_OCCURRENCES:_v^ar<| = true;
+        self::$|>MARK_OCCURRENCES:_var<|;
+        return static::$|>MARK_OCCURRENCES:_var<|;

@@ -1,0 +1,9 @@
+Code completion result for source line:
+$extendedClass->|publicExtendedClassMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicBaseClassMethod()         [PUBLIC]   BaseClass
+METHOD     publicBaseTrait1Method()        [PUBLIC]   BaseTrait1
+METHOD     publicExtendedClassMethod()     [PUBLIC]   ExtendedClass
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticExtendedClassMetho  [STATIC]   ExtendedClass
+VARIABLE   ? publicBaseTrait1Field         [PUBLIC]   BaseTrait1

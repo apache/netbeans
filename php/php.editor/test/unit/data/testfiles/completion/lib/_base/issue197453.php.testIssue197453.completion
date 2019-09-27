@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo "class property: $this->|name";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? name                          [PUBLIC]   Book

@@ -1,0 +1,20 @@
+FUNCTION propertyWithNew [ANONYMOUS: false, DECLARED: true - propertyWithNew, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Manufacturer            : FUNCTION Manufacturer [ANONYMOUS: false, DECLARED: false - Manufacturer, MODIFIERS: PUBLIC, FUNCTION]
+                        # PROPERTIES
+                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+ManufacturerEdit        : FUNCTION ManufacturerEdit [ANONYMOUS: false, DECLARED: false - ManufacturerEdit, MODIFIERS: PUBLIC, FUNCTION]
+                        # PROPERTIES
+                        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+propertyWithNewAnonym$0 : OBJECT propertyWithNewAnonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                        # PROPERTIES
+                        creation : OBJECT creation [ANONYMOUS: false, DECLARED: true - creation, MODIFIERS: PUBLIC, PROPERTY]
+                        div      : OBJECT div [ANONYMOUS: false, DECLARED: true - div, MODIFIERS: PUBLIC, PROPERTY]
+                        height   : OBJECT height [ANONYMOUS: false, DECLARED: true - height, MODIFIERS: PUBLIC, PROPERTY]
+                        model    : OBJECT model [ANONYMOUS: false, DECLARED: true - model, MODIFIERS: PUBLIC, PROPERTY]
+                        pageId   : OBJECT pageId [ANONYMOUS: false, DECLARED: true - pageId, MODIFIERS: PUBLIC, PROPERTY]
+                        title    : OBJECT title [ANONYMOUS: false, DECLARED: true - title, MODIFIERS: PUBLIC, PROPERTY]
+                        width    : OBJECT width [ANONYMOUS: false, DECLARED: true - width, MODIFIERS: PUBLIC, PROPERTY]
+view                    : OBJECT view [ANONYMOUS: false, DECLARED: true - view, MODIFIERS: PUBLIC, VARIABLE]

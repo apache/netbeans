@@ -1,0 +1,44 @@
+<testresult testFile='uniformVariableSyntax_24.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='7' end='8'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='8' end='13'>
+            <text>$func</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='13' end='14'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='14' end='15'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='15' end='16'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='16' end='17'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='18' end='18'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='18'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='17'>
+                <FunctionInvocation start='7' end='16'>
+                    <FucntionName start='7' end='14'>
+                        <DereferencableVariable start='7' end='14'>
+                            <Variable start='8' end='13' isDollared='true'>
+                                <Identifier start='9' end='13' name='func'/>
+                            </Variable>
+                        </DereferencableVariable>
+                    </FucntionName>
+                    <Parameters>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/Servers.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/debug.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/debugging.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/ear.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/earBadge.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/ejb.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/ejbBadge.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/profilerblocking.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/profiling.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/refresh.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/restart.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/running.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/start.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/stop.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/suspended.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/waiting.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/war.png</file>
+        <file>src/org/netbeans/modules/j2ee/deployment/impl/ui/resources/warBadge.png</file>
+        <file>test/unit/src/org/netbeans/tests/j2eeserver/plugin/registry/manager.gif</file>
+        <file>test/unit/src/org/netbeans/tests/j2eeserver/plugin/registry/manager32.gif</file>
+        <file>test/unit/src/org/netbeans/tests/j2eeserver/plugin/registry/plugin.gif</file>
+        <file>test/unit/src/org/netbeans/tests/j2eeserver/plugin/registry/plugin32.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

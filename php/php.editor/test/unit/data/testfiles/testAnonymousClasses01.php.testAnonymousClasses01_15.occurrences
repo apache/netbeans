@@ -1,0 +1,2 @@
+    public function log(string $|>MARK_OCCURRENCES:m^sg3<|) {
+        echo $|>MARK_OCCURRENCES:msg3<| . PHP_EOL;

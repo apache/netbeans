@@ -1,0 +1,18 @@
+{foreach $people as $person}
+	{first}({/first} {$person}{sep}, {/sep} {last}){/last}
+{/foreach}
+
+
+{foreach $people as $person}
+	{first 2}({/first} {$person}{sep 2}, {/sep} {last 2}){/last}
+{/foreach}
+
+
+{foreach $people as $person}
+	{first 1}({/first} {$person}{sep 1}, {/sep} {last 1}){/last}
+{/foreach}
+
+
+{foreach $people as $person}
+	<span n:first=0>(</span> {$person}<span n:sep>, </span> <span n:last>)</span>
+{/foreach}

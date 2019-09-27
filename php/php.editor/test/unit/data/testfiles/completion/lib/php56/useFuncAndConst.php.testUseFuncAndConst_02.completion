@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo FOO|2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   FOO 42                          [PUBLIC]   Name\Space
+CONSTANT   FOO2 42                         [PUBLIC]   Name\Space

@@ -1,8 +1,0 @@
-package org.netbeans.test.codegen;
-
-import java.awt.geom.Point2D;
-
-public class ImportTest9 {
-    Double d;
-    Point2D.Double test;
-}

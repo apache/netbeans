@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:stat^ic_int<| = 0;
+    Player.prototype.setStatic = function(v){ |>MARK_OCCURRENCES:static_int<| = v; };

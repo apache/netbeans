@@ -92,8 +92,12 @@ public final class InsertModuleAllTargets extends Task {
                     for( String module: clusterModules) {
                         File moduleBuild = new File(nbRoot, module + File.separator + "build.xml");
                         if (!moduleBuild.exists() || !moduleBuild.isFile()) {
-                            missingModules = true;
-                            log("This module is missing from checkout: " + module + " - at least can't find: " + moduleBuild.getAbsolutePath());
+                            String clusterDir = (String) props.get(cluster + ".dir");
+                            File subModuleBuild = new File(new File(nbRoot, clusterDir), module + File.separator + "build.xml");
+                            if (!subModuleBuild.exists() || !subModuleBuild.isFile()) {
+                                missingModules = true;
+                                log("This module is missing from checkout: " + module + " - at least can't find: " + moduleBuild.getAbsolutePath());
+                            }
                         }
                     }
                 }
@@ -126,7 +130,7 @@ public final class InsertModuleAllTargets extends Task {
             for (ModuleListParser.Entry entry : entries.values()) {
                 String path = entry.getNetbeansOrgPath();
                 assert path != null : entry;
-                String trg = "all-" + path;
+                String trg = "all-" + entry.getNetbeansOrgId();
                 if (existingTargets.contains(trg)) {
                     log("Not adding target " + trg + " because one already exists", Project.MSG_INFO);
                     continue;
@@ -140,12 +144,12 @@ public final class InsertModuleAllTargets extends Task {
                         log("Cannot find build prerequisite " + cnb + " of " + entry, Project.MSG_WARN);
                         continue;
                     }
-                    String otherPath = other.getNetbeansOrgPath();
-                    if (otherPath == null) continue; // Do not add the all-module dependency for module which is in the binaries
-                    String otherCluster = clustersOfModules.get(otherPath);
+                    String otherId = other.getNetbeansOrgId();
+                    if (otherId == null) continue; // Do not add the all-module dependency for module which is in the binaries
+                    String otherCluster = clustersOfModules.get(otherId);
                     if (myCluster == null || otherCluster == null || myCluster.equals(otherCluster)) {
                         namedDeps.append(",all-");
-                        namedDeps.append(otherPath);
+                        namedDeps.append(otherId);
                     }
                 }
                 String namedDepsS = namedDeps.toString();

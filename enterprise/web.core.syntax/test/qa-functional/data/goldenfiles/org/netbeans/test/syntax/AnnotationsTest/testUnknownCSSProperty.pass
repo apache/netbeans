@@ -1,0 +1,21 @@
+Quirky doctype. Expected "".
+From line 5, column 4; to line 6, column 63
+(Rule Category: Doctype)
+----
+(Alt-Enter shows hints)
+The "/>" syntax on void elements is not allowed.  (This is an HTML4-only error.)
+At line 13, column 54
+(Rule Category: All Other)
+
+Self-closing syntax ("/>") used on a non-void HTML element. Ignoring the slash and treating as a start tag.
+From line 13, column 9; to line 13, column 54
+(Rule Category: All Other)
+
+Unknown property backgrond
+----
+(Alt-Enter shows hints)
+End tag for "body" seen but there were unclosed elements.
+From line 14, column 9; to line 14, column 15
+(Rule Category: Tags Matching)
+----
+(Alt-Enter shows hints)

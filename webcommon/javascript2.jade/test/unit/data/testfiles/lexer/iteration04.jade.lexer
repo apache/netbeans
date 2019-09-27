@@ -1,0 +1,8 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(16):var values = [];][EOL(1):\n]
+[TAG(2):ul][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_EACH(4):each][WHITESPACE(1): ][JAVASCRIPT(3):val][WHITESPACE(1): ][KEYWORD_IN(2):in][WHITESPACE(1): ][JAVASCRIPT(48):values.length ? values : ['There are no values']][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):li][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(3):val][EOL(1):\n]
+[EOL(1):\n]
+[TAG(2):ul][EOL(1):\n]
+[WHITESPACE(2):  ][KEYWORD_FOR(3):for][WHITESPACE(1): ][JAVASCRIPT(3):val][WHITESPACE(1): ][KEYWORD_IN(2):in][WHITESPACE(1): ][JAVASCRIPT(48):values.length ? values : ['There are no values']][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(2):li][CODE_DELIMITER(1):=][WHITESPACE(1): ][JAVASCRIPT(3):val]

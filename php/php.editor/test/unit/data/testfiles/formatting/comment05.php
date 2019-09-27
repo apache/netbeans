@@ -1,0 +1,5 @@
+<?php
+if (true ) {
+/* comment part 1 */
+}
+?>

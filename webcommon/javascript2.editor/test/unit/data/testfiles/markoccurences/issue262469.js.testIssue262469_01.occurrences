@@ -1,0 +1,2 @@
+    var |>MARK_OCCURRENCES:service<| = () => {console.log("running");};
+    test(|>MARK_OCCURRENCES:servi^ce<|);

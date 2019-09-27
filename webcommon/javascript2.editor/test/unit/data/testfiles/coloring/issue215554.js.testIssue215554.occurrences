@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:Bug<| = Backbone.Model.extend({
+    model: |>MARK_OCCURRENCES:B^ug<|

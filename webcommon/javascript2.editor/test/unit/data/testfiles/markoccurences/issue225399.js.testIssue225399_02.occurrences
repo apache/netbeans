@@ -1,0 +1,2 @@
+        version = (version.length > 0) ? {"|>MARK_OCCURRENCES:version<|": version} : {petr : 10};
+        version.|>MARK_OCCURRENCES:ver^sion<| = 10;

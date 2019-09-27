@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.modules.profiler.nbimpl/1
-OpenIDE-Module-Layer: org/netbeans/modules/profiler/nbimpl/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/profiler/nbimpl/Bundle.properties
-OpenIDE-Module-Provides: org.netbeans.lib.profiler.common.Profiler
-OpenIDE-Module-Specification-Version: 1.26

@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:f^1<| = f2 = function () {
+|>MARK_OCCURRENCES:f1<|();

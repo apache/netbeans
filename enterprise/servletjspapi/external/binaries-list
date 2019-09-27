@@ -1,0 +1,23 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+81191AB80E342912DC9CEA735C30FF4EDDC64DE3 javax.servlet.jsp:javax.servlet.jsp-api:2.3.3
+3CD63D075497751784B2FA84BE59432F4905BF7C javax.servlet:javax.servlet-api:3.1.0
+60200AFFC2FE0165136ED3690FAF00B66AED581A javax.servlet:javax.servlet-api:4.0.0
+A27082684A2FF0BF397666C3943496C44541D1CA javax.servlet:javax.servlet-api:4.0.1
+4975514B3E9190D71A3F123092B9CDFE6F2B508B org.glassfish.main.appclient:gf-client-module:5.0
+42971279CC8BA864462580C7FC2199FD5715EE7F javax.el:el-api:2.2

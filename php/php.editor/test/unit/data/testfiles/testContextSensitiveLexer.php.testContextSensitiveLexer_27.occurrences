@@ -1,0 +1,2 @@
+    const GOTO = [1, 2], |>MARK_OCCURRENCES:IF<| = 2;
+        ChildClass::^|>MARK_OCCURRENCES:IF<|;

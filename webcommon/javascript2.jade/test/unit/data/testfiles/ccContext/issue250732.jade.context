@@ -1,0 +1,12 @@
+[TAG_AND_KEYWORD]doctype[NONE] html
+[TAG_AND_KEYWORD]html
+  head
+    title=[NONE] title
+[TAG_AND_KEYWORD]    link([ATTRIBUTE]rel='stylesheet', href='/stylesheets/style.css')[NONE]
+[TAG_AND_KEYWORD]  body
+    block[NONE] content
+[TAG_AND_KEYWORD]    [CSS_CLASS].just
+[TAG_AND_KEYWORD]        div[CSS_ID]#as
+[TAG_AND_KEYWORD]        //[NONE]
+[TAG_AND_KEYWORD]         [NONE]sdsds
+[TAG_AND_KEYWORD]         

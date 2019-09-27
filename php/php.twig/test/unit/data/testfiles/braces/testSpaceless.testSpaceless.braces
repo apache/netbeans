@@ -1,0 +1,5 @@
+<html>
+{% *space^less* %}
+text
+{% *endspaceless* %}
+</html>

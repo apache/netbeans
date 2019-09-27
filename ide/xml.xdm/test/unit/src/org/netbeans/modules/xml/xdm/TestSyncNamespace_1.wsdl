@@ -1,0 +1,10 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:tns="test/operations" 
+targetNamespace="test/operations">
+
+  <message name="message1">
+    <part name="m1-part1" type="xsd:long"/>
+  </message>
+  
+</definitions>

@@ -1,0 +1,217 @@
+<testresult testFile='anonymousObjectVariable.php'>
+    <scanner>
+        <token id='T_OPEN_PARENTHESE' start='6' end='7'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='7' end='10'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='11' end='27'>
+            <text>AnonymousObject1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='27' end='28'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='28' end='29'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='29' end='30'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='30' end='32'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='32' end='38'>
+            <text>field1</text>
+        </token>
+        <token id='T_SEMICOLON' start='38' end='39'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='40' end='41'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='41' end='44'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='45' end='61'>
+            <text>AnonymousObject2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='61' end='62'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='62' end='63'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='63' end='64'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='64' end='66'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='66' end='73'>
+            <text>method1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='73' end='74'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='74' end='75'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='75' end='76'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='77' end='78'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='78' end='81'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='82' end='98'>
+            <text>AnonymousObject3</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='98' end='99'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='99' end='101'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='101' end='107'>
+            <text>field2</text>
+        </token>
+        <token id='T_SEMICOLON' start='107' end='108'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='109' end='110'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='110' end='113'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='114' end='130'>
+            <text>AnonymousObject4</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='130' end='131'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='131' end='133'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='133' end='140'>
+            <text>method2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='140' end='141'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='141' end='142'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='142' end='143'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='144' end='147'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='147' end='147'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='146'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='39'>
+                <FieldAccess start='6' end='38'>
+                    <AnonymousObjectVariable start='6' end='30'>
+                        <ClassInstanceCreation start='7' end='29' anonymous='false'>
+                            <ClassName start='11' end='27'>
+                                <NamespaceName start='11' end='27' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='11' end='27' name='AnonymousObject1'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </AnonymousObjectVariable>
+                    <Field>
+                        <Variable start='32' end='38' isDollared='false'>
+                            <Identifier start='32' end='38' name='field1'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='40' end='76'>
+                <MethodInvocation start='40' end='75'>
+                    <AnonymousObjectVariable start='40' end='64'>
+                        <ClassInstanceCreation start='41' end='63' anonymous='false'>
+                            <ClassName start='45' end='61'>
+                                <NamespaceName start='45' end='61' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='45' end='61' name='AnonymousObject2'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </AnonymousObjectVariable>
+                    <Method>
+                        <FunctionInvocation start='66' end='75'>
+                            <FucntionName start='66' end='73'>
+                                <Variable start='66' end='73' isDollared='false'>
+                                    <Identifier start='66' end='73' name='method1'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='77' end='108'>
+                <FieldAccess start='77' end='107'>
+                    <AnonymousObjectVariable start='77' end='99'>
+                        <ClassInstanceCreation start='78' end='98' anonymous='false'>
+                            <ClassName start='82' end='98'>
+                                <NamespaceName start='82' end='98' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='82' end='98' name='AnonymousObject3'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </AnonymousObjectVariable>
+                    <Field>
+                        <Variable start='101' end='107' isDollared='false'>
+                            <Identifier start='101' end='107' name='field2'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='109' end='143'>
+                <MethodInvocation start='109' end='142'>
+                    <AnonymousObjectVariable start='109' end='131'>
+                        <ClassInstanceCreation start='110' end='130' anonymous='false'>
+                            <ClassName start='114' end='130'>
+                                <NamespaceName start='114' end='130' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='114' end='130' name='AnonymousObject4'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </AnonymousObjectVariable>
+                    <Method>
+                        <FunctionInvocation start='133' end='142'>
+                            <FucntionName start='133' end='140'>
+                                <Variable start='133' end='140' isDollared='false'>
+                                    <Identifier start='133' end='140' name='method2'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='144' end='146'/>
+        </Statements>
+    </Program>
+</testresult>

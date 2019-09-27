@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.core.multitabs/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/core/multitabs/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/core/multitabs/Bundle.properties
+

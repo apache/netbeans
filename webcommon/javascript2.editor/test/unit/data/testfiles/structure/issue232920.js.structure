@@ -1,0 +1,5 @@
+MyCtx:CLASS:[PUBLIC]:ESCAPED{MyCtx}:
+  Auto:CONSTRUCTOR:[PUBLIC]:ESCAPED{Auto}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    description:CLASS:[PUBLIC]:ESCAPED{description}:
+      name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+aaa:VARIABLE:[PUBLIC]:ESCAPED{aaa}<font color="#999999">ESCAPED{ : }MyCtx.Auto</font>:

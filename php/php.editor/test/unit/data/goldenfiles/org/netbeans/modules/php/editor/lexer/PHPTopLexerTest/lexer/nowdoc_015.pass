@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nTest nowdoc and line numbering\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \nfunction error_handler($num, $msg, $file, $line, $vars) {\n\techo $line,"\n";\n}\nset_error_handler('error_handler');\ntrigger_error("line", E_USER_ERROR);\n$x = <<<EOF\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\n$x = <<<'EOF'\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\n$x = <<<EOF\ntest\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\n$x = <<<'EOF'\ntest\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\n$x = <<<EOF\ntest1\ntest2\n\ntest3\n\n\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\n$x = <<<'EOF'\ntest1\ntest2\n\ntest3\n\n\nEOF;\nvar_dump($x);\ntrigger_error("line", E_USER_ERROR);\necho "ok\n";\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\n6\nstring(0) ""\n10\nstring(0) ""\n14\nstring(4) "test"\n19\nstring(4) "test"\n24\nstring(20) "test1\ntest2\n\ntest3\n\n"\n34\nstring(20) "test1\ntest2\n\ntest3\n\n"\n44\nok\n

@@ -1,6 +1,0 @@
-Patched indexer-core-6.0.0-SNAPSHOT.jar
-=======================================
-
-Contents of original indexer-core-6.0.0-SNAPSHOT.jar changed by Oracle.
-Patch url:             http://hg.netbeans.org/main-golden/file/tip/maven.indexer/external/mvn-indexer.patch
-maven-indexer sources: https://github.com/apache/maven-indexer #a7aeb9f2fe34e6c9f52

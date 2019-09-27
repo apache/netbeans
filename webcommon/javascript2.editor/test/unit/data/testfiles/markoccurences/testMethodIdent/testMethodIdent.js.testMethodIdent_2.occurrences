@@ -1,0 +1,3 @@
+ * @param {String} |>MARK_OCCURRENCES:town<|
+function Address (street, |>MARK_OCCURRENCES:town<|, country) {
+    this.town = |>MARK_OCCURRENCES:t^own<|;

@@ -1,0 +1,7 @@
+(function () {
+    var |>UNUSED:prom<| = 10;
+    
+    |>UNUSED:prom<| = 20;     
+    
+    return 30;
+})();

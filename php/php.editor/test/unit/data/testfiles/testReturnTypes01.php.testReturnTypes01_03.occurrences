@@ -1,0 +1,5 @@
+interface |>MARK_OCCURRENCES:IfaceA<| {
+    static function make(): |>MARK_OCCURRENCES:IfaceA<|;
+class ClsB implements |>MARK_OCCURRENCES:Iface^A<| {
+    static function make(): |>MARK_OCCURRENCES:IfaceA<| {
+function create(|>MARK_OCCURRENCES:IfaceA<| $a): ClsB {

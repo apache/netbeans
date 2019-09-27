@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="palette_api">Palette API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+    <change>
+        <api name="palette_api"/>
+        <summary>Introduced <code>PaletteItemRegistration</code> and <code>PaletteItemRegistrations</code></summary>
+        <version major="1" minor="40"/>
+        <date day="10" month="12" year="2013"/>
+        <author login="skygo"/>
+        <compatibility addition="yes"/>
+          <description>
+             <p>
+                  Introduced a new annotation for registering palette items.
+              </p>
+          </description>
+        <class package="org.netbeans.spi.palette" name="PaletteItemRegistration"/>
+        <class package="org.netbeans.spi.palette" name="PaletteItemRegistrations"/>        
+        <issue number="227345"/>
+    </change>      
+    <change>
+        <api name="palette_api"/>
+        <summary>Deprecating ModuleInstall</summary>
+        <version major="1" minor="31"/>
+        <date day="1" month="4" year="2012"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" deprecation="yes"/>
+        <description>Deprecating <a href="@TOP@/org/netbeans/spi/palette/PaletteModule.html">
+          PaletteModule</a> - it should not
+          be part of the API to begin with. Now it is registered with
+          <a href="@org-openide-windows@/org/openide/windows/OnShowing.html">OnShowing</a>
+          annotation and thus implements <code>Runnable</code>.
+        </description>
+        <class package="org.netbeans.spi.palette" name="PaletteModule"/>
+        <issue number="200636"/>
+    </change>      
+    <change>
+        <api name="palette_api"/>
+        <summary>Initial version released</summary>
+        <version major="1" minor="0"/>
+        <date day="21" month="7" year="2005"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>The first initial release of the Palette API.</description>
+    </change>      
+    
+    <change>
+        <api name="palette_api"/>
+        <summary>Removing unnecessary exceptions from PaletteFactory</summary>
+        <version major="1" minor="1"/>
+        <date day="8" month="8" year="2005"/>
+        <author login="saubrecht"/>
+        <compatibility addition="no"/>
+        <description>Removed IOException from the signature of methods in PaletteFactory that accept Node as an argument.</description>
+    </change>      
+    
+    <change>
+        <api name="palette_api"/>
+        <summary>Added a new optional attribute that can specify the width of items in the palette.</summary>
+        <version major="1" minor="2"/>
+        <date day="9" month="8" year="2005"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>There's a new attribute "itemWidth" that can be set for palette's root node 
+        (or for palette's root folder in the layer). This attribute defines the width in pixels
+        for all items in the palette thus forcing the same number of columns for all categories.
+        If the attribute is omitted or its value is "-1" then the item widths will be calculated
+        dynamically. The attribute is read-only.</description>
+    </change>      
+    <change id="client-support" >
+        <api name="palette_api"/>
+        <summary>Palette client support released</summary>
+        <version major="1" minor="3"/>
+        <date day="10" month="8" year="2005"/>
+        <author login="lkotouc"/>
+        <compatibility addition="yes"/>
+        <description>
+            The first release of the Palette client support. It involves namely DTD describing item definition file format
+            and some implementation addons regarding definition file parsing and custom implementation class loading.
+            
+            The palette item implementor can either directly provide the item body 
+            or her own item class implementing <code>org.openide.text.ActiveEditorDrop</code> interface.
+            
+            Lookup that holds object(s) representing the selected item then associates 
+            custom item class instance with the <code>org.openide.text.ActiveEditorDrop.class</code> key and 
+            the body with <code>java.lang.String</code> key.
+        </description>
+    </change>      
+    
+    <change id="draganddrop_support" >
+        <api name="palette_api"/>
+        <summary>Added support for default drag and drop operations</summary>
+        <version major="1" minor="4"/>
+        <date day="13" month="9" year="2005"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            The abstract class DragAndDropHandler now provides default implementation
+            for all drag and drop operations. The only method that needs to be overridden
+            is <code>void customize( ExTransferable t, Lookup item )</code> to provide
+            custom data flavors for items dragged from the palette to editor.<br/>
+            There are also new methods (and their default implementations) in this class 
+            that handle reordering of categories and reordering of items (i.e. drag and drop
+            operations withing the palette window).
+        </description>
+    </change>      
+    
+    <change id="api_stabilization.palette" >
+        <api name="palette_api"/>
+        <summary>The Common Palette API has been stabilized.</summary>
+        <version major="1" minor="6"/>
+        <date day="6" month="6" year="2006"/>
+        <author login="saubrecht"/>
+        <compatibility deprecation="yes"/>
+        <description>
+            <p>
+                To indicate that this is now considered a stable API, the major release version was
+                incremented to 1 from 0.
+            </p>
+        </description>
+        <issue number="77387"/>
+    </change>      
+    
+    <change id="help_ctx" >
+        <api name="palette_api"/>
+        <summary>Added helpId attribute</summary>
+        <version major="1" minor="7"/>
+        <date day="16" month="10" year="2006"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Now it's possible to add <em>helpId</em> attribute to palette's root, categories and items
+                that will be used to create appropriate HelpCtx. The attribute can be specified
+                in XML layer as a folder (palette's root and categories) or file attribute 
+                (palette items) or it can be provided directly by appropriate Nodes.
+            </p>
+            <p>
+                When F1 key is pressed in palette's window then first the selected item is asked
+                for HelpCtx id. If no item is selected or it does not provide specific help id then
+                selected category is checked for help id. If the category does not provide any help id
+                either then palette's root is asked for help id. If the root does not define any then
+                the default help id <em>CommonPalette</em> will be used.
+            </p>
+        </description>
+        <issue number="77387"/>
+    </change>      
+    
+    <change id="display-name" >
+        <api name="palette_api"/>
+        <summary>Allow display name and tooltip to be defined directly in item's XML</summary>
+        <version major="1" minor="8"/>
+        <date day="30" month="1" year="2007"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Now it's possible to specify item's display name and tooltip directly in item's
+                XML definition (instead of providing bundle name and keys). It's needed for items
+                created at runtime, for example code snippets highlighted in the editor and dropped
+                to the palette.
+            </p>
+        </description>
+        <issue number="90212"/>
+    </change>      
+    
+    <change id="custom-refresh" >
+        <api name="palette_api"/>
+        <summary>Palette providers need to be notified when the palette content is being refreshed.</summary>
+        <version major="1" minor="9"/>
+        <date day="27" month="1" year="2007"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Now it's possible to provide an action that will be invoked as part of palette's 'refresh' logic.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.palette" name="PaletteActions"/>
+        <issue number="88400"/>
+    </change>      
+
+    <change id="mime-type-associations" >
+        <api name="palette_api"/>
+        <summary>Allow associating palette content with document mime type.</summary>
+        <version major="1" minor="10"/>
+        <date day="27" month="2" year="2007"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+                <p>
+                The previous version of palette API mandated that editor TopComponent had to insert a 
+                PaletteController instance into its Lookup if it wants to associate the palette with it.
+                Now it is possible to associate the palette also with an existing
+                editor without the need to change its implementation, e.g. to add code snippets
+                palette to java source editor.
+                </p>
+                <p>
+                If the mime type of active editor window has an associated instance of PaletteController 
+                in the XML layer system then palette window opens and displays the specified palette contents.
+                The PaletteController from TopComponent's Lookup takes precedens over the PaletteController 
+                found from mime type lookup in the XML layer (if any) for backwards compatibility.
+                </p>
+                <p>The new API is fully backwards compatible and there are no implications for existing
+                palette providers.</p>
+        </description>
+        <issue number="90213"/>
+    </change>      
+    
+    <change id="custom-reset" >
+        <api name="palette_api"/>
+        <summary>Palette providers may need to define their own action that 
+                 resets the palette to its default state.</summary>
+        <version major="1" minor="11"/>
+        <date day="12" month="6" year="2007"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Now it's possible to provide an action that will be invoked when user chose 'Reset' 
+                in palette's popup menu or in Palette Manager window.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.palette" name="PaletteActions"/>
+        <issue number="105561"/>
+    </change>      
+    
+    <change id="per-document-visibility" >
+        <api name="palette_api"/>
+        <summary>Palette visibility is defined per document-type.</summary>
+        <version major="1" minor="13"/>
+        <date day="22" month="2" year="2008"/>
+        <author login="saubrecht"/>
+        <compatibility addition="no" binary="compatible" deletion="no" semantic="compatible" deprecation="no" modification="no" source="compatible"/>
+        <description>
+            <p>
+                Now it's possible to close the palette window while e.g. editing an HTML file
+                and the palette will still show up when designing a form.
+            </p>
+        </description>
+        <issue number="62964"/>
+    </change>      
+
+    <change id="support-text-dnd" >
+        <api name="palette_api"/>
+        <summary>Allowing user dropping text into the palette to create new custom code clips.</summary>
+        <version major="1" minor="14"/>
+        <date day="5" month="5" year="2008"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible" deprecation="no" modification="no" source="compatible"/>
+        <description>
+            <p>
+                If the Common Palette is associated with a text editor then it's desired to allow
+                users dragging and dropping text into the palette to create new custom code clips that
+                can be dropped into editor later on.
+            </p>
+            <p>
+                That can be achieved simply by subclassing the default DragAndDropHandler class
+                which manages all DragAndDrop-related operations in the Common Palette and turning
+                the text dnd support in superclasses's constructor on. The default implementation
+                pops up a dialog window when some text is dropped into the palette where user enters
+                code clip name and tooltip and optionally selects appropriate icons.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.palette" name="DragAndDropHandler"/>
+        <issue number="93002"/>
+    </change>
+
+    <change id="default-visible" >
+        <api name="palette_api"/>
+        <summary>Make palette hidden by default for selected document types.</summary>
+        <version major="1" minor="20"/>
+        <date day="21" month="10" year="2009"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible" deprecation="no" modification="no" source="compatible"/>
+        <description>
+            <p>
+                A new boolean attribute can be set on palette's root node or
+                on palette's root folder in XML layer to hide the palette window
+                by default when a document the palette is associated with is activated.
+                User then must open the palette window manually for the first time.
+                The attribute's name is "paletteDefaultVisible" and the default
+                value is "true".
+            </p>
+        </description>
+        <issue number="170718"/>
+    </change>
+
+    <change id="disable-palette-window" >
+        <api name="palette_api"/>
+        <summary>Allow to turn the auto-show of palette window on/off.</summary>
+        <version major="1" minor="29"/>
+        <date day="8" month="11" year="2011"/>
+        <author login="saubrecht"/>
+        <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible" deprecation="no" modification="no" source="compatible"/>
+        <description>
+            <p>
+                A new branding token <code>Palette.Window.Enabled</code> in 
+                <code>org.netbeans.spi.palette</code> package allows to turn the automatic display of palette
+                window on/off. When the property value is <code>false</code> then
+                the palette window will not show when an editor with palette
+                content is activated. The user must open/close the palette window
+                manually. The default value is <code>true</code> which means
+                the palette window will auto-show/hide when active editor changes.
+                Note: The palette window is part of <code>commonpalette</code> TopComponent group
+                which the form designer opens when activated. So to turn the palette
+                window off completely it is necessary to remove its reference
+                from that group.
+            </p>
+        </description>
+        <issue number="204786"/>
+    </change>
+    
+</changes>
+  
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Progress API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Palette API/SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.spi.palette"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

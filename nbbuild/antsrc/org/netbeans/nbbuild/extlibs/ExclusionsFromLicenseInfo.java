@@ -19,12 +19,14 @@
 
 package org.netbeans.nbbuild.extlibs;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -43,9 +45,17 @@ public class ExclusionsFromLicenseInfo extends Task {
     public void setLicenseinfoFileset(String licenseinfoFileset) {
         this.licenseinfoFileset = licenseinfoFileset;
     }
+    
+    private String exclusionFile;
+
+    public void setExclusionFile(String exclusionFile) {
+        this.exclusionFile = exclusionFile;
+    }
 
     public @Override void execute() throws BuildException {
-        try {
+        try (FileOutputStream fos = new FileOutputStream(new File(getProject().getBaseDir(), exclusionFile));
+                OutputStreamWriter osw = new OutputStreamWriter(fos);
+                BufferedWriter bw = new BufferedWriter(osw)) {
             Path nballPath = nball.toPath();
             List<File> licenseinfofiles = Files.walk(nballPath)
                     .filter(p -> p.endsWith("licenseinfo.xml"))
@@ -62,6 +72,8 @@ public class ExclusionsFromLicenseInfo extends Task {
                     for(File f: fs.getFiles()) {
                         Path relativePath = nball.toPath().relativize(f.toPath());
                         licenseinfoFileset.appendIncludes(new String[]{relativePath.toString()});
+                        bw.write(relativePath.toString());
+                        bw.newLine();
                     }
                 }
             }

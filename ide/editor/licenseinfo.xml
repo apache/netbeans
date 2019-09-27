@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/editor/resources/uncomment.png</file>
+        <file>src/org/netbeans/modules/editor/resources/previous_matching.png</file>
+        <file>src/org/netbeans/modules/editor/resources/annotationtypes.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/edit_previous.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/var_is.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/var_get.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/indentEngine.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/navigate_back_24.png</file>
+        <file>src/org/netbeans/modules/editor/resources/fastOpen.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/rect_select_24x24.png</file>
+        <file>src/org/netbeans/modules/editor/resources/edit_next.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/override/overrides.png</file>
+        <file>src/org/netbeans/modules/editor/resources/override/override-is-overridden-combined.png</file>
+        <file>src/org/netbeans/modules/editor/resources/override/has-implementations.png</file>
+        <file>src/org/netbeans/modules/editor/resources/override/override-is-overridden-combined2.png</file>
+        <file>src/org/netbeans/modules/editor/resources/override/implements.png</file>
+        <file>src/org/netbeans/modules/editor/resources/override/is-overridden.png</file>
+        <file>src/org/netbeans/modules/editor/resources/find_close.png</file>
+        <file>src/org/netbeans/modules/editor/resources/navigate_back_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/shift_line_right.png</file>
+        <file>src/org/netbeans/modules/editor/resources/start_macro_recording.png</file>
+        <file>src/org/netbeans/modules/editor/resources/last_edit_location_24.png</file>
+        <file>src/org/netbeans/modules/editor/resources/empty.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/var_set.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/Folder.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/default.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/comment.png</file>
+        <file>src/org/netbeans/modules/editor/resources/macro_list.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/indentEngine32.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/shift_line_left.png</file>
+        <file>src/org/netbeans/modules/editor/resources/stop_macro_recording.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_static_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/annotation_type.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_package_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_static_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/constructor_package_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_protected_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_static_protected_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/defaultFolder.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/constructor_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_static_package_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_static_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_package_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/enum.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_static_protected_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_protected_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_static_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/localVariable.gif</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/method_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/constructor_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/class_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/interface.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/constructor_protected_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/completion/field_static_package_private_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/rect_select_16x16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/last_edit_location_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/next_matching.png</file>
+        <file>src/org/netbeans/modules/editor/resources/navigate_forward_16.png</file>
+        <file>src/org/netbeans/modules/editor/resources/find_expand.png</file>
+        <file>src/org/netbeans/modules/editor/resources/navigate_forward_24.png</file>
+        <file>demosrc/properties-addon/org/netbeans/editor/example/res/propertiesObject.gif</file>
+        <file>demosrc/base/org/netbeans/editor/example/res/htmlObject.gif</file>
+        <file>demosrc/base/org/netbeans/editor/example/res/javaObject.gif</file>
+        <file>demosrc/base/org/netbeans/editor/example/res/txtObject.gif</file>
+        <file>test/unit/src/org/netbeans/modules/editor/resources/testAnnotationGlyph.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

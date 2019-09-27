@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodRRFOperation" targetNamespace="http://j2ee.netbeans.org/wsdl/goodRRFOperation"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodRRFOperation" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodRRFOperationOperationRequest">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="goodRRFOperationOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="goodRRFOperationOperationFault">
+        <part name="part1" type="xsd:float"/>
+    </message>
+    <portType name="goodRRFOperationPortType">
+        <operation name="goodRRFOperationOperation">
+            <output name="output1" message="tns:goodRRFOperationOperationReply"/>
+            <input name="input1" message="tns:goodRRFOperationOperationRequest"/>
+            <fault name="fault1" message="tns:badRRFOperationOperationFault"/>
+        </operation>
+    </portType>
+    <binding name="goodRRFOperationBinding" type="tns:goodRRFOperationPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="goodRRFOperationOperation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodRRFOperation"/>
+            </input>
+            <output name="output1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodRRFOperation"/>
+            </output>
+            <fault name="fault1">
+                <soap:fault use="literal" name="fault1" namespace="http://j2ee.netbeans.org/wsdl/goodRRFOperation"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="goodRRFOperationService">
+        <port name="goodRRFOperationPort" binding="tns:goodRRFOperationBinding">
+            <soap:address location="http://localhost:18181/goodRRFOperationService/goodRRFOperationPort"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="goodRRFOperationPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodRRFOperationPortTypeRole" portType="tns:goodRRFOperationPortType"/>
+    </plink:partnerLinkType>
+</definitions>

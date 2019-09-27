@@ -1,0 +1,52 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_VARIABLE $name
+token #7 PHP_OPERATOR =
+token #8 PHP_CONSTANT_ENCAPSED_STRING "Junichi"
+token #9 PHP_SEMICOLON ;
+token #10 WHITESPACE \n
+token #11 PHP_VARIABLE $age
+token #12 PHP_OPERATOR =
+token #13 PHP_NUMBER 100
+token #14 PHP_SEMICOLON ;
+token #15 WHITESPACE \n
+token #16 PHP_ECHO echo
+token #17 WHITESPACE  
+token #18 PHP_NOWDOC_TAG_START <<<'NOWDOC'\n
+token #19 PHP_CONSTANT_ENCAPSED_STRING Name: $name<br>\nMy age is: $age<br>\n
+token #20 PHP_NOWDOC_TAG_END NOWDOC
+token #21 PHP_SEMICOLON ;
+token #22 WHITESPACE \n
+token #23 PHP_VARIABLE $name
+token #24 PHP_OPERATOR =
+token #25 PHP_CONSTANT_ENCAPSED_STRING "Jun"
+token #26 PHP_SEMICOLON ;
+token #27 WHITESPACE \n\n
+token #28 PHP_LINE_COMMENT //
+token #29 PHP_LINE_COMMENT  defferent indentation for body(spaces) ending marker(tabs)\n
+token #30 PHP_LINE_COMMENT //
+token #31 PHP_LINE_COMMENT  allow this in the lexer but spaces and tabs MUST NOT be intermixed\n
+token #32 PHP_VARIABLE $x
+token #33 WHITESPACE  
+token #34 PHP_OPERATOR =
+token #35 WHITESPACE  
+token #36 PHP_NOWDOC_TAG_START <<<'ENDOFNOWDOC'\n
+token #37 PHP_CONSTANT_ENCAPSED_STRING     This is another nowdoc test.\n    With another line in it. {$test} $test ${test} variable test.\n    test. $object->field\n
+token #38 PHP_NOWDOC_TAG_END \t\tENDOFNOWDOC
+token #39 PHP_SEMICOLON ;
+token #40 WHITESPACE \n\n
+token #41 PHP_LINE_COMMENT //
+token #42 PHP_LINE_COMMENT  body(tabs) ending marker(spaces)\n
+token #43 PHP_VARIABLE $y
+token #44 WHITESPACE  
+token #45 PHP_OPERATOR =
+token #46 WHITESPACE  
+token #47 PHP_NOWDOC_TAG_START <<<'ENDOFNOWDOC'\n
+token #48 PHP_CONSTANT_ENCAPSED_STRING \t\tThis is another nowdoc test.\n\t\tWith another line in it. {$test} $test ${test} variable test.\n\t\ttest. $object->field\n
+token #49 PHP_NOWDOC_TAG_END     ENDOFNOWDOC
+token #50 PHP_SEMICOLON ;
+token #51 WHITESPACE \n

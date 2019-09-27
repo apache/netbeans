@@ -1,0 +1,2 @@
+        this.|>MARK_OCCURRENCES:y<| = y;
+        const dy = a.|>MARK_OCCURRENCES:y<| - b.|>MARK_OCCURRENCES:y^<|;

@@ -1,0 +1,9 @@
+token #0 NEON_BLOCK section-with-dash
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE \n
+token #3 NEON_WHITESPACE     
+token #4 NEON_VALUED_BLOCK sub-section
+token #5 NEON_INTERPUNCTION :
+token #6 NEON_WHITESPACE  
+token #7 NEON_LITERAL value
+token #8 NEON_WHITESPACE \n

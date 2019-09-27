@@ -1,0 +1,21 @@
+# Ensure that Apache listens on port 80
+Listen 80
+
+# Listen for virtual host requests on all IP addresses
+NameVirtualHost *:80
+
+#<VirtualHost *:80>^
+DocumentRoot /www/example1
+ServerName www.example.com
+
+# Other directives here
+
+</VirtualHost>
+
+<VirtualHost *:80>
+DocumentRoot /www/example2
+ServerName www.example.org
+
+# Other directives here
+
+</VirtualHost>

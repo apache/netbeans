@@ -1,0 +1,5 @@
+<html>
+{% *em^bed* %}
+text
+{% *endembed* %}
+</html>

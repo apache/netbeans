@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="org.netbeans.performance.mobility" default="build" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.performance.mobility</description>
+
+    <property name="nbextra.dir" location="../../../nbextra"/>
+    <property name="test.timeout" value="3600000"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=300m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
+    <property environment="env"/>
+    <property name="hudson.buildnumber" value="${env.BUILD_NUMBER}"/>
+    <property name="hudson.jobname" value="${env.JOB_NAME}"/>
+
+    <loadfile property="perftestrun.buildnumber"
+      srcFile="../../../build.number"
+      failonerror="false"
+    />
+
+    <target name="test-preinit" depends="init, prepare-wtk"/>
+
+
+    <target name="set-wtk-path" unless="wtk.zipfile.name">
+        <condition property="wtk.zipfile.name" value="wtk252-windows.zip">
+            <os family="windows"/>
+        </condition>
+        <condition property="wtk.zipfile.name" value="wtk252-linux.zip">
+            <os family="unix" name="linux"/>
+        </condition>
+    </target>
+
+    <target name="prepare-wtk" depends="set-wtk-path">
+        <fail unless="wtk.zipfile.name" message="Not supported platform."/>
+
+        <unzip src="${nbextra.dir}/data/${wtk.zipfile.name}" dest="${netbeans.dest.dir}/mobility"/>
+    </target>
+
+<!-- why UML is here?
+    <target name="test" description="Uses test-single to run each suite in different VM">
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLSetupTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLActionsTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLDialogsTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\*"/>
+            <param name="test.type" value="unit"/>
+        </antcall>
+    </target>
+-->
+
+    <import file="nbproject/build-impl.xml"/>
+</project>

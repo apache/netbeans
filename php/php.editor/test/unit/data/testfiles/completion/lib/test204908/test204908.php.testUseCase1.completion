@@ -1,0 +1,5 @@
+Code completion result for source line:
+$ot2->|setName("harunaga");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getName()                       [PUBLIC]   ObjectTracker
+METHOD     setName($name)                  [PUBLIC]   ObjectTracker

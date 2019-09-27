@@ -1,8 +1,0 @@
-syntax: glob
-ignoredFolderLevel2
-.project
-*.ignore
-
-syntax: regexp
-^ignoredFolderLevel1$
-^unignoredFolderLevel1/ignoredFolderLevel2_2

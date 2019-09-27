@@ -1,0 +1,16 @@
+<h:column>
+    <f:facet name="header">
+        <h:outputText escape="false" value="&nbsp;"/>
+    </f:facet>
+    <h:commandLink value="Show" action="#'{'__MANAGED_BEAN_NAME__.detailSetup'}'">
+        <f:param name="jsfcrud.current__ENTITY_NAME__" value="#'{'jsfcrud_class[''__JSF_UTIL_CLASS__''].jsfcrud_method[''getAsConvertedString''][{0}][__MANAGED_BEAN_NAME__.converter].jsfcrud_invoke'}'"/>
+    </h:commandLink>
+    <h:outputText value=" "/>
+    <h:commandLink value="Edit" action="#'{'__MANAGED_BEAN_NAME__.editSetup'}'">
+        <f:param name="jsfcrud.current__ENTITY_NAME__" value="#'{'jsfcrud_class[''__JSF_UTIL_CLASS__''].jsfcrud_method[''getAsConvertedString''][{0}][__MANAGED_BEAN_NAME__.converter].jsfcrud_invoke'}'"/>
+    </h:commandLink>
+    <h:outputText value=" "/>
+    <h:commandLink value="Destroy" action="#'{'__MANAGED_BEAN_NAME__.__REMOVE_METHOD__'}'">
+        <f:param name="jsfcrud.current__ENTITY_NAME__" value="#'{'jsfcrud_class[''__JSF_UTIL_CLASS__''].jsfcrud_method[''getAsConvertedString''][{0}][__MANAGED_BEAN_NAME__.converter].jsfcrud_invoke'}'"/>
+    </h:commandLink>
+</h:column>

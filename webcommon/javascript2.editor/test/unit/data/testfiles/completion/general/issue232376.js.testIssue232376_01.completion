@@ -1,0 +1,6 @@
+Code completion result for source line:
+a232376.w|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     walk(n): undefined              [PROTECTE  issue232376.js
+METHOD     wswim(n): undefined             [PROTECTE  issue232376.js

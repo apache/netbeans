@@ -1,0 +1,11 @@
+Code completion result for source line:
+t| //cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   triangle: Module triangle       [PUBLIC]   foo.js
+VARIABLE   tripCtrl: Module tripCtrl       [PRIVATE]  issue249436.js
+KEYWORD    this                                       null
+KEYWORD    throw                                      null
+KEYWORD    true                                       null
+KEYWORD    try                                        null
+KEYWORD    typeof                                     null

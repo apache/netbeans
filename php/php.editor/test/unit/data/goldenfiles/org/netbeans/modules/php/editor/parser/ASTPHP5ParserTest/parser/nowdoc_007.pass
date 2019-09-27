@@ -1,0 +1,129 @@
+<testresult testFile='nowdoc_007.php'>
+    <scanner>
+        <token id='T_INLINE_HTML' start='0' end='81'>
+            <text>--TEST--\nbraced and unbraced complex variable replacement test (nowdoc)\n--FILE--\n</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='88' end='100'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='101' end='113'>
+            <text>&apos;nowdoc.inc&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='113' end='114'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='137' end='142'>
+            <text>print</text>
+        </token>
+        <token id='T_START_NOWDOC' start='143' end='160'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='160' end='218'>
+            <text>This is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='218' end='229'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='229' end='230'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='232' end='234'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='235' end='236'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='237' end='254'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='254' end='312'>
+            <text>This is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='312' end='323'>
+            <text>ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='323' end='324'>
+            <text>;</text>
+        </token>
+        <token id='T_PRINT' start='326' end='331'>
+            <text>print</text>
+        </token>
+        <token id='T_QUATE' start='332' end='333'>
+            <text>"</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='333' end='334'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='334' end='336'>
+            <text>$x</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='336' end='337'>
+            <text>}</text>
+        </token>
+        <token id='T_QUATE' start='337' end='338'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='338' end='339'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='341' end='344'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='T_INLINE_HTML' start='344' end='469'>
+            <text>--EXPECT--\nThis is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\nThis is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\n</text>
+        </token>
+        <token id='EOF' start='469' end='469'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='469'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InLineHtml start='0' end='81'/>
+            <ExpressionStatement start='88' end='114'>
+                <Include start='88' end='113' type='REQUIRE_ONCE'>
+                    <Scalar start='101' end='113' type='STRING' value='&apos;nowdoc.inc&apos;'/>
+                </Include>
+            </ExpressionStatement>
+            <ExpressionStatement start='137' end='230'>
+                <FunctionInvocation start='137' end='229'>
+                    <FucntionName start='137' end='142'>
+                        <Identifier start='137' end='142' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='143' end='229' type='STRING' value='This is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\n\n'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='232' end='324'>
+                <Assignment start='232' end='323' operator='EQUAL'>
+                    <Variable start='232' end='234' isDollared='true'>
+                        <Identifier start='233' end='234' name='x'/>
+                    </Variable>
+                    <Scalar start='237' end='323' type='STRING' value='This is nowdoc test #s $a, {$b}, {$c[&apos;c&apos;]}, and {$d-&gt;d}.\n\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='326' end='339'>
+                <FunctionInvocation start='326' end='338'>
+                    <FucntionName start='326' end='331'>
+                        <Identifier start='326' end='331' name='print'/>
+                    </FucntionName>
+                    <Parameters>
+                        <Quote start='332' end='338' type='QUOTE'>
+                            <Expressions>
+                                <ReflectionVariable start='333' end='337'>
+                                    <Variable start='334' end='336' isDollared='true'>
+                                        <Identifier start='335' end='336' name='x'/>
+                                    </Variable>
+                                </ReflectionVariable>
+                            </Expressions>
+                        </Quote>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='341' end='344'/>
+            <InLineHtml start='344' end='469'/>
+        </Statements>
+    </Program>
+</testresult>

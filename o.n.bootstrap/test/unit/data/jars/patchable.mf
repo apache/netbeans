@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: pkg.subpkg/3
-OpenIDE-Module-Name: Patchable module
-

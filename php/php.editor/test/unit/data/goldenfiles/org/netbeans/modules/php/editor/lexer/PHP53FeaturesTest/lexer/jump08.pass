@@ -1,0 +1,28 @@
+token #0 T_INLINE_HTML --TEST--\njump 08: goto into loop (forward)\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_GOTO goto
+token #4 WHITESPACE  
+token #5 PHP_STRING L1
+token #6 PHP_SEMICOLON ;
+token #7 WHITESPACE \n
+token #8 PHP_WHILE while
+token #9 WHITESPACE  
+token #10 PHP_TOKEN (
+token #11 PHP_NUMBER 0
+token #12 PHP_TOKEN )
+token #13 WHITESPACE  
+token #14 PHP_CURLY_OPEN {
+token #15 WHITESPACE \n\t
+token #16 PHP_STRING L1
+token #17 PHP_TOKEN :
+token #18 WHITESPACE  
+token #19 PHP_ECHO echo
+token #20 WHITESPACE  
+token #21 PHP_CONSTANT_ENCAPSED_STRING "bug\n"
+token #22 PHP_SEMICOLON ;
+token #23 WHITESPACE \n
+token #24 PHP_CURLY_CLOSE }
+token #25 WHITESPACE \n
+token #26 PHP_CLOSETAG ?>
+token #27 T_INLINE_HTML \n--EXPECTF--\nFatal error: 'goto' into loop or switch statement is disallowed in %sjump08.php on line 2\n

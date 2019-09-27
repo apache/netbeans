@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nbraced complex variable replacement test (nowdoc)\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nprint <<<'ENDOFNOWDOC'\nThis is nowdoc test #s {$a}, {$b}, {$c['c']}, and {$d->d}.\n\nENDOFNOWDOC;\n\n$x = <<<'ENDOFNOWDOC'\nThis is nowdoc test #s {$a}, {$b}, {$c['c']}, and {$d->d}.\n\nENDOFNOWDOC;\n\nprint "{$x}";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\nThis is nowdoc test #s {$a}, {$b}, {$c['c']}, and {$d->d}.\nThis is nowdoc test #s {$a}, {$b}, {$c['c']}, and {$d->d}.\n

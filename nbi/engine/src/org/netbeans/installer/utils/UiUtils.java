@@ -554,7 +554,7 @@ public final class UiUtils {
         MOTIF("motif", "Motif", "com.sun.java.swing.plaf.motif.MotifLookAndFeel"),
         GTK("gtk", "GTK", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"),
         METAL("metal", "Metal", "javax.swing.plaf.metal.MetalLookAndFeel"),
-        AQUA("aqua", "Aqua", "apple.laf.AquaLookAndFeel"),
+        AQUA("aqua", "Aqua", "com.apple.laf.AquaLookAndFeel"),
         NIMBUS("nimbus", "Nimbus", "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel"),
         DEFAULT("default", null, null);
         

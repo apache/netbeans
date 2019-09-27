@@ -1,0 +1,2 @@
+    for (var |>MARK_OCCURRENCES:i<| = 0, max = day; |>MARK_OCCURRENCES:i<| < max; |>MARK_OCCURRENCES:i<|++) {
+            console.log("i: " + |>MARK_OCCURRENCES:i^<|);

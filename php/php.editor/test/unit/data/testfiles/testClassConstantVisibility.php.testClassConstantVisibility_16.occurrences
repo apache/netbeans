@@ -1,0 +1,2 @@
+    private const |>MARK_OCCURRENCES:PRIVATE_PARENT_CONST<| = "private";
+        static::^|>MARK_OCCURRENCES:PRIVATE_PARENT_CONST<|;

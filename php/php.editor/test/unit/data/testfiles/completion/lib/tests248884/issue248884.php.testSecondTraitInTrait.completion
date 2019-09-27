@@ -1,0 +1,7 @@
+Code completion result for source line:
+use |SecondTrait; // test trait second
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      FirstTrait                      [PUBLIC]   issue248884.php
+CLASS      SecondTrait                     [PUBLIC]   issue248884.php
+CLASS      T                               [PUBLIC]   issue248884.php
+CLASS      U                               [PUBLIC]   issue248884.php

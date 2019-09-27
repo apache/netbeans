@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -109,6 +110,13 @@ public class MakeUpdateDesc extends MatchingTask {
     /** Description file to create. */
     public void setDesc(File d) {
         desc = d;
+    }
+
+    private File descLicense;
+
+    /** Description file license to use. */
+    public void setDescLicense(File d) {
+        descLicense = d;
     }
 
     /** Module group to create **/
@@ -275,6 +283,9 @@ public class MakeUpdateDesc extends MatchingTask {
                 PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8")); //NOI18N
 		pw.println ("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"); //NOI18N
 		pw.println ();
+                if (descLicense != null) {
+                    pw.println(new String(Files.readAllBytes(descLicense.toPath()), "UTF-8"));
+                }
                 DateFormat format = new SimpleDateFormat("ss/mm/HH/dd/MM/yyyy"); //NOI18N
                 format.setTimeZone(TimeZone.getTimeZone("GMT")); //NOI18N
                 String date = format.format(new Date());
@@ -664,7 +675,11 @@ public class MakeUpdateDesc extends MatchingTask {
      * @return a {@code <module ...><manifest .../></module>} valid according to
      *         <a href="http://www.netbeans.org/dtds/autoupdate-info-2_5.dtd">DTD</a>
      */
-    private Element fakeOSGiInfoXml(JarFile jar, File whereFrom) throws IOException {
+    private static Element fakeOSGiInfoXml(JarFile jar, File whereFrom) throws IOException {
+        return fakeOSGiInfoXml(jar, whereFrom, XMLUtil.createDocument("module"));
+    }
+    //TODO: javadoc
+    public static Element fakeOSGiInfoXml(JarFile jar, File whereFrom, Document doc) throws IOException {
         Attributes attr = jar.getManifest().getMainAttributes();
         Properties localized = new Properties();
         String bundleLocalization = attr.getValue("Bundle-Localization");
@@ -673,10 +688,12 @@ public class MakeUpdateDesc extends MatchingTask {
                 localized.load(is);
             }
         }
-        return fakeOSGiInfoXml(attr, localized, whereFrom);
+        return fakeOSGiInfoXml(attr, localized, whereFrom, doc);
     }
-    static Element fakeOSGiInfoXml(Attributes attr, Properties localized, File whereFrom) {
-        Document doc = XMLUtil.createDocument("module");
+    static Element fakeOSGiInfoXml(Attributes attr, Properties localized, File whereFrom) { //tests
+        return fakeOSGiInfoXml(attr, localized, whereFrom, XMLUtil.createDocument("module"));
+    }
+    private static Element fakeOSGiInfoXml(Attributes attr, Properties localized, File whereFrom, Document doc) {
         Element module = doc.getDocumentElement();
         String cnb = JarWithModuleAttributes.extractCodeName(attr);
         module.setAttribute("codenamebase", cnb);

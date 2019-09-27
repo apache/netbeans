@@ -1,0 +1,71 @@
+<testresult testFile='uniformVariableSyntax_17.php'>
+    <scanner>
+        <token id='T_DOLLAR' start='7' end='8'>
+            <text>$</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='8' end='9'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='9' end='13'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OPEN_RECT' start='13' end='14'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='14' end='19'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='19' end='20'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='20' end='21'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='21' end='26'>
+            <text>&apos;baz&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='26' end='27'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='27' end='28'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='28' end='29'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='30' end='30'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='30'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='29'>
+                <ReflectionVariable start='7' end='28'>
+                    <ArrayAccess start='9' end='27' type='VARIABLE_ARRAY' isDollared='false'>
+                        <ArrayDimension start='20' end='27'>
+                            <Index>
+                                <Scalar start='21' end='26' type='STRING' value='&apos;baz&apos;'/>
+                            </Index>
+                        </ArrayDimension>
+                        <Name>
+                            <ArrayAccess start='9' end='20' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='13' end='20'>
+                                    <Index>
+                                        <Scalar start='14' end='19' type='STRING' value='&apos;bar&apos;'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <Variable start='9' end='13' isDollared='true'>
+                                        <Identifier start='10' end='13' name='foo'/>
+                                    </Variable>
+                                </Name>
+                            </ArrayAccess>
+                        </Name>
+                    </ArrayAccess>
+                </ReflectionVariable>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

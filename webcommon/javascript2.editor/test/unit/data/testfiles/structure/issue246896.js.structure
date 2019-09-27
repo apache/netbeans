@@ -1,0 +1,8 @@
+context:CLASS:[PRIVATE]:ESCAPED{context}:
+  Parser:METHOD:[PUBLIC]:ESCAPED{Parser}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    MyError:CONSTRUCTOR:[PRIVATE]:ESCAPED{MyError}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }context.Parser.MyError</font>:
+      prop:FIELD:[PUBLIC]:ESCAPED{prop}<font color="#999999">ESCAPED{ : }String</font>:
+      prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+        constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }context.Parser.MyError</font>:
+    Parser:METHOD:[PRIVATE]:ESCAPED{Parser}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  Parser2:FIELD:[PUBLIC]:ESCAPED{Parser2}<font color="#999999">ESCAPED{ : }Parser</font>:

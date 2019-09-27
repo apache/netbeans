@@ -1,0 +1,4 @@
+Code completion result for source line:
+$object->auto|complete(); // 1
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     autocomplete()                  [PUBLIC]   \Name\Space\SomeClass

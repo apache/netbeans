@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.modules.gsf.testrunner</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.extexecution</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.42</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.projectapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.58</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.25</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <friend-packages>
+                <friend>com.sun.tools.tuxedo.testrunner</friend>
+                <friend>org.netbeans.gradle.project</friend>
+                <friend>org.netbeans.modules.gradle.test</friend>
+                <friend>org.netbeans.modules.android.testrunner</friend>
+                <friend>org.netbeans.modules.cnd.cncppunit</friend>
+                <friend>org.netbeans.modules.cnd.testrunner</friend>
+                <friend>org.netbeans.modules.gototest</friend>
+                <friend>org.netbeans.modules.groovy.support</friend>
+                <friend>org.netbeans.modules.gsf.testrunner.ui</friend>
+                <friend>org.netbeans.modules.hudson.ui</friend>
+                <friend>org.netbeans.modules.java.testrunner</friend>
+                <friend>org.netbeans.modules.java.testrunner.ant</friend>
+                <friend>org.netbeans.modules.java.testrunner.ui</friend>
+                <friend>org.netbeans.modules.javascript.jstestdriver</friend>
+                <friend>org.netbeans.modules.javascript.karma</friend>
+                <friend>org.netbeans.modules.junit</friend>
+                <friend>org.netbeans.modules.junit.ant</friend>
+                <friend>org.netbeans.modules.junit.ant.ui</friend>
+                <friend>org.netbeans.modules.junit.ui</friend>
+                <friend>org.netbeans.modules.maven.junit</friend>
+                <friend>org.netbeans.modules.maven.junit.ui</friend>
+                <friend>org.netbeans.modules.mobility.j2meunit</friend>
+                <friend>org.netbeans.modules.mobility.project</friend>
+                <friend>org.netbeans.modules.php.atoum</friend>
+                <friend>org.netbeans.modules.php.codeception</friend>
+                <friend>org.netbeans.modules.php.nette.tester</friend>
+                <friend>org.netbeans.modules.php.phpunit</friend>
+                <friend>org.netbeans.modules.php.project</friend>
+                <friend>org.netbeans.modules.python.testrunner</friend>
+                <friend>org.netbeans.modules.ruby.testrunner</friend>
+                <friend>org.netbeans.modules.selenium2</friend>
+                <friend>org.netbeans.modules.selenium2.java</friend>
+                <friend>org.netbeans.modules.selenium2.maven</friend>
+                <friend>org.netbeans.modules.selenium2.php</friend>
+                <friend>org.netbeans.modules.selenium2.webclient</friend>
+                <friend>org.netbeans.modules.selenium2.webclient.mocha</friend>
+                <friend>org.netbeans.modules.selenium2.webclient.protractor</friend>
+                <friend>org.netbeans.modules.testng</friend>
+                <friend>org.netbeans.modules.testng.ant</friend>
+                <friend>org.netbeans.modules.testng.ui</friend>
+                <friend>org.netbeans.modules.web.clientproject.api</friend>
+                <package>org.netbeans.modules.gsf.testrunner.api</package>
+                <package>org.netbeans.modules.gsf.testrunner.plugin</package>
+            </friend-packages>
+        </data>
+    </configuration>
+</project>

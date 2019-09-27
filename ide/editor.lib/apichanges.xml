@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">General</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="editor-document-split">
+            <summary>Document handling split</summary>
+            <version major="4" minor="0"/>
+            <date day="20" month="5" year="2013"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" semantic="compatible" source="incompatible" addition="no" deprecation="no" deletion="no"/>
+            <description>
+                <p>
+                    Document data handling and implementation was separated into <code>editor.document</code> module
+                </p>
+            </description>
+            <issue number="244679"/>
+        </change>
+        <change id="caret-fold-cleanup">
+            <summary>Removed dependencies on Folding</summary>
+            <version major="3" minor="38"/>
+            <date day="11" month="3" year="2013"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" source="compatible" semantic="incompatible" deprecation="yes"/>
+            <description>
+                <p>
+                    BaseCaret handling of folding was factored out. BaseCaret still implements the FoldHierarchyListener, but should
+                    not be used as a listener on a hierarchy, and will not attach itself. BaseCaret's listener method does nothing.
+                </p>
+                <p>
+                    Folding actions from ActionFactory were deprecated, they moved to editor.fold.nbui module. Public classes in
+                    <code>org.netbeans.editor.ActionFactory</code> were changed to delegators to the actual actions registered
+                    with the component's EditorKit. 
+                </p>
+            </description>
+            <class name="BaseCaret" package="org.netbeans.editor"/>
+            <class name="ActionFactory" package="org.netbeans.editor"/>
+            <issue number="226368"/>
+        </change>
+        <change id="caret-refresh">
+            <summary>Allow to refresh editor view so that caret is visible</summary>
+            <version major="3" minor="37"/>
+            <date day="11" month="3" year="2013"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The method helps to ensure that the caret, if it was originally visible on the screen,
+                    will remain visible after some view hierarchy change (i.e. define a new fold).
+                </p>
+            </description>
+            <class name="BaseCaret" package="org.netbeans.editor"/>
+            <issue number="226368"/>
+        </change>
+        <change id="EditorLibDeprecation.SidebarFactory">
+            <summary>SidebarFactory interface deprecated</summary>
+            <version major="3" minor="37"/>
+            <date day="8" month="3" year="2013"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="yes"/>
+            <description>
+                <p>The interface <code>org.netbeans.editor.SideBarFactory</code> was
+                adopted to <code>editor.lib2</code>. The original interface was
+                deprecated. Clients should start using the relocated interface.
+                </p>
+            </description>
+            <class name="SideBarFactory" package="org.netbeans.editor"/>
+            <issue number="226877"/>
+        </change>
+        <change id="moving-find">
+            <summary>Moving find implementations to module editor.search</summary>
+            <version major="3" minor="36"/>
+            <date day="6" month="2" year="2013"/>
+            <author login="mkristofic"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no" deprecation="yes" deletion="yes" modification="yes"/>
+            <description>
+                <p>
+                    The search actions from ActionFactory where moved to editor.search module. DocumentFinder was removed as unused by new search implementation.
+                </p>
+
+                <pre>
+                    check-sigtest:
+                    [mkdir] Created dir: /home/mito/nb/develop/editor.lib/build/test/sigtest/results
+                    [sigtest] /home/mito/nb/develop/editor.lib/build/test/sigtest/results/org.netbeans.modules.editor.lib
+                    [sigtest] Packages: org.netbeans.editor.*, org.netbeans.editor.ext.*, org.netbeans.editor.view.spi.*, org.netbeans.lib.editor.hyperlink.spi.*, org.netbeans.lib.editor.view.*
+                    [sigtest]
+                    [sigtest] email: api-changes@netbeans.org
+                    [sigtest] SignatureTest report
+                    [sigtest] Base version: 3.34.0
+                    [sigtest] Tested version: 3.34.0
+                    [sigtest] Check mode: bin [throws removed]
+                    [sigtest] Constant checking: on
+                    [sigtest]
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.ActionFactory$FindNextAction
+                    [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ActionFactory$FindNextAction
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.ActionFactory$FindPreviousAction
+                    [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ActionFactory$FindPreviousAction
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.ActionFactory$FindSelectionAction
+                    [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ActionFactory$FindSelectionAction
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.ActionFactory$ToggleHighlightSearchAction
+                    [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ActionFactory$ToggleHighlightSearchAction
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.DocumentFinder
+                    [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.DocumentFinder
+                    [sigtest]
+                    [sigtest] Class org.netbeans.editor.DocumentFinder$FindReplaceResult
+                    [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.DocumentFinder$FindReplaceResult
+                    [sigtest]
+                    [sigtest] /home/mito/nb/develop/editor.lib/build/test/sigtest/results/org-netbeans-modules-editor-lib.xml: 1 failures in /home/mito/nb/develop/editor.lib/nbproject/org-netbeans-modules-editor-lib.sig
+                </pre>
+            </description>
+        </change>
+        <change id="pasive.corrected.to.passive">
+            <summary>Spelling error in the API corrected</summary>
+            <version major="3" minor="33"/>
+            <date day="17" month="12" year="2012"/>
+            <author login="dstrupl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"
+                addition="yes"/>
+            <description>
+                <p>
+                    Two methods containing the word "pasive" were renamed to contain "passive".
+                </p>
+            </description>
+            <class name="Annotations" package="org.netbeans.editor"/>
+            <issue number="197623"/>
+        </change>
+        <change id="removing-find">
+            <summary>Removing old deprecatted find implementations</summary>
+            <version major="3" minor="30"/>
+            <date day="5" month="10" year="2012"/>
+            <author login="mkristofic"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no" deprecation="yes" deletion="yes" modification="yes"/>
+            <description>
+                <p>
+                    The old find apis and implementations (<code>org.netbeans.editor.FindSupport</code> &amp; co.)
+                    has been removed. The current implementation is in editor.lib2 and editor.search
+                </p>
+                <p>The exact API changes are listed in the sigtest report below.</p>
+<pre>
+-sigtest-init:
+     [echo] sigtest check: editor.lib; cnb: org-netbeans-modules-editor-lib; email: api-changes@netbeans.org; type: check
+
+check-sigtest:
+    [mkdir] Created dir: /home/mito/nb/develop/editor.lib/build/test/sigtest/results
+  [sigtest] /home/mito/nb/develop/editor.lib/build/test/sigtest/results/org.netbeans.modules.editor.lib
+  [sigtest] Packages: org.netbeans.editor.*, org.netbeans.editor.ext.*, org.netbeans.editor.view.spi.*, org.netbeans.lib.editor.hyperlink.spi.*, org.netbeans.lib.editor.view.*
+  [sigtest]
+  [sigtest] email: api-changes@netbeans.org
+  [sigtest] SignatureTest report
+  [sigtest] Base version: 3.29.0
+  [sigtest] Tested version: 3.29.0
+  [sigtest] Check mode: bin [throws removed]
+  [sigtest] Constant checking: on
+  [sigtest]
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.FindSupport
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.FindSupport
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.FindSupport$SearchPatternWrapper
+  [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.FindSupport$SearchPatternWrapper
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.ext.ExtKit$FindAction
+  [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ext.ExtKit$FindAction
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.ext.ExtKit$ReplaceAction
+  [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ext.ExtKit$ReplaceAction
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.ext.FindDialogPanel
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.ext.FindDialogPanel
+  [sigtest]
+  [sigtest] Class org.netbeans.editor.ext.FindDialogSupport
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.ext.FindDialogSupport
+  [sigtest]
+  [sigtest] /home/mito/nb/develop/editor.lib/build/test/sigtest/results/org-netbeans-modules-editor-lib.xml: 1 failures in /home/mito/nb/develop/editor.lib/nbproject/org-netbeans-modules-editor-lib.sig
+
+</pre>
+            </description>
+            <issue number="189638"/>
+        </change>
+        <change id="programmatic.tooltips.visible">
+            <summary>Support to show tooltips not tied to the view hierarchy</summary>
+            <version major="3" minor="28"/>
+            <date day="11" month="9" year="2012"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"
+                addition="yes"/>
+            <description>
+                <p>
+                    When the tooltip is being shown (<code>setTooltipVisible(true)</code>),
+                    the ToolTipSupport attempts to build the tooltip from the view hierarchy,
+                    based on mouse position. This may fail, if the tooltip was initiated in
+                    other way, than mouse hover, or even programmatically.
+                </p>
+                <p>
+                    The new <code>setTooltipVisible</code> overload allows to skip the step
+                    during the process of showing the tooltip.
+                </p>
+            </description>
+            <class name="ToolTipSupport" package="org.netbeans.editor.ext"/>
+            <issue number="216245"/>
+        </change>
+        <change id="absolute-positioned-tooltips">
+            <summary>Tooltips can be positioned at absolute position, not relative to the caret</summary>
+            <version major="3" minor="26"/>
+            <date day="5" month="7" year="2012"/>
+            <author login="sdedic"/>
+            <compatibility binary="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Tooltips are usually positioned above/below the caret, so they appear in the area the user is focused on.
+                    Some tooltips however should be displayed above or next to the editor window, e.g. begin/end of a code block,
+                    which is alredy off the visible area. This change allows to specify <code>Point</code> relative to the
+                    view or the scroller, where the tooltip should appear.
+                </p>
+            </description>
+            <issue number="214755"/>
+        </change>
+        <change id="clickable-annotations">
+            <summary>Clickable annotations in the editor glyph gutter</summary>
+            <version major="3" minor="24"/>
+            <date day="12" month="5" year="2012"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" semantic="incompatible" modification="yes"/>
+            <description>
+                <p>
+                    <code>Editors/.../GlyphGutterActions</code> can now specify on which annotations they need to be invoked. Supported annotation value (set using 
+                    <code>putValue</code>):
+                </p>
+                <dl>
+                    <dt>default-action</dt>
+                    <dd>if true, this action will be invoked when the free space is clicked</dd>
+                    <dt>default-action-excluded-annotation-types</dt>
+                    <dd>an array containing annotation types. When any of the annotations on the current line has any of these type, this action will not be invoked when the free space is clicked. (See below for combined annotations unrolling.)</dd>
+                    <dt>supported-annotation-types</dt>
+                    <dd>an array containing annotation types. When an annotation is clicked, the first action that contains its type in the supported-annotation-types attribute is invoked.</dd>
+                </dl>
+            </description>
+            <issue number="105746"/>
+        </change>
+        
+        <change id="typing-hooks-replace">
+            <summary>Replace is done before insert and fix inserting empty text</summary>
+            <version major="3" minor="21"/>
+            <date day="27" month="2" year="2012"/>
+            <author login="mkristofic"/>
+            <compatibility binary="compatible" semantic="incompatible" modification="yes"/>
+            <description>
+                <p>Change in assert to fix inserting empty text to TypedTextInterceptor.MutableContext </p>
+                <p>Replace is done before perform insert, before typing hooks insert method</p>
+            </description>
+        </change>
+
+        <change id="deprecating-formatting">
+            <summary>Deprecating old formatting API</summary>
+            <version major="3" minor="1"/>
+            <date day="24" month="8" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="yes" deprecation="yes" deletion="yes" modification="yes"/>
+            <description>
+                <p>
+                    The old formatting API (<code>org.netbeans.editor.Formatter</code> &amp; co.)
+                    has been deprecated and moved to <code>editor.deprecated.pre65formatting</code> module.
+                </p>
+                <p>The exact API changes are listed in the sigtest report below.</p>
+<pre>
+-sigtest-init:
+     [echo] sigtest check: editor.lib; cnb: org-netbeans-modules-editor-lib; email: api-changes@netbeans.org; type: check
+
+check-sigtest:
+    [mkdir] Created dir: /work/netbeans/main2m/editor.lib/build/test/sigtest/results
+  [sigtest] /work/netbeans/main2m/editor.lib/build/test/sigtest/results/org.netbeans.modules.editor.lib
+  [sigtest] Packages: org.netbeans.editor.*, org.netbeans.editor.ext.*, org.netbeans.editor.view.spi.*, org.netbeans.lib.editor.hyperlink.spi.*, org.netbeans.lib.editor.view.*
+  [sigtest] Missing /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/rt.jar
+  [sigtest] 
+  [sigtest] email: api-changes@netbeans.org
+  [sigtest] SignatureTest report
+  [sigtest] Base version: 2.11.0
+  [sigtest] Tested version: 2.11.0
+  [sigtest] Check mode: bin [throws removed]
+  [sigtest] Constant checking: on
+  [sigtest] 
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.BaseDocument
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getFormatter()
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getLegacyFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.BaseKit
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseKit.createFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.BaseKit$PasteAction
+  [sigtest]   "E1.2 - API type removed" : method public static void org.netbeans.editor.BaseKit$PasteAction.indentBlock(org.netbeans.editor.BaseDocument,int,int)
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.Formatter
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.Formatter
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.GuardedDocument
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getFormatter()
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseDocument.getLegacyFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.AbstractFormatLayer
+  [sigtest]   "E1.2 - API type removed" : CLASS public abstract org.netbeans.editor.ext.AbstractFormatLayer
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.ExtFormatSupport
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.ext.ExtFormatSupport
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.ExtFormatter
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.ext.ExtFormatter
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.ExtFormatter$Simple
+  [sigtest]   "E1.2 - API type removed" : CLASS public static org.netbeans.editor.ext.ExtFormatter$Simple
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.ExtKit
+  [sigtest]   "E1.2 - API type removed" : method public org.netbeans.editor.Formatter org.netbeans.editor.BaseKit.createFormatter()
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.FormatLayer
+  [sigtest]   "E1.2 - API type removed" : CLASS public abstract interface org.netbeans.editor.ext.FormatLayer
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.FormatSupport
+  [sigtest]   "E1.2 - API type removed" : CLASS public org.netbeans.editor.ext.FormatSupport
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.FormatTokenPosition
+  [sigtest]   "E1.2 - API type removed" : CLASS public abstract interface org.netbeans.editor.ext.FormatTokenPosition
+  [sigtest] 
+  [sigtest] Class org.netbeans.editor.ext.FormatWriter
+  [sigtest]   "E1.2 - API type removed" : CLASS public final org.netbeans.editor.ext.FormatWriter
+  [sigtest] 
+  [sigtest] /work/netbeans/main2m/editor.lib/build/test/sigtest/results/org-netbeans-modules-editor-lib.xml: 1 failures in /work/netbeans/main2m/editor.lib/nbproject/org-netbeans-modules-editor-lib.sig
+
+BUILD FAILED
+Signature tests return code is wrong (1), check the messages above
+</pre>                
+            </description>
+            <issue number="189638"/>
+        </change>
+        
+        <change id="ToolTipSupport-heavyweight-tooltips">
+            <summary>Support for heavyweight tooltips</summary>
+            <version major="2" minor="10"/>
+            <date day="5" month="5" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                    Adding flags to <code>o.n.editor.ext.ToolTipSupport</code> class that control
+                    tooltip behavior such as if the tooltip should be hidden on mouse move, timeout, etc.
+                    The flags are <code>FLAG_HIDE_ON_MOUSE_MOVE</code>, <code>FLAG_HIDE_ON_TIMER</code>, <code>FLAG_PERMANENT</code>
+                    and <code>FLAGS_LIGHTWEIGHT_TOOLTIP</code>, <code>FLAGS_HEAVYWEIGHT_TOOLTIP</code>.
+                </p>
+                <p>
+                    A new method <code>ToolTipSupport.setTooltip()</code> accepting the additional <code>flags</code>
+                    parameter has also been added.
+                </p>
+            </description>
+            <issue number="181533"/>
+        </change>
+
+        <change id="Utilities.createSingleLineEditor">
+            <summary>Adding Utilities.createSingleLineEditor</summary>
+            <version major="2" minor="7"/>
+            <date day="29" month="3" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                    Adding <code>o.n.editor.Utilities.createSingleLineEditor(String mimeType)</code> method
+                    in order to give modules a unified way of creating simple <code>TextField</code>-like
+                    controls.
+                </p>
+            </description>
+        </change>
+
+        <change id="ToolTipSupport-api-cleanup">
+            <summary>Hiding listener methods from public API</summary>
+            <version major="2" minor="4"/>
+            <date day="1" month="3" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="compatible" addition="no" deprecation="no" deletion="yes" modification="no" />
+            <description>
+                <p>
+                    A bunch of listener methods were accidentally made publically visible
+                    when ToolTipSupport class was first introduced. These were now removed
+                    and marked by @PatchedPublic in order to preserve binary compatibility.
+                </p>
+            </description>
+        </change>
+
+        <change id="ToolTipSupport-setToolTipVisible-public">
+            <summary>Making ToolTipSupport.setToolTipVisible() public</summary>
+            <version major="2" minor="3"/>
+            <date day="1" month="3" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="no" deprecation="no" deletion="no" modification="yes" />
+            <description>
+                <p>
+                    Making <code>o.n.editor.ext.ToolTipSupport</code> public in order to allow
+                    modules to use custom tooltip components and have full control over their
+                    displaying.
+                </p>
+            </description>
+            <issue number="59336"/>
+        </change>
+
+        <change id="Registry-cleanup">
+            <summary>Cleaning up o.n.editor.Registry</summary>
+            <version major="2" minor="2"/>
+            <date day="11" month="1" year="2010"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="compatible" addition="no" deprecation="no" deletion="yes" modification="no" />
+            <description>
+                <p>
+                    <code>o.n.editor.Registry</code> was internally bridged to <code>o.n.api.editor.EditorRegistry</code>
+                    and some of its methods were removed from API. <code>@PatchedPublic</code> was used to preserve binary compatibility.
+                    The whole class has been deprecated for a long time
+                    and its usage is discouraged in favor of <code>EditorRegistry</code>.
+                </p>
+            </description>
+            <issue number="179368"/>
+        </change>
+
+        <change id="removing-DrawLayer">
+            <summary>Removing DrawLayer and related API</summary>
+            <version major="2" minor="1"/>
+            <date day="21" month="12" year="2009"/>
+            <author login="vstejskal"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible" addition="no" deprecation="no" deletion="yes" modification="no" />
+            <description>
+                <p>
+                Removing DrawLayer and related classes and methods. This part of the API has been long time deprecated
+                and replaced by Highlighting SPI on <code>editor.lib2</code> module.
+                </p>
+            </description>
+            <issue number="97517"/>
+        </change>
+
+        <change id="GapDocumentView.hideBottomPadding">
+            <summary>Add flag hideBottomPadding to GapDocumentView constructor to be able to control adding bottom padding.</summary>
+            <version major="1" minor="46"/>
+            <date day="14" month="12" year="2009"/>
+            <author login="mslama"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                Add flag hideBottomPadding to GapDocumentView constructor. Subclasses should override this constructor
+                to pass this flag to superclass constructor.
+                </p>
+            </description>
+            <issue number="178284"/>
+        </change>
+        
+        <change id="MimeTypeInitializer">
+            <summary>Adding interface enabling initialization of lookups performed by SideBarFactory implementations.</summary>
+            <version major="1" minor="41"/>
+            <date day="10" month="8" year="2009"/>
+            <author login="msauer"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                Adding <code>MimeTypeInitializer</code> providing <code>init(mimeType)</code>
+                method. <code>SideBarFactory</code> implementations
+                can use this to perform time-consuming operations (ie. lookups) outside AWT.
+                </p>
+            </description>
+            <issue number="137416"/>
+        </change>
+
+        <change id="EditorUI.textLimitWidth">
+            <summary>Making method EditorUI.textLimitWidth protected</summary>
+            <version major="1" minor="38"/>
+            <date day="23" month="4" year="2009"/>
+            <author login="dstrupl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                Making the method <code>EditorUI.textLimitWidth</code> protected
+                so we are able to override it in NbEditorUI.
+                </p>
+            </description>
+            <issue number="137416"/>
+        </change>
+
+        <change id="HyperlinkType.ALT_HYPERLINK">
+            <summary>Adding HyperlinkType.ALT_HYPERLINK</summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="2" year="2009"/>
+            <author login="vv159170"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+                <p>
+                Adding a new constant <code>HyperlinkType.ALT_HYPERLINK</code> as the name
+                for alternative (other than <code>HyperlinkType.GO_TO_DECLARATION</code>) hyperlink action.
+                </p>
+            </description>
+            <issue number="157705"/>
+        </change>
+
+        <change id="BaseDocument.atomicLock-deprecation">
+            <summary>BaseDocument.atomicLock() method deprecated.</summary>
+            <version major="1" minor="28"/>
+            <date day="21" month="6" year="2008"/>
+            <author login="jjancura"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="no" deprecation="yes"/>
+            <description>
+                <p>BaseDocument.atomicLock() and atomicUnlock () methods deprecated. User should use BaseDocument.runAtomic () instead.
+                </p>
+            </description>
+            <issue number="135004"/>
+        </change>
+
+        <change id="deprecating-settings-and-completion">
+            <summary>Deprecating old settings and completion API</summary>
+            <version major="1" minor="27"/>
+            <date day="4" month="6" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="compatible" addition="yes" deprecation="yes" deletion="yes" modification="yes"/>
+            <description>
+                <p>
+                    The old settings API (<code>org.netbeans.editor.Settings</code> &amp; co.)
+                    has been deprecated and moved to <code>editor.deprecated.pre61settings</code> module.
+                    Also the old completion API (<code>org.netbeans.editor.ext.Completion</code> &amp; co.)
+                    has been deprecated and moved to <code>editor.deprecated.pre61completion</code> module.
+                </p>
+                <p>The exact API changes are listed in the sigtest report below.</p>
+<pre>
+SignatureTest report
+Base version: 1.26.0
+Tested version: 1.27.0
+Check mode: src [throws normalized]
+Constant checking: on
+
+Warning: public class org.netbeans.editor.BaseView can't be extended because contains the following member: method abstract void org.netbeans.editor.BaseView.modelToViewDG(int,org.netbeans.editor.DrawGraphics) throws javax.swing.text.BadLocationException
+
+Missing Classes
+---------------
+
+org.netbeans.editor.BaseSettingsInitializer
+org.netbeans.editor.Settings
+org.netbeans.editor.Settings$AbstractInitializer
+org.netbeans.editor.Settings$Evaluator
+org.netbeans.editor.Settings$Filter
+org.netbeans.editor.Settings$FilterInitializerSorter
+org.netbeans.editor.Settings$Initializer
+org.netbeans.editor.Settings$InitializerSorter
+org.netbeans.editor.Settings$KitAndValue
+org.netbeans.editor.SettingsChangeEvent
+org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.SettingsDefaults
+org.netbeans.editor.SettingsNames
+org.netbeans.editor.SettingsUtil
+org.netbeans.editor.SettingsUtil$FontStylePrintColoringEvaluator
+org.netbeans.editor.SettingsUtil$ForeColorPrintColoringEvaluator
+org.netbeans.editor.SettingsUtil$PrintColoringEvaluator
+org.netbeans.editor.SettingsUtil$TokenColoringEvaluator
+org.netbeans.editor.SettingsUtil$TokenColoringInitializer
+org.netbeans.editor.ext.Completion
+org.netbeans.editor.ext.CompletionJavaDoc
+org.netbeans.editor.ext.CompletionJavaDoc$JavaDocTagItem
+org.netbeans.editor.ext.CompletionPane
+org.netbeans.editor.ext.CompletionQuery
+org.netbeans.editor.ext.CompletionQuery$AbstractResult
+org.netbeans.editor.ext.CompletionQuery$AbstractResultItem
+org.netbeans.editor.ext.CompletionQuery$DefaultResult
+org.netbeans.editor.ext.CompletionQuery$DefaultResultItem
+org.netbeans.editor.ext.CompletionQuery$Result
+org.netbeans.editor.ext.CompletionQuery$ResultItem
+org.netbeans.editor.ext.CompletionQuery$ResultItemAssociatedObject
+org.netbeans.editor.ext.CompletionQuery$SupportsSpeculativeInvocation
+org.netbeans.editor.ext.CompletionView
+org.netbeans.editor.ext.ExtCompletionPane
+org.netbeans.editor.ext.ExtEditorUI
+org.netbeans.editor.ext.ExtSettingsDefaults
+org.netbeans.editor.ext.ExtSettingsInitializer
+org.netbeans.editor.ext.ExtSettingsNames
+org.netbeans.editor.ext.ExtUtilities
+org.netbeans.editor.ext.HTMLJavaDocView
+org.netbeans.editor.ext.JDCPopupPanel
+org.netbeans.editor.ext.JavaDocPane
+org.netbeans.editor.ext.JavaDocView
+org.netbeans.editor.ext.ListCompletionView
+org.netbeans.editor.ext.ScrollCompletionPane
+org.netbeans.editor.ext.ScrollJavaDocPane
+org.netbeans.editor.ext.ScrollJavaDocPane$BrowserButton
+org.netbeans.editor.ext.ScrollJavaDocPane$HyperlinkAction
+
+Missing Superclasses or Superinterfaces
+---------------------------------------
+
+org.netbeans.editor.Abbrev:             interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.BaseCaret:          interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.BaseDocument:       interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.BaseDocument:       interface java.util.EventListener
+org.netbeans.editor.BaseTextUI:         interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.CodeFoldingSideBar: interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.CodeFoldingSideBar: interface java.util.EventListener
+org.netbeans.editor.DrawLayerFactory$BlockSearchLayer:      interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.DrawLayerFactory$BlockSearchLayer:      interface java.util.EventListener
+org.netbeans.editor.DrawLayerFactory$IncSearchLayer:        interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.DrawLayerFactory$IncSearchLayer:        interface java.util.EventListener
+org.netbeans.editor.EditorUI:           interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.Formatter:          interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.Formatter:          interface java.util.EventListener
+org.netbeans.editor.GlyphGutter:        interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.GuardedDocument:    interface java.util.EventListener
+org.netbeans.editor.GuardedDocument:    interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.StatusBar:          interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.WordMatch:          interface @ org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.ext.ExtCaret:       interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.ext.ExtFormatter:   interface java.util.EventListener
+org.netbeans.editor.ext.ExtFormatter:   interface org.netbeans.editor.SettingsChangeListener
+org.netbeans.editor.ext.ToolTipSupport: interface @ org.netbeans.editor.SettingsChangeListener
+
+Missing Constructors
+--------------------
+
+org.netbeans.editor.ext.ToolTipSupport: constructor public org.netbeans.editor.ext.ToolTipSupport.ToolTipSupport(org.netbeans.editor.ext.ExtEditorUI)
+
+Missing Methods
+---------------
+
+org.netbeans.editor.Abbrev:             method public void org.netbeans.editor.Abbrev.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.ActionFactory$AbbrevExpandAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$AbbrevResetAction:        method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$AdjustCaretAction:        method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$AdjustWindowAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$AnnotationsCyclingAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ChangeCaseAction:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$CollapseAllFolds:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$CollapseFold:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$CutToLineBeginOrEndAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$DumpViewHierarchyAction:  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ExpandAllFolds:           method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ExpandFold:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$FindNextAction:           method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$FindPreviousAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$FindSelectionAction:      method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$FirstNonWhiteAction:      method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$FormatAction:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$GenerateGutterPopupAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$InsertDateTimeAction:     method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$JumpListNextAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$JumpListNextComponentAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$JumpListPrevAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$JumpListPrevComponentAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$LastNonWhiteAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RedoAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ReindentLineAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveLineAction:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveLineBeginAction:    method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveSelectionAction:    method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveTabAction:          method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveWordNextAction:     method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$RemoveWordPreviousAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ScrollDownAction:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ScrollUpAction:           method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$SelectIdentifierAction:   method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$SelectNextParameterAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ShiftLineAction:          method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$StartMacroRecordingAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$StartNewLine:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$StopMacroRecordingAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ToggleHighlightSearchAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ToggleLineNumbersAction:  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$ToggleTypingModeAction:   method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$UndoAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ActionFactory$WordMatchAction:          method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseAction:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseCaret:          method public void org.netbeans.editor.BaseCaret.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.BaseDocument:       method public void org.netbeans.editor.BaseDocument.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.BaseKit:            method public java.util.List org.netbeans.editor.BaseKit.translateActionNameList(java.util.List)
+org.netbeans.editor.BaseKit$BackwardAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$BeepAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$BeginAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$BeginLineAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$BeginWordAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$CompoundAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$CopyAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$CutAction:  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$DefaultKeyTypedAction:          method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$DeleteCharAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$DownAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$EndAction:  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$EndLineAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$EndWordAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$ForwardAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$InsertBreakAction:              method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$InsertContentAction:            method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$InsertStringAction:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$InsertTabAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$KitCompoundAction:              method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$NextWordAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$PageDownAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$PageUpAction:                   method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$PasteAction:method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$PreviousWordAction:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$ReadOnlyAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$RemoveTrailingSpacesAction:     method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$SelectLineAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$SplitLineAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$UpAction:   method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseKit$WritableAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.BaseTextUI:         method public void org.netbeans.editor.BaseTextUI.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.CodeFoldingSideBar: method public void org.netbeans.editor.CodeFoldingSideBar.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.DrawLayerFactory$BlockSearchLayer:      method public void org.netbeans.editor.DrawLayerFactory$BlockSearchLayer.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.DrawLayerFactory$IncSearchLayer:        method public void org.netbeans.editor.DrawLayerFactory$IncSearchLayer.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.EditorUI:           method public void org.netbeans.editor.EditorUI.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.Formatter:          method public void org.netbeans.editor.Formatter.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.GlyphGutter:        method public void org.netbeans.editor.GlyphGutter.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.GuardedDocument:    method public void org.netbeans.editor.BaseDocument.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.StatusBar:          method public void org.netbeans.editor.StatusBar.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.WordMatch:          method public void org.netbeans.editor.WordMatch.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.ext.ExtCaret:       method public void org.netbeans.editor.ext.ExtCaret.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.ext.ExtFormatter:   method public void org.netbeans.editor.ext.ExtFormatter.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+org.netbeans.editor.ext.ExtKit:         method public org.netbeans.editor.ext.Completion org.netbeans.editor.ext.ExtKit.createCompletion(org.netbeans.editor.ext.ExtEditorUI)
+org.netbeans.editor.ext.ExtKit:         method public org.netbeans.editor.ext.CompletionJavaDoc org.netbeans.editor.ext.ExtKit.createCompletionJavaDoc(org.netbeans.editor.ext.ExtEditorUI)
+org.netbeans.editor.ext.ExtKit$AllCompletionShowAction:     method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$BuildPopupMenuAction:        method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$CodeSelectAction:            method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$CommentAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$CompletionShowAction:        method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$CompletionTooltipShowAction: method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$DocumentationShowAction:     method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$EscapeAction:                method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$FindAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$GotoAction:                  method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$GotoDeclarationAction:       method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$MatchBraceAction:            method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$PrefixMakerAction:           method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$ReplaceAction:               method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$ShowPopupMenuAction:         method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$ToggleCaseIdentifierBeginAction:                 method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ExtKit$UncommentAction:             method protected void org.netbeans.editor.BaseAction.settingsChange(org.netbeans.editor.SettingsChangeEvent,java.lang.Class)
+org.netbeans.editor.ext.ToolTipSupport: method public void org.netbeans.editor.ext.ToolTipSupport.settingsChange(org.netbeans.editor.SettingsChangeEvent)
+
+Added Fields
+------------
+
+org.netbeans.editor.BaseDocument:       field public final static java.lang.String org.netbeans.editor.BaseDocument.MIME_TYPE_PROP = "mimeType"
+org.netbeans.editor.GuardedDocument:    field public final static java.lang.String org.netbeans.editor.BaseDocument.MIME_TYPE_PROP = "mimeType"
+
+Added Constructors
+------------------
+
+org.netbeans.editor.BaseDocument:       constructor public org.netbeans.editor.BaseDocument.BaseDocument(boolean,java.lang.String)
+org.netbeans.editor.GuardedDocument:    constructor public org.netbeans.editor.GuardedDocument.GuardedDocument(java.lang.String)
+org.netbeans.editor.GuardedDocument:    constructor public org.netbeans.editor.GuardedDocument.GuardedDocument(java.lang.String,boolean,javax.swing.text.StyleContext)
+org.netbeans.editor.ext.ToolTipSupport: constructor public org.netbeans.editor.ext.ToolTipSupport.ToolTipSupport(org.netbeans.editor.EditorUI)
+
+Added Methods
+-------------
+
+org.netbeans.editor.BaseCaret:          method public final void org.netbeans.editor.BaseCaret.refresh()
+org.netbeans.editor.BaseKit:            method public java.util.List&lt;javax.swing.Action&gt; org.netbeans.editor.BaseKit.translateActionNameList(java.util.List&lt;java.lang.String&gt;)
+org.netbeans.editor.EditorUI:           method public javax.swing.JPopupMenu org.netbeans.editor.EditorUI.getPopupMenu()
+org.netbeans.editor.EditorUI:           method public org.netbeans.editor.PopupManager org.netbeans.editor.EditorUI.getPopupManager()
+org.netbeans.editor.EditorUI:           method public org.netbeans.editor.ext.ToolTipSupport org.netbeans.editor.EditorUI.getToolTipSupport()
+org.netbeans.editor.EditorUI:           method public void org.netbeans.editor.EditorUI.hidePopupMenu()
+org.netbeans.editor.EditorUI:           method public void org.netbeans.editor.EditorUI.setPopupMenu(javax.swing.JPopupMenu)
+org.netbeans.editor.EditorUI:           method public void org.netbeans.editor.EditorUI.showPopupMenu(int,int)
+org.netbeans.editor.Formatter:          method public static org.netbeans.editor.Formatter org.netbeans.editor.Formatter.getFormatter(java.lang.String)
+org.netbeans.editor.ext.ExtFormatter:   method public static org.netbeans.editor.Formatter org.netbeans.editor.Formatter.getFormatter(java.lang.String)
+
+duplicate messages suppressed: 14
+</pre>                
+            </description>
+            <issue number="90403"/>
+        </change>
+
+        <change id="BaseDocument-kitClass-deprecations">
+            <summary>Deprecating kit class related API in BaseDocument</summary>
+            <version major="1" minor="26"/>
+            <date day="16" month="1" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    The use of editor kit implementation class for identifying
+                    the type of a document has been deprecated in favor of mime
+                    types and <code>MimeLookup</code>. This change deprecates API
+                    methods and construction in <code>BaseDocument</code> that
+                    accept editor kit implementation class and adds their equivalents
+                    accepting mime type.
+                </p>
+                <p>Deprecated:
+                <code>BaseDocument(Class, boolean)</code>,
+                <code>GuardedDocument(Class)</code>,
+                <code>GuardedDocument(Class, boolean, StyleContext)</code>,
+                <code>Formatter.getFormatter(Class)</code>,
+                <code>Formatter.setFormatter(Class, Formatter)</code>
+                </p>
+                <p>Added:
+                <code>BaseDocument.MIME_TYPE_PROP</code>,
+                <code>BaseDocument(boolean, String)</code>,
+                <code>GuardedDocument(String)</code>,
+                <code>GuardedDocument(String, boolean, StyleContext)</code>,
+                <code>Formatter.getFormatter(String)</code>
+                </p>
+            </description>
+            <issue number="114747"/>
+        </change>
+
+        <change id="BaseDocument.addUpdateDocumentListener">
+            <summary>Added BaseDocument.addPostModificationDocumentListener()</summary>
+            <version major="1" minor="27"/>
+            <date day="12" month="6" year="2008"/>
+            <author login="mmetelka"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                <p>BaseDocument.addUpdateDocumentListener() allows clients to add
+                   custom undoable edits into document event (acting as a compound edit).
+                </p>
+            </description>
+        </change>
+        
+        <change id="BaseDocument.addPostModificationDocumentListener">
+            <summary>Added BaseDocument.addPostModificationDocumentListener()</summary>
+            <version major="1" minor="25"/>
+            <date day="28" month="3" year="2008"/>
+            <author login="mmetelka"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                <p>BaseDocument.addPostModificationDocumentListener() is an improvement
+                  over existing BaseDocument.setPostModificationDocumentListener()
+                  which is now deprecated.
+                </p>
+            </description>
+        </change>
+        
+        <change id="Adding.thick.line.caret">
+            <summary>Adding Thick Line Caret</summary>
+            <version major="1" minor="23"/>
+            <date day="20" month="3" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                <p>Adding several fields related to Thick Line Caret contributed
+                by barty (barth2k at yahoo dot com):</p>
+                <ul>
+                    <li><code>BaseCaret.THICK_LINE_CARET</code></li>
+                    <li><code>SettingsNames.THICK_CARET_WIDTH</code></li>
+                    <li><code>SettingsDefaults.defaultThickCaretWidth</code></li>
+                </ul>
+            </description>
+        </change>
+        
+        <change id="DrawContext.and.DrawGraphics.enhanced">
+            <summary>Adding methods to DrawContext and DrawGraphics</summary>
+            <version major="1" minor="22"/>
+            <date day="28" month="2" year="2008"/>
+            <author login="vstejskal"/>
+            <compatibility binary="incompatible" source="compatible" semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                <p>Adding:</p>
+                <ul>
+                    <li><code>DrawContext.get{set}TopBorderLineColor</code></li>
+                    <li><code>DrawContext.get{set}RightBorderLineColor</code></li>
+                    <li><code>DrawContext.get{set}BottomBorderLineColor</code></li>
+                    <li><code>DrawContext.get{set}LeftBorderLineColor</code></li>
+                    <li><code>DrawGraphics.setTopBorderLineColor</code></li>
+                    <li><code>DrawGraphics.setRightBorderLineColor</code></li>
+                    <li><code>DrawGraphics.setBottomBorderLineColor</code></li>
+                    <li><code>DrawGraphics.setLeftBorderLineColor</code></li>
+                </ul>
+            </description>
+        </change>
+        
+        <change id="LineSeparatorConversion.deprecated">
+            <summary>Deprecating LineSeparatorConversion</summary>
+            <version major="1" minor="20"/>
+            <date day="17" month="10" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="no" deprecation="yes"/>
+            <description>
+                <p>
+                    Deprecating LineSeparatorConversion in favor of
+                    <code>org.netbeans.lib.editor.util.CharacterConversions</code>.
+                </p>
+            </description>
+        </change>
+        
+        <change id="BaseDocument.getLegacyFormatter">
+            <summary>Added BaseDocument.getLegacyFormatter()</summary>
+            <version major="1" minor="19"/>
+            <date day="13" month="10" year="2007"/>
+            <author login="mmetelka"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>BaseDocument.getLegacyFormatter()</code> was added
+                    to allow the new indent infrastructure to delegate to legacy
+                    formatter in case the new indent API was called explicitly.
+                </p>
+            </description>
+        </change>
+        
+        <change id="HyperlinkProviderExt">
+            <summary>Extending HyperlinkProviders</summary>
+            <version major="1" minor="18"/>
+            <date day="20" month="9" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The hyperlink providers have been extended to allow:
+                </p>
+                
+                <ul>
+                    <li>tooltips for the hyperlinks</li>
+                    <li>future extensions through <code>HyperlinkType</code></li>
+                </ul>
+                    
+                <p>
+                    See newly added <code>HyperlinkProviderExt</code> class.
+                </p>
+            </description>
+            <issue number="115359" />
+        </change>
+        
+        <change id="BaseDocumentEvent.getChangeAttributes.added">
+            <summary>Added BaseDocumentEvent.getChangeAttributes</summary>
+            <version major="1" minor="17"/>
+            <date day="22" month="8" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    The <code>BaseDocumentEvent.getChangeAttributes()</code> was added
+                    in order to be able to find out the attributes supplied
+                    when calling <code>Document.insertString()</code>.
+                </p>
+            </description>
+        </change>
+
+        <change id="ExtKit.ToggleCommentAction.added">
+            <summary>Added ExtKit.ToggleCommentAction</summary>
+            <version major="1" minor="16"/>
+            <date day="23" month="7" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="no" addition="yes"/>
+            <description>
+                <p>
+                    The <code>ExtKit.ToggleCommentAction</code> was added as a
+                    replacement for the <code>ExtKit.CommentAction</code> and
+                    <code>ExtKit.UncommentAction</code> actions.
+                </p>
+            </description>
+        </change>
+
+        <change id="BracesMatching.spi.related.deprecations">
+            <summary>Several things were deprecated in favor of BracesMatching SPI</summary>
+            <version major="1" minor="15"/>
+            <date day="7" month="6" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="yes" />
+            <description>
+                <p>
+                    Some fields and methods in <code>ExtCaret</code> and <code>ExtKit</code>
+                    that were related to highlighting matching braces in a document
+                    are no longer supported. There is new Braces Matching SPI available,
+                    which replaces them.
+                </p>
+                <p>
+                    The <code>ExtCaret.setMatchBraceOffset</code> and the <code>MATCH_BRACE_*</code>
+                    added in 1.14 were removed again. This is in fact no change,
+                    because these methods have never been part of any release.
+                </p>
+            </description>
+        </change>
+
+        <change id="ExtCaret-matchBraceOffset">
+            <summary>Adding ExtCaret.get/setMatchBraceOffset</summary>
+            <version major="1" minor="14"/>
+            <date day="2" month="5" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" />
+            <description>
+                <p>
+                    The <code>ExtCaret.setMatchBraceOffset</code> and the <code>MATCH_BRACE_*</code>
+                    constants can be used for customizing the algorithm for
+                    finding a matching bracket. The options are: match a breacket
+                    before caret, after caret or either side.
+                </p>
+            </description>
+        </change>
+
+        <change id="JumpList-final">
+            <summary>Making JumpList final</summary>
+            <version major="1" minor="13"/>
+            <date day="2" month="4" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="incompatible" semantic="compatible" />
+            <description>
+                <p>
+                    The JumpList was never meant to be subclassed or instantialized
+                    even though the class did not prevent it. It is now final with
+                    private constructor; the same for JumpList.Entry class.
+                </p>
+            </description>
+        </change>
+        
+        <change id="draw-layers-disabled">
+            <summary>Deprecating the use of <code>DrawLayer</code></summary>
+            <version major="1" minor="12"/>
+            <date day="8" month="1" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" />
+            <description>
+                <p>
+                    Using <code>DrawLayer</code> and related classes and methods
+                    has been deprecated in favor of the new Highlighting SPI in
+                    the editor/lib2 module. For more details see
+                    <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Highlighting SPI</a>.
+                </p>
+            </description>
+        </change>
+        
+        <change id="Coloring.fromAttributeSet">
+            <summary>Adding Coloring.fromAttributeSet method</summary>
+            <version major="1" minor="11"/>
+            <date day="5" month="1" year="2007"/>
+            <author login="vstejskal"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes"/>
+            <description>
+                <p>
+                    Adding <code>Coloring.fromAttributeSet</code> static
+                    method to provide a simple and correct way of converting colorings
+                    from the format used by the new settings infrastructure to
+                    the format used by <code>DrawEngine</code> and various
+                    <code>DrawLayer</code>s.
+                </p>
+            </description>
+        </change>
+
+        <change id="created">
+            <summary>editor/lib now has its own arch and apichanges documents.</summary>
+            <version major="1" minor="9"/>
+            <date day="28" month="11" year="2005"/>
+            <author login="mmetelka"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                <p>
+                    Separate arch and apichanges documents extracted from editor to editor/lib.
+                </p>
+            </description>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!-- Generated from apichanges.xml -->
+    <head>
+      <title>Change History for the Editor Library API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="overview-summary.html">Editor Library API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.editor.lib/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

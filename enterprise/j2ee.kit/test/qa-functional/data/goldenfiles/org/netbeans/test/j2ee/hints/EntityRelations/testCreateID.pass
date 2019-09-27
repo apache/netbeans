@@ -1,0 +1,42 @@
+13:0-13:28:verifier:Unused Import
+23:13-23:21:error:There is no ID defined for this entity hierarchy.
+Create Entity ID...
+Remove unused import
+---------------------
+/*
+ * CreateID.java
+ *
+ * Created on July 20, 2006, 4:15 PM
+ *
+ * To change this template, choose Tools | Template Manager
+ * and open the template in the editor.
+ */
+
+package hints;
+
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+/**
+ * Entity class CreateID
+ * 
+ * 
+ * 
+ * @author jindra
+ */
+@Entity
+public class CreateID implements Serializable {
+    @Id
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+}
+
+

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$currentUser = System147427::$userInfo->|id;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? id                            [PUBLIC]   User147427

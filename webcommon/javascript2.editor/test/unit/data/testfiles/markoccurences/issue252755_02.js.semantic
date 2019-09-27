@@ -1,0 +1,12 @@
+|>GLOBAL:$<|("#foo").on("click", ".foo", function() {
+    var |>LOCAL_VARIABLE_DECLARATION:coord<|;
+    |>LOCAL_VARIABLE:coord<|[0] = 1; //OK
+    |>GLOBAL:$<|("#foo2").appendTo("#foo3").show(400, function() {
+        //Create map target div when completely open (or it doesn't work)
+        |>LOCAL_VARIABLE:coord<|[0] = 1; //marked as not declared!
+        |>LOCAL_VARIABLE:coord<| = 1; //OK
+    });
+});
+
+
+

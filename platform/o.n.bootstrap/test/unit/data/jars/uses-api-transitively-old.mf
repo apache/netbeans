@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: usesapitransold
+OpenIDE-Module-Module-Dependencies: usesandexportsapi
+
+

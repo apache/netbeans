@@ -1,0 +1,29 @@
+Name: test70_01
+public function test70_01(string $string, int $int): \Bar {
+${cursor};
+}
+
+Name: test70_02
+public function test70_02(string $string, int $int): \Bar {
+${cursor};
+}
+
+Name: test70_03
+public function test70_03(string $string, int $int) {
+${cursor};
+}
+
+Name: test70_04
+public function test70_04(string $string, int $int): \Bar {
+${cursor};
+}
+
+Name: test70_05
+public function test70_05(): \FooInterface {
+${cursor};
+}
+
+Name: test70_06
+public function test70_06(\FooInterface $self) {
+${cursor};
+}

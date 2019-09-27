@@ -1,0 +1,4 @@
+Code completion result for source line:
+UVS1::$INSTANCE2::$INS|TANCE3::MAX;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   UVS3 $INSTANCE3                 [STATIC]   UVS2

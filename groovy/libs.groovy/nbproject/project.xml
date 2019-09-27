@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.modules.libs.groovy</code-name-base>
+            <module-dependencies/>
+            <friend-packages>
+                <friend>org.netbeans.modules.groovy.editor</friend>
+                <friend>org.netbeans.modules.groovy.refactoring</friend>
+                <friend>org.netbeans.modules.groovy.support</friend>
+                <package>groovy.lang</package>
+                <package>groovyjarjarantlr</package>
+                <package>groovyjarjarasm.asm</package>
+                <package>org.codehaus.groovy</package>
+                <package>org.codehaus.groovy.ant</package>
+                <package>org.codehaus.groovy.antlr.parser</package>
+                <package>org.codehaus.groovy.ast</package>
+                <package>org.codehaus.groovy.ast.expr</package>
+                <package>org.codehaus.groovy.ast.stmt</package>
+                <package>org.codehaus.groovy.ast.tools</package>
+                <package>org.codehaus.groovy.classgen</package>
+                <package>org.codehaus.groovy.control</package>
+                <package>org.codehaus.groovy.control.customizers</package>
+                <package>org.codehaus.groovy.control.customizers.builder</package>
+                <package>org.codehaus.groovy.control.messages</package>
+                <package>org.codehaus.groovy.reflection</package>
+                <package>org.codehaus.groovy.syntax</package>
+                <package>org.codehaus.groovy.transform</package>
+                <package>org.codehaus.groovy.transform.stc</package>
+            </friend-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/groovy.jar</runtime-relative-path>
+                <binary-origin>external/groovy-2.5.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/groovy-ant.jar</runtime-relative-path>
+                <binary-origin>external/groovy-ant-2.5.2.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

@@ -1,0 +1,31 @@
+jpda.session.name=<set-by-the-generator>
+jpda.host=localhost
+
+# Sun Java System Application Server using shared memory (on Windows)
+# jpda.address=localhost4848
+# jpda.transport=dt_shmem
+
+# Sun Java System Application Server using a socket
+# jpda.address=9009
+# jpda.transport=dt_socket
+
+# Tomcat using shared memory (on Windows)
+# jpda.address=tomcat_shared_memory_id
+# jpda.transport=dt_shmem
+
+# Tomcat using a socket
+jpda.address=11555
+jpda.transport=dt_socket
+
+src.folders=<set-by-the-generator>
+web.docbase.dir=<set-by-the-generator>
+
+# you can change this property to a list of your source folders
+debug.sourcepath=${src.folders}:${web.docbase.dir}
+
+# Client URL for Tomcat
+client.url=http://localhost:8084
+
+# Client URL for Sun Java System Application Server 
+# client.url=http://localhost:8080
+

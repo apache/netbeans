@@ -1,0 +1,28 @@
+Code completion result for source line:
+TestDomain.findByAgeAndName|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     findByAgeAndName(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeAndName(Object, Objec  [PROTECTE  Object
+METHOD     findByAgeAndNameBetween(Object  [PROTECTE  Object
+METHOD     findByAgeAndNameBetween(Object  [PROTECTE  Object
+METHOD     findByAgeAndNameEqual(Object,   [PROTECTE  Object
+METHOD     findByAgeAndNameEqual(Object,   [PROTECTE  Object
+METHOD     findByAgeAndNameGreaterThan(Ob  [PROTECTE  Object
+METHOD     findByAgeAndNameGreaterThan(Ob  [PROTECTE  Object
+METHOD     findByAgeAndNameGreaterThanEqu  [PROTECTE  Object
+METHOD     findByAgeAndNameGreaterThanEqu  [PROTECTE  Object
+METHOD     findByAgeAndNameILike(Object,   [PROTECTE  Object
+METHOD     findByAgeAndNameILike(Object,   [PROTECTE  Object
+METHOD     findByAgeAndNameIsNotNull(Obje  [PROTECTE  Object
+METHOD     findByAgeAndNameIsNotNull(Obje  [PROTECTE  Object
+METHOD     findByAgeAndNameIsNull(Object)  [PROTECTE  Object
+METHOD     findByAgeAndNameIsNull(Object,  [PROTECTE  Object
+METHOD     findByAgeAndNameLessThan(Objec  [PROTECTE  Object
+METHOD     findByAgeAndNameLessThan(Objec  [PROTECTE  Object
+METHOD     findByAgeAndNameLessThanEquals  [PROTECTE  Object
+METHOD     findByAgeAndNameLessThanEquals  [PROTECTE  Object
+METHOD     findByAgeAndNameLike(Object, O  [PROTECTE  Object
+METHOD     findByAgeAndNameLike(Object, O  [PROTECTE  Object
+METHOD     findByAgeAndNameNotEqual(Objec  [PROTECTE  Object
+METHOD     findByAgeAndNameNotEqual(Objec  [PROTECTE  Object

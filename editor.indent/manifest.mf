@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.editor.indent/2
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/indent/Bundle.properties
-OpenIDE-Module-Layer: org/netbeans/modules/editor/indent/resources/layer.xml
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Recommends: org.netbeans.modules.editor.indent.spi.CodeStylePreferences.Provider
-OpenIDE-Module-Provides: org.netbeans.templates.IndentEngine
-OpenIDE-Module-Specification-Version: 1.44

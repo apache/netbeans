@@ -1,0 +1,4 @@
+Code completion result for source line:
+parent::b|eforeRender();//TEST
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     beforeRender()                  [PROTECTE  \AdminModule\AdminPresenter

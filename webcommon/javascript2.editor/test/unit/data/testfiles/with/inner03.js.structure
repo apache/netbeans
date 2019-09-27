@@ -1,0 +1,9 @@
+ondra:CLASS:[PUBLIC]:ESCAPED{ondra}:
+  address:CLASS:[PUBLIC]:ESCAPED{address}:
+    city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+    state:FIELD:[PUBLIC]:ESCAPED{state}<font color="#999999">ESCAPED{ : }String</font>:
+  house:CLASS:[PUBLIC]:ESCAPED{house}:
+    address:CLASS:[PUBLIC]:ESCAPED{address}:
+      street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+    number:FIELD:[PUBLIC]:ESCAPED{number}<font color="#999999">ESCAPED{ : }Number</font>:
+  name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:

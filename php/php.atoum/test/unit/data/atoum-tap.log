@@ -1,0 +1,36 @@
+1..10
+not ok 1 # TODO tests\unit\StdClass::testVoid()
+# /home/gapon/NetBeansProjects/atoum-sample/tests/unit/StdClass.php
+not ok 2 - tests\unit\StdClass::testFail()
+# object(stdClass) is not null
+# second line of the message
+# /home/gapon/NetBeansProjects/atoum-sample/tests/unit/StdClass.php:19
+ok 3
+# tests\unit\StdClass::testPass()
+ok 4 # SKIP tests\unit\StdClass::testSkipped()
+# This test was skipped
+# /home/gapon/NetBeansProjects/atoum-sample/tests/unit/StdClass.php:29
+not ok 5 - tests\unit\StdClass::testException()
+# exception 'RuntimeException' with message 'This test triggered a \RuntimeException' in /home/gapon/NetBeansProjects/atoum-sample/tests/unit/StdClass.php:41
+# Stack trace:
+# #0 /home/gapon/NetBeansProjects/atoum-sample/vendor/atoum/atoum/classes/test.php(838): tests\unit\StdClass->testException()
+# #1 -(1): mageekguy\atoum\test->runTestMethod('testException')
+# #2 {main}
+# /home/gapon/NetBeansProjects/atoum-sample/vendor/atoum/atoum/classes/test.php:838
+not ok 6 - tests\unit\StdClass::testError()
+# This test triggered an error
+# /home/gapon/NetBeansProjects/atoum-sample/tests/unit/StdClass.php:36
+ok 7
+# tests\unit\atoum\sample\Foobar::test__construct()
+ok 8
+# tests\unit\atoum\sample\Foobar::testGetFoo()
+not ok 9 - tests\unit\atoum\sample\Foobar::testIncomplete()
+# I died
+not ok 10 - my\project\tests\units\helloWorld::testBye()
+# strings are not equals
+# -Reference
+# +Data
+# @@ -1 +1 @@
+# -string(10) "Bye World!"
+# +string(6) "Hello!"
+# C:\\My Documents\\myproject\\test\\helloWorld.php:31

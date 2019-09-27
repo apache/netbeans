@@ -1,0 +1,6 @@
+class TypeRedeclarationClassName {
+      --------------------------
+HINT:Type "TypeRedeclarationClassName" has been already declared
+interface TypeRedeclarationInterfaceName {
+          ------------------------------
+HINT:Type "TypeRedeclarationInterfaceName" has been already declared

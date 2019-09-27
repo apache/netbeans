@@ -1,0 +1,8 @@
+Code completion result for source line:
+console.log(o.c.|third);     // 3th
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     sayHello(): String              [PUBLIC]   shorthandPropertyNames.js
+FIELD      first: String                   [PUBLIC]   shorthandPropertyNames.js
+FIELD      second: String                  [PUBLIC]   shorthandPropertyNames.js
+FIELD      third: String                   [PUBLIC]   shorthandPropertyNames.js

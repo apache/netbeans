@@ -1,0 +1,5 @@
+Code completion result for source line:
+use function Name\Space\f|nc as fnc2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     fnc()                           [PUBLIC]   Name\Space
+METHOD     fnc()                           [PUBLIC]   Name\Space

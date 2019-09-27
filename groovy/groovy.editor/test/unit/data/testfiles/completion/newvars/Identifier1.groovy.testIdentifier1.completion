@@ -1,0 +1,5 @@
+Code completion result for source line:
+String str|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   string                                     null

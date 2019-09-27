@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="AntJava">
+            <folder name="J2EE">
+                <attr name="position" intvalue="400"/>
+                <file name="emptyCar.xml">
+                    <attr name="position" intvalue="600"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingIterator" newvalue="org.netbeans.modules.j2ee.clientproject.ui.wizards.NewAppClientProjectWizardIterator"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.clientproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/appclient.gif"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-emptyProject.html"/>
+                </file>
+        
+                <file name="importCar.xml">
+                    <attr name="position" intvalue="700"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingIterator" newvalue="org.netbeans.modules.j2ee.clientproject.ui.wizards.ImportAppClientProjectWizardIterator"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.clientproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/appclient.gif"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-importProject.html"/>
+                </file>                
+            </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="org-netbeans-modules-j2ee-clientproject">
+        <file name="application-client-1.4.xml" url="application-client-1.4.xml"/>
+        <file name="application-client-5.xml" url="application-client-5.xml"/>
+        <file name="application-client-6.xml" url="application-client-6.xml"/>
+        <file name="application-client-7.xml" url="application-client-7.xml"/>
+        <file name="MANIFEST.MF" url="MANIFEST.MF"/>
+    </folder>
+    
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-j2ee-clientproject">
+            
+            <folder name="Customizer">
+                <file name="Sources.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createSources"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="Libraries.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createLibraries"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <folder name="BuildCategory">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.Bundle"/>
+                    <attr name="position" intvalue="300"/>
+                    <file name="Build.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createBuild"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="Jar.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createJar"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="Javadoc.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createJavadoc"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                </folder>
+                <file name="Run.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createRun"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="WebServicesCategory.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.clientproject.ui.customizer.AppClientCompositePanelProvider.createWebServicesCategory"/>
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="Formatting.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.indent.project.api.Customizers.createFormattingCategoryProvider"/>
+                    <attr name="allowedMimeTypes" stringvalue="text/x-java"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+
+            <folder name="Nodes">
+                <file name="org-netbeans-modules-java-api-common-project-ui-JavaSourceNodeFactory.instance">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+
+            <folder name="Lookup"/>
+            
+            <folder name="Actions">
+                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="sep-1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-BuildProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-BuildProject.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RebuildProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RebuildProject.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CleanProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CleanProject.instance"/>
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider$VerifyAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider$VerifyAction.instance"/>
+                    <attr name="position" intvalue="550"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-JavadocProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-JavadocProject.instance"/>
+                    <attr name="position" intvalue="600"/>
+                </file>
+                <file name="sep-2.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RunProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunProject.instance"/>
+                    <attr name="position" intvalue="800"/>
+                </file>
+                <file name="org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-redeploy.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-redeploy.instance"/>
+                    <attr name="position" intvalue="850"/>
+                </file>
+                <file name="org-netbeans-modules-debugger-ui-actions-DebugProjectAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugProjectAction.instance"/>
+                    <attr name="position" intvalue="900"/>
+                </file>
+                <!--<file name="Profiler_Actions_temporary.shadow">
+                    <attr name="originalFile" stringvalue="Projects/Profiler_Actions_temporary"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>-->
+                <file name="org-netbeans-modules-project-ui-TestProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestProject.instance"/>
+                    <attr name="position" intvalue="1100"/>
+                </file>
+                <file name="sep-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1300"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-SetMainProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-SetMainProject.instance"/>
+                    <attr name="position" intvalue="1400"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-actions-OpenSubprojects.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-actions-OpenSubprojects.instance"/>
+                    <attr name="position" intvalue="1500"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CloseProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CloseProject.instance"/>
+                    <attr name="position" intvalue="1600"/>
+                </file>
+                <file name="sep-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1700"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RenameProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RenameProject.instance"/>
+                    <attr name="position" intvalue="1800"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-MoveProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-MoveProject.instance"/>
+                    <attr name="position" intvalue="1900"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CopyProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CopyProject.instance"/>
+                    <attr name="position" intvalue="2000"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-DeleteProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-DeleteProject.instance"/>
+                    <attr name="position" intvalue="2100"/>
+                </file>
+                <file name="sep-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2200"/>
+                </file>
+                <file name="org-openide-actions-FindAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
+                    <attr name="position" intvalue="2300"/>
+                </file>
+                <file name="general.shadow">
+                    <attr name="originalFile" stringvalue="Projects/Actions"/>
+                    <attr name="position" intvalue="2400"/>
+                </file>
+                <file name="sep-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2500"/>
+                </file>
+                <file name="org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenLinksActionFactory.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenLinksActionFactory.instance"/>
+                    <attr name="position" intvalue="2600"/>
+                </file>
+                <file name="org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenServerActionFactory.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenServerActionFactory.instance"/>
+                    <attr name="position" intvalue="2700"/>
+                </file>
+                <file name="org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenDataSourceActionFactory.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-javaee-project-api-ant-ui-logicalview-AbstractLogicalViewProvider-brokenDataSourceActionFactory.instance"/>
+                    <attr name="position" intvalue="2800"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CustomizeProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CustomizeProject.instance"/>
+                    <attr name="position" intvalue="2900"/>
+                </file>
+            </folder>
+
+        </folder>
+    </folder>
+    <folder name="ProjectXMLCatalog">
+        <folder name="car-project">
+            <file name="1.xsd" url="../../resources/car-project.xsd"/>
+        </folder>
+        <folder name="car-project-private">
+            <file name="1.xsd" url="../../resources/car-project-private.xsd"/>
+        </folder>
+    </folder>
+</filesystem>

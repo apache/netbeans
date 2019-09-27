@@ -1,0 +1,9 @@
+Display text: const <b>CON</b> = 1;
+File name: index.php
+Name: CON
+Position: BEGIN: 43 END: 46
+
+Display text: Foo::<b>CON</b>;
+File name: index.php
+Name: CON
+Position: BEGIN: 216 END: 219

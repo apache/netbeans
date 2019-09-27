@@ -1,0 +1,83 @@
+<testresult testFile='lambdaFunctionWithParams.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='13'>
+            <text>$lambda</text>
+        </token>
+        <token id='T_EQUAL' start='14' end='15'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='16' end='24'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='25' end='26'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='26' end='33'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='33' end='34'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='35' end='42'>
+            <text>$param2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='42' end='43'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='44' end='45'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='46' end='47'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='47' end='48'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='49' end='52'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='52' end='52'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='51'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='48'>
+                <Assignment start='6' end='47' operator='EQUAL'>
+                    <Variable start='6' end='13' isDollared='true'>
+                        <Identifier start='7' end='13' name='lambda'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='16' end='47' isReference='false'>
+                        <FormalParameter start='26' end='33' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='26' end='33' isDollared='true'>
+                                    <Identifier start='27' end='33' name='param1'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <FormalParameter start='35' end='42' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='35' end='42' isDollared='true'>
+                                    <Identifier start='36' end='42' name='param2'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Block start='44' end='47' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='49' end='51'/>
+        </Statements>
+    </Program>
+</testresult>

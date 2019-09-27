@@ -1,0 +1,8 @@
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(13): layout.jade
+][DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):head][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_BLOCK(5):block][WHITESPACE(1): ][BLOCK_NAME(5):title][EOL(1):\n]
+[WHITESPACE(6):      ][TAG(5):title][WHITESPACE(1): ][TEXT(13):Default title][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_BLOCK(5):block][WHITESPACE(1): ][BLOCK_NAME(7):content][EOL(1):\n]

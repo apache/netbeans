@@ -1,0 +1,4 @@
+$|>MARK_OCCURRENCES:tests<| = [];
+$anon = function() use ($|>MARK_OCCURRENCES:tes^ts<|) {
+    $|>MARK_OCCURRENCES:tests<|[0] = [1, 2, 3];
+var_dump($|>MARK_OCCURRENCES:tests<|);

@@ -1,0 +1,79 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Utility Classes</title>
+<link rel="Stylesheet" href="../../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<p class="overviewlink"><a href="@TOP@overview-summary.html">Overview</a></p>
+
+<h1>Utility Classes</h1>
+
+Not all of the classes in this package are of interest for all module
+writers, but some of them may or even are as they are used through out
+our sources.
+
+<h2>Package <a href="../../package-summary.html"><code>org.openide.util</code></a></h2>
+
+<ol>
+    <li><a href="../../NbBundle.html">NbBundle</a> as our specialized support
+    for localization and replacement to
+    <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>.
+    </li>
+
+    <li><a href="../../Task.html"><code>Task</code></a> and especially
+    <a href="../../RequestProcessor.html"><code>RequestProcessor</code></a> which
+    is our way to manage pools of thread workers and execute asynchronous
+    computations.
+    </li>
+
+    <li>
+    <a href="../../BaseUtilities.html"><code>BaseUtilities</code></a> which contain
+    a lot of methods of possible interest. For example
+    <a href="../../BaseUtilities.html#topologicalSort(java.util.Collection,%20java.util.Map)"><code>topologicalSort</code></a>,
+    <a href="../../BaseUtilities.html#activeReferenceQueue()"><code>activeReferenceQueue</code></a>,
+    <a href="../../BaseUtilities.html#translate(java.lang.String)"><code>translate</code></a>.
+    </li>
+
+    <li>
+    <a href="../../Enumerations.html"><code>Enumerations</code></a> provide
+    enhacened support for manipulation with 
+    <a href="@JDK@/java/util/Enumeration.html">Enumeration</a>s and especially
+    their on-demand generation.
+    </li>
+</ol>
+
+<!--
+<li><a href="../io/package-summary.html"><code>org.openide.util.io</code></a>:
+
+a few extensions to the Java I/O system.
+
+<li><a href="../../xml/package-summary.html"><code>org.openide.xml</code></a>:
+
+general XML parsing, entity registration, and so on.
+-->
+
+<hr>@FOOTER@
+</body>
+</html>

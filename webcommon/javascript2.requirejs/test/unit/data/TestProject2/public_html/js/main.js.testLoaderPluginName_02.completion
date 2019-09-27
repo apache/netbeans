@@ -1,0 +1,18 @@
+Code completion result for source line:
+'|proto/localization',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      order!                                     
+OTHER      text!                                      
+FILE       app                                        
+FILE       app                                        
+FILE       js                                         
+FILE       lib                                        
+FILE       moduleLib1.js                              
+FILE       moduleLib2.js                              
+FILE       oj                                         
+FILE       ojs                                        
+FILE       picnic.js                                  
+FILE       piknic                                     
+FILE       proto                                      
+FILE       require.js                                 

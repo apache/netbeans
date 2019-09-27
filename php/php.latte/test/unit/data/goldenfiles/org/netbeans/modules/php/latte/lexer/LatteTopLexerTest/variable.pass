@@ -1,0 +1,3 @@
+token #0 T_LATTE_OPEN_DELIMITER [{]
+token #1 T_LATTE [$foo]
+token #2 T_LATTE_CLOSE_DELIMITER [}]

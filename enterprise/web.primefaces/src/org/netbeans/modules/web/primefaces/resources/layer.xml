@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="j2ee">
+        <folder name="jsf">
+            <folder name="components">
+                <file name="org-netbeans-modules-web-primefaces-PrimefacesProvider.instance">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="org-netbeans-api-project-libraries">
+        <folder name="Libraries">
+            <file name="primefaces.xml" url="primefaces.xml">
+                <attr name="displayName" bundlevalue="org/netbeans/modules/web/primefaces/resources/Bundle#primefaces"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Templates">
+        <folder name="JSF">
+            <folder name="JSF_From_Entity_Wizard">
+                <folder name="PrimeFaces">
+                    <attr name="position" intvalue="200"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.web.primefaces.resources.Bundle#Templates/JSF/JSF_From_Entity_Wizard/PrimeFaces"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                    <file name="JsfUtil.ftl" url="../templates/JsfUtil.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="controller.ftl" url="../templates/controller.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="create.ftl" url="../templates/create.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="edit.ftl" url="../templates/edit.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="list.ftl" url="../templates/list.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="view.ftl" url="../templates/view.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="bundle.ftl" url="../templates/bundle.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="jsfcrud.css" url="../templates/jsfcrud.css">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="jsfcrud.js" url="../templates/jsfcrud.js">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="template.ftl" url="../templates/template.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="JSF_From_Entity_Snippets">
+                <folder name="PrimeFaces">
+                    <attr name="position" intvalue="200"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                    <file name="table.ftl" url="../snippets/table.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="view.ftl" url="../snippets/view.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="edit.ftl" url="../snippets/edit.ftl">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.primefaces.resources.Bundle"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="Other">
+            <file name="welcomePrimefaces.xhtml" url="welcomePrimefaces.template">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="position" intvalue="171"/>
+                <attr name="template" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+
+</filesystem>

@@ -1,0 +1,4 @@
+    this.get = function($scope, |>MARK_OCCURRENCES:version<|, onSuccess, onFail) {
+        |>MARK_OCCURRENCES:vers^ion<| = (|>MARK_OCCURRENCES:version<|.length > 0) ? {"version": |>MARK_OCCURRENCES:version<|} : {petr : 10};
+        $http.get($scope.SYNERGY.server.buildURL("specifications", |>MARK_OCCURRENCES:version<|)).success(onSuccess).error(onFail);
+        |>MARK_OCCURRENCES:version<|.version = 10;

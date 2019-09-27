@@ -1,0 +1,102 @@
+token #0 T_INLINE_HTML --TEST--\njump 10: goto with try blocks\n--FILE--\n
+token #1 PHP_OPENTAG <?php
+token #2 WHITESPACE \n
+token #3 PHP_GOTO goto
+token #4 WHITESPACE  
+token #5 PHP_STRING a
+token #6 PHP_SEMICOLON ;
+token #7 WHITESPACE \n
+token #8 PHP_STRING e
+token #9 PHP_TOKEN :
+token #10 WHITESPACE  
+token #11 PHP_RETURN return
+token #12 PHP_SEMICOLON ;
+token #13 WHITESPACE \n
+token #14 PHP_TRY try
+token #15 WHITESPACE  
+token #16 PHP_CURLY_OPEN {
+token #17 WHITESPACE \n    
+token #18 PHP_STRING a
+token #19 PHP_TOKEN :
+token #20 WHITESPACE  
+token #21 PHP_PRINT print
+token #22 WHITESPACE  
+token #23 PHP_NUMBER 1
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n    
+token #26 PHP_GOTO goto
+token #27 WHITESPACE  
+token #28 PHP_STRING b
+token #29 PHP_SEMICOLON ;
+token #30 WHITESPACE \n    
+token #31 PHP_TRY try
+token #32 WHITESPACE  
+token #33 PHP_CURLY_OPEN {
+token #34 WHITESPACE \n        
+token #35 PHP_STRING b
+token #36 PHP_TOKEN :
+token #37 WHITESPACE  
+token #38 PHP_PRINT print
+token #39 WHITESPACE  
+token #40 PHP_NUMBER 2
+token #41 PHP_SEMICOLON ;
+token #42 WHITESPACE \n        
+token #43 PHP_GOTO goto
+token #44 WHITESPACE  
+token #45 PHP_STRING c
+token #46 PHP_SEMICOLON ;
+token #47 WHITESPACE \n    
+token #48 PHP_CURLY_CLOSE }
+token #49 WHITESPACE \n    
+token #50 PHP_CATCH catch
+token #51 PHP_TOKEN (
+token #52 PHP_STRING Exception
+token #53 WHITESPACE  
+token #54 PHP_VARIABLE $e
+token #55 PHP_TOKEN )
+token #56 WHITESPACE  
+token #57 PHP_CURLY_OPEN {
+token #58 WHITESPACE \n        
+token #59 PHP_STRING c
+token #60 PHP_TOKEN :
+token #61 WHITESPACE  
+token #62 PHP_PRINT print
+token #63 WHITESPACE  
+token #64 PHP_NUMBER 3
+token #65 PHP_SEMICOLON ;
+token #66 WHITESPACE \n        
+token #67 PHP_GOTO goto
+token #68 WHITESPACE  
+token #69 PHP_STRING d
+token #70 PHP_SEMICOLON ;
+token #71 WHITESPACE     \n    
+token #72 PHP_CURLY_CLOSE }
+token #73 WHITESPACE     \n
+token #74 PHP_CURLY_CLOSE }
+token #75 WHITESPACE \n
+token #76 PHP_CATCH catch
+token #77 PHP_TOKEN (
+token #78 PHP_STRING Exception
+token #79 WHITESPACE  
+token #80 PHP_VARIABLE $e
+token #81 PHP_TOKEN )
+token #82 WHITESPACE  
+token #83 PHP_CURLY_OPEN {
+token #84 WHITESPACE \n    
+token #85 PHP_STRING d
+token #86 PHP_TOKEN :
+token #87 WHITESPACE  
+token #88 PHP_PRINT print
+token #89 WHITESPACE  
+token #90 PHP_NUMBER 4
+token #91 PHP_SEMICOLON ;
+token #92 WHITESPACE \n    
+token #93 PHP_GOTO goto
+token #94 WHITESPACE  
+token #95 PHP_STRING e
+token #96 PHP_SEMICOLON ;
+token #97 WHITESPACE     \n
+token #98 PHP_CURLY_CLOSE }
+token #99 WHITESPACE \n
+token #100 PHP_CLOSETAG ?>
+token #101 T_INLINE_HTML \n--EXPECT--\n1234\n

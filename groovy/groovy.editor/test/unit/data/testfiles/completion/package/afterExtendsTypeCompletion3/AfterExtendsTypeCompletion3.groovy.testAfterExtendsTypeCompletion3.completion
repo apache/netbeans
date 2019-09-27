@@ -1,0 +1,29 @@
+Code completion result for source line:
+class PrefixIsEqualWithKeyword extends in| {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      IncompatibleClassChangeError               null
+CLASS      IncorrectClosureArgumentsExcep             null
+CLASS      IndentPrinter                              null
+CLASS      IndexOutOfBoundsException                  null
+CLASS      Inet4Address                               null
+CLASS      Inet6Address                               null
+CLASS      InetAddress                                null
+CLASS      InetSocketAddress                          null
+CLASS      InheritableThreadLocal                     null
+CLASS      InputMismatchException                     null
+CLASS      InputStream                                null
+CLASS      InputStreamReader                          null
+CLASS      InstantiationError                         null
+CLASS      InstantiationException                     null
+CLASS      IntRange                                   null
+CLASS      IntSummaryStatistics                       null
+CLASS      Integer                                    null
+CLASS      Interceptor                                null
+CLASS      InterfaceAddress                           null
+CLASS      InternalError                              null
+CLASS      InterruptedException                       null
+CLASS      InterruptedIOException                     null
+CLASS      InvalidClassException                      null
+CLASS      InvalidObjectException                     null
+CLASS      InvalidPropertiesFormatExcepti             null

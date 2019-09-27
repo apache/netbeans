@@ -1,0 +1,5 @@
+SomeSingleton:CLASS:[PUBLIC]:ESCAPED{SomeSingleton}:
+  _privateFunction:METHOD:[PRIVATE]:ESCAPED{_privateFunction}ESCAPED{(}ESCAPED{blah}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  _privateVariable:VARIABLE:[PRIVATE]:ESCAPED{_privateVariable}<font color="#999999">ESCAPED{ : }Number</font>:
+  publicFunction:METHOD:[PROTECTED]:ESCAPED{publicFunction}ESCAPED{(}ESCAPED{foobar}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  publicVariable:FIELD:[PUBLIC]:ESCAPED{publicVariable}<font color="#999999">ESCAPED{ : }Number</font>:

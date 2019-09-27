@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="ide/whitelist-test" default="test" basedir=".">
+
+    <dirname property="whitelist-test.basedir" file="${ant.file.whitelist-test}"/>
+
+    <property name="nb_all" location="${whitelist-test.basedir}/../../.."/>
+    <property name="temp_dir" location="${whitelist-test.basedir}/temp"/>
+    <property name="tomcat6_zip" location="${temp_dir}/tomcat6.zip"/>
+    <property name="tomcat6_dir" location="${temp_dir}/tomcat6"/>
+    <property name="tomcat6_dest_dir" location="${whitelist-test.basedir}/../qa-functional/data/tomcat6"/>
+    <property name="work_dir" location="${whitelist-test.basedir}/../../build/test/qa-functional/work"/>
+    <condition property="ant.executable" value="ant.bat" else="ant">
+        <os family="windows"/>
+    </condition>
+    <property name="allowed.violations" value="0"/>
+    <property name="debug.pause" value="y"/>
+    <condition property="debug.args" value="-agentlib:jdwp=transport=dt_socket,suspend=${debug.pause},server=y,address=${debug.port}">
+        <isset property="debug.port"/>
+    </condition>
+    <property name="debug.args" value=""/>
+
+    <target name="help">
+        <echo>
+            Execute
+
+            ant test             to perform measurement
+            ant unprepare        to remove Tomcat project from ide.kit test data dir
+        </echo>
+    </target>
+    
+    <!-- Download -->
+
+    <target name="init-download-project" depends="init-prepare,init-unzip-project" if="tomcat6_zip">
+        <available property="tomcat6_zip_exists" file="${tomcat6_zip}"/>
+        <condition property="do-download-project">
+            <and>
+                <not>
+                    <isset property="tomcat6_dir_exists"/>
+                </not>
+                <not>
+                    <isset property="tomcat6_zip_exists"/>
+                </not>
+                <not>
+                    <isset property="tomcat6_dest_dir_exists"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+    
+    <target name="download-project" depends="init-download-project" if="do-download-project">
+        <mkdir dir="${temp_dir}"/>
+        <get src="http://hg.netbeans.org/binaries/70CE8459CA39C3A49A2722C449117CE5DCFBA56A-tomcat6.zip"
+            dest="${temp_dir}/tomcat6.zip"/>
+    </target>
+    
+    <!-- Prepare -->
+
+    <target name="init-unzip-project" depends="init-prepare" if="tomcat6_dir">
+        <available property="tomcat6_dir_exists" file="${tomcat6_dir}"/>
+        <condition property="do-unzip-project">
+            <and>
+                <not>
+                    <isset property="tomcat6_dir_exists"/>
+                </not>
+                <not>
+                    <isset property="tomcat6_dest_dir_exists"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+
+    <target name="unzip-project" depends="init-unzip-project,download-project" if="do-unzip-project">
+        <unzip dest="${temp_dir}" src="${tomcat6_zip}"/>
+        <delete file="${tomcat6_dir}"/>
+    </target>
+
+    <target name="init-prepare" depends="" if="tomcat6_dest_dir">
+        <available property="tomcat6_dest_dir_exists" file="${tomcat6_dest_dir}"/>
+    </target>
+
+    <target name="prepare" depends="init-prepare,unzip-project" unless="tomcat6_dest_dir_exists">
+<!--        <mkdir dir="${tomcat6_dest_dir}"/>-->
+        <copy todir="${tomcat6_dest_dir}">
+            <fileset dir="${tomcat6_dir}"/>
+        </copy>
+        <echo>
+            Environment is prepared to run the project
+        </echo>
+    </target>
+    
+    <!-- Test -->
+
+    <target name="clean">
+        <delete dir="${work_dir}"/>
+        <delete dir="${tomcat6_dest_dir}"/>
+    </target>
+
+    <!-- Don't use this task to run the test -->
+    <target name="test1">
+        <echo>
+            1st startup test
+            ~~~~~~~~~~~~~~~~
+        </echo>
+        <exec executable="${ant.executable}" dir="${whitelist-test.basedir}/../..">
+            <arg value="test-qa-functional"/>
+            <arg value="-Dtest.includes=**/WhitelistTest.class"/>
+            <arg value="-Dpermit.jdk6.builds=true"/>
+            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=1 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
+        </exec>
+    </target>
+
+    <!-- Don't use this task to run the test  -->
+    <target name="test2">
+        <echo>
+            2nd startup test
+            ~~~~~~~~~~~~~~~~
+        </echo>
+        <exec executable="${ant.executable}" dir="${whitelist-test.basedir}/../..">
+            <arg value="test-qa-functional"/>
+            <arg value="-Dtest.includes=**/WhitelistTest.class"/>
+            <arg value="-Dpermit.jdk6.builds=true"/>
+            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=2 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
+        </exec>
+    </target>
+
+    <!-- Don't use this task to run the test  -->
+    <target name="test3">
+        <echo>
+            Startup with Tomcat project test
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        </echo>
+        <exec executable="${ant.executable}" dir="${whitelist-test.basedir}/../..">
+            <arg value="test-qa-functional"/>
+            <arg value="-Dtest.includes=**/WhitelistTest.class"/>
+            <arg value="-Dpermit.jdk6.builds=true"/>
+            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=3 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
+        </exec>
+    </target>
+
+    <target name="test" depends="clean, prepare">
+        <antcall target="test1" inheritAll="true" inheritRefs="true"/>
+        <antcall target="test2" inheritAll="true" inheritRefs="true"/>
+        <antcall target="test3" inheritAll="true" inheritRefs="true"/>
+        <echo>
+            _________________________________________________________________________________
+            Results are in ${work_dir}
+
+            Execute
+
+            ant unprepare
+
+            to remove Tomcat project project from ide.kit test data dir
+            (recommended if you're going to run ide.kit tests such as commit-validation suite)
+        </echo>
+    </target>
+    
+    <!-- Unprepare -->
+    
+    <target name="unprepare">
+        <delete dir="${tomcat6_dest_dir}"/>
+        <delete dir="${temp_dir}"/>
+    </target>
+        
+</project>

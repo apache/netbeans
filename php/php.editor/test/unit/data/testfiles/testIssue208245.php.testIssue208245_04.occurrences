@@ -1,0 +1,3 @@
+        $|>MARK_OCCURRENCES:v^ar<| = "";
+        function() use($|>MARK_OCCURRENCES:var<|) {
+            echo $|>MARK_OCCURRENCES:var<|;

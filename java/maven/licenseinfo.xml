@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/maven/actions/usages/ArtifactBadge.png</file>
+        <file>src/org/netbeans/modules/maven/actions/scm/update.png</file>
+        <file>src/org/netbeans/modules/maven/actions/scm/update_disabled.png</file>
+        <file>src/org/netbeans/modules/maven/actions/libraries.gif</file>
+        <file>src/org/netbeans/modules/maven/customizer/mojo.png</file>
+        <file>src/org/netbeans/modules/maven/customizer/param.png</file>
+        <file>src/org/netbeans/modules/maven/customizer/libraries.gif</file>
+        <file>src/org/netbeans/modules/maven/customizer/referencedClasspath.gif</file>
+        <file>src/org/netbeans/modules/maven/projectsite-badge.png</file>
+        <file>src/org/netbeans/modules/maven/DependencyManaged.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun1.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2Icon.gif</file>
+        <file>src/org/netbeans/modules/maven/resources/empty.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun4.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun5.png</file>
+        <file>src/org/netbeans/modules/maven/resources/jaricon.png</file>
+        <file>src/org/netbeans/modules/maven/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/maven/resources/ArtifactBadge_dark.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun3.png</file>
+        <file>src/org/netbeans/modules/maven/resources/suggestion.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun2.png</file>
+        <file>src/org/netbeans/modules/maven/resources/Maven2IconRun6.png</file>
+        <file>src/org/netbeans/modules/maven/resources/ArtifactBadge.png</file>
+        <file>src/org/netbeans/modules/maven/DependencySrcIncluded.png</file>
+        <file>src/org/netbeans/modules/maven/DependencyIcon.png</file>
+        <file>src/org/netbeans/modules/maven/spi/nodes/DependencyJar.gif</file>
+        <file>src/org/netbeans/modules/maven/defaultFolderOpen.gif</file>
+        <file>src/org/netbeans/modules/maven/libraries-badge.png</file>
+        <file>src/org/netbeans/modules/maven/projectfiles-badge.png</file>
+        <file>src/org/netbeans/modules/maven/defaultFolder.gif</file>
+        <file>src/org/netbeans/modules/maven/TransitiveMaven2Icon.png</file>
+        <file>src/org/netbeans/modules/maven/others-badge.png</file>
+        <file>src/org/netbeans/modules/maven/nodes/filteredResourceWarningBadge.png</file>
+        <file>src/org/netbeans/modules/maven/brokenProjectBadge.png</file>
+        <file>src/org/netbeans/modules/maven/TransitiveDependencyIcon.png</file>
+        <file>src/org/netbeans/modules/maven/modules-badge.png</file>
+        <file>src/org/netbeans/modules/maven/ArtifactIcon.png</file>
+        <file>src/org/netbeans/modules/maven/DependencyJavadocIncluded.png</file>
+        <file>src/org/netbeans/modules/maven/execute/back.png</file>
+        <file>src/org/netbeans/modules/maven/execute/refresh.png</file>
+        <file>src/org/netbeans/modules/maven/execute/forward.png</file>
+        <file>src/org/netbeans/modules/maven/execute/stop.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/mojo.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/tag.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/config.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/lifecycle.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/phase.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/error.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/buildplangoals.png</file>
+        <file>src/org/netbeans/modules/maven/execute/ui/executionId.png</file>
+        <file>src/org/netbeans/modules/maven/execute/options.png</file>
+        <file>src/org/netbeans/modules/maven/execute/navigator/help.png</file>
+        <file>src/org/netbeans/modules/maven/execute/navigator/thread_running_16.png</file>
+        <file>src/org/netbeans/modules/maven/execute/refreshdebug.png</file>
+        <file>src/org/netbeans/modules/maven/TransitiveArtifactIcon.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

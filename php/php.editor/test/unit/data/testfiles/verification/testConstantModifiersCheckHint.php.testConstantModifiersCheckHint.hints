@@ -1,0 +1,8 @@
+    private const PRIVATE_CONST = 2;
+                  -------------
+HINT:Interface const "PRIVATE_CONST" can not be declared private
+FIX:Remove modifier: private
+    protected const PROTECTED_CONST = 3;
+                    ---------------
+HINT:Interface const "PROTECTED_CONST" can not be declared protected
+FIX:Remove modifier: protected

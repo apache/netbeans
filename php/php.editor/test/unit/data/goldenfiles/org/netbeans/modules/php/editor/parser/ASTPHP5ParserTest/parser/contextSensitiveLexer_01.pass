@@ -1,0 +1,2445 @@
+<testresult testFile='contextSensitiveLexer_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='25'>
+            <text>ClassExample</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='26' end='27'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='33' end='39'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='40' end='46'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='47' end='55'>
+            <text>function</text>
+        </token>
+        <token id='T_DEFINE' start='56' end='62'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='62' end='63'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='63' end='64'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='65' end='66'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='66' end='67'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='72' end='78'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='79' end='85'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='86' end='94'>
+            <text>function</text>
+        </token>
+        <token id='T_CLASS' start='95' end='100'>
+            <text>class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='100' end='101'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='101' end='102'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='103' end='104'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='104' end='105'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='110' end='116'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='117' end='123'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='124' end='132'>
+            <text>function</text>
+        </token>
+        <token id='T_CALLABLE' start='133' end='141'>
+            <text>callable</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='141' end='142'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='142' end='143'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='144' end='145'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='145' end='146'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='151' end='157'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='158' end='164'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='165' end='173'>
+            <text>function</text>
+        </token>
+        <token id='T_TRAIT' start='174' end='179'>
+            <text>trait</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='179' end='180'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='180' end='181'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='182' end='183'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='183' end='184'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='189' end='195'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='196' end='202'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='203' end='211'>
+            <text>function</text>
+        </token>
+        <token id='T_EXTENDS' start='212' end='219'>
+            <text>extends</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='219' end='220'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='220' end='221'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='222' end='223'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='223' end='224'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='229' end='235'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='236' end='242'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='243' end='251'>
+            <text>function</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='252' end='262'>
+            <text>implements</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='262' end='263'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='263' end='264'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='265' end='266'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='266' end='267'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='272' end='278'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='279' end='285'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='286' end='294'>
+            <text>function</text>
+        </token>
+        <token id='T_STATIC' start='295' end='301'>
+            <text>static</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='301' end='302'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='302' end='303'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='304' end='305'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='305' end='306'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='311' end='317'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='318' end='324'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='325' end='333'>
+            <text>function</text>
+        </token>
+        <token id='T_ABSTRACT' start='334' end='342'>
+            <text>abstract</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='342' end='343'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='343' end='344'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='345' end='346'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='346' end='347'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='352' end='358'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='359' end='365'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='366' end='374'>
+            <text>function</text>
+        </token>
+        <token id='T_FINAL' start='375' end='380'>
+            <text>final</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='380' end='381'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='381' end='382'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='383' end='384'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='384' end='385'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='390' end='396'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='397' end='403'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='404' end='412'>
+            <text>function</text>
+        </token>
+        <token id='T_PUBLIC' start='413' end='419'>
+            <text>public</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='419' end='420'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='420' end='421'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='422' end='423'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='423' end='424'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='429' end='435'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='436' end='442'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='443' end='451'>
+            <text>function</text>
+        </token>
+        <token id='T_PROTECTED' start='452' end='461'>
+            <text>protected</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='461' end='462'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='462' end='463'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='464' end='465'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='465' end='466'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='471' end='477'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='478' end='484'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='485' end='493'>
+            <text>function</text>
+        </token>
+        <token id='T_PRIVATE' start='494' end='501'>
+            <text>private</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='501' end='502'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='502' end='503'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='504' end='505'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='505' end='506'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='511' end='517'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='518' end='524'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='525' end='533'>
+            <text>function</text>
+        </token>
+        <token id='T_CONST' start='534' end='539'>
+            <text>const</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='539' end='540'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='540' end='541'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='542' end='543'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='543' end='544'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='549' end='555'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='556' end='562'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='563' end='571'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDDECLARE' start='572' end='582'>
+            <text>enddeclare</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='582' end='583'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='583' end='584'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='585' end='586'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='586' end='587'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='592' end='598'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='599' end='605'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='606' end='614'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDFOR' start='615' end='621'>
+            <text>endfor</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='621' end='622'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='622' end='623'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='624' end='625'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='625' end='626'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='631' end='637'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='638' end='644'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='645' end='653'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDFOREACH' start='654' end='664'>
+            <text>endforeach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='664' end='665'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='665' end='666'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='667' end='668'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='668' end='669'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='674' end='680'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='681' end='687'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='688' end='696'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDIF' start='697' end='702'>
+            <text>endif</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='702' end='703'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='703' end='704'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='705' end='706'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='706' end='707'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='712' end='718'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='719' end='725'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='726' end='734'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDWHILEnejdu.' start='735' end='743'>
+            <text>endwhile</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='743' end='744'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='744' end='745'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='746' end='747'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='747' end='748'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='753' end='759'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='760' end='766'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='767' end='775'>
+            <text>function</text>
+        </token>
+        <token id='T_LOGICAL_AND' start='776' end='779'>
+            <text>and</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='779' end='780'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='780' end='781'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='782' end='783'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='783' end='784'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='789' end='795'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='796' end='802'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='803' end='811'>
+            <text>function</text>
+        </token>
+        <token id='T_GLOBAL' start='812' end='818'>
+            <text>global</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='818' end='819'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='819' end='820'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='821' end='822'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='822' end='823'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='828' end='834'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='835' end='841'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='842' end='850'>
+            <text>function</text>
+        </token>
+        <token id='T_GOTO' start='851' end='855'>
+            <text>goto</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='855' end='856'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='856' end='857'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='858' end='859'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='859' end='860'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='865' end='871'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='872' end='878'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='879' end='887'>
+            <text>function</text>
+        </token>
+        <token id='T_INSTANCEOF' start='888' end='898'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='898' end='899'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='899' end='900'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='901' end='902'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='902' end='903'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='908' end='914'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='915' end='921'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='922' end='930'>
+            <text>function</text>
+        </token>
+        <token id='T_INSTEADOF' start='931' end='940'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='940' end='941'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='941' end='942'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='943' end='944'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='944' end='945'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='950' end='956'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='957' end='963'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='964' end='972'>
+            <text>function</text>
+        </token>
+        <token id='T_INTERFACE' start='973' end='982'>
+            <text>interface</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='982' end='983'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='983' end='984'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='985' end='986'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='986' end='987'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='992' end='998'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='999' end='1005'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1006' end='1014'>
+            <text>function</text>
+        </token>
+        <token id='T_NAMESPACE' start='1015' end='1024'>
+            <text>namespace</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1024' end='1025'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1025' end='1026'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1027' end='1028'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1028' end='1029'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1034' end='1040'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1041' end='1047'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1048' end='1056'>
+            <text>function</text>
+        </token>
+        <token id='T_NEW' start='1057' end='1060'>
+            <text>new</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1060' end='1061'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1061' end='1062'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1063' end='1064'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1064' end='1065'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1070' end='1076'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1077' end='1083'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1084' end='1092'>
+            <text>function</text>
+        </token>
+        <token id='T_LOGICAL_OR' start='1093' end='1095'>
+            <text>or</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1095' end='1096'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1096' end='1097'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1098' end='1099'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1099' end='1100'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1105' end='1111'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1112' end='1118'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1119' end='1127'>
+            <text>function</text>
+        </token>
+        <token id='T_LOGICAL_XOR' start='1128' end='1131'>
+            <text>xor</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1131' end='1132'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1132' end='1133'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1134' end='1135'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1135' end='1136'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1141' end='1147'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1148' end='1154'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1155' end='1163'>
+            <text>function</text>
+        </token>
+        <token id='T_TRY' start='1164' end='1167'>
+            <text>try</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1167' end='1168'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1168' end='1169'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1170' end='1171'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1171' end='1172'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1177' end='1183'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1184' end='1190'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1191' end='1199'>
+            <text>function</text>
+        </token>
+        <token id='T_USE' start='1200' end='1203'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1203' end='1204'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1204' end='1205'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1206' end='1207'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1207' end='1208'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1213' end='1219'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1220' end='1226'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1227' end='1235'>
+            <text>function</text>
+        </token>
+        <token id='T_VAR' start='1236' end='1239'>
+            <text>var</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1239' end='1240'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1240' end='1241'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1242' end='1243'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1243' end='1244'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1249' end='1255'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1256' end='1262'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1263' end='1271'>
+            <text>function</text>
+        </token>
+        <token id='T_EXIT' start='1272' end='1276'>
+            <text>exit</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1276' end='1277'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1277' end='1278'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1279' end='1280'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1280' end='1281'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1286' end='1292'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1293' end='1299'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1300' end='1308'>
+            <text>function</text>
+        </token>
+        <token id='T_LIST' start='1309' end='1313'>
+            <text>list</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1313' end='1314'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1314' end='1315'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1316' end='1317'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1317' end='1318'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1323' end='1329'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1330' end='1336'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1337' end='1345'>
+            <text>function</text>
+        </token>
+        <token id='T_CLONE' start='1346' end='1351'>
+            <text>clone</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1351' end='1352'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1352' end='1353'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1354' end='1355'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1355' end='1356'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1361' end='1367'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1368' end='1374'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1375' end='1383'>
+            <text>function</text>
+        </token>
+        <token id='T_INCLUDE' start='1384' end='1391'>
+            <text>include</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1391' end='1392'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1392' end='1393'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1394' end='1395'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1395' end='1396'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1401' end='1407'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1408' end='1414'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1415' end='1423'>
+            <text>function</text>
+        </token>
+        <token id='T_INCLUDE_ONCE' start='1424' end='1436'>
+            <text>include_once</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1436' end='1437'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1437' end='1438'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1439' end='1440'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1440' end='1441'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1446' end='1452'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1453' end='1459'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1460' end='1468'>
+            <text>function</text>
+        </token>
+        <token id='T_THROW' start='1469' end='1474'>
+            <text>throw</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1474' end='1475'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1475' end='1476'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1477' end='1478'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1478' end='1479'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1484' end='1490'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1491' end='1497'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1498' end='1506'>
+            <text>function</text>
+        </token>
+        <token id='T_ARRAY' start='1507' end='1512'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1512' end='1513'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1513' end='1514'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1515' end='1516'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1516' end='1517'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1522' end='1528'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1529' end='1535'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1536' end='1544'>
+            <text>function</text>
+        </token>
+        <token id='T_PRINT' start='1545' end='1550'>
+            <text>print</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1550' end='1551'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1551' end='1552'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1553' end='1554'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1554' end='1555'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1560' end='1566'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1567' end='1573'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1574' end='1582'>
+            <text>function</text>
+        </token>
+        <token id='T_ECHO' start='1583' end='1587'>
+            <text>echo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1587' end='1588'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1588' end='1589'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1590' end='1591'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1591' end='1592'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1597' end='1603'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1604' end='1610'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1611' end='1619'>
+            <text>function</text>
+        </token>
+        <token id='T_REQUIRE' start='1620' end='1627'>
+            <text>require</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1627' end='1628'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1628' end='1629'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1630' end='1631'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1631' end='1632'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1637' end='1643'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1644' end='1650'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1651' end='1659'>
+            <text>function</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='1660' end='1672'>
+            <text>require_once</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1672' end='1673'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1673' end='1674'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1675' end='1676'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1676' end='1677'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1682' end='1688'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1689' end='1695'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1696' end='1704'>
+            <text>function</text>
+        </token>
+        <token id='T_RETURN' start='1705' end='1711'>
+            <text>return</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1711' end='1712'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1712' end='1713'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1714' end='1715'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1715' end='1716'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1721' end='1727'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1728' end='1734'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1735' end='1743'>
+            <text>function</text>
+        </token>
+        <token id='T_ELSE' start='1744' end='1748'>
+            <text>else</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1748' end='1749'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1749' end='1750'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1751' end='1752'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1752' end='1753'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1758' end='1764'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1765' end='1771'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1772' end='1780'>
+            <text>function</text>
+        </token>
+        <token id='T_ELSEIF' start='1781' end='1787'>
+            <text>elseif</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1787' end='1788'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1788' end='1789'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1790' end='1791'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1791' end='1792'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1797' end='1803'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1804' end='1810'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1811' end='1819'>
+            <text>function</text>
+        </token>
+        <token id='T_DEFAULT' start='1820' end='1827'>
+            <text>default</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1827' end='1828'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1828' end='1829'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1830' end='1831'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1831' end='1832'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1837' end='1843'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1844' end='1850'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1851' end='1859'>
+            <text>function</text>
+        </token>
+        <token id='T_BREAK' start='1860' end='1865'>
+            <text>break</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1865' end='1866'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1866' end='1867'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1868' end='1869'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1869' end='1870'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1875' end='1881'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1882' end='1888'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1889' end='1897'>
+            <text>function</text>
+        </token>
+        <token id='T_CONTINUE' start='1898' end='1906'>
+            <text>continue</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1906' end='1907'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1907' end='1908'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1909' end='1910'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1910' end='1911'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1916' end='1922'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1923' end='1929'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1930' end='1938'>
+            <text>function</text>
+        </token>
+        <token id='T_SWITCH' start='1939' end='1945'>
+            <text>switch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1945' end='1946'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1946' end='1947'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1948' end='1949'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1949' end='1950'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1955' end='1961'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1962' end='1968'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1969' end='1977'>
+            <text>function</text>
+        </token>
+        <token id='T_YIELD' start='1978' end='1983'>
+            <text>yield</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1983' end='1984'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1984' end='1985'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1986' end='1987'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1987' end='1988'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1993' end='1999'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2000' end='2006'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2007' end='2015'>
+            <text>function</text>
+        </token>
+        <token id='T_FUNCTION' start='2016' end='2024'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2024' end='2025'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2025' end='2026'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2027' end='2028'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2028' end='2029'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2034' end='2040'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2041' end='2047'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2048' end='2056'>
+            <text>function</text>
+        </token>
+        <token id='T_IF' start='2057' end='2059'>
+            <text>if</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2059' end='2060'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2060' end='2061'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2062' end='2063'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2063' end='2064'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2069' end='2075'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2076' end='2082'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2083' end='2091'>
+            <text>function</text>
+        </token>
+        <token id='T_ENDSWITCH' start='2092' end='2101'>
+            <text>endswitch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2101' end='2102'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2102' end='2103'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2104' end='2105'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2105' end='2106'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2111' end='2117'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2118' end='2124'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2125' end='2133'>
+            <text>function</text>
+        </token>
+        <token id='T_FINALLY' start='2134' end='2141'>
+            <text>finally</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2141' end='2142'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2142' end='2143'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2144' end='2145'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2145' end='2146'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2151' end='2157'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2158' end='2164'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2165' end='2173'>
+            <text>function</text>
+        </token>
+        <token id='T_FOR' start='2174' end='2177'>
+            <text>for</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2177' end='2178'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2178' end='2179'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2180' end='2181'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2181' end='2182'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2187' end='2193'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2194' end='2200'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2201' end='2209'>
+            <text>function</text>
+        </token>
+        <token id='T_FOREACH' start='2210' end='2217'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2217' end='2218'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2218' end='2219'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2220' end='2221'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2221' end='2222'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2227' end='2233'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2234' end='2240'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2241' end='2249'>
+            <text>function</text>
+        </token>
+        <token id='T_DECLARE' start='2250' end='2257'>
+            <text>declare</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2257' end='2258'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2258' end='2259'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2260' end='2261'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2261' end='2262'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2267' end='2273'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2274' end='2280'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2281' end='2289'>
+            <text>function</text>
+        </token>
+        <token id='T_CASE' start='2290' end='2294'>
+            <text>case</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2294' end='2295'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2295' end='2296'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2297' end='2298'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2298' end='2299'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2304' end='2310'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2311' end='2317'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2318' end='2326'>
+            <text>function</text>
+        </token>
+        <token id='T_DO' start='2327' end='2329'>
+            <text>do</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2329' end='2330'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2330' end='2331'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2332' end='2333'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2333' end='2334'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2339' end='2345'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2346' end='2352'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2353' end='2361'>
+            <text>function</text>
+        </token>
+        <token id='T_WHILE' start='2362' end='2367'>
+            <text>while</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2367' end='2368'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2368' end='2369'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2370' end='2371'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2371' end='2372'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2377' end='2383'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2384' end='2390'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2391' end='2399'>
+            <text>function</text>
+        </token>
+        <token id='T_AS' start='2400' end='2402'>
+            <text>as</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2402' end='2403'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2403' end='2404'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2405' end='2406'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2406' end='2407'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2412' end='2418'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2419' end='2425'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2426' end='2434'>
+            <text>function</text>
+        </token>
+        <token id='T_CATCH' start='2435' end='2440'>
+            <text>catch</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2440' end='2441'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2441' end='2442'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2443' end='2444'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2444' end='2445'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2450' end='2456'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2457' end='2463'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2464' end='2472'>
+            <text>function</text>
+        </token>
+        <token id='T_EXIT' start='2473' end='2476'>
+            <text>die</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2476' end='2477'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2477' end='2478'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2479' end='2480'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2480' end='2481'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2486' end='2492'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2493' end='2499'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2500' end='2508'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2509' end='2513'>
+            <text>self</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2513' end='2514'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2514' end='2515'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2516' end='2517'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2517' end='2518'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2523' end='2529'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2530' end='2536'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2537' end='2545'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2546' end='2552'>
+            <text>parent</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2552' end='2553'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2553' end='2554'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2555' end='2556'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2556' end='2557'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2562' end='2568'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2569' end='2575'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2576' end='2584'>
+            <text>function</text>
+        </token>
+        <token id='T_CLASS_C' start='2585' end='2594'>
+            <text>__CLASS__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2594' end='2595'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2595' end='2596'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2597' end='2598'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2598' end='2599'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2604' end='2610'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2611' end='2617'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2618' end='2626'>
+            <text>function</text>
+        </token>
+        <token id='T_TRAIT_C' start='2627' end='2636'>
+            <text>__TRAIT__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2636' end='2637'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2637' end='2638'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2639' end='2640'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2640' end='2641'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2646' end='2652'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2653' end='2659'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2660' end='2668'>
+            <text>function</text>
+        </token>
+        <token id='T_FUNC_C' start='2669' end='2681'>
+            <text>__FUNCTION__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2681' end='2682'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2682' end='2683'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2684' end='2685'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2685' end='2686'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2691' end='2697'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2698' end='2704'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2705' end='2713'>
+            <text>function</text>
+        </token>
+        <token id='T_METHOD_C' start='2714' end='2724'>
+            <text>__METHOD__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2724' end='2725'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2725' end='2726'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2727' end='2728'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2728' end='2729'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2734' end='2740'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2741' end='2747'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2748' end='2756'>
+            <text>function</text>
+        </token>
+        <token id='T_LINE' start='2757' end='2765'>
+            <text>__LINE__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2765' end='2766'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2766' end='2767'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2768' end='2769'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2769' end='2770'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2775' end='2781'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2782' end='2788'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2789' end='2797'>
+            <text>function</text>
+        </token>
+        <token id='T_FILE' start='2798' end='2806'>
+            <text>__FILE__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2806' end='2807'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2807' end='2808'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2809' end='2810'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2810' end='2811'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2816' end='2822'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2823' end='2829'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2830' end='2838'>
+            <text>function</text>
+        </token>
+        <token id='unknown' start='2839' end='2846'>
+            <text>__DIR__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2846' end='2847'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2847' end='2848'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2849' end='2850'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2850' end='2851'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2856' end='2862'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2863' end='2869'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2870' end='2878'>
+            <text>function</text>
+        </token>
+        <token id='unknown' start='2879' end='2892'>
+            <text>__NAMESPACE__</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2892' end='2893'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2893' end='2894'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2895' end='2896'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2896' end='2897'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2898' end='2899'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='2901' end='2901'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2901'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='2899' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='25' name='ClassExample'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='26' end='2899' isCurly='true'>
+                    <MethodDeclaration start='33' end='67' modifiers='public static'>
+                        <FunctionDeclaration start='47' end='67' isReference='false'>
+                            <Identifier start='56' end='62' name='define'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='65' end='67' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='72' end='105' modifiers='public static'>
+                        <FunctionDeclaration start='86' end='105' isReference='false'>
+                            <Identifier start='95' end='100' name='class'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='103' end='105' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='110' end='146' modifiers='public static'>
+                        <FunctionDeclaration start='124' end='146' isReference='false'>
+                            <Identifier start='133' end='141' name='callable'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='144' end='146' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='151' end='184' modifiers='public static'>
+                        <FunctionDeclaration start='165' end='184' isReference='false'>
+                            <Identifier start='174' end='179' name='trait'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='182' end='184' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='189' end='224' modifiers='public static'>
+                        <FunctionDeclaration start='203' end='224' isReference='false'>
+                            <Identifier start='212' end='219' name='extends'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='222' end='224' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='229' end='267' modifiers='public static'>
+                        <FunctionDeclaration start='243' end='267' isReference='false'>
+                            <Identifier start='252' end='262' name='implements'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='265' end='267' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='272' end='306' modifiers='public static'>
+                        <FunctionDeclaration start='286' end='306' isReference='false'>
+                            <Identifier start='295' end='301' name='static'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='304' end='306' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='311' end='347' modifiers='public static'>
+                        <FunctionDeclaration start='325' end='347' isReference='false'>
+                            <Identifier start='334' end='342' name='abstract'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='345' end='347' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='352' end='385' modifiers='public static'>
+                        <FunctionDeclaration start='366' end='385' isReference='false'>
+                            <Identifier start='375' end='380' name='final'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='383' end='385' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='390' end='424' modifiers='public static'>
+                        <FunctionDeclaration start='404' end='424' isReference='false'>
+                            <Identifier start='413' end='419' name='public'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='422' end='424' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='429' end='466' modifiers='public static'>
+                        <FunctionDeclaration start='443' end='466' isReference='false'>
+                            <Identifier start='452' end='461' name='protected'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='464' end='466' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='471' end='506' modifiers='public static'>
+                        <FunctionDeclaration start='485' end='506' isReference='false'>
+                            <Identifier start='494' end='501' name='private'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='504' end='506' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='511' end='544' modifiers='public static'>
+                        <FunctionDeclaration start='525' end='544' isReference='false'>
+                            <Identifier start='534' end='539' name='const'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='542' end='544' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='549' end='587' modifiers='public static'>
+                        <FunctionDeclaration start='563' end='587' isReference='false'>
+                            <Identifier start='572' end='582' name='enddeclare'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='585' end='587' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='592' end='626' modifiers='public static'>
+                        <FunctionDeclaration start='606' end='626' isReference='false'>
+                            <Identifier start='615' end='621' name='endfor'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='624' end='626' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='631' end='669' modifiers='public static'>
+                        <FunctionDeclaration start='645' end='669' isReference='false'>
+                            <Identifier start='654' end='664' name='endforeach'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='667' end='669' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='674' end='707' modifiers='public static'>
+                        <FunctionDeclaration start='688' end='707' isReference='false'>
+                            <Identifier start='697' end='702' name='endif'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='705' end='707' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='712' end='748' modifiers='public static'>
+                        <FunctionDeclaration start='726' end='748' isReference='false'>
+                            <Identifier start='735' end='743' name='endwhile'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='746' end='748' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='753' end='784' modifiers='public static'>
+                        <FunctionDeclaration start='767' end='784' isReference='false'>
+                            <Identifier start='776' end='779' name='and'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='782' end='784' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='789' end='823' modifiers='public static'>
+                        <FunctionDeclaration start='803' end='823' isReference='false'>
+                            <Identifier start='812' end='818' name='global'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='821' end='823' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='828' end='860' modifiers='public static'>
+                        <FunctionDeclaration start='842' end='860' isReference='false'>
+                            <Identifier start='851' end='855' name='goto'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='858' end='860' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='865' end='903' modifiers='public static'>
+                        <FunctionDeclaration start='879' end='903' isReference='false'>
+                            <Identifier start='888' end='898' name='instanceof'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='901' end='903' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='908' end='945' modifiers='public static'>
+                        <FunctionDeclaration start='922' end='945' isReference='false'>
+                            <Identifier start='931' end='940' name='insteadof'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='943' end='945' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='950' end='987' modifiers='public static'>
+                        <FunctionDeclaration start='964' end='987' isReference='false'>
+                            <Identifier start='973' end='982' name='interface'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='985' end='987' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='992' end='1029' modifiers='public static'>
+                        <FunctionDeclaration start='1006' end='1029' isReference='false'>
+                            <Identifier start='1015' end='1024' name='namespace'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1027' end='1029' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1034' end='1065' modifiers='public static'>
+                        <FunctionDeclaration start='1048' end='1065' isReference='false'>
+                            <Identifier start='1057' end='1060' name='new'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1063' end='1065' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1070' end='1100' modifiers='public static'>
+                        <FunctionDeclaration start='1084' end='1100' isReference='false'>
+                            <Identifier start='1093' end='1095' name='or'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1098' end='1100' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1105' end='1136' modifiers='public static'>
+                        <FunctionDeclaration start='1119' end='1136' isReference='false'>
+                            <Identifier start='1128' end='1131' name='xor'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1134' end='1136' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1141' end='1172' modifiers='public static'>
+                        <FunctionDeclaration start='1155' end='1172' isReference='false'>
+                            <Identifier start='1164' end='1167' name='try'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1170' end='1172' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1177' end='1208' modifiers='public static'>
+                        <FunctionDeclaration start='1191' end='1208' isReference='false'>
+                            <Identifier start='1200' end='1203' name='use'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1206' end='1208' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1213' end='1244' modifiers='public static'>
+                        <FunctionDeclaration start='1227' end='1244' isReference='false'>
+                            <Identifier start='1236' end='1239' name='var'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1242' end='1244' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1249' end='1281' modifiers='public static'>
+                        <FunctionDeclaration start='1263' end='1281' isReference='false'>
+                            <Identifier start='1272' end='1276' name='exit'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1279' end='1281' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1286' end='1318' modifiers='public static'>
+                        <FunctionDeclaration start='1300' end='1318' isReference='false'>
+                            <Identifier start='1309' end='1313' name='list'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1316' end='1318' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1323' end='1356' modifiers='public static'>
+                        <FunctionDeclaration start='1337' end='1356' isReference='false'>
+                            <Identifier start='1346' end='1351' name='clone'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1354' end='1356' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1361' end='1396' modifiers='public static'>
+                        <FunctionDeclaration start='1375' end='1396' isReference='false'>
+                            <Identifier start='1384' end='1391' name='include'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1394' end='1396' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1401' end='1441' modifiers='public static'>
+                        <FunctionDeclaration start='1415' end='1441' isReference='false'>
+                            <Identifier start='1424' end='1436' name='include_once'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1439' end='1441' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1446' end='1479' modifiers='public static'>
+                        <FunctionDeclaration start='1460' end='1479' isReference='false'>
+                            <Identifier start='1469' end='1474' name='throw'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1477' end='1479' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1484' end='1517' modifiers='public static'>
+                        <FunctionDeclaration start='1498' end='1517' isReference='false'>
+                            <Identifier start='1507' end='1512' name='array'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1515' end='1517' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1522' end='1555' modifiers='public static'>
+                        <FunctionDeclaration start='1536' end='1555' isReference='false'>
+                            <Identifier start='1545' end='1550' name='print'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1553' end='1555' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1560' end='1592' modifiers='public static'>
+                        <FunctionDeclaration start='1574' end='1592' isReference='false'>
+                            <Identifier start='1583' end='1587' name='echo'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1590' end='1592' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1597' end='1632' modifiers='public static'>
+                        <FunctionDeclaration start='1611' end='1632' isReference='false'>
+                            <Identifier start='1620' end='1627' name='require'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1630' end='1632' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1637' end='1677' modifiers='public static'>
+                        <FunctionDeclaration start='1651' end='1677' isReference='false'>
+                            <Identifier start='1660' end='1672' name='require_once'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1675' end='1677' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1682' end='1716' modifiers='public static'>
+                        <FunctionDeclaration start='1696' end='1716' isReference='false'>
+                            <Identifier start='1705' end='1711' name='return'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1714' end='1716' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1721' end='1753' modifiers='public static'>
+                        <FunctionDeclaration start='1735' end='1753' isReference='false'>
+                            <Identifier start='1744' end='1748' name='else'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1751' end='1753' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1758' end='1792' modifiers='public static'>
+                        <FunctionDeclaration start='1772' end='1792' isReference='false'>
+                            <Identifier start='1781' end='1787' name='elseif'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1790' end='1792' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1797' end='1832' modifiers='public static'>
+                        <FunctionDeclaration start='1811' end='1832' isReference='false'>
+                            <Identifier start='1820' end='1827' name='default'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1830' end='1832' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1837' end='1870' modifiers='public static'>
+                        <FunctionDeclaration start='1851' end='1870' isReference='false'>
+                            <Identifier start='1860' end='1865' name='break'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1868' end='1870' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1875' end='1911' modifiers='public static'>
+                        <FunctionDeclaration start='1889' end='1911' isReference='false'>
+                            <Identifier start='1898' end='1906' name='continue'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1909' end='1911' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1916' end='1950' modifiers='public static'>
+                        <FunctionDeclaration start='1930' end='1950' isReference='false'>
+                            <Identifier start='1939' end='1945' name='switch'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1948' end='1950' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1955' end='1988' modifiers='public static'>
+                        <FunctionDeclaration start='1969' end='1988' isReference='false'>
+                            <Identifier start='1978' end='1983' name='yield'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1986' end='1988' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1993' end='2029' modifiers='public static'>
+                        <FunctionDeclaration start='2007' end='2029' isReference='false'>
+                            <Identifier start='2016' end='2024' name='function'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2027' end='2029' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2034' end='2064' modifiers='public static'>
+                        <FunctionDeclaration start='2048' end='2064' isReference='false'>
+                            <Identifier start='2057' end='2059' name='if'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2062' end='2064' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2069' end='2106' modifiers='public static'>
+                        <FunctionDeclaration start='2083' end='2106' isReference='false'>
+                            <Identifier start='2092' end='2101' name='endswitch'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2104' end='2106' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2111' end='2146' modifiers='public static'>
+                        <FunctionDeclaration start='2125' end='2146' isReference='false'>
+                            <Identifier start='2134' end='2141' name='finally'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2144' end='2146' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2151' end='2182' modifiers='public static'>
+                        <FunctionDeclaration start='2165' end='2182' isReference='false'>
+                            <Identifier start='2174' end='2177' name='for'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2180' end='2182' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2187' end='2222' modifiers='public static'>
+                        <FunctionDeclaration start='2201' end='2222' isReference='false'>
+                            <Identifier start='2210' end='2217' name='foreach'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2220' end='2222' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2227' end='2262' modifiers='public static'>
+                        <FunctionDeclaration start='2241' end='2262' isReference='false'>
+                            <Identifier start='2250' end='2257' name='declare'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2260' end='2262' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2267' end='2299' modifiers='public static'>
+                        <FunctionDeclaration start='2281' end='2299' isReference='false'>
+                            <Identifier start='2290' end='2294' name='case'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2297' end='2299' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2304' end='2334' modifiers='public static'>
+                        <FunctionDeclaration start='2318' end='2334' isReference='false'>
+                            <Identifier start='2327' end='2329' name='do'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2332' end='2334' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2339' end='2372' modifiers='public static'>
+                        <FunctionDeclaration start='2353' end='2372' isReference='false'>
+                            <Identifier start='2362' end='2367' name='while'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2370' end='2372' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2377' end='2407' modifiers='public static'>
+                        <FunctionDeclaration start='2391' end='2407' isReference='false'>
+                            <Identifier start='2400' end='2402' name='as'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2405' end='2407' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2412' end='2445' modifiers='public static'>
+                        <FunctionDeclaration start='2426' end='2445' isReference='false'>
+                            <Identifier start='2435' end='2440' name='catch'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2443' end='2445' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2450' end='2481' modifiers='public static'>
+                        <FunctionDeclaration start='2464' end='2481' isReference='false'>
+                            <Identifier start='2473' end='2476' name='die'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2479' end='2481' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2486' end='2518' modifiers='public static'>
+                        <FunctionDeclaration start='2500' end='2518' isReference='false'>
+                            <Identifier start='2509' end='2513' name='self'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2516' end='2518' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2523' end='2557' modifiers='public static'>
+                        <FunctionDeclaration start='2537' end='2557' isReference='false'>
+                            <Identifier start='2546' end='2552' name='parent'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2555' end='2557' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2562' end='2599' modifiers='public static'>
+                        <FunctionDeclaration start='2576' end='2599' isReference='false'>
+                            <Identifier start='2585' end='2594' name='__CLASS__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2597' end='2599' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2604' end='2641' modifiers='public static'>
+                        <FunctionDeclaration start='2618' end='2641' isReference='false'>
+                            <Identifier start='2627' end='2636' name='__TRAIT__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2639' end='2641' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2646' end='2686' modifiers='public static'>
+                        <FunctionDeclaration start='2660' end='2686' isReference='false'>
+                            <Identifier start='2669' end='2681' name='__FUNCTION__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2684' end='2686' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2691' end='2729' modifiers='public static'>
+                        <FunctionDeclaration start='2705' end='2729' isReference='false'>
+                            <Identifier start='2714' end='2724' name='__METHOD__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2727' end='2729' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2734' end='2770' modifiers='public static'>
+                        <FunctionDeclaration start='2748' end='2770' isReference='false'>
+                            <Identifier start='2757' end='2765' name='__LINE__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2768' end='2770' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2775' end='2811' modifiers='public static'>
+                        <FunctionDeclaration start='2789' end='2811' isReference='false'>
+                            <Identifier start='2798' end='2806' name='__FILE__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2809' end='2811' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2816' end='2851' modifiers='public static'>
+                        <FunctionDeclaration start='2830' end='2851' isReference='false'>
+                            <Identifier start='2839' end='2846' name='__DIR__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2849' end='2851' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2856' end='2897' modifiers='public static'>
+                        <FunctionDeclaration start='2870' end='2897' isReference='false'>
+                            <Identifier start='2879' end='2892' name='__NAMESPACE__'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='2895' end='2897' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

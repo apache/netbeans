@@ -1,0 +1,10 @@
+Code completion result for source line:
+f|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     f1(f1arg: String): undefined    [PROTECTE  issue242472.js
+METHOD     f2(f2arg: String): undefined    [PROTECTE  issue242472.js
+KEYWORD    false                                      null
+KEYWORD    finally                                    null
+KEYWORD    for                                        null
+KEYWORD    function                                   null

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="newWSDL" targetNamespace="http://www.mycomp.org/schemas/newWSDL"
+    xmlns:tns="http://www.mycomp.org/schemas/newWSDL"
+    xmlns:ns1="urn:WS/types"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Type definitions -->
+  <types>
+    <xsd:schema targetNamespace="urn:WS/types">
+    <!-- TODO: type XML schema elements and types here, e.g.: -->
+      <!--
+      <xsd:element name="id" type="xsd:string"/>
+      <xsd:element name="item" type="ns1:ItemType"/>
+      <xsd:complexType name="ItemType">
+        <xsd:sequence>
+          <xsd:element ref="ns1:id"/>
+          <xsd:element name="productName" type="xsd:string"/>
+          <xsd:element name="price" type="xsd:double"/>
+          <xsd:element name="quantity" type="xsd:integer"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="error" type="xsd:string"/>
+      -->
+    </xsd:schema>
+  </types>
+
+  <!-- Message definitions -->
+  <!-- TODO: write one or more messages here, e.g.: -->
+  <!--
+  <message name ="newWSDLRequest">
+    <part name="id" element="ns1:id"/>
+  </message>
+
+  <message name ="newWSDLResponse">
+    <part name="item" element="ns1:item"/>
+  </message>
+  
+  <message name ="newWSDLError">
+    <part name="error" element="ns1:error"/>
+  </message>
+  -->
+
+  <!-- Port type definitions -->
+  <!-- TODO: write one or more port types here (usually just one), e.g.: -->
+  <!--
+  <portType name="newWSDLPortType">
+    <operation name="newWSDLOperation">
+      <input message="tns:newWSDLRequest"/>
+      <output message="tns:newWSDLResponse"/>
+      <fault message="tns:newWSDLError" name="error"/>
+    </operation>
+  </portType>
+  -->
+
+  <!-- Binding definitions -->
+  <!-- TODO: write one or more bindings here (usually just one), e.g.: -->
+  <!--
+  <binding name="newWSDLBinding" type="tns:newWSDLPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <operation name="newWSDLOperation">
+      <soap:operation soapAction="REPLACE_WITH_ACTION_URL"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="error">
+        <soap:fault name="error" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  -->
+
+  <!-- Service and Port (network address) definitions -->
+  <!-- TODO: write one or more service elements here (usually just one), e.g.: -->
+  <!--
+  <service name="newWSDLService">
+    <port name="newWSDLPort" binding="tns:newWSDLBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+    </port>
+  </service>
+  -->
+
+</definitions>

@@ -1,0 +1,1 @@
+function fnx(/*String*/ str) {}

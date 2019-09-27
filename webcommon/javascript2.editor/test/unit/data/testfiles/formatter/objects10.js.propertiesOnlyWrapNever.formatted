@@ -1,0 +1,5 @@
+obj = {x, y}
+
+obj = {x: x, y: y};
+
+obj = {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, y}

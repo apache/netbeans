@@ -1,0 +1,1 @@
+$fn2 = fn(int $^|>MARK_OCCURRENCES:a<|, ArrowFunctions $b) => $|>MARK_OCCURRENCES:a<| + $b->getNumber() * $y;

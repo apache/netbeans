@@ -1,0 +1,7 @@
+Code completion result for source line:
+'ojs/|',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       oj.js                                      
+FILE       ojaco.js                                   
+FILE       ojbla.js                                   

@@ -1,0 +1,29 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<%@' [0, 3]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'page' [3, 4]; tag-directive; 3; directive; JspTagTokenContext, JspMultiTokenContext
+' ' [7, 1]; whitespace; 11; directive; JspTagTokenContext, JspMultiTokenContext
+'contentType' [8, 11]; attribute-name; 7; directive; JspTagTokenContext, JspMultiTokenContext
+'=' [19, 1]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'"text/html"' [20, 11]; attribute-value; 8; directive; JspTagTokenContext, JspMultiTokenContext
+'%>' [31, 2]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'<NL>' [33, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<%@' [34, 3]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'page' [37, 4]; tag-directive; 3; directive; JspTagTokenContext, JspMultiTokenContext
+' ' [41, 1]; whitespace; 11; directive; JspTagTokenContext, JspMultiTokenContext
+'pageEncoding' [42, 12]; attribute-name; 7; directive; JspTagTokenContext, JspMultiTokenContext
+'=' [54, 1]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'"UTF-8"' [55, 7]; attribute-value; 8; directive; JspTagTokenContext, JspMultiTokenContext
+'%>' [62, 2]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'<%@' [64, 3]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'taglib' [67, 6]; tag-directive; 3; directive; JspTagTokenContext, JspMultiTokenContext
+' ' [73, 1]; whitespace; 11; directive; JspTagTokenContext, JspMultiTokenContext
+'uri' [74, 3]; attribute-name; 7; directive; JspTagTokenContext, JspMultiTokenContext
+'=' [77, 1]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'"http://java.sun.com/jsp/jstl/core"' [78, 35]; attribute-value; 8; directive; JspTagTokenContext, JspMultiTokenContext
+' ' [113, 1]; whitespace; 11; directive; JspTagTokenContext, JspMultiTokenContext
+'prefix' [114, 6]; attribute-name; 7; directive; JspTagTokenContext, JspMultiTokenContext
+'=' [120, 1]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext
+'"c"' [121, 3]; attribute-value; 8; directive; JspTagTokenContext, JspMultiTokenContext
+'%>' [124, 2]; symbol; 4; directive; JspTagTokenContext, JspMultiTokenContext

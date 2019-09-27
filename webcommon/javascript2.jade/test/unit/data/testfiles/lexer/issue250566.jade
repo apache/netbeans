@@ -1,0 +1,15 @@
+&nbsp; text
+body
+  .container
+    h1 Login Page
+    p.lead Say something worthwhile here.
+    br
+    form(role='form', action="/login",method="post", style='max-width: 300px;')
+      .form-group
+          input.form-control(type='text', name="username", placeholder='Enter Username')
+      .form-group
+        input.form-control(type='password', name="password", placeholder='Password')
+      button.btn.btn-default(type='submit') Submit
+      &nbsp;
+      a(href='/')
+        button.btn.btn-primary(type="button") Cancel

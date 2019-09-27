@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+    <target name="-groovy-init-macrodef-javac">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}" name="classpath"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${javac.debug}" name="debug"/>
+            <attribute default="" name="sourcepath"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <taskdef name="groovyc" classpath="${javac.classpath}" classname="org.codehaus.groovy.ant.Groovyc"/>
+                <groovyc destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" includes="@{includes}" sourcepath="@{sourcepath}" srcdir="@{srcdir}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" includeantruntime="false" includes="@{includes}" source="${javac.source}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="${javac.target}">
+                        <compilerarg line="${javac.compilerargs} ${javac.compilerargs.jaxws}"/>
+                        <customize/>
+                    </javac>
+                </groovyc>
+            </sequential>
+        </macrodef>
+        <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}" name="classpath"/>
+            <sequential>
+                <depend cache="${build.dir}/depcache" destdir="@{destdir}" excludes="${excludes}" includes="${includes}" srcdir="@{srcdir}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                </depend>
+            </sequential>
+        </macrodef>
+        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <sequential>
+                <fail unless="javac.includes">Must set javac.includes</fail>
+                <pathconvert pathsep="," property="javac.includes.binary">
+                    <path>
+                        <filelist dir="@{destdir}" files="${javac.includes}"/>
+                    </path>
+                    <globmapper from="*.java" to="*.class"/>
+                </pathconvert>
+                <delete>
+                    <files includes="${javac.includes.binary}"/>
+                </delete>
+            </sequential>
+        </macrodef>
+    </target>
+</project>

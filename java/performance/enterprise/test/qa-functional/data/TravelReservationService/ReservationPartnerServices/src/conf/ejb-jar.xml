@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+    <display-name>ReservationPartnerServices</display-name>
+    <enterprise-beans>
+        <session>
+            <display-name>AirlineReservationServiceSB</display-name>
+            <ejb-name>AirlineReservationService</ejb-name>
+            <service-endpoint>partnerservices.AirlineReservationPortType</service-endpoint>
+            <ejb-class>partnerservices.AirlineReservationPortType_Impl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <resource-ref>
+                <res-ref-name>jms/ReservationCallbackProviderDestinationFactory</res-ref-name>
+                <res-type>javax.jms.ConnectionFactory</res-type>
+                <res-auth>Container</res-auth>
+                <res-sharing-scope>Shareable</res-sharing-scope>
+            </resource-ref>
+            <message-destination-ref>
+                <message-destination-ref-name>jms/ReservationCallbackProviderDestination</message-destination-ref-name>
+                <message-destination-type>javax.jms.Queue</message-destination-type>
+                <message-destination-usage>Produces</message-destination-usage>
+                <message-destination-link>ReservationCallbackProviderDestination</message-destination-link>
+            </message-destination-ref>
+        </session>
+        <session>
+            <display-name>HotelReservationServiceSB</display-name>
+            <ejb-name>HotelReservationService</ejb-name>
+            <service-endpoint>partnerservices.HotelReservationPortType</service-endpoint>
+            <ejb-class>partnerservices.HotelReservationPortType_Impl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <resource-ref>
+                <res-ref-name>jms/ReservationCallbackProviderDestinationFactory</res-ref-name>
+                <res-type>javax.jms.ConnectionFactory</res-type>
+                <res-auth>Container</res-auth>
+                <res-sharing-scope>Shareable</res-sharing-scope>
+            </resource-ref>
+            <message-destination-ref>
+                <message-destination-ref-name>jms/ReservationCallbackProviderDestination</message-destination-ref-name>
+                <message-destination-type>javax.jms.Queue</message-destination-type>
+                <message-destination-usage>Produces</message-destination-usage>
+                <message-destination-link>ReservationCallbackProviderDestination</message-destination-link>
+            </message-destination-ref>
+        </session>
+        <session>
+            <display-name>VehicleReservationServiceSB</display-name>
+            <ejb-name>VehicleReservationService</ejb-name>
+            <service-endpoint>partnerservices.VehicleReservationPortType</service-endpoint>
+            <ejb-class>partnerservices.VehicleReservationPortType_Impl</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <resource-ref>
+                <res-ref-name>jms/ReservationCallbackProviderDestinationFactory</res-ref-name>
+                <res-type>javax.jms.ConnectionFactory</res-type>
+                <res-auth>Container</res-auth>
+                <res-sharing-scope>Shareable</res-sharing-scope>
+            </resource-ref>
+            <message-destination-ref>
+                <message-destination-ref-name>jms/ReservationCallbackProviderDestination</message-destination-ref-name>
+                <message-destination-type>javax.jms.Queue</message-destination-type>
+                <message-destination-usage>Produces</message-destination-usage>
+                <message-destination-link>ReservationCallbackProviderDestination</message-destination-link>
+            </message-destination-ref>
+        </session>
+        <message-driven>
+            <display-name>ReservationCallbackProviderMDB</display-name>
+            <ejb-name>ReservationCallbackProviderBean</ejb-name>
+            <ejb-class>partnerservices.callback.ReservationCallbackProviderBean</ejb-class>
+            <transaction-type>Container</transaction-type>
+            <message-destination-type>javax.jms.Queue</message-destination-type>
+            <message-destination-link>ReservationCallbackProviderDestination</message-destination-link>
+            <activation-config>
+                <activation-config-property>
+                    <activation-config-property-name>acknowledgeMode</activation-config-property-name>
+                    <activation-config-property-value>Auto-acknowledge</activation-config-property-value>
+                </activation-config-property>
+                <activation-config-property>
+                    <activation-config-property-name>destinationType</activation-config-property-name>
+                    <activation-config-property-value>javax.jms.Queue</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+            <env-entry>
+                <env-entry-name>AirlineCallbackURL</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>http://localhost:18181/TravelReservationService/airlineReserved</env-entry-value>
+                </env-entry>
+            <env-entry>
+                <env-entry-name>VehicleCallbackURL</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>http://localhost:18181/TravelReservationService/vehicleReserved</env-entry-value>
+                </env-entry>
+            <env-entry>
+                <env-entry-name>HotelCallbackURL</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>http://localhost:18181/TravelReservationService/hotelReserved</env-entry-value>
+                </env-entry>
+                       
+        </message-driven>
+    </enterprise-beans>
+    <assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>ReservationCallbackProviderBean</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        <message-destination>
+            <display-name>Destination for ReservationCallbackProvider</display-name>
+            <message-destination-name>ReservationCallbackProviderDestination</message-destination-name>
+        </message-destination>
+    </assembly-descriptor>
+</ejb-jar>

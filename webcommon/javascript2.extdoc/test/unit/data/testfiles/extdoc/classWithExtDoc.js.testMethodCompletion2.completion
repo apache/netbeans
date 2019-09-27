@@ -1,0 +1,6 @@
+Code completion result for source line:
+* @me|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @member identifier                         ExtDoc
+OTHER      @method                                    ExtDoc

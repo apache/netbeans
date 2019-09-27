@@ -1,0 +1,9 @@
+Code completion result for source line:
+this.| // cc here
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     log(title, msgs, level, style)  [PROTECTE  issue224650.js
+METHOD     printMessage(title, msg, style  [PROTECTE  issue224650.js
+FIELD      bar                             [PUBLIC]   issue224650.js
+FIELD      msg: String                     [PUBLIC]   issue224650.js
+FIELD      print: Boolean                  [PUBLIC]   issue224650.js

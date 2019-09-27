@@ -1,0 +1,3 @@
+myhelp:VARIABLE:[PRIVATE]:ESCAPED{myhelp}<font color="#999999">ESCAPED{ : }String</font>:
+window:CLASS:[PUBLIC]:ESCAPED{window}:
+  someprom:FIELD:[PUBLIC]:ESCAPED{someprom}<font color="#999999">ESCAPED{ : }String</font>:

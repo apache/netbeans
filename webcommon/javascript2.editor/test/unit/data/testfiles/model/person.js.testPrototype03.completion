@@ -1,0 +1,5 @@
+Code completion result for source line:
+Person.p|rototype.shower=function(){           //Shower technology improves for everyone
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      population: Number              [PUBLIC,   person.js

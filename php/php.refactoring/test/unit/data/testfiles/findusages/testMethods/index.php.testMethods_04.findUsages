@@ -1,0 +1,19 @@
+Display text: public function <b>inMethod</b>() {}
+File name: index.php
+Name: inMethod
+Position: BEGIN: 95 END: 103
+
+Display text: $f-><b>inMethod</b>();
+File name: index.php
+Name: inMethod
+Position: BEGIN: 248 END: 256
+
+Display text: $retFoo-><b>inMethod</b>();
+File name: index.php
+Name: inMethod
+Position: BEGIN: 312 END: 320
+
+Display text: $retFoo2-><b>inMethod</b>();
+File name: index.php
+Name: inMethod
+Position: BEGIN: 379 END: 387

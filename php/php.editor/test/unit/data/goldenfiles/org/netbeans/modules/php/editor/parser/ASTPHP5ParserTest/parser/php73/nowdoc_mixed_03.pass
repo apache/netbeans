@@ -1,0 +1,81 @@
+<testresult testFile='nowdoc_mixed_03.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='821'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='822' end='823'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='824' end='825'>
+            <text>[</text>
+        </token>
+        <token id='T_START_NOWDOC' start='825' end='835'>
+            <text>&lt;&lt;&lt; &apos;END&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='835' end='954'>
+            <text>    $test\n    spaces $test\n\ttabs {$test}\n                spaces tabs ${test}\n$test\n\t\t        tabs spaces\nnospaces test\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='954' end='961'>
+            <text>    END</text>
+        </token>
+        <token id='T_COMMA' start='961' end='962'>
+            <text>,</text>
+        </token>
+        <token id='T_DOLLAR' start='963' end='964'>
+            <text>$</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='964' end='965'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='965' end='969'>
+            <text>test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='969' end='970'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='970' end='971'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='971' end='972'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='973' end='973'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='972'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='972'>
+                <Assignment start='815' end='971' operator='EQUAL'>
+                    <Variable start='815' end='821' isDollared='true'>
+                        <Identifier start='816' end='821' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='824' end='971' type='NEW'>
+                        <ArrayElement start='825' end='961'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='825' end='961' type='STRING' value='    $test\n    spaces $test\n\ttabs {$test}\n                spaces tabs ${test}\n$test\n\t\t        tabs spaces\nnospaces test\n'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='963' end='970'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ReflectionVariable start='963' end='970'>
+                                    <NamespaceName start='965' end='969' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='965' end='969' name='test'/>
+                                    </NamespaceName>
+                                </ReflectionVariable>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

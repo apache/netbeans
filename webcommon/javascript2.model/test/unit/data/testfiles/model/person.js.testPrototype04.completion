@@ -1,0 +1,6 @@
+Code completion result for source line:
+Person.prototype.beCool = function(){ this.c|lothing="khakis and black shirt" }
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      constructor                     [PUBLIC]   person.js
+FIELD      clothing: String                [PUBLIC]   person.js

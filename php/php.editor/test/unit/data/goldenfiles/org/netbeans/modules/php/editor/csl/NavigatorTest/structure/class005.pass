@@ -1,0 +1,11 @@
+|-person [12, 1265] : ESCAPED{person}
+|--$name [79, 83] : ESCAPED{$name}
+|--$me [151, 153] : ESCAPED{$me}
+|--$you [225, 228] : ESCAPED{$you}
+|--$count [308, 313] : ESCAPED{$count}
+|--$test [384, 388] : ESCAPED{$test}
+|--__construct [462, 766] : ESCAPED{__construct}ESCAPED{(}ESCAPED{$name}ESCAPED{)}
+|--yourName [789, 863] : ESCAPED{yourName}ESCAPED{(}ESCAPED{)}
+|--name [885, 1001] : ESCAPED{name}ESCAPED{(}ESCAPED{)}
+|--getCount [1030, 1148] : ESCAPED{getCount}ESCAPED{(}ESCAPED{)}
+|--getCount2 [1178, 1263] : ESCAPED{getCount2}ESCAPED{(}ESCAPED{)}

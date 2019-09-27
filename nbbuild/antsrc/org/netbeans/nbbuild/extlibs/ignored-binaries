@@ -56,5 +56,20 @@ mobility.databindingme/lib/*
 # TODO: should be removed eventually:
 lib.terminalemulator/examples/lib.richexecution/process_start-*.zip
 
-# ide is a special semi-module, does not have nbproject/project.xml, so is not recognized:
-ide/external/launchers.zip
+# Gradle Wrapper, used by the Gradle tooling build, but not distributed
+groovy/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
+
+# Gradle NetBeans Tooling, built by Gradle, so it is not recognized
+groovy/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
+
+# ide.launcher is a special semi-module, does not have nbproject/project.xml, so is not recognized:
+nb/ide.launcher/external/launchers-10.0.zip
+
+# webcommon/libs.oracle.jsparser builds a test-only binaries into build/webcommon. Not distributed.
+contrib/libs.oracle.jsparser/build/webcommon/**
+
+#only used to build installers
+nbbuild/installer/mac/newbuild/dmg/template.sparseimage.bz2
+
+# Used in a pure ant project (installer), so not identified as a project
+nbbuild/installer/jnlp/external/*

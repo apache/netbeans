@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="6" assertions="8" failures="2" errors="0" time="0.031338">
+    <testsuite name="CalculatorTest" file="/home/gapon/NetBeansProjects/Calc/Tests/CalculatorTest.php" tests="6" assertions="8" failures="2" errors="0" time="0.031338">
+      <testcase name="testAdd" class="CalculatorTest" file="/home/gapon/NetBeansProjects/Calc/Tests/CalculatorTest.php" line="22" assertions="3" time="0.010364"/>
+      <testcase name="testAddFailure" class="CalculatorTest" file="/home/gapon/NetBeansProjects/Calc/Tests/CalculatorTest.php" line="28" assertions="1" time="0.013619">
+        <failure type="PHPUnit_Framework_ExpectationFailedException">CalculatorTest::testAddFailure
+Failed asserting that &lt;integer:5&gt; matches expected &lt;integer:4&gt;.
+
+/home/gapon/NetBeansProjects/Calc/Tests/CalculatorTest.php:29
+</failure>
+      </testcase>
+      <testsuite name="CalculatorTest::testAdd_withProvider" tests="3" assertions="3" failures="0" errors="0" time="0.005028">
+        <testcase name="testAdd_withProvider with data set #0" assertions="1" time="0.001509"/>
+        <testcase name="testAdd_withProvider with data set #1" assertions="1" time="0.001727"/>
+        <testcase name="testAdd_withProvider with data set #2" assertions="1" time="0.001792"/>
+      </testsuite>
+      <testsuite name="CalculatorTest::testAddFailure_withProvider" tests="1" assertions="1" failures="1" errors="0" time="0.002327">
+        <testcase name="testAddFailure_withProvider with data set #0" assertions="1" time="0.002327">
+          <failure type="PHPUnit_Framework_ExpectationFailedException">CalculatorTest::testAddFailure_withProvider with data set #0 (1, 4)
+Failed asserting that &lt;integer:5&gt; matches expected &lt;integer:4&gt;.
+
+/home/gapon/NetBeansProjects/Calc/Tests/CalculatorTest.php:58
+</failure>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

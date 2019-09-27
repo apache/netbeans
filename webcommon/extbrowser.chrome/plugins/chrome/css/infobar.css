@@ -1,0 +1,63 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+body {
+    font-family: Tahoma, Helvetica;
+    font-size: 12px;
+}
+a {
+    text-decoration: none;
+}
+
+button, .button {
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+    margin-right: 4px;
+    background-color: orange;
+    border: 1px solid orange;
+    border-radius: 3px;
+    color: white;
+    padding: 3px 4px;
+    box-shadow: 1px 1px 5px #1D1D1D;
+}
+button:hover, .button:hover {
+    background-color: darkorange;
+}
+button.disabled, button[disabled=disabled], .button.disabled {
+    cursor: not-allowed;
+    border: 1px solid grey;
+    background-color: grey;
+}
+button.disabled:hover, button[disabled=disabled]:hover, .button.disabled:hover {
+    background-color: grey;
+}
+
+div.button {
+    padding: 1px 0px 0px 0px;
+}
+#selectionModeMenu {
+    color: white;
+    padding-top: 2px;
+    padding-right: 4px;
+}
+
+#preview * {
+    float: left;
+}

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="ergonomics/ide.ergonomics">
+    <description>Builds, tests, and runs the project org.netbeans.modules.ide.ergonomics</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    <property name="anttasks.jar" value="${nbantext.jar}"/>
+
+    <target name="-release.dir" depends="-disable-kits,projectized-common.-release.dir"/>
+    <target name="jar-prep" depends="-generate-proxies,projectized-common.jar-prep"/>
+    <target name="clean" depends="-clean-release,projectized-common.clean"/>
+
+    <!--
+    -
+    - Internal implementation
+    -
+    -->
+    <target name="-compile-ant" depends="projectized-common.basic-init">
+        <mkdir dir="${src-ant.build}"/>
+        <depend srcdir="src-ant" destdir="${src-ant.build}" cache="build/depcache-ant">
+            <classpath>
+                <path path="${src-ant.cp}"/>
+            </classpath>
+        </depend>
+        <javac srcdir="src-ant" destdir="${src-ant.build}"
+            deprecation="${build.compiler.deprecation}"
+            debug="true"
+            source="1.6" target="1.6" includeantruntime="false">
+            <classpath>
+                <path path="${src-ant.cp}"/>
+            </classpath>
+            <compilerarg line="${javac.compilerargs}"/>
+        </javac>
+        <copy todir="${src-ant.build}">
+            <fileset dir="src-ant" excludes="${jar-excludes}"/>
+        </copy>
+        <taskdef name="extractlayer"
+             classname="org.netbeans.modules.ide.ergonomics.ant.ExtractLayer"
+             classpath="${src-ant.build}:${src-ant.cp}"/>
+        <taskdef name="resolvelist"
+             classname="org.netbeans.nbbuild.ResolveList"
+             classpath="${anttasks.jar}"/>
+    </target>
+
+    <target name="-init-clusters">
+        <property name="common.ergonomics" location="src-ant/org/netbeans/modules/ide/ergonomics/ant/common-ergonomics.xml"/>
+        <resolvelist
+            name="ergonomic.clusters.includes"
+            list="${nb.clusters.list}"
+        >
+            <mapper type="glob" from="*" to="*.dir"/>
+        </resolvelist>
+        <dirset 
+            id="ergonomic.clusters"
+            dir="${netbeans.dest.dir}"
+            includes="${ergonomic.clusters.includes}"
+        >
+            <exclude name="harness"/>
+            <exclude name="ide"/>
+            <exclude name="platform"/>
+            <exclude name="ergonomics"/>
+            <exclude name="extra"/>
+            <exclude name="nb"/>
+        </dirset>
+    </target>
+
+    <target name="-clean-release">
+        <property name="build.release.dir" location="build/release"/>
+        <delete dir="${build.release.dir}"/>
+    </target>
+    <target name="-init-static-analysis">
+        <property name="build.release.dir" location="build/release"/>
+        <condition property="skip.static.analysis">
+            <and>
+                <equals arg1="${static.analysis}" arg2="false"/>
+                <available file="${build.release.dir}"/>
+            </and>
+        </condition>
+    </target>
+
+    <!--
+    - multi cluster operations
+    -->
+    <target 
+        name="-disable-kits"
+        depends="-init-clusters,-init-static-analysis"
+        unless="skip.static.analysis"
+    >
+        <mkdir dir="${build.release.dir}/config/Modules"/>
+        <subant genericantfile="${common.ergonomics}" target="-disable-one-cluster">
+            <property name="xmldir" value="${build.release.dir}/config/Modules"/>
+            <property name="ergonomicsdir" location="${basedir}"/>
+            <property name="src-ant.cp" value="${src-ant.cp}"/>
+            <property name="anttasks.jar" value="${anttasks.jar}"/>
+            <dirset refid="ergonomic.clusters"/>
+        </subant>
+        <pathconvert property="extra.module.files" pathsep=",">
+            <path>
+                <fileset id="-disable-kits" dir="${build.release.dir}">
+                    <include name="**/*"/>
+                </fileset>
+            </path>
+            <chainedmapper>
+                <flattenmapper/>
+                <globmapper from="*" to="config/Modules/*"/>
+            </chainedmapper>
+        </pathconvert>
+        <copy todir="${cluster}">
+            <fileset dir="${build.release.dir}" includes="${extra.module.files}"/>
+        </copy>
+    </target>
+
+    <target 
+        name="-generate-proxies"
+        depends="-init-clusters,-init-static-analysis,-compile-ant"
+        unless="skip.static.analysis"
+    >
+        <subant genericantfile="${common.ergonomics}" target="-proxy-one-cluster">
+            <property name="ergonomicsdir" location="${basedir}"/>
+            <property name="src-ant.cp" value="${src-ant.cp}"/>
+            <property name="cluster.entries" location="${netbeans.dest.dir}"/>
+            <property name="anttasks.jar" value="${anttasks.jar}"/>
+            <dirset refid="ergonomic.clusters"/>
+        </subant>
+    </target>
+</project>

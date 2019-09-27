@@ -1,0 +1,136 @@
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $parentContext = undefined;
+var $context = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+$context.$parentContext.$data = undefined;
+$parentContext.$data = undefined;
+var $parent = undefined;
+var $parents = [];
+var $data = ko.$bindings;
+with ($data) {
+({ data: categories, as: 'category' });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :undefined,
+$root : ko.$bindings,
+};
+var $context = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $parent = ko.$bindings;
+$context.$parentContext.$data = ko.$bindings;
+$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$data];
+with (ko.$bindings) {
+var $data = (categories)[0];
+var category = (categories)[0];
+}
+with ($data) {
+({ data: items, as: 'item' });}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $context = {
+$parentContext :{
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+with (ko.$bindings) {
+var $parent = (categories)[0];
+$context.$parentContext.$data = (categories)[0];
+$parentContext.$data = (categories)[0];
+}
+$context.$parentContext.$parentContext.$data = ko.$bindings;
+$parentContext.$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$parentContext.$data,$parentContext.$data];
+with (ko.$bindings) {
+var category = (categories)[0];
+with ((categories)[0]) {
+var $data = (items)[0];
+var item = (items)[0];
+}
+}
+with ($data) {
+(category.name);}
+});
+(function(){
+var $element;
+var $root = ko.$bindings;
+var $index = 0;
+var $parentContext = {
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+var $context = {
+$parentContext :{
+$parentContext :{
+$parentContext :undefined,
+$root : ko.$bindings,
+},
+$root : ko.$bindings,
+$index : 0,
+},
+$root : ko.$bindings,
+$index : 0,
+};
+with (ko.$bindings) {
+var $parent = (categories)[0];
+$context.$parentContext.$data = (categories)[0];
+$parentContext.$data = (categories)[0];
+}
+$context.$parentContext.$parentContext.$data = ko.$bindings;
+$parentContext.$parentContext.$data = ko.$bindings;
+var $parents = [$parentContext.$parentContext.$data,$parentContext.$data];
+with (ko.$bindings) {
+var category = (categories)[0];
+with ((categories)[0]) {
+var $data = (items)[0];
+var item = (items)[0];
+}
+}
+with ($data) {
+ ;}
+});
+
+    var viewModel = {
+        categories: [
+            { name: 'Fruit', items: [ 'Apple', 'Orange', 'Banana' ] },
+            { name: 'Vegetables', items: [ 'Celery', 'Corn', 'Spinach' ] }
+        ]
+    };
+    ko.applyBindings(viewModel);
+

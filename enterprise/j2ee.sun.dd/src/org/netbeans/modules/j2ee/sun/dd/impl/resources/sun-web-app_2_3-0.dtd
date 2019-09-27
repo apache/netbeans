@@ -1,0 +1,266 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+
+<!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
+
+<!-- root element for vendor specific web application (module) configuration -->
+<!ELEMENT sun-web-app (security-role-mapping*, servlet*, session-config?,
+                       resource-env-ref*, resource-ref*,
+                       ejb-ref*, cache?, class-loader?,
+                       jsp-config?, locale-charset-info?, property*)>
+
+<!ELEMENT security-role-mapping (role-name, (principal-name | group-name)+)>
+<!ELEMENT role-name (#PCDATA)>
+
+<!ELEMENT principal-name (#PCDATA)>
+<!ELEMENT group-name (#PCDATA)>
+
+<!ELEMENT servlet (servlet-name, principal-name)>
+
+<!ELEMENT session-config (session-manager?, session-properties?, cookie-properties?)>
+
+<!ENTITY % persistence-type "(memory | file | custom)">
+
+<!ELEMENT session-manager (manager-properties?, store-properties?)>
+<!ATTLIST session-manager persistence-type %persistence-type; "memory">
+
+<!ELEMENT manager-properties (property*)>
+<!ELEMENT store-properties (property*)>
+<!ELEMENT session-properties (property*)>
+<!ELEMENT cookie-properties (property*)>
+
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!ELEMENT resource-env-ref (resource-env-ref-name, jndi-name)>
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+           
+<!ELEMENT resource-ref (res-ref-name, jndi-name, default-resource-principal?)>
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+This text nodes holds a name string.
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+This element holds password text.
+-->
+<!ELEMENT password (#PCDATA)>
+
+
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!ENTITY % scope "(context.attribute | request.header  | request.parameter | 
+                   request.cookie  | request.attribute | session.attribute)">
+<!ENTITY % key-scope "(context.attribute | request.header | request.parameter | 
+                       request.cookie | session.id | session.attribute)">
+<!ENTITY % expr "(equals | greater | lesser | not-equals | in-range)">
+
+<!-- cache element configures the cache for web application. iAS 7.0 web container    
+     supports one such cache object per application: i.e. <cache> is a sub element    
+     of <ias-web-app>. A cache can have zero or more cache-mapping elements and
+     zero or more customizable cache-helper classes.
+                                                                                   
+        max-entries        Maximum number of entries this cache may hold. [4096]
+        timeout-in-seconds Default timeout for the cache entries in seconds. [30]
+        enabled            Is this cache enabled? [false]                                 
+-->                                                                                   
+<!ELEMENT cache (cache-helper*, default-helper?, property*, cache-mapping*)>
+<!ATTLIST cache  max-entries         CDATA     "4096"
+                 timeout-in-seconds  CDATA     "30"
+                 enabled             %boolean; "false">
+
+<!-- cache-helper specifies customizable class which implements CacheHelper interface. 
+
+     name                     Unique name for the helper class; this is referenced in
+                              the cache-mapping elements (see below).
+                              "default" is reserved for the built-in default helper.
+     class-name               Fully qualified class name of the cache-helper; this class
+                              must extend the com.sun.appserv.web.CacheHelper class.
+-->
+<!ELEMENT cache-helper (property*)>
+<!ATTLIST cache-helper name CDATA #REQUIRED
+                       class-name CDATA #REQUIRED>
+
+<!-- 
+Default, built-in cache-helper properties
+-->
+<!ELEMENT default-helper (property*)>
+
+<!-- 
+cache-mapping element defines what to be cached, the key to be used, any other   
+constraints to be applied and a customizable cache-helper to programmatically
+hook this information.
+-->
+<!ELEMENT cache-mapping ((servlet-name | url-pattern), 
+                        (cache-helper-ref |
+                        (timeout?, refresh-field?, http-method*, key-field*, constraint-field*)))>
+
+<!-- 
+servlet-name element defines a named servlet to which this caching is enabled.
+the specified name must be present in the web application deployment descriptor
+(web.xml)
+-->
+<!ELEMENT servlet-name (#PCDATA)>
+
+<!-- 
+url-pattern element specifies the url pattern to which caching is to be enabled.
+See Servlet 2.3 specification section SRV. 11.2 for the applicable patterns.
+-->
+<!ELEMENT url-pattern  (#PCDATA)>
+
+<!-- 
+cache-helper-ref s a reference to the cache-helper used by this cache-mapping 
+-->
+<!ELEMENT cache-helper-ref (#PCDATA)>
+
+<!-- 
+timeout element defines the cache timeout in seconds applicable for this mapping.
+default is to use cache object's timeout. The timeout value is specified statically
+ere (e.g. <timeout> 60 </timeout> or dynamically via fields in the relevant scope.
+
+   name             Name of the field where this timeout could be found
+   scope            Scope of the field. default scope is request attribute.
+-->
+<!ELEMENT timeout (#PCDATA)>
+<!ATTLIST timeout  name  CDATA   #REQUIRED
+                   scope %scope; 'request.attribute'>
+
+<!-- 
+http-method specifies HTTP method eligible for caching default is GET. 
+-->
+<!ELEMENT http-method (#PCDATA)>
+
+<!-- 
+specifies the request parameter name that triggers refresh. the cached entry 
+is refreshed when there such a request parameter is set to "true"
+example:
+<cache-mapping> 
+    <url-pattern> /quote </url-pattern> 
+    <refresh-field name="refresh" scope="request.parameter"/> 
+</cache-mapping> 
+-->
+<!ELEMENT refresh-field EMPTY>
+<!ATTLIST refresh-field name  CDATA       #REQUIRED
+                        scope %key-scope; 'request.parameter'>
+<!-- 
+key-field specifies a component of the key; container looks for the named 
+field in the given scope to access the cached entry. Default is to use
+the Servlet Path (the path section that corresponds to the servlet mapping 
+which activated this request). See Servlet 2.3 specification section SRV 4.4 
+on Servlet Path.
+
+  name             Name of the field to look for in the given scope
+  scope            Scope of the field. default scope is request parameter.
+-->
+<!ELEMENT key-field EMPTY>
+<!ATTLIST key-field name  CDATA       #REQUIRED
+                    scope %key-scope; 'request.parameter'>
+
+<!-- 
+constraint-field specifies a field whose value is used as a cacheability constraint.
+  
+  name                     Name of the field to look for in the given scope
+  scope                    Scope of the field. Default scope is request parameter.
+  cache-on-match           Should this constraint check pass, is the response cacheable?
+                           Default is true (i.e. cache the response on success match). 
+                           Useful to turn off caching when there is an attribute in the 
+                           scope (e.g. don't cache when there is an attribute called UID 
+                           in the session.attribute scope).
+  cache-on-match-failure   Should the constraint check fail, is response not cacheable?
+                           Default is false (i.e. a failure in enforcing the constraint
+                           would negate caching). Useful to turn on caching when the 
+                           an an attribute is not present (e.g. turn on caching 
+                           when there is no session or session attribute called UID).
+
+  Example 1: don't cache when there is a session attribute
+  <constraint-field name="UID" scope="session.attribute" cache-on-match="false">
+
+  Example 2: do cache only when there is no session attribute
+  <constraint-field name="UID" scope="session.attribute" 
+                    cache-on-match-failure="false">
+-->
+<!ELEMENT constraint-field (value*)>
+<!ATTLIST constraint-field  name                    CDATA      #REQUIRED
+                            scope                   %scope;    'request.parameter'
+                            cache-on-match          %boolean;  'true'
+                            cache-on-match-failure  %boolean;  'false'>
+
+<!-- 
+value element specifies the applicable value and a matching expression for a constraint-field
+  match-expr            Expression used to match the value. Default is 'equals'.
+
+  Example 1: cache when the category matches with any value other than a specific value
+  <constraint-field name="category" scope="request.parameter>
+    <value match-expr="equals" cache-on-match-failure="true">
+         bogus
+    </value>
+  </constraint-field>
+-->             
+<!ELEMENT value (#PCDATA)>
+<!ATTLIST value match-expr              %expr;    'equals'
+                cache-on-match          %boolean;  'true'
+                cache-on-match-failure  %boolean;  'false'>
+
+<!ELEMENT class-loader EMPTY>
+<!ATTLIST class-loader extra-class-path CDATA  #IMPLIED
+                       delegate %boolean; 'false'>
+
+<!ELEMENT jsp-config (property*)>
+
+<!ELEMENT locale-charset-info (locale-charset-map+, parameter-encoding?)>
+<!ATTLIST locale-charset-info default-locale CDATA #REQUIRED>
+
+<!ELEMENT locale-charset-map (description?)>
+<!ATTLIST locale-charset-map locale  CDATA  #REQUIRED
+                             agent   CDATA  #IMPLIED
+                             charset CDATA  #REQUIRED>
+
+<!ELEMENT parameter-encoding EMPTY>
+<!ATTLIST parameter-encoding form-hint-field CDATA #REQUIRED>
+
+<!-- 
+Syntax for supplying properties as name value pairs 
+-->
+<!ELEMENT property (description?)>
+<!ATTLIST property name  CDATA  #REQUIRED
+                   value CDATA  #REQUIRED>
+
+<!ELEMENT description (#PCDATA)>

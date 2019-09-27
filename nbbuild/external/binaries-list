@@ -14,6 +14,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-A7674A6D78B7FEA58AF76B357DAE6EA5E3FDFBE9 apitest.jar
 16398550402B27F81CD0D508CEF54B3E47A4A6DA org.apache.rat:apache-rat:0.12
 AB396EE119BFAD809CC9F09950CC22E2BCE2FE35 langtools-9.zip
+E32B3483FBF362C92088CB79E9F1F161F3F64A21 org.apidesign.javadoc:codesnippet-doclet:0.30
+D5CC2CD2A20963B86CF95397784BC7E74101C7A9 org.netbeans.tools:sigtest-maven-plugin:1.2
+C9AD4A0850AB676C5C64461A05CA524CDFFF59F1 com.googlecode.json-simple:json-simple:1.1.1

@@ -1,0 +1,11 @@
+<?php
+
+interface Iface {
+    function test1();
+}
+
+$a = new class implements Iface {
+    public function test1() {
+        
+    }
+};

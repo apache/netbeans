@@ -1,0 +1,23 @@
+for ( var i = 1; ; (i++));
+
+for ( ; ;);
+
+   for ( var i = 1; ; i++);
+        for (a in b)
+"ok";
+
+  for ("ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"; i < 5;) "ok"
+
+  for ("tttttttttttttttttttttttttttttttttttttttttttttttttttttttt"; i<5;iiiiiiiiiiii++) "ok"
+
+for ( i = 1; i < q; i++)
+       ;
+
+  for (var x in t) test();
+
+ for (e in t ) test();
+
+   for(f in (eval1())) "yep";
+
+for ( var i = 1; i < q; (i++))
+       done();

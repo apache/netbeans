@@ -1,2 +1,0 @@
-OpenIDE-Module: org.apache.commons.codec
-OpenIDE-Module-Specification-Version: 1.8

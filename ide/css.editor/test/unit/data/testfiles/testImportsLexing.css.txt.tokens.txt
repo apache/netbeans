@@ -1,0 +1,35 @@
+.t.e.s.t. imports
+IMPORT_SYM      "@import", la=1, st=0
+S               " ", la=1, st=0
+URI             "url("anoher.css")", st=0
+S               " ", la=1, st=0
+IDENT           "screen", la=1, st=0
+COMMA           ",", st=0
+S               " ", la=1, st=0
+IDENT           "print", la=1, st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+IMPORT_SYM      "@import", la=1, st=0
+S               " ", la=1, st=0
+STRING          ""file://../third.css"", st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+IMPORT_SYM      "@import", la=1, st=0
+S               " ", la=1, st=0
+STRING          ""nonexisting.css"", st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+IMPORT_SYM      "@import", la=1, st=0
+S               " ", la=1, st=0
+STRING          ""http://fukala.net/resources/style.css"", st=0
+SEMICOLON       ";", st=0
+S               "\n", la=1, st=0
+IMPORT_SYM      "@import", la=1, st=0
+S               " ", la=1, st=0
+URI             "url(http://fukala.net/resources/style2.css)", st=0
+SEMICOLON       ";", st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

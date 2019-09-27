@@ -1,0 +1,7 @@
+[UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(12): index.jade
+][DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):head][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(5):title][WHITESPACE(1): ][TEXT(10):An Article][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_INCLUDE(7):include][FILTER(9)::markdown][UNKNOWN(11): article.md]

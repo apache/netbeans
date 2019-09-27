@@ -1,0 +1,47 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+$title = 'My albums';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('album', array('action'=>'add'));?>">Add new album</a>
+</p>
+
+<table class="table">
+<tr>
+    <th>Title</th>
+    <th>Artist</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($albums as $album) : ?>
+<tr>
+    <td><?php echo $this->escapeHtml($album->title);?></td>
+    <td><?php echo $this->escapeHtml($album->artist);?></td>
+    <td>
+        <a href="<?php echo $this->url('album',
+            array('action'=>'edit', 'id' => $album->id));?>">Edit</a>
+        <a href="<?php echo $this->url('album',
+            array('action'=>'delete', 'id' => $album->id));?>">Delete</a>
+    </td>
+</tr>
+<?php endforeach; ?>
+</table>

@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.hibernate4lib/1
-OpenIDE-Module-Layer: org/netbeans/modules/hibernate4lib/resources/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/hibernate4lib/Bundle.properties
-

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="jseprojects">Java SE Projects API</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="J2SEProjectBuilder-DefaultModuleProperties">
+            <api name="jseprojects"/>
+            <summary>Added a method to create default module properties</summary>
+            <version major="1" minor="85"/>            
+            <date day="4" month="10" year="2016"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added a method into the <code>J2SEProjectBuilder</code> to create default module properties for J2SEProject.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SEProjectBuilder"/>
+        </change>
+        <change id="J2SEBuildPropertiesProvider">
+            <api name="jseprojects"/>
+            <summary>Added SPI to allow J2SE Project extensions to supply additional build properties</summary>
+            <version major="1" minor="71"/>            
+            <date day="24" month="9" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added SPI to allow J2SE Project extensions to supply additional build properties.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SEBuildPropertiesProvider"/>
+        </change>
+        <change id="J2SERuntimePlatformProvider">
+            <api name="jseprojects"/>
+            <summary>Added SPI to allow J2SE Project extensions to provide allowed runtime java platforms</summary>
+            <version major="1" minor="70"/>
+            <date day="24" month="9" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added J2SERuntimePlatformProvider SPI to allow J2SE Project extensions to provide allowed runtime java platforms
+                to J2SE Project customizer.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SERuntimePlatformProvider"/>
+        </change>
+        <change id="J2SEProjectPlatform">
+            <api name="jseprojects"/>
+            <summary>Added API to allow J2SE Project extension to get and set active project platform</summary>
+            <version major="1" minor="63"/>
+            <date day="2" month="5" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added a new friend API to allow J2SE Project extension to obtain and set active project platform.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SEProjectPlatform"/>
+            <issue number="229085"/>
+        </change>
+        <change id="J2SECategoryExtensionProvider">
+            <api name="jseprojects"/>
+            <summary></summary>
+            <version major="1" minor="60"/>
+            <date day="21" month="3" year="2013"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>J2SECategoryExtensionProvider</code> so far restricted the possibility to extend
+                panels in Project Properties dialog to Run and Package panels only. Now it is possible 
+                to extend also Application panel.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SECategoryExtensionProvider"/>
+            <issue number="218422"/>
+        </change>
+        <change id="GeneratedFilesInterceptor">
+            <api name="jseprojects"/>
+            <summary></summary>
+            <version major="1" minor="58"/>
+            <date day="25" month="2" year="2013"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                The J2SEProject calls all the instances of the <code>GeneratedFilesInterceptor</code>
+                registered in the project <code>Lookup</code> when a a build script file has been updated
+                or created.
+            </description>
+            <issue number="226433"/>
+        </change>
+
+        <change>
+            <api name="jseprojects"/>
+            <summary>Enable correct handling of properties in Project Property dialog of an extension of JSE Project</summary>
+            <version major="1" minor="46"/>
+            <date day="17" month="8" year="2011"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added interface <code>J2SECustomPropertySaver</code> with method <code>save()</code>
+                to enable correct saving of properties added by JSE Project extending modules.
+                If a JSE Project extending module adds/modifies panels in Project Property
+                panels, then a mechanism is needed to ensure that all user-modified properties
+                are correctly stored in project.properties and private.properties when OK pressed.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SECustomPropertySaver"/>
+            <issue number="200691"/>
+        </change>
+
+        <change>
+            <api name="jseprojects"/>
+            <summary>Enable extending existing JSE Project category panels in Project Properties dialog</summary>
+            <version major="1" minor="46"/>
+            <date day="17" month="8" year="2011"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                Replace the existing <code>J2SERunConfigProvider</code> interface by
+                <code>J2SECategoryExtensionProvider</code>. The old interface was hardwired
+                to enable extension of Run panel only with one extension panel only. The
+                new interface provides this mechanism for any category and allows
+                multiple extension panels per category. The new functionality is needed 
+                for JavaFX 2.0 support module, but is not limited to it.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SECategoryExtensionProvider"/>
+            <issue number="200704"/>
+        </change>
+
+        <change>
+            <api name="jseprojects"/>
+            <summary>Added class for accessing PropertyEvaluator for given JSE Project</summary>
+            <version major="1" minor="10"/>
+            <date day="4" month="1" year="2007"/>
+            <author login="mkubec"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added class <code>J2SEPropertyEvaluator</code> with method <code>evaluator()</code> for 
+                accessing PropertyEvaluator for given JSE Project. PropertyEvaluator resolves property 
+                values for properties defined in project.properties and private.properties.
+            </description>
+            <class package="org.netbeans.modules.java.j2seproject.api" name="J2SEPropertyEvaluator"/>
+            <issue number="89457"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+        
+    <!-- Generated from apichanges.xml -->
+    <head>
+        <title>Change History for the Java SE Projects API</title>
+        <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+        <p class="overviewlink"><a href="@TOP@/overview-summary.html">Overview</a></p>
+        <h1>Introduction</h1>
+        <p>This document lists changes made to the <a href="@TOP@/overview-summary.html">Java SE Projects API</a>.</p>
+        <!-- The actual lists of changes, as summaries and details: -->
+        <hr/>
+        <standard-changelists module-code-name="org.netbeans.modules.java.j2seproject/1"/>
+        <hr/>
+        <p>@FOOTER@</p>
+    </body>
+    
+    </htmlcontents>
+
+</apichanges>

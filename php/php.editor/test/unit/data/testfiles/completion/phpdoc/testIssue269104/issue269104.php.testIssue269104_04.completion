@@ -1,0 +1,5 @@
+Code completion result for source line:
+* @return callab|le
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    callable                                   null

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$class->setFoo(new God())->|setFoo($foo);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     setFoo($foo)                    [PUBLIC]   SetFoo

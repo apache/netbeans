@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="PHP">
+            <file name="org-netbeans-modules-php-project-ui-logicalview-DownloadAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.project.ui.logicalview.SrcNode.createDownloadAction"/>
+            </file>
+            <file name="org-netbeans-modules-php-project-ui-logicalview-UploadAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.project.ui.logicalview.SrcNode.createUploadAction"/>
+            </file>
+            <file name="org-netbeans-modules-php-project-ui-logicalview-SynchronizeAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.project.ui.logicalview.SrcNode.createSynchronizeAction"/>
+            </file>
+            <file name="org-netbeans-modules-php-project-ui-actions-RunFrameworkCommandAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.project.ui.actions.RunFrameworkCommandAction.getInstance"/>
+            </file>
+        </folder>
+        </folder>
+
+    <folder name="Shortcuts">
+        <file name="AS-X.shadow">
+            <attr name="originalFile" stringvalue="Actions/PHP/org-netbeans-modules-php-project-ui-actions-RunFrameworkCommandAction.instance"/>
+        </file>
+    <!-- uncomment/change default values for actions Download, Upload
+        <file name="CSA-D.shadow">
+            <attr name="originalFile" stringvalue="Actions/PHP/org-netbeans-modules-php-project-ui-logicalview-DownloadAction.instance"/>
+        </file>
+        <file name="CSA-U.shadow">
+            <attr name="originalFile" stringvalue="Actions/PHP/org-netbeans-modules-php-project-ui-logicalview-UploadAction.instance"/>
+        </file>
+    -->
+    </folder>
+
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="PHP">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.project.ui.wizards.Bundle"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/phpDescription.html"/>
+                <attr name="position" intvalue="700"/>
+                <file name="PHPProject.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/index.php">
+                    <attr name="position" intvalue="100"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="templateWizardIterator" newvalue="org.netbeans.modules.php.project.ui.wizards.NewPhpProjectWizardIterator"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.project.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/phpProject.png"/>
+                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPhpProject.html"/>
+                </file>
+                <file name="existingPHPProject.php">
+                    <attr name="position" intvalue="200"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewPhpProjectWizardIterator.existing"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.project.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/phpProject.png"/>
+                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/existingPhpProject.html"/>
+                </file>
+                <file name="remotePHPProject.php">
+                    <attr name="position" intvalue="300"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewPhpProjectWizardIterator.remote"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.project.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/phpProject.png"/>
+                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/remotePhpProject.html"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Scripting">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.project.ui.wizards.Bundle"/>
+            <attr name="position" intvalue="20"/>
+            <folder name="Tests">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/Tests"/>
+                <attr name="position" intvalue="9999"/>
+                <!-- intentionally not in new file wizard, only in Tools > Templates -->
+                <attr name="templateCategory" stringvalue="PhpTests"/>
+            </folder>
+            <file name="EmptyPHP.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHP.php">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/EmptyPHP"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.simple"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPFileDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="EmptyPHPWebPage.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyWebPagePHP.php">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/EmptyPHPWebPage"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.simple"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPWebPageDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="PHPClass.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyClassPHP.php">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPClass"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPClassDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="PHPInterface.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyInterfacePHP.php">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPInterface"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPInterfaceDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="350"/>
+            </file>
+            <file name="PHPTrait.php" url="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyTraitPHP.php">
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.ui.wizards.Bundle#Templates/Scripting/PHPTrait"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.php.project.ui.wizards.NewFileWizardIterator.withNamespace"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/php/project/ui/resources/emptyPHPTraitDescription.html"/>
+                <attr name="templateCategory" stringvalue="PHP"/>
+                <attr name="position" intvalue="400"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="PHP">
+        <folder name="RuntimeLibraries">
+            <!-- part of PHP Platform (SFS folder for signature files from other modules) -->
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-php5">
+                <folder name="Actions">
+                    <!-- do not move under Actions/PHP because it is ContextAware action! -->
+                    <file name="org-netbeans-modules-php-project-ui-actions-GoToActionOrViewAction.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.php.project.ui.actions.GoToActionOrViewAction.getInstance"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-project-ui-RunSingle.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="840"/>
+                    </file>
+                    <folder name="goto">
+                        <file name="org-netbeans-modules-php-project-ui-actions-GoToActionOrViewAction.shadow">
+                            <attr name="originalFile" stringvalue="Editors/text/x-php5/Actions/org-netbeans-modules-php-project-ui-actions-GoToActionOrViewAction.instance"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="org-netbeans-modules-gototest-GotoOppositeAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/UnitTests/org-netbeans-modules-gototest-GotoOppositeAction.instance"/>
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                    </folder>
+                </folder>
+                <!-- XXX no longer automatic; cf. GsfJar.registerCodeCoverage -->
+                <file name="org-netbeans-modules-gsf-codecoverage-CoverageHighlightsLayerFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.gsf.codecoverage.CoverageHighlightsLayerFactory"/>
+                 </file>
+                <folder name="SideBar">
+                    <file name="org-netbeans-modules-gsf-codecoverage-CoverageSideBar$Factory.instance">
+                        <attr name="position" intvalue="1308"/>
+                        <attr name="location" stringvalue="South"/>
+                        <attr name="scrollable" boolvalue="false"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsExport">
+        <folder name="PHP">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.resources.Bundle#Php.Options.Export.Category.displayName"/>
+            <attr name="position" intvalue="700"/>
+            <file name="General">
+                <attr name="include" stringvalue="config/Preferences/org/netbeans/modules/php/project/general(\.properties|/.*)|config/Editors/text/x-php5/.*"/>
+                <attr name="exclude" stringvalue="config/Preferences/org/netbeans/modules/php/project/private(\.properties|/.*)"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.resources.Bundle#Php.Options.Export.General.displayName"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="Remote">
+                <attr name="include" stringvalue="config/Preferences/org/netbeans/modules/php/project/RemoteConnections(\.properties|/.*)"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.resources.Bundle#Php.Options.Export.Remote.displayName"/>
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="Annotations">
+                <attr name="include" stringvalue="config/Preferences/org/netbeans/modules/php/project/annotations.properties"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.php.project.resources.Bundle#Php.Options.Export.Annotations.displayName"/>
+                <attr name="position" intvalue="210"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-php-project">
+            <folder name="Actions">
+                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="sep-1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RunProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunProject.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="org-netbeans-modules-debugger-ui-actions-DebugProjectAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugProjectAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-TestProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestProject.instance"/>
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-actions-ActiveConfigAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-actions-ActiveConfigAction.instance"/>
+                    <attr name="position" intvalue="600"/>
+                </file>
+                <!-- ??? - code coverage [dynamic] -->
+                <file name="sep-2.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
+                <!-- 800 - generate documentation -->
+                <!-- ??? - separator + framework commands + separator [dynamic] -->
+                <file name="sep-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="900"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CloseProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CloseProject.instance"/>
+                    <attr name="position" intvalue="1100"/>
+                </file>
+                <file name="sep-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1200"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RenameProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RenameProject.instance"/>
+                    <attr name="position" intvalue="1300"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-MoveProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-MoveProject.instance"/>
+                    <attr name="position" intvalue="1400"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CopyProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CopyProject.instance"/>
+                    <attr name="position" intvalue="1500"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-DeleteProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-DeleteProject.instance"/>
+                    <attr name="position" intvalue="1600"/>
+                </file>
+                <file name="sep-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1700"/>
+                </file>
+                <file name="org-openide-actions-FindAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
+                    <attr name="position" intvalue="1800"/>
+                </file>
+                <file name="general.shadow">
+                    <attr name="originalFile" stringvalue="Projects/Actions"/>
+                    <attr name="position" intvalue="1900"/>
+                </file>
+                <file name="sep-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2000"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CustomizeProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CustomizeProject.instance"/>
+                    <attr name="position" intvalue="2100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="ProjectXMLCatalog">
+        <folder name="php-project">
+            <file name="1.xsd" url="php-project1.xsd"/>
+        </folder>
+        <folder name="php-project-private">
+            <file name="1.xsd" url="php-project-private1.xsd"/>
+        </folder>
+    </folder>
+
+</filesystem>

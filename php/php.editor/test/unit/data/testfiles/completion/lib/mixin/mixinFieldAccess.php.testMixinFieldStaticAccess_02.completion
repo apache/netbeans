@@ -1,0 +1,20 @@
+Code completion result for source line:
+$fieldAccess->Mixin::|publicStaticMethodC1(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicStaticMethodC1()          [STATIC]   C1
+METHOD     publicStaticMethodC2()          [STATIC]   C2
+METHOD     publicStaticMethodC3()          [STATIC]   C3
+METHOD     publicStaticMethodC4()          [STATIC]   C4
+METHOD     publicStaticMethodC5()          [STATIC]   C5
+VARIABLE   ? $publicStaticFieldC1          [STATIC]   C1
+VARIABLE   ? $publicStaticFieldC2          [STATIC]   C2
+VARIABLE   ? $publicStaticFieldC3          [STATIC]   C3
+VARIABLE   ? $publicStaticFieldC4          [STATIC]   C4
+VARIABLE   ? $publicStaticFieldC5          [STATIC]   C5
+CONSTANT   PUBLIC_CONST_C1 "PUBLIC_CONST_  [PUBLIC]   C1
+CONSTANT   PUBLIC_CONST_C2 "PUBLIC_CONST_  [PUBLIC]   C2
+CONSTANT   PUBLIC_CONST_C3 "PUBLIC_CONST_  [PUBLIC]   C3
+CONSTANT   PUBLIC_CONST_C4 "PUBLIC_CONST_  [PUBLIC]   C4
+CONSTANT   PUBLIC_CONST_C5 "PUBLIC_CONST_  [PUBLIC]   C5
+CONSTANT   class \Mixin                    [PUBLIC]   Magic Constant

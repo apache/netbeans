@@ -1,0 +1,14 @@
+Code completion result for source line:
+TestDomain.findBy|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     findByAge(Object)               [PROTECTE  Object
+METHOD     findByAge(Object, Map)          [PROTECTE  Object
+METHOD     findByAge(Object, Object)       [PROTECTE  Object
+METHOD     findByAge(Object, Object, Map)  [PROTECTE  Object
+METHOD     findByAge...                    [PROTECTE  Object
+METHOD     findByName(Object)              [PROTECTE  Object
+METHOD     findByName(Object, Map)         [PROTECTE  Object
+METHOD     findByName(Object, Object)      [PROTECTE  Object
+METHOD     findByName(Object, Object, Map  [PROTECTE  Object
+METHOD     findByName...                   [PROTECTE  Object

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.php.editor
+OpenIDE-Module-Layer: org/netbeans/modules/php/editor/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/editor/resources/Bundle.properties
+OpenIDE-Module-Implementation-Version: 2

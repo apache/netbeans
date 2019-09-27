@@ -1,0 +1,5 @@
+Code completion result for source line:
+var p = new P|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Polygon                         [PUBLIC]   class01.js

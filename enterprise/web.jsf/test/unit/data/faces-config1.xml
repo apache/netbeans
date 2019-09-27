@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config>
+    <application>
+        <variable-resolver>
+            org.springframework.web.jsf.DelegatingVariableResolver
+        </variable-resolver>
+    </application>
+    <managed-bean>
+        <managed-bean-name>login</managed-bean-name>
+        <managed-bean-class>org.ncl.backing.Login</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>usersDAO</property-name>
+            <value>#{usersDAO}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <description>
+            Taxanomic Information Managing Bean
+        </description>
+        <managed-bean-name>taxa</managed-bean-name>
+        <managed-bean-class>org.ncl.backing.TaxaController</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+        <managed-property>
+            <property-name>scinameDAO</property-name>
+            <value>#{scinameDAO}</value>
+        </managed-property>
+    </managed-bean>
+    <navigation-rule>
+        <from-view-id>/index.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/searchSciname.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/searchSciname.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>addSciname</from-outcome>
+            <to-view-id>/addSciname.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>listSciname</from-outcome>
+            <to-view-id>/listSciname.jsp</to-view-id>
+        </navigation-case>
+        
+    </navigation-rule>
+    
+</faces-config>

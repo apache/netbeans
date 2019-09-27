@@ -1,0 +1,4 @@
+    |>MARK_OCCURRENCES:nam^e<| : "A"
+a.test.|>MARK_OCCURRENCES:name<| = "B";
+b.test.|>MARK_OCCURRENCES:name<| = "B";
+c.test.|>MARK_OCCURRENCES:name<| = "c";

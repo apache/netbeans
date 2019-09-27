@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:p^<| = new Polygon (10,20);
+console.log(|>MARK_OCCURRENCES:p<|.height);
+console.log(|>MARK_OCCURRENCES:p<|.width);

@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.spellchecker.apimodule
-XOpenIDE-Module-Layer: org/netbeans/modules/spellchecker/apimodule/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/spellchecker/apimodule/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.26
-AutoUpdate-Show-In-Client: false
-

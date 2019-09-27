@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:test<| = function() {
+    var z = |>MARK_OCCURRENCES:te^st<|() * times;

@@ -1,0 +1,6 @@
+$obj1 = new AbstractClass(); // this is error
+        -------------------
+HINT:Abstract class \Xxx\AbstractClass can not be instantiated
+$obj2 = new AbstractClass; // this is error
+        -----------------
+HINT:Abstract class \Xxx\AbstractClass can not be instantiated

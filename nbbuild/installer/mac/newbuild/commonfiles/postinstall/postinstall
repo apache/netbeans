@@ -1,0 +1,57 @@
+#!/bin/sh
+
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+set -e
+
+dirname=`dirname "$0"`
+
+jdk_home=`"$dirname"/get_current_jdk.sh`
+
+. "$dirname"/env.sh
+
+#"$dirname"/add_gf.sh "$NETBEANS_INSTALL_DIR" "$GLASSFISH_INSTALL_DIR"
+
+#"$dirname"/add_javadb.sh "$NETBEANS_INSTALL_DIR" "$GLASSFISH_INSTALL_DIR/javadb"
+
+#"$dirname"/add_tc.sh "$NETBEANS_INSTALL_DIR" "$TOMCAT_INSTALL_DIR"
+
+DEFAULT_JDK_HOME=`/usr/libexec/java_home --version 1.8+`
+
+if [ -f "$dirname"/set_jdk_home.sh ]; then
+    "$dirname"/set_jdk_home.sh "$NETBEANS_INSTALL_DIR" "$DEFAULT_JDK_HOME"
+fi
+
+"$dirname"/populate_caches.sh "$NETBEANS_INSTALL_DIR"
+exit_code=$?
+echo Result of populate_caches.sh : $exit_code
+
+#fix for 114656
+cd "$NETBEANS_INSTALL_DIR"
+cd Contents/Resources/NetBeans*/netbeans/${NB_CLUSTER_DIR}
+mkdir -p var
+touch var/license_accepted
+
+#fix for 151681
+"$dirname"/perm.sh "$NETBEANS_INSTALL_DIR"
+
+#Fix for 151681
+#Go to the /Application/NetBeans folder to change its permissions and ownership
+chmod g+w "$NETBEANS_INSTALL_DIR"/..
+chown root:wheel "$NETBEANS_INSTALL_DIR"/..

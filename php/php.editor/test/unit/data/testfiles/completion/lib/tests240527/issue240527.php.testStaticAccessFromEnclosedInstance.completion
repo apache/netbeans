@@ -1,0 +1,10 @@
+Code completion result for source line:
+$enclosedAccess::|privateStaticSAMethod(); // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticSAMethod()         [PRIVATE,  StaticAccessTest
+METHOD     protectedStaticSAMethod()       [PROTECTE  StaticAccessTest
+METHOD     publicStaticSAMethod()          [STATIC]   StaticAccessTest
+VARIABLE   ? $privateStaticSAField         [PRIVATE,  StaticAccessTest
+VARIABLE   ? $protectedStaticSAField       [PROTECTE  StaticAccessTest
+VARIABLE   ? $publicStaticSAField          [STATIC]   StaticAccessTest
+CONSTANT   CONSTANT_SA 'CONSTANT_SA'       [PUBLIC]   StaticAccessTest

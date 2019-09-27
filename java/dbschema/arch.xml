@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.7"
+  author="rnajman@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project, 
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+Database Schema allows the user to work with information about the database structure in offline mode, 
+which means that the user can't be connected to the database. Instead of that the user works with 
+a database schema snapshot, which is stored in an XML file. The Database Schema module uses a simple 
+model of relational databases. Each database element (e.g. table or index) is represented by an element in the model.
+</answer>
+
+
+
+<!--
+        <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes.
+</answer>
+
+
+
+<!--
+        <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+<answer id="compat-standards">
+No.
+</answer>
+
+
+
+<!--
+        <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+Yes. The module has no settings.
+</answer>
+
+
+
+<!--
+        <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+Any.
+</answer>
+
+
+
+<!--
+        <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE.
+</answer>
+
+
+
+<!--
+        <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name=&quot;identification&quot; type=&quot;import or export&quot; category=&quot;stable&quot; url=&quot;where is the description&quot; /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+Database Explorer. The module takes the list of database connections and JDBC drivers from the Database Explorer.
+</answer>
+
+
+
+<!--
+        <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+None.
+</answer>
+
+
+
+<!--
+        <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+Any.
+</answer>
+
+
+
+<!--
+        <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+Module JAR file only.
+</answer>
+
+
+
+<!--
+        <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+Yes.
+</answer>
+
+
+
+<!--
+        <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+No.
+</answer>
+
+
+
+<!--
+        <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+Anywhere.
+</answer>
+
+
+
+<!--
+        <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the &quot;contract&quot; as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name=&quot;id&quot; category=&quot;private&quot; &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+No.
+</answer>
+
+
+
+<!--
+        <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+No.
+</answer>
+
+
+
+<!--
+        <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+None.
+</answer>
+
+
+
+<!--
+        <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+        </question>
+-->
+<answer id="format-dnd">
+None.
+</answer>
+
+
+
+<!--
+        <question id="format-types">
+            Which file formats (if any) does your code read or write on disk?
+        </question>
+-->
+<answer id="format-types">
+The module writes/reads database schema snapshot in XML format. The file extension is .dbschema.
+</answer>
+
+
+
+<!--
+        <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+No.
+</answer>
+
+
+
+<!--
+        <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+<answer id="perf-limit">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+Suitably. It depends on the number of elements in the database schema. 
+One element of the reletional model consumes about 1kB of the memory.
+</answer>
+
+
+
+<!--
+        <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+<answer id="perf-menus">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+Possible long-running task is capturing of the database schema. It depends on the network 
+and database performance and on the number of the database objects that the user wants to capture.
+</answer>
+
+
+
+<!--
+        <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+Network and database performance (response time) can influence the performance of the module when capturing the schema.
+</answer>
+
+
+
+<!--
+        <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+<answer id="perf-wakeup">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+The module provides standard layer which describes menu items, actions, templates and services. The layer doesn't create any files.
+</answer>
+
+
+
+<!--
+        <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file&apos;s name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+No.
+</answer>
+
+
+
+<!--
+        <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+No.
+</answer>
+
+</api-answers>

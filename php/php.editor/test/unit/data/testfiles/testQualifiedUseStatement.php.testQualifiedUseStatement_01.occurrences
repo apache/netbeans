@@ -1,0 +1,4 @@
+class |>MARK_OCCURRENCES:Kit^chen<| {
+use pl\dagguh\someproject\rooms\|>MARK_OCCURRENCES:Kitchen<|;
+use pl\dagguh\someproject\rooms\|>MARK_OCCURRENCES:Kitchen<| as Alias;
+        |>MARK_OCCURRENCES:Kitchen<|::DEFAULT_SIZE;

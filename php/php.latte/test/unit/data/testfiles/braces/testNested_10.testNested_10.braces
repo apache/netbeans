@@ -1,0 +1,7 @@
+<html>
+{define}
+{/define}
+text
+{*define*}
+{*/def^ine*}
+</html>

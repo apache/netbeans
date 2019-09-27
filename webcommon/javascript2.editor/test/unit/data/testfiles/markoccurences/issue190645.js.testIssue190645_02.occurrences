@@ -1,0 +1,3 @@
+ * @property {object}  defaults.|>MARK_OCCURRENCES:treasure<|      - The default treasure.
+ * @property {number}  defaults.|>MARK_OCCURRENCES:treasure<|.gold - How much gold the party starts with.
+config.defaults.|>MARK_OCCURRENCES:trea^sure<|.gold = 1;

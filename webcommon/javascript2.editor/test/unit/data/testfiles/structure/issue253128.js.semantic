@@ -1,0 +1,10 @@
+|>METHOD:t1<| = |>METHOD:t2<| = function () {
+    return 10;
+}
+  
+|>METHOD:t3<| = |>METHOD:t4<| = |>METHOD:t5<| = |>METHOD:t6<| = function () {
+    return "hello"
+};
+
+t1();
+t2();

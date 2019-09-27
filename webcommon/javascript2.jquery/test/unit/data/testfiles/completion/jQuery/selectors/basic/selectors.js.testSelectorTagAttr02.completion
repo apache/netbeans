@@ -1,0 +1,7 @@
+Code completion result for source line:
+$('div[t|itle="hello"]')
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+ATTRIBUTE  tabindex                                   null
+ATTRIBUTE  title                                      null
+ATTRIBUTE  translate                                  null

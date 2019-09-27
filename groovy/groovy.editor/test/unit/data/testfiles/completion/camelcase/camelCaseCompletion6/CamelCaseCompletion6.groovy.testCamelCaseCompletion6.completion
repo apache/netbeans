@@ -1,0 +1,11 @@
+Code completion result for source line:
+NS|^
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      NavigableSet                               null
+CLASS      NoSuchElementException                     null
+CLASS      NoSuchFieldError                           null
+CLASS      NoSuchFieldException                       null
+CLASS      NoSuchMethodError                          null
+CLASS      NoSuchMethodException                      null
+CLASS      NotSerializableException                   null

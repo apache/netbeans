@@ -1,0 +1,7 @@
+Code completion result for source line:
+#{java.math.|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      BigDecimal                                 java.math.BigDecimal
+CLASS      BigInteger                                 java.math.BigInteger
+CLASS      MathContext                                java.math.MathContext

@@ -1,0 +1,4 @@
+test226559:VARIABLE:[PUBLIC]:ESCAPED{test226559}<font color="#999999">ESCAPED{ : }Test226559</font>:
+Test226559:CONSTRUCTOR:[PUBLIC]:ESCAPED{Test226559}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test226559</font>:
+  method1:METHOD:[PROTECTED]:ESCAPED{method1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  method2:METHOD:[PROTECTED]:ESCAPED{method2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

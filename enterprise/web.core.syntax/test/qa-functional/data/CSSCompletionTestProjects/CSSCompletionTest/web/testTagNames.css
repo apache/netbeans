@@ -1,0 +1,39 @@
+/**CC
+h|
+h1
+h1
+*/
+
+
+/**CC
+t|
+table
+table
+*/
+
+
+/**CC
+h1, button > b|
+base
+h1, button > base
+*/
+
+
+/**CC
+E[foo~="warning"] + th|
+thead
+E[foo~="warning"] + thead
+*/
+
+
+@media page{
+
+/** issue
+h|
+h1
+h1
+*/
+
+
+}
+

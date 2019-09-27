@@ -1,0 +1,102 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='146'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='146'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='146'>
+      <CallNode start='1' end='144'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <FunctionNode name='L:1' kind='NORMAL' start='1' end='142'>
+          <isAnonymous/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='13' end='140'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+            <VarNode name='service' start='23' end='64'>
+              <hasInit/>
+              <isAssignment/>
+              <!-- VarNode Assignment Dest -->
+              <IdentNode start='23' end='30'>
+                <name>service</name>
+                <isDeclaredHere/>
+                <isInitializedHere/>
+              </IdentNode>
+              <!-- VarNode Init -->
+              <FunctionNode name='L:1#=>:2' kind='ARROW' start='33' end='64'>
+                <isAnonymous/>
+                <!-- FunctionNode Parameters -->
+                <!-- FunctionNode Body -->
+                <Block start='39' end='63'>
+                  <isFunctionBody/>
+                  <!-- Block Statements -->
+                  <ExpressionStatement start='40' end='63'>
+                    <CallNode start='40' end='62'>
+                      <!-- CallNode Arguments -->
+                      <StringLiteralNode value='running' start='53' end='60'/>
+                      <!-- CallNode Function -->
+                      <AccessNode property='log' start='40' end='51'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='40' end='47'>
+                          <name>console</name>
+                        </IdentNode>
+                      </AccessNode>
+                    </CallNode>
+                  </ExpressionStatement>
+                </Block>
+              </FunctionNode>
+            </VarNode>
+            <VarNode name='test' start='79' end='121'>
+              <hasInit/>
+              <isAssignment/>
+              <!-- VarNode Assignment Dest -->
+              <IdentNode start='79' end='83'>
+                <name>test</name>
+                <isDeclaredHere/>
+                <isInitializedHere/>
+              </IdentNode>
+              <!-- VarNode Init -->
+              <FunctionNode name='L:1#test' kind='NORMAL' start='86' end='121'>
+                <isAnonymous/>
+                <!-- FunctionNode Parameters -->
+                <IdentNode start='96' end='98'>
+                  <name>fn</name>
+                </IdentNode>
+                <!-- FunctionNode Body -->
+                <Block start='100' end='115'>
+                  <isFunctionBody/>
+                  <!-- Block Statements -->
+                  <ExpressionStatement start='110' end='115'>
+                    <CallNode start='110' end='114'>
+                      <!-- CallNode Arguments -->
+                      <!-- CallNode Function -->
+                      <IdentNode start='110' end='112'>
+                        <name>fn</name>
+                      </IdentNode>
+                    </CallNode>
+                  </ExpressionStatement>
+                </Block>
+              </FunctionNode>
+            </VarNode>
+            <ExpressionStatement start='126' end='140'>
+              <CallNode start='126' end='139'>
+                <!-- CallNode Arguments -->
+                <IdentNode start='131' end='138'>
+                  <name>service</name>
+                </IdentNode>
+                <!-- CallNode Function -->
+                <IdentNode start='126' end='130'>
+                  <name>test</name>
+                </IdentNode>
+              </CallNode>
+            </ExpressionStatement>
+          </Block>
+        </FunctionNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

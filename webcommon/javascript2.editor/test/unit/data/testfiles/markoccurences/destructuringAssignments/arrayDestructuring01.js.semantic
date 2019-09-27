@@ -1,0 +1,9 @@
+var |>GLOBAL:a<|, |>GLOBAL:b<|, |>GLOBAL:c<|;
+var |>GLOBAL:d<| = 4;
+[|>GLOBAL:a<|,|>GLOBAL:b<|, |>GLOBAL:c<|, |>GLOBAL:d<|] = [1, 2, "testik", |>GLOBAL:d<|+|>GLOBAL:d<|];
+   
+
+|>GLOBAL:console<|.log(|>GLOBAL:a<|); // 1
+|>GLOBAL:console<|.log(|>GLOBAL:b<|); // 2
+|>GLOBAL:console<|.log(|>GLOBAL:c<|); // "testik"
+|>GLOBAL:console<|.log(|>GLOBAL:d<|); // 8

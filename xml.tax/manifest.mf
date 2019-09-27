@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.xml.tax/2
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/tax/resources/Bundle.properties
-OpenIDE-Module-Requires: org.openide.modules.InstalledFileLocator
-

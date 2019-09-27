@@ -1,0 +1,311 @@
+[@|, Basic, @Basic, 568]
+interface
+Basic
+Column
+Deprecated
+Enumerated
+FieldResult
+NamedNativeQuery
+Override
+RequestForEnhancement
+SafeVarargs
+SuppressWarnings
+Temporal
+TestAdvancedAnnotation
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+End cursor position = 575
+[@FieldResult(|, String name, @FieldResult(name=, 689]
+String column
+String name
+End cursor position = 704
+[@Temporal(|, TemporalType value, @Temporal(value=, 976]
+TemporalType TemporalType.DATE
+TemporalType TemporalType.TIME
+TemporalType TemporalType.TIME
+TemporalType value
+false
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Basic
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+Column
+Comparable <T>
+Compiler
+Deprecated
+Double
+Enum <E>
+EnumConstantNotPresentExceptio
+Enumerated
+Error
+Exception
+ExceptionInInitializerError
+FieldResult
+Float
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal <T>
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable <T>
+LinkageError
+Long
+Math
+NamedNativeQuery
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+Readable
+ReflectiveOperationException
+RequestForEnhancement
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SafeVarargs
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsExceptio
+SuppressWarnings
+System
+Temporal
+TestAdvancedAnnotation
+TestBasicAnnotation
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+End cursor position = 993
+[@NamedNativeQuery(resultClass=java.util.C|, Calendar, @NamedNativeQuery(resultClass=java.util.Calendar, 1146]
+Calendar
+Collection <E>
+Collections
+Comparator <T>
+ConcurrentModificationExceptio
+Currency
+concurrent
+End cursor position = 1195
+[@Column(unique=|, false, @Column(unique=false, 1236]
+false
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Basic
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class <T>
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue <T>
+CloneNotSupportedException
+Cloneable
+Column
+Comparable <T>
+Compiler
+Deprecated
+Double
+Enum <E>
+EnumConstantNotPresentExceptio
+Enumerated
+Error
+Exception
+ExceptionInInitializerError
+FieldResult
+Float
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal <T>
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable <T>
+LinkageError
+Long
+Math
+NamedNativeQuery
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+Readable
+ReflectiveOperationException
+RequestForEnhancement
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SafeVarargs
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsExceptio
+SuppressWarnings
+System
+Temporal
+TestAdvancedAnnotation
+TestBasicAnnotation
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal <T>
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+End cursor position = 1257
+[@|, RequestForEnhancement, @RequestForEnhancement, 1337]
+interface
+Basic
+Column
+Deprecated
+Enumerated
+FieldResult
+NamedNativeQuery
+Override
+RequestForEnhancement
+SafeVarargs
+SuppressWarnings
+Temporal
+TestAdvancedAnnotation
+ch
+com
+java
+javanet
+javassist
+javax
+jp
+org
+sun
+sunw
+End cursor position = 1356
+[@RequestForEnhancement(|), int id, @RequestForEnhancement(id=), 1412]
+String date = "[unimplemented]
+String engineer = "[unassigned
+int id
+String synopsis
+End cursor position = 1435

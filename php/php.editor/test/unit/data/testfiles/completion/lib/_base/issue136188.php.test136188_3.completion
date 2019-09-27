@@ -1,0 +1,4 @@
+Code completion result for source line:
+$v1 = new Cls136188|();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Cls136188()                     [PUBLIC]   Cls136188

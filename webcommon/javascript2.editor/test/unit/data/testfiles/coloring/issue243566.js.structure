@@ -1,0 +1,3 @@
+ABC:CLASS:[PUBLIC]:ESCAPED{ABC}:
+  x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }String</font>:
+  y:METHOD:[PUBLIC]:ESCAPED{y}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

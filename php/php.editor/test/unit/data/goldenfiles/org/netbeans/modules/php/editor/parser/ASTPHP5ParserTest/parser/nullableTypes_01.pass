@@ -1,0 +1,205 @@
+<testresult testFile='nullableTypes_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='22'>
+            <text>answer</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='22' end='23'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='23' end='24'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='24' end='25'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='26' end='27'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='27' end='30'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='31' end='32'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='37' end='43'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='44' end='48'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='48' end='49'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='50' end='51'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='53' end='61'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='62' end='69'>
+            <text>answer2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='69' end='70'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='70' end='71'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='71' end='72'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='73' end='74'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='74' end='81'>
+            <text>MyClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='82' end='83'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='88' end='94'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='95' end='97'>
+            <text>77</text>
+        </token>
+        <token id='T_SEMICOLON' start='97' end='98'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='99' end='100'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='102' end='110'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='111' end='118'>
+            <text>answer3</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='118' end='119'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='119' end='120'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='120' end='121'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='122' end='123'>
+            <text>?</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='123' end='124'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='124' end='127'>
+            <text>Foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='127' end='128'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='128' end='131'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='132' end='133'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='138' end='144'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='145' end='148'>
+            <text>new</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='149' end='150'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='150' end='153'>
+            <text>Foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='153' end='154'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='154' end='157'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='157' end='158'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='158' end='159'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='159' end='160'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='161' end='162'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='163' end='163'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='163'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='51' isReference='false'>
+                <Identifier start='16' end='22' name='answer'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NullableType start='26' end='30'>
+                    <NamespaceName start='27' end='30' isCurrent='false' isGlobal='false'>
+                        <Identifier start='27' end='30' name='int'/>
+                    </NamespaceName>
+                </NullableType>
+                <Block start='31' end='51' isCurly='true'>
+                    <ReturnStatement start='37' end='49'>
+                        <NamespaceName start='44' end='48' isCurrent='false' isGlobal='false'>
+                            <Identifier start='44' end='48' name='null'/>
+                        </NamespaceName>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='53' end='100' isReference='false'>
+                <Identifier start='62' end='69' name='answer2'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NullableType start='73' end='81'>
+                    <NamespaceName start='74' end='81' isCurrent='false' isGlobal='false'>
+                        <Identifier start='74' end='81' name='MyClass'/>
+                    </NamespaceName>
+                </NullableType>
+                <Block start='82' end='100' isCurly='true'>
+                    <ReturnStatement start='88' end='98'>
+                        <Scalar start='95' end='97' type='INT' value='77'/>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='102' end='162' isReference='false'>
+                <Identifier start='111' end='118' name='answer3'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NullableType start='122' end='131'>
+                    <NamespaceName start='123' end='131' isCurrent='false' isGlobal='true'>
+                        <Identifier start='124' end='127' name='Foo'/>
+                        <Identifier start='128' end='131' name='Bar'/>
+                    </NamespaceName>
+                </NullableType>
+                <Block start='132' end='162' isCurly='true'>
+                    <ReturnStatement start='138' end='160'>
+                        <ClassInstanceCreation start='145' end='159' anonymous='false'>
+                            <ClassName start='149' end='157'>
+                                <NamespaceName start='149' end='157' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='150' end='153' name='Foo'/>
+                                    <Identifier start='154' end='157' name='Bar'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

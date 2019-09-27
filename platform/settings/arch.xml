@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.12"
+  author="rmatous@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+
+     <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+Settings are persistent objects with a set of properties, that should be available via lookup.  
+Properties are expected to be changed. Implementation of setting doesn't care about persistence issues, which
+is responsibility of settings infrastructure.  XML persistence support is provided in a standalone autoload module core-settings.jar.
+Also service types must be mentioned here.
+Service type can be desribed as typed a named settings.
+<ul>
+<li>
+<api group="java" name="SettingsAPI" type="export" category="official" url="@org-openide-util-ui@/org/openide/util/doc-files/api.html#settings"/>
+</li><li>
+<api group="java" name="ServicesAPI" type="export" category="official" url="@org-openide-util-ui@/org/openide/util/doc-files/api.html#service-lookup"/>
+</li><li>
+<api group="java" name="XmlSettingsPersistence" type="export" category="official" url="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html"/>
+</li>
+</ul>
+</answer>
+
+
+<!--
+        
+     <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+Yes
+</answer>
+
+
+
+<!--
+        
+     <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+<answer id="compat-standards">
+No
+</answer>
+
+
+
+<!--
+        
+     <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+Yes. 
+</answer>
+
+
+
+<!--
+        
+     <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+JRE 1.3
+</answer>
+
+
+
+<!--
+        
+     <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+JRE is enough
+</answer>
+
+
+
+<!--
+        
+     <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+<defaultanswer generate='none' />    
+It uses various kinds of API's:
+<ul>
+<li>
+    <api 
+        name="FilesystemsAPI"
+        type="import"
+        category="official"
+        url="@org-openide-filesystems@/org/openide/filesystems/doc-files/api.html"
+				group="java"     />
+</li>
+<li>
+    <api 
+        name="LoadersAPI"
+        type="import"
+        category="official"
+        url="@org-openide-loaders@/org/openide/loaders/doc-files/api.html"
+        group="java" 
+    />
+</li>
+<li>
+    <api 
+        name="UtilitiesAPI"
+        type="import"
+        category="official"
+        url="@org-openide-util-ui@/org/openide/util/doc-files/api.html"
+        group="java" 
+    />
+</li>
+<li>
+    <api 
+        name="NodesAPI"
+        type="import"
+        category="official"
+        url="@org-openide-nodes@/org/openide/nodes/doc-files/api.html"
+        group="java" 
+    />    
+</li>
+<li>
+    <api 
+        name="ModulesAPI"
+        type="import"
+        category="official"
+        url="@org-openide-modules@/org/openide/modules/doc-files/api.html"
+        group="java" 
+    />
+</li>
+<li>
+    <api type='import' 
+    group='java' 
+    category='official' 
+    name='org.openide.windows' 
+    url='@org-openide-windows@/overview-summary.html'/>
+</li>            
+<li>
+    <api type='import' 
+    group='java' 
+    category='official' 
+    name='org.openide.actions' 
+    url='@org-openide-actions@/overview-summary.html'/>
+</li>            
+</ul>
+</answer>
+
+<!--
+        
+     <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+SAX parser.
+</answer>
+
+
+
+<!--
+        
+     <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+Platform independent. 
+</answer>
+
+
+
+<!--
+        
+     <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+    Complicated.
+    Instead of <code>ServiceType</code>  can be used arbitrary object , that
+    cooperate with convertor. Infrastracture for convertos is in <samp>core-settings.jar</samp>.
+</answer>
+
+
+
+<!--
+        
+     <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+<samp>openide.nbm</samp> and <samp>core.nbm</samp>) are reachable via the Update Center .
+</answer>
+
+
+
+<!--
+        
+     <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+<code>ServiceType</code> is publicly accessible.  
+The settings infrastructure resides in core
+and is considered private except <code>InstanceDataObject</code> which is in Datasystems, which
+is public.  Infrastracture for convertos is in <samp>core-settings.jar</samp> exposes some  packages  explicitly declaring them in manifest, 
+ which means that all other packages are  inaccessible.
+</answer>
+
+
+
+<!--
+        
+     <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+<samp>openide.jar</samp> and <samp>core.jar</samp> must be in the shared location as it is part of the core of NetBeans.
+<samp>core-settings.jar.jar</samp> can be anywhere.
+</answer>
+
+
+
+<!--
+        
+     <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+No.
+</answer>
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+<answer id="exec-introspection">
+No answer
+</answer>
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+<answer id="exec-process">
+No external process.
+</answer>
+
+<!--
+        
+     <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+There are method invocations between parts of setting infrastructure.
+<ul>
+<li>
+If there is created new persistent instance of setting object in the runtime, 
+then <code>InstanceDataObject</code> that comes from <samp>openide.jar</samp>, calls 
+method responsible for storing setting on disk. This method is expected to have 
+following decaration <code>public void methodName (java.io.Writer w, Object inst)</code>. Which
+method and from which module is invoked depends on configuration. 
+</li>
+<li>
+If new persistent instances of setting was created, then infrastructure must be notified about it, to be able to listen
+on changes and ensure , that all changes will be stored. Then from <code>InstanceDataObject</code>
+is used  <code>Lookup</code> to find <code>InstanceCookie</code>. Then method <code>setInstance</code>
+is invoked on instance of <code>InstanceCookie</code>. This binds instance of setting to setting infrastructure.
+Which <code>Lookup</code> and then also which <code>InstanceCookie</code> is used depends again on cofiguration.
+<a href="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html">description of  configuration</a>.
+</li>
+<li>
+Also org.openide.util.SharedClassObject.reset is called from org.netbeans.modules.settings.convertors.XMLSettingsSupport.SettingsRecognizer.
+</li>
+</ul>
+
+
+</answer>
+
+
+
+<!--
+        
+     <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </pre>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+Neither java system nor  (<code>System.getProperty</code>) property. But attributes 
+attached to <code>FileObject</code> are used for configuration. This configuration is too complex
+and can't be separated from entity registration and so on.  So, here is 
+ <a href="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html#use-own">
+  description of  configuration</a>.
+</answer>
+
+
+
+<!--
+        
+     <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+Yes reflection is used heavily. 
+<ul>
+<li>
+There is used reflection to create new instance of setting. Either direcltly <code>newInstance</code> or factory method, that
+is defined in setting  <a href="http://www.netbeans.org/dtds/sessionsettings-1_0.dtd"> file</a>.
+</li>
+<li>
+ Setting infrastructure registers its 
+own PropertyChangeListener to know about changes and calls <code>addPropertyChangeListener </code> on 
+setting instances.  There is also called pair method <code> removePropertChangeListener</code>. 
+</li>
+<li>
+For synchronization of file name with instance name is called on setting instance method <code>getDisplayName</code> and 
+<code>getName</code>.
+</li>
+<li>
+If <code>XMLPropertiesConvertor</code> is used for settings based on xml with grammar defined by 
+<a href="http://www.netbeans.org/dtds/properties-1_0.dtd">
+<code>-//NetBeans org.netbeans.modules.settings.examples//DTD XML ProxySettings 1.0//EN</code></a>, then methods
+<code>readProperties</code> and <code>writeProperties</code> is used on instance of setting.
+</li></ul>
+</answer>
+
+
+
+<!--
+        
+     <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+No special implementation.
+</answer>
+
+
+
+<!--
+        
+     <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+        </question>
+-->
+<answer id="format-dnd">
+No special implementation. 
+</answer>
+
+
+
+<!--
+        
+     <question id="format-types">
+            Which file formats (if any) does your code read or write on disk?
+        </question>
+-->
+<answer id="format-types">
+<ul>
+<li><api group="dtd" category="stable" type="export" name="sessionsettings-1_0.dtd" url="http://www.netbeans.org/dtds/sessionsettings-1_0.dtd"><samp>-//NetBeans//DTD Session settings 1.0//EN</samp></api></li>
+<li><api group="dtd" category="devel" type="export" name="properties-1_0.dtd" url="http://www.netbeans.org/dtds/properties-1_0.dtd"><samp>-//NetBeans org.netbeans.modules.settings.examples//DTD XML ProxySettings 1.0//EN</samp></api></li>
+</ul>
+</answer>
+
+
+
+<!--
+        
+     <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+<ul>
+<li>
+In <code>InstanceDataObject.createSettingsFile</code> is looked up <code>ServiceType.Registry</code> to be sure, 
+that ServiceType is unique.
+</li>
+<li>
+Also <code>ClassLoader</code> is looked up often to find <code>ModuleManager.SystemClassLoader</code> .
+</li>
+</ul>
+</answer>
+
+
+
+<!--
+        
+     <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+Yes. There is registered <code>Environment.Provider</code> which is ultimately
+used to provide <code>Lookup</code>, that provides <code>InstanceCookie</code>. 
+This is a second way how can mainly <code>InstanceDataObject</code> call
+outside  implementation (first one are method calls by reflection).
+</answer>
+
+
+
+<!--
+        
+     <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+<answer id="perf-exit">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+<answer id="perf-limit">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+Hardly to estimate.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+<answer id="perf-menus">
+No
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+No. Perhaps if ToolsOption is showed, then createing of nodes defined 
+in UI/Services may take relatively enough time, but not sure if this should be
+considered as part of setting infrastructure.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+Not completely relevant questin in this case. There is not  so much important how many settings will be defined,
+but how heavily will be used.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+<answer id="perf-startup">
+No. Instances are provided on request, the same is true for activity of infrastructure.
+</answer>
+
+
+
+<!--
+        
+     <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+<answer id="perf-wakeup">
+No. 
+</answer>
+
+
+
+<!--
+        
+     <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+No.
+</answer>
+
+
+
+<!--
+        
+     <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+<p></p>
+Provided layers:
+<ul>
+<li><samp>core-settings.jar  org/netbeans/modules/settings/resources/mf-layer</samp> </li>
+<li>In <samp>core.jar</samp> in org/netbeans/core/resources/mf-layer.xml</li> 
+</ul>
+
+<p></p>
+Provided folderes: 
+<ul>
+<li><api name="RuntimeInstancesRegistry" group="layer" type="export" category="official" url="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html#use-memory">
+<b>xml/memory</b>: Associates runtime instance with environment provider. </api><p></p></li>
+<li><api name="ServicesDisplayRegistry" group="layer" type="export" category="official" url="@org-openide-util-ui@/org/openide/util/doc-files/api.html#lookup-ui">
+<b>UI/Services</b>: The root folder for displaying options in the deprecated Advanced dialog.</api><p></p></li>
+</ul>
+</answer>
+
+
+
+<!--
+        
+     <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+Yes <samp>core-settings.jar</samp> override <samp>xml/lookup/Netbeans/DTD_Session_settings_1_0.instance</samp> in 
+<samp>core.jar</samp> and mainly its attributes.  So, if is <samp>core-settings.jar</samp> present, then take over functionality of settings 
+infrastructure implemented in <samp>core.jar</samp>.
+</answer>
+
+
+
+<!--
+        
+     <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+Many times mentioned in this document. See 
+<a href="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html"> this document</a>.
+</answer>
+
+</api-answers>

@@ -1,0 +1,68 @@
+<testresult testFile='staticExpressionCall_02.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='11'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='11' end='13'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='13' end='14'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='14' end='22'>
+            <text>&apos;method&apos;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='22' end='23'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='23' end='24'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='24' end='25'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='25' end='26'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='28' end='31'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='31' end='31'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='30'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='26'>
+                <StaticMethodInvocation start='7' end='25'>
+                    <NamespaceName start='7' end='11' isCurrent='false' isGlobal='false'>
+                        <Identifier start='7' end='11' name='Test'/>
+                    </NamespaceName>
+                    <Member>
+                        <FunctionInvocation start='13' end='25'>
+                            <FucntionName start='13' end='23'>
+                                <ReflectionVariable start='13' end='23'>
+                                    <Scalar start='14' end='22' type='STRING' value='&apos;method&apos;'/>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='13' end='25'>
+                        <FucntionName start='13' end='23'>
+                            <ReflectionVariable start='13' end='23'>
+                                <Scalar start='14' end='22' type='STRING' value='&apos;method&apos;'/>
+                            </ReflectionVariable>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='28' end='30'/>
+        </Statements>
+    </Program>
+</testresult>

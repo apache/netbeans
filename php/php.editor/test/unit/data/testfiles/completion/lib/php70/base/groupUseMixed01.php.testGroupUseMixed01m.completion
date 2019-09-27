@@ -1,0 +1,8 @@
+Code completion result for source line:
+myte|stA(); // testA
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     mytestA()                       [PUBLIC]   A
+METHOD     mytestAA()                      [PUBLIC]   A
+------------------------------------
+METHOD     mytest()                        [PUBLIC]   returnTypesTyping03.php
+METHOD     mytest()                        [PUBLIC]   returnTypesTyping04.php

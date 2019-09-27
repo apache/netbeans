@@ -1,0 +1,90 @@
+$array{1};
+      ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+$array{1}[2];
+      -------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+$array{1}[2]{3};
+            ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({3})
+$array{1}{2}{"test"};
+            ---------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({2})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({"test"})
+$array{1}{2}{$test};
+            --------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({2})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({$test})
+$array{getIndex()};
+      -------------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({getIndex()})
+myFunction(){"test"};
+            ---------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({"test"})
+[1,2,3]{0};
+       ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({0})
+"string"{0};
+        ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({0})
+CONSTANT{1}{2};
+           ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({1})
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({2})
+MyClass::CONSTANT{0};
+                 ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({0})
+((string) $variable->something){0};
+                               ----
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({0})
+($a){"test"};
+    ---------
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax (All)
+HINT:Curly brace syntax("{}") is deprecated since PHP 7.4
+FIX:Use Bracket Syntax ({"test"})

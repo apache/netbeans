@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Actions">
+        <folder name="J2EE">
+            <file name="org-netbeans-modules-j2ee-deployment-impl-bridge-ErgonomicsAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ErgonomicsAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.deployment.impl.bridge.Bundle#LBL_ErgonomicsAction"/>
+                <attr name="serverNodeHidden" boolvalue="true"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Servers">
+        <folder name="J2EEWrapper">
+            <file name="ServerInstanceProviderLookup.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerInstanceProviderLookup.getInstance"/>
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerInstanceProviderLookup"/>
+                <attr name="instanceOf" stringvalue="org.openide.util.Lookup"/>
+            </file>
+            <file name="ServerWizardProviderLookup.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerWizardProviderLookup.getInstance"/>
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.bridge.ServerWizardProviderLookup"/>
+                <attr name="instanceOf" stringvalue="org.openide.util.Lookup"/>
+            </file>
+        </folder>
+        <!-- This enables the J2EE if there are registered servers-->
+        <folder name="Actions">
+            <file name="org-netbeans-modules-j2ee-deployment-impl-bridge-ErgonomicsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/J2EE/org-netbeans-modules-j2ee-deployment-impl-bridge-ErgonomicsAction.instance"/>
+                <attr name="position" intvalue="1000"/>
+                <attr name="config-J2EE/InstalledServers/" boolvalue="true"/>
+                <!-- More appropriate place would be GF module, but that would need another action-->
+                <attr name="config-GlassFishEE6/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishEE8/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishEE6WC/Instances/" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+
+
+  <folder name="J2EE">
+    <folder name="ApplicationProviders">
+    </folder>
+    <folder name="DeploymentPlugins">
+    </folder>
+    <folder name="InstalledServers">
+    </folder>
+  </folder>
+
+  <folder name="Services">
+    <folder name="J2EEServers">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.deployment.impl.Bundle"/>
+        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/deployment/impl/ui/resources/Servers.png"/>
+    </folder>
+  </folder>
+
+    <folder name="xml">
+        <folder name="entities">
+        <!--Entity registration-->
+            <folder name="org_netbeans_modules_j2ee">
+                <file name="DTD_ServerString_1_0" url="nbres:/org/netbeans/modules/j2ee/deployment/impl/server-string.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//org_netbeans_modules_j2ee//DTD ServerString 1.0//EN"/>
+                </file>
+                <file name="DTD_TargetModule_1_0" url="nbres:/org/netbeans/modules/j2ee/deployment/impl/target-module.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//org_netbeans_modules_j2ee//DTD TargetModule 1.0//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="org_netbeans_modules_j2ee">
+                <file name="DTD_ServerString_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.modules.j2ee.deployment.impl.ServerStringConverter.create"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.ServerString"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.impl.ServerString"/>
+                </file>
+                <file name="DTD_TargetModule_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.modules.j2ee.deployment.impl.TargetModuleConverter.create"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.j2ee.deployment.impl.TargetModule.List"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.j2ee.deployment.impl.TargetModule.List"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="org">
+                <folder name="netbeans">
+                    <folder name="modules">
+                        <folder name="j2ee">
+                            <folder name="deployment">
+                                <folder name="impl">
+                                    <file name="ServerString">
+                                        <attr name="settings.providerPath" stringvalue="xml/lookups/org_netbeans_modules_j2ee/DTD_ServerString_1_0.instance"/>
+                                    </file>
+                                    <file name="TargetModule$List">
+                                        <attr name="settings.providerPath" stringvalue="xml/lookups/org_netbeans_modules_j2ee/DTD_TargetModule_1_0.instance"/>
+                                    </file>
+                                </folder>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder> <!--memory-->
+    </folder>
+
+    <folder name="OptionsExport">
+        <folder name="Advanced">
+            <file name="J2EE">
+                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC|GlassFishEE8)/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.deployment.impl.Bundle#J2EE.Options.Export.displayName"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

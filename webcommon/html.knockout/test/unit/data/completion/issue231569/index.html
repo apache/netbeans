@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Test</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="js/knockout-2.2.1/knockout-min.js"></script>
+
+        <div class='liveExample'>
+
+            <div class='configuration'>
+                <input data-bind='value: userNameToAdd, valueUpdate: "keyup", css: { invalid:  }' /></input>
+            </div>
+        </div>
+
+        <script type='text/javascript'>
+
+            var TestModel = function(lists, selectedList) {
+                this.savedLists = ko.observableArray(lists);
+
+
+                this.userNameToAddIsValid = ko.computed(function() {
+                    return true;
+                }, this);
+            }
+            ko.applyBindings(new TestModel(savedLists, "Test"));
+        </script>
+    </body>
+</html>

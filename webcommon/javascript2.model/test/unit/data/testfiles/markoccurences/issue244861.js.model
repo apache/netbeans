@@ -1,0 +1,29 @@
+FUNCTION issue244861 [ANONYMOUS: false, DECLARED: true - issue244861, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+MyClass : FUNCTION MyClass [ANONYMOUS: false, DECLARED: true - MyClass, MODIFIERS: PUBLIC, CONSTRUCTOR]
+        # RETURN TYPES
+        MyClass, RESOLVED: true
+        # PROPERTIES
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        myField   : OBJECT myField [ANONYMOUS: false, DECLARED: true - myField, MODIFIERS: PUBLIC, PROPERTY]
+                  # PROPERTIES
+                  doAgain     : FUNCTION doAgain [ANONYMOUS: false, DECLARED: false - doAgain, MODIFIERS: PUBLIC, METHOD]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  doFirst     : FUNCTION doFirst [ANONYMOUS: false, DECLARED: false - doFirst, MODIFIERS: PUBLIC, METHOD]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  doSomething : FUNCTION doSomething [ANONYMOUS: false, DECLARED: false - doSomething, MODIFIERS: PUBLIC, METHOD]
+                              # PROPERTIES
+                              arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        prototype : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                  # PROPERTIES
+                  myMethod : FUNCTION myMethod [ANONYMOUS: false, DECLARED: true - myMethod, MODIFIERS: PUBLIC, METHOD]
+                           # RETURN TYPES
+                           undefined, RESOLVED: true
+                           # PROPERTIES
+                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                           self      : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]
+        self      : OBJECT self [ANONYMOUS: false, DECLARED: true - self, MODIFIERS: PRIVATE, VARIABLE]

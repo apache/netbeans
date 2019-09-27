@@ -1,0 +1,2 @@
+This directory is named "libs" and not "lib" because naming it "lib" would add its
+contents to the compilation classpath, which is unwanted.

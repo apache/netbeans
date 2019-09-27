@@ -1,0 +1,243 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        javax.servlet.*
+        javax.servlet.http.*
+        javax.servlet.jsp.*
+      dependants:
+      taglibsMap:
+        tag library: http://java.sun.com/jsp/jstl/core
+            tlibversion : 1.1
+            jspversion  : 2.0
+            shortname   : c
+            urn         : http://java.sun.com/jsp/jstl/core
+            info        : JSTL 1.1 core library
+            uri         : http://java.sun.com/jsp/jstl/core
+              tag name     : catch
+                  class    : org.apache.taglibs.standard.tag.common.core.CatchTag
+                  attribs  : [var]
+              tag name     : choose
+                  class    : org.apache.taglibs.standard.tag.common.core.ChooseTag
+                  attribs  : []
+              tag name     : if
+                  class    : org.apache.taglibs.standard.tag.rt.core.IfTag
+                  attribs  : [test, var, scope]
+              tag name     : import
+                  class    : org.apache.taglibs.standard.tag.rt.core.ImportTag
+                  attribs  : [url, var, scope, varReader, context, charEncoding]
+              tag name     : forEach
+                  class    : org.apache.taglibs.standard.tag.rt.core.ForEachTag
+                  attribs  : [items, begin, end, step, var, varStatus]
+              tag name     : forTokens
+                  class    : org.apache.taglibs.standard.tag.rt.core.ForTokensTag
+                  attribs  : [items, delims, begin, end, step, var, varStatus]
+              tag name     : out
+                  class    : org.apache.taglibs.standard.tag.rt.core.OutTag
+                  attribs  : [value, default, escapeXml]
+              tag name     : otherwise
+                  class    : org.apache.taglibs.standard.tag.common.core.OtherwiseTag
+                  attribs  : []
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.rt.core.ParamTag
+                  attribs  : [name, value]
+              tag name     : redirect
+                  class    : org.apache.taglibs.standard.tag.rt.core.RedirectTag
+                  attribs  : [url, context]
+              tag name     : remove
+                  class    : org.apache.taglibs.standard.tag.common.core.RemoveTag
+                  attribs  : [var, scope]
+              tag name     : set
+                  class    : org.apache.taglibs.standard.tag.rt.core.SetTag
+                  attribs  : [var, value, target, property, scope]
+              tag name     : url
+                  class    : org.apache.taglibs.standard.tag.rt.core.UrlTag
+                  attribs  : [var, scope, value, context]
+              tag name     : when
+                  class    : org.apache.taglibs.standard.tag.rt.core.WhenTag
+                  attribs  : [test]
+      prefixMapper:
+      approxXmlPrefixMapper :
+        c -> http://java.sun.com/jsp/jstl/core
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : image/svg+xml;charset=UTF-8
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : true
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+        c
+        xmlns
+        jsp
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="image/svg+xml;charset=UTF-8"
+/>
+<svg
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 450 500"
+  height="500"
+  width="450"
+  jsp:id="2"
+>
+<title
+  jsp:id="3"
+>
+<![CDATA[
+JSP 2.0 JSPX]]>
+</title>
+<c:set
+  value="${empty param[&quot;name&quot;] ? &quot;JSPX&quot; : param[&quot;name&quot;]}"
+  var="name"
+  jsp:id="4"
+/>
+<g
+  id="testContent"
+  jsp:id="5"
+>
+<text
+  text-anchor="middle"
+  font-size="15"
+  y="10%"
+  x="50%"
+  class="title"
+  jsp:id="6"
+>
+<![CDATA[
+
+            JSP 2.0 XML Syntax (.jspx) Demo]]>
+</text>
+<text
+  text-anchor="middle"
+  font-size="15"
+  y="15%"
+  x="50%"
+  class="title"
+  jsp:id="7"
+>
+<![CDATA[
+
+            Try changing the name parameter!]]>
+</text>
+<g
+  id="rotatedText"
+  transform="translate(225, 250)"
+  opacity="1.0"
+  jsp:id="8"
+>
+<c:forEach
+  end="24"
+  begin="1"
+  var="i"
+  jsp:id="9"
+>
+<jsp:text
+  jsp:id="10"
+>
+<![CDATA[
+
+          ]]>
+<![CDATA[
+<g opacity="0.95" transform="scale(1.05) rotate(15)">]]>
+<![CDATA[
+
+        ]]>
+</jsp:text>
+<text
+  id="words"
+  font-family="Serif"
+  font-size="40"
+  text-anchor="middle"
+  fill="DarkSlateBlue"
+  transform="scale(1.6, 1.6)"
+  y="0"
+  x="0"
+  jsp:id="11"
+>
+${name}
+</text>
+</c:forEach>
+<c:forEach
+  end="24"
+  begin="1"
+  var="i"
+  jsp:id="12"
+>
+<jsp:text
+  jsp:id="13"
+>
+<![CDATA[
+</g>]]>
+</jsp:text>
+</c:forEach>
+<text
+  text-anchor="middle"
+  style="font-size:75;font-family:Serif;fill:white"
+  jsp:id="14"
+>
+${name}
+</text>
+</g>
+</g>
+</svg>
+</jsp:root>
+
+ ---- NODES
+
+Node [/jsp2/jspx/textRotate4.jspx(5,-1), Comment] <%-- 
+  - This example is based off the textRotate.svg example that comes
+  - with Batik.  The original example was written by Bill Haneman.
+  - This version by Mark Roth.
+  --%>
+Node [/jsp2/jspx/textRotate4.jspx(9,-1), UninterpretedTag] <svg viewBox="0 0 450 500" height="500" width="450">  
+Node [/jsp2/jspx/textRotate4.jspx(10,-1), PageDirective]   <%@ page contentType="image/svg+xml"%>  
+Node [/jsp2/jspx/textRotate4.jspx(11,-1), UninterpretedTag]   <title>    
+Node [/jsp2/jspx/textRotate4.jspx(11,-1), TemplateText]     JSP 2.0 JSPX  </title>  
+Node [/jsp2/jspx/textRotate4.jspx(12,-1), Comment]   <%-- select name parameter, or default to JSPX --%>  
+Node [/jsp2/jspx/textRotate4.jspx(13,-1), CustomTag]   <c:set value="${empty param["name"] ? "JSPX" : param["name"]}" var="name">  </c:set>  
+Node [/jsp2/jspx/textRotate4.jspx(14,-1), UninterpretedTag]   <g id="testContent">    
+Node [/jsp2/jspx/textRotate4.jspx(15,-1), UninterpretedTag]     <text text-anchor="middle" font-size="15" y="10%" x="50%" class="title">      
+Node [/jsp2/jspx/textRotate4.jspx(15,-1), TemplateText]       
+            JSP 2.0 XML Syntax (.jspx) Demo    </text>    
+Node [/jsp2/jspx/textRotate4.jspx(17,-1), UninterpretedTag]     <text text-anchor="middle" font-size="15" y="15%" x="50%" class="title">      
+Node [/jsp2/jspx/textRotate4.jspx(17,-1), TemplateText]       
+            Try changing the name parameter!    </text>    
+Node [/jsp2/jspx/textRotate4.jspx(19,-1), UninterpretedTag]     <g id="rotatedText" transform="translate(225, 250)" opacity="1.0">      
+Node [/jsp2/jspx/textRotate4.jspx(20,-1), CustomTag]       <c:forEach end="24" begin="1" var="i">        
+Node [/jsp2/jspx/textRotate4.jspx(21,-1), TemplateText]         
+                  
+Node [/jsp2/jspx/textRotate4.jspx(22,-1), TemplateText]         <g opacity="0.95" transform="scale(1.05) rotate(15)">        
+Node [/jsp2/jspx/textRotate4.jspx(22,-1), TemplateText]         
+                
+Node [/jsp2/jspx/textRotate4.jspx(26,-1), UninterpretedTag]         <text id="words" font-family="Serif" font-size="40" text-anchor="middle" fill="DarkSlateBlue" transform="scale(1.6, 1.6)" y="0" x="0">          
+Node [/jsp2/jspx/textRotate4.jspx(26,-1), ELExpression]           ${name}        </text>      </c:forEach>      
+Node [/jsp2/jspx/textRotate4.jspx(28,-1), CustomTag]       <c:forEach end="24" begin="1" var="i">        
+Node [/jsp2/jspx/textRotate4.jspx(29,-1), TemplateText]         </g>      </c:forEach>      
+Node [/jsp2/jspx/textRotate4.jspx(32,-1), UninterpretedTag]       <text text-anchor="middle" style="font-size:75;font-family:Serif;fill:white">        
+Node [/jsp2/jspx/textRotate4.jspx(32,-1), ELExpression]         ${name}      </text>    </g>  </g></svg>

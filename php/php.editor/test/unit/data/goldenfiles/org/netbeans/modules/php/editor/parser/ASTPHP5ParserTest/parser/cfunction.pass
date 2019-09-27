@@ -1,0 +1,79 @@
+<testresult testFile='cfunction.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='22'>
+            <text>CFunction</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_FUNCTION' start='27' end='35'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='36' end='39'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='39' end='40'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='40' end='41'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='42' end='43'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='47' end='53'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='54' end='59'>
+            <text>false</text>
+        </token>
+        <token id='T_SEMICOLON' start='59' end='60'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='62' end='63'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='65' end='66'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='68' end='71'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='71' end='71'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='70'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='66' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='22' name='CFunction'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='23' end='66' isCurly='true'>
+                    <MethodDeclaration start='27' end='63' modifiers='public'>
+                        <FunctionDeclaration start='27' end='63' isReference='false'>
+                            <Identifier start='36' end='39' name='foo'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='42' end='63' isCurly='true'>
+                                <ReturnStatement start='47' end='60'>
+                                    <Scalar start='54' end='59' type='STRING' value='false'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <EmptyStatement start='68' end='70'/>
+        </Statements>
+    </Program>
+</testresult>

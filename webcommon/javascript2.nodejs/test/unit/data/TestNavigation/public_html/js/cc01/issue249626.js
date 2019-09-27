@@ -1,0 +1,1 @@
+require("./complexModule").literalRef.propX.iprop;

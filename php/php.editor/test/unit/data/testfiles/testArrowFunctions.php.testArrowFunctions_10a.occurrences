@@ -1,0 +1,1 @@
+fn(?array $z, int $^|>MARK_OCCURRENCES:x<|): ?int => $|>MARK_OCCURRENCES:x<| + count($z); // parameter and return type

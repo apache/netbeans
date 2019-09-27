@@ -1,0 +1,20 @@
+function |>METHOD:myFunction<|(param) {
+    var |>METHOD:f<| = param || function () {}; // usage is correctly detected
+    var  |>LOCAL_VARIABLE_DECLARATION:a<| = param.a || 1;  // usage is correctly detected
+    var |>METHOD:g<| = function () {
+        f();
+        |>GLOBAL:console<|.log(|>LOCAL_VARIABLE:a<|);
+    };
+    g();
+}              
+myFunction({|>FIELD:a<|: 4});
+ 
+function |>METHOD:myFunction2<|(param) {
+    var |>METHOD:f2<| = param.f || function () {}; // usage is correctly detected
+    var  |>LOCAL_VARIABLE_DECLARATION:a2<| = param.a || 1;  // usage is correctly detected
+    var |>METHOD:g2<| = function () {
+        f2();
+        |>GLOBAL:console<|.log(|>LOCAL_VARIABLE:a2<|);
+    };
+    g2();
+}

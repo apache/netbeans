@@ -1,0 +1,171 @@
+[<% request.getSession().|, void removeAttribute (String name ), <% request.getSession().removeAttribute(name);, 435]
+boolean equals (Object obj )
+Object getAttribute (String na
+Enumeration <String> getAttrib
+Class  getClass ()
+long getCreationTime ()
+String getId ()
+long getLastAccessedTime ()
+int getMaxInactiveInterval ()
+ServletContext getServletConte
+HttpSessionContext getSessionC
+Object getValue (String name )
+String[] getValueNames ()
+int hashCode ()
+void invalidate ()
+boolean isNew ()
+void notify ()
+void notifyAll ()
+void putValue (String name , O
+void removeAttribute (String n
+void removeValue (String name 
+void setAttribute (String name
+void setMaxInactiveInterval (i
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 480
+[<% session.| %>, Object getAttribute (String name ), <% session.getAttribute(name) %>, 577]
+boolean equals (Object obj )
+Object getAttribute (String na
+Enumeration <String> getAttrib
+Class  getClass ()
+long getCreationTime ()
+String getId ()
+long getLastAccessedTime ()
+int getMaxInactiveInterval ()
+ServletContext getServletConte
+HttpSessionContext getSessionC
+Object getValue (String name )
+String[] getValueNames ()
+int hashCode ()
+void invalidate ()
+boolean isNew ()
+void notify ()
+void notifyAll ()
+void putValue (String name , O
+void removeAttribute (String n
+void removeValue (String name 
+void setAttribute (String name
+void setMaxInactiveInterval (i
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 606
+[<%! void f() { this.|, ServletConfig getServletConfig (), <%! void f() { this.getServletConfig(), 754]
+Object clone ()
+void destroy ()
+void doDelete (HttpServletRequ
+void doGet (HttpServletRequest
+void doHead (HttpServletReques
+void doOptions (HttpServletReq
+void doPost (HttpServletReques
+void doPut (HttpServletRequest
+void doTrace (HttpServletReque
+boolean equals (Object obj )
+void f ()
+void finalize ()
+Class  getClass ()
+String getInitParameter (Strin
+Enumeration <String> getInitPa
+long getLastModified (HttpServ
+ServletConfig getServletConfig
+ServletContext getServletConte
+String getServletInfo ()
+String getServletName ()
+int hashCode ()
+void init ()
+void init (ServletConfig confi
+void log (String msg )
+void log (String message , Thr
+void notify ()
+void notifyAll ()
+void service (HttpServletReque
+void service (ServletRequest r
+String toString ()
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 793
+[<%= request.|, String getContextPath (), <%= request.getContextPath(), 903]
+String changeSessionId ()
+String getAuthType ()
+String getCharacterEncoding ()
+String getContentType ()
+String getContextPath ()
+String getHeader (String name 
+String getLocalAddr ()
+String getLocalName ()
+String getMethod ()
+String getParameter (String na
+String getPathInfo ()
+String getPathTranslated ()
+String getProtocol ()
+String getQueryString ()
+String getRealPath (String pat
+String getRemoteAddr ()
+String getRemoteHost ()
+String getRemoteUser ()
+String getRequestURI ()
+String getRequestedSessionId (
+String getScheme ()
+String getServerName ()
+String getServletPath ()
+String toString ()
+boolean authenticate (HttpServ
+boolean equals (Object obj )
+AsyncContext getAsyncContext (
+Object getAttribute (String na
+Enumeration <String> getAttrib
+Class  getClass ()
+int getContentLength ()
+long getContentLengthLong ()
+Cookie[] getCookies ()
+long getDateHeader (String nam
+DispatcherType getDispatcherTy
+Enumeration <String> getHeader
+Enumeration <String> getHeader
+ServletInputStream getInputStr
+int getIntHeader (String name 
+int getLocalPort ()
+Locale getLocale ()
+Enumeration <Locale> getLocale
+Map <String, String[]> getPara
+Enumeration <String> getParame
+String[] getParameterValues (S
+Part getPart (String name )
+Collection <Part> getParts ()
+BufferedReader getReader ()
+int getRemotePort ()
+RequestDispatcher getRequestDi
+StringBuffer getRequestURL ()
+int getServerPort ()
+ServletContext getServletConte
+HttpSession getSession ()
+HttpSession getSession (boolea
+Principal getUserPrincipal ()
+int hashCode ()
+boolean isAsyncStarted ()
+boolean isAsyncSupported ()
+boolean isRequestedSessionIdFr
+boolean isRequestedSessionIdFr
+boolean isRequestedSessionIdFr
+boolean isRequestedSessionIdVa
+boolean isSecure ()
+boolean isUserInRole (String r
+void login (String username , 
+void logout ()
+void notify ()
+void notifyAll ()
+void removeAttribute (String n
+void setAttribute (String name
+void setCharacterEncoding (Str
+AsyncContext startAsync ()
+AsyncContext startAsync (Servl
+T upgrade (Class <T> handlerCl
+void wait ()
+void wait (long timeout )
+void wait (long timeout , int 
+End cursor position = 932

@@ -1,0 +1,5 @@
+function |>MARK_OCCURRENCES:Requester<|() {}
+ * @param {|>MARK_OCCURRENCES:Requ^ester<|~requestCallback} cb - The callback that handles the response.
+|>MARK_OCCURRENCES:Requester<|.prototype.send = function(cb) {
+ * @callback |>MARK_OCCURRENCES:Requester<|~requestCallback
+var r = new |>MARK_OCCURRENCES:Requester<|();

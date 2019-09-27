@@ -1,0 +1,10 @@
+function |>METHOD:Model<| () {};
+
+Model.|>METHOD:compile<| = function |>METHOD,UNUSED:compile<| () {
+  
+  function |>METHOD:model<| () {};
+  model.|>METHOD:__proto__<| = Model;
+};
+    
+    
+    

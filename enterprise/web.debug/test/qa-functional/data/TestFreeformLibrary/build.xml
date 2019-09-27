@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="TestFreeformLibrary" default="all" basedir=".">
+    
+    <target name="-pre-compile">
+        <mkdir dir="classes"/>
+    </target>
+    
+    <target name="compile" depends="-pre-compile">
+        <javac destdir="classes" debug="true" source="1.5" target="1.5">
+            <src path="src1"/>
+            <src path="src2"/>
+        </javac>
+    </target>
+    
+    <target name="clean">
+        <delete dir="classes"/>
+        <delete dir="dist"/>
+    </target>
+    
+    <target name="-pre-jar">
+        <mkdir dir="dist"/>
+    </target>
+    
+    <target name="jar" depends="compile,-pre-jar">
+        <jar destfile="dist/${ant.project.name}.jar">
+            <fileset dir="classes"/>
+        </jar>
+    </target>
+</project>

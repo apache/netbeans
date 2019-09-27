@@ -31,20 +31,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -127,6 +119,7 @@ public class DownloadBinaries extends Task {
 
     @Override
     public void execute() throws BuildException {
+        boolean success = true;
         for (FileSet fs : manifests) {
             DirectoryScanner scanner = fs.getDirectoryScanner(getProject());
             File basedir = scanner.getBasedir();
@@ -151,9 +144,9 @@ public class DownloadBinaries extends Task {
 
                             if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                                success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else {
-                                fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
+                                success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
                         }
                     }
@@ -161,6 +154,9 @@ public class DownloadBinaries extends Task {
                     throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
                 }
             }
+        }
+        if(! success) {
+            throw new BuildException("Failed to download binaries - see log message for the detailed reasons.", getLocation());
         }
     }
     
@@ -177,7 +173,7 @@ public class DownloadBinaries extends Task {
         return downloadFromServer(u);
     }
 
-    private void fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
+    private boolean fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
         File f = new File(manifest.getParentFile(), baseName);
         if (!clean) {
             if (!f.exists() || !hash(f).equals(expectedHash)) {
@@ -201,35 +197,43 @@ public class DownloadBinaries extends Task {
                     doDownload(cacheName, f, expectedHash, download);
                 }
             }
+            if(! f.exists()) {
+                return false;
+            }
             String actualHash = hash(f);
             if (!actualHash.equals(expectedHash)) {
-                throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
-                        expectedHash + " actually had hash " + actualHash, getLocation());
+                log("File " + f + " requested by " + manifest + " to have hash " +
+                        expectedHash + " actually had hash " + actualHash, Project.MSG_WARN);
+                return false;
             }
             log("Have " + f + " with expected hash", Project.MSG_VERBOSE);
+            return true;
         } else {
             if (f.exists()) {
                 String actualHash = hash(f);
                 if (!actualHash.equals(expectedHash)) {
-                    throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
-                            expectedHash + " actually had hash " + actualHash, getLocation());
+                    log("File " + f + " requested by " + manifest + " to have hash " +
+                            expectedHash + " actually had hash " + actualHash, Project.MSG_WARN);
+                    return false;
                 }
                 log("Deleting " + f);
                 f.delete();
             }
+            return true;
         }
     }
 
-    private void doDownload(String cacheName, File destination, String expectedHash, Downloader download) {
-        Throwable firstProblem = null;
+    private boolean doDownload(String cacheName, File destination, String expectedHash, Downloader download) {
         try {
             byte[] downloaded = download.download();
 
             if (expectedHash != null) {
                 String actualHash = hash(new ByteArrayInputStream(downloaded));
                 if (!expectedHash.equals(actualHash)) {
-                    throw new BuildException("Download of " + cacheName + " produced content with hash "
-                            + actualHash + " when " + expectedHash + " was expected", getLocation());
+                    this.log("Download of " + cacheName + " produced content with hash "
+                        + actualHash + " when " + expectedHash + " was expected",
+                        Project.MSG_WARN);
+                    return false;
                 }
             }
             OutputStream os = new FileOutputStream(destination);
@@ -241,15 +245,12 @@ public class DownloadBinaries extends Task {
                 throw x;
             }
             os.close();
-            return ;
-        } catch (IOException x) {
+            return true;
+        } catch (IOException | RuntimeException x) {
             String msg = "Could not download " + cacheName + " to " + destination + ": " + x;
             log(msg, Project.MSG_WARN);
-            if (firstProblem == null) {
-                firstProblem = new IOException(msg).initCause(x);
-            }
+            return false;
         }
-        throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
     }
 
     private byte[] legacyDownload(String cacheName) throws IOException {
@@ -266,7 +267,7 @@ public class DownloadBinaries extends Task {
     
     private byte[] downloadFromServer(URL url) throws IOException {
         log("Downloading: " + url);
-        URLConnection conn = openConnection(url);
+        URLConnection conn = ConfigureProxy.openConnection(this, url, null);
         int code = HttpURLConnection.HTTP_OK;
         if (conn instanceof HttpURLConnection) {
             code = ((HttpURLConnection) conn).getResponseCode();
@@ -291,68 +292,6 @@ public class DownloadBinaries extends Task {
 
     interface Downloader {
         public byte[] download() throws IOException;
-    }
-
-    private URLConnection openConnection(final URL url) throws IOException {
-        final URLConnection[] conn = { null };
-        final CountDownLatch connected = new CountDownLatch(1);
-        ExecutorService connectors = Executors.newFixedThreadPool(3);
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("http_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                String httpProxy = System.getenv("https_proxy");
-                if (httpProxy != null) {
-                    try {
-                        URI uri = new URI(httpProxy);
-                        InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                        Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                        URLConnection test = url.openConnection(proxy);
-                        test.connect();
-                        conn[0] = test;
-                        connected.countDown();
-                    } catch (IOException | URISyntaxException ex) {
-                        log(ex, Project.MSG_ERR);
-                    }
-                }
-            }
-        });
-        connectors.submit(new Runnable() {
-            public void run() {
-                try {
-                    URLConnection test = url.openConnection();
-                    test.connect();
-                    conn[0] = test;
-                    connected.countDown();
-                } catch (IOException ex) {
-                    log(ex, Project.MSG_ERR);
-                }
-            }
-        });
-        try {
-            connected.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException ex) {
-        }
-        if (conn[0] == null) {
-            throw new IOException("Cannot connect to " + url);
-        }
-        return conn[0];
     }
 
     private String hash(File f) {

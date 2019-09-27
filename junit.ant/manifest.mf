@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.junit.ant
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/junit/ant/Bundle.properties
-OpenIDE-Module-Provides: org.netbeans.modules.junit.ant.JUnitAntLogger
-OpenIDE-Module-Specification-Version: 1.4
-

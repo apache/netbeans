@@ -1,0 +1,87 @@
+<Program start='0' end='246'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='7' end='65' modifier='NONE'>
+            <ClassName>
+                <Identifier start='13' end='16' name='prd'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='17' end='65' isCurly='true'>
+                <MethodDeclaration start='23' end='63' modifiers='public'>
+                    <FunctionDeclaration start='23' end='63' isReference='false'>
+                        <Identifier start='32' end='43' name='__construct'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='46' end='63' isCurly='true'>
+                            <EmptyStatement start='56' end='57'/>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <ClassDeclaration start='67' end='195' modifier='NONE'>
+            <ClassName>
+                <Identifier start='73' end='77' name='test'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='78' end='195' isCurly='true'>
+                <FieldsDeclaration start='84' end='98' modifier='private'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='92' end='97' isDollared='true'>
+                            <Identifier start='93' end='97' name='name'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+                <MethodDeclaration start='103' end='127' modifiers='public'>
+                    <FunctionDeclaration start='103' end='127' isReference='false'>
+                        <Identifier start='112' end='116' name='ahoj'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='119' end='127' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+                <MethodDeclaration start='132' end='164' modifiers='public'>
+                    <FunctionDeclaration start='139' end='164' isReference='false'>
+                        <Identifier start='148' end='152' name='neco'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='156' end='164' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <ClassDeclaration start='195' end='246' modifier='NONE'>
+            <ClassName>
+                <Identifier start='201' end='206' name='hello'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='207' end='246' isCurly='true'>
+                <MethodDeclaration start='213' end='244' modifiers='public'>
+                    <FunctionDeclaration start='213' end='244' isReference='false'>
+                        <Identifier start='222' end='233' name='__construct'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='236' end='244' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+    </Statements>
+</Program>

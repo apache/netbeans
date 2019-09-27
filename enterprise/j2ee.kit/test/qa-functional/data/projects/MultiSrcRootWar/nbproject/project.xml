@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.web.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/web-project/3">
+            <name>MultiSrcRootWar</name>
+            <minimum-ant-version>1.6</minimum-ant-version>
+            <web-module-libraries/>
+            <web-module-additional-libraries/>
+            <source-roots>
+                <root id="src.dir"/>
+                <root id="src.webservices.dir"/>
+            </source-roots>
+            <test-roots/>
+        </data>
+    </configuration>
+</project>

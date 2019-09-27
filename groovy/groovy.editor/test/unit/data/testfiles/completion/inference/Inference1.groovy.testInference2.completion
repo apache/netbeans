@@ -1,0 +1,32 @@
+Code completion result for source line:
+set.t|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     take(int)                                  CharSequence
+METHOD     takeWhile(Closure)                         CharSequence
+METHOD     toBigDecimal()                             BigDecimal
+METHOD     toBigInteger()                             BigInteger
+METHOD     toBoolean()                                Boolean
+METHOD     toCharArray()                   [PUBLIC]   char[]
+METHOD     toCharacter()                              Character
+METHOD     toDouble()                                 Double
+METHOD     toFloat()                                  Float
+METHOD     toInteger()                                Integer
+METHOD     toList()                                   List
+METHOD     toLong()                                   Long
+METHOD     toLowerCase()                   [PUBLIC]   String
+METHOD     toLowerCase(Locale)             [PUBLIC]   String
+METHOD     toSet()                                    Set
+METHOD     toShort()                                  Short
+METHOD     toString()                      [PUBLIC]   String
+METHOD     toURI()                                    URI
+METHOD     toURL()                                    URL
+METHOD     toUpperCase()                   [PUBLIC]   String
+METHOD     toUpperCase(Locale)             [PUBLIC]   String
+METHOD     tokenize()                                 List
+METHOD     tokenize(CharSequence)                     List
+METHOD     tokenize(Character)                        List
+METHOD     tokenize(String)                           List
+METHOD     tr(CharSequence, CharSequence)             CharSequence
+METHOD     tr(String, String)                         String
+METHOD     trim()                          [PUBLIC]   String

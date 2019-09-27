@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/db/resources/index.gif</file>
+        <file>src/org/netbeans/modules/db/resources/folderAdaptors.gif</file>
+        <file>src/org/netbeans/modules/db/resources/procedure.png</file>
+        <file>src/org/netbeans/modules/db/resources/databaseAdaptor.gif</file>
+        <file>src/org/netbeans/modules/db/resources/arrowUp.gif</file>
+        <file>src/org/netbeans/modules/db/resources/columnIndex.gif</file>
+        <file>src/org/netbeans/modules/db/resources/indexUp.gif</file>
+        <file>src/org/netbeans/modules/db/resources/folderDrivers.gif</file>
+        <file>src/org/netbeans/modules/db/resources/helpset.gif</file>
+        <file>src/org/netbeans/modules/db/resources/column.gif</file>
+        <file>src/org/netbeans/modules/db/resources/paramResult.gif</file>
+        <file>src/org/netbeans/modules/db/resources/function-invalid.png</file>
+        <file>src/org/netbeans/modules/db/resources/procedure-invalid.png</file>
+        <file>src/org/netbeans/modules/db/resources/trigger.png</file>
+        <file>src/org/netbeans/modules/db/resources/driverPrefered.gif</file>
+        <file>src/org/netbeans/modules/db/resources/connection.gif</file>
+        <file>src/org/netbeans/modules/db/resources/driver.gif</file>
+        <file>src/org/netbeans/modules/db/resources/driverNotInstalled.gif</file>
+        <file>src/org/netbeans/modules/db/resources/trigger-invalid.png</file>
+        <file>src/org/netbeans/modules/db/resources/defaultFolder.gif</file>
+        <file>src/org/netbeans/modules/db/resources/paramReturn.gif</file>
+        <file>src/org/netbeans/modules/db/resources/errorIcon.png</file>
+        <file>src/org/netbeans/modules/db/resources/arrowDown.gif</file>
+        <file>src/org/netbeans/modules/db/resources/columnView.gif</file>
+        <file>src/org/netbeans/modules/db/resources/catalog.gif</file>
+        <file>src/org/netbeans/modules/db/resources/info.gif</file>
+        <file>src/org/netbeans/modules/db/resources/schema.png</file>
+        <file>src/org/netbeans/modules/db/resources/function.png</file>
+        <file>src/org/netbeans/modules/db/resources/columnPrimary.gif</file>
+        <file>src/org/netbeans/modules/db/resources/columnForeign.gif</file>
+        <file>src/org/netbeans/modules/db/resources/database.gif</file>
+        <file>src/org/netbeans/modules/db/resources/driverPreferedNotInstalled.gif</file>
+        <file>src/org/netbeans/modules/db/resources/indexDown.gif</file>
+        <file>src/org/netbeans/modules/db/resources/infoIcon.png</file>
+        <file>src/org/netbeans/modules/db/resources/tableReferenced.gif</file>
+        <file>src/org/netbeans/modules/db/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/db/resources/view.gif</file>
+        <file>src/org/netbeans/modules/db/resources/param.gif</file>
+        <file>src/org/netbeans/modules/db/resources/connectionDisconnected.gif</file>
+        <file>src/org/netbeans/modules/db/resources/paramOut.gif</file>
+        <file>src/org/netbeans/modules/db/resources/foreignKey.gif</file>
+        <file>src/org/netbeans/modules/db/resources/addConnection.png</file>
+        <file>src/org/netbeans/modules/db/resources/tableSystem.gif</file>
+        <file>src/org/netbeans/modules/db/resources/paramInOut.gif</file>
+        <file>src/org/netbeans/modules/db/resources/table.gif</file>
+        <file>src/org/netbeans/modules/db/resources/paramIn.gif</file>
+        <file>src/org/netbeans/modules/db/resources/folder.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

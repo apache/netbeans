@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-     targetNamespace="http://www.example.com/test"
-     xmlns="http://www.w3.org/2001/XMLSchema">
-     <element name="test3" other="abc"/>
-     <element name="test4" other="abc"/>
-</schema>

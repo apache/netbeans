@@ -1,0 +1,4 @@
+            echo "";
+            --------
+HINT:ForEach Loops Must Use Braces
+FIX:Add Braces

@@ -1,0 +1,2033 @@
+<testresult testFile='issue262144.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='20'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='20' end='21'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='21' end='22'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='23' end='24'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='29' end='34'>
+            <text>yield</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='35' end='41'>
+            <text>"from"</text>
+        </token>
+        <token id='T_SEMICOLON' start='41' end='42'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='43' end='44'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='46' end='54'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='55' end='58'>
+            <text>gen</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='58' end='59'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='59' end='63'>
+            <text>$key</text>
+        </token>
+        <token id='T_COMMA' start='63' end='64'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='65' end='71'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='71' end='72'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='73' end='74'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='79' end='81'>
+            <text>$i</text>
+        </token>
+        <token id='T_EQUAL' start='82' end='83'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='84' end='85'>
+            <text>0</text>
+        </token>
+        <token id='T_SEMICOLON' start='85' end='86'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='91' end='96'>
+            <text>yield</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='102' end='103'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='103' end='108'>
+            <text>yield</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='108' end='109'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='109' end='110'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='115' end='120'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='121' end='126'>
+            <text>yield</text>
+        </token>
+        <token id='T_SEMICOLON' start='126' end='127'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='132' end='133'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='133' end='138'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='139' end='144'>
+            <text>yield</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='144' end='145'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='145' end='146'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='151' end='156'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='157' end='162'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='163' end='164'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='164' end='165'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='170' end='171'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='171' end='176'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='177' end='182'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='183' end='184'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='184' end='185'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='185' end='186'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='191' end='196'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='197' end='199'>
+            <text>$i</text>
+        </token>
+        <token id='T_SEMICOLON' start='199' end='200'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='205' end='206'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='206' end='211'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='212' end='214'>
+            <text>$i</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='214' end='215'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='215' end='216'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='221' end='226'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='227' end='231'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='232' end='234'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='235' end='241'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='241' end='242'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='247' end='248'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='248' end='253'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='254' end='258'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='259' end='261'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='262' end='268'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='268' end='269'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='269' end='270'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='276' end='278'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='279' end='280'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='281' end='286'>
+            <text>yield</text>
+        </token>
+        <token id='T_SEMICOLON' start='286' end='287'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='292' end='294'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='295' end='296'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='297' end='298'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='298' end='303'>
+            <text>yield</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='303' end='304'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='304' end='305'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='310' end='312'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='313' end='314'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='315' end='320'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='321' end='326'>
+            <text>yield</text>
+        </token>
+        <token id='T_SEMICOLON' start='326' end='327'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='332' end='334'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='335' end='336'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='337' end='338'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='338' end='343'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='344' end='349'>
+            <text>yield</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='349' end='350'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='350' end='351'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='356' end='358'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='359' end='360'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='361' end='366'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='367' end='372'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='373' end='374'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='374' end='375'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='380' end='382'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='383' end='384'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='385' end='386'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='386' end='391'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD' start='392' end='397'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='398' end='399'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='399' end='400'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='400' end='401'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='406' end='408'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='409' end='410'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='411' end='416'>
+            <text>yield</text>
+        </token>
+        <token id='T_INC' start='417' end='419'>
+            <text>++</text>
+        </token>
+        <token id='T_VARIABLE' start='419' end='421'>
+            <text>$i</text>
+        </token>
+        <token id='T_SEMICOLON' start='421' end='422'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='427' end='429'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='430' end='431'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='432' end='433'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='433' end='438'>
+            <text>yield</text>
+        </token>
+        <token id='T_INC' start='439' end='441'>
+            <text>++</text>
+        </token>
+        <token id='T_VARIABLE' start='441' end='443'>
+            <text>$i</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='443' end='444'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='444' end='445'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='450' end='452'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='453' end='454'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='455' end='460'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='461' end='465'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='466' end='468'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='469' end='475'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='475' end='476'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='481' end='483'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='484' end='485'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='486' end='487'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='487' end='492'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='493' end='497'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='498' end='500'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='501' end='507'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='507' end='508'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='508' end='509'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='514' end='516'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='517' end='518'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='519' end='521'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='522' end='523'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='524' end='529'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='530' end='534'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='535' end='537'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='538' end='544'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='544' end='545'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='550' end='552'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='553' end='554'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='555' end='557'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='558' end='559'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='560' end='561'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='561' end='566'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='567' end='571'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='572' end='574'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='575' end='581'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='581' end='582'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='582' end='583'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='588' end='590'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='591' end='592'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='593' end='594'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='594' end='596'>
+            <text>$b</text>
+        </token>
+        <token id='T_EQUAL' start='597' end='598'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='599' end='600'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD' start='600' end='605'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='606' end='610'>
+            <text>$key</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='611' end='613'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='614' end='620'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='620' end='621'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='621' end='622'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='622' end='623'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='628' end='629'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='629' end='631'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='632' end='633'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD' start='634' end='639'>
+            <text>yield</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='639' end='640'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='640' end='641'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='647' end='652'>
+            <text>yield</text>
+        </token>
+        <token id='T_YIELD_FROM' start='653' end='663'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='664' end='668'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='668' end='669'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='669' end='670'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='670' end='671'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='677' end='682'>
+            <text>$from</text>
+        </token>
+        <token id='T_EQUAL' start='683' end='684'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='685' end='689'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='689' end='690'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='690' end='691'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='691' end='692'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD_FROM' start='697' end='707'>
+            <text>yield from</text>
+        </token>
+        <token id='T_VARIABLE' start='708' end='713'>
+            <text>$from</text>
+        </token>
+        <token id='T_SEMICOLON' start='713' end='714'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='719' end='724'>
+            <text>$from</text>
+        </token>
+        <token id='T_EQUAL' start='725' end='726'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='727' end='731'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='731' end='732'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='732' end='733'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='733' end='734'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='739' end='740'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='740' end='750'>
+            <text>yield from</text>
+        </token>
+        <token id='T_VARIABLE' start='751' end='756'>
+            <text>$from</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='756' end='757'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='757' end='758'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD_FROM' start='763' end='773'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='774' end='778'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='778' end='779'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='779' end='780'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='780' end='781'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='786' end='787'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='787' end='797'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='798' end='802'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='802' end='803'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='803' end='804'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='804' end='805'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='805' end='806'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD_FROM' start='811' end='821'>
+            <text>yield from</text>
+        </token>
+        <token id='T_NEW' start='822' end='825'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='826' end='839'>
+            <text>ArrayIterator</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='839' end='840'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='840' end='841'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='841' end='842'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='842' end='843'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='844' end='845'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='845' end='846'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='847' end='848'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='848' end='849'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='849' end='850'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='850' end='851'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='856' end='857'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='857' end='867'>
+            <text>yield from</text>
+        </token>
+        <token id='T_NEW' start='868' end='871'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='872' end='885'>
+            <text>ArrayIterator</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='885' end='886'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='886' end='887'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='887' end='888'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='888' end='889'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='890' end='891'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='891' end='892'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='893' end='894'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='894' end='895'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='895' end='896'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='896' end='897'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='897' end='898'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='904' end='909'>
+            <text>$from</text>
+        </token>
+        <token id='T_EQUAL' start='910' end='911'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='912' end='916'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='916' end='917'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='917' end='918'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='918' end='919'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='924' end='926'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='927' end='928'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD_FROM' start='929' end='939'>
+            <text>yield from</text>
+        </token>
+        <token id='T_VARIABLE' start='940' end='945'>
+            <text>$from</text>
+        </token>
+        <token id='T_SEMICOLON' start='945' end='946'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='951' end='956'>
+            <text>$from</text>
+        </token>
+        <token id='T_EQUAL' start='957' end='958'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='959' end='963'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='963' end='964'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='964' end='965'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='965' end='966'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='971' end='973'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='974' end='975'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='976' end='977'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='977' end='987'>
+            <text>yield from</text>
+        </token>
+        <token id='T_VARIABLE' start='988' end='993'>
+            <text>$from</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='993' end='994'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='994' end='995'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1000' end='1002'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1003' end='1004'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1005' end='1015'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1016' end='1020'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1020' end='1021'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1021' end='1022'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1022' end='1023'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1028' end='1030'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1031' end='1032'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1033' end='1034'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1034' end='1044'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1045' end='1049'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1049' end='1050'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1050' end='1051'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1051' end='1052'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1052' end='1053'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1058' end='1060'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1061' end='1062'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1063' end='1073'>
+            <text>yield from</text>
+        </token>
+        <token id='T_NEW' start='1074' end='1077'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1078' end='1091'>
+            <text>ArrayIterator</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1091' end='1092'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1092' end='1093'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1093' end='1094'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='1094' end='1095'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1096' end='1097'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='1097' end='1098'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1099' end='1100'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1100' end='1101'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1101' end='1102'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1102' end='1103'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1108' end='1110'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1111' end='1112'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1113' end='1114'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1114' end='1124'>
+            <text>yield from</text>
+        </token>
+        <token id='T_NEW' start='1125' end='1128'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1129' end='1142'>
+            <text>ArrayIterator</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1142' end='1143'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1143' end='1144'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='1144' end='1145'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='1145' end='1146'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1147' end='1148'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='1148' end='1149'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='1150' end='1151'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1151' end='1152'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1152' end='1153'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1153' end='1154'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1154' end='1155'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1160' end='1162'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1163' end='1164'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1165' end='1167'>
+            <text>$d</text>
+        </token>
+        <token id='T_EQUAL' start='1168' end='1169'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1170' end='1180'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1181' end='1185'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1185' end='1186'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1186' end='1187'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1187' end='1188'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1193' end='1195'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1196' end='1197'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1198' end='1200'>
+            <text>$d</text>
+        </token>
+        <token id='T_EQUAL' start='1201' end='1202'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1203' end='1204'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1204' end='1214'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1215' end='1219'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1219' end='1220'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1220' end='1221'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1221' end='1222'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1222' end='1223'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1228' end='1230'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1231' end='1232'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1233' end='1234'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1234' end='1236'>
+            <text>$d</text>
+        </token>
+        <token id='T_EQUAL' start='1237' end='1238'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1239' end='1240'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1240' end='1250'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1251' end='1255'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1255' end='1256'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1256' end='1257'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1257' end='1258'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1258' end='1259'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1259' end='1260'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1265' end='1266'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1266' end='1268'>
+            <text>$c</text>
+        </token>
+        <token id='T_EQUAL' start='1269' end='1270'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1271' end='1272'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1272' end='1274'>
+            <text>$d</text>
+        </token>
+        <token id='T_EQUAL' start='1275' end='1276'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1277' end='1278'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1278' end='1288'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1289' end='1293'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1293' end='1294'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1294' end='1295'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1295' end='1296'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1296' end='1297'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1297' end='1298'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1298' end='1299'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='1304' end='1310'>
+            <text>return</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1311' end='1321'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1322' end='1326'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1326' end='1327'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1327' end='1328'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1328' end='1329'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='1334' end='1340'>
+            <text>return</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1341' end='1342'>
+            <text>(</text>
+        </token>
+        <token id='T_YIELD_FROM' start='1342' end='1352'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='1353' end='1357'>
+            <text>from</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1357' end='1358'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1358' end='1359'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1359' end='1360'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1360' end='1361'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1362' end='1363'>
+            <text>}</text>
+        </token>
+        <token id='T_FOREACH' start='1365' end='1372'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1373' end='1374'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1374' end='1377'>
+            <text>gen</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1377' end='1378'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1378' end='1383'>
+            <text>"key"</text>
+        </token>
+        <token id='T_COMMA' start='1383' end='1384'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1385' end='1392'>
+            <text>"value"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1392' end='1393'>
+            <text>)</text>
+        </token>
+        <token id='T_AS' start='1394' end='1396'>
+            <text>as</text>
+        </token>
+        <token id='T_VARIABLE' start='1397' end='1403'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1403' end='1404'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1405' end='1406'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1411' end='1419'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1419' end='1420'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1420' end='1426'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1426' end='1427'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1427' end='1428'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1429' end='1430'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1431' end='1431'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1431'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='44' isReference='false'>
+                <Identifier start='16' end='20' name='from'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Block start='23' end='44' isCurly='true'>
+                    <ExpressionStatement start='29' end='42'>
+                        <YieldExpression start='29' end='41'>
+                            <Scalar start='35' end='41' type='STRING' value='"from"'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='46' end='1363' isReference='false'>
+                <Identifier start='55' end='58' name='gen'/>
+                <FormalParameters>
+                    <FormalParameter start='59' end='63' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='59' end='63' isDollared='true'>
+                                <Identifier start='60' end='63' name='key'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='65' end='71' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='65' end='71' isDollared='true'>
+                                <Identifier start='66' end='71' name='value'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='73' end='1363' isCurly='true'>
+                    <ExpressionStatement start='79' end='86'>
+                        <Assignment start='79' end='85' operator='EQUAL'>
+                            <Variable start='79' end='81' isDollared='true'>
+                                <Identifier start='80' end='81' name='i'/>
+                            </Variable>
+                            <Scalar start='84' end='85' type='INT' value='0'/>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='91' end='97'>
+                        <YieldExpression start='91' end='96'>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='102' end='110'>
+                        <ParenthesisExpression start='102' end='109'>
+                            <YieldExpression start='103' end='108'>
+                            </YieldExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='115' end='127'>
+                        <YieldExpression start='115' end='126'>
+                            <YieldExpression start='121' end='126'>
+                            </YieldExpression>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='132' end='146'>
+                        <ParenthesisExpression start='132' end='145'>
+                            <YieldExpression start='133' end='144'>
+                                <YieldExpression start='139' end='144'>
+                                </YieldExpression>
+                            </YieldExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='151' end='165'>
+                        <YieldExpression start='151' end='164'>
+                            <YieldExpression start='157' end='164'>
+                                <Scalar start='163' end='164' type='INT' value='2'/>
+                            </YieldExpression>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='170' end='186'>
+                        <ParenthesisExpression start='170' end='185'>
+                            <YieldExpression start='171' end='184'>
+                                <YieldExpression start='177' end='184'>
+                                    <Scalar start='183' end='184' type='INT' value='2'/>
+                                </YieldExpression>
+                            </YieldExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='191' end='200'>
+                        <YieldExpression start='191' end='199'>
+                            <Variable start='197' end='199' isDollared='true'>
+                                <Identifier start='198' end='199' name='i'/>
+                            </Variable>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='205' end='216'>
+                        <ParenthesisExpression start='205' end='215'>
+                            <YieldExpression start='206' end='214'>
+                                <Variable start='212' end='214' isDollared='true'>
+                                    <Identifier start='213' end='214' name='i'/>
+                                </Variable>
+                            </YieldExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='221' end='242'>
+                        <YieldExpression start='221' end='241'>
+                            <Variable start='227' end='231' isDollared='true'>
+                                <Identifier start='228' end='231' name='key'/>
+                            </Variable>
+                            <Variable start='235' end='241' isDollared='true'>
+                                <Identifier start='236' end='241' name='value'/>
+                            </Variable>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='247' end='270'>
+                        <ParenthesisExpression start='247' end='269'>
+                            <YieldExpression start='248' end='268'>
+                                <Variable start='254' end='258' isDollared='true'>
+                                    <Identifier start='255' end='258' name='key'/>
+                                </Variable>
+                                <Variable start='262' end='268' isDollared='true'>
+                                    <Identifier start='263' end='268' name='value'/>
+                                </Variable>
+                            </YieldExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='276' end='287'>
+                        <Assignment start='276' end='286' operator='EQUAL'>
+                            <Variable start='276' end='278' isDollared='true'>
+                                <Identifier start='277' end='278' name='a'/>
+                            </Variable>
+                            <YieldExpression start='281' end='286'>
+                            </YieldExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='292' end='305'>
+                        <Assignment start='292' end='304' operator='EQUAL'>
+                            <Variable start='292' end='294' isDollared='true'>
+                                <Identifier start='293' end='294' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='297' end='304'>
+                                <YieldExpression start='298' end='303'>
+                                </YieldExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='310' end='327'>
+                        <Assignment start='310' end='326' operator='EQUAL'>
+                            <Variable start='310' end='312' isDollared='true'>
+                                <Identifier start='311' end='312' name='a'/>
+                            </Variable>
+                            <YieldExpression start='315' end='326'>
+                                <YieldExpression start='321' end='326'>
+                                </YieldExpression>
+                            </YieldExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='332' end='351'>
+                        <Assignment start='332' end='350' operator='EQUAL'>
+                            <Variable start='332' end='334' isDollared='true'>
+                                <Identifier start='333' end='334' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='337' end='350'>
+                                <YieldExpression start='338' end='349'>
+                                    <YieldExpression start='344' end='349'>
+                                    </YieldExpression>
+                                </YieldExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='356' end='375'>
+                        <Assignment start='356' end='374' operator='EQUAL'>
+                            <Variable start='356' end='358' isDollared='true'>
+                                <Identifier start='357' end='358' name='a'/>
+                            </Variable>
+                            <YieldExpression start='361' end='374'>
+                                <YieldExpression start='367' end='374'>
+                                    <Scalar start='373' end='374' type='INT' value='2'/>
+                                </YieldExpression>
+                            </YieldExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='380' end='401'>
+                        <Assignment start='380' end='400' operator='EQUAL'>
+                            <Variable start='380' end='382' isDollared='true'>
+                                <Identifier start='381' end='382' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='385' end='400'>
+                                <YieldExpression start='386' end='399'>
+                                    <YieldExpression start='392' end='399'>
+                                        <Scalar start='398' end='399' type='INT' value='2'/>
+                                    </YieldExpression>
+                                </YieldExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='406' end='422'>
+                        <Assignment start='406' end='421' operator='EQUAL'>
+                            <Variable start='406' end='408' isDollared='true'>
+                                <Identifier start='407' end='408' name='a'/>
+                            </Variable>
+                            <YieldExpression start='411' end='421'>
+                                <PrefixExpression start='417' end='421' operator='INC'>
+                                    <Variable start='419' end='421' isDollared='true'>
+                                        <Identifier start='420' end='421' name='i'/>
+                                    </Variable>
+                                </PrefixExpression>
+                            </YieldExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='427' end='445'>
+                        <Assignment start='427' end='444' operator='EQUAL'>
+                            <Variable start='427' end='429' isDollared='true'>
+                                <Identifier start='428' end='429' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='432' end='444'>
+                                <YieldExpression start='433' end='443'>
+                                    <PrefixExpression start='439' end='443' operator='INC'>
+                                        <Variable start='441' end='443' isDollared='true'>
+                                            <Identifier start='442' end='443' name='i'/>
+                                        </Variable>
+                                    </PrefixExpression>
+                                </YieldExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='450' end='476'>
+                        <Assignment start='450' end='475' operator='EQUAL'>
+                            <Variable start='450' end='452' isDollared='true'>
+                                <Identifier start='451' end='452' name='a'/>
+                            </Variable>
+                            <YieldExpression start='455' end='475'>
+                                <Variable start='461' end='465' isDollared='true'>
+                                    <Identifier start='462' end='465' name='key'/>
+                                </Variable>
+                                <Variable start='469' end='475' isDollared='true'>
+                                    <Identifier start='470' end='475' name='value'/>
+                                </Variable>
+                            </YieldExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='481' end='509'>
+                        <Assignment start='481' end='508' operator='EQUAL'>
+                            <Variable start='481' end='483' isDollared='true'>
+                                <Identifier start='482' end='483' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='486' end='508'>
+                                <YieldExpression start='487' end='507'>
+                                    <Variable start='493' end='497' isDollared='true'>
+                                        <Identifier start='494' end='497' name='key'/>
+                                    </Variable>
+                                    <Variable start='501' end='507' isDollared='true'>
+                                        <Identifier start='502' end='507' name='value'/>
+                                    </Variable>
+                                </YieldExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='514' end='545'>
+                        <Assignment start='514' end='544' operator='EQUAL'>
+                            <Variable start='514' end='516' isDollared='true'>
+                                <Identifier start='515' end='516' name='a'/>
+                            </Variable>
+                            <Assignment start='519' end='544' operator='EQUAL'>
+                                <Variable start='519' end='521' isDollared='true'>
+                                    <Identifier start='520' end='521' name='b'/>
+                                </Variable>
+                                <YieldExpression start='524' end='544'>
+                                    <Variable start='530' end='534' isDollared='true'>
+                                        <Identifier start='531' end='534' name='key'/>
+                                    </Variable>
+                                    <Variable start='538' end='544' isDollared='true'>
+                                        <Identifier start='539' end='544' name='value'/>
+                                    </Variable>
+                                </YieldExpression>
+                            </Assignment>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='550' end='583'>
+                        <Assignment start='550' end='582' operator='EQUAL'>
+                            <Variable start='550' end='552' isDollared='true'>
+                                <Identifier start='551' end='552' name='a'/>
+                            </Variable>
+                            <Assignment start='555' end='582' operator='EQUAL'>
+                                <Variable start='555' end='557' isDollared='true'>
+                                    <Identifier start='556' end='557' name='b'/>
+                                </Variable>
+                                <ParenthesisExpression start='560' end='582'>
+                                    <YieldExpression start='561' end='581'>
+                                        <Variable start='567' end='571' isDollared='true'>
+                                            <Identifier start='568' end='571' name='key'/>
+                                        </Variable>
+                                        <Variable start='575' end='581' isDollared='true'>
+                                            <Identifier start='576' end='581' name='value'/>
+                                        </Variable>
+                                    </YieldExpression>
+                                </ParenthesisExpression>
+                            </Assignment>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='588' end='623'>
+                        <Assignment start='588' end='622' operator='EQUAL'>
+                            <Variable start='588' end='590' isDollared='true'>
+                                <Identifier start='589' end='590' name='a'/>
+                            </Variable>
+                            <ParenthesisExpression start='593' end='622'>
+                                <Assignment start='594' end='621' operator='EQUAL'>
+                                    <Variable start='594' end='596' isDollared='true'>
+                                        <Identifier start='595' end='596' name='b'/>
+                                    </Variable>
+                                    <ParenthesisExpression start='599' end='621'>
+                                        <YieldExpression start='600' end='620'>
+                                            <Variable start='606' end='610' isDollared='true'>
+                                                <Identifier start='607' end='610' name='key'/>
+                                            </Variable>
+                                            <Variable start='614' end='620' isDollared='true'>
+                                                <Identifier start='615' end='620' name='value'/>
+                                            </Variable>
+                                        </YieldExpression>
+                                    </ParenthesisExpression>
+                                </Assignment>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='628' end='641'>
+                        <ParenthesisExpression start='628' end='640'>
+                            <Assignment start='629' end='639' operator='EQUAL'>
+                                <Variable start='629' end='631' isDollared='true'>
+                                    <Identifier start='630' end='631' name='a'/>
+                                </Variable>
+                                <YieldExpression start='634' end='639'>
+                                </YieldExpression>
+                            </Assignment>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='647' end='671'>
+                        <YieldExpression start='647' end='670'>
+                            <YieldFromExpression start='653' end='670'>
+                                <FunctionInvocation start='664' end='670'>
+                                    <FucntionName start='664' end='668'>
+                                        <NamespaceName start='664' end='668' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='664' end='668' name='from'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </YieldFromExpression>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='677' end='692'>
+                        <Assignment start='677' end='691' operator='EQUAL'>
+                            <Variable start='677' end='682' isDollared='true'>
+                                <Identifier start='678' end='682' name='from'/>
+                            </Variable>
+                            <FunctionInvocation start='685' end='691'>
+                                <FucntionName start='685' end='689'>
+                                    <NamespaceName start='685' end='689' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='685' end='689' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='697' end='714'>
+                        <YieldFromExpression start='697' end='713'>
+                            <Variable start='708' end='713' isDollared='true'>
+                                <Identifier start='709' end='713' name='from'/>
+                            </Variable>
+                        </YieldFromExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='719' end='734'>
+                        <Assignment start='719' end='733' operator='EQUAL'>
+                            <Variable start='719' end='724' isDollared='true'>
+                                <Identifier start='720' end='724' name='from'/>
+                            </Variable>
+                            <FunctionInvocation start='727' end='733'>
+                                <FucntionName start='727' end='731'>
+                                    <NamespaceName start='727' end='731' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='727' end='731' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='739' end='758'>
+                        <ParenthesisExpression start='739' end='757'>
+                            <YieldFromExpression start='740' end='756'>
+                                <Variable start='751' end='756' isDollared='true'>
+                                    <Identifier start='752' end='756' name='from'/>
+                                </Variable>
+                            </YieldFromExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='763' end='781'>
+                        <YieldFromExpression start='763' end='780'>
+                            <FunctionInvocation start='774' end='780'>
+                                <FucntionName start='774' end='778'>
+                                    <NamespaceName start='774' end='778' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='774' end='778' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </YieldFromExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='786' end='806'>
+                        <ParenthesisExpression start='786' end='805'>
+                            <YieldFromExpression start='787' end='804'>
+                                <FunctionInvocation start='798' end='804'>
+                                    <FucntionName start='798' end='802'>
+                                        <NamespaceName start='798' end='802' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='798' end='802' name='from'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </YieldFromExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='811' end='851'>
+                        <YieldFromExpression start='811' end='850'>
+                            <ClassInstanceCreation start='822' end='850' anonymous='false'>
+                                <ClassName start='826' end='839'>
+                                    <NamespaceName start='826' end='839' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='826' end='839' name='ArrayIterator'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                    <ArrayCreation start='840' end='849' type='NEW'>
+                                        <ArrayElement start='841' end='842'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='841' end='842' type='INT' value='2'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='844' end='845'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='844' end='845' type='INT' value='3'/>
+                                            </Value>
+                                        </ArrayElement>
+                                        <ArrayElement start='847' end='848'>
+                                            <Key>
+                                            </Key>
+                                            <Value>
+                                                <Scalar start='847' end='848' type='INT' value='4'/>
+                                            </Value>
+                                        </ArrayElement>
+                                    </ArrayCreation>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </YieldFromExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='856' end='898'>
+                        <ParenthesisExpression start='856' end='897'>
+                            <YieldFromExpression start='857' end='896'>
+                                <ClassInstanceCreation start='868' end='896' anonymous='false'>
+                                    <ClassName start='872' end='885'>
+                                        <NamespaceName start='872' end='885' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='872' end='885' name='ArrayIterator'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                        <ArrayCreation start='886' end='895' type='NEW'>
+                                            <ArrayElement start='887' end='888'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='887' end='888' type='INT' value='2'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='890' end='891'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='890' end='891' type='INT' value='3'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='893' end='894'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='893' end='894' type='INT' value='4'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </YieldFromExpression>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='904' end='919'>
+                        <Assignment start='904' end='918' operator='EQUAL'>
+                            <Variable start='904' end='909' isDollared='true'>
+                                <Identifier start='905' end='909' name='from'/>
+                            </Variable>
+                            <FunctionInvocation start='912' end='918'>
+                                <FucntionName start='912' end='916'>
+                                    <NamespaceName start='912' end='916' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='912' end='916' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='924' end='946'>
+                        <Assignment start='924' end='945' operator='EQUAL'>
+                            <Variable start='924' end='926' isDollared='true'>
+                                <Identifier start='925' end='926' name='c'/>
+                            </Variable>
+                            <YieldFromExpression start='929' end='945'>
+                                <Variable start='940' end='945' isDollared='true'>
+                                    <Identifier start='941' end='945' name='from'/>
+                                </Variable>
+                            </YieldFromExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='951' end='966'>
+                        <Assignment start='951' end='965' operator='EQUAL'>
+                            <Variable start='951' end='956' isDollared='true'>
+                                <Identifier start='952' end='956' name='from'/>
+                            </Variable>
+                            <FunctionInvocation start='959' end='965'>
+                                <FucntionName start='959' end='963'>
+                                    <NamespaceName start='959' end='963' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='959' end='963' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='971' end='995'>
+                        <Assignment start='971' end='994' operator='EQUAL'>
+                            <Variable start='971' end='973' isDollared='true'>
+                                <Identifier start='972' end='973' name='c'/>
+                            </Variable>
+                            <ParenthesisExpression start='976' end='994'>
+                                <YieldFromExpression start='977' end='993'>
+                                    <Variable start='988' end='993' isDollared='true'>
+                                        <Identifier start='989' end='993' name='from'/>
+                                    </Variable>
+                                </YieldFromExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1000' end='1023'>
+                        <Assignment start='1000' end='1022' operator='EQUAL'>
+                            <Variable start='1000' end='1002' isDollared='true'>
+                                <Identifier start='1001' end='1002' name='c'/>
+                            </Variable>
+                            <YieldFromExpression start='1005' end='1022'>
+                                <FunctionInvocation start='1016' end='1022'>
+                                    <FucntionName start='1016' end='1020'>
+                                        <NamespaceName start='1016' end='1020' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1016' end='1020' name='from'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </YieldFromExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1028' end='1053'>
+                        <Assignment start='1028' end='1052' operator='EQUAL'>
+                            <Variable start='1028' end='1030' isDollared='true'>
+                                <Identifier start='1029' end='1030' name='c'/>
+                            </Variable>
+                            <ParenthesisExpression start='1033' end='1052'>
+                                <YieldFromExpression start='1034' end='1051'>
+                                    <FunctionInvocation start='1045' end='1051'>
+                                        <FucntionName start='1045' end='1049'>
+                                            <NamespaceName start='1045' end='1049' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1045' end='1049' name='from'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </YieldFromExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1058' end='1103'>
+                        <Assignment start='1058' end='1102' operator='EQUAL'>
+                            <Variable start='1058' end='1060' isDollared='true'>
+                                <Identifier start='1059' end='1060' name='c'/>
+                            </Variable>
+                            <YieldFromExpression start='1063' end='1102'>
+                                <ClassInstanceCreation start='1074' end='1102' anonymous='false'>
+                                    <ClassName start='1078' end='1091'>
+                                        <NamespaceName start='1078' end='1091' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1078' end='1091' name='ArrayIterator'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                        <ArrayCreation start='1092' end='1101' type='NEW'>
+                                            <ArrayElement start='1093' end='1094'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='1093' end='1094' type='INT' value='2'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='1096' end='1097'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='1096' end='1097' type='INT' value='3'/>
+                                                </Value>
+                                            </ArrayElement>
+                                            <ArrayElement start='1099' end='1100'>
+                                                <Key>
+                                                </Key>
+                                                <Value>
+                                                    <Scalar start='1099' end='1100' type='INT' value='4'/>
+                                                </Value>
+                                            </ArrayElement>
+                                        </ArrayCreation>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </YieldFromExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1108' end='1155'>
+                        <Assignment start='1108' end='1154' operator='EQUAL'>
+                            <Variable start='1108' end='1110' isDollared='true'>
+                                <Identifier start='1109' end='1110' name='c'/>
+                            </Variable>
+                            <ParenthesisExpression start='1113' end='1154'>
+                                <YieldFromExpression start='1114' end='1153'>
+                                    <ClassInstanceCreation start='1125' end='1153' anonymous='false'>
+                                        <ClassName start='1129' end='1142'>
+                                            <NamespaceName start='1129' end='1142' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1129' end='1142' name='ArrayIterator'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                            <ArrayCreation start='1143' end='1152' type='NEW'>
+                                                <ArrayElement start='1144' end='1145'>
+                                                    <Key>
+                                                    </Key>
+                                                    <Value>
+                                                        <Scalar start='1144' end='1145' type='INT' value='2'/>
+                                                    </Value>
+                                                </ArrayElement>
+                                                <ArrayElement start='1147' end='1148'>
+                                                    <Key>
+                                                    </Key>
+                                                    <Value>
+                                                        <Scalar start='1147' end='1148' type='INT' value='3'/>
+                                                    </Value>
+                                                </ArrayElement>
+                                                <ArrayElement start='1150' end='1151'>
+                                                    <Key>
+                                                    </Key>
+                                                    <Value>
+                                                        <Scalar start='1150' end='1151' type='INT' value='4'/>
+                                                    </Value>
+                                                </ArrayElement>
+                                            </ArrayCreation>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </YieldFromExpression>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1160' end='1188'>
+                        <Assignment start='1160' end='1187' operator='EQUAL'>
+                            <Variable start='1160' end='1162' isDollared='true'>
+                                <Identifier start='1161' end='1162' name='c'/>
+                            </Variable>
+                            <Assignment start='1165' end='1187' operator='EQUAL'>
+                                <Variable start='1165' end='1167' isDollared='true'>
+                                    <Identifier start='1166' end='1167' name='d'/>
+                                </Variable>
+                                <YieldFromExpression start='1170' end='1187'>
+                                    <FunctionInvocation start='1181' end='1187'>
+                                        <FucntionName start='1181' end='1185'>
+                                            <NamespaceName start='1181' end='1185' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1181' end='1185' name='from'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </YieldFromExpression>
+                            </Assignment>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1193' end='1223'>
+                        <Assignment start='1193' end='1222' operator='EQUAL'>
+                            <Variable start='1193' end='1195' isDollared='true'>
+                                <Identifier start='1194' end='1195' name='c'/>
+                            </Variable>
+                            <Assignment start='1198' end='1222' operator='EQUAL'>
+                                <Variable start='1198' end='1200' isDollared='true'>
+                                    <Identifier start='1199' end='1200' name='d'/>
+                                </Variable>
+                                <ParenthesisExpression start='1203' end='1222'>
+                                    <YieldFromExpression start='1204' end='1221'>
+                                        <FunctionInvocation start='1215' end='1221'>
+                                            <FucntionName start='1215' end='1219'>
+                                                <NamespaceName start='1215' end='1219' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1215' end='1219' name='from'/>
+                                                </NamespaceName>
+                                            </FucntionName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </YieldFromExpression>
+                                </ParenthesisExpression>
+                            </Assignment>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1228' end='1260'>
+                        <Assignment start='1228' end='1259' operator='EQUAL'>
+                            <Variable start='1228' end='1230' isDollared='true'>
+                                <Identifier start='1229' end='1230' name='c'/>
+                            </Variable>
+                            <ParenthesisExpression start='1233' end='1259'>
+                                <Assignment start='1234' end='1258' operator='EQUAL'>
+                                    <Variable start='1234' end='1236' isDollared='true'>
+                                        <Identifier start='1235' end='1236' name='d'/>
+                                    </Variable>
+                                    <ParenthesisExpression start='1239' end='1258'>
+                                        <YieldFromExpression start='1240' end='1257'>
+                                            <FunctionInvocation start='1251' end='1257'>
+                                                <FucntionName start='1251' end='1255'>
+                                                    <NamespaceName start='1251' end='1255' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='1251' end='1255' name='from'/>
+                                                    </NamespaceName>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </YieldFromExpression>
+                                    </ParenthesisExpression>
+                                </Assignment>
+                            </ParenthesisExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1265' end='1299'>
+                        <ParenthesisExpression start='1265' end='1298'>
+                            <Assignment start='1266' end='1297' operator='EQUAL'>
+                                <Variable start='1266' end='1268' isDollared='true'>
+                                    <Identifier start='1267' end='1268' name='c'/>
+                                </Variable>
+                                <ParenthesisExpression start='1271' end='1297'>
+                                    <Assignment start='1272' end='1296' operator='EQUAL'>
+                                        <Variable start='1272' end='1274' isDollared='true'>
+                                            <Identifier start='1273' end='1274' name='d'/>
+                                        </Variable>
+                                        <ParenthesisExpression start='1277' end='1296'>
+                                            <YieldFromExpression start='1278' end='1295'>
+                                                <FunctionInvocation start='1289' end='1295'>
+                                                    <FucntionName start='1289' end='1293'>
+                                                        <NamespaceName start='1289' end='1293' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1289' end='1293' name='from'/>
+                                                        </NamespaceName>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </YieldFromExpression>
+                                        </ParenthesisExpression>
+                                    </Assignment>
+                                </ParenthesisExpression>
+                            </Assignment>
+                        </ParenthesisExpression>
+                    </ExpressionStatement>
+                    <ReturnStatement start='1304' end='1329'>
+                        <YieldFromExpression start='1311' end='1328'>
+                            <FunctionInvocation start='1322' end='1328'>
+                                <FucntionName start='1322' end='1326'>
+                                    <NamespaceName start='1322' end='1326' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1322' end='1326' name='from'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </YieldFromExpression>
+                    </ReturnStatement>
+                    <ReturnStatement start='1334' end='1361'>
+                        <ParenthesisExpression start='1341' end='1360'>
+                            <YieldFromExpression start='1342' end='1359'>
+                                <FunctionInvocation start='1353' end='1359'>
+                                    <FucntionName start='1353' end='1357'>
+                                        <NamespaceName start='1353' end='1357' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1353' end='1357' name='from'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </YieldFromExpression>
+                        </ParenthesisExpression>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ForEachStatement start='1365' end='1430'>
+                <Key>
+                </Key>
+                <Expression>
+                    <FunctionInvocation start='1374' end='1393'>
+                        <FucntionName start='1374' end='1377'>
+                            <NamespaceName start='1374' end='1377' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1374' end='1377' name='gen'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <Scalar start='1378' end='1383' type='STRING' value='"key"'/>
+                            <Scalar start='1385' end='1392' type='STRING' value='"value"'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </Expression>
+                <Statement>
+                    <Block start='1405' end='1430' isCurly='true'>
+                        <ExpressionStatement start='1411' end='1428'>
+                            <FunctionInvocation start='1411' end='1427'>
+                                <FucntionName start='1411' end='1419'>
+                                    <NamespaceName start='1411' end='1419' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1411' end='1419' name='var_dump'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Variable start='1420' end='1426' isDollared='true'>
+                                        <Identifier start='1421' end='1426' name='value'/>
+                                    </Variable>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ExpressionStatement>
+                    </Block>
+                </Statement>
+                <Value>
+                    <Variable start='1397' end='1403' isDollared='true'>
+                        <Identifier start='1398' end='1403' name='value'/>
+                    </Variable>
+                </Value>
+            </ForEachStatement>
+        </Statements>
+    </Program>
+</testresult>

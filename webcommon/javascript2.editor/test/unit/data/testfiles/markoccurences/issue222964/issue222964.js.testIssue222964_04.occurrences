@@ -1,0 +1,3 @@
+|>MARK_OCCURRENCES:window<|.store = {
+|>MARK_OCCURRENCES:window<|.store.populate();
+console.log(|>MARK_OCCURRENCES:wind^ow<|.store.address.street);

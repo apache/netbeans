@@ -1,0 +1,5 @@
+var |>METHOD:Utils<| = function(window) {
+    this.|>FIELD:window<| = window;  
+    this.|>FIELD:document<| = window.document;       
+    this.|>FIELD:browser<| = |>GLOBAL:browser<|.browser;
+}

@@ -1,0 +1,2 @@
+use const Name\Space\FOO as |>MARK_OCCURRENCES:F^OO2<|;
+echo |>MARK_OCCURRENCES:FOO2<|;

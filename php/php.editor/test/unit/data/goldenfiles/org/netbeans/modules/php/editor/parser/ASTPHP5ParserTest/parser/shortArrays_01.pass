@@ -1,0 +1,105 @@
+<testresult testFile='shortArrays_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='17'>
+            <text>$shortArray</text>
+        </token>
+        <token id='T_EQUAL' start='18' end='19'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='20' end='21'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='21' end='22'>
+            <text>1</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='23' end='25'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='26' end='34'>
+            <text>"string"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='34' end='35'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='35' end='36'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='37' end='49'>
+            <text>$shortArray2</text>
+        </token>
+        <token id='T_EQUAL' start='50' end='51'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='52' end='53'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='53' end='58'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='58' end='59'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='60' end='62'>
+            <text>56</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='62' end='63'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='63' end='64'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='65' end='68'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='68' end='68'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='67'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='36'>
+                <Assignment start='6' end='35' operator='EQUAL'>
+                    <Variable start='6' end='17' isDollared='true'>
+                        <Identifier start='7' end='17' name='shortArray'/>
+                    </Variable>
+                    <ArrayCreation start='20' end='35' type='NEW'>
+                        <ArrayElement start='21' end='34'>
+                            <Key>
+                                <Scalar start='21' end='22' type='INT' value='1'/>
+                            </Key>
+                            <Value>
+                                <Scalar start='26' end='34' type='STRING' value='"string"'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='37' end='64'>
+                <Assignment start='37' end='63' operator='EQUAL'>
+                    <Variable start='37' end='49' isDollared='true'>
+                        <Identifier start='38' end='49' name='shortArray2'/>
+                    </Variable>
+                    <ArrayCreation start='52' end='63' type='NEW'>
+                        <ArrayElement start='53' end='58'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='53' end='58' type='STRING' value='"foo"'/>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='60' end='62'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='60' end='62' type='INT' value='56'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='65' end='67'/>
+        </Statements>
+    </Program>
+</testresult>

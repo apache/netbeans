@@ -1,0 +1,5 @@
+token #0 T_HTML [<div n:foreach="]
+token #1 T_LATTE [$form->controls as $input]
+token #2 T_HTML [" n:class="]
+token #3 T_LATTE [$input->required ? required]
+token #4 T_HTML ["></div>]

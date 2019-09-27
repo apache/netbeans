@@ -1,0 +1,3 @@
+Code completion result for source line:
+// print $test2|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

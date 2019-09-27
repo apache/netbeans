@@ -1,0 +1,8 @@
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+
+public interface ${name} {
+
+}

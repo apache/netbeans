@@ -27,13 +27,13 @@
         <head>
             <!-- projects.netbeans.org -->
            <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>All NetBeans Classes</title>
+           <title>All Apache NetBeans (incubating) Classes</title>
            <link rel="stylesheet" href="org-openide-util/javadoc.css" type="text/css" title="style" />
         </head>
 
         <body>
         <font size="+1" CLASS="FrameHeadingFont">
-            <b>NetBeans API Classes</b>
+            <b>Apache NetBeans (incubating) API Classes</b>
         </font>
         
         <TABLE BORDER="0" WIDTH="100%" SUMMARY="">

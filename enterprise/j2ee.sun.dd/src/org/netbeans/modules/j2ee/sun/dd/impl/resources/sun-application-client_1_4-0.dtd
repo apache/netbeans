@@ -1,0 +1,218 @@
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+
+<!--
+application-client is the root element describing all the runtime bindings 
+of a single application client
+-->
+<!ELEMENT sun-application-client (ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, 
+	message-destination*)>
+
+<!--
+name of a resource reference.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+resource-env-ref holds all the runtime bindings of a resource env reference.
+-->
+<!ELEMENT resource-env-ref ( resource-env-ref-name, jndi-name )>
+
+<!--
+name of a resource env reference.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+resource-ref holds the runtime bindings of a resource reference.
+-->
+<!ELEMENT resource-ref  ( res-ref-name, jndi-name,  default-resource-principal?)>
+
+<!--
+default-resource-principal specifies the default principal that the container 
+will use to access a resource.
+-->
+<!ELEMENT default-resource-principal ( name,  password)>
+
+<!--
+name element holds the user name
+-->
+<!ELEMENT name (#PCDATA)>
+
+<!--
+password element holds a password string.
+-->
+<!ELEMENT password (#PCDATA)>
+
+<!--
+ejb-ref element which binds an ejb reference to a jndi name.
+-->
+<!ELEMENT ejb-ref (ejb-ref-name, jndi-name)>
+
+<!--
+ejb-ref-name locates the name of the ejb reference in the application.
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!--
+jndi name of the associated entity
+-->
+<!ELEMENT  jndi-name (#PCDATA)>
+
+<!--
+This node holds information about a logical message destination
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+This node holds the name of a logical message destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+Specifies the name of a durable subscription associated with a message-driven bean's 
+destination.  Required for a Topic destination, if subscription-durability is set to 
+Durable (in ejb-jar.xml)
+-->
+
+<!--
+  			W E B   S E R V I C E S 
+--> 	
+<!--
+Runtime settings for a web service reference.  In the simplest case,
+there is no runtime information required for a service ref.  Runtime info
+is only needed in the following cases :
+ * to define the port that should be used to resolve a container-managed port
+ * to define default Stub/Call property settings for Stub objects
+ * to define the URL of a final WSDL document to be used instead of
+the one packaged with a service-ref
+-->
+<!ELEMENT service-ref ( service-ref-name, port-info*, call-property*, 
+		wsdl-override?, service-impl-class?, service-qname? )>
+
+<!--
+Coded name (relative to java:comp/env) for a service-reference
+-->
+<!ELEMENT service-ref-name ( #PCDATA )>
+
+<!-- 
+Information for a port within a service-reference.
+
+Either service-endpoint-interface or wsdl-port or both
+(service-endpoint-interface and wsdl-port) should be specified.  
+
+If both are specified, wsdl-port represents the
+port the container should choose for container-managed port selection.
+
+The same wsdl-port value must not appear in
+more than one port-info entry within the same service-ref.
+
+If a particular service-endpoint-interface is using container-managed port
+selection, it must not appear in more than one port-info entry
+within the same service-ref.
+
+-->
+<!ELEMENT port-info ( service-endpoint-interface?, wsdl-port?, stub-property*, call-property* )>
+
+<!--
+Fully qualified name of service endpoint interface
+-->
+<!ELEMENT service-endpoint-interface ( #PCDATA )>
+<!-- 
+Port used in port-info.  
+-->
+<!ELEMENT wsdl-port ( namespaceURI, localpart )>
+
+<!-- 
+JAXRPC property values that should be set on a stub before it's returned to 
+to the web service client.  The property names can be any properties supported
+by the JAXRPC Stub implementation. See javadoc for javax.xml.rpc.Stub
+-->
+<!ELEMENT stub-property ( name, value )>
+
+<!-- 
+JAXRPC property values that should be set on a Call object before it's 
+returned to the web service client.  The property names can be any 
+properties supported by the JAXRPC Call implementation.  See javadoc
+for javax.xml.rpc.Call
+-->
+<!ELEMENT call-property ( name, value )>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+Name of generated service implementation class. This is not set by the 
+deployer. It is derived during deployment.
+-->
+<!ELEMENT service-impl-class ( #PCDATA )>
+
+<!-- 
+The service-qname element declares the specific WSDL service
+element that is being refered to.  It is not set by the deployer.
+It is derived during deployment.
+-->
+<!ELEMENT service-qname (namespaceURI, localpart)>
+
+<!--
+The localpart element indicates the local part of a QNAME.
+-->
+<!ELEMENT localpart (#PCDATA)>
+
+<!--
+The namespaceURI element indicates a URI.
+-->
+<!ELEMENT namespaceURI (#PCDATA)>
+
+<!--
+This text nodes holds a value string.
+-->
+<!ELEMENT value (#PCDATA)>

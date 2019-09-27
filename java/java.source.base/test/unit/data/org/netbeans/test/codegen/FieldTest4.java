@@ -1,0 +1,43 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.test.codegen;
+
+/**
+ * The class is used as a source for field test generating.
+ *
+ * @author  Pavel Flaska
+ */
+public class FieldTest4 {
+
+    private static final int modifiersField;
+
+    public long typeField = 10;
+
+    public String noveJmenoField;
+
+    String initialValueTextTester = "This text will be replaced by another one.";
+
+    long initialValueChanger = 5 * 12 - 22;
+
+    /** This field contains JavaDoc */
+    protected String initialValueReplacer = new String("NetBeers");
+
+    Object removeInitialValueField = new Object();
+
+}

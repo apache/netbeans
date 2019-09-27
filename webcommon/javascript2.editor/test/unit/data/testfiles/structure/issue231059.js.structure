@@ -1,0 +1,6 @@
+Test:METHOD:[PUBLIC]:ESCAPED{Test}ESCAPED{(}ESCAPED{$scope}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  getLabelId:METHOD:[PRIVATE]:ESCAPED{getLabelId}ESCAPED{(}ESCAPED{stringLabel}ESCAPED{)}<font color="#999999">ESCAPED{ : }Number</font>:
+Test2:METHOD:[PUBLIC]:ESCAPED{Test2}ESCAPED{(}ESCAPED{$scope}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  $scope:PARAMETER:[PUBLIC]:ESCAPED{$scope}:
+    currentCase:CLASS:[PUBLIC]:ESCAPED{currentCase}:
+      title:FIELD:[PUBLIC]:ESCAPED{title}:

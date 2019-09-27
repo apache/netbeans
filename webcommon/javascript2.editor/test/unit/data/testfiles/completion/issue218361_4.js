@@ -1,0 +1,3 @@
+window.history.
+function test(){
+}

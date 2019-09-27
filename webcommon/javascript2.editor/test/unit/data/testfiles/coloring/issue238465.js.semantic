@@ -1,0 +1,9 @@
+var |>GLOBAL:HTMLManipulator<| = new function() {
+
+
+    this.|>METHOD:initBoard<| = function() {
+        var |>LOCAL_VARIABLE_DECLARATION:table<| = |>GLOBAL:document<|.createElement("table");
+        |>LOCAL_VARIABLE:table<|.setAttribute("class", "board");
+        return |>LOCAL_VARIABLE:table<|;
+    };        
+};

@@ -1,0 +1,5 @@
+<html>
+{*label*}
+text
+{*/^label*}
+</html>

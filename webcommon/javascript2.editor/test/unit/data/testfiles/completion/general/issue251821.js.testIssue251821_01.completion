@@ -1,0 +1,5 @@
+Code completion result for source line:
+var res = a1.aproper|ty.toLocaleString();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      aproperty: Number|String        [PUBLIC]   issue251821.js

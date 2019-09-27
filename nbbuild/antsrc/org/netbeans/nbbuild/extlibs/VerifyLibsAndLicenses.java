@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -88,9 +89,18 @@ public class VerifyLibsAndLicenses extends Task {
     public @Override void execute() throws BuildException {
         try { // XXX workaround for http://issues.apache.org/bugzilla/show_bug.cgi?id=43398
         pseudoTests = new LinkedHashMap<>();
-        modules = new TreeSet<>();
-        for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
-            modules.addAll(Arrays.asList(getProject().getProperty(cluster).split("[, ]+")));
+        if(getProject().getProperty("allmodules") != null) {
+            modules = new TreeSet<>(Arrays.asList(getProject().getProperty("allmodules").split("[, ]+")));
+            modules.add("nbbuild");
+        } else {
+            Path nbAllPath = nball.toPath();
+            modules = new TreeSet<>(
+                    Files.walk(nbAllPath)
+                            .filter(p -> Files.exists(p.resolve("external/binaries-list")))
+                            .map(p -> nbAllPath.relativize(p))
+                            .map(p -> p.toString())
+                            .collect(Collectors.toSet())
+            );
         }
         try {
             testNoStrayThirdPartyBinaries();
@@ -107,7 +117,7 @@ public class VerifyLibsAndLicenses extends Task {
                                      pseudoTests.values().stream().filter(err -> err != null).collect(Collectors.joining("\n")),
                                      getLocation());
         }
-        } catch (NullPointerException x) {x.printStackTrace(); throw x;}
+        } catch (NullPointerException | IOException x) {x.printStackTrace(); throw new BuildException(x);}
     }
 
     private void testBinaryUniqueness() throws IOException {
@@ -173,8 +183,10 @@ public class VerifyLibsAndLicenses extends Task {
         for (String pattern : ignoredPatterns) {
             String[] parts = pattern.split(" ");
             assert parts.length == 2 : pattern;
-            if (SelectorUtils.matchPath(parts[0], path1.replaceFirst("^.+ in ", "")) &&
-                    SelectorUtils.matchPath(parts[1], path2.replaceFirst("^.+ in ", ""))) {
+            if ((SelectorUtils.matchPath(parts[0], path1.replaceFirst("^.+ in ", ""))
+                && SelectorUtils.matchPath(parts[1], path2.replaceFirst("^.+ in ", "")))
+                || (SelectorUtils.matchPath(parts[1], path1.replaceFirst("^.+ in ", ""))
+                && SelectorUtils.matchPath(parts[0], path2.replaceFirst("^.+ in ", "")))) {
                 return;
             }
         }
@@ -311,9 +323,9 @@ public class VerifyLibsAndLicenses extends Task {
                 String license = headers.get("License");
                 if (license != null) {
                     if (license.contains("GPL")) {
-                        if (license.contains("GPL-2-CP") &&
-                            headers.getOrDefault("Type", "").contains("compile-time")) {
-                            //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
+                        if (headers.getOrDefault("Type", "").contains("compile-time")) {
+                            // GPL dependencies are ok as build/compile time dependencies
+                            // but not ok, as a runtime dependency
                             if (!headers.containsKey("Comment")) {
                                 msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
                             }
@@ -354,12 +366,30 @@ public class VerifyLibsAndLicenses extends Task {
                         }
                     }
                 }
+
                 String files = headers.get("Files");
                 if (files != null) {
                     for (String file : files.split("[, ]+")) {
                         referencedBinaries.add(file);
-                        if (!hgFiles.contains(file)) {
-                            msg.append("\n" + path + " mentions a nonexistent binary in Files: " + file);
+                        String nested = null;
+                        if (file.contains("!/")) {
+                            final int nestedStart = file.indexOf("!/");
+                            nested = file.substring(nestedStart + 2);
+                            file = file.substring(0, nestedStart);
+                        }
+                        if (!headers.getOrDefault("Type", "").equals("generated")) {
+                            // Generated files are created by the build system, for
+                            // example by post-procession other downloaded files
+                            if (!hgFiles.contains(file)) {
+                                msg.append("\n" + path + " mentions a nonexistent binary in Files: " + file);
+                            } else if (nested != null) {
+                                try (JarFile jf = new JarFile(new File(d, file))) {
+                                    ZipEntry e = jf.getEntry(nested);
+                                    if (e == null) {
+                                        msg.append("\n" + path + " mentions a nonexistent nested binary in Files: " + nested + "; enclosing jar: " + file);
+                                    }
+                                }
+                            }
                         }
                     }
                 } else {
@@ -367,10 +397,15 @@ public class VerifyLibsAndLicenses extends Task {
                     String matchingZip = n.replaceFirst("-license\\.txt$", ".zip");
                     referencedBinaries.add(matchingJar);
                     referencedBinaries.add(matchingZip);
-                    if (!hgFiles.contains(matchingJar) && !hgFiles.contains(matchingZip)) {
-                        msg.append("\n" + path + " has no Files header and no corresponding " + matchingJar + " or " + matchingZip + " could be found");
+                    if (!headers.getOrDefault("Type", "").equals("generated")) {
+                        // Generated files are created by the build system, for
+                        // example by post-procession other downloaded files
+                        if (!hgFiles.contains(matchingJar) && !hgFiles.contains(matchingZip)) {
+                            msg.append("\n" + path + " has no Files header and no corresponding " + matchingJar + " or " + matchingZip + " could be found");
+                        }
                     }
                 }
+
             }
             for (String n : hgFiles) {
                 if (!n.endsWith(".jar") && !n.endsWith(".zip")) {
@@ -619,9 +654,12 @@ public class VerifyLibsAndLicenses extends Task {
             if (isDir && new File(f, ".hg").isDirectory()) {
                 continue; // skip contrib, misc repos if present
             }
-            for (Pattern p : ignoredPatterns) {
-                if (p.matcher(fullname).find() || (isDir && p.matcher(fullname + "/").find())) {
-                    continue FILES;
+            if (!n.startsWith("generated-")) {
+                // Hack to support resources generated by the build system
+                for (Pattern p : ignoredPatterns) {
+                    if (p.matcher(fullname).find() || (isDir && p.matcher(fullname + "/").find())) {
+                        continue FILES;
+                    }
                 }
             }
             files.add(n);

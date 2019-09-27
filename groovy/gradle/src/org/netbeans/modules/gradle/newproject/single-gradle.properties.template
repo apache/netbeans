@@ -1,0 +1,10 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#if version != "">
+# Generally it is better to set the version only for release builds, build time
+# from command line using -Pversion=${version}
+#
+# Only use SNAPSHOT versions if you need to contribute your binaries to a
+# local Maven project.
+version=${version}
+</#if>
+

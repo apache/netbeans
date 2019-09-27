@@ -1,0 +1,5 @@
+Code completion result for source line:
+C|ONST_2
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_1 "CONST_1"               [PUBLIC]   GroupUse1
+CONSTANT   CONST_2 "CONST_2"               [PUBLIC]   GroupUse1

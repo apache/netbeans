@@ -1,0 +1,6 @@
+new Foo\Bar();^
+    -------
+HINT:Fix Name To "\Foo\Bar"
+FIX:Fix Name To "\Foo\Bar"
+HINT:Generate "use Foo;"
+FIX:Generate "use Foo;"

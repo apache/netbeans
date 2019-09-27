@@ -1,0 +1,7 @@
+var |>GLOBAL:items<| = [];
+var |>GLOBAL:tmp<| = [];
+for (var |>GLOBAL:j<| = 0; |>GLOBAL:j<| < |>GLOBAL:items<|.length; |>GLOBAL:j<|++) {
+    |>GLOBAL:tmp<|[|>GLOBAL:j<|] = { // { is bold
+        '|>FIELD:slideid<|': |>GLOBAL:items<|[|>GLOBAL:j<|].slideid // this is bold
+    }; // }; is bold
+}

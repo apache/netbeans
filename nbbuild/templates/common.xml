@@ -65,7 +65,7 @@
         <condition property="javahelp.class.path.extension" value="docs/${javahelp.jar.basename}">
             <isset property="has.javahelp"/>
         </condition>
-        <property name="javac.source" value="1.4"/>
+        <property name="javac.source" value="1.7"/>
         <property name="javac.target" value="${javac.source}"/>
         <property name="javac.compilerargs" value=""/>
         <property name="module.auto.deps.xml" location="module-auto-deps.xml"/>
@@ -81,7 +81,7 @@
         <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar">
             <available file="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar"/>
         </condition>
-        <property name="asm.jar" location="${libs.asm.dir}/core/asm-all-5.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-all-5.0.1.jar"/>
     </target>
 
     <target name="-release.dir">
@@ -322,13 +322,13 @@
     <target name="-validate-layers" depends="init">
         <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Layer" property="layer.file"/>
         <!-- DTD from sources -->
-        <available file="${nb_all}/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
-                   property="dtd.cp" value="${nb_all}/openide.filesystems/src"/>
+        <available file="${nb_all}/platform/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
+                   property="dtd.cp" value="${nb_all}/platform/openide.filesystems/src"/>
         <!-- DTD from platform -->
         <pathconvert property="dtd.cp">
             <pathfileset>
                 <path refid="cluster.path.id"/>
-                <filename name="core/org-openide-filesystems.jar"/>
+                <filename name="platform/core/org-openide-filesystems.jar"/>
             </pathfileset>
         </pathconvert>
 
@@ -358,6 +358,8 @@
             </fileset>
         </genlist>
     </target>
+
+    <target name="build" depends="netbeans,test-build"/>
 
     <target name="-jnlp-init">
         <fail unless="jnlp.dest.dir" >
@@ -425,7 +427,11 @@
         <fileset dir="${cluster}" id="module.executable.files" includes="${nbm.executable.files}"/>
     </target>
 
-    <target name="nbm" depends="init,netbeans,-nbm-prompt-for-storepass,-init-executables" description="Build NBM archive.">
+    <target name="-init-extra.nbm.files" unless="extra.nbm.files.provided"> <!-- fallback -->
+        <zipfileset dir="${cluster}" id="extra.nbm.files" includes="[NOTHING]"/>
+    </target>
+
+    <target name="nbm" depends="init,netbeans,-nbm-prompt-for-storepass,-init-executables,-init-extra.nbm.files" description="Build NBM archive.">
         <mkdir dir="${build.dir}"/>
         <property name="nbm.target.cluster" value=""/> <!-- fallback -->
         <property name="license.file.override" value="${license.file}"/>
@@ -442,6 +448,7 @@
                  preferredupdate="${nbm.is.preferredupdate}"
                  usepack200="${use.pack200}"
                  pack200excludes="${pack200.excludes}"
+                 alwayscreatenbm="${nbm.always.create}"
                  targetcluster="${nbm.target.cluster}"
                  releasedate="${nbm.release.date}"
                  moduleauthor="${nbm.module.author}"
@@ -456,6 +463,7 @@
                 </pathfileset>
             </updaterjar>
             <executables refid="module.executable.files"/>
+            <extranbmfiles refid="extra.nbm.files"/>
         </makenbm>
     </target>
 

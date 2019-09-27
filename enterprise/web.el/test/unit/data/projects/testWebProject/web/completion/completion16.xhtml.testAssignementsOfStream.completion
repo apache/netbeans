@@ -1,0 +1,26 @@
+Code completion result for source line:
+#{b.|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     allMatch(LambdaExpression pred  [PUBLIC]   boolean
+METHOD     anyMatch(LambdaExpression pred  [PUBLIC]   boolean
+METHOD     average()                       [PUBLIC]   Optional
+METHOD     count()                         [PUBLIC]   Object
+METHOD     distinct()                      [PUBLIC]   Stream
+METHOD     filter(LambdaExpression predic  [PUBLIC]   Stream
+METHOD     findFirst()                     [PUBLIC]   Optional
+METHOD     flatMap(LambdaExpression mappe  [PUBLIC]   Stream
+METHOD     forEach(LambdaExpression comsu  [PUBLIC]   void
+METHOD     iterator()                      [PUBLIC]   Iterator<Object>
+METHOD     limit(long n)                   [PUBLIC]   Stream
+METHOD     map(LambdaExpression mapper)    [PUBLIC]   Stream
+METHOD     max()                           [PUBLIC]   Optional
+METHOD     min()                           [PUBLIC]   Optional
+METHOD     noneMatch(LambdaExpression pre  [PUBLIC]   boolean
+METHOD     peek(LambdaExpression comsumer  [PUBLIC]   Stream
+METHOD     reduce(Object base,LambdaExpre  [PUBLIC]   Object
+METHOD     sorted()                        [PUBLIC]   Stream
+METHOD     substream(long startIndex)      [PUBLIC]   Stream
+METHOD     sum()                           [PUBLIC]   Object
+METHOD     toArray()                       [PUBLIC]   Object[]
+METHOD     toList()                        [PUBLIC]   Object

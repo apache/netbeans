@@ -1,0 +1,3 @@
+    private static $|>MARK_OCCURRENCES:stat^ic_array<| = array('', 'thousand ', 'million ', 'billion ');
+        $result .= self::$|>MARK_OCCURRENCES:static_array<|[$idx++];
+        $result .= self::$|>MARK_OCCURRENCES:static_array<|[$instance_array[$idx]];

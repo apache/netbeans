@@ -1,0 +1,200 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<HTML>
+<BODY>
+The DD API has been developed in order to satisfy the requirement to access the web module deployment descriptor for other Netbeans modules in a simple and servlet spec.-independant way.
+
+<h3>1. The Overall Architecture</h3>
+ <p>
+The DD API is based on a bunch of interfaces based on the deployment descriptor xml structure. The names of interfaces correspond to the names of deployment descriptor elements in <b>web.xml</b> file.
+The DD API interfaces are organized in  a hierarchic tree structure where they are accassible through the root  - <b>{@link org.netbeans.api.web.dd.WebApp}</b> - interface.
+The implementation of DD API interfaces is hidden for clients.  It is based on schema2beans infrastructure and is the DD version - specific. (there is always requirement to support at least two successive versions of DD specification).
+The root of the deployment descriptor is accessible through the <b>{@link org.netbeans.api.web.dd.DDProvider}</b> class.
+</p>
+
+<h3>2. What it is not.</h3>
+<p>
+The DD API provides no UI for deployment descriptor editing.
+</p>
+
+<h3>3. The Hierarchic structure of DD API Interfaces</h3>
+Package: <b>{@link org.netbeans.api.web.dd}</b>
+<p>
+All DD API interfaces are included to this package. <br>
+Here is the hierarchic structure of the DD API interfaces :
+<pre>
+<b>{@link org.netbeans.api.web.dd.WebApp}</b>
+  - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.InitParam}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.Filter}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.InitParam}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.FilterMapping}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.Listener}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.Servlet}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.InitParam}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.RunAs}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.SecurityRoleRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.ServletMapping}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.SessionConfig}</b><font color = "800040"> [?]</font>	
+  - <b>{@link org.netbeans.api.web.dd.MimeMapping}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.WelcomeFileList}</b><font color = "800040"> [?]</font>
+  - <b>{@link org.netbeans.api.web.dd.ErrorPage}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.Taglib}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.JspConfig}</b><font color = "800040"> [?]</font>
+    - <b>{@link org.netbeans.api.web.dd.Taglib}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.JspPropertyGroup}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.SecurityConstraint}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.WebResourceCollection}</b><font color = "800040"> [+]</font>
+    - <b>{@link org.netbeans.api.web.dd.AuthConstraint}</b><font color = "800040"> [?]</font>
+    - <b>{@link org.netbeans.api.web.dd.UserDataConstraint}</b><font color = "800040"> [?]</font>
+  - <b>{@link org.netbeans.api.web.dd.LoginConfig}</b><font color = "800040"> [?]</font>
+    - <b>{@link org.netbeans.api.web.dd.FormLoginConfig}</b><font color = "800040"> [?]</font>
+  - <b>{@link org.netbeans.api.web.dd.SecurityRole}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.EnvEntry}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.EjbRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.EjbLocalRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.ServiceRef}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.PortComponentRef}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.ServiceRefHandler}</b><font color = "800040"> [*]</font>
+      - <b>{@link org.netbeans.api.web.dd.InitParam}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.ResourceRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.ResourceEnvRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.MessageDestinationRef}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.MessageDestination}</b><font color = "800040"> [*]</font>
+    - <b>{@link org.netbeans.api.web.dd.Icon}</b><font color = "800040"> [*]</font>
+  - <b>{@link org.netbeans.api.web.dd.LocaleEncodingMappingList}</b><font color = "800040"> [?]</font>
+    - <b>{@link org.netbeans.api.web.dd.LocaleEncodingMapping}</b><font color = "800040"> [+]</font>
+
+<i><b>Comments : </b></i>
+<font color = "800040">[*]</font> - objects occur multiple times in parent object (0-n)
+<font color = "800040">[+]</font> - objects occur multiple times in parent object (1-n)
+<font color = "800040">[?]</font> - object can occur only once in parent object (0-1)
+</pre>
+</p>
+
+<h3>4. The structure of method names.</h3>
+<p>
+The syntax and usage of interfaces methods is very simple and straightforward.<br>
+If certain object [of XYZ interface] occurs multiple times in parent object these methods are present in parent interface :
+<ul>
+<li>  <b>XYZ [] getXYZ</b> (); - returns an array of XYZ objects</li>
+<li>  <b>XYZ getXYZ</b> (int i); -returns an XYZ object at the certain position (i) within the array</li>
+<li> <b>void setXYZ</b> (XYZ[] array); - sets the array of XYZ objects</li>
+<li> <b>void setXYZ</b> (int i, XYZ object); - sets the XYZ object at certain position (i)</li>
+<li> <b>int addXYZ</b> (XYZ object); - adds the XYZ object to the parent object</li>
+<li> <b>int removeXYZ</b> (XYZ object); - removes the XYZ object from the parent object</li>
+<li> <b>int sizeXYZ</b> (); - returns the size of XYZ array</li>
+</ul><br>
+If certain object [of XYZ interface] can occur only once in parent object these methods are present in parent interface :
+<ul>
+<li> <b>XYZ getSingleXYZ</b> (); - returns an XYZ object or null</li>
+<li> <b>void setXYZ</b> (XYZ object); - sets the XYZ object to the parent object</li>
+</ul><br>
+Example :  The {@link org.netbeans.api.web.dd.WebApp} interface contains these methods for getting/setting {@link org.netbeans.api.web.dd.Servlet}s and {@link org.netbeans.api.web.dd.WelcomeFileList} :
+<ul>
+<li> {@link org.netbeans.api.web.dd.Servlet} [] <b>getServlet</b> ();</li>
+<li> {@link org.netbeans.api.web.dd.Servlet} <b>getServlet</b> (int i);</li>
+<li> void <b>setServlet</b> ({@link org.netbeans.api.web.dd.Servlet}[] servlets);</li>
+<li> void <b>setServlet</b> (int i, {@link org.netbeans.api.web.dd.Servlet} servlet);</li>
+<li> int <b>addServlet</b> ({@link org.netbeans.api.web.dd.Servlet}servlet);</li>
+<li> int <b>removeServlet</b> ({@link org.netbeans.api.web.dd.Servlet} servlet);</li>
+<li> int <b>sizeServlet</b> ();</li>
+<li> {@link org.netbeans.api.web.dd.WelcomeFileList} <b>getSingleWelcomeFileList</b> ();</li>
+<li> void <b>setWelcomeFileList</b> ({@link org.netbeans.api.web.dd.WelcomeFileList} list);</li>
+</ul><br>
+
+Interfaces contain additional methods corresponding to the simple(String)  properties following the deployment descriptor xml syntax.<br>
+Example :  The {@link org.netbeans.api.web.dd.Taglib} interface contains these additional getters/setters :
+<ul>
+<li> String <b>getTaglibUri</b> ();</li>
+<li> String <b>getTaglibLocation</b> ();</li>
+<li> void <b>setTaglibUri</b> (String uri);</li>
+<li> void <b>setTaglibLocation</b> (String location);</li>
+</ul><br>
+Interfaces usually extends some interfaces from the <b>{@link org.netbeans.api.web.dd.common}</b> package. For example if a DD element has the description property, it extends the {@link org.netbeans.api.web.dd.common.DescriptionInterface} containing the methods for description property handling.<br>
+Example :  The {@link org.netbeans.api.web.dd.WebApp}, {@link org.netbeans.api.web.dd.Servlet}, {@link org.netbeans.api.web.dd.Filter}, {@link org.netbeans.api.web.dd.Listener}, {@link org.netbeans.api.web.dd.ServiceRef}, {@link org.netbeans.api.web.dd.WebResourceCollection} interfaces have the additional functionality for description proprty.
+</p>
+
+<h3>5. DDProvider class - getting the root interface from web.xml file.</h3>
+Package: <b>{@link org.netbeans.api.web.dd}</b>
+<p>
+Provides the access to the deployment descriptor root - {@link org.netbeans.api.web.dd.WebApp} - object.
+The {@link org.netbeans.api.web.dd.DDProvider} class is a singleton and caches the WebApp objects in IDE.<br>
+There are following methods for accessing {@link org.netbeans.api.web.dd.WebApp} object in DDProvider : <br>
+<ul>
+<li>{@link org.netbeans.api.web.dd.DDProvider#getDDRoot(org.openide.filesystems.FileObject)};</li>
+<li>{@link org.netbeans.api.web.dd.DDProvider#getDDRoot(java.io.File)};</li>
+</ul>
+</p>
+
+<h3>6. Deployment descriptor modification.</h3>
+<p>
+DD API enables the full modification of deployment descriptor elements including:
+<ul>
+<li>adding new elements</li>
+<li>removing elements</li>
+<li>changing the value of elements</li>
+</ul>
+</p>
+<p>
+See the <b><a href="arch/usage.html">Examples of usage</a></b>.
+</p>
+
+<h3>7. Writing changes.</h3>
+<p>
+The modificated {@link org.netbeans.api.web.dd.WebApp} object can be serialized to FileObject using :
+<ul>
+<li>void write({@link org.openide.filesystems.FileObject} fo) throws {@link java.io.IOException};</li>
+</ul>
+</p>
+<p>
+There is also  another <b>write</b> mathod available on any interface to serialize the fraction of deployment descriptor to OutputStream :
+<ul>
+<li>void write({@link java.io.OutputStream} os) throws {@link java.io.IOException};</li>
+</ul>
+</p>
+<p>
+See the <b><a href="arch/usage.html">Examples of usage</a></b>.
+</p>
+
+<hr>
+<p>
+See also : 
+<ul>
+<li><a href="architecture-summary.html">Architecture Summary</a></li>
+<li><a href="apichanges.html">API Changes</a></li>
+<li><a href="arch/ddapi_architecture.html">Original Architecture Document for the Web part of DD API</a></li>
+</ul>
+</p>
+<!-- Contributors & Reviewers:
+
+   Petr Jiricka
+   Pavel Buzek
+   Jaroslav Tulach
+   Tomas Pavek
+ -->
+
+</BODY></HTML>

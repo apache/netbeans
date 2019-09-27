@@ -1,0 +1,19 @@
+{
+    "name": "netbeans/calculator-nette-tester",
+    "description": "Simple project using Nette Tester.",
+    "authors": [
+        {
+            "name": "NetBeans",
+            "email": "tmysik@apache.org"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+        "nette/tester": "v2.2.0"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

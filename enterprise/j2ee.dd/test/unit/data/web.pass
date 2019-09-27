@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+  <icon>
+    <small-icon>/img/icon16x16.gif</small-icon>
+    <large-icon>/img/icon32x32.gif</large-icon>
+  </icon>
+  <context-param>
+    <param-name>car</param-name>
+    <param-value>Ford</param-value>
+  </context-param>
+  <context-param>
+    <param-name>color</param-name>
+    <param-value>red</param-value>
+  </context-param>
+  <context-param>
+    <param-name>type</param-name>
+    <param-value>Puma</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>FordServlet</servlet-name>
+    <servlet-class>org.package.mypackage.CarServlet</servlet-class>
+    <init-param>
+      <param-name>car</param-name>
+      <param-value>Ford</param-value>
+    </init-param>
+    <init-param>
+      <description xml:lang="cz">barva automobilu</description>
+      <description xml:lang="sk">farba automobilu</description>
+      <description xml:lang="en">the colour of the car</description>
+      <description>the color of the car</description>
+      <param-name>color</param-name>
+      <param-value>red</param-value>
+    </init-param>
+    <load-on-startup>10</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>VolvoServlet</servlet-name>
+    <servlet-class>org.package.mypackage.CarServlet</servlet-class>
+    <init-param>
+      <param-name>car</param-name>
+      <param-value>Volvo</param-value>
+    </init-param>
+    <load-on-startup>25</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FordServlet</servlet-name>
+    <url-pattern>/ford</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>VolvoServlet</servlet-name>
+    <url-pattern>/volvo</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            index.jsp
+        </welcome-file>
+    <welcome-file>
+            index.html
+        </welcome-file>
+    <welcome-file>
+            index.htm
+        </welcome-file>
+  </welcome-file-list>
+  <jsp-config>
+    <jsp-property-group>
+      <url-pattern>*.jsp</url-pattern>
+      <include-prelude>/jsp/prelude.jsp</include-prelude>
+      <include-coda>/jsp/coda.jsp</include-coda>
+    </jsp-property-group>
+  </jsp-config>
+</web-app>

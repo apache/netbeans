@@ -1,0 +1,5 @@
+<html>
+{% *block* %}
+text
+{% *end^block* %}
+</html>

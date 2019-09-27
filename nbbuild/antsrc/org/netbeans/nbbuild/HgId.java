@@ -20,19 +20,22 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
- * Computes Mercurial changeset ID (in short format, i.e. 12 hex digits) of current working copy.
- * Compared to {@code hg id -i} or even {@code hg log -r . --template '{node|short}\n'}
+ * Computes Git changeset ID (in short format, i.e. 12 hex digits) of current working copy.
+ * Compared to {@code git log --abbrev-commit --abbrev=12}
  * it is very quick. Does not check for second merge parent or modification status
  * or tags. Sets property to {@code unknown-revn} if there is any problem.
+ * 
+ * (This task formerly computed a Mercurial changeset ID hence the name)
  */
 public class HgId extends Task {
 
@@ -53,33 +56,43 @@ public class HgId extends Task {
         this.property = property;
     }
 
-    public @Override void execute() throws BuildException {
+    @Override
+    public void execute() throws BuildException {
         if (file == null || property == null) {
             throw new BuildException("define file and property");
         }
-        File dirstate = null;
-        for (File root = file; root != null; root = root.getParentFile()) {
-            File ds = new File(new File(root, ".hg"), "dirstate");
-            if (ds.isFile()) {
-                dirstate = ds;
+        Path headroot = null;
+        for (Path root = file.toPath(); root != null; root = root.getParent()) {
+            Path headpath = root.resolve(".git/HEAD");
+            if (Files.isRegularFile(headpath)) {
+                headroot = headpath;
                 break;
             }
         }
         String id = "unknown-revn";
-        if (dirstate != null && dirstate.length() >= 6) {
-            try {
-                try (InputStream is = new FileInputStream(dirstate)) {
-                    byte[] data = new byte[6];
-                    if (is.read(data) < 6) {
-                        throw new IOException("truncated read");
+        try {
+            if (headroot != null && Files.size(headroot) > 0l) {
+                List<String> lines = Files.readAllLines(headroot);
+                String line = lines.get(0);
+                String revLink = line.substring(line.indexOf(':')+1).trim();
+
+                Path revPath = headroot.getParent().resolve(revLink);
+                if(Files.isRegularFile(revPath) && Files.size(revPath) > 0l) {
+                    List<String> revlines = Files.readAllLines(revPath);
+                    String revline = revlines.get(0);
+                    if(revline.length()>=12){
+                        id = revline.substring(0, 12);
+                    } else {
+                        log("no content in " + revPath, Project.MSG_WARN);                        
                     }
-                    id = String.format("%012x", new BigInteger(1, data));
+                } else {
+                    log("unable to find revision info for " + revPath, Project.MSG_WARN);
                 }
-            } catch (IOException x) {
-                log("Could not read " + dirstate + ": " + x, Project.MSG_WARN);
+            } else {
+                log("No HEAD found starting from " + file, Project.MSG_WARN);
             }
-        } else {
-            log("No dirstate found starting from " + file, Project.MSG_WARN);
+        } catch(IOException ex) {
+            log("Could not read " + headroot + ": " + ex, Project.MSG_WARN);
         }
         assert id.length() == 12 : id;
         getProject().setNewProperty(property, id);

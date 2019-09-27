@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->firstObj->|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     one()                           [PUBLIC]   SecondClass
+METHOD     two()                           [PUBLIC]   SecondClass

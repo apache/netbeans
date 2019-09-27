@@ -1,0 +1,68 @@
+<testresult testFile='heredoc_indent_spaces_04.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='821'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='822' end='823'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='824' end='825'>
+            <text>[</text>
+        </token>
+        <token id='T_START_HEREDOC' start='826' end='838'>
+            <text>&lt;&lt;&lt; HEREDOC\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='842' end='849'>
+            <text>HEREDOC</text>
+        </token>
+        <token id='T_COMMA' start='849' end='850'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='851' end='856'>
+            <text>&apos;qux&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='856' end='857'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='857' end='858'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='859' end='859'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='858'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='858'>
+                <Assignment start='815' end='857' operator='EQUAL'>
+                    <Variable start='815' end='821' isDollared='true'>
+                        <Identifier start='816' end='821' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='824' end='857' type='NEW'>
+                        <ArrayElement start='826' end='849'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Quote start='826' end='849' type='HEREDOC'>
+                                    <Expressions>
+                                    </Expressions>
+                                </Quote>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='851' end='856'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Scalar start='851' end='856' type='STRING' value='&apos;qux&apos;'/>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,40 @@
+FUNCTION issue250392 [ANONYMOUS: false, DECLARED: true - issue250392, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Lexer   : FUNCTION Lexer [ANONYMOUS: false, DECLARED: true - Lexer, MODIFIERS: PUBLIC, CONSTRUCTOR]
+        # RETURN TYPES
+        Lexer, RESOLVED: true
+        # PROPERTIES
+        Lexer     : FUNCTION Lexer [ANONYMOUS: false, DECLARED: true - Lexer, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                  # RETURN TYPES
+                  Lexer, RESOLVED: true
+                  # PROPERTIES
+                  Lexer     : CYCLE Lexer.Lexer
+                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  prototype : OBJECT prototype [ANONYMOUS: false, DECLARED: true - prototype, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                            # PROPERTIES
+                            method1 : FUNCTION method1 [ANONYMOUS: false, DECLARED: true - method1, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    undefined, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                            method2 : FUNCTION method2 [ANONYMOUS: false, DECLARED: true - method2, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    undefined, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+        prototype : OBJECT prototype [ANONYMOUS: false, DECLARED: true - prototype, MODIFIERS: PUBLIC, OBJECT_LITERAL]
+                  # PROPERTIES
+                  method1 : FUNCTION method1 [ANONYMOUS: false, DECLARED: true - method1, MODIFIERS: PUBLIC, METHOD]
+                          # RETURN TYPES
+                          undefined, RESOLVED: true
+                          # PROPERTIES
+                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                  method2 : FUNCTION method2 [ANONYMOUS: false, DECLARED: true - method2, MODIFIERS: PUBLIC, METHOD]
+                          # RETURN TYPES
+                          undefined, RESOLVED: true
+                          # PROPERTIES
+                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+myLexer : OBJECT myLexer [ANONYMOUS: false, DECLARED: true - myLexer, MODIFIERS: PUBLIC, VARIABLE]

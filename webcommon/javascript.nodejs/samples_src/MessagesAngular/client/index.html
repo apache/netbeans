@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html data-ng-app="messagesApp">
+    <head>
+        <title>NetBeans Messages Sample Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="styles/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body data-ng-controller="MessagesCtrl">
+        <div id="container">
+            <h2>Your message:</h2>
+            <div>
+                <textarea rows="1" cols="40" placeholder="Type a messsage" data-ng-model="currentMessage">
+
+                </textarea><br/>
+                <button type="button" data-ng-click="sendText()" data-ng-disabled="currentMessage.length < 1">Send</button>
+            </div>
+
+            <mytitle msg="'Messages'"></mytitle>
+            <messages></messages>
+
+        </div>
+        <script src="libs/angular/angular.js" type="text/javascript"></script>
+        <script src="src.js" type="text/javascript"></script>
+    </body>
+</html>

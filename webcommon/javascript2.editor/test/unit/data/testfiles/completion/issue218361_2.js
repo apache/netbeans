@@ -1,0 +1,2 @@
+window.history.
+var semicolon;

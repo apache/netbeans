@@ -28,7 +28,7 @@
                 <dependency>
                     <code-name-base>org.netbeans.modules.nbjavac.api</code-name-base>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

@@ -145,6 +145,7 @@
   </target>
   <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
       <!-- try to get information from jenkins apache multi branch build or travis -->
+      <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
       <property environment="env"/>
       <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
           <isset property="env.GIT_BRANCH" />
@@ -155,11 +156,6 @@
       <condition property="metabuild.branch" value="${metabuild.branch}" >
           <isset property="metabuild.branch" />
       </condition>
-      <condition property="metabuild.branch" value="master" >
-          <not>
-              <isset property="metabuild.branch" />
-          </not>
-      </condition>
       <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
           <isset property="env.GIT_COMMIT" />
       </condition>
@@ -169,6 +165,15 @@
       <condition property="metabuild.hash" value="${metabuild.hash}" >
           <isset property="metabuild.hash" />
       </condition>
+      
+      <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
+      
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
+      </condition>
+      
       <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
       <!-- if hash not present do not fail -->
       <fail message="Branch not found use -Dmetabuild.branch=branchName " >

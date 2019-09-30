@@ -25,6 +25,6 @@
     <fileset>
         <file>src/org/netbeans/modules/glassfish/eecommon/api/ddtemplates/javaee/glassfish-web.xml</file>
         <license ref="EPL-v20" />
-        <comment type="COMMENT_UNSUPPORTED" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
     </fileset>
 </licenseinfo>

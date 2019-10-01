@@ -19,7 +19,6 @@
 package org.netbeans.libs.jna;
 
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Utilities;
 
 public class Installer extends ModuleInstall {
 
@@ -27,6 +26,6 @@ public class Installer extends ModuleInstall {
     public void validate() {
         super.validate();
         //#211655
-        System.setProperty( "jna.boot.library.name", "jnidispatch-440" ); //NOI18N
+        System.setProperty( "jna.boot.library.name", "jnidispatch-nb" ); //NOI18N
     }
 }

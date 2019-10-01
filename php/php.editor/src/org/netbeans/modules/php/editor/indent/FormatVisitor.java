@@ -914,6 +914,19 @@ public class FormatVisitor extends DefaultVisitor {
 
             }
             scan(node.getInitializers());
+            if (ts.token().id() == PHPTokenId.PHP_SELF || ts.token().id() == PHPTokenId.PHP_PARENT) {
+                // NETBEANS-3103 check whether the token behind self|parent is "::"
+                // e.g. const CONSTANT = self::;
+                int originalOffset = ts.offset();
+                if (ts.moveNext()) {
+                    if (ts.token().id() == PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM) { // ::
+                        addFormatToken(formatTokens);
+                    } else {
+                        ts.move(originalOffset);
+                        ts.moveNext();
+                    }
+                }
+            }
             formatTokens.add(new FormatToken.IndentToken(node.getStartOffset(), options.continualIndentSize * -1));
             if (index == statements.size() - 1
                     || ((index < statements.size() - 1) && !(statements.get(index + 1) instanceof ConstantDeclaration))) {

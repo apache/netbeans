@@ -37,7 +37,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path />
-                <binary-origin>external/nb-javac-12-impl.jar</binary-origin>
+                <binary-origin>external/nb-javac-13-impl.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

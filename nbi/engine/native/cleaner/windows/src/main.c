@@ -21,14 +21,82 @@
 #include <wchar.h>
 
 
+/*
+ * cleaner.exe
+ * 
+ * Deletes a list of files/folders.
+ * 
+ * The command line syntax is:
+ * 
+ *    arg1:   File name containing a list of files/folders to delete.
+ * 
+ * Requirements for arg1:
+ *  - The arg1 file name MUST be fully qualified. (or be in the same directory
+ *       as the cleaner.exe executable)
+ *  - The file MUST use Windows line ending (CRLF)
+ *  - The file MUST be encoded in UTF-16. The NBI Engine will produce
+ *    this file in Java charset "UNICODE" which effectively means
+ *    UCS-2 BigEndian BOM. Such file will work just fine.
+ *  - Each line in the file is expected to contain a fully qualified file
+ *    or folder name. The entry can be 
+ *        - a local file/folder name, e.g. "C:\foo\bar", up to a maximum of 32767 
+ *          chars and thus not subject to the original Windows limitation 
+ *          of 260 chars for a path name.
+ *        - a UNC, e.g. "\\servername\sharename\foo\bar", subject to a
+ *          restriction of 260 chars.
+ *  - The list MUST be ordered so that the files in a folder are listed before 
+ *    the folder itself. (it is not possible to delete a non-empty folder)
+ * 
+ * Method of working:
+ * 
+ * 1. After launch the content of command line arg1 is read into memory 
+ *    as one big string.
+ * 2. The string is chopped into a list by separating at the LINE_SEPARATOR.
+ * 3. Sleep for 2 seconds to allow the launching process (the JVM) to exit.
+ * 4. Loop over the list of files/folder to delete. Each file-delete operation 
+ *    is spawned into a thread of its own up to a maximum of 64 threads. 
+ *    Therefore the delete operations happens in parallel rather than in sequence. 
+ *    If 64 threads have been spawned then wait for a thread to exit before
+ *    spawning a new one. (therefore never more than 64 threads)
+ *    For each file delete operation do the following:
+ *       - Check to see if the file exists (by getting its attributes)
+ *       - If file: delete file, if directory: delete directory (these are two 
+ *            different calls in the Win32 API).
+ *       - Attempt to delete each file/dir up to 15 times sleeping for 200 ms 
+ *            between each attempt.
+ * 5. Wait for all file-delete threads to exit.
+ * 6. Delete self, i.e. the "cleaner.exe" executable.
+ * 7. End
+ *
+ * The arg1 file is not deleted. However it can be part of the list itself 
+ * if need be.
+ * 
+ * Author:  Dmitry Lipin, 2007
+ * 
+ *
+ *  
+ * Changes after transition to Apache:
+ * 
+ *   14-SEP-2019 Lars Bruun-Hansen (lbruun@apache.org) :   
+ *         Function comment headers added. 
+ *         Main comment header added.
+ *  
+ */
 
+
+// Retry functionality: 
+//   SLEEP_DELAY : millis between each attempt at a file delete
+//   MAX_ATTEMPTS : how many times to attempt to delete a file
 const DWORD SLEEP_DELAY   = 200;
-const DWORD MAX_ATTEPTS   = 15;
+const DWORD MAX_ATTEMPTS   = 15;
 const DWORD THREAD_FINISHED = 100;
-const DWORD INITIAL_DELAY = 2000; // 2 seconds is seems to be enough to finish java process
+
+// Number of milliseconds to sleep at launch of the application.
+const DWORD INITIAL_DELAY = 2000; // 2 seconds seems to be enough to finish java process
+
 const WCHAR * LINE_SEPARATOR = L"\r\n";
-const WCHAR * UNC_PREFIX     = L"\\\\?\\";
-const WCHAR * UNC_STD_PREFIX = L"\\\\";
+const WCHAR * UNC_PREFIX     = L"\\\\?\\"; // Prefix for extended-length path in Win32 API
+const WCHAR * UNC_STD_PREFIX = L"\\\\";  // Prefix for UNC paths, for example: \\servername\share\foo\bar
 const DWORD UNC_PREFIX_LENGTH = 4;
 
 #ifdef _MSC_VER
@@ -37,25 +105,11 @@ const DWORD UNC_PREFIX_LENGTH = 4;
 #define ZERO(x,y) ZeroMemory((x),(y));
 #endif
 
+
 /*
- * typedef UINT  (WINAPI * WAIT_PROC)(HANDLE, DWORD);
- * typedef BOOL  (WINAPI * CLOSE_PROC)(HANDLE);
- * typedef BOOL  (WINAPI * DELETE_PROC)(LPCWSTR);
- * typedef VOID  (WINAPI * EXIT_PROC)(DWORD);
- * typedef VOID  (WINAPI * SLEEP_PROC)(DWORD);
- *
- *
- * typedef struct {
- * WAIT_PROC	waitObject;
- * CLOSE_PROC	closeHandle;
- * DELETE_PROC	deleteFile;
- * EXIT_PROC	exitProcess;
- * SLEEP_PROC  sleep;
- *
- * HANDLE		hProcess;
- * WCHAR		szFileName[MAX_PATH];
- *
- * } INJECT;
+ * Search for the first occurrence of wcs2 within wcs1.
+ * Returns a pointer to the first occurrence if found.
+ * If not found, NULL is returned.
  */
 WCHAR * search( const WCHAR * wcs1, const WCHAR * wcs2) {
     WCHAR *cp = (WCHAR *) wcs1;
@@ -80,91 +134,6 @@ WCHAR * search( const WCHAR * wcs1, const WCHAR * wcs2) {
     return(NULL);
 }
 
-/*
- * DWORD WINAPI RemoteThread(INJECT *remote) {
- * DWORD count = 0 ;
- *
- * remote->waitObject(remote->hProcess, INFINITE);
- * remote->closeHandle(remote->hProcess);
- * while(!remote->deleteFile(remote->szFileName) && (count++) < MAX_ATTEPTS) {
- * remote->sleep(SLEEP_DELAY);
- * }
- * remote->exitProcess(0);
- * return 0;
- * }
- *
- * HANDLE GetRemoteProcess() {
- * STARTUPINFO si;
- *
- * PROCESS_INFORMATION pi;
- * ZERO( &si, sizeof(si) );
- * ZERO( &pi, sizeof(pi) );
- * si.cb = sizeof(si);
- * if(CreateProcess(0, "explorer.exe", 0, 0, FALSE, CREATE_SUSPENDED|CREATE_NO_WINDOW|IDLE_PRIORITY_CLASS, 0, 0, &si, &pi)) {
- * CloseHandle(pi.hThread);
- * return pi.hProcess;
- * }
- * else {
- * return 0;
- * }
- * }
- *
- * BOOL removeItself() {
- *
- * INJECT local, *remote;
- * BYTE   *code;
- * HMODULE hKernel32;
- * HANDLE  hRemoteProcess;
- * HANDLE  hCurProc;
- *
- * DWORD	dwThreadId;
- * HANDLE	hThread = 0;
- * DWORD sizeOfCode = 200;
- *
- * hRemoteProcess = GetRemoteProcess();
- *
- * if(hRemoteProcess == 0) {
- * return FALSE;
- * }
- *
- * code = VirtualAllocEx(hRemoteProcess, 0, sizeof(INJECT) + sizeOfCode, MEM_RESERVE|MEM_COMMIT, PAGE_EXECUTE_READWRITE);
- *
- * if(code == 0) {
- * CloseHandle(hRemoteProcess);
- * return FALSE;
- * }
- *
- * hKernel32 = GetModuleHandleW(L"kernel32.dll");
- * remote = (INJECT *)(code + sizeOfCode);
- *
- * local.waitObject      = (WAIT_PROC)  GetProcAddress(hKernel32, "WaitForSingleObject");
- * local.closeHandle	  = (CLOSE_PROC) GetProcAddress(hKernel32, "CloseHandle");
- * local.exitProcess	  = (EXIT_PROC)  GetProcAddress(hKernel32, "ExitProcess");
- * local.deleteFile      = (DELETE_PROC)GetProcAddress(hKernel32, "DeleteFileW");
- * local.sleep           = (SLEEP_PROC) GetProcAddress(hKernel32, "Sleep");
- *
- * // duplicate our own process handle for remote process to wait on
- * hCurProc = GetCurrentProcess();
- *
- * DuplicateHandle(hCurProc, hCurProc, hRemoteProcess, &local.hProcess, 0, FALSE, DUPLICATE_SAME_ACCESS);
- *
- * // find name of current executable
- *
- * GetModuleFileNameW(NULL, local.szFileName, MAX_PATH);
- *
- * // write in code to execute, and the remote structure
- * WriteProcessMemory(hRemoteProcess, (LPVOID) code,   RemoteThread, sizeOfCode, 0);
- * WriteProcessMemory(hRemoteProcess, (LPVOID) remote, &local, sizeof(local), 0);
- *
- * // execute the code in remote process
- * hThread = CreateRemoteThread(hRemoteProcess, 0, 0, (LPTHREAD_START_ROUTINE) code, remote, 0, &dwThreadId);
- *
- * if(hThread != 0) {
- * CloseHandle(hThread);
- * }
- * return TRUE;
- * }
- */
 
 typedef struct _list {
     WCHAR * item;
@@ -203,6 +172,10 @@ WCHAR * toWCHAR(char * charBuffer, DWORD size) {
     return buffer;
 }
 
+/*
+ * Gets the number of lines in the input. 
+ * (lines are expected to be separated by LINE_SEPARATOR) 
+ */
 DWORD getLinesNumber(WCHAR *str) {
     DWORD result = 0;
     WCHAR *ptr = str;
@@ -222,6 +195,15 @@ DWORD getLinesNumber(WCHAR *str) {
     return result;
 }
 
+/*
+ * Produces a string array, 'list', from 'str' by splitting the string
+ * at each occurrence of LINE_SEPARATOR.
+ * 
+ * [IN] str:      the input
+ * [OUT] list:    string array
+ * [OUT] number:  number of elements in 'list' 
+ *
+ */
 void getLines(WCHAR *str, WCHAR *** list, DWORD * number) {
     WCHAR *ptr = str;
     WCHAR *ptr2 = NULL;
@@ -257,7 +239,9 @@ void getLines(WCHAR *str, WCHAR *** list, DWORD * number) {
     }
 }
 
-
+/*
+ *  Read file into memory. 
+ */
 void readStringList(HANDLE fileHandle, WCHAR *** list, DWORD *number) {
     DWORD size = GetFileSize(fileHandle, NULL); // hope it much less than 2GB
     DWORD read = 0;
@@ -273,6 +257,7 @@ void readStringList(HANDLE fileHandle, WCHAR *** list, DWORD *number) {
 }
 
 void deleteFile(WCHAR * filePath) {
+    BOOL canDelete = TRUE;
     DWORD count = 0 ;
     WIN32_FILE_ATTRIBUTE_DATA attrs;
     DWORD filePathLength = lstrlenW(filePath);
@@ -287,15 +272,30 @@ void deleteFile(WCHAR * filePath) {
         file[i+prefixLength] = filePath[i];
     }
 
+    // Implementation note:
+    // GetFileAttributesExW() is used not only to get file attributes
+    // but also as a way to check if the file/dir (still) exist.
+
     if(GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) {
-        if(attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            while((!RemoveDirectoryW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEPTS))
-                Sleep(SLEEP_DELAY);
-        else
-            while((!DeleteFileW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
-                ((count++) < MAX_ATTEPTS))
-                Sleep(SLEEP_DELAY);
+      if (attrs.dwFileAttributes & FILE_ATTRIBUTE_READONLY) { // if read-only attrib is set
+            if (SetFileAttributesW(file, FILE_ATTRIBUTE_NORMAL) == 0) { // remove read-only attrib
+                // The read-only attrib could not be deleted. No point in continuing.
+                canDelete = FALSE;
+            }
+        }
+        if (canDelete) {
+            if (attrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                while ((!RemoveDirectoryW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
+                        ((count++) < MAX_ATTEMPTS)) {
+                    Sleep(SLEEP_DELAY);
+                }
+            } else {
+                while ((!DeleteFileW(file) || GetFileAttributesExW(file, GetFileExInfoStandard, &attrs)) &&
+                        ((count++) < MAX_ATTEMPTS)) {
+                    Sleep(SLEEP_DELAY);
+                }
+            }
+        }
     }
     LocalFree(file);
 }
@@ -329,6 +329,11 @@ void getFreeIndexForNextThread(HANDLE * list, DWORD max, DWORD * counter) {
     }
 }
 
+/*
+ * Deletes the the current executable. This is done by spawning a small
+ * .bat file which does the job. The .bat file even deletes itself when 
+ * finished.
+ */
 #define BUFSIZE 512
 void removeItselfUsingCmd() {
     char * currentFile = LocalAlloc(LPTR, sizeof(char) * BUFSIZE);    
@@ -391,6 +396,10 @@ void removeItselfUsingCmd() {
     
 }
 
+/*
+ * Changes directory to the directory where the currently executing
+ * executable is located.
+ */ 
 void changeCurrentDirectory() {
     WCHAR * currentFile = LocalAlloc(LPTR, sizeof(WCHAR) * MAX_PATH);    
     if (GetModuleFileNameW(0, currentFile, MAX_PATH)) {

@@ -53,9 +53,9 @@ public class JsDocumentationReaderTest extends CslTestBase {
     }
 
     public void testGetAllTags() throws Exception {
-        Source source = getTestSource(getTestFile("testfiles/doc/commonDocFile.js"));
+        Source source = getTestSource(getTestFile("../../../testfiles/jsdoc-testfiles/classWithJsDoc.js"));
         Set<String> allTags = JsDocumentationReader.getAllTags(source.createSnapshot());
-        assertEquals(25, allTags.size());
+        assertEquals(27, allTags.size());
         // randomly check several tags
         assertTrue(allTags.contains("@param"));
         assertTrue(allTags.contains("@example"));

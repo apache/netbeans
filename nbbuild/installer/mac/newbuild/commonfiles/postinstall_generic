@@ -30,6 +30,3 @@ jdk_home=`"$script_dir"/get_current_jdk.sh`
 
 package_dir="$NETBEANS_INSTALL_DIR/Contents/Resources/NetBeans"
 
-if [ -n "$package_dir" ]; then
-   sh "$script_dir"/unpack200.sh "$package_dir" "$jdk_home"
-fi

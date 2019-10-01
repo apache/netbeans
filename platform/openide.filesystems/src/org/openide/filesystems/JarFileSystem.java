@@ -1298,8 +1298,8 @@ public class JarFileSystem extends AbstractFileSystem {
             names = newNames;
 
             // strip all the indices arrays:
-            for (Iterator it = folders.values().iterator(); it.hasNext();) {
-                ((Folder) it.next()).trunc();
+            for (Folder folder : folders.values()) {
+                folder.trunc();
             }
         }
 

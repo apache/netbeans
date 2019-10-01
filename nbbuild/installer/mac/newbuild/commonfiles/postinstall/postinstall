@@ -44,7 +44,7 @@ echo Result of populate_caches.sh : $exit_code
 
 #fix for 114656
 cd "$NETBEANS_INSTALL_DIR"
-cd Contents/Resources/NetBeans*/${NB_CLUSTER_DIR}
+cd Contents/Resources/NetBeans*/netbeans/${NB_CLUSTER_DIR}
 mkdir -p var
 touch var/license_accepted
 

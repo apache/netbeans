@@ -51,14 +51,16 @@ public class AmazonDeploymentManager implements DeploymentManager2 {
     private String key;
     private String containerType;
     private String regionUrl;
+    private String regionCode;
 
-    public AmazonDeploymentManager(String appName, String envID, String keyId, String key, String containerType, String regionUrl) {
+    public AmazonDeploymentManager(String appName, String envID, String keyId, String key, String containerType, String regionUrl, String regionCode) {
         this.appName = appName;
         this.envID = envID;
         this.keyId = keyId;
         this.key = key;
         this.containerType = containerType;
         this.regionUrl = regionUrl;
+        this.regionCode = regionCode;
     }
     
     @Override
@@ -70,7 +72,7 @@ public class AmazonDeploymentManager implements DeploymentManager2 {
     public ProgressObject distribute(Target[] targets, DeploymentContext deployment) {
         File f = deployment.getModuleFile();
         ProgressObjectImpl po = new ProgressObjectImpl(NbBundle.getMessage(AmazonDeploymentManager.class, "AmazonDeploymentManager.distributing"), false);
-        AmazonInstance.deployAsync(f, appName, envID, keyId, key, po, regionUrl);
+        AmazonInstance.deployAsync(f, appName, envID, keyId, key, po, regionCode);
         return po;
     }
 

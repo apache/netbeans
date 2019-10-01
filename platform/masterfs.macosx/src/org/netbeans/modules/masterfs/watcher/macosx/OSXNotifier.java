@@ -66,8 +66,8 @@ public final class OSXNotifier extends Notifier<Void> {
     private static final String ALL_CHANGE = "ALL-CHANGE";  //xxx - shouldn't be global in Notifier rather than using null?
 
     public OSXNotifier() {
-        cf = Native.loadLibrary("CoreFoundation",CoreFoundation.class);    //NOI18N
-        cs = Native.loadLibrary("CoreServices",CoreServices.class);          //NOI18N
+        cf = Native.load("CoreFoundation",CoreFoundation.class);    //NOI18N
+        cs = Native.load("CoreServices",CoreServices.class);        //NOI18N
         callback = new EventCallbackImpl();
         events = new LinkedBlockingQueue<String>();
     }
@@ -83,9 +83,10 @@ public final class OSXNotifier extends Notifier<Void> {
 
     public @Override String nextEvent() throws IOException, InterruptedException {
         final String event = events.take();
-        return event == ALL_CHANGE ? null : event;
+        return ALL_CHANGE.equals(event) ? null : event;
     }
 
+    @Override
     public synchronized void start() throws IOException {
         if (worker != null) {
             throw new IllegalStateException("FileSystemWatcher already started.");  //NOI18N

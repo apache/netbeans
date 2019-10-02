@@ -162,7 +162,12 @@
     <tstamp>
     	<format property="buildday" pattern="d MMM yyyy" locale="en" />
     </tstamp>
-
+    <condition property="buildnumber" value="${metabuild.RawVersion}-${metabuild.hash}">
+        <and>
+            <isset property="metabuild.hash" />
+            <isset property="metabuild.RawVersion" />
+        </and>
+    </condition>
     <property environment="hudson"/>
     <condition property="buildnumber" value="${hudson.JOB_NAME}-${hudson.BUILD_NUMBER}-on-${buildstamp}">
       <and>
@@ -172,7 +177,7 @@
     </condition>
     <hgid property="hg.id" file="."/>
     <property name="buildnumber" value="${buildstamp}-${hg.id}"/>
-    <echo message="${buildnumber}" level="verbose"/>
+    <echo message="Build number : ${buildnumber}" />
   </target>
   <target name="set-buildnumber" depends="-do-set-buildnumber">
     <!-- Overridable. Note: need not necessarily be a number at all): -->

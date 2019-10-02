@@ -630,7 +630,10 @@ public final class ComputeImports {
                     if (type != null && type.getKind() == TypeKind.PACKAGE) {
                         //does the package really exists?
                         String s = ((PackageElement) el).getQualifiedName().toString();
-                        if (info.getElements().getPackageElement(s) == null) {
+                        Element thisPack = info.getTrees().getElement(new TreePath(info.getCompilationUnit()));
+                        ModuleElement module = thisPack != null ? info.getElements().getModuleOf(thisPack) : null;
+                        PackageElement pack = module != null ? info.getElements().getPackageElement(module, s) : info.getElements().getPackageElement(s);
+                        if (pack == null) {
                             //probably situation like:
                             //Map.Entry e;
                             //where Map is not imported

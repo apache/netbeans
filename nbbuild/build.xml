@@ -116,13 +116,13 @@
         </not>
     </condition>
     <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
-    <!-- get branches and git information -->
-    <antcall target="getgitinformation" />
-    <!-- javadoc content filtering -->
-    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
     <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    <!-- get branches and git information as previous not overrided this will take new-->
+    <antcall target="getgitinformation" />
+    <!-- javadoc content filtering -->
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
     <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
     <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <setjavadoc branch="${metabuild.branch}"/>
@@ -139,13 +139,12 @@
         </classpath>
     </taskdef>
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
-    <!--<fail />-->
   </target>
   <target name="-gitinfo.ispresent">
       <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
   </target>
   <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
-      <!-- try to get information from jenkins or travis -->
+      <!-- try to get information from jenkins apache multi branch build or travis -->
       <property environment="env"/>
       <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
           <isset property="env.GIT_BRANCH" />

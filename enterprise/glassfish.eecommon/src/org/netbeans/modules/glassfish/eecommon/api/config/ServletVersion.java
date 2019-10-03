@@ -53,6 +53,13 @@ public final class ServletVersion extends J2EEBaseVersion {
         "3.0", 3000,	// NOI18N
         "6.0", 6000	// NOI18N
         );
+    
+    /** Represents servlet version 4.0
+     */
+    public static final ServletVersion SERVLET_4_0 = new ServletVersion(
+        "4.0", 3000,	// NOI18N
+        "6.0", 6000	// NOI18N
+        );
 
     /** -----------------------------------------------------------------------
      *  Implementation
@@ -87,6 +94,8 @@ public final class ServletVersion extends J2EEBaseVersion {
             result = SERVLET_2_5;
         } else if(SERVLET_3_0.toString().equals(version)) {
             result = SERVLET_3_0;
+        } else if(SERVLET_4_0.toString().equals(version)) {
+            result = SERVLET_4_0;
         }
 
         return result;

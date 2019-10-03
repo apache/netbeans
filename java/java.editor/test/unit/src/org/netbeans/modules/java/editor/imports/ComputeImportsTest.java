@@ -18,9 +18,20 @@
  */
 package org.netbeans.modules.java.editor.imports;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -82,6 +94,11 @@ public class ComputeImportsTest extends NbTestCase {
         "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
     }));
     
+    private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(
+        Pattern.compile("jdk\\..*\\.internal\\..*"),
+        Pattern.compile("org\\.graalvm\\..*")
+    ));
+
     private FileObject testSource;
     private JavaSource js;
     private CompilationInfo info;
@@ -217,7 +234,61 @@ public class ComputeImportsTest extends NbTestCase {
         doTest("TestNotImportFieldAsClass");
     }
 
-    private void prepareTest(String capitalizedName, String sourceLevel) throws Exception {
+    public void testJIRA2914a() throws Exception {
+        doTest("test/Test",
+               "11",
+               Arrays.asList(
+                   new FileData("test/Test.java",
+                                "package test;\n" +
+                                "import io.test.IO;\n" +
+                                "public class Test {\n" +
+                                "    IO i1;\n" +
+                                "    io.test.IO i2;\n" +
+                                "}\n"),
+                   new FileData("io/test/IO.java",
+                                "package io.test;\n" +
+                                "public class IO {\n" +
+                                "    public static IO io() { return null; }\n" +
+                                "}\n")
+               ),
+               "",
+               "");
+    }
+
+    public void testJIRA2914b() throws Exception {
+        doTest("test/Test",
+               "11",
+               Arrays.asList(
+                   new FileData("test/Test.java",
+                                "package test;\n" +
+                                "import io.test.IO;\n"),
+                   new FileData("io/test/IO.java",
+                                "package io.test;\n" +
+                                "public class IO {\n" +
+                                "    public static IO io() { return null; }\n" +
+                                "}\n")
+               ),
+               "",
+               "");
+    }
+
+    public void testJIRA2914c() throws Exception {
+        doTest("test/Test",
+               "11",
+               Arrays.asList(
+                   new FileData("test/Test.java",
+                                "import io.test.IO;\n"),
+                   new FileData("io/test/IO.java",
+                                "package io.test;\n" +
+                                "public class IO {\n" +
+                                "    public static IO io() { return null; }\n" +
+                                "}\n")
+               ),
+               "",
+               "");
+    }
+
+    private void prepareTest(String capitalizedName, String sourceLevel, Iterable<FileData> files) throws Exception {
         FileObject workFO = FileUtil.toFileObject(getWorkDir());
         
         assertNotNull(workFO);
@@ -225,35 +296,22 @@ public class ComputeImportsTest extends NbTestCase {
         FileObject sourceRoot = workFO.createFolder("src");
         FileObject buildRoot  = workFO.createFolder("build");
 //        FileObject cache = workFO.createFolder("cache");
-        FileObject packageRoot = FileUtil.createFolder(sourceRoot, "org/netbeans/modules/java/editor/imports/data");
         
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cacheFO);
         
-        String testPackagePath = "org/netbeans/modules/java/editor/imports/data/";
-        File   testPackageFile = new File(getDataDir(), testPackagePath);
-        
-        String[] names = testPackageFile.list(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                if (name.endsWith(".java"))
-                    return true;
-                
-                return false;
+        for (FileData fd : files) {
+            FileObject target = FileUtil.createData(sourceRoot, fd.fileName);
+            try (OutputStream out = target.getOutputStream();
+                 Writer w = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+                w.write(fd.content);
             }
-        });
-        
-        String[] files = new String[names.length];
-        
-        for (int cntr = 0; cntr < files.length; cntr++) {
-            files[cntr] = testPackagePath + names[cntr];
         }
         
-        TestUtil.copyFiles(getDataDir(), FileUtil.toFile(sourceRoot), files);
-        
-        packageRoot.refresh();
+        FileUtil.refreshAll();
         
         SourceUtilsTestUtil.compileRecursively(sourceRoot);
         
-        testSource = packageRoot.getFileObject(capitalizedName + ".java");
+        testSource = sourceRoot.getFileObject(capitalizedName + ".java");
         
         assertNotNull(testSource);
         
@@ -268,7 +326,8 @@ public class ComputeImportsTest extends NbTestCase {
         assertNotNull(info);
     }
     
-    private void dump(PrintStream out, Map<String, List<Element>> set, Set<String> masks) {
+    private String dump(Map<String, List<Element>> set) {
+        StringWriter out = new StringWriter();
         List<String> keys = new LinkedList<String>(set.keySet());
         
         Collections.sort(keys);
@@ -304,14 +363,17 @@ public class ComputeImportsTest extends NbTestCase {
                     fqn = fqnSB.toString();
                 }
                 
-                if (!masks.contains(fqn))
+                if (!IGNORE_CLASSES.contains(fqn) && IGNORE_PATTERNS.stream().noneMatch(p -> p.matcher(fqn).matches())) {
                     fqns.add(fqn);
+                }
             }
             
             Collections.sort(fqns);
             
-            out.println(key + ":" + fqns.toString());
+            out.write(key + ":" + fqns.toString() + "\n");
         }
+
+        return out.toString();
     }
     
     private void doTest(String name) throws Exception {
@@ -319,8 +381,48 @@ public class ComputeImportsTest extends NbTestCase {
     }
     
     private void doTest(String name, String sourceLevel) throws Exception {
-        prepareTest(name, sourceLevel);
+        String testPackagePath = "org/netbeans/modules/java/editor/imports/data/";
+        File   testPackageFile = new File(getDataDir(), testPackagePath);
+        List<FileData> files = new ArrayList<>();
         
+        String[] names = testPackageFile.list(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(".java"))
+                    return true;
+
+                return false;
+            }
+        });
+
+        for (int cntr = 0; cntr < names.length; cntr++) {
+            files.add(new FileData(testPackagePath + names[cntr],
+                                   readContent(new File(testPackageFile, names[cntr]))));
+        }
+
+
+        doTest(testPackagePath + name,
+               sourceLevel,
+               files,
+               readContent(getGoldenFile(getName() + "-unfiltered.pass")),
+               readContent(getGoldenFile(getName() + "-filtered.pass")));
+    }
+
+    private String readContent(File file) throws IOException {
+        try (InputStream in = new BufferedInputStream(new FileInputStream(file));
+             Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            StringWriter sw = new StringWriter();
+            int read;
+
+            while ((read = r.read()) != (-1)) {
+                sw.write(read);
+            }
+            return sw.toString();
+        }
+    }
+
+    private void doTest(String name, String sourceLevel, Iterable<FileData> files, String unfilteredPass, String filteredPass) throws Exception {
+        prepareTest(name, sourceLevel, files);
+
         DataObject testDO = DataObject.find(testSource);
         EditorCookie ec = testDO.getCookie(EditorCookie.class);
         
@@ -330,12 +432,45 @@ public class ComputeImportsTest extends NbTestCase {
         
         Pair<Map<String, List<Element>>, Map<String, List<Element>>> candidates = new ComputeImports(info).computeCandidates();
         
-        dump(getLog(getName() + "-unfiltered.ref"), candidates.b, IGNORE_CLASSES);
-        dump(getLog(getName() + "-filtered.ref"), candidates.a, IGNORE_CLASSES);
+        assertEquals(unfilteredPass, dump(candidates.b));
+        assertEquals(filteredPass, dump(candidates.a));
+    }
+    
+    private static final class FileData {
+        public final String fileName;
+        public final String content;
 
-        String version = System.getProperty("java.specification.version") + "/";
-        
-        compareReferenceFiles(getName() + "-unfiltered.ref", version + getName() + "-unfiltered.pass", getName() + "-unfiltered.diff");
-        compareReferenceFiles(getName() + "-filtered.ref", version + getName() + "-filtered.pass", getName() + "-filtered.diff");
+        public FileData(String fileName, String content) {
+            this.fileName = fileName;
+            this.content = content;
+        }
+
+    }
+
+    //from CompletionTestBaseBase:
+    private   final String goldenFilePath = "org/netbeans/modules/java/editor/imports/ComputeImportsTest";
+    public File getGoldenFile(String goldenFileName) {
+        File goldenFile = null;
+        String version = System.getProperty("java.specification.version");
+        for (String variant : computeVersionVariantsFor(version)) {
+            goldenFile = new File(getDataDir(), "/goldenfiles/" + goldenFilePath + "/" + variant + "/" + goldenFileName);
+            if (goldenFile.exists())
+                break;
+        }
+        assertNotNull(goldenFile);
+        return goldenFile;
+    }
+
+    private List<String> computeVersionVariantsFor(String version) {
+        int dot = version.indexOf('.');
+        version = version.substring(dot + 1);
+        int versionNum = Integer.parseInt(version);
+        List<String> versions = new ArrayList<>();
+
+        for (int v = versionNum; v >= 8; v--) {
+            versions.add(v != 8 ? "" + v : "1." + v);
+        }
+
+        return versions;
     }
 }

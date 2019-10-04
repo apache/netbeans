@@ -26,6 +26,20 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="getArrowIcon">
+        <api name="awt"/>
+        <summary>Added factory class for drop-down buttons</summary>
+        <version major="7" minor="75"/>
+        <date day="13" month="12" year="2019"/>
+        <author login="ebakke"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Add the DropDownButtonFactory.getArrowIcon method, to expose the HiDPI-enabled dropdown
+        arrow icon for use by other modules.
+        </description>
+        <class package="org.openide.awt" name="DropDownButtonFactory"/>
+        <issue number="NETBEANS-3581"/>
+    </change>
     <change id="ToggleActions">
         <api name="awt"/>
         <summary>Support model-based enabled and check state of actions</summary>

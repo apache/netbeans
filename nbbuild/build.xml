@@ -116,13 +116,13 @@
         </not>
     </condition>
     <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
-    <!-- get branches and git information -->
-    <antcall target="getgitinformation" />
-    <!-- javadoc content filtering -->
-    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
     <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    <!-- get branches and git information as previous not overrided this will take new-->
+    <antcall target="getgitinformation" />
+    <!-- javadoc content filtering -->
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
     <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
     <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <setjavadoc branch="${metabuild.branch}"/>
@@ -139,13 +139,13 @@
         </classpath>
     </taskdef>
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
-    <!--<fail />-->
   </target>
   <target name="-gitinfo.ispresent">
       <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
   </target>
   <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
-      <!-- try to get information from jenkins or travis -->
+      <!-- try to get information from jenkins apache multi branch build or travis -->
+      <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
       <property environment="env"/>
       <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
           <isset property="env.GIT_BRANCH" />
@@ -156,11 +156,6 @@
       <condition property="metabuild.branch" value="${metabuild.branch}" >
           <isset property="metabuild.branch" />
       </condition>
-      <condition property="metabuild.branch" value="master" >
-          <not>
-              <isset property="metabuild.branch" />
-          </not>
-      </condition>
       <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
           <isset property="env.GIT_COMMIT" />
       </condition>
@@ -170,6 +165,15 @@
       <condition property="metabuild.hash" value="${metabuild.hash}" >
           <isset property="metabuild.hash" />
       </condition>
+      
+      <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
+      
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
+      </condition>
+      
       <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
       <!-- if hash not present do not fail -->
       <fail message="Branch not found use -Dmetabuild.branch=branchName " >

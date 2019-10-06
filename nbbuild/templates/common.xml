@@ -435,7 +435,7 @@
         <mkdir dir="${build.dir}"/>
         <property name="nbm.target.cluster" value=""/> <!-- fallback -->
         <property name="license.file.override" value="${license.file}"/>
-        <property name="use.pack200" value="true"/>
+        <property name="use.pack200" value="false"/>
         <property name="pack200.excludes" value=""/>
         <property name="nbm.locales" value="${locales}"/>
         <makenbm file="${build.dir}/${nbm}"

@@ -51,6 +51,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.openide.util.Exceptions;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -127,7 +128,7 @@ public final class XMLUtil extends Object {
                 factory = SAXParserFactory.newInstance();
             } catch (FactoryConfigurationError err) {
                 Exceptions.attachMessage(
-                    err, 
+                    err,
                     "Info about thread context classloader: " + // NOI18N
                     Thread.currentThread().getContextClassLoader()
                 );
@@ -141,7 +142,7 @@ public final class XMLUtil extends Object {
         try {
             return factory.newSAXParser().getXMLReader();
         } catch (ParserConfigurationException ex) {
-            throw new SAXException("Cannot create parser satisfying configuration parameters", ex); //NOI18N                        
+            throw new SAXException("Cannot create parser satisfying configuration parameters", ex); //NOI18N
         }
     }
 
@@ -319,7 +320,7 @@ public final class XMLUtil extends Object {
         InputSource input, boolean validate, boolean namespaceAware, ErrorHandler errorHandler,
         EntityResolver entityResolver
     ) throws IOException, SAXException {
-        
+
         DocumentBuilder builder = null;
         DocumentBuilderFactory factory = getFactory(validate, namespaceAware);
 
@@ -328,15 +329,15 @@ public final class XMLUtil extends Object {
         } catch (ParserConfigurationException ex) {
             throw new SAXException("Cannot create parser satisfying configuration parameters", ex); //NOI18N
         }
-        
+
         if (errorHandler != null) {
             builder.setErrorHandler(errorHandler);
         }
-        
+
         if (entityResolver != null) {
             builder.setEntityResolver(entityResolver);
         }
-        
+
         return builder.parse(input);
     }
 
@@ -366,7 +367,7 @@ public final class XMLUtil extends Object {
     /**
      * Writes a DOM document to a stream.
      * The precise output format is not guaranteed but this method will attempt to indent it sensibly.
-     * 
+     *
      * <p class="nonnormative"><b>Important</b>: There might be some problems with
      * <code>&lt;![CDATA[ ]]&gt;</code> sections in the DOM tree you pass into this method. Specifically,
      * some CDATA sections my not be written as CDATA section or may be merged with
@@ -375,7 +376,7 @@ public final class XMLUtil extends Object {
      * <br/>
      * For nodes that only have one CDATA section this method should work fine.
      * </p>
-     * 
+     *
      * @param doc DOM document to be written
      * @param out data sink
      * @param enc XML-defined encoding name (e.g. "UTF-8")
@@ -454,7 +455,7 @@ public final class XMLUtil extends Object {
                 }
             }
         }
-        
+
         NodeList children = node.getChildNodes();
         for(int i = 0; i < children.getLength(); i++) {
             collectCDATASections(children.item(i), cdataQNames);
@@ -895,7 +896,7 @@ public final class XMLUtil extends Object {
      * @param parent a parent element in a DOM tree
      * @return a list of direct child elements (may be empty)
      * @throws IllegalArgumentException if there are non-element children besides whitespace
-     * 
+     *
      * @since 8.4
      */
     public static List<Element> findSubElements(Element parent) throws IllegalArgumentException {
@@ -936,9 +937,10 @@ public final class XMLUtil extends Object {
      * @param namespace the intended namespace (or null)
      * @return the one child element with that name, or null if none
      * @throws IllegalArgumentException if there is multiple elements of the same name
-     * 
+     *
      * @since 8.4
      */
+    @CheckForNull
     public static Element findElement(Element parent, String name, String namespace) throws IllegalArgumentException {
         Element result = null;
         NodeList l = parent.getChildNodes();
@@ -948,7 +950,7 @@ public final class XMLUtil extends Object {
                 Node node = l.item(i);
                 String localName = node.getLocalName();
                 localName = localName == null ? node.getNodeName() : localName;
-                
+
                 if (name.equals(localName)
 			&& (namespace == null || namespace.equals(node.getNamespaceURI()))) {
                     if (result == null) {
@@ -967,12 +969,14 @@ public final class XMLUtil extends Object {
      * Currently does not handle coalescing text nodes, CDATA sections, etc.
      * @param parent a parent element
      * @return the nested text, or null if parent is null or none was found
-     * 
+     *
      * @since 8.4
      */
+    @CheckForNull
     public static String findText(Node parent) {
-    	if (parent == null)
-    		return null;
+        if (parent == null) {
+            return null;
+        }
         NodeList l = parent.getChildNodes();
         for (int i = 0; i < l.getLength(); i++) {
             if (l.item(i).getNodeType() == Node.TEXT_NODE) {
@@ -985,11 +989,11 @@ public final class XMLUtil extends Object {
 
     /**
      * Convert an XML fragment from one namespace to another.
-     * 
+     *
      * @param from element to translate
      * @param namespace namespace to be translated to
      * @return
-     * 
+     *
      * @since 8.4
      */
     public static Element translateXML(Element from, String namespace) {
@@ -1021,7 +1025,7 @@ public final class XMLUtil extends Object {
      * @param from copy the children of this element (exclusive)
      * @param to where to attach the copied elements
      * @param newNamespace destination namespace
-     * 
+     *
      * @since 8.4
      */
     public static void copyDocument(Element from, Element to, String newNamespace) {

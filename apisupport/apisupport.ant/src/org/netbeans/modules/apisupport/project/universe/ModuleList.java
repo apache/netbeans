@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -120,7 +119,7 @@ public final class ModuleList {
      * <tt>nbbuild/netbeans</tt>, i.e. it only contains cluster name.
      */
     private static final Map<File,Map<String,String>> clusterLocations = new HashMap<File,Map<String,String>>();
-    
+
     /** All entries known to exist for a given included file path. */
     private static final Map<File,Set<ModuleEntry>> knownEntries = new HashMap<File,Set<ModuleEntry>>();
 
@@ -211,7 +210,7 @@ public final class ModuleList {
                     }
                 });
     }
-    
+
     /**
      * Check to see if there are <em>any</em> known module list entries.
      * @return false if {@link #getKnownEntries} cannot return a nonempty set at the moment, true if it might
@@ -221,7 +220,7 @@ public final class ModuleList {
             return !knownEntries.isEmpty();
         }
     }
-    
+
     /**
      * Find the known module entries which build to a given built file path (e.g. module JAR).
      * Applies to any entries which have been scanned.
@@ -277,7 +276,7 @@ public final class ModuleList {
             }
         }
     }
-    
+
     static ModuleList findOrCreateModuleListFromNetBeansOrgSources(final File root) throws IOException {
         return runProtected(sourceLists, new Mutex.ExceptionAction<ModuleList>() {
             public ModuleList run() throws IOException {
@@ -442,7 +441,7 @@ public final class ModuleList {
         LOG.log(Level.FINER, "scanning NetBeans.org stable sources finished");
         lazyNetBeansOrgList = 1;
     }
-    
+
     /** Only useful for pre-Hg layout. */
     public static final Set<String> EXCLUDED_DIR_NAMES = new HashSet<String>();
     static {
@@ -487,7 +486,7 @@ public final class ModuleList {
             }
         }
     }
-    
+
     /**
      * Tries to interpret basedir as NBM project dir and if project files are found, stores
      * its <tt>ModuleEntry</tt> to entries.
@@ -515,6 +514,10 @@ public final class ModuleList {
         assert root != null ^ type != NbModuleType.NETBEANS_ORG;
         assert path != null ^ type != NbModuleType.NETBEANS_ORG;
         String cnb = XMLUtil.findText(XMLUtil.findElement(data, "code-name-base", NbModuleProject.NAMESPACE_SHARED)); // NOI18N
+        if (cnb == null) {
+            LOG.log(Level.WARNING, "Error getting code base name, malformed xml");
+            return;
+        }
         PropertyEvaluator eval = parseProperties(basedir, root, type, cnb);
         String module = eval.getProperty("module.jar"); // NOI18N
         // Cf. ParseProjectXml.computeClasspath:
@@ -548,7 +551,7 @@ public final class ModuleList {
             cpextra = new StringBuilder();
         }
         File manifest = new File(basedir, "manifest.mf"); // NOI18N
-        ManifestManager mm = (manifest.isFile() ? 
+        ManifestManager mm = (manifest.isFile() ?
             ManifestManager.getInstance(manifest, false) : ManifestManager.NULL_INSTANCE);
         File clusterDir = PropertyUtils.resolveFile(basedir, eval.getProperty("cluster")); // NOI18N
         ModuleEntry entry;
@@ -575,7 +578,7 @@ public final class ModuleList {
         registerEntry(entry, findSourceNBMFiles(entry, eval));
         LOG.log(Level.FINER, "scanPossibleProject: " + basedir + " scanned successfully");  // see ModuleListTest#testConcurrentScanning
     }
-    
+
     /**
      * Look for files to be included in the NBM.
      * Some stock entries are always present: the module JAR, update_tracking/*.xml, config/Modules/*.xml,
@@ -663,7 +666,7 @@ public final class ModuleList {
             }
         }
     }
-    
+
     public static ModuleList findOrCreateModuleListFromSuite(
             File root, File customNbDestDir) throws IOException {
         PropertyEvaluator eval = parseSuiteProperties(root);
@@ -730,7 +733,7 @@ public final class ModuleList {
             return sources;
         }
     }
-    
+
     private static File resolveNbDestDir(File root, File customNbDestDir, PropertyEvaluator eval) throws IOException {
         File nbdestdir;
         if (customNbDestDir == null) {
@@ -762,7 +765,7 @@ public final class ModuleList {
     static ModuleList findOrCreateModuleListFromSuiteWithoutBinaries(File root) throws IOException {
         return findOrCreateModuleListFromSuiteWithoutBinaries(root, null);
     }
-    
+
     private static PropertyEvaluator parseSuiteProperties(File root) throws IOException {
         Properties p = System.getProperties();
         Map<String,String> predefs;
@@ -788,11 +791,11 @@ public final class ModuleList {
         providers.add(new DestDirProvider(eval));
         return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
     }
-    
+
     static File[] findModulesInSuite(File root) throws IOException {
         return findModulesInSuite(root, parseSuiteProperties(root));
     }
-    
+
     private static File[] findModulesInSuite(File root, PropertyEvaluator eval) throws IOException {
         String modulesS = eval.getProperty("modules"); // NOI18N
         if (modulesS == null) {
@@ -805,7 +808,7 @@ public final class ModuleList {
         }
         return modules;
     }
-    
+
     private static ModuleList findOrCreateModuleListFromStandaloneModule(
             File basedir, File customNbDestDir) throws IOException {
         PropertyEvaluator eval = parseProperties(basedir, null, NbModuleType.STANDALONE, "irrelevant"); // NOI18N
@@ -877,7 +880,7 @@ public final class ModuleList {
             return new HashSet<String>();
         }
     }
-    
+
     private static final String[] MODULE_DIRS = {
         "modules", // NOI18N
         "modules/eager", // NOI18N
@@ -1001,7 +1004,7 @@ public final class ModuleList {
         }
         return files;
     }
-    
+
     private static final String PROJECT_XML = "nbproject" + File.separatorChar + "project.xml"; // NOI18N
     /**
      * Load a project.xml from a project.
@@ -1042,7 +1045,7 @@ public final class ModuleList {
             }
         }
     }
-    
+
     /**
      * Load properties for a project.
      * Only deals with certain properties of interest here (all file-type values assumed relative to basedir):
@@ -1112,7 +1115,7 @@ public final class ModuleList {
         defaults.put("cluster", findClusterLocation(basedir, root, type));
         return PropertyUtils.sequentialPropertyEvaluator(predefsProvider, providers.toArray(new PropertyProvider[providers.size()]));
     }
-    
+
     private static PropertyProvider loadPropertiesFile(File f) throws IOException {
         if (!f.isFile()) {
             return PropertyUtils.fixedPropertyProvider(Collections.<String,String>emptyMap());
@@ -1126,7 +1129,7 @@ public final class ModuleList {
         }
         return PropertyUtils.fixedPropertyProvider(NbCollections.checkedMapByFilter(p, String.class, String.class, true));
     }
-    
+
     /**
      * Refresh any existing lists, e.g. in response to a new module being created.
      */
@@ -1136,7 +1139,7 @@ public final class ModuleList {
         synchronized (clusterLists) { clusterLists.clear(); }
         synchronized (knownEntries) { knownEntries.clear(); }
     }
-    
+
     /**
      * Refresh cached module list for the given root dir.
      *
@@ -1160,14 +1163,14 @@ public final class ModuleList {
         // and ensure entries are loaded again when needed
 //        binaryLists.remove(clusterDir);
     }
-    
+
     /**
      * Whether whether a given dir is root of netbeans.org sources.
      */
     public static boolean isNetBeansOrg(File dir) {
         return new File(dir, "nbbuild").isDirectory(); // NOI18N
     }
-    
+
     /**
      * Find the root of netbeans.org sources starting from a project basedir.
      */
@@ -1203,7 +1206,7 @@ public final class ModuleList {
         // Not here.
         return null;
     }
-    
+
     public static Map<String,String> getClusterProperties(File nbroot) throws IOException {
         Map<String, String> clusterDefs = null;
         synchronized (clusterPropertiesFiles) {
@@ -1222,7 +1225,7 @@ public final class ModuleList {
         }
         return clusterDefs;
     }
-    
+
     /**
      * Find cluster location of a netbeans module (standalone, suite components and NB.org).
      * @param basedir project basedir
@@ -1282,12 +1285,12 @@ public final class ModuleList {
         }
         return cluster;
     }
-    
+
     // NONSTATIC PART
-    
+
     /** all module entries, indexed by cnb */
     private Map<String,ModuleEntry> entries;
-    
+
     /** originally passed top-level dir */
     private final File home;
 
@@ -1298,7 +1301,7 @@ public final class ModuleList {
      * Cf. #62221.
      */
     private int lazyNetBeansOrgList = 0;
-    
+
     private ModuleList(Map<String,ModuleEntry> entries, File home) {
         this.entries = entries;
         this.home = home;
@@ -1323,11 +1326,11 @@ public final class ModuleList {
         }
         FOREST = forest.toArray(new String[0]);
     }
-    
+
     public @Override String toString() {
         return "ModuleList[" + home + ",lazy=" + lazyNetBeansOrgList + "]" + entries.values(); // NOI18N
     }
-    
+
     /**
      * Merge a bunch of module lists into one.
      * In case of conflict (by CNB), earlier entries take precedence.
@@ -1344,7 +1347,7 @@ public final class ModuleList {
         }
         return new ModuleList(entries, home);
     }
-    
+
     private void maybeRescanNetBeansOrgSources() {
         if (lazyNetBeansOrgList < 2) {
             lazyNetBeansOrgList = 2;
@@ -1366,7 +1369,7 @@ public final class ModuleList {
             entries = _entries;
         }
     }
-    
+
     /**
      * Find an entry by name.
      * @param codeNameBase code name base of the module
@@ -1428,7 +1431,7 @@ public final class ModuleList {
                    replaceFirst("^com\\.sun\\.", "c.s."). // NOI18N
                    replaceFirst("^com\\.", "c."); // NOI18N
     }
-    
+
     /**
      * Get all known entries at once.
      * @return all known module entries
@@ -1443,7 +1446,7 @@ public final class ModuleList {
         }
         return new HashSet<ModuleEntry>(entries.values());
     }
-    
+
     public static LocalizedBundleInfo loadBundleInfo(File projectDir) {
         LocalizedBundleInfo bundleInfo = ApisupportAntUtils.findLocalizedBundleInfo(projectDir);
         return bundleInfo == null ? LocalizedBundleInfo.EMPTY : bundleInfo;

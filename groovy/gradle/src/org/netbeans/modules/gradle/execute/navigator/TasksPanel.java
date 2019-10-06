@@ -213,7 +213,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
     private static final String WAIT_GIF = "org/netbeans/modules/gradle/resources/wait.gif";
 
     @StaticResource
-    private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.png";
+    private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.gif";
 
     private static Node createEmptyNode() {
         return new AbstractNode(Children.LEAF);

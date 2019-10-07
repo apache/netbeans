@@ -1821,7 +1821,7 @@ public final class GeneratorUtilities {
             if (parent == null)
                 parent = getElementByFQN(cut, ((MemberSelectTree)qualIdent).getExpression().toString());
             if (parent != null && (parent.getKind().isClass() || parent.getKind().isInterface())) {
-                Scope s = trees.getScope(new TreePath(cut));
+                Scope s = trees.getScope(new TreePath(copy.getCompilationUnit()));
                 for (Element e : parent.getEnclosedElements()) {
                     if (name == e.getSimpleName() && e.getModifiers().contains(Modifier.STATIC) && trees.isAccessible(s, e, (DeclaredType)parent.asType()))
                         return e;

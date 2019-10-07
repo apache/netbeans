@@ -827,10 +827,10 @@ binRoots:   for (URL binary : binaries) {
 
     @NonNull
     private static Collection<? extends CharSequence> getFragment(Element e) {
-        final FragmentBuilder fb = new FragmentBuilder();
+        final FragmentBuilder fb = new FragmentBuilder(e.getKind());
         if (!e.getKind().isClass() && !e.getKind().isInterface()) {
             if (e.getKind() == ElementKind.CONSTRUCTOR) {
-                fb.append(e.getEnclosingElement().getSimpleName());
+                fb.constructor(e.getEnclosingElement().getSimpleName());
             } else {
                 fb.append(e.getSimpleName());
             }
@@ -870,21 +870,43 @@ binRoots:   for (URL binary : binaries) {
             final List<Convertor<CharSequence,CharSequence>> tmp = new ArrayList<>();
             tmp.add(Convertors.<CharSequence>identity());
             tmp.add(new JDoc8025633());
+            tmp.add(new JDoc8046068());
             FILTERS = Collections.unmodifiableList(tmp);
         };
         private final StringBuilder[] sbs;
 
-        FragmentBuilder() {
-            this.sbs = new StringBuilder[FILTERS.size()];
+        FragmentBuilder(@NonNull ElementKind kind) {
+            int size = FILTERS.size();
+            // JDK-8046068 changed the constructor format from "Name" to "<init>"
+            if (kind == ElementKind.CONSTRUCTOR) {
+                size *= 2;
+            }
+            this.sbs = new StringBuilder[size];
             for (int i = 0; i < sbs.length; i++) {
                 sbs[i] = new StringBuilder();
             }
         }
+        
+        @NonNull
+        FragmentBuilder constructor(@NonNull final CharSequence text) {
+            CharSequence constructor = text;
+            for (int i = 0; i < sbs.length;) {
+                for (int j = 0; j < FILTERS.size(); j++) {
+                    sbs[i].append(FILTERS.get(j).convert(constructor));
+                    i++;
+                }
+                constructor = "<init>";
+            }
+            return this;
+        }
 
         @NonNull
         FragmentBuilder append(@NonNull final CharSequence text) {
-            for (int i = 0; i < sbs.length; i++) {
-                sbs[i].append(FILTERS.get(i).convert(text));
+            for (int i = 0; i < sbs.length;) {
+                for (int j = 0; j < FILTERS.size(); j++) {
+                    sbs[i].append(FILTERS.get(j).convert(text));
+                    i++;
+                }
             }
             return this;
         }
@@ -936,6 +958,14 @@ binRoots:   for (URL binary : binaries) {
                     }
                 }
                 return sb.toString();
+            }
+        }
+        
+        private static final class JDoc8046068 implements Convertor<CharSequence,CharSequence> {
+            @Override
+            @NonNull
+            public CharSequence convert(@NonNull final CharSequence text) {
+                return text.toString().replace(" ", "");
             }
         }
     }

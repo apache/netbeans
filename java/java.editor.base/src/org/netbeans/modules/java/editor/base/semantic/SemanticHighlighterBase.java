@@ -1100,10 +1100,15 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
 
             TreePath pp = getCurrentPath().getParentPath();
-            if (pp.getLeaf() != null &&
-                pp.getLeaf().getKind() == Kind.METHOD_INVOCATION) {
-                MethodInvocationTree inv = (MethodInvocationTree) pp.getLeaf();
-                int pos = inv.getArguments().indexOf(node);
+            Tree leaf = pp.getLeaf();
+            if (leaf != null &&
+                (leaf.getKind() == Kind.METHOD_INVOCATION || leaf.getKind() == Kind.NEW_CLASS)) {
+                int pos = -1;
+                if (leaf.getKind() == Kind.METHOD_INVOCATION) {
+                    pos = MethodInvocationTree.class.cast(leaf).getArguments().indexOf(node);
+                } else if (leaf.getKind() == Kind.NEW_CLASS) {
+                    pos = NewClassTree.class.cast(leaf).getArguments().indexOf(node);
+                }
                 if (pos != (-1)) {
                     Element invoked = info.getTrees().getElement(pp);
                     if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {

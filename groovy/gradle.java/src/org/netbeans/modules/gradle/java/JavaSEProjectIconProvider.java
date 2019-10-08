@@ -41,6 +41,9 @@ public class JavaSEProjectIconProvider implements ProjectIconProvider {
     @StaticResource
     private static final String GRADLE_JAVASE_ICON = "org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png"; //NOI18
 
+    @StaticResource
+    private static final String APPLICATION_BADGE = "org/netbeans/modules/gradle/java/resources/application-badge.png"; //NOI18
+
     final Project project;
 
     public JavaSEProjectIconProvider(Project project) {
@@ -51,8 +54,12 @@ public class JavaSEProjectIconProvider implements ProjectIconProvider {
     public Image getIcon() {
         Image ret = null;
         Set<String> plugins = GradleBaseProject.get(project).getPlugins();
-        if (plugins.contains("java")) { //NOI18N
+        if (plugins.contains("java")) {                 //NOI18N
             ret = ImageUtilities.loadImage(GRADLE_JAVASE_ICON);
+            if (plugins.contains("application")) {      //NOI18N
+               Image badge = ImageUtilities.loadImage(APPLICATION_BADGE);
+               ret = ImageUtilities.mergeImages(ret, badge, 8, 8);
+            }
         }
         return  ret;
     }

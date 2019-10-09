@@ -35,7 +35,7 @@
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
                         <li><a target="_blank" href="http://netbeans.org">NetBeans</a></li>
                         <li><a target="_blank" href="https://github.com/dukescript/kt-mvvm-demo/tree/FXBeanInfo#readme">JavaFX</a></li>
-                        <li><a target="_blank" href="https://materializecss.com/">Material CSS</a></li>
+                        <li><a target="_blank" href="https://materializecss.com/">Materialize CSS</a></li>
                         <li><a target="_blank" href="http://dukescript.com">DukeScript</a></li>
                     </ul>
                 </div>

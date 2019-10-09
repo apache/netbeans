@@ -46,7 +46,9 @@
           <property name="nbm_alias" value="netbeans-bundled"/>
           <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
       </subant>
-      <subant target="build" inheritall="false">
+      <subant inheritall="false">
+          <target name="clean" />
+          <target name="build" />
           <property name="nb_all" location="${nb_all}"/>
           <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
           <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
@@ -100,13 +102,4 @@
           </fileset>
       </copy>
   </target>
-
-  <target name="clean" depends="projectized.clean">
-    <subant target="clean" inheritall="false">
-          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
-          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
-          <fileset dir="extras" includes="build.xml"/>
-      </subant>
-  </target>
-
 </project>

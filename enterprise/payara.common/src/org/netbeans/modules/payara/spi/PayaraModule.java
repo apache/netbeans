@@ -85,6 +85,7 @@ public interface PayaraModule {
     public static final String JDBC = "JDBC"; // NOI18N
     public static final String JDBC_RESOURCE = "jdbc-resource"; // NOI18N
     public static final String JDBC_CONNECTION_POOL = "jdbc-connection-pool"; // NOI18N
+    public static final String HOT_DEPLOY = "hotDeploy";
     public static final String SESSION_PRESERVATION_FLAG = "preserveSessionsOn";
 
     public static final String CONNECTORS = "CONNECTORS"; // NOI18N

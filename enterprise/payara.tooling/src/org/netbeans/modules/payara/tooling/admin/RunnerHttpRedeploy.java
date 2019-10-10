@@ -54,6 +54,9 @@ public class RunnerHttpRedeploy extends RunnerHttp {
     /** Deploy command <code>keepState</code> parameter name. */
     private static final String KEEP_STATE_PARAM = "keepState";
 
+    /** Deploy command <code>hotDeploy</code> parameter name. */
+    private static final String HOT_DEPLOY_PARAM = "hotDeploy";
+
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
     ////////////////////////////////////////////////////////////////////////////
@@ -66,6 +69,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "target" '=' &lt;target&gt; ] <br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "contextroot" '=' &lt;contextRoot&gt; ] <br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "keepState" '=' true | false ]<br/>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "hotDeploy" '=' true | false ]<br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "properties" '=' &lt;pname&gt; '=' &lt;pvalue&gt;
      *                                                  { ':' &lt;pname&gt; '=' &lt;pvalue&gt;} ]</code>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "libraries" '=' &lt;lname&gt; '=' &lt;lvalue&gt;
@@ -79,18 +83,19 @@ public class RunnerHttpRedeploy extends RunnerHttp {
         String target;
         String ctxRoot;
         String keepState;
+        String hotDeploy;
         if (command instanceof CommandRedeploy) {
             name = Utils.sanitizeName(((CommandRedeploy)command).name);
             target = ((CommandRedeploy)command).target;
             ctxRoot = ((CommandRedeploy)command).contextRoot;
             keepState = Boolean.toString(((CommandRedeploy)command).keepState);
+            hotDeploy = Boolean.toString(((CommandRedeploy)command).hotDeploy);
         }
         else {
             throw new CommandException(
                     CommandException.ILLEGAL_COMAND_INSTANCE);
         }
         // Calculate StringBuilder initial length to avoid resizing
-        boolean first = true;
         StringBuilder sb = new StringBuilder(
                 queryPropertiesLength(
                         ((CommandRedeploy)command).properties, PROPERTIES_PARAM)
@@ -104,6 +109,9 @@ public class RunnerHttpRedeploy extends RunnerHttp {
                         : 0 )
                 + ( ((CommandRedeploy)command).keepState
                         ? KEEP_STATE_PARAM.length() + 1 + keepState.length()
+                        : 0 )
+                + ( ((CommandRedeploy)command).hotDeploy
+                        ? HOT_DEPLOY_PARAM.length() + 1 + hotDeploy.length()
                         : 0 )
                 );
         sb.append(NAME_PARAM).append(PARAM_ASSIGN_VALUE).append(name);
@@ -119,6 +127,11 @@ public class RunnerHttpRedeploy extends RunnerHttp {
             sb.append(PARAM_SEPARATOR);
             sb.append(KEEP_STATE_PARAM);
             sb.append(PARAM_ASSIGN_VALUE).append(keepState);
+        }
+        if (((CommandRedeploy)command).hotDeploy) {
+            sb.append(PARAM_SEPARATOR);
+            sb.append(HOT_DEPLOY_PARAM);
+            sb.append(PARAM_ASSIGN_VALUE).append(hotDeploy);
         }
         // Add properties into query string.
         queryPropertiesAppend(sb, ((CommandRedeploy)command).properties,

@@ -692,6 +692,8 @@ public class CommonServerSupport
     boolean resourcesChanged) {
         Map<String, String> properties = new HashMap<String, String>();
         String url = instance.getProperty(PayaraModule.URL_ATTR);
+        String hotDeployFlag = instance.getProperty(PayaraModule.HOT_DEPLOY);
+
         String sessionPreservationFlag = instance.getProperty(PayaraModule.SESSION_PRESERVATION_FLAG);
         if (sessionPreservationFlag == null) {
             // If there isn't a value stored for the instance, use the value of
@@ -709,7 +711,9 @@ public class CommonServerSupport
             return ServerAdmin.<ResultString>exec(instance, new CommandRedeploy(
                     name, Util.computeTarget(instance.getProperties()),
                     contextRoot, properties, libraries,
-                    url != null && url.contains("ee6wc")), stateListener);
+                    url != null && url.contains("deployer:pfv"),
+                    Boolean.parseBoolean(hotDeployFlag)
+            ), stateListener);
         } finally {
             refreshChildren();
         }

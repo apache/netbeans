@@ -281,8 +281,9 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
     }
 
     private ProgressObject incrementalDeploy(final TargetModuleID targetModuleID, AppChangeDescriptor appChangeDescriptor, final File[] requiredLibraries) {
-        final MonitorProgressObject progressObject = new MonitorProgressObject(dm,
-                (Hk2TargetModuleID) targetModuleID, CommandType.REDEPLOY);
+        final Hk2TargetModuleID hk2TargetModuleID = (Hk2TargetModuleID) targetModuleID;
+        final MonitorProgressObject progressObject = new MonitorProgressObject(
+                dm, hk2TargetModuleID, CommandType.REDEPLOY);
         // prevent issues by protecting against triggering
         //   http://java.net/jira/browse/GLASSFISH-15690
         for (File f : appChangeDescriptor.getChangedFiles()) {
@@ -293,11 +294,11 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 return progressObject;
             }
         }
-        MonitorProgressObject restartObject = new MonitorProgressObject(dm, (Hk2TargetModuleID) targetModuleID,
+        MonitorProgressObject restartObject = new MonitorProgressObject(dm, hk2TargetModuleID,
                 CommandType.REDEPLOY);
         final MonitorProgressObject updateCRObject = new MonitorProgressObject(dm,
-                (Hk2TargetModuleID) targetModuleID, CommandType.REDEPLOY);
-        progressObject.addProgressListener(new UpdateContextRoot(updateCRObject,(Hk2TargetModuleID) targetModuleID, dm.getServerInstance(), ! (null == targetModuleID.getWebURL())));
+                hk2TargetModuleID, CommandType.REDEPLOY);
+        progressObject.addProgressListener(new UpdateContextRoot(updateCRObject,hk2TargetModuleID, dm.getServerInstance(), ! (null == targetModuleID.getWebURL())));
         final PayaraModule commonSupport = dm.getCommonServerSupport();
         final PayaraModule2 commonSupport2 = (commonSupport instanceof PayaraModule2 ?
             (PayaraModule2)commonSupport : null);
@@ -353,9 +354,20 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                     if (event.getDeploymentStatus().isCompleted()) {
                         if (hasChanges) {
                             if (commonSupport2 != null && requiredLibraries.length > 0) {
-                                commonSupport2.redeploy(progressObject, targetModuleID.getModuleID(), null, requiredLibraries,resourcesChanged);
+                                commonSupport2.redeploy(
+                                        progressObject,
+                                        hk2TargetModuleID.getModuleID(),
+                                        hk2TargetModuleID.getContextRoot(),
+                                        requiredLibraries,
+                                        resourcesChanged
+                                );
                             } else {
-                                commonSupport.redeploy(progressObject, targetModuleID.getModuleID(),resourcesChanged);
+                                commonSupport.redeploy(
+                                        progressObject,
+                                        hk2TargetModuleID.getModuleID(),
+                                        hk2TargetModuleID.getContextRoot(),
+                                        resourcesChanged
+                                );
                             }
                         } else {
                             progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
@@ -370,9 +382,20 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         } else {
             if (hasChanges) {
                 if (commonSupport2 != null && requiredLibraries.length > 0) {
-                    commonSupport2.redeploy(progressObject, targetModuleID.getModuleID(), null, requiredLibraries, resourcesChanged);
+                    commonSupport2.redeploy(
+                            progressObject,
+                            hk2TargetModuleID.getModuleID(),
+                            hk2TargetModuleID.getContextRoot(),
+                            requiredLibraries,
+                            resourcesChanged
+                    );
                 } else {
-                    commonSupport.redeploy(progressObject, targetModuleID.getModuleID(), resourcesChanged);
+                    commonSupport.redeploy(
+                            progressObject,
+                            hk2TargetModuleID.getModuleID(),
+                            hk2TargetModuleID.getContextRoot(),
+                            resourcesChanged
+                    );
                 }
             } else {
                 progressObject.operationStateChanged(TaskState.COMPLETED, TaskEvent.CMD_COMPLETED,

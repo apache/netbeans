@@ -58,6 +58,9 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         /** Preserve sessions property. */
         final String preserveSessionsProperty;
 
+        /** hot deploy property. */
+        final String hotDeployProperty;
+
         /** Start Derby property. */
         final String startDerbyProperty;
 
@@ -81,6 +84,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                     = instance.getProperty(PayaraModule.HTTP_MONITOR_FLAG);
             jdbcDriverDeploymentProperty
                     = instance.getProperty(PayaraModule.DRIVER_DEPLOY_FLAG);
+            hotDeployProperty
+                    = instance.getProperty(PayaraModule.HOT_DEPLOY);
             preserveSessionsProperty
                     = instance.getProperty(PayaraModule.SESSION_PRESERVATION_FLAG);
             startDerbyProperty
@@ -102,7 +107,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
             // Store true value as String property.
             if (value) {
                 instance.putProperty(key, Boolean.toString(value));
-            // Store false valye by removal of property.
+            // Store false value by removal of property.
             } else {
                 instance.removeProperty(key);
             }
@@ -115,14 +120,17 @@ public abstract class InstancePanel extends javax.swing.JPanel {
          * @param cometSupportFlag         Comet support flag.
          * @param httpMonitorFlag          HTTP monitor flag.
          * @param jdbcDriverDeploymentFlag JDBC driver deployment flag.
+         * @param hotDeployFlag
          * @param preserveSessionsFlag     Preserve sessions flag.
          * @param startDerbyFlag           Start Derby flag.
+         * @param loopbackFlag
          * @param instance                 Payara instance object to store
          *                                 check box fields properties.
          */
         protected void store(final boolean cometSupportFlag,
                 final boolean httpMonitorFlag,
                 final boolean jdbcDriverDeploymentFlag,
+                final boolean hotDeployFlag,
                 final boolean preserveSessionsFlag,
                 final boolean startDerbyFlag,
                 final boolean loopbackFlag,
@@ -140,6 +148,10 @@ public abstract class InstancePanel extends javax.swing.JPanel {
             if (jdbcDriverDeploymentFlag != getJdbcDriverDeploymentProperty()) {
                 storeBooleanProperty(PayaraModule.DRIVER_DEPLOY_FLAG,
                         jdbcDriverDeploymentFlag, instance);
+            }
+            if (hotDeployFlag != getHotDeployProperty()) {
+                storeBooleanProperty(PayaraModule.HOT_DEPLOY,
+                        hotDeployFlag, instance);
             }
             if (preserveSessionsFlag != getPreserveSessionsProperty()) {
                 storeBooleanProperty(PayaraModule.SESSION_PRESERVATION_FLAG,
@@ -180,6 +192,15 @@ public abstract class InstancePanel extends javax.swing.JPanel {
          */
         protected boolean getJdbcDriverDeploymentProperty() {
             return Boolean.parseBoolean(jdbcDriverDeploymentProperty);
+        }
+
+        /**
+         * Get hot deploy property.
+         * <p/>
+         * @return hot deploy property.
+         */
+        protected boolean getHotDeployProperty() {
+            return Boolean.parseBoolean(hotDeployProperty);
         }
 
         /**
@@ -245,6 +266,9 @@ public abstract class InstancePanel extends javax.swing.JPanel {
 
     /** Preserve sessions flag. */
     protected boolean preserverSessionsFlag;
+
+     /** Hot Deploy flag. */
+    protected boolean hotDeployFlag;
 
     /** Start Derby flag. */
     protected boolean startDerbyFlag;
@@ -352,7 +376,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     protected void initFlagsFromProperties(final CheckBoxProperties properties) {
         cometSupportFlag = properties.getCommetSupportProperty();
         httpMonitorFlag = properties.getHttpMonitorProperty();
-        jdbcDriverDeploymentFlag= properties.getJdbcDriverDeploymentProperty();
+        jdbcDriverDeploymentFlag = properties.getJdbcDriverDeploymentProperty();
+        hotDeployFlag = properties.getHotDeployProperty();
         preserverSessionsFlag = properties.getPreserveSessionsProperty();
         startDerbyFlag = properties.getStartDerbyProperty();
         loopbackFlag = properties.getLoopbackProperty();
@@ -376,6 +401,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         httpMonitor.setSelected(httpMonitorFlag);
         jdbcDriverDeployment.setSelected(jdbcDriverDeploymentFlag);
         showPassword.setSelected(showPasswordFlag);
+        hotDeploy.setSelected(hotDeployFlag);
         preserveSessions.setSelected(preserverSessionsFlag);
         startDerby.setSelected(startDerbyFlag);
         localIpCB.setSelected(loopbackFlag);
@@ -404,8 +430,9 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     protected void storeCheckBoxes() {
         CheckBoxProperties properties = new CheckBoxProperties(instance);
         properties.store(cometSupportFlag, httpMonitorFlag,
-                jdbcDriverDeploymentFlag, preserverSessionsFlag,
-                startDerbyFlag, loopbackFlag, instance);
+                jdbcDriverDeploymentFlag, hotDeployFlag,
+                preserverSessionsFlag, startDerbyFlag,
+                loopbackFlag, instance);
         PayaraSettings.setGfShowPasswordInPropertiesForm(showPasswordFlag);
     }
 
@@ -503,6 +530,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         commetSupport.setEnabled(true);
         httpMonitor.setEnabled(true);
         jdbcDriverDeployment.setEnabled(true);
+        hotDeploy.setEnabled(true);
         showPassword.setEnabled(true);
         preserveSessions.setEnabled(true);
         startDerby.setEnabled(true);
@@ -529,6 +557,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         commetSupport.setEnabled(false);
         httpMonitor.setEnabled(false);
         jdbcDriverDeployment.setEnabled(false);
+        hotDeploy.setEnabled(false);
         showPassword.setEnabled(false);
         preserveSessions.setEnabled(false);
         startDerby.setEnabled(false);
@@ -633,10 +662,11 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         httpMonitor = new javax.swing.JCheckBox();
         startDerby = new javax.swing.JCheckBox();
         jdbcDriverDeployment = new javax.swing.JCheckBox();
-        showPassword = new javax.swing.JCheckBox();
         passwordField = new javax.swing.JPasswordField();
         hostRemoteLabel = new javax.swing.JLabel();
         hostRemoteField = new javax.swing.JTextField();
+        hotDeploy = new javax.swing.JCheckBox();
+        showPassword = new javax.swing.JToggleButton();
 
         setName(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstanceLocalPanel.displayName")); // NOI18N
         setPreferredSize(new java.awt.Dimension(602, 304));
@@ -726,19 +756,28 @@ public abstract class InstancePanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(showPassword, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstanceLocalPanel.showPassword")); // NOI18N
-        showPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPasswordActionPerformed(evt);
-            }
-        });
-
         passwordField.setText(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.passwordField.text")); // NOI18N
 
         hostRemoteLabel.setLabelFor(domainsFolderField);
         org.openide.awt.Mnemonics.setLocalizedText(hostRemoteLabel, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.hostRemoteLabel.text")); // NOI18N
 
         hostRemoteField.setText(org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.hostRemoteField.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(hotDeploy, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.hotDeploy.text")); // NOI18N
+        hotDeploy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hotDeployActionPerformed(evt);
+            }
+        });
+
+        showPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/payara/common/resources/show-password.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(showPassword, org.openide.util.NbBundle.getMessage(InstancePanel.class, "InstancePanel.showPassword.text")); // NOI18N
+        showPassword.setAlignmentY(0.0F);
+        showPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -754,8 +793,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                             .addComponent(hostRemoteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(domainsFolderField)
-                            .addComponent(installationLocationField)
+                            .addComponent(domainsFolderField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                            .addComponent(installationLocationField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                             .addComponent(hostRemoteField)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -766,14 +805,14 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(hostLocalField, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(hostLocalField, 0, 291, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(localIpCB))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(domainField, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dasPortField, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(domainField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(dasPortField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(userNameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(httpPortLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -781,19 +820,23 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                                     .addComponent(passwordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(httpPortField)
-                                    .addComponent(targetField)
-                                    .addComponent(passwordField)))))
+                                    .addComponent(httpPortField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(targetField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(showPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(2, 2, 2))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jdbcDriverDeployment, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                            .addComponent(jdbcDriverDeployment, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
                             .addComponent(httpMonitor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(commetSupport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(preserveSessions, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                            .addComponent(preserveSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(startDerby, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(showPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(hotDeploy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -834,15 +877,17 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                     .addComponent(targetLabel)
                     .addComponent(targetField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(userNameField)
-                    .addComponent(passwordLabel)
-                    .addComponent(userNameLabel)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(passwordField)
+                    .addComponent(showPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(userNameField)
+                        .addComponent(passwordLabel)
+                        .addComponent(userNameLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(commetSupport)
-                    .addComponent(showPassword))
+                    .addComponent(hotDeploy))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(httpMonitor)
@@ -851,7 +896,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jdbcDriverDeployment)
                     .addComponent(startDerby))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(120, 120, 120))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -862,10 +907,6 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     private void preserveSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preserveSessionsActionPerformed
         preserverSessionsFlag = preserveSessions.isSelected();
     }//GEN-LAST:event_preserveSessionsActionPerformed
-
-    private void showPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPasswordActionPerformed
-        updatePasswordVisibility();
-    }//GEN-LAST:event_showPasswordActionPerformed
 
     private void httpMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_httpMonitorActionPerformed
         httpMonitorFlag = httpMonitor.isSelected();
@@ -895,6 +936,14 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         hostLocalField.setEnabled(true);
     }//GEN-LAST:event_localIpCBActionPerformed
 
+    private void showPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPasswordActionPerformed
+        updatePasswordVisibility();
+    }//GEN-LAST:event_showPasswordActionPerformed
+
+    private void hotDeployActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hotDeployActionPerformed
+         hotDeployFlag = hotDeploy.isSelected();
+    }//GEN-LAST:event_hotDeployActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JCheckBox commetSupport;
     protected javax.swing.JTextField dasPortField;
@@ -907,6 +956,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     protected javax.swing.JLabel hostLocalLabel;
     protected javax.swing.JTextField hostRemoteField;
     protected javax.swing.JLabel hostRemoteLabel;
+    protected javax.swing.JCheckBox hotDeploy;
     protected javax.swing.JCheckBox httpMonitor;
     protected javax.swing.JTextField httpPortField;
     protected javax.swing.JLabel httpPortLabel;
@@ -917,7 +967,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     protected javax.swing.JPasswordField passwordField;
     protected javax.swing.JLabel passwordLabel;
     protected javax.swing.JCheckBox preserveSessions;
-    protected javax.swing.JCheckBox showPassword;
+    protected javax.swing.JToggleButton showPassword;
     protected javax.swing.JCheckBox startDerby;
     protected javax.swing.JTextField targetField;
     protected javax.swing.JLabel targetLabel;

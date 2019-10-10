@@ -55,6 +55,9 @@ public class CommandRedeploy extends CommandTargetName {
     /** Keep state. */
     final boolean keepState;
 
+    /** Hot Deploy. */
+    final boolean hotDeploy;
+
     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
     ////////////////////////////////////////////////////////////////////////////
@@ -69,15 +72,18 @@ public class CommandRedeploy extends CommandTargetName {
      * @param properties  Deployment properties.
      * @param libraries   Deployment libraries.
      * @param keepState   Keep state.
+     * @param hotDeploy   Hot Deploy.
      */
     public CommandRedeploy(final String name, final String target,
             final String contextRoot, final Map<String,String> properties,
-            final File[] libraries, final boolean keepState) {
+            final File[] libraries, final boolean keepState,
+            final boolean hotDeploy) {
         super(COMMAND, name, target);
         this.contextRoot = contextRoot;
         this.properties = properties;
         this.libraries = libraries;
         this.keepState = keepState;
+        this.hotDeploy = hotDeploy;
     }
 
 }

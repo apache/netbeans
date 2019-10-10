@@ -14,12 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.source=1.7
-javac.compilerargs=-Xlint -Xlint:-serial
-is.autoload=true
-
-release.external/nb-javac-13-impl.jar=modules/ext/nb-javac-13-impl.jar
-release.external/nb-javac-13-impl.jar.external=modules/ext/nb-javac-13-impl.jar.external
-
-license.file.override=${nb_all}/nbbuild/licenses/GPL-2-CP
+E6F49BAA176938C82F4EBAA148F8A8AB13556233 nb-javac-13-api.jar

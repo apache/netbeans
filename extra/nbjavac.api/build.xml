@@ -22,11 +22,4 @@
 <project basedir="." default="netbeans" name="extra/nbjavac.api">
     <description>Builds, tests, and runs the project org.netbeans.modules.nbjavac.api</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="netbeans" if="do.run.build">
-        <antcall target="projectized.netbeans" inheritAll="true" inheritRefs="true" />
-    </target>
-    <target name="nbm">
-        <property name="do.run.build" value="true" />
-        <antcall target="projectized.nbm" inheritAll="true" inheritRefs="true" />
-    </target>
 </project>

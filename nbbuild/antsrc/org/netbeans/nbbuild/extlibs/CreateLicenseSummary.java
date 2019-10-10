@@ -588,6 +588,9 @@ public class CreateLicenseSummary extends Task {
                 Entry<Map<String, String>,Long> headersAndCRC = getHeaders(crc2LicenseHeaders, () -> new FileInputStream(f));
                 if (headersAndCRC != null) {
                     String path = prefix + n;
+                    if (excludeFiles != null && matchModule(getProject(), excludeFiles, path)) {
+                        continue;
+                    }
                     binaries2LicenseHeaders.put(path, headersAndCRC.getKey());
                     String otherPath = crc2Binary.put(headersAndCRC.getValue(), path);
                     if (otherPath != null) {

@@ -429,7 +429,7 @@ public class JavaKit extends NbEditorKit {
             int dotPos = context.getCaretOffset();
             Document doc = context.getDocument();
             
-            if (TypingCompletion.posWithinString(doc, dotPos)) {
+            if (TypingCompletion.posWithinString(doc, dotPos) && !TypingCompletion.posWithinTextBlock(doc,dotPos)) {
                 if (CodeStyle.getDefault(doc).wrapAfterBinaryOps()) {
                     context.setText("\" +\n \"", 3, 6); // NOI18N
                 } else {

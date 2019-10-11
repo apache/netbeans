@@ -153,7 +153,6 @@ platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorT
 ######  external dependencies licences and notices 
 **/external/*-license.txt
 **/external/*-notice.txt
-**/external/*.jar.external
 
 ###### generated
 ### signatures for past versions 

@@ -89,3 +89,7 @@ webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.e
 webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip are identical</failure>
+
+# these jars are on two places, but neither is part of the end product:
+extra/nbjavac.api/external/nb-javac-13-api.jar java/libs.javacapi/external/nb-javac-13-api.jar
+extra/nbjavac.impl/external/nb-javac-13-impl.jar java/libs.javacimpl/external/nb-javac-13-impl.jar

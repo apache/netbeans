@@ -125,7 +125,10 @@ public class DynamicVerifyTest extends NbTestCase {
         moduleNames.removeAll(Arrays.asList(
             "org.netbeans.libs.javafx.linux",
             "org.netbeans.libs.javafx.macosx",
-            "org.netbeans.libs.javafx.win"));
+            "org.netbeans.libs.javafx.win",
+            "org.netbeans.modules.nbjavac",
+            "org.netbeans.modules.nbjavac.api",
+            "org.netbeans.modules.nbjavac.impl"));
 
         System.out.println(featureItem.getModuleCodeNames());
         assertTrue(

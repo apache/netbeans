@@ -303,6 +303,5 @@ public class ConnectDisconnectTest extends NbTestCase {
                 ((DelegatingVCS) vs).getDelegate();
             }
         }
-//        return null;
     }
 }

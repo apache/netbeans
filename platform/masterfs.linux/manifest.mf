@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.masterfs.linux
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/masterfs/watcher/linux/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.18
+OpenIDE-Module-Specification-Version: 1.19
 OpenIDE-Module-Requires: org.openide.modules.os.Linux
 OpenIDE-Module-Provides: org.netbeans.modules.masterfs.providers.Notifier
 

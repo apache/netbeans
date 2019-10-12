@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.ModelUtils;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.customizer.support.SelectedItemsTable;
 import org.netbeans.modules.maven.api.customizer.support.SelectedItemsTable.SelectedItemsTableModel;
@@ -125,8 +124,8 @@ public class PublicPackagesPanel extends javax.swing.JPanel implements SelectedI
             pkgMap.put(pkgName, Boolean.FALSE);
         }
 
-        String[] publicPkgs = PluginPropertyUtils.getPluginPropertyList(project,
-                MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, PUBLIC_PACKAGES, PUBLIC_PACKAGE,
+        String[] publicPkgs = PluginBackwardPropertyUtils.getPluginPropertyList(project,
+                PUBLIC_PACKAGES, PUBLIC_PACKAGE,
                 "manifest"); //NOI18N
 
         if (publicPkgs != null) {
@@ -174,7 +173,7 @@ public class PublicPackagesPanel extends javax.swing.JPanel implements SelectedI
 
         Plugin nbmPlugin = null;
         if (build != null) {
-            nbmPlugin = build.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+            nbmPlugin = PluginBackwardPropertyUtils.findPluginFromBuild(build);
         } else {
             build = pomModel.getFactory().createBuild();
             pomModel.getProject().setBuild(build);
@@ -184,7 +183,7 @@ public class PublicPackagesPanel extends javax.swing.JPanel implements SelectedI
             config = nbmPlugin.getConfiguration();
         } else {
             nbmPlugin = pomModel.getFactory().createPlugin();
-            nbmPlugin.setGroupId(MavenNbModuleImpl.GROUPID_MOJO);
+            nbmPlugin.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
             nbmPlugin.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
             nbmPlugin.setExtensions(Boolean.TRUE);
             build.addPlugin(nbmPlugin);

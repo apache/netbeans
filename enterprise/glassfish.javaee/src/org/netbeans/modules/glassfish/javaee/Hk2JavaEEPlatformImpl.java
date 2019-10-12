@@ -190,6 +190,10 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                                break;
                 case v1_7:     profiles[index++] = Profile.JAVA_EE_7_FULL;
                                break;
+                case v1_8_web: profiles[index++] = Profile.JAVA_EE_8_WEB;
+                               break;
+                case v1_8:     profiles[index++] = Profile.JAVA_EE_8_FULL;
+                               break;
             }
         } else {
             profiles = new Profile[0];
@@ -382,6 +386,9 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
 
     /** Application client container configuration file for GlassFish v4. */
     private static final String GFv4_ACC_XML = "glassfish-acc.xml";
+
+    /** Application client container configuration file for GlassFish v5. */
+    private static final String GFv5_ACC_XML = "glassfish-acc.xml";
 
     /**
      * 

@@ -187,7 +187,7 @@ public final class LocalNativeProcess extends AbstractNativeProcess {
                 f.setAccessible(true);
                 long phandle = f.getLong(process);
 
-                Win32APISupport kernel = Win32APISupport.instance;
+                Win32APISupport kernel = Win32APISupport.INSTANCE;
                 Win32APISupport.HANDLE handle = new Win32APISupport.HANDLE();
                 handle.setPointer(Pointer.createConstant(phandle));
                 newPid = kernel.GetProcessId(handle);

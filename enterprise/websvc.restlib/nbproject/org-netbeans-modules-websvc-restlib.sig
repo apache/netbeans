@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.12.1
+#Version 2.13
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)

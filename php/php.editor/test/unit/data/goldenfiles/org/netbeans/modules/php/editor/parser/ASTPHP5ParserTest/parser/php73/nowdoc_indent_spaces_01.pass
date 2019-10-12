@@ -53,6 +53,8 @@
                 </Interfaces>
                 <Block start='825' end='895' isCurly='true'>
                     <FieldsDeclaration start='831' end='893' modifier='public'>
+                        <FieldType>
+                        </FieldType>
                         <VariableNames>
                             <Variable start='838' end='843' isDollared='true'>
                                 <Identifier start='839' end='843' name='test'/>

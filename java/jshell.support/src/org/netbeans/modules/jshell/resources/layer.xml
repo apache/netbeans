@@ -94,9 +94,6 @@
                             <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                             <attr name="position" intvalue="20000"/>
                         </file>
-                        <file name="jshell-reset">
-                            <attr name="position" intvalue="20002"/>
-                        </file>
                         <file name="jshell-stop">
                             <attr name="position" intvalue="20005"/>
                         </file>

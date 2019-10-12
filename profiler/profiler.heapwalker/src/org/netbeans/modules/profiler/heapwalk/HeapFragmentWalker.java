@@ -123,7 +123,7 @@ public class HeapFragmentWalker {
     }
 
     public final void addStateListener(StateListener listener) {
-        if (stateListeners == null) stateListeners = new ArrayList();
+        if (stateListeners == null) stateListeners = new ArrayList<StateListener>();
         if (!stateListeners.contains(listener)) stateListeners.add(listener);
     }
 

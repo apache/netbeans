@@ -203,7 +203,7 @@ public final class RecognizeInstanceFiles extends NamedServicesProvider {
             IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         T r = null;
         for (CustomInstanceFactory fif : getInstanceFactories()) {
-            r = (T)fif.createInstance(type);
+            r = fif.createInstance(type);
             if (r != null) {
                 break;
             }

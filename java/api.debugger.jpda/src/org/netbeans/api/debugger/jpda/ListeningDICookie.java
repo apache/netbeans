@@ -36,17 +36,8 @@ import java.util.Map;
  *
  * <br><br>
  * <b>How to use it:</b>
- * <pre style="background-color: rgb(255, 255, 153);">
- *    DebuggerInfo di = DebuggerInfo.create (
- *        "My First Listening Debugger Info",
- *        new Object [] {
- *            ListeningDICookie.create (
- *                1234
- *            )
- *        }
- *    );
- *    DebuggerManager.getDebuggerManager ().startDebugging (di);</pre>
- *
+ * {@codesnippet org.netbeans.api.debugger.jpda.StartListeningTest}
+ * 
  * @author Jan Jancura
  */
 public final class ListeningDICookie extends AbstractDICookie {
@@ -86,9 +77,13 @@ public final class ListeningDICookie extends AbstractDICookie {
     }
 
     /**
-     * Creates a new instance of ListeningDICookie for given parameters.
+     * Creates a new instance of ListeningDICookie for given parameters. Example
+     * showing how to tell the IDE to start listening on a random port:
+     * 
+     * {@codesnippet org.netbeans.api.debugger.jpda.StartListeningTest}
      *
-     * @param portNumber a number of port to listen on
+     * @param portNumber a number of port to listen on, use {@code -1} to
+     *    let the system select a random port since 3.12
      * @return a new instance of ListeningDICookie for given parameters
      */
     public static ListeningDICookie create (
@@ -137,7 +132,7 @@ public final class ListeningDICookie extends AbstractDICookie {
         int portNumber
     ) {
         Map<String, ? extends Argument> args = listeningConnector.defaultArguments ();
-        args.get ("port").setValue ("" + portNumber);
+        args.get ("port").setValue (portNumber > 0 ? "" + portNumber : "");
         return args;
     }
 

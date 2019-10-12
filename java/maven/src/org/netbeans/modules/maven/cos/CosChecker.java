@@ -41,6 +41,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
@@ -77,9 +78,6 @@ import org.openide.util.Utilities;
 public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesChecker {
 
     static final String NB_COS = ".netbeans_automatic_build"; //NOI18N
-    static final String RUN_MAIN = ActionProvider.COMMAND_RUN_SINGLE + ".main"; //NOI18N
-    static final String DEBUG_MAIN = ActionProvider.COMMAND_DEBUG_SINGLE + ".main"; //NOI18N
-    static final String PROFILE_MAIN = ActionProvider.COMMAND_PROFILE_SINGLE + ".main"; // NOI18N
     private static final Logger LOG = Logger.getLogger(CosChecker.class.getName());
     static final RequestProcessor RP = new RequestProcessor(CosChecker.class);
     // a maven property name denoting that the old, javarunner based execution is to be used.    
@@ -160,9 +158,9 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
             if (ActionProvider.COMMAND_RUN.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG.equals(actionName) ||
                 ActionProvider.COMMAND_PROFILE.equals(actionName) ||
-                RUN_MAIN.equals(actionName) ||
-                DEBUG_MAIN.equals(actionName) ||
-                PROFILE_MAIN.equals(actionName)) 
+                ActionProviderImpl.COMMAND_RUN_MAIN.equals(actionName) ||
+                ActionProviderImpl.COMMAND_DEBUG_MAIN.equals(actionName) ||
+                ActionProviderImpl.COMMAND_PROFILE_MAIN.equals(actionName))
             {
                 long stamp = getLastCoSLastTouch(config, false);
                 //check the COS timestamp against critical files (pom.xml)

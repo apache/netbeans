@@ -181,15 +181,15 @@ public class SourceGroupSupport {
         return testGroups;
     }
 
-    private static List/*<SourceGroup>*/ getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
+    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
             return new ArrayList();
         }
-        List result = new ArrayList();
-        List sourceRoots = getFileObjects(rootURLs, true);
+        List<SourceGroup> result = new ArrayList<SourceGroup>();
+        List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
-            FileObject sourceRoot = (FileObject) sourceRoots.get(i);
+            FileObject sourceRoot = sourceRoots.get(i);
             SourceGroup srcGroup = (SourceGroup) foldersToSourceGroupsMap.get(sourceRoot);
             if (srcGroup != null) {
                 result.add(srcGroup);

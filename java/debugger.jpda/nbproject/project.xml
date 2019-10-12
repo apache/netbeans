@@ -168,6 +168,12 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.api.debugger.jpda</code-name-base>
+                        <recursive/>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.debugger.jpda.projects</code-name-base>
                         <recursive/>
                     </test-dependency>

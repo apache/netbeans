@@ -55,6 +55,11 @@ public class RestServicesNodeFactory implements NodeFactory {
         return new RestServicesNodeFactory();
     }
 
+    @NodeFactory.Registration(projectType="org-netbeans-modules-gradle",position=90)
+    public static RestServicesNodeFactory gradleproject() {
+        return new RestServicesNodeFactory();
+    }
+
     /** Creates a new instance of WebServicesNodeFactory */
     public RestServicesNodeFactory() {
     }

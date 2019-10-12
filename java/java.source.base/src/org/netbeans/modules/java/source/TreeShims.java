@@ -38,6 +38,7 @@ import org.openide.util.Exceptions;
 public class TreeShims {
 
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
+    public static final String YIELD = "YIELD"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -137,6 +138,21 @@ public class TreeShims {
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static ExpressionTree getYieldValue(Tree node) {
+        if (!node.getKind().toString().equals(YIELD)) {
+            return null;
+        }
+        try {
+            Class yieldTreeClass = Class.forName("com.sun.source.tree.YieldTree"); //NOI18N
+            Method getExpression = yieldTreeClass.getDeclaredMethod("getValue");  //NOI18N
+            return (ExpressionTree) getExpression.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
     }

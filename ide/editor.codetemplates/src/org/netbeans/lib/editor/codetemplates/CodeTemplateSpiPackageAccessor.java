@@ -37,7 +37,7 @@ public abstract class CodeTemplateSpiPackageAccessor {
     public static CodeTemplateSpiPackageAccessor get() {
         if (INSTANCE == null) {
             try {
-                Class clazz = Class.forName(CodeTemplateInsertRequest.class.getName());
+                Class<?> clazz = Class.forName(CodeTemplateInsertRequest.class.getName());
             } catch (ClassNotFoundException e) {
                 // ignore
             }

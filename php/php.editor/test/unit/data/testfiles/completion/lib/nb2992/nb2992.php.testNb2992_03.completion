@@ -1,0 +1,4 @@
+Code completion result for source line:
+$func2 = fn() => $this->test->test|Method(); //test3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testMethod()                    [PUBLIC]   Test

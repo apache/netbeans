@@ -139,7 +139,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
             if (null != rootOfWebApp) {
                 String fileName = null;
                 String SUNWEB = "WEB-INF/sun-web.xml";  // NOI18N
-                if (url.contains("gfv3ee6wc")) { // NOI18N
+                if (url.contains("gfv3ee6wc") || url.contains("gfv4") || url.contains("gfv5")) { // NOI18N
                     String GFWEB = "WEB-INF/glassfish-web.xml"; // NOI18N
                     if (null == rootOfWebApp.getFileObject(GFWEB) && 
                             null == rootOfWebApp.getFileObject(SUNWEB)) {

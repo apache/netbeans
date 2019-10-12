@@ -530,7 +530,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class clazz = null;
+        Class<?> clazz = null;
         String method = null;
 
         try {
@@ -587,7 +587,7 @@ public class ComputeOverriders {
             return null;
         }
 
-        Class clazz = null;
+        Class<?> clazz = null;
         String method = null;
 
         try {

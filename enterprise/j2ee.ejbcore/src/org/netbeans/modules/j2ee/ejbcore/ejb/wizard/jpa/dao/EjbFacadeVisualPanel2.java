@@ -71,7 +71,8 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
         J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
         if (projectCap.isEjb31LiteSupported()){
             boolean serverSupportsEJB31 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
-                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL);
+                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
+                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL);
             if (!projectCap.isEjb31Supported() && !serverSupportsEJB31){
                 remoteCheckBox.setVisible(false);
                 remoteCheckBox.setEnabled(false);

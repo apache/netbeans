@@ -53,7 +53,7 @@ public class OpenAction extends CookieAction {
 
     protected void performAction(final Node[] activatedNodes) {
         for (int i = 0; i < activatedNodes.length; i++) {
-            OpenCookie oc = (OpenCookie) activatedNodes[i].getCookie(OpenCookie.class);
+            OpenCookie oc = activatedNodes[i].getCookie(OpenCookie.class);
 
             if (oc != null) {
                 oc.open();

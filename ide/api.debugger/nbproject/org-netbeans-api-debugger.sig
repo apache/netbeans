@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58.1
+#Version 1.60
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -213,9 +213,9 @@ supr java.lang.Object
 
 CLSS public final org.netbeans.api.debugger.DebuggerInfo
 intf org.netbeans.spi.debugger.ContextProvider
+meth public !varargs static org.netbeans.api.debugger.DebuggerInfo create(java.lang.String,java.lang.Object[])
 meth public <%0 extends java.lang.Object> java.util.List<? extends {%%0}> lookup(java.lang.String,java.lang.Class<{%%0}>)
 meth public <%0 extends java.lang.Object> {%%0} lookupFirst(java.lang.String,java.lang.Class<{%%0}>)
-meth public static org.netbeans.api.debugger.DebuggerInfo create(java.lang.String,java.lang.Object[])
 supr java.lang.Object
 hfds lookup
 

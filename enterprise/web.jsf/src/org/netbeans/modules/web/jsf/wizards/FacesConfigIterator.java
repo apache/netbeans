@@ -189,7 +189,9 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
             J2eePlatform j2eePlatform = ProjectUtil.getPlatform(project);
             if (j2eePlatform != null) {
                 Set<Profile> serverProfiles = j2eePlatform.getSupportedProfiles();
-                if (serverProfiles.contains(Profile.JAVA_EE_7_WEB) || serverProfiles.contains(Profile.JAVA_EE_7_FULL)) {
+                if (serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
+                    return JSFCatalog.RES_FACES_CONFIG_2_3;
+                } else if (serverProfiles.contains(Profile.JAVA_EE_7_WEB) || serverProfiles.contains(Profile.JAVA_EE_7_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_2;
                 } else if (serverProfiles.contains(Profile.JAVA_EE_5) || serverProfiles.contains(Profile.JAVA_EE_6_WEB) || serverProfiles.contains(Profile.JAVA_EE_6_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_1;
@@ -203,7 +205,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                         cpUrls.add(entry.getURL());
                     }
                     jsfVersion = JSFVersion.forClasspath(cpUrls);
-                    jsfVersion = jsfVersion == null ? JSFVersion.JSF_2_2 : jsfVersion;
+                    jsfVersion = jsfVersion == null ? JSFVersion.JSF_2_3 : jsfVersion;
                     return facesConfigForVersion(jsfVersion);
                 }
             }
@@ -214,6 +216,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JSFVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_2_3:
+                return JSFCatalog.RES_FACES_CONFIG_2_3;
             case JSF_2_2:
                 return JSFCatalog.RES_FACES_CONFIG_2_2;
             case JSF_2_1:

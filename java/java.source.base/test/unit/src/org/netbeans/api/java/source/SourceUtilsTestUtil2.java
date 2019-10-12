@@ -22,6 +22,7 @@ import com.sun.source.tree.Tree;
 import org.apache.lucene.store.FSDirectory;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParser.TreeLoaderRegistry;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.java.source.transform.Transformer;
 import org.netbeans.modules.parsing.lucene.LuceneIndex;
 import org.netbeans.modules.parsing.lucene.support.IndexManagerTestUtilities;
@@ -67,6 +68,7 @@ public final class SourceUtilsTestUtil2 {
         } catch (Exception ex) {
             //ignore
         }
+        ParameterNameProviderImpl.DISABLE_ARTIFICAL_PARAMETER_NAMES = true;
     }
 
     public static void disableConfinementTest() {

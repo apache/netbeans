@@ -138,6 +138,9 @@ public class ProxyAutoConfig {
                 }
             }
         }
+        if (evaluator == null) {
+            return Collections.singletonList(Proxy.NO_PROXY);
+        }
         try {
             return evaluator.findProxyForURL(u);
         } catch (PacValidationException ex) {

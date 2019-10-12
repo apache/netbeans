@@ -22,18 +22,26 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.spi.editor.typinghooks.DeletedTextInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedBreakInterceptor;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.modules.SpecificationVersion;
 
 /**
  * This static class groups the whole aspect of bracket completion. It is
@@ -67,7 +75,8 @@ class TypingCompletion {
         char removedChar = context.getText().charAt(0);
         int caretOffset = context.isBackwardDelete() ? context.getOffset() - 1 : context.getOffset();
         if (removedChar == '\"') {
-            if (ts.token().id() == JavaTokenId.STRING_LITERAL && ts.offset() == caretOffset) {
+            if ((ts.token().id() == JavaTokenId.STRING_LITERAL && ts.offset() == caretOffset) ||
+                (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && ts.offset() <= caretOffset - 2)) {
                 context.getDocument().remove(caretOffset, 1);
             }
         } else if (removedChar == '\'') {
@@ -136,11 +145,10 @@ class TypingCompletion {
             return;
         }
         
-        
         char chr = context.getDocument().getText(context.getOffset(), 1).charAt(0);
         if (chr == ')' || chr == ',' || chr == '\"' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
             char insChr = context.getText().charAt(0);
-            context.setText("" + insChr + matching(insChr) , 1);  // NOI18N
+            context.setText("" + insChr + matching(insChr), 1);  // NOI18N
         }
     }
 
@@ -202,7 +210,6 @@ class TypingCompletion {
         TokenSequence<JavaTokenId> javaTS = javaTokenSequence(context, true);
         JavaTokenId id = (javaTS != null) ? javaTS.token().id() : null;
 
-
         // If caret within comment return false
         boolean caretInsideToken = (id != null)
                 && (javaTS.offset() + javaTS.token().length() > context.getOffset()
@@ -214,7 +221,8 @@ class TypingCompletion {
         boolean completablePosition = isQuoteCompletablePosition(context);
         boolean insideString = caretInsideToken
                 && (id == JavaTokenId.STRING_LITERAL
-                || id == JavaTokenId.CHAR_LITERAL);
+                || id == JavaTokenId.CHAR_LITERAL
+                || id == JavaTokenId.MULTILINE_STRING_LITERAL);
 
         int lastNonWhite = org.netbeans.editor.Utilities.getRowLastNonWhite((BaseDocument) context.getDocument(), context.getOffset());
         // eol - true if the caret is at the end of line (ignoring whitespaces)
@@ -231,7 +239,7 @@ class TypingCompletion {
                         javaTS.move(context.getOffset() - 1);
                         if (javaTS.moveNext()) {
                             id = javaTS.token().id();
-                            if (id == JavaTokenId.STRING_LITERAL || id == JavaTokenId.CHAR_LITERAL) {
+                            if (id == JavaTokenId.STRING_LITERAL || id == JavaTokenId.CHAR_LITERAL || id == JavaTokenId.MULTILINE_STRING_LITERAL) {
                                 context.setText("", 0); // NOI18N
                                 return context.getOffset() + 1;
                             }
@@ -242,7 +250,25 @@ class TypingCompletion {
         }
 
         if ((completablePosition && !insideString) || eol) {
-            context.setText(context.getText() + context.getText(), 1);
+            if (context.getText().equals("\"") && context.getOffset() >= 2 &&
+                    context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"") &&
+                    isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
+                context.setText("\"\n\"\"\"", 2, true);  // NOI18N
+            } else {
+                context.setText(context.getText() + context.getText(), 1);
+            }
+        } else if (context.getText().equals("\"") &&
+                isTextBlockSupported(getFileObject((BaseDocument) context.getDocument()))) {
+            if ((javaTS != null) && javaTS.moveNext()) {
+                id = javaTS.token().id();
+                if ((id == JavaTokenId.STRING_LITERAL) && (javaTS.token().text().toString().equals("\"\""))) {
+                    if (context.getDocument().getText(context.getOffset(), 2).equals("\"\"")) {
+                        context.setText("\"\"\"\n\"", 4, true);
+                    }
+                }
+                javaTS.movePrevious();
+                id = javaTS.token().id();
+            }
         }
         return -1;
     }
@@ -283,6 +309,20 @@ class TypingCompletion {
         return context.getDocument().getText(context.getOffset() - 1, 1).charAt(0) == '\\';
     }
     
+    private static boolean isTextBlockSupported(
+            @NullAllowed FileObject fileObject) {
+        SpecificationVersion supportedVer = new SpecificationVersion("13"); //NOI18N
+
+        if (fileObject != null) {
+            SpecificationVersion sourceVer = new SpecificationVersion(SourceLevelQuery.getSourceLevel(fileObject));
+            if (sourceVer.compareTo(supportedVer) < 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Resolve whether pairing right curly should be added automatically
      * at the caret position or not.
@@ -812,8 +852,12 @@ class TypingCompletion {
         }
         return null;
     }
-    
-    private static Set<JavaTokenId> STRING_AND_COMMENT_TOKENS = EnumSet.of(JavaTokenId.STRING_LITERAL, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT, JavaTokenId.BLOCK_COMMENT, JavaTokenId.CHAR_LITERAL);
+
+    private static FileObject getFileObject(BaseDocument doc) {
+        return doc != null ? NbEditorUtilities.getFileObject(doc) : null;
+    }
+
+    private static Set<JavaTokenId> STRING_AND_COMMENT_TOKENS = EnumSet.of(JavaTokenId.STRING_LITERAL, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT, JavaTokenId.BLOCK_COMMENT, JavaTokenId.CHAR_LITERAL, JavaTokenId.MULTILINE_STRING_LITERAL);
 
     private static boolean isStringOrComment(JavaTokenId javaTokenId) {
         return STRING_AND_COMMENT_TOKENS.contains(javaTokenId);

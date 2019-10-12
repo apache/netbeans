@@ -91,7 +91,7 @@ public class TransformPerformer {
     private void saveBeforeTransformation  (DataObject dObject){
         if (dObject.isModified()){
             SaveCookie save;
-            save = (SaveCookie)dObject.getCookie(SaveCookie.class);
+            save = dObject.getCookie(SaveCookie.class);
             if (save != null) {
                 try {
                     save.save();
@@ -116,9 +116,9 @@ public class TransformPerformer {
                 // automatically detect if one of selected nodes is transformation
                 // in such case suppose that user want to it to transform second file
                 
-                DataObject do1 = (DataObject) nodes[0].getCookie(DataObject.class);
+                DataObject do1 = nodes[0].getCookie(DataObject.class);
                 boolean xslt1 = TransformUtil.isXSLTransformation(do1);
-                DataObject do2 = (DataObject) nodes[1].getCookie(DataObject.class);
+                DataObject do2 = nodes[1].getCookie(DataObject.class);
                 boolean xslt2 = TransformUtil.isXSLTransformation(do2);
                 
                 // fix for issue #61608
@@ -136,29 +136,29 @@ public class TransformPerformer {
                     DataObject xmlDO;
                     DataObject xslDO;
                     if ( xslt1 ) {
-                        transformable = (TransformableCookie) nodes[1].getCookie(TransformableCookie.class);
+                        transformable = nodes[1].getCookie(TransformableCookie.class);
                         xmlDO = do2;
                         xslDO = do1;
                     } else {
-                        transformable = (TransformableCookie) nodes[0].getCookie(TransformableCookie.class);
+                        transformable = nodes[0].getCookie(TransformableCookie.class);
                         xmlDO = do1;
                         xslDO = do2;
                     }
                     DoublePerformer performer = new DoublePerformer(transformable, xmlDO, xslDO);
                     performer.perform();
                 } else {
-                    TransformableCookie transformable1 = (TransformableCookie) nodes[0].getCookie(TransformableCookie.class);
+                    TransformableCookie transformable1 = nodes[0].getCookie(TransformableCookie.class);
                     SinglePerformer performer = new SinglePerformer(transformable1, do1, xslt1);
                     performer.setLastInBatch(false);
                     performer.perform();
                     
-                    TransformableCookie transformable2 = (TransformableCookie) nodes[1].getCookie(TransformableCookie.class);
+                    TransformableCookie transformable2 = nodes[1].getCookie(TransformableCookie.class);
                     performer = new SinglePerformer(transformable2, do2, xslt2);
                     performer.perform();
                 }
             } else { // nodes.length != 2
                 for ( int i = 0; i < nodes.length; i++ ) {
-                    DataObject dataObject = (DataObject) nodes[i].getCookie(DataObject.class);
+                    DataObject dataObject = nodes[i].getCookie(DataObject.class);
                     // fix for issue #61608
                     saveBeforeTransformation(dataObject);
                     TransformableCookie transformable = null;
@@ -535,7 +535,7 @@ public class TransformPerformer {
             File file = FileUtil.toFile(fileObject);
             
             if ( file != null ) {
-                fileURL = file.toURL();
+                fileURL = file.toURI().toURL();
             } else {
                 fileURL = fileObject.getURL();
             }

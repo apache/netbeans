@@ -18,7 +18,11 @@
  */
 package org.netbeans.modules.javascript2.jsdoc;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import org.netbeans.modules.javascript2.editor.*;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -29,7 +33,25 @@ public class JsDocCodeCompletionTest extends JsCodeCompletionBase {
     public JsDocCodeCompletionTest(String testName) {
         super(testName);
     }
-  
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Files.copy(
+            new File(getDataDir(), "../../../testfiles/jsdoc-testfiles/classWithJsDoc.js").toPath(),
+            new File(getDataDir(), "testfiles/jsdoc/classWithJsDoc.js").toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @Override
+    protected File getDataFile(String relFilePath) {
+        // CslTestBase loads test file and reference file from different locations
+        // this breaks our assumption, that we can prepare the JS on-the-fly in the
+        // build directory. This redirects the resolution of the reference files
+        // to the build directory (they are also copied on test begin)
+        return FileUtil.toFile(getTestFile(relFilePath));
+    }
+
     public void testAllCompletion() throws Exception {
         checkCompletion("testfiles/jsdoc/classWithJsDoc.js", " * @^param {int} One The first number to add", false);
     }

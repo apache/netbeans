@@ -1,0 +1,4 @@
+funct^ion(?array $z, int $x) use ($y): ?int {
+--------------------------------------------
+HINT:You can use arrow function
+FIX:Use Arrow Function

@@ -35,6 +35,7 @@ import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
+import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ServerInstance;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ServerManager;
 import org.netbeans.modules.javaee.project.api.ui.UserProjectSettings;
@@ -154,15 +155,19 @@ public class ServerSelectionHelper {
         // If <No Server> option was selected, show all supported profiles except Java EE 7 profiles
         if (ExecutionChecker.DEV_NULL.equals(serverInstance)) {
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.add(Profile.JAVA_EE_8_WEB);
                 profiles.add(Profile.JAVA_EE_7_WEB);
                 profiles.add(Profile.JAVA_EE_6_WEB);
             } else {
+                profiles.add(Profile.JAVA_EE_8_FULL);
                 profiles.add(Profile.JAVA_EE_7_FULL);
                 profiles.add(Profile.JAVA_EE_6_FULL);
             }
             profiles.add(Profile.JAVA_EE_5);
         } else {
             try {
+                J2eePlatform pfm = findServerInstance(serverInstance).getJ2eePlatform();
+                Set<Profile> supported = pfm.getSupportedProfiles(projectType);
                 profiles.addAll(findServerInstance(serverInstance).getJ2eePlatform().getSupportedProfiles(projectType));
             } catch (InstanceRemovedException ex) {
                 // If selected instance was removed during the process we can easily refresh Server model list and update versions again
@@ -179,9 +184,11 @@ public class ServerSelectionHelper {
 
             // We want to have Java EE 6 Full profile for all project types except Web project
             if (J2eeModule.Type.WAR.equals(projectType)) {
+                profiles.remove(Profile.JAVA_EE_8_FULL);
                 profiles.remove(Profile.JAVA_EE_7_FULL);
                 profiles.remove(Profile.JAVA_EE_6_FULL);
             } else {
+                profiles.remove(Profile.JAVA_EE_8_WEB);
                 profiles.remove(Profile.JAVA_EE_7_WEB);
                 profiles.remove(Profile.JAVA_EE_6_WEB);
             }

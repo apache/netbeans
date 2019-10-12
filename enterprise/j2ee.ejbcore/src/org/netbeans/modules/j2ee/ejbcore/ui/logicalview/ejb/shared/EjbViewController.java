@@ -108,7 +108,9 @@ public final class EjbViewController {
                              Profile.JAVA_EE_6_FULL.equals(profile) ||
                              Profile.JAVA_EE_6_WEB.equals(profile) ||
                              Profile.JAVA_EE_7_FULL.equals(profile) ||
-                             Profile.JAVA_EE_7_WEB.equals(profile);
+                             Profile.JAVA_EE_7_WEB.equals(profile) ||
+                             Profile.JAVA_EE_8_FULL.equals(profile) ||
+                             Profile.JAVA_EE_8_WEB.equals(profile);
 
         if (!isEE5orEE6or7) {
             ejbModule.getMetadataModel().runReadAction(new MetadataModelAction<EjbJarMetadata, Void>() {

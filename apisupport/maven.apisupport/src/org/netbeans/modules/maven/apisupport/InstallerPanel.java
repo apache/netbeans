@@ -32,7 +32,6 @@ import org.netbeans.api.queries.CollocationQuery;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.customizer.support.CheckBoxUpdater;
 import org.netbeans.modules.maven.api.customizer.support.TextComponentUpdater;
@@ -234,10 +233,10 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
             build = pomModel.getFactory().createBuild();
             pomModel.getProject().setBuild(build);
         }
-        Plugin nbmPlugin = build.findPluginById(MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+        Plugin nbmPlugin = PluginBackwardPropertyUtils.findPluginFromBuild(build);
         if (nbmPlugin == null) {
             nbmPlugin = pomModel.getFactory().createPlugin();
-            nbmPlugin.setGroupId(MavenNbModuleImpl.GROUPID_MOJO);
+            nbmPlugin.setGroupId(MavenNbModuleImpl.GROUPID_APACHE);
             nbmPlugin.setArtifactId(MavenNbModuleImpl.NBM_PLUGIN);
             nbmPlugin.setExtensions(Boolean.TRUE);
             build.addPlugin(nbmPlugin);
@@ -266,7 +265,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
             super(comp);
             this.property = property;
             this.dflt = dflt;
-            pomValue = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, property, GOAL, null);
+            pomValue = PluginBackwardPropertyUtils.getPluginProperty(project, property, GOAL, null);
         }
 
         @org.netbeans.api.annotations.common.SuppressWarnings("NP_BOOLEAN_RETURN_NULL")
@@ -320,7 +319,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
         StringPropUpdater(String property, JTextComponent comp, JLabel label) {
             super(comp, label);
             this.property = property;
-            pomValue = PluginPropertyUtils.getPluginProperty(project, MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN, property, GOAL, null);
+            pomValue = PluginBackwardPropertyUtils.getPluginProperty(project, property, GOAL, null);
         }
 
         @Override public String getValue() {
@@ -373,7 +372,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
             Project project = context.lookup(Project.class);
             NbMavenProject watcher = project.getLookup().lookup(NbMavenProject.class);
             if (watcher != null && NbMavenProject.TYPE_NBM_APPLICATION.equalsIgnoreCase(watcher.getPackagingType())) {
-                String version = PluginPropertyUtils.getPluginVersion(watcher.getMavenProject(), MavenNbModuleImpl.GROUPID_MOJO, MavenNbModuleImpl.NBM_PLUGIN);
+                String version = PluginBackwardPropertyUtils.getPluginVersion(watcher.getMavenProject());
                 if (version != null && new ComparableVersion(version).compareTo(new ComparableVersion("3.7-SNAPSHOT")) >= 0) {
                     return ProjectCustomizer.Category.create("Installer", LBL_InstallerPanel(), null);
                 }

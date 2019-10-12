@@ -208,7 +208,7 @@ public class Wsdl2Java {
     
     private boolean createJaxRpcProxyJars(Properties properties) {
         try {
-            String wsdlUrlName = new File(webServiceData.getURL()).toURI().toURL().toString();
+            String wsdlUrlName = new File(webServiceData.getWsdlFile()).toURI().toURL().toString();
             createJaxrpcConfigFile(wsdlUrlName, properties);
             
             ExecutorTask executorTask = ActionUtils.runTarget(FileUtil.toFileObject(getAntScript()),

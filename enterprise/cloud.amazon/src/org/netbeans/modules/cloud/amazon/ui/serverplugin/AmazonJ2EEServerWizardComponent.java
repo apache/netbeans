@@ -50,6 +50,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
     private Map<String, List<String>> templates;
     
     private static final String SUFFIX = "-dev-env";
+    private final String CONTAINER_FILER = "Tomcat"; // NOI18N
     
     /** Creates new form AmazonJ2EEServerWizardComponent */
     public AmazonJ2EEServerWizardComponent(AmazonJ2EEServerWizardPanel wizardPanel, String suggestedName, AmazonJ2EEInstance aji) {
@@ -440,6 +441,7 @@ public class AmazonJ2EEServerWizardComponent extends javax.swing.JPanel implemen
             @Override
             public Void call() {
                 final List<String> containers = ai.readContainerTypes();
+                containers.removeIf(c -> !c.contains(CONTAINER_FILER));
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {

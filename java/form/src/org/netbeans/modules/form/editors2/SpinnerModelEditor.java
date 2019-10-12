@@ -291,7 +291,7 @@ public class SpinnerModelEditor extends PropertyEditorSupport
      */
     private void updateNumberUI(FormSpinnerModel model) {
         SpinnerNumberModel numberModel = (SpinnerNumberModel)model.getModel();
-        Class clazz = model.getInitialValue().getClass();
+        Class<?> clazz = model.getInitialValue().getClass();
         int typeIndex = 0;
         if (clazz == Byte.class) {
             typeIndex = 0;
@@ -469,7 +469,7 @@ public class SpinnerModelEditor extends PropertyEditorSupport
      * @return selected number type.
      */
     private Class selectedNumberType() {
-        Class clazz = null;
+        Class<?> clazz = null;
         switch (numberTypeCombo.getSelectedIndex()) {
             case 0: clazz = Byte.class; break;
             case 1: clazz = Double.class; break;
@@ -1476,7 +1476,7 @@ public class SpinnerModelEditor extends PropertyEditorSupport
         Object minimum = numberModel.getMinimum();
         Object maximum = numberModel.getMaximum();
         Object stepSize = numberModel.getStepSize();
-        Class clazz = initial.getClass();
+        Class<?> clazz = initial.getClass();
         if (clazz == Integer.class
                 && Integer.valueOf(0).equals(initial)
                 && (minimum == null) && (maximum == null)

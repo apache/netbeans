@@ -52,6 +52,8 @@ public class JavaEEProjectSettingsImplTest extends JavaEEMavenTestBase {
     }
 
     public void checkProjectForProfileChange(Project prj) {
+        JavaEEProjectSettings.setProfile(prj, Profile.JAVA_EE_8_FULL);
+        assertEquals(Profile.JAVA_EE_8_FULL, JavaEEProjectSettings.getProfile(prj));
         JavaEEProjectSettings.setProfile(prj, Profile.JAVA_EE_7_FULL);
         assertEquals(Profile.JAVA_EE_7_FULL, JavaEEProjectSettings.getProfile(prj));
         JavaEEProjectSettings.setProfile(prj, Profile.JAVA_EE_6_FULL);

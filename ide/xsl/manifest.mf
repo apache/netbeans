@@ -4,4 +4,4 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xsl/resources/Bundle.prop
 OpenIDE-Module-Layer: org/netbeans/modules/xsl/resources/mf-layer.xml
 OpenIDE-Module-Requires: org.openide.util.HttpServer$Impl
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.49
+OpenIDE-Module-Specification-Version: 1.50

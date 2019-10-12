@@ -19,12 +19,14 @@
 package org.netbeans.modules.php.editor.parser.astnodes.visitors;
 
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
@@ -95,6 +97,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -107,8 +110,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -156,6 +159,13 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ArrowFunctionDeclaration node) {
+        scan(node.getFormalParameters());
+        scan(node.getReturnType());
+        scan(node.getExpression());
+    }
+
+    @Override
     public void visit(Assignment node) {
         scan(node.getLeftHandSide());
         scan(node.getRightHandSide());
@@ -163,6 +173,10 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(ASTError astError) {
+    }
+
+    @Override
+    public void visit(ASTErrorExpression astErrorExpression) {
     }
 
     @Override
@@ -287,6 +301,7 @@ public class DefaultVisitor implements Visitor {
 
     @Override
     public void visit(FieldsDeclaration node) {
+        scan(node.getFieldType());
         scan(node.getFields());
     }
 
@@ -639,6 +654,11 @@ public class DefaultVisitor implements Visitor {
         scan(traitsInsteadofStatement.getPreferredTraitName());
         scan(traitsInsteadofStatement.getMethodName());
         scan(traitsInsteadofStatement.getSuppressedTraitNames());
+    }
+
+    @Override
+    public void visit(UnpackableArrayElement unpackableArrayElement) {
+        scan(unpackableArrayElement.getValue());
     }
 
     @Override

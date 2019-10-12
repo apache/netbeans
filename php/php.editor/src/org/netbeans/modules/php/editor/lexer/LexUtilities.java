@@ -634,4 +634,16 @@ public final class LexUtilities {
 
         return start;
     }
+
+    /**
+     * Check whether the token id is an operator(PHP_OPERATOR or
+     * PHP_TEXTUAL_OPERATOR). PHP_TEXTUAL_OPERATOR is "AND", "OR", or "XOR".
+     *
+     * @param id the token id
+     * @return {@code true} the token id is an operator, otherwise {@code false}
+     */
+    public static boolean isPHPOperator(PHPTokenId id) {
+        return id == PHPTokenId.PHP_OPERATOR || id == PHPTokenId.PHP_TEXTUAL_OPERATOR;
+    }
+
 }

@@ -60,7 +60,6 @@ public final class ProjectPlatform {
     private ProjectPlatform() {
         throw new IllegalStateException("No instance allowed"); //NOI18N
     }
-    
     /**
      * Creates a transient {@link JavaPlatform} defined in given {@link Project}.
      * @param owner the project to return the {@link JavaPlatform} for
@@ -76,8 +75,8 @@ public final class ProjectPlatform {
             @NonNull final String platformType) {
         Parameters.notNull("owner", owner); //NOI18N
         Parameters.notNull("eval", eval); //NOI18N
-        Parameters.notNull("platformType", platformType);   //NOI18N        
-        final String platformName = eval.getProperty(PLATFORM_ACTIVE);        
+        Parameters.notNull("platformType", platformType);   //NOI18N
+        final String platformName = eval.getProperty(PLATFORM_ACTIVE);
         final FileObject jdkHome = resolvePlatformHome(
                 platformName,
                 owner.getProjectDirectory(),
@@ -85,19 +84,44 @@ public final class ProjectPlatform {
         if (jdkHome == null) {
             return null;
         }
+        return forProject(owner, jdkHome, platformName, platformType);
+    }
+
+    /**
+     * Creates a transient {@link JavaPlatform} defined in given {@link Project}.
+     * @param owner the project to return the {@link JavaPlatform} for
+     * @param platformHome the {@link JavaPlatform} install folder
+     * @param platformName the {@link JavaPlatform} system name uniquely identifying the platform.
+     * The name has to be valid property name, use the {@link PropertyUtils#getUsablePropertyName(java.lang.String)} to create the name.
+     * For the Ant based project the platform name is a value of {@code platform.active} property.
+     * @param platformType the type of the platform, eg. "j2se"
+     * @return a {@link JavaPlatform} for given project or null when platform cannot
+     * be created
+     * @since 1.77
+     */
+    @CheckForNull
+    public static JavaPlatform forProject(
+            @NonNull final Project owner,
+            @NonNull final FileObject platformHome,
+            @NonNull final String platformName,
+            @NonNull final String platformType) {
+        Parameters.notNull("owner", owner); //NOI18N
+        Parameters.notNull("platformHome", platformHome); //NOI18N
+        Parameters.notNull("platformName", platformName);   //NOI18N
+        Parameters.notNull("platformType", platformType);   //NOI18N
         JavaPlatform res;
-        JavaPlatform delegate;        
+        JavaPlatform delegate;
         synchronized (platformsByProject) {
-            res = platformsByProject.get(jdkHome);
+            res = platformsByProject.get(platformHome);
             delegate = res == null ?
-                    platformsByHome.get(jdkHome) :
+                    platformsByHome.get(platformHome) :
                     null;
         }
         if (res == null) {
             boolean newDelegate = false;
             if (delegate == null) {
-                delegate = Optional.ofNullable(findJavaPlatform(jdkHome, platformType))
-                        .orElseGet(() -> createJavaPlatform(jdkHome, platformType));
+                delegate = Optional.ofNullable(findJavaPlatform(platformHome, platformType))
+                        .orElseGet(() -> createJavaPlatform(platformHome, platformType));
                 newDelegate = true;
             }
             if (delegate != null) {
@@ -118,16 +142,16 @@ public final class ProjectPlatform {
                     @Override
                     public String getDisplayName() {
                         return platformName;
-                    }                
-                };                
+                    }
+                };
             }
             if (res != null) {
                 synchronized (platformsByProject) {
                     platformsByProject.put(owner, res);
                     assert delegate != null;
                     if (newDelegate) {
-                        homesByProject.put(owner, jdkHome);
-                        platformsByHome.put(jdkHome, delegate);
+                        homesByProject.put(owner, platformHome);
+                        platformsByHome.put(platformHome, delegate);
                     }
                 }
             }

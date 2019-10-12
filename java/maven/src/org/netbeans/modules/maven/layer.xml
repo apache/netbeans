@@ -34,6 +34,12 @@
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.newproject.Bundle#Templates/Project/Maven2"/>
                 <attr name="position" intvalue="100"/>
             </folder>
+            <folder name="Samples">
+                <folder name="JavaFXMaven">
+                    <attr name="position" intvalue="50"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.maven.newproject.Bundle#Templates/Samples/JavaFXMaven"/>
+                </folder>
+            </folder>        
         </folder>
     </folder>
 

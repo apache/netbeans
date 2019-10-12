@@ -79,7 +79,7 @@ public class AnalysisController extends AbstractTopLevelController implements Na
 
     public List<Rule> getRules() {
         if (rules == null) {
-            rules = new ArrayList(MemoryLint.createRules());
+            rules = new ArrayList<Rule>(MemoryLint.createRules());
         }
 
         return rules;
@@ -98,7 +98,7 @@ public class AnalysisController extends AbstractTopLevelController implements Na
     }
 
     public BoundedRangeModel performAnalysis(boolean[] rulesSelection) {
-        final List<Rule> selectedRules = new ArrayList();
+        final List<Rule> selectedRules = new ArrayList<Rule>();
         final List<Rule> allRules = getRules();
 
         for (int i = 0; i < rulesSelection.length; i++) {

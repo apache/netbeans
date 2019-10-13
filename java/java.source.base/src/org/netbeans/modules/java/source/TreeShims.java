@@ -37,6 +37,7 @@ import org.openide.util.Exceptions;
 
 public class TreeShims {
 
+    public static final String BINDING_PATTERN = "BINDING_PATTERN"; //NOI18N
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
     public static final String YIELD = "YIELD"; //NOI18N
 
@@ -170,6 +171,21 @@ public class TreeShims {
         }
     }
   
+    public static Tree getBindingPatternType(Tree node) {
+        if (!node.getKind().toString().equals(BINDING_PATTERN)) {
+            return null;
+        }
+        try {
+            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
+            return (Tree) getType.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;

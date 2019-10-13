@@ -577,7 +577,23 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : super.scan(tree, p) : null;
+                if (tokens.offset() > endPos)
+                    return true;
+                Boolean ret;
+                switch (tree.getKind().toString()) {
+                    case TreeShims.SWITCH_EXPRESSION:
+                        ret = scanSwitchExpression(tree, p);
+                        break;
+                    case TreeShims.YIELD:
+                        ret = scanYield(tree, p);
+                        break;
+                    case TreeShims.BINDING_PATTERN:
+                        ret = scanBindingPattern(tree, p);
+                        break;
+                    default:
+                        ret = super.scan(tree, p);
+                        break;
+                }
                 return ret != null ? ret : true;
             }
             finally {
@@ -2576,6 +2592,17 @@ public class Reformatter implements ReformatTask {
             return handleYield(node, p);
         }
 
+        private Boolean scanBindingPattern(Tree node, Void p) {
+            Name name = TreeShims.getBinding(node);
+            Tree type = TreeShims.getBindingPatternType(node);
+            scan(type, p);
+            if (name != null) {
+                space();
+                accept(IDENTIFIER);
+            }
+            return true;
+        }
+
         private Boolean handleYield(Tree node, Void p) {
             ExpressionTree exprTree = TreeShims.getYieldValue(node);
             if (exprTree != null) {
@@ -3131,7 +3158,10 @@ public class Reformatter implements ReformatTask {
             space();
             accept(INSTANCEOF);
             space();
-            scan(node.getType(), p);
+            Tree pattern = TreeShims.getPattern(node);
+            if (pattern == null)
+                pattern = node.getType();
+            scan(pattern, p);
             return true;
         }
 

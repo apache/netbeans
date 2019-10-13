@@ -43,6 +43,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.modules.maven.TextValueCompleter;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.customizer.ActionMappings;
@@ -390,6 +391,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbShowInfoLevel = new javax.swing.JCheckBox();
         lblJdkHome = new javax.swing.JLabel();
         comJdkHome = new javax.swing.JComboBox();
+        comManageJdks = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCategory = new javax.swing.JList();
         lblCategory = new javax.swing.JLabel();
@@ -674,6 +676,13 @@ public class SettingsPanel extends javax.swing.JPanel {
         lblCommandLine.setLabelFor(comMavenHome);
         org.openide.awt.Mnemonics.setLocalizedText(lblJdkHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblJdkHome.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(comManageJdks, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.comManageJdks.text")); // NOI18N
+        comManageJdks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comManageJdksActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
@@ -681,15 +690,6 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlExecutionLayout.createSequentialGroup()
-                        .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCommandLine)
-                            .addComponent(lblJdkHome))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlExecutionLayout.createSequentialGroup()
@@ -712,11 +712,24 @@ public class SettingsPanel extends javax.swing.JPanel {
                             .addComponent(cbSkipTests, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(0, 45, Short.MAX_VALUE))
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
-                        .addComponent(lblOptions)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtOptions)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnOptions)
+                        .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCommandLine)
+                                    .addComponent(lblJdkHome))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                        .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comManageJdks))))
+                            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                .addComponent(lblOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnOptions)))
                         .addContainerGap())))
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addGap(119, 119, 119)
@@ -734,8 +747,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblJdkHome)
-                    .addComponent(comJdkHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                    .addComponent(comJdkHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comManageJdks))
+                .addGap(31, 31, 31)
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOptions)
                     .addComponent(txtOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -893,6 +907,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     
     }//GEN-LAST:event_btnDirectoryActionPerformed
+
+    private void comManageJdksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comManageJdksActionPerformed
+        PlatformsCustomizer.showCustomizer(findSelectedJdk(new String[1]));
+    }//GEN-LAST:event_comManageJdksActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -915,6 +933,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comIndex;
     private javax.swing.JComboBox comJavadoc;
     private javax.swing.JComboBox comJdkHome;
+    private javax.swing.JButton comManageJdks;
     private javax.swing.JComboBox comMavenHome;
     private javax.swing.JComboBox comSource;
     private javax.swing.JLabel jLabel1;
@@ -1252,22 +1271,33 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
 
     final String findSelectedJdkName() {
+        String[] name = { null };
+        findSelectedJdk(name);
+        return name[0];
+    }
+
+    private final JavaPlatform findSelectedJdk(String[] name) {
         if (jdkHomeDataModel == null) {
-            return "";
+            name[0] = "";
+            return null;
         }
         String jdk = (String) jdkHomeDataModel.getSelectedItem();
-        if (jdk == null || jdk.equals(JavaPlatformManager.getDefault().getDefaultPlatform().getDisplayName())) {
-            return "";
+        final JavaPlatform def = JavaPlatformManager.getDefault().getDefaultPlatform();
+        if (jdk == null || jdk.equals(def.getDisplayName())) {
+            name[0] = "";
+            return def;
         }
         for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
             if (jdk.equals(p.getDisplayName())) {
                 String antName = p.getProperties().get("platform.ant.name");
                 if (antName != null) {
-                    return antName;
+                    name[0] = antName;
+                    return p;
                 }
             }
         }
-        return jdk;
+        name[0] = jdk;
+        return null;
     }
     
     private class ActionListenerImpl implements ActionListener {

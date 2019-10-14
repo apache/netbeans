@@ -258,54 +258,108 @@ public class DetectorTest extends TestBase {
         performTest("Test.java",
                     "package test;" +
                     "public class Test {" +
-                    "    public Test(String param) {" +
+                    "    public Test(String param1, int param2, int param3, float param4, double param5, Object... param6) {" +
                     "    }" +
-                    "    public void api(String param1, int param2, int param3, float param4, Object... param5) {" +
+                    "    public void api(String param1, int param2, int param3, float param4, double param5, Object... param6) {" +
                     "    }" +
                     "    private int getValue() {" +
                     "        return -1;" +
                     "    }" +
                     "    private void test() {" +
-                    "        new Test(\"\")" +
-                    "        api(\"\", 2, getValue(), 1.0f);" +
-                    "        api(\"\", 2, getValue(), 1.0f, null);" +
-                    "        api(\"\", 2, getValue(), 1.0f, null, null);" +
+                    "        String param5 = \"\"" +
+                    "        new Test(\"\", 2, getValue(), 1.0f, Math.PI)" +
+                    "        new Test(\"\", 2, getValue(), 1.0f, Math.PI, null)" +
+                    "        new Test(\"\", 2, getValue(), 1.0f, Math.PI, param5, null)" +
+                    "        api(\"\", 2, getValue(), 1.0f, Math.PI);" +
+                    "        api(\"\", 2, getValue(), 1.0f, Math.PI, null);" +
+                    "        api(\"\", 2, getValue(), 1.0f, Math.PI, param5, null);" +
                     "    }" +
                     "}",
                     "[PUBLIC, CLASS, DECLARATION], 0:26-0:30\n" +
                     "[PUBLIC, CONSTRUCTOR, DECLARATION], 0:43-0:47\n" +
                     "[PUBLIC, CLASS], 0:48-0:54\n" +
-                    "[PARAMETER, DECLARATION], 0:55-0:60\n" +
-                    "[PUBLIC, METHOD, DECLARATION], 0:84-0:87\n" +
-                    "[PUBLIC, CLASS], 0:88-0:94\n" +
-                    "[PARAMETER, DECLARATION], 0:95-0:101\n" +
-                    "[PARAMETER, DECLARATION], 0:107-0:113\n" +
-                    "[PARAMETER, DECLARATION], 0:119-0:125\n" +
-                    "[PARAMETER, DECLARATION], 0:133-0:139\n" +
-                    "[PUBLIC, CLASS], 0:141-0:147\n" +
-                    "[PARAMETER, DECLARATION], 0:151-0:157\n" +
-                    "[PRIVATE, METHOD, DECLARATION], 0:181-0:189\n" +
-                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:233-0:237\n" +
-                    "[PUBLIC, CONSTRUCTOR], 0:253-0:257\n" +
-                    "[param:], 0:258-0:259\n" +
-                    "[PUBLIC, METHOD], 0:269-0:272\n" +
-                    "[param1:], 0:273-0:274\n" +
-                    "[param2:], 0:277-0:278\n" +
-                    "[PRIVATE, METHOD], 0:280-0:288\n" +
-                    "[param4:], 0:292-0:293\n" +
-                    "[PUBLIC, METHOD], 0:306-0:309\n" +
-                    "[param1:], 0:310-0:311\n" +
-                    "[param2:], 0:314-0:315\n" +
-                    "[PRIVATE, METHOD], 0:317-0:325\n" +
-                    "[param4:], 0:329-0:330\n" +
-                    "[param5:], 0:335-0:336\n" +
-                    "[PUBLIC, METHOD], 0:349-0:352\n" +
-                    "[param1:], 0:353-0:354\n" +
-                    "[param2:], 0:357-0:358\n" +
-                    "[PRIVATE, METHOD], 0:360-0:368\n" +
-                    "[param4:], 0:372-0:373\n" +
-                    "[param5:], 0:378-0:379\n" +
-                    "[param5:], 0:384-0:385\n");
+                    "[PARAMETER, DECLARATION], 0:55-0:61\n" +
+                    "[PARAMETER, DECLARATION], 0:67-0:73\n" +
+                    "[PARAMETER, DECLARATION], 0:79-0:85\n" +
+                    "[PARAMETER, DECLARATION], 0:93-0:99\n" +
+                    "[PARAMETER, DECLARATION], 0:108-0:114\n" +
+                    "[PUBLIC, CLASS], 0:116-0:122\n" +
+                    "[PARAMETER, DECLARATION], 0:126-0:132\n" +
+                    "[PUBLIC, METHOD, DECLARATION], 0:156-0:159\n" +
+                    "[PUBLIC, CLASS], 0:160-0:166\n" +
+                    "[PARAMETER, DECLARATION], 0:167-0:173\n" +
+                    "[PARAMETER, DECLARATION], 0:179-0:185\n" +
+                    "[PARAMETER, DECLARATION], 0:191-0:197\n" +
+                    "[PARAMETER, DECLARATION], 0:205-0:211\n" +
+                    "[PARAMETER, DECLARATION], 0:220-0:226\n" +
+                    "[PUBLIC, CLASS], 0:228-0:234\n" +
+                    "[PARAMETER, DECLARATION], 0:238-0:244\n" +
+                    "[PRIVATE, METHOD, DECLARATION], 0:268-0:276\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:320-0:324\n" +
+                    "[PUBLIC, CLASS], 0:336-0:342\n" +
+                    "[LOCAL_VARIABLE, DECLARATION], 0:343-0:349\n" +
+                    "[PUBLIC, CONSTRUCTOR], 0:366-0:370\n" +
+                    "[param1:], 0:371-0:372\n" +
+                    "[param2:], 0:375-0:376\n" +
+                    "[param3:], 0:378-0:379\n" +
+                    "[PRIVATE, METHOD], 0:378-0:386\n" +
+                    "[param4:], 0:390-0:391\n" +
+                    "[param5:], 0:396-0:397\n" +
+                    "[PUBLIC, CLASS], 0:396-0:400\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:401-0:403\n" +
+                    "[PUBLIC, CONSTRUCTOR], 0:416-0:420\n" +
+                    "[param1:], 0:421-0:422\n" +
+                    "[param2:], 0:425-0:426\n" +
+                    "[param3:], 0:428-0:429\n" +
+                    "[PRIVATE, METHOD], 0:428-0:436\n" +
+                    "[param4:], 0:440-0:441\n" +
+                    "[param5:], 0:446-0:447\n" +
+                    "[PUBLIC, CLASS], 0:446-0:450\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:451-0:453\n" +
+                    "[param6:], 0:455-0:456\n" +
+                    "[PUBLIC, CONSTRUCTOR], 0:472-0:476\n" +
+                    "[param1:], 0:477-0:478\n" +
+                    "[param2:], 0:481-0:482\n" +
+                    "[param3:], 0:484-0:485\n" +
+                    "[PRIVATE, METHOD], 0:484-0:492\n" +
+                    "[param4:], 0:496-0:497\n" +
+                    "[param5:], 0:502-0:503\n" +
+                    "[PUBLIC, CLASS], 0:502-0:506\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:507-0:509\n" +
+                    "[param6:], 0:511-0:512\n" +
+                    "[LOCAL_VARIABLE], 0:511-0:517\n" +
+                    "[param6:], 0:519-0:520\n" +
+                    "[PUBLIC, METHOD], 0:532-0:535\n" +
+                    "[param1:], 0:536-0:537\n" +
+                    "[param2:], 0:540-0:541\n" +
+                    "[param3:], 0:543-0:544\n" +
+                    "[PRIVATE, METHOD], 0:543-0:551\n" +
+                    "[param4:], 0:555-0:556\n" +
+                    "[param5:], 0:561-0:562\n" +
+                    "[PUBLIC, CLASS], 0:561-0:565\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:566-0:568\n" +
+                    "[PUBLIC, METHOD], 0:578-0:581\n" +
+                    "[param1:], 0:582-0:583\n" +
+                    "[param2:], 0:586-0:587\n" +
+                    "[param3:], 0:589-0:590\n" +
+                    "[PRIVATE, METHOD], 0:589-0:597\n" +
+                    "[param4:], 0:601-0:602\n" +
+                    "[param5:], 0:607-0:608\n" +
+                    "[PUBLIC, CLASS], 0:607-0:611\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:612-0:614\n" +
+                    "[param6:], 0:616-0:617\n" +
+                    "[PUBLIC, METHOD], 0:630-0:633\n" +
+                    "[param1:], 0:634-0:635\n" +
+                    "[param2:], 0:638-0:639\n" +
+                    "[param3:], 0:641-0:642\n" +
+                    "[PRIVATE, METHOD], 0:641-0:649\n" +
+                    "[param4:], 0:653-0:654\n" +
+                    "[param5:], 0:659-0:660\n" +
+                    "[PUBLIC, CLASS], 0:659-0:663\n" +
+                    "[STATIC, PUBLIC, FIELD], 0:664-0:666\n" +
+                    "[param6:], 0:668-0:669\n" +
+                    "[LOCAL_VARIABLE], 0:668-0:674\n" +
+                    "[param6:], 0:676-0:677\n");
     }
 
     @RandomlyFails

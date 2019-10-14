@@ -474,7 +474,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             handlePossibleIdentifier(getCurrentPath(), false);
             firstIdentifier(tree.getIdentifier().toString());
-            
+            addParameterInlineHint(tree);
             return null;
         }
         
@@ -897,6 +897,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             scan(tree.getArguments(), p);
             
+            addParameterInlineHint(tree);
             return null;
         }
 
@@ -915,6 +916,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tl.identifierHere(tree, tree2Tokens);
             
             handlePossibleIdentifier(getCurrentPath(), false);
+            addParameterInlineHint(tree);
             super.visitIdentifier(tree, null);
             return null;
         }
@@ -1099,28 +1101,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 }
             }
 
-            TreePath pp = getCurrentPath().getParentPath();
-            Tree leaf = pp.getLeaf();
-            if (leaf != null &&
-                (leaf.getKind() == Kind.METHOD_INVOCATION || leaf.getKind() == Kind.NEW_CLASS)) {
-                int pos = -1;
-                if (leaf.getKind() == Kind.METHOD_INVOCATION) {
-                    pos = MethodInvocationTree.class.cast(leaf).getArguments().indexOf(node);
-                } else if (leaf.getKind() == Kind.NEW_CLASS) {
-                    pos = NewClassTree.class.cast(leaf).getArguments().indexOf(node);
-                }
-                if (pos != (-1)) {
-                    Element invoked = info.getTrees().getElement(pp);
-                    if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
-                        long start = sourcePositions.getStartPosition(info.getCompilationUnit(), node);
-                        long end = start + 1;
-                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
-                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
-                        preText.put(new int[] {(int) start, (int) end},
-                                    invokedMethod.getParameters().get(pos).getSimpleName() + ":");
-                    }
-                }
-            }
+            addParameterInlineHint(node);
             return super.visitLiteral(node, p);
         }
 
@@ -1147,6 +1128,39 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
 
             return indent;
+        }
+
+        private void addParameterInlineHint(Tree tree) {
+            TreePath pp = getCurrentPath().getParentPath();
+            Tree leaf = pp.getLeaf();
+            if (leaf != null &&
+                (leaf.getKind() == Kind.METHOD_INVOCATION || leaf.getKind() == Kind.NEW_CLASS)) {
+                int pos = -1;
+                if (leaf.getKind() == Kind.METHOD_INVOCATION) {
+                    pos = MethodInvocationTree.class.cast(leaf).getArguments().indexOf(tree);
+                } else if (leaf.getKind() == Kind.NEW_CLASS) {
+                    pos = NewClassTree.class.cast(leaf).getArguments().indexOf(tree);
+                }
+                if (pos != (-1)) {
+                    Element invoked = info.getTrees().getElement(pp);
+                    if (invoked != null && (invoked.getKind() == ElementKind.METHOD || invoked.getKind() == ElementKind.CONSTRUCTOR)) {
+                        long start = sourcePositions.getStartPosition(info.getCompilationUnit(), tree);
+                        long end = start + 1;
+                        ExecutableElement invokedMethod = (ExecutableElement) invoked;
+                        pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
+                        boolean shouldBeAdded = true;
+                        if (tree.getKind() == Kind.IDENTIFIER &&
+                                invokedMethod.getParameters().get(pos).getSimpleName().equals(
+                                        IdentifierTree.class.cast(tree).getName())) {
+                            shouldBeAdded = false;
+                        }
+                        if (shouldBeAdded) {
+                            preText.put(new int[] {(int) start, (int) end},
+                                        invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+                        }
+                    }
+                }
+            }
         }
     }
 

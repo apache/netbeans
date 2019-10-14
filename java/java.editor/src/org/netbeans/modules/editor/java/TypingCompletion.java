@@ -248,7 +248,7 @@ class TypingCompletion {
                 }
             }
         }
-
+     
         if ((completablePosition && !insideString) || eol) {
             if (context.getText().equals("\"") && context.getOffset() >= 2 &&
                     context.getDocument().getText(context.getOffset() - 2, 2).equals("\"\"") &&

@@ -102,7 +102,7 @@ public class ReflectionHelper {
 
     public static boolean isComplexType(String className, ClassLoader runtimeClassLoader) {
         try {
-            Class type = Class.forName(className, true, runtimeClassLoader);
+            Class<?> type = Class.forName(className, true, runtimeClassLoader);
             Class xmlType = Class.forName(XmlType.class.getName(), true, runtimeClassLoader);
 
             Annotation xmlAnnotation = type.getAnnotation(xmlType);
@@ -116,7 +116,7 @@ public class ReflectionHelper {
 
     public static boolean isCollection(String className, ClassLoader runtimeClassLoader) {
         try {
-            Class cls = Class.forName(className, true, runtimeClassLoader);
+            Class<?> cls = Class.forName(className, true, runtimeClassLoader);
             return Collection.class.isAssignableFrom(cls);
         } catch (ClassNotFoundException cnfe) {
             return false;
@@ -133,8 +133,8 @@ public class ReflectionHelper {
 
     public static boolean isEnumeration(String className, ClassLoader loader) {
         try {
-            Class cls = Class.forName(className, true, loader);
-            Class enumClass = Class.forName(Enum.class.getName(), true, loader);
+            Class<?> cls = Class.forName(className, true, loader);
+            Class<?> enumClass = Class.forName(Enum.class.getName(), true, loader);
 
             return enumClass.isAssignableFrom(cls);
         } catch (ClassNotFoundException cnfe) {
@@ -161,7 +161,7 @@ public class ReflectionHelper {
     public static Object makeGenericArray(String componentType, int length, ClassLoader loader)
             throws WebServiceReflectionException {
         try {
-            Class componentClass;
+            Class<?> componentClass;
             if (isPrimitiveClass(componentType)) {
                 componentClass = getPrimitiveClass(componentType);
             } else {
@@ -183,15 +183,15 @@ public class ReflectionHelper {
             }
 
             Thread.currentThread().setContextClassLoader(loader);
-            Class declaredClass;
+            Class<?> declaredClass;
             if (isPrimitiveClass(valueType)) {
                 declaredClass = getPrimitiveClass(valueType);
             } else {
                 declaredClass = Class.forName(valueType, true, loader);
             }
 
-            Class qNameClass = Class.forName(QName.class.getName(), true, loader);
-            Class jaxBClass = Class.forName(JAXBElement.class.getName(), true, loader);
+            Class<?> qNameClass = Class.forName(QName.class.getName(), true, loader);
+            Class<?> jaxBClass = Class.forName(JAXBElement.class.getName(), true, loader);
 
             Constructor qNameConstr = qNameClass.getConstructor(new Class[]{String.class});
             Object qName = qNameConstr.newInstance(localPart);
@@ -249,7 +249,7 @@ public class ReflectionHelper {
             if (!isCollection(className, loader)) {
                 return null;
             } else {
-                Class cls = Class.forName(className, true, loader);
+                Class<?> cls = Class.forName(className, true, loader);
                 if (cls.isInterface()) {
                     return new ArrayList();
                 } else {
@@ -278,7 +278,7 @@ public class ReflectionHelper {
             }
 
             Thread.currentThread().setContextClassLoader(loader);
-            Class typeClass = Class.forName(typeName, true, loader);
+            Class<?> typeClass = Class.forName(typeName, true, loader);
             Object result = typeClass.newInstance();
 
             return result;
@@ -299,7 +299,7 @@ public class ReflectionHelper {
             throws WebServiceReflectionException {
         try {
             List<String> enumerations = new ArrayList<String>();
-            Class enumerClass = Class.forName(enumeration, true, loader);
+            Class<?> enumerClass = Class.forName(enumeration, true, loader);
 
             Field[] fields = enumerClass.getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
@@ -323,7 +323,7 @@ public class ReflectionHelper {
             savedLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(loader);
 
-            Class nextClass = Class.forName(complexType, true, loader);
+            Class<?> nextClass = Class.forName(complexType, true, loader);
             Class xmlTypeClass = Class.forName(XmlType.class.getName(), true, loader);
 
             for (; nextClass != null; nextClass = nextClass.getSuperclass()) {
@@ -359,7 +359,7 @@ public class ReflectionHelper {
             throws WebServiceReflectionException {
         ClassLoader savedLoader = null;
         try {
-            Class typeClass = Class.forName(type, true, loader);
+            Class<?> typeClass = Class.forName(type, true, loader);
             char[] name = propName.toCharArray();
             Method method = null;
 
@@ -450,7 +450,7 @@ public class ReflectionHelper {
             savedLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(classLoader);
 
-            Class structClass = Class.forName(className, true, classLoader);
+            Class<?> structClass = Class.forName(className, true, classLoader);
             Method[] methods = structClass.getMethods();
             for (int i = 0; i < methods.length; i++) {
                 Method curMethod = methods[i];
@@ -474,7 +474,7 @@ public class ReflectionHelper {
             String propType, Object propValue, ClassLoader classLoader) throws WebServiceReflectionException {
         ClassLoader savedLoader = null;
         try {
-            Class typeClass = objValue.getClass();
+            Class<?> typeClass = objValue.getClass();
 
             Class propClass;
             savedLoader = Thread.currentThread().getContextClassLoader();
@@ -529,7 +529,7 @@ public class ReflectionHelper {
             ClassLoader classLoader) throws WebServiceReflectionException {
         ClassLoader savedLoader = null;
         try {
-            Class typeClass = obj.getClass();
+            Class<?> typeClass = obj.getClass();
             Method method = null;
 
             savedLoader = Thread.currentThread().getContextClassLoader();
@@ -586,7 +586,7 @@ public class ReflectionHelper {
             URLClassLoader urlClassLoader, WsdlData wsData, WSPort port) throws WebServiceReflectionException {
 
         Class<?> clazz = null;
-        Class serviceClass = null;
+        Class<?> serviceClass = null;
         if (null == urlClassLoader) {
             return null;
         }
@@ -687,7 +687,7 @@ public class ReflectionHelper {
              * 1. from ArrayList to a typed array. (done prior)
              * 2. from objects to primitives
              */
-            LinkedList classList = new LinkedList();
+            LinkedList<Class> classList = new LinkedList<>();
             List parameterList = inMethod.getParametersList();
             for (int ii = 0; null != paramValues && ii < paramValues.length; ii++) {
 
@@ -719,7 +719,7 @@ public class ReflectionHelper {
                 }
                 classList.add(classToAdd);
             }
-            Class[] paramClasses = (Class[]) classList.toArray(new Class[0]);
+            Class[] paramClasses = classList.toArray(new Class[0]);
 
             /**
              * Now instantiate the method to call.

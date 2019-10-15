@@ -310,6 +310,35 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/magicMethod07");
     }
 
+    // NETBEANS-1861
+    public void testMagicMethodStatic01() throws Exception {
+        performTest("parser/magicMethodStatic01");
+    }
+
+    public void testMagicMethodStatic02() throws Exception {
+        performTest("parser/magicMethodStatic02");
+    }
+
+    public void testMagicMethodStatic03() throws Exception {
+        performTest("parser/magicMethodStatic03");
+    }
+
+    public void testMagicMethodStatic04() throws Exception {
+        performTest("parser/magicMethodStatic04");
+    }
+
+    public void testMagicMethodStatic05() throws Exception {
+        performTest("parser/magicMethodStatic05");
+    }
+
+    public void testMagicMethodStatic06() throws Exception {
+        performTest("parser/magicMethodStatic06");
+    }
+
+    public void testMagicMethodStatic07() throws Exception {
+        performTest("parser/magicMethodStatic07");
+    }
+
     public void testTraits_01() throws Exception {
         performTest("parser/traits_01");
     }

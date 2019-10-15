@@ -794,6 +794,7 @@ public class JavacParser extends Parser {
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
                   .forEach(r -> r.enhance(javacTask.getContext(), cpInfo, detached));
+            ParameterNameProviderImpl.register(javacTask, cpInfo);
             return javacTask;
         }
     }
@@ -962,7 +963,6 @@ public class JavacParser extends Parser {
         }
         NBEnter.preRegister(context);
         NBMemberEnter.preRegister(context, backgroundCompilation);
-        ParameterNameProviderImpl.register(task, cpInfo);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);
         return task;
     }

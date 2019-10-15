@@ -276,11 +276,37 @@ public interface TypedTextInterceptor {
          *   are <code>&lt;0, text.getLength()&gt;</code>.
          */
         public void setText(String text, int caretPosition) {
+            setText(text, caretPosition, false);
+        }
+
+        /**
+         * Sets the insertion text and adjusted caret position. This method can
+         * be used for modifying text typed by a user that would normally be
+         * inserted into a document.
+         *
+         * <p>There is no restriction on the new text
+         * set by this method, except that it must not be <code>null</code>. It can
+         * be of any length (including an empty string) and can even span  multiple lines.
+         *
+         * <p>It is important to remember that the adjusted caret position is
+         * relative to the new text. Therefore valid values for the <code>caretPosition</code>
+         * parameter are <code>&lt;0, text.getLength()&gt;</code>! The adjusted position
+         * is <b>not</b> a document offset.
+         * 
+         * @param text The new text that will be inserted to a document.
+         * @param caretPosition The adjusted caret position <b>inside</b> the new text.
+         *   This position is relative to the new text. Valid values for this parameter
+         *   are <code>&lt;0, text.getLength()&gt;</code>.
+         * @param formatNewLines true if new lines in the provided text should be indented.
+         * @since 2.26
+         */
+        public void setText(String text, int caretPosition, boolean formatNewLines) {
             assert text != null : "Invalid text, it must not be null."; //NOI18N
             assert caretPosition >= 0 && caretPosition <= text.length() : "Invalid caretPostion=" + caretPosition + ", text.length=" + text.length(); //NOI18N
 
             this.insertionText = text;
             this.caretPosition = caretPosition;
+            this.formatNewLines = formatNewLines;
         }
 
         /**
@@ -302,6 +328,7 @@ public interface TypedTextInterceptor {
         private String insertionText = null;
         private String replacedText = null;
         private int caretPosition = -1;
+        private boolean formatNewLines = false;
         
         private MutableContext(JTextComponent c, Position offset, String typedText, String replacedText) {
             super(c, offset, typedText);
@@ -318,7 +345,7 @@ public interface TypedTextInterceptor {
             @Override
             public Object[] getTtiContextData(MutableContext context) {
                 return context.insertionText != null ?
-                    new Object [] { context.insertionText, context.caretPosition } :
+                    new Object [] { context.insertionText, context.caretPosition, context.formatNewLines } :
                     null;
             }
 
@@ -326,6 +353,7 @@ public interface TypedTextInterceptor {
             public void resetTtiContextData(MutableContext context) {
                 context.insertionText = null;
                 context.caretPosition = -1;
+                context.formatNewLines = false;
             }
 
             @Override

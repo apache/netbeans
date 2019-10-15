@@ -1,0 +1,22 @@
+<PHPDocBlock start='3' end='49'>
+    <Tags>
+        <PHPDocMethodTag start='3' end='52' kind='method' isStatic='true'>
+            <Name>
+                <PHPDocNode start='25' end='28' value='get'/>
+            </Name>
+            <Return Types>
+                <PHPDocTypeNode start='21' end='24' value='int' isArray='false'/>
+            </Return Types>
+            <Parameters>
+                <PHPDocVarTypeTag start='29' end='35' kind='param'>
+                    <Variable>
+                        <PHPDocNode start='33' end='35' value='$i'/>
+                    </Variable>
+                    <Types>
+                        <PHPDocTypeNode start='29' end='32' value='int' isArray='false'/>
+                    </Types>
+                </PHPDocVarTypeTag>
+            </Parameters>
+        </PHPDocMethodTag>
+    </Tags>
+</PHPDocBlock>

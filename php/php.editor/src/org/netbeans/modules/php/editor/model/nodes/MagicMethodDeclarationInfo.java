@@ -20,6 +20,7 @@
 package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,10 +52,21 @@ public class MagicMethodDeclarationInfo extends ASTNodeInfo<PHPDocMethodTag> {
     private String methodName;
     private int offset;
     private int typeOffset;
+    private final boolean isStatic;
 
     MagicMethodDeclarationInfo(PHPDocMethodTag node) {
         super(node);
+        // @method int get(Type $object) message
+        // @method static int staticGet(Type $object) message
         String[] parts = node.getValue().trim().split("\\s+", 3); //NOI18N
+        isStatic = parts.length >= 1 && parts[0].equals("static"); // NOI18N NETBEANS-1861
+        // the method is already checked whether it is static when PHPDocMethodTag is created
+        // So, they should be the same result
+        // see: PHPDocCommentParser.createTag()
+        assert isStatic == node.isStatic() : "PHPDocMethodTag static: " + node.isStatic(); // NOI18N
+        if (isStatic) {
+            parts = Arrays.copyOfRange(parts, 1, parts.length);
+        }
         if (parts.length == 1 || (parts.length > 0 && parts[0].trim().indexOf("(") > 0)) { //NOI18N
             // expect that the type is void
             returnType = Type.VOID;
@@ -137,7 +149,7 @@ public class MagicMethodDeclarationInfo extends ASTNodeInfo<PHPDocMethodTag> {
 
     @Override
     public Kind getKind() {
-        return Kind.METHOD;
+        return isStatic ? Kind.STATIC_METHOD : Kind.METHOD;
     }
 
     @Override
@@ -168,6 +180,7 @@ public class MagicMethodDeclarationInfo extends ASTNodeInfo<PHPDocMethodTag> {
     }
 
     public PhpModifiers getAccessModifiers() {
-        return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC);
+        int modifiers = isStatic ? (PhpModifiers.PUBLIC | PhpModifiers.STATIC) : PhpModifiers.PUBLIC;
+        return PhpModifiers.fromBitMask(modifiers);
     }
 }

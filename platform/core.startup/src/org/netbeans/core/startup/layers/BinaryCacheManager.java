@@ -108,8 +108,8 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
         
         if (folder.attrs != null) {
             bw.writeInt(folder.attrs.size()); // attr count
-            for (Iterator it = folder.attrs.iterator(); it.hasNext(); ) {
-                writeAttribute(bw, (MemAttr)it.next()); // write attrs
+            for (MemAttr attr : folder.attrs) {
+                writeAttribute(bw, attr); // write attrs
             }
         } else {
             bw.writeInt(0); // no attrs
@@ -119,15 +119,13 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
             bw.writeInt(folder.children.size()); // file count
             // compute len of all FileRefs
             int baseOffset = bw.getPosition();
-            for (Iterator it = folder.children.iterator(); it.hasNext(); ) {
-                MemFileOrFolder item = (MemFileOrFolder)it.next(); 
+            for (MemFileOrFolder item : folder.children) {
                 baseOffset += computeHeaderSize(item, null);
             }
             // baseOffset now contains the offset of the first file content
 
             // write file headers
-            for (Iterator it = folder.children.iterator(); it.hasNext(); ) {
-                MemFileOrFolder item = (MemFileOrFolder)it.next(); 
+            for (MemFileOrFolder item : folder.children) {
                 bw.writeString(item.name); //    String name
                 bw.writeByte((item instanceof MemFile) ? (byte)0 : (byte)1); //boolean isFolder
                 bw.writeInt(baseOffset); //  int contentRef
@@ -137,8 +135,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
             }
 
             // write file/folder contents
-            for (Iterator it = folder.children.iterator(); it.hasNext(); ) {
-                MemFileOrFolder item = (MemFileOrFolder)it.next(); 
+            for (MemFileOrFolder item : folder.children) {
                 // TODO: can check the correctenss of the offsets now
                 if (item instanceof MemFile) {
                     writeFile(bw, (MemFile)item);
@@ -171,8 +168,8 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
 
         if (file.attrs != null) {
             bw.writeInt(file.attrs.size()); // attr count
-            for (Iterator it = file.attrs.iterator(); it.hasNext(); ) {
-                writeAttribute(bw, (MemAttr)it.next()); // write attrs
+            for (MemAttr attr : file.attrs) {
+                writeAttribute(bw, attr); // write attrs
             }
         } else {
             bw.writeInt(0); // no attrs
@@ -235,8 +232,8 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
 
         size += 4; // int attrCount
         if (mf.attrs != null) {
-            for (Iterator it = mf.attrs.iterator(); it.hasNext(); ) {
-                size += computeSize((MemAttr)it.next(), text); // Attribute[attrCount] attrs
+            for (MemAttr attr : mf.attrs) {
+                size += computeSize(attr, text); // Attribute[attrCount] attrs
             }
         }
 
@@ -393,9 +390,8 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
                 }
             }
             if (f instanceof MemFolder && ((MemFolder)f).children != null) {
-                Iterator it = ((MemFolder)f).children.iterator ();
-                while (it.hasNext ()) {
-                    collectBaseUrls ((MemFileOrFolder)it.next (), map, counter);
+                for (MemFileOrFolder item : ((MemFolder)f).children) {
+                    collectBaseUrls (item, map, counter);
                 }
             }
         }

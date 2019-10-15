@@ -30,6 +30,8 @@
 /nbbuild/testuserdir/
 /nbbuild/*.zip
 /nbbuild/user.build.properties
+/nbbuild/gitinfo.properties
+/nbbuild/netbeansrelease.properties
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 /java.source.nbjavac/test/test-nb-javac/nbproject/private/
@@ -52,6 +54,9 @@
 /platform/o.n.bootstrap/launcher/windows/nbproject/Makefile-*.mk
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
 /platform/o.n.bootstrap/launcher/windows/nbproject/private/
+
+# Database logs
+derby.log
 
 
 # OS generated files #

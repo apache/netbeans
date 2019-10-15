@@ -32,7 +32,7 @@
 
     <target name="compile-lib" depends="init,fake-jdbc-40">
         <mkdir dir="${build.dir}/lib-classes" />
-        <javac srcdir="libsrc" destdir="${build.dir}/lib-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6">
+        <javac target="${javac.target}" srcdir="libsrc" destdir="${build.dir}/lib-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6">
             <classpath>
                 <pathelement path="${lib.cp}"/>
             </classpath>
@@ -50,7 +50,7 @@
             public class RowIdLifetime {}
         </echo>
         <mkdir dir="${fake-jdbc-40.build}"/>
-        <javac srcdir="${fake-jdbc-40.src}" destdir="${fake-jdbc-40.build}"/>
+        <javac target="${javac.target}" source="1.7" srcdir="${fake-jdbc-40.src}" destdir="${fake-jdbc-40.build}"/>
     </target>
 
     <target name="jar-lib" depends="compile-lib">

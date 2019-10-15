@@ -94,7 +94,10 @@ public class AmazonJ2eePlatformImpl2 extends J2eePlatformImpl2 {
             return new HashSet<Profile>(Arrays.<Profile>asList(new Profile[]{Profile.JAVA_EE_5, Profile.J2EE_14}));
         } else if (dm.getContainerType().contains("Tomcat 7")) {
             return new HashSet<Profile>(Arrays.<Profile>asList(new Profile[]{Profile.JAVA_EE_6_FULL, Profile.JAVA_EE_6_WEB, Profile.JAVA_EE_5, Profile.J2EE_14}));
-        } else {
+        } else if (dm.getContainerType().contains("Tomcat 8")) {
+            return new HashSet<Profile>(Arrays.<Profile>asList(new Profile[]{Profile.JAVA_EE_7_FULL, Profile.JAVA_EE_7_WEB, Profile.JAVA_EE_6_FULL, Profile.JAVA_EE_6_WEB, Profile.JAVA_EE_5, Profile.J2EE_14}));
+        }
+        else {
             return new HashSet<Profile>(Arrays.<Profile>asList(new Profile[]{Profile.JAVA_EE_6_FULL, Profile.JAVA_EE_6_WEB, Profile.JAVA_EE_5, Profile.J2EE_14}));
         }
     }

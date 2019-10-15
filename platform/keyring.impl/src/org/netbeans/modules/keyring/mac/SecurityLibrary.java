@@ -28,7 +28,7 @@ import com.sun.jna.Pointer;
  */
 public interface SecurityLibrary extends Library {
 
-    SecurityLibrary LIBRARY = Native.loadLibrary("Security", SecurityLibrary.class);
+    SecurityLibrary LIBRARY = Native.load("Security", SecurityLibrary.class);
 
     int SecKeychainAddGenericPassword(
             Pointer keychain,

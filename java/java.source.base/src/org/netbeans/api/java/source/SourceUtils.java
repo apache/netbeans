@@ -568,26 +568,6 @@ public class SourceUtils {
         return null;        
     }
 
-    /**
-     * @since 13.0
-     */
-    public static boolean isTextBlockSupported(
-            @NullAllowed FileObject fileObject) {
-        SpecificationVersion supportedVer = new SpecificationVersion("13"); //NOI18N
-
-        SpecificationVersion runtimeVer = new SpecificationVersion(System.getProperty("java.specification.version")); //NOI18N
-        if (runtimeVer.compareTo(supportedVer) >= 0) {
-            if (fileObject != null) {
-                SpecificationVersion sourceVer = new SpecificationVersion(SourceLevelQuery.getSourceLevel(fileObject));
-                if (sourceVer.compareTo(supportedVer) < 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     private static FileObject findSourceForBinary(FileObject binaryRoot, FileObject binary, String signature, String pkgName, String className, boolean isPkg) throws IOException {
         FileObject[] sourceRoots = SourceForBinaryQuery.findSourceRoots(binaryRoot.toURL()).getRoots();                        
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);

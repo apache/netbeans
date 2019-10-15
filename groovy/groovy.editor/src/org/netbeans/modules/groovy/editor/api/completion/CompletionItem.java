@@ -1003,7 +1003,6 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public ImageIcon getIcon() {
-            // todo: what happens, if i get a CCE here?
             return (ImageIcon) ElementIcons.getElementIcon(javax.lang.model.element.ElementKind.FIELD,
                     Utilities.gsfModifiersToModel(modifiers, null));
         }
@@ -1045,7 +1044,6 @@ public abstract class CompletionItem extends DefaultCompletionProposal {
 
         @Override
         public ImageIcon getIcon() {
-            // todo: what happens, if i get a CCE here?
             return (ImageIcon) ElementIcons.getElementIcon(javax.lang.model.element.ElementKind.LOCAL_VARIABLE, null);
         }
 

@@ -136,6 +136,10 @@ public abstract class GlassfishConfiguration implements
         if (version == null) {
             return new int[]{0,1};
         }
+        // glassfish-resources.xml for v5
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_5) || GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+            return new int[]{0};
+        }
         // glassfish-resources.xml for v4
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
             return new int[]{0};
@@ -333,7 +337,7 @@ public abstract class GlassfishConfiguration implements
                     (J2EEVersion.J2EE_1_4.compareSpecification(j2eeVersion) >= 0) : false;
             boolean isPreJavaEE6 = (j2eeVersion != null) ?
                     (J2EEVersion.JAVAEE_5_0.compareSpecification(j2eeVersion) >= 0) : false;
-            if (!primarySunDD.exists() && isPreJavaEE6) {
+            if (!primarySunDD.exists()) {
                 // If module is J2EE 1.4 (or 1.3), or this is a web app (where we have
                 // a default property even for JavaEE5), then copy the default template.
                 if (J2eeModule.Type.WAR.equals(mt) || isPreJavaEE5) {
@@ -545,7 +549,17 @@ public abstract class GlassfishConfiguration implements
     
     static ASDDVersion getInstalledAppServerVersionFromDirectory(File asInstallFolder) {
         File dtdFolder = new File(asInstallFolder, "lib/dtds/"); // NOI18N
-        if (dtdFolder.exists()) {
+        File schemaFolder = new File(asInstallFolder, "lib/schemas");
+        
+        boolean geGF5 = false;
+        if(schemaFolder.exists()){
+            if(new File(schemaFolder, "javaee_8.xsd").exists() &&
+                    new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
+              geGF5 = true;
+              return ASDDVersion.GLASSFISH_5_1;
+            }
+        }
+        if (!geGF5 && dtdFolder.exists()) {
             if (new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()) {
                 return ASDDVersion.SUN_APPSERVER_10_1;
             }
@@ -569,7 +583,7 @@ public abstract class GlassfishConfiguration implements
         return null;
     }
 
-    // ------------------------------------------------------------------------
+    // ---------------------------------- --------------------------------------
     // Access to V2/V3 specific information.  Allows for graceful deprecation
     // of unsupported features (e.g. CMP, etc.)
     // ------------------------------------------------------------------------

@@ -21,14 +21,13 @@ package org.netbeans.core.network.proxy.mac;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
 
 /**
  *
  * @author lfischme
  */
 public interface MacCoreFoundationLibrary extends Library {
-    MacCoreFoundationLibrary LIBRARY = Native.loadLibrary("CoreFoundation", MacCoreFoundationLibrary.class);
+    MacCoreFoundationLibrary LIBRARY = Native.load("CoreFoundation", MacCoreFoundationLibrary.class);
 
     public boolean CFDictionaryGetValueIfPresent(Pointer dictionary, Pointer key, Pointer[] returnValue);
 
@@ -47,8 +46,8 @@ public interface MacCoreFoundationLibrary extends Library {
     public boolean CFNumberGetValue(Pointer cfNumberRef, Pointer cfNumberType, Pointer value);
 
     public long CFNumberGetByteSize(Pointer cfNumberRef);
-    
+
     public long CFArrayGetCount(Pointer cfArrayRef);
-    
+
     public Pointer CFArrayGetValueAtIndex(Pointer cfArrayRef, Pointer cfIndex);
 }

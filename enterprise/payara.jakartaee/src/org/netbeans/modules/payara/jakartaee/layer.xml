@@ -237,14 +237,14 @@
         <folder name="XML">
             <folder name="UserCatalogs">
                 <file name="org-netbeans-modules-payara-jakartaee-RunTimeDDCatalog.instance">
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.jakartaee.RunTimeDDCatalog.getRunTimeDDCatalog"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.jakartaee.RunTimeDDCatalog.getDefaultRunTimeDDCatalog"/>
                     <attr name="instanceOf" stringvalue="org.netbeans.modules.xml.catalog.spi.CatalogReader"/>
                 </file>
             </folder>
             <folder name="GrammarQueryManagers">
                 <file name="org-netbeans-modules-payara-jakartaee-RunTimeDDCatalog.instance">
                     <attr name="position" intvalue="350"/>
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.jakartaee.RunTimeDDCatalog.getRunTimeDDCatalog"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.jakartaee.RunTimeDDCatalog.getDefaultRunTimeDDCatalog"/>
                 </file>
             </folder> <!-- GrammarQueryManagers -->
         </folder>

@@ -20,23 +20,10 @@
 
 -->
 <project xmlns="http://www.netbeans.org/ns/project/1">
-    <type>org.netbeans.modules.apisupport.project</type>
+    <type>org.netbeans.modules.apisupport.project.suite</type>
     <configuration>
-        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.modules.nbjavac.impl</code-name-base>
-            <module-dependencies>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.nbjavac.api</code-name-base>
-                    <run-dependency>
-                        <specification-version>2.0</specification-version>
-                    </run-dependency>
-                </dependency>
-            </module-dependencies>
-            <public-packages/>
-            <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-13-impl.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/nb-javac-13-impl.jar</binary-origin>
-            </class-path-extension>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-suite-project/1">
+            <name>extras</name>
         </data>
     </configuration>
 </project>

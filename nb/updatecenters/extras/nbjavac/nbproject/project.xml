@@ -24,6 +24,7 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>org.netbeans.modules.nbjavac</code-name-base>
+            <suite-component/>
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.netbeans.modules.nbjavac.api</code-name-base>

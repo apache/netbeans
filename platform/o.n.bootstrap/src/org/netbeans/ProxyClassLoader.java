@@ -122,6 +122,18 @@ public class ProxyClassLoader extends ClassLoader {
     @Override
     protected synchronized Class loadClass(String name, boolean resolve)
                                             throws ClassNotFoundException {
+        final Class cls = doFindClass(name);
+        if (resolve) resolveClass(cls); 
+        return cls; 
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        LOGGER.log(Level.FINEST, "{0} finding class {1}", new Object[] {this, name});
+        return doFindClass(name);
+    }
+    
+    private Class<?> doFindClass(String name) throws ClassNotFoundException {
         if (LOG_LOADING && !name.startsWith("java.")) {
             LOGGER.log(Level.FINEST, "{0} initiated loading of {1}",
                     new Object[] {this, name});
@@ -202,9 +214,9 @@ public class ProxyClassLoader extends ClassLoader {
         if (cls == null) {
             throw new ClassNotFoundException(diagnosticCNFEMessage(name, del));
         }
-        if (resolve) resolveClass(cls); 
-        return cls; 
+        return cls;
     }
+    
     private String diagnosticCNFEMessage(String base, Set<ProxyClassLoader> del) {
         String parentSetS;
         int size = parents.size();

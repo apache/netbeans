@@ -19,16 +19,7 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/updatecenters/resources/updateAction.gif</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    <fileset>
-        <file>extras/nbjavac.api/release/modules/ext/nb-javac-13-api.jar.external</file>
-        <file>extras/nbjavac.impl/release/modules/ext/nb-javac-13-impl.jar.external</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<project basedir="." default="netbeans" name="extra/nbjavac">
+    <description>Builds, tests, and runs the project org.netbeans.modules.nbjavac</description>
+    <import file="${basedir}/nbproject/build-impl.xml" />
+</project>

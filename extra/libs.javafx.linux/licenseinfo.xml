@@ -21,13 +21,12 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/updatecenters/resources/updateAction.gif</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    <fileset>
-        <file>extras/nbjavac.api/release/modules/ext/nb-javac-13-api.jar.external</file>
-        <file>extras/nbjavac.impl/release/modules/ext/nb-javac-13-impl.jar.external</file>
+        <file>external/javafx-base-13-linux.jar.external</file>
+        <file>external/javafx-controls-13-linux.jar.external</file>
+        <file>external/javafx-graphics-13-linux.jar.external</file>
+        <file>external/javafx-media-13-linux.jar.external</file>
+        <file>external/javafx-swing-13-linux.jar.external</file>
+        <file>external/javafx-web-13-linux.jar.external</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

@@ -19,17 +19,15 @@
     under the License.
 
 -->
-<project xmlns="http://www.netbeans.org/ns/project/1">
-    <type>org.netbeans.modules.apisupport.project</type>
-    <configuration>
-        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.modules.nbjavac.api</code-name-base>
-            <module-dependencies/>
-            <public-packages/>
-            <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-13-api.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/nb-javac-13-api.jar</binary-origin>
-            </class-path-extension>
-        </data>
-    </configuration>
-</project>
+<licenseinfo>
+    <fileset>
+        <file>external/javafx-base-13-win.jar.external</file>
+        <file>external/javafx-controls-13-win.jar.external</file>
+        <file>external/javafx-graphics-13-win.jar.external</file>
+        <file>external/javafx-media-13-win.jar.external</file>
+        <file>external/javafx-swing-13-win.jar.external</file>
+        <file>external/javafx-web-13-win.jar.external</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="extra/nbjavac">
-    <description>Builds, tests, and runs the project org.netbeans.modules.nbjavac</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
+<project basedir="." default="netbeans" name="extra/nbjavac.api">
+    <description>Builds, tests, and runs the project org.netbeans.modules.nbjavac.api</description>
+    <import file="${basedir}/nbproject/build-impl.xml" />
 </project>

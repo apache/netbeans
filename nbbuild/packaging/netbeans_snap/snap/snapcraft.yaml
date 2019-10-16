@@ -40,6 +40,7 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "${VERSION}"
+    parse-info: []
       
   build:
     build-attributes: [ no-patchelf ]

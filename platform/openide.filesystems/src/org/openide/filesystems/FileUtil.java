@@ -2326,7 +2326,7 @@ public final class FileUtil extends Object {
                 res = new ProxyLookup(
                     Lookups.singleton(new JarArchiveRootProvider()),
                     Lookup.getDefault()).lookupResult(ArchiveRootProvider.class);
-                if (!archiveRootProviders.compareAndSet(null, res)) {
+                if (archiveRootProviders.compareAndSet(null, res)) {
                     res = archiveRootProviders.get();
                     res.addLookupListener((ev) -> {
                         archiveRootProviderCache = null;
@@ -2338,6 +2338,6 @@ public final class FileUtil extends Object {
         return archiveRootProviderCache;
     }
 
-    private static Iterable<? extends ArchiveRootProvider> archiveRootProviderCache;
+    private static volatile Iterable<? extends ArchiveRootProvider> archiveRootProviderCache;
     private static final AtomicReference<Lookup.Result<ArchiveRootProvider>> archiveRootProviders = new AtomicReference<>();
 }

@@ -20,16 +20,20 @@
 package org.netbeans.modules.ide.ergonomics;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import junit.framework.Test;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.autoupdate.services.Trampoline;
+import org.netbeans.modules.autoupdate.updateprovider.FeatureItem;
+import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
 import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
 import org.netbeans.modules.ide.ergonomics.fod.FoDUpdateUnitProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.project.ProjectFactory;
-import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
 /**
@@ -101,11 +105,35 @@ public class DynamicVerifyTest extends NbTestCase {
         FoDUpdateUnitProvider instance = new FoDUpdateUnitProvider();
 
         Map<String, UpdateItem> items = instance.getUpdateItems();
-        assertNull("No user installed modules should be in standard build. If this happens,\n" +
+        UpdateItem updateItem = items.get("fod.user.installed");
+        if(updateItem == null) {
+            return; // The best case
+        }
+        UpdateItemImpl updateItemImpl = Trampoline.SPI.impl(updateItem);
+        assertTrue("Unexpected UpdateItemImpl: " + updateItemImpl.getClass().getName(), updateItemImpl instanceof FeatureItem);
+        FeatureItem featureItem = (FeatureItem) updateItemImpl;
+
+        Set<String> moduleNames = featureItem.getModuleCodeNames();
+
+        // OpenJFX can't be distributed with netbeans as GPL2-CP is not
+        // whitelisted by Apache legal. To make it easier update items with
+        // only references to maven central are provided, that make it easy
+        // for the end user to install the necessary dependencies
+        //
+        // This results in these modules to be reported as user installable
+        // from a base installation:
+        moduleNames.removeAll(Arrays.asList(
+            "org.netbeans.libs.javafx.linux",
+            "org.netbeans.libs.javafx.macosx",
+            "org.netbeans.libs.javafx.win"));
+
+        System.out.println(featureItem.getModuleCodeNames());
+        assertTrue(
+                "No user installed modules should be in standard build. If this happens,\n" +
                 "like in case of http://openide.netbeans.org/issues/show_bug.cgi?id=174052\n" +
                 "then you probably added new module and did not categorize it properly,\n" +
                 "or you have additional modules (not part of regular build) " +
-                "in your installation.", items.get("fod.user.installed"));
+                "in your installation. Found: " + moduleNames, moduleNames.isEmpty());
     }
 
     public void testGetAllProjectFactories() throws Exception {

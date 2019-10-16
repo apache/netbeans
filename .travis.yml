@@ -213,13 +213,13 @@ matrix:
           services:
             - mysql
           env:
-            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
             - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
           before_script:
             - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
-            - ant $OPTS $OPTS_TEST -f ide/db.mysql test
+            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
 

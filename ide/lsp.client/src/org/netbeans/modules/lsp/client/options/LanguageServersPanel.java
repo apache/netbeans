@@ -18,37 +18,18 @@
  */
 package org.netbeans.modules.lsp.client.options;
 
-import com.google.gson.Gson;
 import java.awt.Component;
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.event.ChangeEvent;
-import org.eclipse.tm4e.core.registry.IRegistryOptions;
-import org.eclipse.tm4e.core.registry.Registry;
 import org.netbeans.modules.lsp.client.options.LanguageStorage.LanguageDescription;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataLoaderPool;
-import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.NbPreferences;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
 
@@ -62,10 +43,13 @@ final class LanguageServersPanel extends javax.swing.JPanel {
         this.languages = new DefaultListModel<>();
         this.usedIds = new HashSet<>();
         initComponents();
-        this.languagesList.addListSelectionListener(evt -> {
-            edit.setEnabled(languagesList.getSelectedIndex() != (-1));
-            remove.setEnabled(languagesList.getSelectedIndex() != (-1));
-        });
+        this.languagesList.addListSelectionListener(evt -> setEnableDisable());
+        setEnableDisable();
+    }
+
+    private void setEnableDisable() {
+        edit.setEnabled(languagesList.getSelectedIndex() != (-1));
+        remove.setEnabled(languagesList.getSelectedIndex() != (-1));
     }
 
     /**

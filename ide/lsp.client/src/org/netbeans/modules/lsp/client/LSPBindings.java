@@ -52,6 +52,7 @@ import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
+import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
@@ -101,8 +102,9 @@ public class LSPBindings {
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
+                                           MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServerDescription desc = provider.startServer(Lookups.singleton(prj));
+                                               LanguageServerDescription desc = provider.startServer(Lookups.fixed(prj, mimeTypeInfo));
 
                                                if (desc != null) {
                                                    try {

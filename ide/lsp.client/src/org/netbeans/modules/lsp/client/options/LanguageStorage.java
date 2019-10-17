@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import org.eclipse.tm4e.core.registry.IRegistryOptions;
 import org.eclipse.tm4e.core.registry.Registry;
+import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataLoaderPool;
@@ -126,14 +127,21 @@ public class LanguageStorage {
                     if (icon != null) {
                         icon.delete();
                     }
-                    icon = FileUtil.createData(FileUtil.getConfigRoot(), "Loaders/" + description.mimeType + "/Factories/icon.png");
-                    File iconFile = new File(description.icon);
-                    try (InputStream in = new FileInputStream(iconFile);
-                         OutputStream out = icon.getOutputStream()) {
-                        FileUtil.copy(in, out);
-                    }
+                    File iconFile = description.icon != null ? new File(description.icon) : null;
+                    if (iconFile != null && iconFile.isFile()) {
+                        icon = FileUtil.createData(FileUtil.getConfigRoot(), "Loaders/" + description.mimeType + "/Factories/icon.png");
+                        try (InputStream in = new FileInputStream(iconFile);
+                             OutputStream out = icon.getOutputStream()) {
+                            FileUtil.copy(in, out);
+                        }
 
-                    loader.setAttribute("iconBase", icon.getNameExt());
+                        loader.setAttribute("iconBase", icon.getNameExt());
+                    }
+                    
+                    if (description.languageServer != null && !description.languageServer.isEmpty()) {
+                        FileObject langServer = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
+                        langServer.setAttribute("command", description.languageServer.split(" "));
+                    }
                     
                     mimeTypesToClear.remove(description.mimeType);
                 } catch (Exception ex) {
@@ -146,6 +154,10 @@ public class LanguageStorage {
                     FileObject syntax = FileUtil.getConfigFile("Editors/" + mimeType + "/syntax.json");
                     if (syntax != null) {
                         syntax.delete();
+                    }
+                    FileObject langServer = FileUtil.getConfigFile("Editors/" + mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
+                    if (langServer != null) {
+                        langServer.delete();
                     }
                     FileObject loader = FileUtil.getConfigFile("Loaders/" + mimeType + "/Factories/data-object.instance");
                     if (loader != null) {
@@ -167,6 +179,8 @@ public class LanguageStorage {
             Method fireChangeEvent = DataLoaderPool.class.getDeclaredMethod("fireChangeEvent", ChangeEvent.class);
             fireChangeEvent.setAccessible(true);
             fireChangeEvent.invoke(DataLoaderPool.getDefault(), new ChangeEvent(DataLoaderPool.getDefault()));
+
+            TextmateTokenId.LanguageHierarchyImpl.refreshGrammars();
         } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }

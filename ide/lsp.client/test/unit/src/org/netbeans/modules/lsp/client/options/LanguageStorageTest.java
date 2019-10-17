@@ -18,13 +18,19 @@
  */
 package org.netbeans.modules.lsp.client.options;
 
+import java.awt.Image;
 import java.beans.BeanInfo;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.lsp.client.options.LanguageStorage.LanguageDescription;
+import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
@@ -75,6 +81,7 @@ public class LanguageStorageTest extends NbTestCase {
         MockLookup.setInstances(repo);
 
         assertSame(repo, Repository.getDefault());
+        assertNull(MimeLookup.getLookup("text/x-ext-t").lookup(Language.class));
 
         FileObject grammar = FileUtil.createData(data, "any.json");
         try (OutputStream out = grammar.getOutputStream()) {
@@ -92,10 +99,15 @@ public class LanguageStorageTest extends NbTestCase {
 
         assertEquals(GenericDataObject.class, recognized.getClass());
         assertEquals("org.openide.loaders.DefaultDataObject", testDO.getClass().getName()); //ensure the DO cannot be GCed
-        
-        //TEST START:
-        recognized.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
-        //TEST END:
+
+        Image icon = recognized.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
+        String url = ((URL) icon.getProperty("url", null)).getFile();
+        assertTrue(url.contains("/org/openide/nodes/defaultNode.png"));
+        Language l = MimeLookup.getLookup("text/x-ext-t").lookup(Language.class);
+        assertNotNull(l);
+
+        LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null)));
+
         LanguageStorage.store(Collections.emptyList());
         
         assertEquals("content/unknown", FileUtil.getMIMEType(testFO));

@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -5683,7 +5684,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (varArgs && !parIt.hasNext() && param.getKind() == TypeKind.ARRAY) {
                             toAdd = ((ArrayType) param).getComponentType();
                         }
-                        if (toAdd != null && ret.add(toAdd) && toAdd.getKind() != TypeKind.TYPEVAR) {
+                        while (toAdd != null && toAdd.getKind() == TypeKind.TYPEVAR) {
+                            toAdd = ((TypeVariable) toAdd).getUpperBound();
+                        }
+                        if (toAdd != null && ret.add(toAdd)) {
                             TypeMirror toRemove = null;
                             for (TypeMirror tm : ret) {
                                 if (tm != toAdd) {

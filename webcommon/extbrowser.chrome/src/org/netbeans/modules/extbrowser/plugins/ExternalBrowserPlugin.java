@@ -124,12 +124,19 @@ public final class ExternalBrowserPlugin {
     }
 
     private String urlToString(URL url) {
-        try {
+        String urlStr;
+        String badStart = "file:/private/var/";
+        String goodStart = "file:/var/";
+        try { 
             // try to 'normalize' the URL
-            return url.toURI().toASCIIString().toLowerCase();
-        } catch (URISyntaxException ex) {
-            return url.toExternalForm();
-        }
+            urlStr =  url.toURI().toASCIIString().toLowerCase();
+        } catch (URISyntaxException ex) { 
+            urlStr = url.toExternalForm();
+        }     
+        if (urlStr != null && urlStr.startsWith(badStart)) {
+            return goodStart + urlStr.substring(badStart.length());
+        }     
+        return urlStr;
     }
 
     /**
@@ -408,7 +415,9 @@ public final class ExternalBrowserPlugin {
                     LOG.log(Level.FINE, "awaiting URL: {0}", awaiting);  // NOI18N
                 }
             }
-            Pair pair = (u == null) ? null : awaitingBrowserResponse.remove(urlToString(u));
+            Pair pair = (u == null) ? null : awaitingBrowserResponse.remove(
+                
+                (u));
             ChromeBrowserImpl browserImpl = pair != null ? pair.impl : null;
 
             // XXX: workaround: when Web Project is run it is started as "http:/localhost/aa" but browser URL is

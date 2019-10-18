@@ -1065,7 +1065,13 @@ public class ConfigManager {
                     Schema schema;
                     if (version != null) {
                         String versionStr = version.getValue();
-                        if ("2.2".equals(versionStr)) {
+                        if ("2.3".equals(versionStr)) {
+                            if ("facelet-taglib".equals(documentElement.getLocalName())) {
+                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_22);
+                            } else {
+                                schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACES_23);
+                            }
+                        } else if ("2.2".equals(versionStr)) {
                             if ("facelet-taglib".equals(documentElement.getLocalName())) {
                                 schema = DbfFactory.getSchema(servletContext, DbfFactory.FacesSchema.FACELET_TAGLIB_22);
                             } else {

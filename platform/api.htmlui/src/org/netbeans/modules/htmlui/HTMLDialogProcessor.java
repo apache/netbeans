@@ -33,7 +33,6 @@ import java.util.TreeSet;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -58,7 +57,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Jaroslav Tulach
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
 @ServiceProvider(service = Processor.class)
 public class HTMLDialogProcessor extends AbstractProcessor
 implements Comparator<ExecutableElement> {
@@ -68,6 +66,11 @@ implements Comparator<ExecutableElement> {
         hash.add(HTMLDialog.class.getCanonicalName());
         hash.add(HTMLComponent.class.getCanonicalName());
         return hash;
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
     
     private Set<Element> annotatedWith(RoundEnvironment re, Class<? extends Annotation> type) {

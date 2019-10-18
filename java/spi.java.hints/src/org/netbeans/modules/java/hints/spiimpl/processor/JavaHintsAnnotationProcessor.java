@@ -22,15 +22,12 @@ package org.netbeans.modules.java.hints.spiimpl.processor;
 import java.lang.reflect.Array;
 import java.util.Map.Entry;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -44,14 +41,12 @@ import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerBuilder.File;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
-import org.openide.util.NbCollections;
 import org.openide.util.lookup.ServiceProvider;
 
 /**Inspired by https://sezpoz.dev.java.net/.
  *
  * @author lahvac
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes("org.netbeans.spi.java.hints.*")
 @ServiceProvider(service=Processor.class, position=100)
 public class JavaHintsAnnotationProcessor extends LayerGeneratingProcessor {

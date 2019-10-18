@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaCompiler;
@@ -82,7 +80,6 @@ public class LayerGeneratingProcessorTest extends NbTestCase {
         assertGC("can collect ProcessingEnvironment", r);
     }
     public @interface A {}
-    @SupportedSourceVersion(SourceVersion.RELEASE_7)
     static class P extends LayerGeneratingProcessor {
         ProcessingEnvironment env;
         public @Override Set<String> getSupportedAnnotationTypes() {

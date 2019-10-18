@@ -26,7 +26,9 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -165,8 +167,8 @@ public class AnnotationProcessors {
             return ErrorDescriptionFactory.forTree(ctx, rewriteAt, 
                     Bundle.HINT_AnnoProcessor_DeclaredSourceObsolete(), 
                     // suggest to generate latest()
-                    new OverrideReturnLatest(info, rewriteAt, false).toEditorFix(),
-                    new OverrideReturnLatest(info, rewriteAt, true).toEditorFix(),
+                    new OverrideReturnLatest(info, helper.getProcessorPath(), false).toEditorFix(),
+                    new OverrideReturnLatest(info, helper.getProcessorPath(), true).toEditorFix(),
                     // suggest change to the current version
                     changeToCurrentSource(ctx, helper, info.getSourceVersion())
             );
@@ -338,7 +340,9 @@ public class AnnotationProcessors {
             return processorPath;
         }
         
-        public void makeGetSupportedOverride(WorkingCopy wc, SourceVersion projectSource) {
+        @SuppressWarnings("element-type-mismatch")
+        public void makeGetSupportedOverride(WorkingCopy wc, SourceVersion projectSource, 
+                boolean removeSupportedAnnotation) {
             TreeMaker make = wc.getTreeMaker();
             
             BlockTree body = make.Block(Collections.singletonList(
@@ -369,7 +373,27 @@ public class AnnotationProcessors {
                     null);
         
             ClassTree ct = (ClassTree)getProcessorPath().getLeaf();
-            ClassTree nct = make.addClassMember(ct, overrideMethod);
+            ClassTree nct = make.addClassMember(ct, make.asNew(overrideMethod));
+
+            if (removeSupportedAnnotation) {
+                // if the class contains also @SupportSourceLevel declaration, remove it:
+                TreePath tp = findSupportedAnnotation();
+                if (tp != null) {
+                    List<? extends AnnotationTree> annos = new ArrayList<>(nct.getModifiers().getAnnotations());
+                    if (annos.remove(tp.getLeaf())) {
+                        make.asRemoved(tp.getLeaf());
+                        nct = make.Class(
+                                make.Modifiers(nct.getModifiers(), annos), 
+                                nct.getSimpleName().toString(), 
+                                nct.getTypeParameters(), 
+                                nct.getExtendsClause(), 
+                                nct.getImplementsClause(), 
+                                nct.getMembers()
+                        );
+                    }
+                }
+            }
+            
             wc.rewrite(ct, nct);
         }
     }        
@@ -451,7 +475,10 @@ public class AnnotationProcessors {
                 return;
             }
             ProcessorHintSupport support = new ProcessorHintSupport(ctx.getWorkingCopy(), path);
-            support.makeGetSupportedOverride(ctx.getWorkingCopy(), projectSource);
+            if (!support.initialize()) {
+                return;
+            }
+            support.makeGetSupportedOverride(ctx.getWorkingCopy(), projectSource, true);
         }
     }
     

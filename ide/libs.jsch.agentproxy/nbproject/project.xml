@@ -28,15 +28,15 @@
                 <dependency>
                     <code-name-base>org.netbeans.libs.jna</code-name-base>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.37</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.7</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.1</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

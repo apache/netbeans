@@ -187,10 +187,10 @@ public final class Utils {
             // appcli 1.3, 1.4, 5.0, 6.0
             // ear 1.3, 1.4, 5, 6
             if (modVer.equals("6") || modVer.equals("6.0") || modVer.endsWith("1.6") || modVer.equals("3.1")) {
-                suffix = "-java_ee_6/";
+                suffix = "-java_ee/";
             } else if (modVer.equals("3.0")) {
                 if (J2eeModule.Type.WAR.equals(t)) {
-                    suffix = "-java_ee_6/";
+                    suffix = "-java_ee/";
                 }
             } else if (modVer.equals("1.4") || modVer.equals("2.4") || modVer.equals("2.1")) {
                 suffix = "-j2ee_1_4/";

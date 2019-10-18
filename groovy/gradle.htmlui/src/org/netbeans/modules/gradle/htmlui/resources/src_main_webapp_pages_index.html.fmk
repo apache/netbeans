@@ -22,24 +22,59 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>Java Frontend Application</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
     <body>
-        <h1>Your Todos (<span data-bind="text: numTodos"></span>)</h1>
-        <label for="key">New Todo:</label>
-        <input id="key" type="text" data-bind="textInput: desc" placeholder="Enter a task"/>
-        <button data-bind="click: addTodo, enable: desc">Add</button>
-        <ul class="todos" data-bind='foreach: todos'>
-            <li>
-                <span data-bind="text: $data"></span>
-            </li>
-        </ul>
+        <div class="navbar-fixed">
+            <nav>
+                <div class="naí-wrapper" >
+                    <a href="#" class="brand-logo center">Java Frontend Application</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a target="_blank" href="http://netbeans.org">NetBeans</a></li>
+                        <li><a target="_blank" href="https://github.com/dukescript/kt-mvvm-demo/tree/FXBeanInfo#readme">JavaFX</a></li>
+                        <li><a target="_blank" href="https://materializecss.com/">Materialize CSS</a></li>
+                        <li><a target="_blank" href="http://dukescript.com">DukeScript</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <form class="col s6" data-bind="submit: addTodo">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <label for="key">New Todo:</label>
+                        <input id="key" type="text" data-bind="textInput: desc" placeholder="Enter a task"/>
+                        <a data-bind="click: addTodo, css: { disabled : desc().length === 0 }" class="waves-effect waves-light btn">Add</a>
+                    </div>
+                </div>
+            </form>
+            <div class="col s6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">TODO Example</span>
+                        <p>Demo application to manage your TODOs.
+                            There is <span data-bind="text: numTodos"></span>
+                            TODOs so far.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ul class="col s12 collection" data-bind='foreach: todos'>
+                <li class="collection-item">
+                    <span data-bind="text: $data"></span>
+                </li>
+            </ul>
+        </div>
         <!-- Remove this line to remove the button bar in the footer -->
         <script async=true src="http://dukescript.com/presenters/welcome.js"></script>
 
 
-<!-- ${browser.bootstrap} -->
+        <!-- ${browser.bootstrap} -->
     </body>
 </html>
 </#noparse>

@@ -1,0 +1,2 @@
+    private static function |>MARK_OCCURRENCES:getIndex<|() {
+        $instance2 = new $this->property[$this->|>MARK_OCCURRENCES:getI^ndex<|()];

@@ -59,7 +59,7 @@ public class MacNetworkProxy implements NetworkProxyResolver {
         boolean resolved = false;
         
         LOGGER.log(Level.FINE, "Mac system proxy resolver started."); //NOI18N
-        Pointer settingsDictionary = cfNetworkLibrary.CFNetworkCopySystemProxySettings(); 
+        Pointer settingsDictionary = cfNetworkLibrary.CFNetworkCopySystemProxySettings();
 
         Pointer autoDiscoveryEnable = cfLibrary.CFDictionaryGetValue(settingsDictionary, getKeyCFStringRef(KEY_AUTO_DISCOVERY_ENABLE));
         if (getIntFromCFNumberRef(autoDiscoveryEnable) != 0) {

@@ -114,9 +114,20 @@ public final class ElementHandle<T extends Element> {
     @SuppressWarnings ("unchecked")     // NOI18N
     public @CheckForNull T resolve (@NonNull final CompilationInfo compilationInfo) {
         Parameters.notNull("compilationInfo", compilationInfo); // NOI18N
-        ModuleElement module = compilationInfo.getFileObject() != null
-                ? ((JCTree.JCCompilationUnit)compilationInfo.getCompilationUnit()).modle
-                : null;
+        ModuleElement module;
+
+        if (compilationInfo.getFileObject() != null) {
+            JCTree.JCCompilationUnit cut = (JCTree.JCCompilationUnit)compilationInfo.getCompilationUnit();
+            if (cut != null) {
+                module = cut.modle;
+            } else if (compilationInfo.getTopLevelElements().iterator().hasNext()) {
+                module = ((Symbol) compilationInfo.getTopLevelElements().iterator().next()).packge().modle;
+            } else {
+                module = null;
+            }
+        } else {
+            module = null;
+        }
         T result = resolveImpl (module, compilationInfo.impl.getJavacTask());
         if (result == null) {
             if (log.isLoggable(Level.INFO))

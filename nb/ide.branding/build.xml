@@ -35,8 +35,16 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
       <fileset dir="release-toplevel"/>
     </copy>
     
+    <!-- copy to build folder to do replace -->
+    <delete dir="${build.dir}/branding/core.startup" quiet="true" />
+    <copy todir="${build.dir}/branding/core.startup">
+        <fileset dir="core.startup"/>
+    </copy>
+    <replace file="${build.dir}/branding/core.startup/src/org/netbeans/core/startup/Bundle_nb.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+        <replacefilter token="@@metabuild.ComputedSplashVersion@@" property="metabuild.ComputedSplashVersion"/>
+    </replace>
     <locjar warnMissingDir="true"
-      basedir="core.startup/src"
+      basedir="${build.dir}/branding/core.startup/src"
       jarfile="${cluster}/core/core.jar">
       <branding name="nb"/>
     </locjar>
@@ -52,9 +60,16 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
       jarfile="${cluster}/modules/org-netbeans-core-netigso.jar">
       <branding name="nb"/>
     </locjar>
-
+    
+    <delete dir="${build.dir}/branding/core.windows" quiet="true" />
+    <copy todir="${build.dir}/branding/core.windows">
+        <fileset dir="core.windows"/>
+    </copy>
+    <replace file="${build.dir}/branding/core.windows/src/org/netbeans/core/windows/view/ui/Bundle_nb.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+        <replacefilter token="@@metabuild.ComputedTitleVersion@@" property="metabuild.ComputedTitleVersion"/>
+    </replace>
     <locjar warnMissingDir="true"
-      basedir="core.windows/src"
+      basedir="${build.dir}/branding/core.windows/src"
       jarfile="${cluster}/modules/org-netbeans-core-windows.jar">
       <branding name="nb"/>
     </locjar>

@@ -31,6 +31,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 
 public class TreeShims {
 
@@ -144,6 +147,35 @@ public class TreeShims {
         }
     }
   
+    public static boolean isRecord(Element el) {
+        return el != null && "RECORD".equals(el.getKind().name());
+    }
+
+    public static boolean isRecordComponent(Element el) {
+        return el != null && "RECORD_COMPONENT".equals(el.getKind().name());
+    }
+
+    public static Element toRecordComponent(Element el) {
+        if (el == null ||el.getKind() != ElementKind.FIELD) {
+            return el;
+        }
+        TypeElement owner = (TypeElement) el.getEnclosingElement();
+        if (!"RECORD".equals(owner.getKind().name())) {
+            return el;
+        }
+        for (Element encl : owner.getEnclosedElements()) {
+            if (isRecordComponent(encl.getKind()) &&
+                encl.getSimpleName().equals(el.getSimpleName())) {
+                return encl;
+            }
+        }
+        return el;
+    }
+
+    private static boolean isRecordComponent(ElementKind kind) {
+        return "RECORD_COMPONENT".equals(kind.name());
+    }
+
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;

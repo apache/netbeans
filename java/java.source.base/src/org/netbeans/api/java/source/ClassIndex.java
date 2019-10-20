@@ -867,6 +867,10 @@ public final class ClassIndex {
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         default:
+                            if (elementKind.name().equals("RECORD")) {
+                                //no subclasses(?)
+                                break;
+                            }
                             throw new IllegalArgumentException ();                                        
                     }
                     break;

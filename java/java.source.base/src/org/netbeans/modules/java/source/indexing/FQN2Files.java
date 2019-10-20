@@ -76,7 +76,7 @@ public final class FQN2Files {
                 if (value == null) {
                     props.setProperty(fqn, file.toExternalForm());
                 }
-                return super.visitType(e, p);
+                return scan(e.getEnclosedElements(), p);
             }
             @Override
             public Object visitModule(ModuleElement e, Object p) {

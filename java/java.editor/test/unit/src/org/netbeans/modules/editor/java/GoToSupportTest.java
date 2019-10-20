@@ -1049,6 +1049,225 @@ public class GoToSupportTest extends NbTestCase {
         assertTrue(wasCalled[0]);
     }
 
+    public void testRecords1() throws Exception {
+//        try {
+//            SourceVersion.valueOf("RELEASE_14");
+//        } catch (IllegalArgumentException ex) {
+//            //OK, no RELEASE_10, skip test:
+//            return ;
+//        }
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "1.14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    public record R(int ff) {}\n" +
+                      "    private static void method(R r) {\n" +
+                      "        int i = r.f|f();\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(code.indexOf("int ff"), pos);
+                wasCalled[0] = true;
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testRecords2() throws Exception {
+//        try {
+//            SourceVersion.valueOf("RELEASE_14");
+//        } catch (IllegalArgumentException ex) {
+//            //OK, no RELEASE_10, skip test:
+//            return ;
+//        }
+        this.sourceLevel = "1.14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    public record R(int ff) {}\n" +
+                      "    private static void method(R r) {\n" +
+                      "        int i = r.f|f();\n" +
+                      "    }\n" +
+                      "}\n";
+
+        String toolTip = performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, true, false);
+
+        toolTip = toolTip.replace(source.toURI().toString(), "FILE");
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test.&#x200B;R</a></b></font>", toolTip);
+    }
+
+    public void testRecords3() throws Exception {
+//        try {
+//            SourceVersion.valueOf("RELEASE_14");
+//        } catch (IllegalArgumentException ex) {
+//            //OK, no RELEASE_10, skip test:
+//            return ;
+//        }
+        this.sourceLevel = "1.14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    public record RR(int ff) {}\n" +
+                      "    private static void method(R|R r) {\n" +
+                      "        int i = r.ff();\n" +
+                      "    }\n" +
+                      "}\n";
+
+        String toolTip = performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, true, false);
+
+        toolTip = toolTip.replace(source.toURI().toString(), "FILE");
+        assertEquals("<html><body><base href=\"FILE\"></base><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font>", toolTip);
+    }
+
+    public void testRecords4() throws Exception {
+//        try {
+//            SourceVersion.valueOf("RELEASE_14");
+//        } catch (IllegalArgumentException ex) {
+//            //OK, no RELEASE_10, skip test:
+//            return ;
+//        }
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "1.14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Auxiliary r) {\n" +
+                      "        int i = r.f|f();\n" +
+                      "    }\n" +
+                      "}\n";
+        final String auxiliary = "package test;\n" +
+                                 "public record Auxiliary(int ff) {}";
+
+        performTest(code, auxiliary, -1, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                try {
+                    JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
+                        public void run(CompilationController parameter) throws Exception {
+                            parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            Element e = el.resolve(parameter);
+
+                            assertTrue(TreeShims.isRecordComponent(e));
+                            assertEquals("ff", e.getSimpleName().toString());
+                            wasCalled[0] = true;
+                        }
+                    }, true);
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, true);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testRecords5() throws Exception {
+//        try {
+//            SourceVersion.valueOf("RELEASE_14");
+//        } catch (IllegalArgumentException ex) {
+//            //OK, no RELEASE_10, skip test:
+//            return ;
+//        }
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "1.14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Auxi|liary r) {\n" +
+                      "    }\n" +
+                      "}\n";
+        final String auxiliary = "package test;\n" +
+                                 "public record Auxiliary(int ff) {}";
+
+        performTest(code, auxiliary, -1, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                try {
+                    JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
+                        public void run(CompilationController parameter) throws Exception {
+                            parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            Element e = el.resolve(parameter);
+
+                            assertTrue(TreeShims.isRecord(e));
+                            assertEquals("test.Auxiliary", ((TypeElement) e).getQualifiedName().toString());
+                            wasCalled[0] = true;
+                        }
+                    }, true);
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, true);
+
+        assertTrue(wasCalled[0]);
+    }
+
     private String sourceLevel = "1.5";
     private FileObject source;
     
@@ -1086,18 +1305,25 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     private String performTest(String sourceCode, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
-        int offset = sourceCode.indexOf('|');
-
-        assertNotSame(-1, offset);
-
-        sourceCode = sourceCode.replace("|", "");
-
-        return performTest(sourceCode, offset, validator, tooltip, doCompileRecursively);
+        return performTest(sourceCode, -1, validator, tooltip, doCompileRecursively);
     }
 
     private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
+        String auxiliary = "package test; public class Auxiliary {}"; //test go to "syntetic" constructor
+        return performTest(sourceCode, auxiliary, offset, validator, tooltip, doCompileRecursively);
+    }
+
+    private String performTest(String sourceCode, String auxiliaryCode, int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
         GoToSupport.CALLER = validator;
         
+        if (offset == (-1)) {
+            offset = sourceCode.indexOf('|');
+
+            assertNotSame(-1, offset);
+
+            sourceCode = sourceCode.replace("|", "");
+        }
+
         clearWorkDir();
         FileUtil.refreshFor(getWorkDir());
 
@@ -1111,7 +1337,7 @@ public class GoToSupportTest extends NbTestCase {
         FileObject auxiliarySource = FileUtil.createData(sourceDir, "test/Auxiliary.java");
 
         TestUtilities.copyStringToFile(source, sourceCode);
-        TestUtilities.copyStringToFile(auxiliarySource, "package test; public class Auxiliary {}"); //test go to "syntetic" constructor
+        TestUtilities.copyStringToFile(auxiliarySource, auxiliaryCode);
 
         SourceUtilsTestUtil.setSourceLevel(source, sourceLevel);
         SourceUtilsTestUtil.setSourceLevel(auxiliarySource, sourceLevel);

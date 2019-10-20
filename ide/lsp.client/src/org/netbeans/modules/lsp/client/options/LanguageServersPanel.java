@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
 
-    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, null, "MMMMMMMMMMMMMMMMM");
+    private static final LanguageDescription PROTOTYPE = new LanguageDescription(null, null, null, null, "MMMMMMMMMMMMMMMMM", null);
     private final LanguageServersOptionsPanelController controller;
     private final DefaultListModel<LanguageDescription> languages;
     private final Set<String> usedIds;
@@ -59,6 +59,7 @@ final class LanguageServersPanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -67,12 +68,32 @@ final class LanguageServersPanel extends javax.swing.JPanel {
         edit = new javax.swing.JButton();
         remove = new javax.swing.JButton();
 
+        setLayout(new java.awt.GridBagLayout());
+
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LanguageServersPanel.class, "LanguageServersPanel.jLabel1.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 12, 0);
+        add(jLabel1, gridBagConstraints);
 
         languagesList.setModel(languages);
         languagesList.setCellRenderer(new ListRenderer());
         languagesList.setPrototypeCellValue(PROTOTYPE);
         jScrollPane1.setViewportView(languagesList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 12, 0);
+        add(jScrollPane1, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(add, org.openide.util.NbBundle.getMessage(LanguageServersPanel.class, "LanguageServersPanel.add.text")); // NOI18N
         add.addActionListener(new java.awt.event.ActionListener() {
@@ -80,6 +101,13 @@ final class LanguageServersPanel extends javax.swing.JPanel {
                 addActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 12, 0, 12);
+        add(add, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(edit, org.openide.util.NbBundle.getMessage(LanguageServersPanel.class, "LanguageServersPanel.edit.text")); // NOI18N
         edit.addActionListener(new java.awt.event.ActionListener() {
@@ -87,6 +115,13 @@ final class LanguageServersPanel extends javax.swing.JPanel {
                 editActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 12);
+        add(edit, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(remove, org.openide.util.NbBundle.getMessage(LanguageServersPanel.class, "LanguageServersPanel.remove.text")); // NOI18N
         remove.addActionListener(new java.awt.event.ActionListener() {
@@ -94,43 +129,13 @@ final class LanguageServersPanel extends javax.swing.JPanel {
                 removeActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 107, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(edit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(remove, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(add)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(edit)
-                        .addGap(12, 12, 12)
-                        .addComponent(remove)
-                        .addGap(0, 11, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 12);
+        add(remove, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     @Messages("CAP_AddDescription=Add Language Description")

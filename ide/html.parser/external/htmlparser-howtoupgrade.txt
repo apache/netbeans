@@ -20,6 +20,6 @@ How to upgrade the htmlparser library:
 For local testing without uploading the new file:
 
 1) Get the SHA1 sum for the file: sha1sum target/htmlparser-1.4.<date>.jar | awk '{print toupper($1)}'
-2) Copy the file to ~/.hgexternalcache/<SHA1SUM>-htmlparser-1.4.<date>.jar
-   DATE=20190624; cp target/htmlparser-1.4.$DATE.jar ~/.hgexternalcache/`sha1sum target/htmlparser-1.4.$DATE.jar | awk '{print toupper($1)}'`-htmlparser-1.4.$DATE.jar
+2) Copy the file to ~/.netbeans/nb_external_cache/<SHA1SUM>-htmlparser-1.4.<date>.jar
+   DATE=20190624; cp target/htmlparser-1.4.$DATE.jar ~/.netbeans/nb_external_cache/`sha1sum target/htmlparser-1.4.$DATE.jar | awk '{print toupper($1)}'`-htmlparser-1.4.$DATE.jar
 3) Update the binaries list

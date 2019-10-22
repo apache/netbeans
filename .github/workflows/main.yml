@@ -32,7 +32,7 @@ jobs:
       - name: Caching dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.hgexternalcache
+          path: ~/.netbeans/nb_external_cache
           key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
 
@@ -86,7 +86,7 @@ jobs:
       - name: Caching dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.hgexternalcache
+          path: ~/.netbeans/nb_external_cache
           key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
 
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/.hgexternalcache
+            ~/.netbeans/nb_external_cache
             ~/Library/Caches/Homebrew
           key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-

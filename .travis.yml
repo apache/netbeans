@@ -32,7 +32,7 @@ install:
 
 cache:
   directories:
-  - $HOME/.hgexternalcache
+  - $HOME/.netbeans/nb_external_cache
 
 matrix:
     include:

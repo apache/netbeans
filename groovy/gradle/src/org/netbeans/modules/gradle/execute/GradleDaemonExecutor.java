@@ -274,15 +274,16 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     @Messages("LBL_ABORTING_BUILD=Aborting Build...")
     @Override
     public boolean cancel() {
-        if (cancelTokenSource != null) {
+        if (!cancelling && (cancelTokenSource != null)) {
             handle.switchToIndeterminate();
             handle.setDisplayName(Bundle.LBL_ABORTING_BUILD());
             // Closing out and err streams to prevent ambigous output NETBEANS-2038
             closeInOutErr();
             cancelling = true;
             cancelTokenSource.cancel();
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

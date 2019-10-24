@@ -56,25 +56,27 @@ public class PHPStanReportParser extends DefaultHandler {
     private Result currentResult = null;
     private String currentFile = null;
     private final FileObject root;
+    private final File workDir;
 
-    private PHPStanReportParser(FileObject root) throws SAXException {
+    private PHPStanReportParser(FileObject root, File workDir) throws SAXException {
         this.xmlReader = FileUtils.createXmlReader();
         this.root = root;
+        this.workDir = workDir;
     }
 
-    private static PHPStanReportParser create(Reader reader, FileObject root) throws SAXException, IOException {
-        PHPStanReportParser parser = new PHPStanReportParser(root);
+    private static PHPStanReportParser create(Reader reader, FileObject root, File workDir) throws SAXException, IOException {
+        PHPStanReportParser parser = new PHPStanReportParser(root, workDir);
         parser.xmlReader.setContentHandler(parser);
         parser.xmlReader.parse(new InputSource(reader));
         return parser;
     }
 
     @CheckForNull
-    public static List<Result> parse(File file, FileObject root) {
+    public static List<Result> parse(File file, FileObject root, File workDir) {
         try {
             sanitizeFile(file);
             try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) { // NOI18N
-                return create(reader, root).getResults();
+                return create(reader, root, workDir).getResults();
             }
         } catch (IOException | SAXException ex) {
             LOGGER.log(Level.INFO, null, ex);
@@ -112,7 +114,7 @@ public class PHPStanReportParser extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if ("file".equals(qName)) { // NOI18N
             processFileStart(attributes);
-        } else if ("error".equals(qName)) { // NOI18N
+        } else if ("error".equals(qName) && currentFile != null) { // NOI18N
             processResultStart(attributes);
         }
     }
@@ -130,11 +132,16 @@ public class PHPStanReportParser extends DefaultHandler {
         assert currentResult == null : currentResult.getFilePath();
         assert currentFile == null : currentFile;
 
-        currentFile = getCurrentFile(attributes.getValue("name")); // NOI18N
+        // NETBEANS-3022 name value can be null
+        // e.g.
+        // <file>
+        //   <error severity="error" message="Ignored error pattern #TEST# was not matched in reported errors." />
+        // </file>
+        String name = attributes.getValue("name"); // NOI18N
+        currentFile = name == null ? null : getCurrentFile(name);
     }
 
     private void processFileEnd() {
-        assert currentFile != null;
         currentFile = null;
     }
 
@@ -160,8 +167,9 @@ public class PHPStanReportParser extends DefaultHandler {
     }
 
     private void processResultEnd() {
-        assert currentResult != null;
-        results.add(currentResult);
+        if (currentResult != null) {
+            results.add(currentResult);
+        }
         currentResult = null;
     }
 
@@ -185,6 +193,15 @@ public class PHPStanReportParser extends DefaultHandler {
         if (rootDirectory.isFolder()) {
             FileObject current = rootDirectory.getFileObject(sanitizedFileName);
             if (current == null) {
+                // NETBANS-3022 try checking relative file path from working directory
+                if (workDir != null) {
+                    rootDirectory = FileUtil.toFileObject(workDir);
+                    if (rootDirectory != null) {
+                        current = rootDirectory.getFileObject(sanitizedFileName);
+                    }
+                }
+            }
+            if (current == null) {
                 LOGGER.log(Level.WARNING, "Cannot get the current file: file name {0}, root directory {1}", // NOI18N
                         new Object[]{fileName, FileUtil.toFile(rootDirectory).getAbsolutePath()});
                 return null;
@@ -202,7 +219,8 @@ public class PHPStanReportParser extends DefaultHandler {
                 return fileName.substring(0, lastIndexOfPhpExt + PHP_EXT.length());
             }
         }
-        return fileName;
+        // windows: <file name="app\index.php">
+        return fileName.replace('\\', '/');
     }
 
     //~ Getters

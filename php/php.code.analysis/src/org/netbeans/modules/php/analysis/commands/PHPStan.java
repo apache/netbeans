@@ -102,19 +102,21 @@ public final class PHPStan {
 
     @NbBundle.Messages({
         "# {0} - counter",
-        "PHPStan.analyze=PHPStan (analyze #{0})",})
+        "PHPStan.analyze=PHPStan (analyze #{0})"
+    })
     @CheckForNull
     public List<Result> analyze(PHPStanParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
-            Integer result = getExecutable(Bundle.PHPStan_analyze(analyzeGroupCounter++), findWorkDir(file))
+            File workDir = findWorkDir(file);
+            Integer result = getExecutable(Bundle.PHPStan_analyze(analyzeGroupCounter++), workDir)
                     .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running phpstan..."); // NOI18N
             if (result == null) {
                 return null;
             }
 
-            return PHPStanReportParser.parse(XML_LOG, file);
+            return PHPStanReportParser.parse(XML_LOG, file, workDir);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();

@@ -36,7 +36,8 @@ public class PHPStanReportParserTest extends NbTestCase {
 
     public void testParse() throws Exception {
         FileObject root = getRoot("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log.xml"), root);
+        File workDir = FileUtil.toFile(root);
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log.xml"), root, workDir);
         assertNotNull(results);
 
         assertEquals(4, results.size());
@@ -62,9 +63,26 @@ public class PHPStanReportParserTest extends NbTestCase {
 
     public void testParseWithOtherOutput() throws Exception {
         FileObject root = getRoot("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root);
+        File workDir = FileUtil.toFile(root);
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root, workDir);
         assertNotNull(results);
         assertEquals(2, results.size());
+    }
+
+    public void testParseNetBeans3022() throws Exception {
+        FileObject root = getRoot("phpstan/PHPStanSupport/netbeans3022");
+        File workDir = getWorkDir("phpstan/PHPStanSupport");
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022.xml"), root, workDir);
+        assertNotNull(results);
+        assertEquals(3, results.size());
+    }
+
+    public void testParseNetBeans3022Win() throws Exception {
+        FileObject root = getRoot("phpstan/PHPStanSupport/netbeans3022");
+        File workDir = getWorkDir("phpstan/PHPStanSupport");
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022-win.xml"), root, workDir);
+        assertNotNull(results);
+        assertEquals(3, results.size());
     }
 
     private File getLogFile(String name) throws Exception {
@@ -79,6 +97,11 @@ public class PHPStanReportParserTest extends NbTestCase {
         assertNotNull(name);
         FileObject dataDir = FileUtil.toFileObject(getDataDir());
         return dataDir.getFileObject(name);
+    }
+
+    private File getWorkDir(String name) {
+        assertNotNull(name);
+        return new File(getDataDir(), name);
     }
 
 }

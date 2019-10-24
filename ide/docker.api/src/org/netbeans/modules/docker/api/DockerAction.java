@@ -1004,9 +1004,8 @@ public class DockerAction {
         }
     }
 
-    public boolean ping() {
+    public boolean pingWithExceptions() throws IOException, MalformedURLException {
         assert !SwingUtilities.isEventDispatchThread() : "Remote access invoked from EDT";
-        try {
             Endpoint s = createEndpoint();
             try {
                 OutputStream os = s.getOutputStream();
@@ -1021,6 +1020,11 @@ public class DockerAction {
             } finally {
                 closeEndpoint(s);
             }
+    }
+    
+    public boolean ping() {      
+        try {
+            return pingWithExceptions();
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.INFO, null, ex);
         } catch (IOException ex) {

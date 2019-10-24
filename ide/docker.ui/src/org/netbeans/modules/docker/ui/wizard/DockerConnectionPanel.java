@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
@@ -46,6 +48,8 @@ import org.openide.util.Utilities;
     "MSG_InaccessibleSocket=Socket is not accessible."
 })
 public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchronousValidatingPanel<WizardDescriptor>, ChangeListener {
+
+    private static final Logger LOGGER = Logger.getLogger(DockerConnectionPanel.class.getName());
 
     private static final Pattern REMOTE_HOST_PATTERN = Pattern.compile("^(tcp://)[^/:](:\\d+)($|/.*)"); // NOI18N
 
@@ -347,6 +351,7 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
                             finishValidation();
                             Exception ex = ref.get();
                             if (ex != null) {
+                                LOGGER.log(Level.SEVERE, "docker connection test failed", ex); // NOI18N
                                 wizard.putProperty(CONNECTION_TEST, false);
                             } else {
                                 wizard.putProperty(CONNECTION_TEST, true);

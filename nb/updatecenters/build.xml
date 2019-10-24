@@ -44,10 +44,25 @@
           <property name="keystore" location="${netbeans.bundled.ks}"/>
           <property name="storepass" value="${netbeans.bundled.ks}"/>
           <property name="nbm_alias" value="netbeans-bundled"/>
-          <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml,nbjavac*/build.xml"/>
+          <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
       </subant>
-      <subant  target="clean" inheritall="false">
-          <fileset dir="${nb_all}/extra" includes="nbjavac*/build.xml"/>
+      <subant inheritall="false">
+          <target name="clean" />
+          <target name="build" />
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="build.xml"/>
+      </subant>
+      <subant target="nbm" inheritall="false">
+          <property name="build.dir" location="build/3rdparty-nbms"/>
+          <property name="keystore" location="${netbeans.bundled.ks}"/>
+          <property name="storepass" value="${netbeans.bundled.ks}"/>
+          <property name="nbm_alias" value="netbeans-bundled"/>
+          <property name="nb_all" location="${nb_all}"/>
+          <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>
+          <property name="nbplatform.default.harness.dir" location="${netbeans.dest.dir}/harness"/>
+          <fileset dir="extras" includes="*/build.xml"/>
       </subant>
       <exec executable="${java.home}/bin/keytool" failonerror="true">
           <arg value="-exportcert"/>

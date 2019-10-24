@@ -58,7 +58,9 @@ public class GenericDataObject extends MultiDataObject {
         super(pf, loader);
         this.mimeType = FileUtil.getMIMEType(pf);
         registerEditor(mimeType, false);
-        REGISTRY.add(new WeakReference<>(this));
+        synchronized (REGISTRY) {
+            REGISTRY.add(new WeakReference<>(this));
+        }
     }
 
     @Override
@@ -98,8 +100,14 @@ public class GenericDataObject extends MultiDataObject {
     }
 
     public static void invalidate() {
+        HashSet<Reference<GenericDataObject>> regCopy;
+
+        synchronized (REGISTRY) {
+            regCopy = new HashSet<>(REGISTRY);
+        }
+
         //TODO: synchronization, only invalidate DOs whose mime type were removed:
-        for (Reference<GenericDataObject> r : REGISTRY) {
+        for (Reference<GenericDataObject> r : regCopy) {
             GenericDataObject god = r.get();
             if (god != null) {
                 try {

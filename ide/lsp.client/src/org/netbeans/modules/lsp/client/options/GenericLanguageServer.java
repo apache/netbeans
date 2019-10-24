@@ -18,16 +18,30 @@
  */
 package org.netbeans.modules.lsp.client.options;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import org.netbeans.api.io.InputOutput;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author jlahoda
  */
 public class GenericLanguageServer implements LanguageServerProvider {
+
+    private final RequestProcessor WORKER = new RequestProcessor(GenericLanguageServer.class.getName(), Integer.MAX_VALUE, false, false);
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
@@ -37,16 +51,85 @@ public class GenericLanguageServer implements LanguageServerProvider {
             return null;
         }
         
+        Project prj = lookup.lookup(Project.class);
         FileObject server = FileUtil.getConfigFile("Editors/" + mti.mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
         String[] command = (String[]) server.getAttribute("command");
+        String name = (String) server.getAttribute("name");
+
+        if (name == null) {
+            name = command[0];
+        }
+
+        ServerRestarter restarter = lookup.lookup(ServerRestarter.class);
+
+        if (restarter != null) {
+            server.addFileChangeListener(new FileChangeListener() {
+                @Override
+                public void fileFolderCreated(FileEvent fe) {
+                    update();
+                }
+
+                @Override
+                public void fileDataCreated(FileEvent fe) {
+                    update();
+                }
+
+                @Override
+                public void fileChanged(FileEvent fe) {
+                    update();
+                }
+
+                @Override
+                public void fileDeleted(FileEvent fe) {
+                    update();
+                }
+
+                @Override
+                public void fileRenamed(FileRenameEvent fe) {
+                    update();
+                }
+
+                @Override
+                public void fileAttributeChanged(FileAttributeEvent fe) {
+                    update();
+                }
+
+                private void update() {
+                    restarter.restart();
+                    server.removeFileChangeListener(this);
+                }
+            });
+        }
 
         try {
-            Process process = new ProcessBuilder(command).redirectError(ProcessBuilder.Redirect.INHERIT).start();
+            InputOutput io = InputOutput.get("Language Server for " + name + " for project " + (prj != null ? ProjectUtils.getInformation(prj).getDisplayName() : "<unknown>"), false);
+            Process process = new ProcessBuilder(command).start();
+            WORKER.post(() -> {
+                try (Reader r = new InputStreamReader(process.getErrorStream())) {
+                    int read;
+                    while ((read = r.read()) != (-1)) {
+                        io.getErr().write("" + (char) read);
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                } finally {
+                    io.getErr().close();
+                    io.getOut().close();
+                    try {
+                        io.getIn().close();
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                if (!process.isAlive() && process.exitValue() != 0) {
+                    io.show();
+                }
+            });
             return LanguageServerDescription.create(process.getInputStream(), process.getOutputStream(), process);
         } catch (Throwable t) {
             t.printStackTrace(); //TODO
             return null;
         }
     }
-    
+
 }

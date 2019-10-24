@@ -141,6 +141,9 @@ public class LanguageStorage {
                     if (description.languageServer != null && !description.languageServer.isEmpty()) {
                         FileObject langServer = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
                         langServer.setAttribute("command", description.languageServer.split(" "));
+                        if (description.name != null) {
+                            langServer.setAttribute("name", description.name);
+                        }
                     }
                     
                     mimeTypesToClear.remove(description.mimeType);

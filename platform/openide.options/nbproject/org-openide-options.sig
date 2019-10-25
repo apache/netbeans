@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.42
+#Version 6.43
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -787,27 +787,37 @@ supr java.lang.Object
 hfds err,name,serialVersionUID,supp
 
 CLSS public org.openide.explorer.propertysheet.PropertySheetSettings
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public boolean getDisplayWritableOnly()
+ anno 0 java.lang.Deprecated()
 meth public boolean getPlastic()
+ anno 0 java.lang.Deprecated()
 meth public int getPropertyPaintingStyle()
+ anno 0 java.lang.Deprecated()
 meth public int getSortingMode()
 meth public java.awt.Color getDisabledPropertyColor()
+ anno 0 java.lang.Deprecated()
 meth public java.awt.Color getValueColor()
 meth public java.lang.String displayName()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public void setDisabledPropertyColor(java.awt.Color)
+ anno 0 java.lang.Deprecated()
 meth public void setDisplayWritableOnly(boolean)
 meth public void setPlastic(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setPropertyPaintingStyle(int)
+ anno 0 java.lang.Deprecated()
 meth public void setSortingMode(int)
 meth public void setValueColor(java.awt.Color)
+ anno 0 java.lang.Deprecated()
 supr org.openide.options.SystemOption
 hfds disabledColor,displayWritableOnly,plastic,propertyPaintingStyle,propertySheetSettings,serialVersionUID,sortingMode,valueColor
 
 CLSS public abstract org.openide.options.ContextSystemOption
 cons public init()
 fld protected java.beans.beancontext.BeanContext beanContext
+ anno 0 java.lang.Deprecated()
 intf java.beans.beancontext.BeanContextProxy
 meth protected void initialize()
 meth public final java.beans.beancontext.BeanContextChild getBeanContextProxy()
@@ -827,6 +837,7 @@ meth public java.beans.PropertyDescriptor[] getPropertyDescriptors()
 supr java.beans.SimpleBeanInfo
 
 CLSS public abstract org.openide.options.SystemOption
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf org.openide.util.HelpCtx$Provider
 meth protected boolean clearSharedData()
@@ -1444,6 +1455,7 @@ meth public int getHeaderAlignment()
 meth public java.awt.Font getFooterFont()
 meth public java.awt.Font getHeaderFont()
 meth public java.awt.print.PageFormat getPageFormat()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String displayName()
 meth public java.lang.String getFooterFormat()
 meth public java.lang.String getHeaderFormat()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52
+#Version 1.53
 
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception
@@ -97,8 +97,10 @@ meth public static javax.swing.JComponent createProgressComponent(org.netbeans.a
 meth public static javax.swing.JLabel createDetailLabelComponent(org.netbeans.api.progress.ProgressHandle)
 meth public static javax.swing.JLabel createMainLabelComponent(org.netbeans.api.progress.ProgressHandle)
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,javax.swing.Action)
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String)
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String,org.openide.util.Cancellable)
@@ -110,13 +112,21 @@ meth public abstract {org.netbeans.api.progress.ProgressRunnable%0} run(org.netb
 
 CLSS public final org.netbeans.api.progress.ProgressUtils
 meth public static <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> showProgressDialogAndRunLater(org.netbeans.api.progress.ProgressRunnable<{%%0}>,org.netbeans.api.progress.ProgressHandle,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} showProgressDialogAndRun(org.netbeans.api.progress.ProgressRunnable<{%%0}>,java.lang.String,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static void runOffEventDispatchThread(java.lang.Runnable,java.lang.String,java.util.concurrent.atomic.AtomicBoolean,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static void runOffEventDispatchThread(java.lang.Runnable,java.lang.String,java.util.concurrent.atomic.AtomicBoolean,boolean,int,int)
+ anno 0 java.lang.Deprecated()
 meth public static void runOffEventThreadWithCustomDialogContent(java.lang.Runnable,java.lang.String,javax.swing.JPanel,int,int)
+ anno 0 java.lang.Deprecated()
 meth public static void runOffEventThreadWithProgressDialog(java.lang.Runnable,java.lang.String,org.netbeans.api.progress.ProgressHandle,boolean,int,int)
+ anno 0 java.lang.Deprecated()
 meth public static void showProgressDialogAndRun(java.lang.Runnable,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void showProgressDialogAndRun(java.lang.Runnable,org.netbeans.api.progress.ProgressHandle,boolean)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds DISPLAY_DIALOG_MS,DISPLAY_WAIT_CURSOR_MS,PROVIDER
 hcls Trivial

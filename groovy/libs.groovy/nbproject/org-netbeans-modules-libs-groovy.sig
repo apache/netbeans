@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.11
+#Version 1.12
 
 CLSS public abstract interface groovy.lang.AdaptingMetaClass
 intf groovy.lang.MetaClass

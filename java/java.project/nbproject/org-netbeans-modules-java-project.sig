@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77
+#Version 1.78
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()

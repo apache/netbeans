@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.50.0
 
 CLSS public abstract interface java.beans.BeanInfo
 fld public final static int ICON_COLOR_16x16 = 1

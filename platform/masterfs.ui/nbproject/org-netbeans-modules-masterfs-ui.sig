@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.8.0
+#Version 2.9.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,6 +21,7 @@ CLSS public abstract org.netbeans.modules.masterfs.providers.AnnotationProvider
 cons public init()
 meth public abstract java.awt.Image annotateIcon(java.awt.Image,int,java.util.Set<? extends org.openide.filesystems.FileObject>)
 meth public javax.swing.Action[] actions(java.util.Set<? extends org.openide.filesystems.FileObject>)
+ anno 0 java.lang.Deprecated()
 meth public org.openide.util.Lookup findExtrasFor(java.util.Set<? extends org.openide.filesystems.FileObject>)
 supr org.netbeans.modules.masterfs.providers.BaseAnnotationProvider
 

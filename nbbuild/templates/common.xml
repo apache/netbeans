@@ -328,7 +328,7 @@
         <pathconvert property="dtd.cp">
             <pathfileset>
                 <path refid="cluster.path.id"/>
-                <filename name="platform/core/org-openide-filesystems.jar"/>
+                <filename name="core/org-openide-filesystems.jar"/>
             </pathfileset>
         </pathconvert>
 

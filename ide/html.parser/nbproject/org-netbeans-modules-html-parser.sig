@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39.0
+#Version 1.40.0
 
 CLSS public com.ibm.icu.impl.Assert
 cons public init()
@@ -8388,7 +8388,19 @@ meth public org.w3c.dom.Document parse(java.lang.String) throws java.io.IOExcept
 meth public void reset()
 supr java.lang.Object
 
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Auto
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.CharacterName
+intf java.lang.annotation.Annotation
+
 CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Const
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Creator
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.HtmlCreator
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.IdType
@@ -8413,6 +8425,12 @@ CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Pr
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.QName
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.SvgCreator
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Unsigned
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation nu.validator.htmlparser.annotation.Virtual
@@ -8448,8 +8466,8 @@ CLSS public abstract interface nu.validator.htmlparser.common.DocumentModeHandle
 meth public abstract void documentMode(nu.validator.htmlparser.common.DocumentMode,java.lang.String,java.lang.String,boolean) throws org.xml.sax.SAXException
 
 CLSS public abstract interface nu.validator.htmlparser.common.EncodingDeclarationHandler
+meth public abstract boolean internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth public abstract java.lang.String getCharacterEncoding() throws org.xml.sax.SAXException
-meth public abstract void internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public final !enum nu.validator.htmlparser.common.Heuristics
 fld public final static nu.validator.htmlparser.common.Heuristics ALL
@@ -8470,6 +8488,7 @@ meth public abstract void comment(char[],int,int) throws org.xml.sax.SAXExceptio
 meth public abstract void doctype(java.lang.String,java.lang.String,java.lang.String,boolean) throws org.xml.sax.SAXException
 meth public abstract void endTag(nu.validator.htmlparser.impl.ElementName) throws org.xml.sax.SAXException
 meth public abstract void endTokenization() throws org.xml.sax.SAXException
+meth public abstract void ensureBufferSpace(int) throws org.xml.sax.SAXException
 meth public abstract void eof() throws org.xml.sax.SAXException
 meth public abstract void startTag(nu.validator.htmlparser.impl.ElementName,nu.validator.htmlparser.impl.HtmlAttributes,boolean) throws org.xml.sax.SAXException
 meth public abstract void startTokenization(nu.validator.htmlparser.impl.Tokenizer) throws org.xml.sax.SAXException
@@ -8519,6 +8538,7 @@ meth public org.w3c.dom.DOMImplementation getDOMImplementation()
 meth public org.w3c.dom.Document newDocument()
 meth public org.w3c.dom.Document parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
 meth public org.w3c.dom.DocumentFragment parseFragment(org.xml.sax.InputSource,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public org.w3c.dom.DocumentFragment parseFragment(org.xml.sax.InputSource,java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 meth public org.xml.sax.Locator getDocumentLocator()
 meth public void addCharacterHandler(nu.validator.htmlparser.common.CharacterHandler)
 meth public void setBogusXmlnsPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
@@ -8567,15 +8587,19 @@ supr java.lang.Object
 hfds COMPOSING_CHARACTERS,alreadyComplainedAboutThisRun,atStartOfRun,buf,bufHolder,errorHandler,locator,pos
 
 CLSS public final nu.validator.htmlparser.impl.AttributeName
-cons protected init(java.lang.String[],java.lang.String[],java.lang.String[],boolean[],boolean)
+fld public final static int BOOLEAN = 64
+fld public final static int CASE_FOLDED = 32
 fld public final static int HTML = 0
 fld public final static int HTML_LANG = 3
+fld public final static int IS_XMLNS = 16
 fld public final static int MATHML = 1
+fld public final static int NCNAME_FOREIGN = 6
+fld public final static int NCNAME_HTML = 1
+fld public final static int NCNAME_LANG = 8
 fld public final static int SVG = 2
 fld public final static nu.validator.htmlparser.impl.AttributeName ABBR
 fld public final static nu.validator.htmlparser.impl.AttributeName ACCENT
 fld public final static nu.validator.htmlparser.impl.AttributeName ACCENTUNDER
-fld public final static nu.validator.htmlparser.impl.AttributeName ACCENT_HEIGHT
 fld public final static nu.validator.htmlparser.impl.AttributeName ACCEPT
 fld public final static nu.validator.htmlparser.impl.AttributeName ACCEPT_CHARSET
 fld public final static nu.validator.htmlparser.impl.AttributeName ACCESSKEY
@@ -8588,12 +8612,10 @@ fld public final static nu.validator.htmlparser.impl.AttributeName ALIGN
 fld public final static nu.validator.htmlparser.impl.AttributeName ALIGNMENTSCOPE
 fld public final static nu.validator.htmlparser.impl.AttributeName ALIGNMENT_BASELINE
 fld public final static nu.validator.htmlparser.impl.AttributeName ALINK
-fld public final static nu.validator.htmlparser.impl.AttributeName ALPHABETIC
 fld public final static nu.validator.htmlparser.impl.AttributeName ALT
 fld public final static nu.validator.htmlparser.impl.AttributeName ALTIMG
 fld public final static nu.validator.htmlparser.impl.AttributeName ALTTEXT
 fld public final static nu.validator.htmlparser.impl.AttributeName AMPLITUDE
-fld public final static nu.validator.htmlparser.impl.AttributeName ARABIC_FORM
 fld public final static nu.validator.htmlparser.impl.AttributeName ARCHIVE
 fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_ACTIVEDESCENDANT
 fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_ATOMIC
@@ -8631,14 +8653,12 @@ fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_TEMPLATE
 fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_VALUEMAX
 fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_VALUEMIN
 fld public final static nu.validator.htmlparser.impl.AttributeName ARIA_VALUENOW
-fld public final static nu.validator.htmlparser.impl.AttributeName ASCENT
 fld public final static nu.validator.htmlparser.impl.AttributeName ASYNC
 fld public final static nu.validator.htmlparser.impl.AttributeName ATTRIBUTENAME
 fld public final static nu.validator.htmlparser.impl.AttributeName ATTRIBUTETYPE
 fld public final static nu.validator.htmlparser.impl.AttributeName AUTOCOMPLETE
 fld public final static nu.validator.htmlparser.impl.AttributeName AUTOFOCUS
 fld public final static nu.validator.htmlparser.impl.AttributeName AUTOPLAY
-fld public final static nu.validator.htmlparser.impl.AttributeName AUTOSUBMIT
 fld public final static nu.validator.htmlparser.impl.AttributeName AXIS
 fld public final static nu.validator.htmlparser.impl.AttributeName AZIMUTH
 fld public final static nu.validator.htmlparser.impl.AttributeName BACKGROUND
@@ -8647,7 +8667,6 @@ fld public final static nu.validator.htmlparser.impl.AttributeName BASEFREQUENCY
 fld public final static nu.validator.htmlparser.impl.AttributeName BASELINE
 fld public final static nu.validator.htmlparser.impl.AttributeName BASELINE_SHIFT
 fld public final static nu.validator.htmlparser.impl.AttributeName BASEPROFILE
-fld public final static nu.validator.htmlparser.impl.AttributeName BBOX
 fld public final static nu.validator.htmlparser.impl.AttributeName BEGIN
 fld public final static nu.validator.htmlparser.impl.AttributeName BEVELLED
 fld public final static nu.validator.htmlparser.impl.AttributeName BGCOLOR
@@ -8655,7 +8674,6 @@ fld public final static nu.validator.htmlparser.impl.AttributeName BIAS
 fld public final static nu.validator.htmlparser.impl.AttributeName BORDER
 fld public final static nu.validator.htmlparser.impl.AttributeName BY
 fld public final static nu.validator.htmlparser.impl.AttributeName CALCMODE
-fld public final static nu.validator.htmlparser.impl.AttributeName CAP_HEIGHT
 fld public final static nu.validator.htmlparser.impl.AttributeName CELLPADDING
 fld public final static nu.validator.htmlparser.impl.AttributeName CELLSPACING
 fld public final static nu.validator.htmlparser.impl.AttributeName CHAR
@@ -8690,26 +8708,21 @@ fld public final static nu.validator.htmlparser.impl.AttributeName COLUMNWIDTH
 fld public final static nu.validator.htmlparser.impl.AttributeName COMPACT
 fld public final static nu.validator.htmlparser.impl.AttributeName CONTENT
 fld public final static nu.validator.htmlparser.impl.AttributeName CONTENTEDITABLE
-fld public final static nu.validator.htmlparser.impl.AttributeName CONTENTSCRIPTTYPE
-fld public final static nu.validator.htmlparser.impl.AttributeName CONTENTSTYLETYPE
 fld public final static nu.validator.htmlparser.impl.AttributeName CONTEXTMENU
 fld public final static nu.validator.htmlparser.impl.AttributeName CONTROLS
 fld public final static nu.validator.htmlparser.impl.AttributeName COORDS
+fld public final static nu.validator.htmlparser.impl.AttributeName CROSSORIGIN
 fld public final static nu.validator.htmlparser.impl.AttributeName CURSOR
 fld public final static nu.validator.htmlparser.impl.AttributeName CX
 fld public final static nu.validator.htmlparser.impl.AttributeName CY
 fld public final static nu.validator.htmlparser.impl.AttributeName D
 fld public final static nu.validator.htmlparser.impl.AttributeName DATA
-fld public final static nu.validator.htmlparser.impl.AttributeName DATAFLD
-fld public final static nu.validator.htmlparser.impl.AttributeName DATAFORMATAS
-fld public final static nu.validator.htmlparser.impl.AttributeName DATASRC
 fld public final static nu.validator.htmlparser.impl.AttributeName DATETIME
 fld public final static nu.validator.htmlparser.impl.AttributeName DECLARE
 fld public final static nu.validator.htmlparser.impl.AttributeName DEFAULT
 fld public final static nu.validator.htmlparser.impl.AttributeName DEFER
 fld public final static nu.validator.htmlparser.impl.AttributeName DEFINITIONURL
 fld public final static nu.validator.htmlparser.impl.AttributeName DEPTH
-fld public final static nu.validator.htmlparser.impl.AttributeName DESCENT
 fld public final static nu.validator.htmlparser.impl.AttributeName DIFFUSECONSTANT
 fld public final static nu.validator.htmlparser.impl.AttributeName DIR
 fld public final static nu.validator.htmlparser.impl.AttributeName DIRECTION
@@ -8732,14 +8745,12 @@ fld public final static nu.validator.htmlparser.impl.AttributeName END
 fld public final static nu.validator.htmlparser.impl.AttributeName EQUALCOLUMNS
 fld public final static nu.validator.htmlparser.impl.AttributeName EQUALROWS
 fld public final static nu.validator.htmlparser.impl.AttributeName EXPONENT
-fld public final static nu.validator.htmlparser.impl.AttributeName EXTERNALRESOURCESREQUIRED
 fld public final static nu.validator.htmlparser.impl.AttributeName FACE
 fld public final static nu.validator.htmlparser.impl.AttributeName FENCE
 fld public final static nu.validator.htmlparser.impl.AttributeName FILL
 fld public final static nu.validator.htmlparser.impl.AttributeName FILL_OPACITY
 fld public final static nu.validator.htmlparser.impl.AttributeName FILL_RULE
 fld public final static nu.validator.htmlparser.impl.AttributeName FILTER
-fld public final static nu.validator.htmlparser.impl.AttributeName FILTERRES
 fld public final static nu.validator.htmlparser.impl.AttributeName FILTERUNITS
 fld public final static nu.validator.htmlparser.impl.AttributeName FLOOD_COLOR
 fld public final static nu.validator.htmlparser.impl.AttributeName FLOOD_OPACITY
@@ -8763,40 +8774,31 @@ fld public final static nu.validator.htmlparser.impl.AttributeName FRAMESPACING
 fld public final static nu.validator.htmlparser.impl.AttributeName FROM
 fld public final static nu.validator.htmlparser.impl.AttributeName FX
 fld public final static nu.validator.htmlparser.impl.AttributeName FY
-fld public final static nu.validator.htmlparser.impl.AttributeName G1
-fld public final static nu.validator.htmlparser.impl.AttributeName G2
 fld public final static nu.validator.htmlparser.impl.AttributeName GLYPHREF
-fld public final static nu.validator.htmlparser.impl.AttributeName GLYPH_NAME
 fld public final static nu.validator.htmlparser.impl.AttributeName GLYPH_ORIENTATION_HORIZONTAL
 fld public final static nu.validator.htmlparser.impl.AttributeName GLYPH_ORIENTATION_VERTICAL
 fld public final static nu.validator.htmlparser.impl.AttributeName GRADIENTTRANSFORM
 fld public final static nu.validator.htmlparser.impl.AttributeName GRADIENTUNITS
 fld public final static nu.validator.htmlparser.impl.AttributeName GROUPALIGN
-fld public final static nu.validator.htmlparser.impl.AttributeName HANGING
 fld public final static nu.validator.htmlparser.impl.AttributeName HEADERS
 fld public final static nu.validator.htmlparser.impl.AttributeName HEIGHT
 fld public final static nu.validator.htmlparser.impl.AttributeName HIDDEN
-fld public final static nu.validator.htmlparser.impl.AttributeName HIDEFOCUS
 fld public final static nu.validator.htmlparser.impl.AttributeName HIGH
-fld public final static nu.validator.htmlparser.impl.AttributeName HORIZ_ADV_X
-fld public final static nu.validator.htmlparser.impl.AttributeName HORIZ_ORIGIN_X
-fld public final static nu.validator.htmlparser.impl.AttributeName HORIZ_ORIGIN_Y
 fld public final static nu.validator.htmlparser.impl.AttributeName HREF
 fld public final static nu.validator.htmlparser.impl.AttributeName HREFLANG
 fld public final static nu.validator.htmlparser.impl.AttributeName HSPACE
 fld public final static nu.validator.htmlparser.impl.AttributeName HTTP_EQUIV
 fld public final static nu.validator.htmlparser.impl.AttributeName ICON
 fld public final static nu.validator.htmlparser.impl.AttributeName ID
-fld public final static nu.validator.htmlparser.impl.AttributeName IDEOGRAPHIC
 fld public final static nu.validator.htmlparser.impl.AttributeName IMAGE_RENDERING
 fld public final static nu.validator.htmlparser.impl.AttributeName IN
 fld public final static nu.validator.htmlparser.impl.AttributeName IN2
 fld public final static nu.validator.htmlparser.impl.AttributeName INDEX
 fld public final static nu.validator.htmlparser.impl.AttributeName INPUTMODE
+fld public final static nu.validator.htmlparser.impl.AttributeName INTEGRITY
 fld public final static nu.validator.htmlparser.impl.AttributeName INTERCEPT
-fld public final static nu.validator.htmlparser.impl.AttributeName IRRELEVANT
+fld public final static nu.validator.htmlparser.impl.AttributeName IS
 fld public final static nu.validator.htmlparser.impl.AttributeName ISMAP
-fld public final static nu.validator.htmlparser.impl.AttributeName K
 fld public final static nu.validator.htmlparser.impl.AttributeName K1
 fld public final static nu.validator.htmlparser.impl.AttributeName K2
 fld public final static nu.validator.htmlparser.impl.AttributeName K3
@@ -8806,6 +8808,7 @@ fld public final static nu.validator.htmlparser.impl.AttributeName KERNELUNITLEN
 fld public final static nu.validator.htmlparser.impl.AttributeName KERNING
 fld public final static nu.validator.htmlparser.impl.AttributeName KEYPOINTS
 fld public final static nu.validator.htmlparser.impl.AttributeName KEYSPLINES
+fld public final static nu.validator.htmlparser.impl.AttributeName KEYSYSTEM
 fld public final static nu.validator.htmlparser.impl.AttributeName KEYTIMES
 fld public final static nu.validator.htmlparser.impl.AttributeName LABEL
 fld public final static nu.validator.htmlparser.impl.AttributeName LANG
@@ -8821,13 +8824,11 @@ fld public final static nu.validator.htmlparser.impl.AttributeName LINK
 fld public final static nu.validator.htmlparser.impl.AttributeName LIST
 fld public final static nu.validator.htmlparser.impl.AttributeName LOCAL
 fld public final static nu.validator.htmlparser.impl.AttributeName LONGDESC
-fld public final static nu.validator.htmlparser.impl.AttributeName LOOPEND
-fld public final static nu.validator.htmlparser.impl.AttributeName LOOPSTART
+fld public final static nu.validator.htmlparser.impl.AttributeName LOOP
 fld public final static nu.validator.htmlparser.impl.AttributeName LOW
 fld public final static nu.validator.htmlparser.impl.AttributeName LOWSRC
 fld public final static nu.validator.htmlparser.impl.AttributeName LQUOTE
 fld public final static nu.validator.htmlparser.impl.AttributeName LSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName MACROS
 fld public final static nu.validator.htmlparser.impl.AttributeName MANIFEST
 fld public final static nu.validator.htmlparser.impl.AttributeName MARGINHEIGHT
 fld public final static nu.validator.htmlparser.impl.AttributeName MARGINWIDTH
@@ -8842,14 +8843,12 @@ fld public final static nu.validator.htmlparser.impl.AttributeName MASKCONTENTUN
 fld public final static nu.validator.htmlparser.impl.AttributeName MASKUNITS
 fld public final static nu.validator.htmlparser.impl.AttributeName MATHBACKGROUND
 fld public final static nu.validator.htmlparser.impl.AttributeName MATHCOLOR
-fld public final static nu.validator.htmlparser.impl.AttributeName MATHEMATICAL
 fld public final static nu.validator.htmlparser.impl.AttributeName MATHSIZE
 fld public final static nu.validator.htmlparser.impl.AttributeName MATHVARIANT
 fld public final static nu.validator.htmlparser.impl.AttributeName MAX
 fld public final static nu.validator.htmlparser.impl.AttributeName MAXLENGTH
 fld public final static nu.validator.htmlparser.impl.AttributeName MAXSIZE
 fld public final static nu.validator.htmlparser.impl.AttributeName MEDIA
-fld public final static nu.validator.htmlparser.impl.AttributeName MEDIUMMATHSPACE
 fld public final static nu.validator.htmlparser.impl.AttributeName METHOD
 fld public final static nu.validator.htmlparser.impl.AttributeName MIN
 fld public final static nu.validator.htmlparser.impl.AttributeName MINSIZE
@@ -8857,44 +8856,32 @@ fld public final static nu.validator.htmlparser.impl.AttributeName MODE
 fld public final static nu.validator.htmlparser.impl.AttributeName MOVABLELIMITS
 fld public final static nu.validator.htmlparser.impl.AttributeName MULTIPLE
 fld public final static nu.validator.htmlparser.impl.AttributeName NAME
-fld public final static nu.validator.htmlparser.impl.AttributeName NARGS
 fld public final static nu.validator.htmlparser.impl.AttributeName NOHREF
+fld public final static nu.validator.htmlparser.impl.AttributeName NOMODULE
 fld public final static nu.validator.htmlparser.impl.AttributeName NORESIZE
 fld public final static nu.validator.htmlparser.impl.AttributeName NOSHADE
 fld public final static nu.validator.htmlparser.impl.AttributeName NOTATION
 fld public final static nu.validator.htmlparser.impl.AttributeName NOWRAP
 fld public final static nu.validator.htmlparser.impl.AttributeName NUMOCTAVES
 fld public final static nu.validator.htmlparser.impl.AttributeName OBJECT
-fld public final static nu.validator.htmlparser.impl.AttributeName OCCURRENCE
 fld public final static nu.validator.htmlparser.impl.AttributeName OFFSET
 fld public final static nu.validator.htmlparser.impl.AttributeName ONABORT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONACTIVATE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONAFTERPRINT
-fld public final static nu.validator.htmlparser.impl.AttributeName ONAFTERUPDATE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFORDEACTIVATE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREACTIVATE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFORECOPY
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFORECUT
-fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREEDITFOCUS
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREPASTE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREPRINT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREUNLOAD
-fld public final static nu.validator.htmlparser.impl.AttributeName ONBEFOREUPDATE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBEGIN
 fld public final static nu.validator.htmlparser.impl.AttributeName ONBLUR
-fld public final static nu.validator.htmlparser.impl.AttributeName ONBOUNCE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONCELLCHANGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONCHANGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONCLICK
 fld public final static nu.validator.htmlparser.impl.AttributeName ONCONTEXTMENU
-fld public final static nu.validator.htmlparser.impl.AttributeName ONCONTROLSELECT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONCOPY
 fld public final static nu.validator.htmlparser.impl.AttributeName ONCUT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDATAAVAILABLE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONDATASETCHANGED
-fld public final static nu.validator.htmlparser.impl.AttributeName ONDATASETCOMPLETE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDBLCLICK
-fld public final static nu.validator.htmlparser.impl.AttributeName ONDEACTIVATE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDRAG
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDRAGDROP
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDRAGEND
@@ -8905,22 +8892,16 @@ fld public final static nu.validator.htmlparser.impl.AttributeName ONDRAGSTART
 fld public final static nu.validator.htmlparser.impl.AttributeName ONDROP
 fld public final static nu.validator.htmlparser.impl.AttributeName ONEND
 fld public final static nu.validator.htmlparser.impl.AttributeName ONERROR
-fld public final static nu.validator.htmlparser.impl.AttributeName ONERRORUPDATE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONFILTERCHANGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONFINISH
 fld public final static nu.validator.htmlparser.impl.AttributeName ONFOCUS
 fld public final static nu.validator.htmlparser.impl.AttributeName ONFOCUSIN
 fld public final static nu.validator.htmlparser.impl.AttributeName ONFOCUSOUT
-fld public final static nu.validator.htmlparser.impl.AttributeName ONFORMCHANGE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONFORMINPUT
-fld public final static nu.validator.htmlparser.impl.AttributeName ONHELP
 fld public final static nu.validator.htmlparser.impl.AttributeName ONINPUT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONINVALID
 fld public final static nu.validator.htmlparser.impl.AttributeName ONKEYDOWN
 fld public final static nu.validator.htmlparser.impl.AttributeName ONKEYPRESS
 fld public final static nu.validator.htmlparser.impl.AttributeName ONKEYUP
 fld public final static nu.validator.htmlparser.impl.AttributeName ONLOAD
-fld public final static nu.validator.htmlparser.impl.AttributeName ONLOSECAPTURE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMESSAGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEDOWN
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEENTER
@@ -8930,19 +8911,11 @@ fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEOUT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEOVER
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEUP
 fld public final static nu.validator.htmlparser.impl.AttributeName ONMOUSEWHEEL
-fld public final static nu.validator.htmlparser.impl.AttributeName ONMOVE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONMOVEEND
-fld public final static nu.validator.htmlparser.impl.AttributeName ONMOVESTART
 fld public final static nu.validator.htmlparser.impl.AttributeName ONPASTE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONPROPERTYCHANGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONREADYSTATECHANGE
 fld public final static nu.validator.htmlparser.impl.AttributeName ONREPEAT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONRESET
 fld public final static nu.validator.htmlparser.impl.AttributeName ONRESIZE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONROWENTER
-fld public final static nu.validator.htmlparser.impl.AttributeName ONROWEXIT
-fld public final static nu.validator.htmlparser.impl.AttributeName ONROWSDELETE
-fld public final static nu.validator.htmlparser.impl.AttributeName ONROWSINSERTED
 fld public final static nu.validator.htmlparser.impl.AttributeName ONSCROLL
 fld public final static nu.validator.htmlparser.impl.AttributeName ONSELECT
 fld public final static nu.validator.htmlparser.impl.AttributeName ONSELECTSTART
@@ -8961,9 +8934,6 @@ fld public final static nu.validator.htmlparser.impl.AttributeName ORIENTATION
 fld public final static nu.validator.htmlparser.impl.AttributeName ORIGIN
 fld public final static nu.validator.htmlparser.impl.AttributeName OTHER
 fld public final static nu.validator.htmlparser.impl.AttributeName OVERFLOW
-fld public final static nu.validator.htmlparser.impl.AttributeName OVERLINE_POSITION
-fld public final static nu.validator.htmlparser.impl.AttributeName OVERLINE_THICKNESS
-fld public final static nu.validator.htmlparser.impl.AttributeName PANOSE_1
 fld public final static nu.validator.htmlparser.impl.AttributeName PATH
 fld public final static nu.validator.htmlparser.impl.AttributeName PATHLENGTH
 fld public final static nu.validator.htmlparser.impl.AttributeName PATTERN
@@ -8971,7 +8941,6 @@ fld public final static nu.validator.htmlparser.impl.AttributeName PATTERNCONTEN
 fld public final static nu.validator.htmlparser.impl.AttributeName PATTERNTRANSFORM
 fld public final static nu.validator.htmlparser.impl.AttributeName PATTERNUNITS
 fld public final static nu.validator.htmlparser.impl.AttributeName PING
-fld public final static nu.validator.htmlparser.impl.AttributeName PLAYCOUNT
 fld public final static nu.validator.htmlparser.impl.AttributeName POINTER_EVENTS
 fld public final static nu.validator.htmlparser.impl.AttributeName POINTS
 fld public final static nu.validator.htmlparser.impl.AttributeName POINTSATX
@@ -8983,10 +8952,12 @@ fld public final static nu.validator.htmlparser.impl.AttributeName PRESERVEASPEC
 fld public final static nu.validator.htmlparser.impl.AttributeName PRIMITIVEUNITS
 fld public final static nu.validator.htmlparser.impl.AttributeName PROFILE
 fld public final static nu.validator.htmlparser.impl.AttributeName PROMPT
+fld public final static nu.validator.htmlparser.impl.AttributeName PROPERTY
 fld public final static nu.validator.htmlparser.impl.AttributeName R
 fld public final static nu.validator.htmlparser.impl.AttributeName RADIOGROUP
 fld public final static nu.validator.htmlparser.impl.AttributeName RADIUS
 fld public final static nu.validator.htmlparser.impl.AttributeName READONLY
+fld public final static nu.validator.htmlparser.impl.AttributeName REFERRERPOLICY
 fld public final static nu.validator.htmlparser.impl.AttributeName REFX
 fld public final static nu.validator.htmlparser.impl.AttributeName REFY
 fld public final static nu.validator.htmlparser.impl.AttributeName REL
@@ -8994,10 +8965,6 @@ fld public final static nu.validator.htmlparser.impl.AttributeName RENDERING_INT
 fld public final static nu.validator.htmlparser.impl.AttributeName REPEAT
 fld public final static nu.validator.htmlparser.impl.AttributeName REPEATCOUNT
 fld public final static nu.validator.htmlparser.impl.AttributeName REPEATDUR
-fld public final static nu.validator.htmlparser.impl.AttributeName REPEAT_MAX
-fld public final static nu.validator.htmlparser.impl.AttributeName REPEAT_MIN
-fld public final static nu.validator.htmlparser.impl.AttributeName REPEAT_START
-fld public final static nu.validator.htmlparser.impl.AttributeName REPEAT_TEMPLATE
 fld public final static nu.validator.htmlparser.impl.AttributeName REPLACE
 fld public final static nu.validator.htmlparser.impl.AttributeName REQUIRED
 fld public final static nu.validator.htmlparser.impl.AttributeName REQUIREDEXTENSIONS
@@ -9026,9 +8993,7 @@ fld public final static nu.validator.htmlparser.impl.AttributeName SCOPED
 fld public final static nu.validator.htmlparser.impl.AttributeName SCRIPTLEVEL
 fld public final static nu.validator.htmlparser.impl.AttributeName SCRIPTMINSIZE
 fld public final static nu.validator.htmlparser.impl.AttributeName SCRIPTSIZEMULTIPLIER
-fld public final static nu.validator.htmlparser.impl.AttributeName SCROLLDELAY
 fld public final static nu.validator.htmlparser.impl.AttributeName SCROLLING
-fld public final static nu.validator.htmlparser.impl.AttributeName SEAMLESS
 fld public final static nu.validator.htmlparser.impl.AttributeName SEED
 fld public final static nu.validator.htmlparser.impl.AttributeName SELECTED
 fld public final static nu.validator.htmlparser.impl.AttributeName SELECTION
@@ -9037,29 +9002,25 @@ fld public final static nu.validator.htmlparser.impl.AttributeName SEPARATORS
 fld public final static nu.validator.htmlparser.impl.AttributeName SHAPE
 fld public final static nu.validator.htmlparser.impl.AttributeName SHAPE_RENDERING
 fld public final static nu.validator.htmlparser.impl.AttributeName SIZE
+fld public final static nu.validator.htmlparser.impl.AttributeName SIZES
 fld public final static nu.validator.htmlparser.impl.AttributeName SLOPE
 fld public final static nu.validator.htmlparser.impl.AttributeName SPACING
 fld public final static nu.validator.htmlparser.impl.AttributeName SPAN
-fld public final static nu.validator.htmlparser.impl.AttributeName SPECIFICATION
 fld public final static nu.validator.htmlparser.impl.AttributeName SPECULARCONSTANT
 fld public final static nu.validator.htmlparser.impl.AttributeName SPECULAREXPONENT
-fld public final static nu.validator.htmlparser.impl.AttributeName SPEED
 fld public final static nu.validator.htmlparser.impl.AttributeName SPREADMETHOD
 fld public final static nu.validator.htmlparser.impl.AttributeName SRC
+fld public final static nu.validator.htmlparser.impl.AttributeName SRCDOC
+fld public final static nu.validator.htmlparser.impl.AttributeName SRCSET
 fld public final static nu.validator.htmlparser.impl.AttributeName STANDBY
 fld public final static nu.validator.htmlparser.impl.AttributeName START
 fld public final static nu.validator.htmlparser.impl.AttributeName STARTOFFSET
 fld public final static nu.validator.htmlparser.impl.AttributeName STDDEVIATION
-fld public final static nu.validator.htmlparser.impl.AttributeName STEMH
-fld public final static nu.validator.htmlparser.impl.AttributeName STEMV
 fld public final static nu.validator.htmlparser.impl.AttributeName STEP
 fld public final static nu.validator.htmlparser.impl.AttributeName STITCHTILES
 fld public final static nu.validator.htmlparser.impl.AttributeName STOP_COLOR
 fld public final static nu.validator.htmlparser.impl.AttributeName STOP_OPACITY
 fld public final static nu.validator.htmlparser.impl.AttributeName STRETCHY
-fld public final static nu.validator.htmlparser.impl.AttributeName STRIKETHROUGH_POSITION
-fld public final static nu.validator.htmlparser.impl.AttributeName STRIKETHROUGH_THICKNESS
-fld public final static nu.validator.htmlparser.impl.AttributeName STRING
 fld public final static nu.validator.htmlparser.impl.AttributeName STROKE
 fld public final static nu.validator.htmlparser.impl.AttributeName STROKE_DASHARRAY
 fld public final static nu.validator.htmlparser.impl.AttributeName STROKE_DASHOFFSET
@@ -9086,46 +9047,23 @@ fld public final static nu.validator.htmlparser.impl.AttributeName TEXTLENGTH
 fld public final static nu.validator.htmlparser.impl.AttributeName TEXT_ANCHOR
 fld public final static nu.validator.htmlparser.impl.AttributeName TEXT_DECORATION
 fld public final static nu.validator.htmlparser.impl.AttributeName TEXT_RENDERING
-fld public final static nu.validator.htmlparser.impl.AttributeName THICKMATHSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName THINMATHSPACE
 fld public final static nu.validator.htmlparser.impl.AttributeName TITLE
 fld public final static nu.validator.htmlparser.impl.AttributeName TO
 fld public final static nu.validator.htmlparser.impl.AttributeName TRANSFORM
 fld public final static nu.validator.htmlparser.impl.AttributeName TYPE
-fld public final static nu.validator.htmlparser.impl.AttributeName U1
-fld public final static nu.validator.htmlparser.impl.AttributeName U2
-fld public final static nu.validator.htmlparser.impl.AttributeName UNDERLINE_POSITION
-fld public final static nu.validator.htmlparser.impl.AttributeName UNDERLINE_THICKNESS
-fld public final static nu.validator.htmlparser.impl.AttributeName UNICODE
-fld public final static nu.validator.htmlparser.impl.AttributeName UNICODE_BIDI
-fld public final static nu.validator.htmlparser.impl.AttributeName UNICODE_RANGE
-fld public final static nu.validator.htmlparser.impl.AttributeName UNITS_PER_EM
-fld public final static nu.validator.htmlparser.impl.AttributeName UNSELECTABLE
 fld public final static nu.validator.htmlparser.impl.AttributeName USEMAP
 fld public final static nu.validator.htmlparser.impl.AttributeName VALIGN
 fld public final static nu.validator.htmlparser.impl.AttributeName VALUE
 fld public final static nu.validator.htmlparser.impl.AttributeName VALUES
 fld public final static nu.validator.htmlparser.impl.AttributeName VALUETYPE
 fld public final static nu.validator.htmlparser.impl.AttributeName VERSION
-fld public final static nu.validator.htmlparser.impl.AttributeName VERT_ADV_Y
-fld public final static nu.validator.htmlparser.impl.AttributeName VERT_ORIGIN_X
-fld public final static nu.validator.htmlparser.impl.AttributeName VERT_ORIGIN_Y
-fld public final static nu.validator.htmlparser.impl.AttributeName VERYTHICKMATHSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName VERYTHINMATHSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName VERYVERYTHICKMATHSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName VERYVERYTHINMATHSPACE
 fld public final static nu.validator.htmlparser.impl.AttributeName VIEWBOX
 fld public final static nu.validator.htmlparser.impl.AttributeName VIEWTARGET
 fld public final static nu.validator.htmlparser.impl.AttributeName VISIBILITY
 fld public final static nu.validator.htmlparser.impl.AttributeName VLINK
 fld public final static nu.validator.htmlparser.impl.AttributeName VSPACE
-fld public final static nu.validator.htmlparser.impl.AttributeName V_ALPHABETIC
-fld public final static nu.validator.htmlparser.impl.AttributeName V_HANGING
-fld public final static nu.validator.htmlparser.impl.AttributeName V_IDEOGRAPHIC
-fld public final static nu.validator.htmlparser.impl.AttributeName V_MATHEMATICAL
 fld public final static nu.validator.htmlparser.impl.AttributeName WHEN
 fld public final static nu.validator.htmlparser.impl.AttributeName WIDTH
-fld public final static nu.validator.htmlparser.impl.AttributeName WIDTHS
 fld public final static nu.validator.htmlparser.impl.AttributeName WORD_SPACING
 fld public final static nu.validator.htmlparser.impl.AttributeName WRAP
 fld public final static nu.validator.htmlparser.impl.AttributeName WRITING_MODE
@@ -9142,11 +9080,9 @@ fld public final static nu.validator.htmlparser.impl.AttributeName XLINK_TITLE
 fld public final static nu.validator.htmlparser.impl.AttributeName XLINK_TYPE
 fld public final static nu.validator.htmlparser.impl.AttributeName XMLNS
 fld public final static nu.validator.htmlparser.impl.AttributeName XMLNS_XLINK
-fld public final static nu.validator.htmlparser.impl.AttributeName XML_BASE
 fld public final static nu.validator.htmlparser.impl.AttributeName XML_LANG
 fld public final static nu.validator.htmlparser.impl.AttributeName XML_SPACE
 fld public final static nu.validator.htmlparser.impl.AttributeName XREF
-fld public final static nu.validator.htmlparser.impl.AttributeName X_HEIGHT
 fld public final static nu.validator.htmlparser.impl.AttributeName Y
 fld public final static nu.validator.htmlparser.impl.AttributeName Y1
 fld public final static nu.validator.htmlparser.impl.AttributeName Y2
@@ -9158,11 +9094,9 @@ meth public boolean isXmlns()
 meth public java.lang.String getLocal(int)
 meth public java.lang.String getPrefix(int)
 meth public java.lang.String getQName(int)
-meth public java.lang.String getType(int)
 meth public java.lang.String getUri(int)
-meth public nu.validator.htmlparser.impl.AttributeName cloneAttributeName(nu.validator.htmlparser.common.Interner)
 supr java.lang.Object
-hfds ALL_NCNAME,ALL_NO_NCNAME,ALL_NO_NS,ALL_NO_PREFIX,ATTRIBUTE_HASHES,ATTRIBUTE_NAMES,LANG_NS,LANG_PREFIX,XLINK_NS,XLINK_PREFIX,XMLNS_NS,XMLNS_PREFIX,XML_NS,XML_PREFIX,local,ncname,prefix,qName,type,uri,xmlns
+hfds ALL_NO_NS,ALL_NO_PREFIX,ATTRIBUTE_HASHES,ATTRIBUTE_NAMES,LANG_NS,LANG_PREFIX,XLINK_NS,XLINK_PREFIX,XMLNS_NS,XMLNS_PREFIX,XML_NS,XML_PREFIX,flags,local,prefix,qName,uri
 
 CLSS public abstract nu.validator.htmlparser.impl.CoalescingTreeBuilder<%0 extends java.lang.Object>
 cons public init()
@@ -9176,57 +9110,41 @@ meth protected final void appendCharacters({nu.validator.htmlparser.impl.Coalesc
 meth protected final void appendComment({nu.validator.htmlparser.impl.CoalescingTreeBuilder%0},char[],int,int) throws org.xml.sax.SAXException
 meth protected final void appendCommentToDocument(char[],int,int) throws org.xml.sax.SAXException
 meth protected final void insertFosterParentedCharacters(char[],int,int,{nu.validator.htmlparser.impl.CoalescingTreeBuilder%0},{nu.validator.htmlparser.impl.CoalescingTreeBuilder%0}) throws org.xml.sax.SAXException
-meth protected void appendIsindexPrompt({nu.validator.htmlparser.impl.CoalescingTreeBuilder%0}) throws org.xml.sax.SAXException
 supr nu.validator.htmlparser.impl.TreeBuilder<{nu.validator.htmlparser.impl.CoalescingTreeBuilder%0}>
 
 CLSS public final nu.validator.htmlparser.impl.ElementName
-cons protected init(java.lang.String)
-fld public final boolean custom
-fld public final boolean fosterParenting
-fld public final boolean scoping
-fld public final boolean special
-fld public final int group
-fld public final java.lang.String camelCaseName
-fld public final java.lang.String name
+cons public init()
+fld public final int flags
+fld public final static int FOSTER_PARENTING = 268435456
+fld public final static int GROUP_MASK = 127
+fld public final static int HTML_INTEGRATION_POINT = 16777216
+fld public final static int NOT_INTERNED = 1073741824
+fld public final static int OPTIONAL_END_TAG = 8388608
+fld public final static int SCOPING = 134217728
+fld public final static int SCOPING_AS_MATHML = 33554432
+fld public final static int SCOPING_AS_SVG = 67108864
+fld public final static int SPECIAL = 536870912
 fld public final static nu.validator.htmlparser.impl.ElementName A
 fld public final static nu.validator.htmlparser.impl.ElementName ABBR
-fld public final static nu.validator.htmlparser.impl.ElementName ABS
 fld public final static nu.validator.htmlparser.impl.ElementName ACRONYM
 fld public final static nu.validator.htmlparser.impl.ElementName ADDRESS
 fld public final static nu.validator.htmlparser.impl.ElementName ALTGLYPH
 fld public final static nu.validator.htmlparser.impl.ElementName ALTGLYPHDEF
 fld public final static nu.validator.htmlparser.impl.ElementName ALTGLYPHITEM
-fld public final static nu.validator.htmlparser.impl.ElementName AND
 fld public final static nu.validator.htmlparser.impl.ElementName ANIMATE
 fld public final static nu.validator.htmlparser.impl.ElementName ANIMATECOLOR
 fld public final static nu.validator.htmlparser.impl.ElementName ANIMATEMOTION
 fld public final static nu.validator.htmlparser.impl.ElementName ANIMATETRANSFORM
-fld public final static nu.validator.htmlparser.impl.ElementName ANIMATION
-fld public final static nu.validator.htmlparser.impl.ElementName ANNOTATION
 fld public final static nu.validator.htmlparser.impl.ElementName ANNOTATION_XML
 fld public final static nu.validator.htmlparser.impl.ElementName APPLET
-fld public final static nu.validator.htmlparser.impl.ElementName APPLY
-fld public final static nu.validator.htmlparser.impl.ElementName APPROX
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCOS
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCOSH
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCOT
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCOTH
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCSC
-fld public final static nu.validator.htmlparser.impl.ElementName ARCCSCH
-fld public final static nu.validator.htmlparser.impl.ElementName ARCSEC
-fld public final static nu.validator.htmlparser.impl.ElementName ARCSECH
-fld public final static nu.validator.htmlparser.impl.ElementName ARCSIN
-fld public final static nu.validator.htmlparser.impl.ElementName ARCSINH
-fld public final static nu.validator.htmlparser.impl.ElementName ARCTAN
-fld public final static nu.validator.htmlparser.impl.ElementName ARCTANH
 fld public final static nu.validator.htmlparser.impl.ElementName AREA
-fld public final static nu.validator.htmlparser.impl.ElementName ARG
 fld public final static nu.validator.htmlparser.impl.ElementName ARTICLE
 fld public final static nu.validator.htmlparser.impl.ElementName ASIDE
 fld public final static nu.validator.htmlparser.impl.ElementName AUDIO
 fld public final static nu.validator.htmlparser.impl.ElementName B
 fld public final static nu.validator.htmlparser.impl.ElementName BASE
 fld public final static nu.validator.htmlparser.impl.ElementName BASEFONT
+fld public final static nu.validator.htmlparser.impl.ElementName BDI
 fld public final static nu.validator.htmlparser.impl.ElementName BDO
 fld public final static nu.validator.htmlparser.impl.ElementName BGSOUND
 fld public final static nu.validator.htmlparser.impl.ElementName BIG
@@ -9234,72 +9152,31 @@ fld public final static nu.validator.htmlparser.impl.ElementName BLOCKQUOTE
 fld public final static nu.validator.htmlparser.impl.ElementName BODY
 fld public final static nu.validator.htmlparser.impl.ElementName BR
 fld public final static nu.validator.htmlparser.impl.ElementName BUTTON
-fld public final static nu.validator.htmlparser.impl.ElementName BVAR
 fld public final static nu.validator.htmlparser.impl.ElementName CANVAS
 fld public final static nu.validator.htmlparser.impl.ElementName CAPTION
-fld public final static nu.validator.htmlparser.impl.ElementName CARD
-fld public final static nu.validator.htmlparser.impl.ElementName CARTESIANPRODUCT
-fld public final static nu.validator.htmlparser.impl.ElementName CEILING
 fld public final static nu.validator.htmlparser.impl.ElementName CENTER
-fld public final static nu.validator.htmlparser.impl.ElementName CI
 fld public final static nu.validator.htmlparser.impl.ElementName CIRCLE
 fld public final static nu.validator.htmlparser.impl.ElementName CITE
 fld public final static nu.validator.htmlparser.impl.ElementName CLIPPATH
-fld public final static nu.validator.htmlparser.impl.ElementName CN
 fld public final static nu.validator.htmlparser.impl.ElementName CODE
-fld public final static nu.validator.htmlparser.impl.ElementName CODOMAIN
 fld public final static nu.validator.htmlparser.impl.ElementName COL
 fld public final static nu.validator.htmlparser.impl.ElementName COLGROUP
-fld public final static nu.validator.htmlparser.impl.ElementName COLOR_PROFILE
-fld public final static nu.validator.htmlparser.impl.ElementName COMMAND
-fld public final static nu.validator.htmlparser.impl.ElementName COMPLEXES
-fld public final static nu.validator.htmlparser.impl.ElementName COMPOSE
-fld public final static nu.validator.htmlparser.impl.ElementName CONDITION
-fld public final static nu.validator.htmlparser.impl.ElementName CONJUGATE
-fld public final static nu.validator.htmlparser.impl.ElementName COS
-fld public final static nu.validator.htmlparser.impl.ElementName COSH
-fld public final static nu.validator.htmlparser.impl.ElementName COT
-fld public final static nu.validator.htmlparser.impl.ElementName COTH
-fld public final static nu.validator.htmlparser.impl.ElementName CSC
-fld public final static nu.validator.htmlparser.impl.ElementName CSCH
-fld public final static nu.validator.htmlparser.impl.ElementName CSYMBOL
-fld public final static nu.validator.htmlparser.impl.ElementName CURL
-fld public final static nu.validator.htmlparser.impl.ElementName CURSOR
-fld public final static nu.validator.htmlparser.impl.ElementName DATAGRID
-fld public final static nu.validator.htmlparser.impl.ElementName DATATEMPLATE
+fld public final static nu.validator.htmlparser.impl.ElementName DATA
+fld public final static nu.validator.htmlparser.impl.ElementName DATALIST
 fld public final static nu.validator.htmlparser.impl.ElementName DD
-fld public final static nu.validator.htmlparser.impl.ElementName DECLARE
-fld public final static nu.validator.htmlparser.impl.ElementName DEFINITION_SRC
 fld public final static nu.validator.htmlparser.impl.ElementName DEFS
-fld public final static nu.validator.htmlparser.impl.ElementName DEGREE
 fld public final static nu.validator.htmlparser.impl.ElementName DEL
 fld public final static nu.validator.htmlparser.impl.ElementName DESC
 fld public final static nu.validator.htmlparser.impl.ElementName DETAILS
-fld public final static nu.validator.htmlparser.impl.ElementName DETERMINANT
 fld public final static nu.validator.htmlparser.impl.ElementName DFN
-fld public final static nu.validator.htmlparser.impl.ElementName DIFF
+fld public final static nu.validator.htmlparser.impl.ElementName DIALOG
 fld public final static nu.validator.htmlparser.impl.ElementName DIR
-fld public final static nu.validator.htmlparser.impl.ElementName DISCARD
 fld public final static nu.validator.htmlparser.impl.ElementName DIV
-fld public final static nu.validator.htmlparser.impl.ElementName DIVERGENCE
-fld public final static nu.validator.htmlparser.impl.ElementName DIVIDE
 fld public final static nu.validator.htmlparser.impl.ElementName DL
-fld public final static nu.validator.htmlparser.impl.ElementName DOMAIN
-fld public final static nu.validator.htmlparser.impl.ElementName DOMAINOFAPPLICATION
 fld public final static nu.validator.htmlparser.impl.ElementName DT
 fld public final static nu.validator.htmlparser.impl.ElementName ELLIPSE
 fld public final static nu.validator.htmlparser.impl.ElementName EM
 fld public final static nu.validator.htmlparser.impl.ElementName EMBED
-fld public final static nu.validator.htmlparser.impl.ElementName EMPTYSET
-fld public final static nu.validator.htmlparser.impl.ElementName EQ
-fld public final static nu.validator.htmlparser.impl.ElementName EQUIVALENT
-fld public final static nu.validator.htmlparser.impl.ElementName EULERGAMMA
-fld public final static nu.validator.htmlparser.impl.ElementName EXISTS
-fld public final static nu.validator.htmlparser.impl.ElementName EXP
-fld public final static nu.validator.htmlparser.impl.ElementName EXPONENTIALE
-fld public final static nu.validator.htmlparser.impl.ElementName FACTORIAL
-fld public final static nu.validator.htmlparser.impl.ElementName FACTOROF
-fld public final static nu.validator.htmlparser.impl.ElementName FALSE
 fld public final static nu.validator.htmlparser.impl.ElementName FEBLEND
 fld public final static nu.validator.htmlparser.impl.ElementName FECOLORMATRIX
 fld public final static nu.validator.htmlparser.impl.ElementName FECOMPONENTTRANSFER
@@ -9308,6 +9185,7 @@ fld public final static nu.validator.htmlparser.impl.ElementName FECONVOLVEMATRI
 fld public final static nu.validator.htmlparser.impl.ElementName FEDIFFUSELIGHTING
 fld public final static nu.validator.htmlparser.impl.ElementName FEDISPLACEMENTMAP
 fld public final static nu.validator.htmlparser.impl.ElementName FEDISTANTLIGHT
+fld public final static nu.validator.htmlparser.impl.ElementName FEDROPSHADOW
 fld public final static nu.validator.htmlparser.impl.ElementName FEFLOOD
 fld public final static nu.validator.htmlparser.impl.ElementName FEFUNCA
 fld public final static nu.validator.htmlparser.impl.ElementName FEFUNCB
@@ -9325,83 +9203,44 @@ fld public final static nu.validator.htmlparser.impl.ElementName FESPOTLIGHT
 fld public final static nu.validator.htmlparser.impl.ElementName FETILE
 fld public final static nu.validator.htmlparser.impl.ElementName FETURBULENCE
 fld public final static nu.validator.htmlparser.impl.ElementName FIELDSET
+fld public final static nu.validator.htmlparser.impl.ElementName FIGCAPTION
 fld public final static nu.validator.htmlparser.impl.ElementName FIGURE
 fld public final static nu.validator.htmlparser.impl.ElementName FILTER
-fld public final static nu.validator.htmlparser.impl.ElementName FLOOR
-fld public final static nu.validator.htmlparser.impl.ElementName FN
 fld public final static nu.validator.htmlparser.impl.ElementName FONT
-fld public final static nu.validator.htmlparser.impl.ElementName FONT_FACE
-fld public final static nu.validator.htmlparser.impl.ElementName FONT_FACE_FORMAT
-fld public final static nu.validator.htmlparser.impl.ElementName FONT_FACE_NAME
-fld public final static nu.validator.htmlparser.impl.ElementName FONT_FACE_SRC
-fld public final static nu.validator.htmlparser.impl.ElementName FONT_FACE_URI
 fld public final static nu.validator.htmlparser.impl.ElementName FOOTER
-fld public final static nu.validator.htmlparser.impl.ElementName FORALL
 fld public final static nu.validator.htmlparser.impl.ElementName FOREIGNOBJECT
 fld public final static nu.validator.htmlparser.impl.ElementName FORM
 fld public final static nu.validator.htmlparser.impl.ElementName FRAME
 fld public final static nu.validator.htmlparser.impl.ElementName FRAMESET
 fld public final static nu.validator.htmlparser.impl.ElementName G
-fld public final static nu.validator.htmlparser.impl.ElementName GCD
-fld public final static nu.validator.htmlparser.impl.ElementName GEQ
-fld public final static nu.validator.htmlparser.impl.ElementName GLYPH
 fld public final static nu.validator.htmlparser.impl.ElementName GLYPHREF
-fld public final static nu.validator.htmlparser.impl.ElementName GRAD
-fld public final static nu.validator.htmlparser.impl.ElementName GT
 fld public final static nu.validator.htmlparser.impl.ElementName H1
 fld public final static nu.validator.htmlparser.impl.ElementName H2
 fld public final static nu.validator.htmlparser.impl.ElementName H3
 fld public final static nu.validator.htmlparser.impl.ElementName H4
 fld public final static nu.validator.htmlparser.impl.ElementName H5
 fld public final static nu.validator.htmlparser.impl.ElementName H6
-fld public final static nu.validator.htmlparser.impl.ElementName HANDLER
 fld public final static nu.validator.htmlparser.impl.ElementName HEAD
 fld public final static nu.validator.htmlparser.impl.ElementName HEADER
 fld public final static nu.validator.htmlparser.impl.ElementName HGROUP
-fld public final static nu.validator.htmlparser.impl.ElementName HKERN
 fld public final static nu.validator.htmlparser.impl.ElementName HR
 fld public final static nu.validator.htmlparser.impl.ElementName HTML
 fld public final static nu.validator.htmlparser.impl.ElementName I
-fld public final static nu.validator.htmlparser.impl.ElementName IDENT
 fld public final static nu.validator.htmlparser.impl.ElementName IFRAME
 fld public final static nu.validator.htmlparser.impl.ElementName IMAGE
-fld public final static nu.validator.htmlparser.impl.ElementName IMAGINARY
-fld public final static nu.validator.htmlparser.impl.ElementName IMAGINARYI
 fld public final static nu.validator.htmlparser.impl.ElementName IMG
-fld public final static nu.validator.htmlparser.impl.ElementName IMPLIES
-fld public final static nu.validator.htmlparser.impl.ElementName IN
-fld public final static nu.validator.htmlparser.impl.ElementName INFINITY
 fld public final static nu.validator.htmlparser.impl.ElementName INPUT
 fld public final static nu.validator.htmlparser.impl.ElementName INS
-fld public final static nu.validator.htmlparser.impl.ElementName INT
-fld public final static nu.validator.htmlparser.impl.ElementName INTEGERS
-fld public final static nu.validator.htmlparser.impl.ElementName INTERSECT
-fld public final static nu.validator.htmlparser.impl.ElementName INTERVAL
-fld public final static nu.validator.htmlparser.impl.ElementName INVERSE
-fld public final static nu.validator.htmlparser.impl.ElementName ISINDEX
 fld public final static nu.validator.htmlparser.impl.ElementName KBD
 fld public final static nu.validator.htmlparser.impl.ElementName KEYGEN
 fld public final static nu.validator.htmlparser.impl.ElementName LABEL
-fld public final static nu.validator.htmlparser.impl.ElementName LAMBDA
-fld public final static nu.validator.htmlparser.impl.ElementName LAPLACIAN
-fld public final static nu.validator.htmlparser.impl.ElementName LCM
 fld public final static nu.validator.htmlparser.impl.ElementName LEGEND
-fld public final static nu.validator.htmlparser.impl.ElementName LEQ
 fld public final static nu.validator.htmlparser.impl.ElementName LI
-fld public final static nu.validator.htmlparser.impl.ElementName LIMIT
 fld public final static nu.validator.htmlparser.impl.ElementName LINE
 fld public final static nu.validator.htmlparser.impl.ElementName LINEARGRADIENT
 fld public final static nu.validator.htmlparser.impl.ElementName LINK
-fld public final static nu.validator.htmlparser.impl.ElementName LIST
-fld public final static nu.validator.htmlparser.impl.ElementName LISTENER
 fld public final static nu.validator.htmlparser.impl.ElementName LISTING
-fld public final static nu.validator.htmlparser.impl.ElementName LN
-fld public final static nu.validator.htmlparser.impl.ElementName LOG
-fld public final static nu.validator.htmlparser.impl.ElementName LOGBASE
-fld public final static nu.validator.htmlparser.impl.ElementName LOWLIMIT
-fld public final static nu.validator.htmlparser.impl.ElementName LT
-fld public final static nu.validator.htmlparser.impl.ElementName MACTION
-fld public final static nu.validator.htmlparser.impl.ElementName MALIGNGROUP
+fld public final static nu.validator.htmlparser.impl.ElementName MAIN
 fld public final static nu.validator.htmlparser.impl.ElementName MALIGNMARK
 fld public final static nu.validator.htmlparser.impl.ElementName MAP
 fld public final static nu.validator.htmlparser.impl.ElementName MARK
@@ -9409,125 +9248,54 @@ fld public final static nu.validator.htmlparser.impl.ElementName MARKER
 fld public final static nu.validator.htmlparser.impl.ElementName MARQUEE
 fld public final static nu.validator.htmlparser.impl.ElementName MASK
 fld public final static nu.validator.htmlparser.impl.ElementName MATH
-fld public final static nu.validator.htmlparser.impl.ElementName MATRIX
-fld public final static nu.validator.htmlparser.impl.ElementName MATRIXROW
-fld public final static nu.validator.htmlparser.impl.ElementName MAX
-fld public final static nu.validator.htmlparser.impl.ElementName MEAN
-fld public final static nu.validator.htmlparser.impl.ElementName MEDIAN
-fld public final static nu.validator.htmlparser.impl.ElementName MENCLOSE
 fld public final static nu.validator.htmlparser.impl.ElementName MENU
-fld public final static nu.validator.htmlparser.impl.ElementName MERROR
+fld public final static nu.validator.htmlparser.impl.ElementName MENUITEM
 fld public final static nu.validator.htmlparser.impl.ElementName META
 fld public final static nu.validator.htmlparser.impl.ElementName METADATA
 fld public final static nu.validator.htmlparser.impl.ElementName METER
-fld public final static nu.validator.htmlparser.impl.ElementName MFENCED
-fld public final static nu.validator.htmlparser.impl.ElementName MFRAC
 fld public final static nu.validator.htmlparser.impl.ElementName MGLYPH
 fld public final static nu.validator.htmlparser.impl.ElementName MI
-fld public final static nu.validator.htmlparser.impl.ElementName MIN
-fld public final static nu.validator.htmlparser.impl.ElementName MINUS
-fld public final static nu.validator.htmlparser.impl.ElementName MISSING_GLYPH
-fld public final static nu.validator.htmlparser.impl.ElementName MLABELEDTR
-fld public final static nu.validator.htmlparser.impl.ElementName MMULTISCRIPTS
 fld public final static nu.validator.htmlparser.impl.ElementName MN
 fld public final static nu.validator.htmlparser.impl.ElementName MO
-fld public final static nu.validator.htmlparser.impl.ElementName MODE
-fld public final static nu.validator.htmlparser.impl.ElementName MOMENT
-fld public final static nu.validator.htmlparser.impl.ElementName MOMENTABOUT
-fld public final static nu.validator.htmlparser.impl.ElementName MOVER
-fld public final static nu.validator.htmlparser.impl.ElementName MPADDED
 fld public final static nu.validator.htmlparser.impl.ElementName MPATH
-fld public final static nu.validator.htmlparser.impl.ElementName MPHANTOM
-fld public final static nu.validator.htmlparser.impl.ElementName MPRESCRIPTS
-fld public final static nu.validator.htmlparser.impl.ElementName MROOT
-fld public final static nu.validator.htmlparser.impl.ElementName MROW
 fld public final static nu.validator.htmlparser.impl.ElementName MS
-fld public final static nu.validator.htmlparser.impl.ElementName MSPACE
-fld public final static nu.validator.htmlparser.impl.ElementName MSQRT
-fld public final static nu.validator.htmlparser.impl.ElementName MSTYLE
-fld public final static nu.validator.htmlparser.impl.ElementName MSUB
-fld public final static nu.validator.htmlparser.impl.ElementName MSUBSUP
-fld public final static nu.validator.htmlparser.impl.ElementName MSUP
-fld public final static nu.validator.htmlparser.impl.ElementName MTABLE
-fld public final static nu.validator.htmlparser.impl.ElementName MTD
 fld public final static nu.validator.htmlparser.impl.ElementName MTEXT
-fld public final static nu.validator.htmlparser.impl.ElementName MTR
-fld public final static nu.validator.htmlparser.impl.ElementName MUNDER
-fld public final static nu.validator.htmlparser.impl.ElementName MUNDEROVER
-fld public final static nu.validator.htmlparser.impl.ElementName NATURALNUMBERS
 fld public final static nu.validator.htmlparser.impl.ElementName NAV
-fld public final static nu.validator.htmlparser.impl.ElementName NEQ
-fld public final static nu.validator.htmlparser.impl.ElementName NEST
 fld public final static nu.validator.htmlparser.impl.ElementName NOBR
 fld public final static nu.validator.htmlparser.impl.ElementName NOEMBED
 fld public final static nu.validator.htmlparser.impl.ElementName NOFRAMES
-fld public final static nu.validator.htmlparser.impl.ElementName NONE
 fld public final static nu.validator.htmlparser.impl.ElementName NOSCRIPT
-fld public final static nu.validator.htmlparser.impl.ElementName NOT
-fld public final static nu.validator.htmlparser.impl.ElementName NOTANUMBER
-fld public final static nu.validator.htmlparser.impl.ElementName NOTIN
-fld public final static nu.validator.htmlparser.impl.ElementName NOTPRSUBSET
-fld public final static nu.validator.htmlparser.impl.ElementName NOTSUBSET
-fld public final static nu.validator.htmlparser.impl.ElementName NULL_ELEMENT_NAME
 fld public final static nu.validator.htmlparser.impl.ElementName OBJECT
 fld public final static nu.validator.htmlparser.impl.ElementName OL
 fld public final static nu.validator.htmlparser.impl.ElementName OPTGROUP
 fld public final static nu.validator.htmlparser.impl.ElementName OPTION
-fld public final static nu.validator.htmlparser.impl.ElementName OR
-fld public final static nu.validator.htmlparser.impl.ElementName OTHERWISE
-fld public final static nu.validator.htmlparser.impl.ElementName OUTERPRODUCT
 fld public final static nu.validator.htmlparser.impl.ElementName OUTPUT
 fld public final static nu.validator.htmlparser.impl.ElementName P
 fld public final static nu.validator.htmlparser.impl.ElementName PARAM
-fld public final static nu.validator.htmlparser.impl.ElementName PARTIALDIFF
 fld public final static nu.validator.htmlparser.impl.ElementName PATH
 fld public final static nu.validator.htmlparser.impl.ElementName PATTERN
-fld public final static nu.validator.htmlparser.impl.ElementName PI
-fld public final static nu.validator.htmlparser.impl.ElementName PIECE
-fld public final static nu.validator.htmlparser.impl.ElementName PIECEWISE
+fld public final static nu.validator.htmlparser.impl.ElementName PICTURE
 fld public final static nu.validator.htmlparser.impl.ElementName PLAINTEXT
-fld public final static nu.validator.htmlparser.impl.ElementName PLUS
 fld public final static nu.validator.htmlparser.impl.ElementName POLYGON
 fld public final static nu.validator.htmlparser.impl.ElementName POLYLINE
-fld public final static nu.validator.htmlparser.impl.ElementName POWER
 fld public final static nu.validator.htmlparser.impl.ElementName PRE
-fld public final static nu.validator.htmlparser.impl.ElementName PREFETCH
-fld public final static nu.validator.htmlparser.impl.ElementName PRIMES
-fld public final static nu.validator.htmlparser.impl.ElementName PRODUCT
 fld public final static nu.validator.htmlparser.impl.ElementName PROGRESS
-fld public final static nu.validator.htmlparser.impl.ElementName PRSUBSET
 fld public final static nu.validator.htmlparser.impl.ElementName Q
-fld public final static nu.validator.htmlparser.impl.ElementName QUOTIENT
 fld public final static nu.validator.htmlparser.impl.ElementName RADIALGRADIENT
-fld public final static nu.validator.htmlparser.impl.ElementName RATIONALS
-fld public final static nu.validator.htmlparser.impl.ElementName REAL
-fld public final static nu.validator.htmlparser.impl.ElementName REALS
+fld public final static nu.validator.htmlparser.impl.ElementName RB
 fld public final static nu.validator.htmlparser.impl.ElementName RECT
-fld public final static nu.validator.htmlparser.impl.ElementName RELN
-fld public final static nu.validator.htmlparser.impl.ElementName REM
-fld public final static nu.validator.htmlparser.impl.ElementName ROOT
 fld public final static nu.validator.htmlparser.impl.ElementName RP
 fld public final static nu.validator.htmlparser.impl.ElementName RT
+fld public final static nu.validator.htmlparser.impl.ElementName RTC
 fld public final static nu.validator.htmlparser.impl.ElementName RUBY
-fld public final static nu.validator.htmlparser.impl.ElementName RULE
 fld public final static nu.validator.htmlparser.impl.ElementName S
 fld public final static nu.validator.htmlparser.impl.ElementName SAMP
-fld public final static nu.validator.htmlparser.impl.ElementName SCALARPRODUCT
 fld public final static nu.validator.htmlparser.impl.ElementName SCRIPT
-fld public final static nu.validator.htmlparser.impl.ElementName SDEV
-fld public final static nu.validator.htmlparser.impl.ElementName SEC
-fld public final static nu.validator.htmlparser.impl.ElementName SECH
 fld public final static nu.validator.htmlparser.impl.ElementName SECTION
 fld public final static nu.validator.htmlparser.impl.ElementName SELECT
-fld public final static nu.validator.htmlparser.impl.ElementName SELECTOR
-fld public final static nu.validator.htmlparser.impl.ElementName SEMANTICS
-fld public final static nu.validator.htmlparser.impl.ElementName SEP
 fld public final static nu.validator.htmlparser.impl.ElementName SET
-fld public final static nu.validator.htmlparser.impl.ElementName SETDIFF
-fld public final static nu.validator.htmlparser.impl.ElementName SIN
-fld public final static nu.validator.htmlparser.impl.ElementName SINH
+fld public final static nu.validator.htmlparser.impl.ElementName SLOT
 fld public final static nu.validator.htmlparser.impl.ElementName SMALL
-fld public final static nu.validator.htmlparser.impl.ElementName SOLIDCOLOR
 fld public final static nu.validator.htmlparser.impl.ElementName SOURCE
 fld public final static nu.validator.htmlparser.impl.ElementName SPAN
 fld public final static nu.validator.htmlparser.impl.ElementName STOP
@@ -9535,19 +9303,15 @@ fld public final static nu.validator.htmlparser.impl.ElementName STRIKE
 fld public final static nu.validator.htmlparser.impl.ElementName STRONG
 fld public final static nu.validator.htmlparser.impl.ElementName STYLE
 fld public final static nu.validator.htmlparser.impl.ElementName SUB
-fld public final static nu.validator.htmlparser.impl.ElementName SUBSET
-fld public final static nu.validator.htmlparser.impl.ElementName SUM
+fld public final static nu.validator.htmlparser.impl.ElementName SUMMARY
 fld public final static nu.validator.htmlparser.impl.ElementName SUP
 fld public final static nu.validator.htmlparser.impl.ElementName SVG
 fld public final static nu.validator.htmlparser.impl.ElementName SWITCH
 fld public final static nu.validator.htmlparser.impl.ElementName SYMBOL
 fld public final static nu.validator.htmlparser.impl.ElementName TABLE
-fld public final static nu.validator.htmlparser.impl.ElementName TAN
-fld public final static nu.validator.htmlparser.impl.ElementName TANH
 fld public final static nu.validator.htmlparser.impl.ElementName TBODY
-fld public final static nu.validator.htmlparser.impl.ElementName TBREAK
 fld public final static nu.validator.htmlparser.impl.ElementName TD
-fld public final static nu.validator.htmlparser.impl.ElementName TENDSTO
+fld public final static nu.validator.htmlparser.impl.ElementName TEMPLATE
 fld public final static nu.validator.htmlparser.impl.ElementName TEXT
 fld public final static nu.validator.htmlparser.impl.ElementName TEXTAREA
 fld public final static nu.validator.htmlparser.impl.ElementName TEXTPATH
@@ -9555,32 +9319,28 @@ fld public final static nu.validator.htmlparser.impl.ElementName TFOOT
 fld public final static nu.validator.htmlparser.impl.ElementName TH
 fld public final static nu.validator.htmlparser.impl.ElementName THEAD
 fld public final static nu.validator.htmlparser.impl.ElementName TIME
-fld public final static nu.validator.htmlparser.impl.ElementName TIMES
 fld public final static nu.validator.htmlparser.impl.ElementName TITLE
 fld public final static nu.validator.htmlparser.impl.ElementName TR
-fld public final static nu.validator.htmlparser.impl.ElementName TRANSPOSE
-fld public final static nu.validator.htmlparser.impl.ElementName TREF
-fld public final static nu.validator.htmlparser.impl.ElementName TRUE
+fld public final static nu.validator.htmlparser.impl.ElementName TRACK
 fld public final static nu.validator.htmlparser.impl.ElementName TSPAN
 fld public final static nu.validator.htmlparser.impl.ElementName TT
 fld public final static nu.validator.htmlparser.impl.ElementName U
 fld public final static nu.validator.htmlparser.impl.ElementName UL
-fld public final static nu.validator.htmlparser.impl.ElementName UNION
-fld public final static nu.validator.htmlparser.impl.ElementName UPLIMIT
 fld public final static nu.validator.htmlparser.impl.ElementName USE
 fld public final static nu.validator.htmlparser.impl.ElementName VAR
-fld public final static nu.validator.htmlparser.impl.ElementName VARIANCE
-fld public final static nu.validator.htmlparser.impl.ElementName VECTOR
-fld public final static nu.validator.htmlparser.impl.ElementName VECTORPRODUCT
 fld public final static nu.validator.htmlparser.impl.ElementName VIDEO
 fld public final static nu.validator.htmlparser.impl.ElementName VIEW
-fld public final static nu.validator.htmlparser.impl.ElementName VKERN
 fld public final static nu.validator.htmlparser.impl.ElementName WBR
 fld public final static nu.validator.htmlparser.impl.ElementName XMP
-fld public final static nu.validator.htmlparser.impl.ElementName XOR
-meth public nu.validator.htmlparser.impl.ElementName cloneElementName(nu.validator.htmlparser.common.Interner)
+meth public boolean isInterned()
+meth public int getFlags()
+meth public int getGroup()
+meth public java.lang.String getCamelCaseName()
+meth public java.lang.String getName()
+meth public void destructor()
+meth public void setNameForNonInterned(java.lang.String)
 supr java.lang.Object
-hfds ELEMENT_HASHES,ELEMENT_NAMES
+hfds ELEMENT_HASHES,ELEMENT_NAMES,camelCaseName,name
 
 CLSS public nu.validator.htmlparser.impl.ErrorReportingTokenizer
 cons public init(nu.validator.htmlparser.common.TokenHandler)
@@ -9655,7 +9415,6 @@ meth protected void noteUnquotedAttributeValue() throws org.xml.sax.SAXException
 meth protected void silentCarriageReturn()
 meth protected void silentLineFeed()
 meth protected void startErrorReporting() throws org.xml.sax.SAXException
-meth public boolean isAlreadyComplainedAboutNonAscii()
 meth public boolean isNextCharOnNewLine()
 meth public int getCol()
 meth public int getColumnNumber()
@@ -9664,14 +9423,16 @@ meth public int getLineNumber()
 meth public void note(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void setContentNonXmlCharPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void setErrorProfile(java.util.HashMap<java.lang.String,java.lang.String>)
+meth public void setTransitionBaseOffset(int)
 meth public void setTransitionHandler(nu.validator.htmlparser.common.TransitionHandler)
 supr nu.validator.htmlparser.impl.Tokenizer
-hfds SURROGATE_OFFSET,alreadyComplainedAboutNonAscii,alreadyWarnedAboutPrivateUseCharacters,col,colPrev,contentNonXmlCharPolicy,errorProfileMap,line,linePrev,nextCharOnNewLine,prev,transitionHandler
+hfds SURROGATE_OFFSET,alreadyWarnedAboutPrivateUseCharacters,col,colPrev,contentNonXmlCharPolicy,errorProfileMap,line,linePrev,nextCharOnNewLine,prev,transitionBaseOffset,transitionHandler
 
 CLSS public final nu.validator.htmlparser.impl.HtmlAttributes
 cons public init(int)
 fld public final static nu.validator.htmlparser.impl.HtmlAttributes EMPTY_ATTRIBUTES
 intf org.xml.sax.Attributes
+meth public boolean equalsAnother(nu.validator.htmlparser.impl.HtmlAttributes)
 meth public int getIndex(java.lang.String)
 meth public int getIndex(java.lang.String,java.lang.String)
 meth public int getIndex(nu.validator.htmlparser.impl.AttributeName)
@@ -9680,36 +9441,43 @@ meth public int getXmlnsIndex(nu.validator.htmlparser.impl.AttributeName)
 meth public int getXmlnsLength()
 meth public java.lang.String getId()
 meth public java.lang.String getLocalName(int)
+meth public java.lang.String getLocalNameNoBoundsCheck(int)
 meth public java.lang.String getPrefix(int)
+meth public java.lang.String getPrefixNoBoundsCheck(int)
 meth public java.lang.String getQName(int)
+meth public java.lang.String getQNameNoBoundsCheck(int)
 meth public java.lang.String getType(int)
 meth public java.lang.String getType(java.lang.String)
 meth public java.lang.String getType(java.lang.String,java.lang.String)
+meth public java.lang.String getTypeNoBoundsCheck(int)
 meth public java.lang.String getURI(int)
+meth public java.lang.String getURINoBoundsCheck(int)
 meth public java.lang.String getValue(int)
 meth public java.lang.String getValue(java.lang.String)
 meth public java.lang.String getValue(java.lang.String,java.lang.String)
 meth public java.lang.String getValue(nu.validator.htmlparser.impl.AttributeName)
+meth public java.lang.String getValueNoBoundsCheck(int)
 meth public java.lang.String getXmlnsLocalName(int)
 meth public java.lang.String getXmlnsURI(int)
 meth public java.lang.String getXmlnsValue(int)
 meth public java.lang.String getXmlnsValue(nu.validator.htmlparser.impl.AttributeName)
 meth public nu.validator.htmlparser.impl.AttributeName getAttributeName(int)
+meth public nu.validator.htmlparser.impl.AttributeName getAttributeNameNoBoundsCheck(int)
 meth public nu.validator.htmlparser.impl.AttributeName getXmlnsAttributeName(int)
-meth public nu.validator.htmlparser.impl.HtmlAttributes cloneAttributes(nu.validator.htmlparser.common.Interner) throws org.xml.sax.SAXException
+meth public nu.validator.htmlparser.impl.HtmlAttributes cloneAttributes() throws org.xml.sax.SAXException
 meth public void adjustForMath()
 meth public void adjustForSvg()
 meth public void merge(nu.validator.htmlparser.impl.HtmlAttributes) throws org.xml.sax.SAXException
 supr java.lang.Object
 hfds EMPTY_ATTRIBUTENAMES,EMPTY_STRINGS,idValue,length,mode,names,values,xmlnsLength,xmlnsNames,xmlnsValues
 
-CLSS public final nu.validator.htmlparser.impl.LocatorImpl
+CLSS public nu.validator.htmlparser.impl.LocatorImpl
 cons public init(org.xml.sax.Locator)
 intf org.xml.sax.Locator
-meth public int getColumnNumber()
-meth public int getLineNumber()
-meth public java.lang.String getPublicId()
-meth public java.lang.String getSystemId()
+meth public final int getColumnNumber()
+meth public final int getLineNumber()
+meth public final java.lang.String getPublicId()
+meth public final java.lang.String getSystemId()
 supr java.lang.Object
 hfds column,line,publicId,systemId
 
@@ -9721,7 +9489,7 @@ meth protected abstract boolean tryCharset(java.lang.String) throws org.xml.sax.
 meth protected final void stateLoop(int) throws java.io.IOException,org.xml.sax.SAXException
 meth protected int read() throws java.io.IOException
 supr java.lang.Object
-hfds A,AFTER_ATTRIBUTE_NAME,AFTER_ATTRIBUTE_VALUE_QUOTED,ATTRIBUTE_NAME,ATTRIBUTE_VALUE_DOUBLE_QUOTED,ATTRIBUTE_VALUE_SINGLE_QUOTED,ATTRIBUTE_VALUE_UNQUOTED,BEFORE_ATTRIBUTE_NAME,BEFORE_ATTRIBUTE_VALUE,CHARSET,COMMENT,COMMENT_END,COMMENT_END_DASH,COMMENT_START,COMMENT_START_DASH,CONTENT,DATA,E,M,MARKUP_DECLARATION_HYPHEN,MARKUP_DECLARATION_OPEN,NO,SCAN_UNTIL_GT,SELF_CLOSING_START_TAG,T,TAG_NAME,TAG_OPEN,charsetIndex,contentIndex,metaState,strBuf,strBufLen
+hfds A,AFTER_ATTRIBUTE_NAME,AFTER_ATTRIBUTE_VALUE_QUOTED,ATTRIBUTE_NAME,ATTRIBUTE_VALUE_DOUBLE_QUOTED,ATTRIBUTE_VALUE_SINGLE_QUOTED,ATTRIBUTE_VALUE_UNQUOTED,BEFORE_ATTRIBUTE_NAME,BEFORE_ATTRIBUTE_VALUE,CHARSET,COMMENT,COMMENT_END,COMMENT_END_DASH,COMMENT_START,COMMENT_START_DASH,CONTENT,CONTENT_TYPE,DATA,E,HTTP_EQUIV,HTTP_EQUIV_CONTENT_TYPE,HTTP_EQUIV_NOT_SEEN,HTTP_EQUIV_OTHER,M,MARKUP_DECLARATION_HYPHEN,MARKUP_DECLARATION_OPEN,NO,SCAN_UNTIL_GT,SELF_CLOSING_START_TAG,T,TAG_NAME,TAG_OPEN,charset,charsetIndex,content,contentIndex,contentTypeIndex,httpEquivIndex,httpEquivState,metaState,strBuf,strBufLen
 
 CLSS public final nu.validator.htmlparser.impl.NCName
 cons public init()
@@ -9745,25 +9513,20 @@ hfds HILO_ACCEL
 CLSS public final nu.validator.htmlparser.impl.Portability
 cons public init()
 meth public static boolean literalEqualsString(java.lang.String,java.lang.String)
-meth public static boolean localEqualsBuffer(java.lang.String,char[],int,int)
+meth public static boolean localEqualsBuffer(java.lang.String,char[],int)
 meth public static boolean lowerCaseLiteralEqualsIgnoreAsciiCaseString(java.lang.String,java.lang.String)
 meth public static boolean lowerCaseLiteralIsPrefixOfIgnoreAsciiCaseString(java.lang.String,java.lang.String)
+meth public static boolean stringEqualsString(java.lang.String,java.lang.String)
 meth public static char[] newCharArrayFromLocal(java.lang.String)
 meth public static char[] newCharArrayFromString(java.lang.String)
 meth public static java.lang.String newEmptyString()
-meth public static java.lang.String newLocalFromLocal(java.lang.String,nu.validator.htmlparser.common.Interner)
-meth public static java.lang.String newLocalNameFromBuffer(char[],int,int,nu.validator.htmlparser.common.Interner)
+meth public static java.lang.String newLocalNameFromBuffer(char[],int,nu.validator.htmlparser.common.Interner)
 meth public static java.lang.String newStringFromBuffer(char[],int,int)
 meth public static java.lang.String newStringFromLiteral(java.lang.String)
 meth public static java.lang.String newStringFromString(java.lang.String)
 meth public static void delete(java.lang.Object)
 meth public static void deleteArray(java.lang.Object)
-meth public static void releaseArray(java.lang.Object)
-meth public static void releaseElement(java.lang.Object)
-meth public static void releaseLocal(java.lang.String)
 meth public static void releaseString(java.lang.String)
-meth public static void retainElement(java.lang.Object)
-meth public static void retainLocal(java.lang.String)
 supr java.lang.Object
 
 CLSS public nu.validator.htmlparser.impl.PushedLocation
@@ -9782,20 +9545,27 @@ hfds col,colPrev,line,linePrev,next,nextCharOnNewLine,publicId,systemId
 CLSS public nu.validator.htmlparser.impl.StateSnapshot<%0 extends java.lang.Object>
 intf nu.validator.htmlparser.impl.TreeBuilderState<{nu.validator.htmlparser.impl.StateSnapshot%0}>
 meth public boolean isFramesetOk()
-meth public boolean isInForeign()
 meth public boolean isNeedToDropLF()
 meth public boolean isQuirks()
 meth public int getListOfActiveFormattingElementsLength()
 meth public int getMode()
 meth public int getOriginalMode()
 meth public int getStackLength()
+meth public int getTemplateModeStackLength()
+meth public int[] getTemplateModeStack()
 meth public nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.StateSnapshot%0}>[] getListOfActiveFormattingElements()
 meth public nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.StateSnapshot%0}>[] getStack()
-meth public {nu.validator.htmlparser.impl.StateSnapshot%0} getDeepTreeSurrogateParent()
 meth public {nu.validator.htmlparser.impl.StateSnapshot%0} getFormPointer()
 meth public {nu.validator.htmlparser.impl.StateSnapshot%0} getHeadPointer()
 supr java.lang.Object
-hfds deepTreeSurrogateParent,formPointer,framesetOk,headPointer,inForeign,listOfActiveFormattingElements,mode,needToDropLF,originalMode,quirks,stack
+hfds formPointer,framesetOk,headPointer,listOfActiveFormattingElements,mode,needToDropLF,originalMode,quirks,stack,templateModeStack
+
+CLSS public nu.validator.htmlparser.impl.TaintableLocatorImpl
+cons public init(org.xml.sax.Locator)
+meth public boolean isTainted()
+meth public void markTainted()
+supr nu.validator.htmlparser.impl.LocatorImpl
+hfds tainted
 
 CLSS public nu.validator.htmlparser.impl.Tokenizer
 cons public init(nu.validator.htmlparser.common.TokenHandler)
@@ -9819,9 +9589,9 @@ fld public final static int AFTER_ATTRIBUTE_NAME = 14
 fld public final static int AFTER_ATTRIBUTE_VALUE_QUOTED = 16
 fld public final static int AFTER_DOCTYPE_NAME = 22
 fld public final static int AFTER_DOCTYPE_PUBLIC_IDENTIFIER = 26
-fld public final static int AFTER_DOCTYPE_PUBLIC_KEYWORD = 44
+fld public final static int AFTER_DOCTYPE_PUBLIC_KEYWORD = 43
 fld public final static int AFTER_DOCTYPE_SYSTEM_IDENTIFIER = 30
-fld public final static int AFTER_DOCTYPE_SYSTEM_KEYWORD = 46
+fld public final static int AFTER_DOCTYPE_SYSTEM_KEYWORD = 45
 fld public final static int ATTRIBUTE_NAME = 13
 fld public final static int ATTRIBUTE_VALUE_DOUBLE_QUOTED = 5
 fld public final static int ATTRIBUTE_VALUE_SINGLE_QUOTED = 6
@@ -9831,62 +9601,63 @@ fld public final static int BEFORE_ATTRIBUTE_VALUE = 15
 fld public final static int BEFORE_DOCTYPE_NAME = 20
 fld public final static int BEFORE_DOCTYPE_PUBLIC_IDENTIFIER = 23
 fld public final static int BEFORE_DOCTYPE_SYSTEM_IDENTIFIER = 27
-fld public final static int BETWEEN_DOCTYPE_PUBLIC_AND_SYSTEM_IDENTIFIERS = 45
+fld public final static int BETWEEN_DOCTYPE_PUBLIC_AND_SYSTEM_IDENTIFIERS = 44
 fld public final static int BOGUS_COMMENT = 17
-fld public final static int BOGUS_COMMENT_HYPHEN = 65
+fld public final static int BOGUS_COMMENT_HYPHEN = 64
 fld public final static int BOGUS_DOCTYPE = 31
-fld public final static int CDATA_RSQB = 58
-fld public final static int CDATA_RSQB_RSQB = 59
-fld public final static int CDATA_SECTION = 57
-fld public final static int CDATA_START = 56
-fld public final static int CHARACTER_REFERENCE_HILO_LOOKUP = 54
-fld public final static int CHARACTER_REFERENCE_TAIL = 49
+fld public final static int CDATA_RSQB = 57
+fld public final static int CDATA_RSQB_RSQB = 58
+fld public final static int CDATA_SECTION = 56
+fld public final static int CDATA_START = 55
+fld public final static int CHARACTER_REFERENCE_HILO_LOOKUP = 53
+fld public final static int CHARACTER_REFERENCE_TAIL = 48
 fld public final static int CLOSE_TAG_OPEN = 10
 fld public final static int COMMENT = 34
 fld public final static int COMMENT_END = 36
-fld public final static int COMMENT_END_BANG = 38
+fld public final static int COMMENT_END_BANG = 37
 fld public final static int COMMENT_END_DASH = 35
-fld public final static int COMMENT_END_SPACE = 37
 fld public final static int COMMENT_START = 32
 fld public final static int COMMENT_START_DASH = 33
-fld public final static int CONSUME_CHARACTER_REFERENCE = 47
-fld public final static int CONSUME_NCR = 48
+fld public final static int CONSUME_CHARACTER_REFERENCE = 46
+fld public final static int CONSUME_NCR = 47
 fld public final static int DATA = 0
-fld public final static int DECIMAL_NRC_LOOP = 51
+fld public final static int DECIMAL_NRC_LOOP = 50
 fld public final static int DOCTYPE = 19
 fld public final static int DOCTYPE_NAME = 21
 fld public final static int DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE_QUOTED = 24
 fld public final static int DOCTYPE_PUBLIC_IDENTIFIER_SINGLE_QUOTED = 25
 fld public final static int DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED = 28
 fld public final static int DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED = 29
-fld public final static int DOCTYPE_UBLIC = 42
-fld public final static int DOCTYPE_YSTEM = 43
-fld public final static int HANDLE_NCR_VALUE = 52
-fld public final static int HANDLE_NCR_VALUE_RECONSUME = 53
-fld public final static int HEX_NCR_LOOP = 50
-fld public final static int MARKUP_DECLARATION_HYPHEN = 40
-fld public final static int MARKUP_DECLARATION_OCTYPE = 41
+fld public final static int DOCTYPE_UBLIC = 41
+fld public final static int DOCTYPE_YSTEM = 42
+fld public final static int HANDLE_NCR_VALUE = 51
+fld public final static int HANDLE_NCR_VALUE_RECONSUME = 52
+fld public final static int HEX_NCR_LOOP = 49
+fld public final static int MARKUP_DECLARATION_HYPHEN = 39
+fld public final static int MARKUP_DECLARATION_OCTYPE = 40
 fld public final static int MARKUP_DECLARATION_OPEN = 18
-fld public final static int NON_DATA_END_TAG_NAME = 39
+fld public final static int NON_DATA_END_TAG_NAME = 38
 fld public final static int PLAINTEXT = 8
+fld public final static int PROCESSING_INSTRUCTION = 73
+fld public final static int PROCESSING_INSTRUCTION_QUESTION_MARK = 74
 fld public final static int RAWTEXT = 3
-fld public final static int RAWTEXT_RCDATA_LESS_THAN_SIGN = 66
+fld public final static int RAWTEXT_RCDATA_LESS_THAN_SIGN = 65
 fld public final static int RCDATA = 1
 fld public final static int SCRIPT_DATA = 2
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED = 69
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_DASH = 71
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH = 72
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN = 70
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPE_END = 73
-fld public final static int SCRIPT_DATA_DOUBLE_ESCAPE_START = 68
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED = 68
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_DASH = 70
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_DASH_DASH = 71
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPED_LESS_THAN_SIGN = 69
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPE_END = 72
+fld public final static int SCRIPT_DATA_DOUBLE_ESCAPE_START = 67
 fld public final static int SCRIPT_DATA_ESCAPED = 4
-fld public final static int SCRIPT_DATA_ESCAPED_DASH = 63
-fld public final static int SCRIPT_DATA_ESCAPED_DASH_DASH = 64
-fld public final static int SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN = 67
-fld public final static int SCRIPT_DATA_ESCAPE_START = 61
-fld public final static int SCRIPT_DATA_ESCAPE_START_DASH = 62
-fld public final static int SCRIPT_DATA_LESS_THAN_SIGN = 60
-fld public final static int SELF_CLOSING_START_TAG = 55
+fld public final static int SCRIPT_DATA_ESCAPED_DASH = 62
+fld public final static int SCRIPT_DATA_ESCAPED_DASH_DASH = 63
+fld public final static int SCRIPT_DATA_ESCAPED_LESS_THAN_SIGN = 66
+fld public final static int SCRIPT_DATA_ESCAPE_START = 60
+fld public final static int SCRIPT_DATA_ESCAPE_START_DASH = 61
+fld public final static int SCRIPT_DATA_LESS_THAN_SIGN = 59
+fld public final static int SELF_CLOSING_START_TAG = 54
 fld public final static int TAG_NAME = 11
 fld public final static int TAG_OPEN = 9
 intf org.xml.sax.Locator
@@ -9961,7 +9732,7 @@ meth protected void noteUnquotedAttributeValue() throws org.xml.sax.SAXException
 meth protected void silentCarriageReturn()
 meth protected void silentLineFeed()
 meth protected void startErrorReporting() throws org.xml.sax.SAXException
-meth public boolean isAlreadyComplainedAboutNonAscii()
+meth public boolean internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth public boolean isInDataState()
 meth public boolean isMappingLangToXmlLang()
 meth public boolean isNextCharOnNewLine()
@@ -9982,7 +9753,6 @@ meth public void errTreeBuilder(java.lang.String) throws org.xml.sax.SAXExceptio
 meth public void fatal(java.lang.String) throws org.xml.sax.SAXException
 meth public void initLocation(java.lang.String,java.lang.String)
 meth public void initializeWithoutStarting() throws org.xml.sax.SAXException
-meth public void internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth public void loadState(nu.validator.htmlparser.impl.Tokenizer) throws org.xml.sax.SAXException
 meth public void notifyAboutMetaBoundary()
 meth public void requestSuspension()
@@ -9999,15 +9769,17 @@ meth public void setMappingLangToXmlLang(boolean)
 meth public void setNamePolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void setStateAndEndTagExpectation(int,java.lang.String)
 meth public void setStateAndEndTagExpectation(int,nu.validator.htmlparser.impl.ElementName)
+meth public void setTransitionBaseOffset(int)
 meth public void setXmlnsPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void start() throws org.xml.sax.SAXException
 meth public void warn(java.lang.String) throws org.xml.sax.SAXException
 supr java.lang.Object
-hfds BUFFER_GROW_BY,CDATA_LSQB,DATA_AND_RCDATA_MASK,IFRAME_ARR,LEAD_OFFSET,LF,LT_GT,LT_SOLIDUS,NOEMBED_ARR,NOFRAMES_ARR,NOSCRIPT_ARR,OCTYPE,PLAINTEXT_ARR,REPLACEMENT_CHARACTER,RSQB_RSQB,SCRIPT_ARR,SPACE,STYLE_ARR,TEXTAREA_ARR,TITLE_ARR,UBLIC,XMP_ARR,YSTEM,additional,astralChar,attributes,bmpChar,candidate,commentPolicy,contentSpacePolicy,doctypeName,endTagExpectationAsArray,entCol,firstCharKey,forceQuirks,hi,html4ModeCompatibleWithXhtml1Schemata,interner,line,lo,longStrBuf,longStrBufLen,mappingLangToXmlLang,metaBoundaryPassed,namePolicy,newAttributesEachTime,prevValue,publicId,publicIdentifier,returnStateSave,seenDigits,shouldSuspend,strBuf,strBufLen,strBufMark,systemId,systemIdentifier,tagName,wantsComments,xmlnsPolicy
+hfds CDATA_LSQB,DATA_AND_RCDATA_MASK,IFRAME_ARR,LEAD_OFFSET,LF,LT_GT,LT_SOLIDUS,NOEMBED_ARR,NOFRAMES_ARR,NOSCRIPT_ARR,OCTYPE,PLAINTEXT_ARR,REPLACEMENT_CHARACTER,RSQB_RSQB,SCRIPT_ARR,SPACE,STYLE_ARR,TEXTAREA_ARR,TITLE_ARR,UBLIC,XMP_ARR,YSTEM,additional,astralChar,attributes,bmpChar,candidate,charRefBuf,charRefBufLen,charRefBufMark,commentPolicy,containsHyphen,contentSpacePolicy,doctypeName,endTagExpectationAsArray,entCol,firstCharKey,forceQuirks,hi,html4ModeCompatibleWithXhtml1Schemata,interner,line,lo,mappingLangToXmlLang,metaBoundaryPassed,namePolicy,newAttributesEachTime,nonInternedTagName,publicId,publicIdentifier,returnStateSave,seenDigits,shouldSuspend,strBuf,strBufLen,systemId,systemIdentifier,tagName,wantsComments,xmlnsPolicy
 
 CLSS public abstract nu.validator.htmlparser.impl.TreeBuilder<%0 extends java.lang.Object>
 cons protected init()
 fld protected char[] charBuffer
+ anno 0 nu.validator.htmlparser.annotation.Auto()
 fld protected int charBufferLen
 fld protected nu.validator.htmlparser.impl.Tokenizer tokenizer
 fld protected org.xml.sax.ErrorHandler errorHandler
@@ -10023,12 +9795,14 @@ meth protected abstract void appendComment({nu.validator.htmlparser.impl.TreeBui
 meth protected abstract void appendCommentToDocument(char[],int,int) throws org.xml.sax.SAXException
  anno 1 nu.validator.htmlparser.annotation.NoLength()
 meth protected abstract void appendElement({nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
-meth protected abstract void appendIsindexPrompt({nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
 meth protected abstract void detachFromParent({nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
 meth protected abstract void insertFosterParentedCharacters(char[],int,int,{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
  anno 1 nu.validator.htmlparser.annotation.NoLength()
 meth protected abstract void insertFosterParentedChild({nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
-meth protected abstract {nu.validator.htmlparser.impl.TreeBuilder%0} createElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes) throws org.xml.sax.SAXException
+meth protected abstract {nu.validator.htmlparser.impl.TreeBuilder%0} createAndInsertFosterParentedElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes,{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
+ anno 1 nu.validator.htmlparser.annotation.NsUri()
+ anno 2 nu.validator.htmlparser.annotation.Local()
+meth protected abstract {nu.validator.htmlparser.impl.TreeBuilder%0} createElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes,{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
  anno 1 nu.validator.htmlparser.annotation.NsUri()
  anno 2 nu.validator.htmlparser.annotation.Local()
 meth protected abstract {nu.validator.htmlparser.impl.TreeBuilder%0} createHtmlElementSetAsRoot(nu.validator.htmlparser.impl.HtmlAttributes) throws org.xml.sax.SAXException
@@ -10051,12 +9825,15 @@ meth protected void end() throws org.xml.sax.SAXException
 meth protected void fatal() throws org.xml.sax.SAXException
 meth protected void markMalformedIfScript({nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
 meth protected void start(boolean) throws org.xml.sax.SAXException
-meth protected {nu.validator.htmlparser.impl.TreeBuilder%0} createElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes,{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
+meth protected {nu.validator.htmlparser.impl.TreeBuilder%0} createAndInsertFosterParentedElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes,{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
+ anno 1 nu.validator.htmlparser.annotation.NsUri()
+ anno 2 nu.validator.htmlparser.annotation.Local()
+meth protected {nu.validator.htmlparser.impl.TreeBuilder%0} createElement(java.lang.String,java.lang.String,nu.validator.htmlparser.impl.HtmlAttributes,{nu.validator.htmlparser.impl.TreeBuilder%0},{nu.validator.htmlparser.impl.TreeBuilder%0}) throws org.xml.sax.SAXException
  anno 1 nu.validator.htmlparser.annotation.NsUri()
  anno 2 nu.validator.htmlparser.annotation.Local()
 meth public boolean cdataSectionAllowed() throws org.xml.sax.SAXException
+ anno 0 nu.validator.htmlparser.annotation.Inline()
 meth public boolean isFramesetOk()
-meth public boolean isInForeign()
 meth public boolean isNeedToDropLF()
 meth public boolean isQuirks()
 meth public boolean isScriptingEnabled()
@@ -10083,39 +9860,42 @@ meth public int getListOfActiveFormattingElementsLength()
 meth public int getMode()
 meth public int getOriginalMode()
 meth public int getStackLength()
+meth public int getTemplateModeStackLength()
+meth public int[] getTemplateModeStack()
 meth public nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.TreeBuilder%0}>[] getListOfActiveFormattingElements()
 meth public nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.TreeBuilder%0}>[] getStack()
 meth public nu.validator.htmlparser.impl.TreeBuilderState<{nu.validator.htmlparser.impl.TreeBuilder%0}> newSnapshot() throws org.xml.sax.SAXException
 meth public org.xml.sax.ErrorHandler getErrorHandler()
 meth public static java.lang.String extractCharsetFromContent(java.lang.String)
 meth public void endTag(nu.validator.htmlparser.impl.ElementName) throws org.xml.sax.SAXException
-meth public void loadState(nu.validator.htmlparser.impl.TreeBuilderState<{nu.validator.htmlparser.impl.TreeBuilder%0}>,nu.validator.htmlparser.common.Interner) throws org.xml.sax.SAXException
+meth public void ensureBufferSpace(int) throws org.xml.sax.SAXException
+meth public void loadState(nu.validator.htmlparser.impl.TreeBuilderState<{nu.validator.htmlparser.impl.TreeBuilder%0}>) throws org.xml.sax.SAXException
 meth public void setDoctypeExpectation(nu.validator.htmlparser.common.DoctypeExpectation)
 meth public void setDocumentModeHandler(nu.validator.htmlparser.common.DocumentModeHandler)
 meth public void setIgnoringComments(boolean)
+meth public void setIsSrcdocDocument(boolean)
 meth public void setNamePolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void setReportingDoctype(boolean)
 meth public void setScriptingEnabled(boolean)
 meth public void startTag(nu.validator.htmlparser.impl.ElementName,nu.validator.htmlparser.impl.HtmlAttributes,boolean) throws org.xml.sax.SAXException
 meth public void zeroOriginatingReplacementCharacter() throws org.xml.sax.SAXException
-meth public {nu.validator.htmlparser.impl.TreeBuilder%0} getDeepTreeSurrogateParent()
 meth public {nu.validator.htmlparser.impl.TreeBuilder%0} getFormPointer()
 meth public {nu.validator.htmlparser.impl.TreeBuilder%0} getHeadPointer()
 supr java.lang.Object
-hfds A,AAA_MAX_ITERATIONS,ADDRESS_OR_DIR_OR_ARTICLE_OR_ASIDE_OR_DATAGRID_OR_DETAILS_OR_HGROUP_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_NAV_OR_SECTION,AFTER_AFTER_BODY,AFTER_AFTER_FRAMESET,AFTER_BODY,AFTER_FRAMESET,AFTER_HEAD,ANNOTATION_XML,AREA_OR_WBR,BASE,BEFORE_HEAD,BEFORE_HTML,BODY,BR,BUTTON,B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U,CAPTION,CHARSET_A,CHARSET_C,CHARSET_DOUBLE_QUOTED,CHARSET_E,CHARSET_EQUALS,CHARSET_H,CHARSET_INITIAL,CHARSET_R,CHARSET_S,CHARSET_SINGLE_QUOTED,CHARSET_T,CHARSET_UNQUOTED,COL,COLGROUP,COMMAND,DD_OR_DT,DIV_OR_BLOCKQUOTE_OR_CENTER_OR_MENU,EMBED_OR_IMG,FIELDSET,FONT,FOREIGNOBJECT_OR_DESC,FORM,FRAME,FRAMESET,FRAMESET_OK,H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6,HEAD,HR,HTML,HTML4_PUBLIC_IDS,HTML_LOCAL,IFRAME,IMAGE,INITIAL,INPUT,IN_BODY,IN_CAPTION,IN_CELL,IN_COLUMN_GROUP,IN_FRAMESET,IN_HEAD,IN_HEAD_NOSCRIPT,IN_ROW,IN_SELECT,IN_SELECT_IN_TABLE,IN_TABLE,IN_TABLE_BODY,ISINDEX,KEYGEN,LI,LINK_OR_BASEFONT_OR_BGSOUND,MARQUEE_OR_APPLET,MATH,META,MGLYPH_OR_MALIGNMARK,MI_MO_MN_MS_MTEXT,NOBR,NOEMBED,NOFRAMES,NOSCRIPT,NOT_FOUND_ON_STACK,OBJECT,OPTGROUP,OPTION,OTHER,OUTPUT_OR_LABEL,P,PARAM_OR_SOURCE,PLAINTEXT,PRE_OR_LISTING,QUIRKY_PUBLIC_IDS,REPLACEMENT_CHARACTER,RT_OR_RP,RUBY_OR_SPAN_OR_SUB_OR_SUP_OR_VAR,SCRIPT,SELECT,STYLE,SVG,TABLE,TBODY_OR_THEAD_OR_TFOOT,TD_OR_TH,TEXT,TEXTAREA,TITLE,TR,UL_OR_OL_OR_DL,XMP,contextName,contextNamespace,contextNode,currentPtr,deepTreeSurrogateParent,doctypeExpectation,documentModeHandler,formPointer,fragment,framesetOk,headPointer,html4,idLocations,inForeign,listOfActiveFormattingElements,listPtr,mode,namePolicy,needToDropLF,originalMode,quirks,reportingDoctype,scriptingEnabled,stack,wantingComments
+hfds A,ADDRESS_OR_ARTICLE_OR_ASIDE_OR_DETAILS_OR_DIALOG_OR_DIR_OR_FIGCAPTION_OR_FIGURE_OR_FOOTER_OR_HEADER_OR_HGROUP_OR_MAIN_OR_NAV_OR_SECTION_OR_SUMMARY,AFTER_AFTER_BODY,AFTER_AFTER_FRAMESET,AFTER_BODY,AFTER_FRAMESET,AFTER_HEAD,ANNOTATION_XML,AREA_OR_WBR,BASE,BEFORE_HEAD,BEFORE_HTML,BODY,BR,BUTTON,B_OR_BIG_OR_CODE_OR_EM_OR_I_OR_S_OR_SMALL_OR_STRIKE_OR_STRONG_OR_TT_OR_U,CAPTION,CHARSET_A,CHARSET_C,CHARSET_DOUBLE_QUOTED,CHARSET_E,CHARSET_EQUALS,CHARSET_H,CHARSET_INITIAL,CHARSET_R,CHARSET_S,CHARSET_SINGLE_QUOTED,CHARSET_T,CHARSET_UNQUOTED,COL,COLGROUP,DD_OR_DT,DIV_OR_BLOCKQUOTE_OR_CENTER_OR_MENU,EMBED,FIELDSET,FONT,FOREIGNOBJECT_OR_DESC,FORM,FRAME,FRAMESET,FRAMESET_OK,H1_OR_H2_OR_H3_OR_H4_OR_H5_OR_H6,HEAD,HR,HTML,HTML4_PUBLIC_IDS,HTML_LOCAL,IFRAME,IMAGE,IMG,INITIAL,INPUT,IN_BODY,IN_CAPTION,IN_CELL,IN_COLUMN_GROUP,IN_FRAMESET,IN_HEAD,IN_HEAD_NOSCRIPT,IN_ROW,IN_SELECT,IN_SELECT_IN_TABLE,IN_TABLE,IN_TABLE_BODY,IN_TEMPLATE,KEYGEN,LI,LINK_OR_BASEFONT_OR_BGSOUND,MARQUEE_OR_APPLET,MATH,MENUITEM,META,MGLYPH_OR_MALIGNMARK,MI_MO_MN_MS_MTEXT,NOBR,NOEMBED,NOFRAMES,NOSCRIPT,NOT_FOUND_ON_STACK,OBJECT,OPTGROUP,OPTION,OTHER,OUTPUT,P,PARAM_OR_SOURCE_OR_TRACK,PLAINTEXT,PRE_OR_LISTING,QUIRKY_PUBLIC_IDS,RB_OR_RTC,REPLACEMENT_CHARACTER,RT_OR_RP,RUBY_OR_SPAN_OR_SUB_OR_SUP_OR_VAR,SCRIPT,SELECT,STYLE,SVG,TABLE,TBODY_OR_THEAD_OR_TFOOT,TD_OR_TH,TEMPLATE,TEXT,TEXTAREA,TITLE,TR,UL_OR_OL_OR_DL,XMP,contextName,contextNamespace,contextNode,currentPtr,doctypeExpectation,documentModeHandler,firstCommentLocation,formPointer,fragment,framesetOk,headPointer,html4,idLocations,isSrcdocDocument,listOfActiveFormattingElements,listPtr,mode,namePolicy,needToDropLF,numStackNodes,originalMode,quirks,reportingDoctype,scriptingEnabled,stack,stackNodes,stackNodesIdx,templateModePtr,templateModeStack,wantingComments
 
 CLSS public abstract interface nu.validator.htmlparser.impl.TreeBuilderState<%0 extends java.lang.Object>
 meth public abstract boolean isFramesetOk()
-meth public abstract boolean isInForeign()
 meth public abstract boolean isNeedToDropLF()
 meth public abstract boolean isQuirks()
 meth public abstract int getListOfActiveFormattingElementsLength()
 meth public abstract int getMode()
 meth public abstract int getOriginalMode()
 meth public abstract int getStackLength()
+meth public abstract int getTemplateModeStackLength()
+meth public abstract int[] getTemplateModeStack()
 meth public abstract nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.TreeBuilderState%0}>[] getListOfActiveFormattingElements()
 meth public abstract nu.validator.htmlparser.impl.StackNode<{nu.validator.htmlparser.impl.TreeBuilderState%0}>[] getStack()
-meth public abstract {nu.validator.htmlparser.impl.TreeBuilderState%0} getDeepTreeSurrogateParent()
 meth public abstract {nu.validator.htmlparser.impl.TreeBuilderState%0} getFormPointer()
 meth public abstract {nu.validator.htmlparser.impl.TreeBuilderState%0} getHeadPointer()
 
@@ -10124,6 +9904,7 @@ cons public init(char[],int,int)
 meth public boolean hasMore()
 meth public char[] getBuffer()
 meth public int getEnd()
+meth public int getLength()
 meth public int getStart()
 meth public void adjust(boolean)
 meth public void setEnd(int)
@@ -10149,12 +9930,12 @@ intf nu.validator.htmlparser.common.EncodingDeclarationHandler
 meth protected nu.validator.htmlparser.io.Encoding encodingFromExternalDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth protected nu.validator.htmlparser.io.Encoding whineAboutEncodingAndReturnActual(java.lang.String,nu.validator.htmlparser.io.Encoding) throws org.xml.sax.SAXException
 meth protected void warnWithoutLocation(java.lang.String) throws org.xml.sax.SAXException
+meth public boolean internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth public boolean isAllowRewinding()
 meth public boolean isCheckingNormalization()
 meth public java.lang.String getCharacterEncoding() throws org.xml.sax.SAXException
 meth public org.xml.sax.Locator getDocumentLocator()
 meth public void addCharacterHandler(nu.validator.htmlparser.common.CharacterHandler)
-meth public void internalEncodingDeclaration(java.lang.String) throws org.xml.sax.SAXException
 meth public void setAllowRewinding(boolean)
 meth public void setCheckingNormalization(boolean)
 meth public void setCommentPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
@@ -10280,6 +10061,7 @@ meth public void addCharacterHandler(nu.validator.htmlparser.common.CharacterHan
 meth public void parse(java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 meth public void parse(org.xml.sax.InputSource) throws java.io.IOException,org.xml.sax.SAXException
 meth public void parseFragment(org.xml.sax.InputSource,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
+meth public void parseFragment(org.xml.sax.InputSource,java.lang.String,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 meth public void setBogusXmlnsPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void setCheckingNormalization(boolean)
 meth public void setCommentPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
@@ -10302,7 +10084,7 @@ meth public void setProperty(java.lang.String,java.lang.Object) throws org.xml.s
 meth public void setReportingDoctype(boolean)
 meth public void setScriptingEnabled(boolean)
 meth public void setStreamabilityViolationPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
-meth public void setTransitionHander(nu.validator.htmlparser.common.TransitionHandler)
+meth public void setTransitionHandler(nu.validator.htmlparser.common.TransitionHandler)
 meth public void setTreeBuilderErrorHandlerOverride(org.xml.sax.ErrorHandler)
 meth public void setXmlPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
 meth public void setXmlnsPolicy(nu.validator.htmlparser.common.XmlViolationPolicy)
@@ -10334,6 +10116,10 @@ meth public void startEntity(java.lang.String) throws org.xml.sax.SAXException
 meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 supr java.lang.Object
 hfds NON_ESCAPING,VOID_ELEMENTS,escapeLevel,ignoreLevel,writer
+
+CLSS public nu.validator.htmlparser.sax.InfosetCoercingHtmlParser
+cons public init()
+supr nu.validator.htmlparser.sax.HtmlParser
 
 CLSS public nu.validator.htmlparser.sax.NameCheckingXmlSerializer
 cons public init(java.io.OutputStream)

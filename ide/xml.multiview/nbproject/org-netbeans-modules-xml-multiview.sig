@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43.0
+#Version 1.44.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1569,6 +1569,7 @@ meth protected void addRefreshable(org.netbeans.modules.xml.multiview.Refreshabl
 meth protected void endUIChange()
 meth protected void scheduleRefreshView()
 meth protected void signalUIChange()
+ anno 0 java.lang.Deprecated()
 meth protected void startUIChange()
 meth public abstract void setValue(javax.swing.JComponent,java.lang.Object)
 meth public boolean canClose()
@@ -1732,6 +1733,7 @@ meth public boolean isAdding()
 meth public boolean[] getButtons()
 meth public boolean[] isTextField()
 meth public char[] getMnemonics()
+ anno 0 java.lang.Deprecated()
 meth public int getSize()
 meth public java.lang.String[] getA11yDesc()
 meth public java.lang.String[] getInitValues()
@@ -1741,6 +1743,7 @@ meth public void setAdding(boolean)
 meth public void setButtons(boolean[])
 meth public void setInitValues(java.lang.String[])
 meth public void setMnemonics(char[])
+ anno 0 java.lang.Deprecated()
 meth public void setSize(int)
 meth public void setTextField(boolean[])
 supr java.lang.Object

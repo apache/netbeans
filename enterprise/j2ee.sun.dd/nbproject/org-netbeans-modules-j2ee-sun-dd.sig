@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.38.0
+#Version 1.39.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -53,6 +53,8 @@ hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MES
 hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public final org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_0
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_0
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_7_0

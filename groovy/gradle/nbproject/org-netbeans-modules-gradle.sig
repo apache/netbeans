@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.1
+#Version 1.3
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1087,6 +1087,7 @@ meth public void addProjectProperty(java.lang.String,java.lang.String)
 meth public void addSystemProperty(java.lang.String,java.lang.String)
 meth public void addTask(java.lang.String)
 meth public void configure(org.gradle.tooling.ConfigurableLauncher)
+meth public void configure(org.gradle.tooling.ConfigurableLauncher,java.io.File)
 meth public void removeFlag(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag)
 meth public void removeParameter(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter,java.lang.String)
 meth public void removeParameters(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter)
@@ -1098,7 +1099,7 @@ meth public void setLogLevel(org.netbeans.modules.gradle.api.execute.GradleComma
 meth public void setStackTrace(org.netbeans.modules.gradle.api.execute.GradleCommandLine$StackTrace)
 meth public void setTasks(java.util.Collection<java.lang.String>)
 supr java.lang.Object
-hfds PARSERS,arguments,tasks
+hfds LOGGER,PARSERS,PROP_JVMARGS,arguments,tasks
 hcls Argument,ArgumentParser,FlagArgument,ParameterParser,ParametricArgument,PropertyArgument,PropertyParser
 
 CLSS public final static !enum org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag
@@ -1280,7 +1281,7 @@ meth public java.util.List<java.io.File> getPropertyFiles()
 meth public java.util.Set<java.io.File> getProjectFiles()
 meth public long lastChanged()
 supr java.lang.Object
-hfds buildScript,gradlew,knownProject,parentScript,projectDir,propertyFiles,rootDir,settingsScript,wrapperProperties
+hfds buildScript,gradlew,knownProject,parentScript,projectDir,rootDir,settingsScript,wrapperProperties
 
 CLSS public final static !enum org.netbeans.modules.gradle.spi.GradleFiles$Kind
  outer org.netbeans.modules.gradle.spi.GradleFiles

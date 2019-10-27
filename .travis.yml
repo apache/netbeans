@@ -154,7 +154,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/openide.modules test
             - hide-logs.sh ant $OPTS -f platform/openide.nodes test
             - hide-logs.sh ant $OPTS -f platform/openide.options test
-            - hide-logs.sh ant $OPTS -f platform/openide.text test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.text test
             - hide-logs.sh ant $OPTS -f platform/openide.util test
             - hide-logs.sh ant $OPTS -f platform/openide.util.enumerations test
             - hide-logs.sh ant $OPTS -f platform/openide.util.lookup test

@@ -18,21 +18,17 @@
  */
 package org.netbeans;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collections;
 import org.netbeans.junit.NbTestCase;
 
 /**
- *This test ensures that package level annotations (annotations to package-info) are correctly loaded 
- * by the NetBeans classloader system in Java 11. 
- * 
- * At present, this test can't be run with JDK 11 unless "<property name="permit.jdk9.builds" value="true"/>" is added
- * to build.xml
- * 
- * @author boris.heithecker@gmx.net
+ * This test ensures that package level annotations (annotations to
+ * package-info) are correctly loaded by the NetBeans classloader system in Java
+ * 11.
  */
 public class ProxyClassLoaderNB11PackageAnnotationsTest extends NbTestCase {
 
@@ -43,50 +39,45 @@ public class ProxyClassLoaderNB11PackageAnnotationsTest extends NbTestCase {
     }
 
     public void testPackageAnnotation() throws Exception {
-        
-        final String testBuildBase = ProxyClassLoaderNB11PackageAnnotationsTest.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
         class PackageClassLoader extends ProxyClassLoader {
 
             PackageClassLoader() {
                 super(new ClassLoader[0], false);
+                addCoveredPackages(Collections.singleton(TEST_PACKAGE));
             }
 
             @Override
-            protected Class<?> findClass(String name) throws ClassNotFoundException {
+            protected Class doLoadClass(String pkg, String name) {
                 if (name.startsWith(TEST_PACKAGE)) {
-                    return selfLoadPackageClass(name);
-                }
-                return super.findClass(name);
-            }
-
-            @Override
-            protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
-                if (name.startsWith(TEST_PACKAGE)) {
-                    return selfLoadPackageClass(name);
-                }
-                return super.loadClass(name, resolve);
-            }
-
-            private synchronized Class selfLoadPackageClass(String name) throws ClassNotFoundException {
-                Class cls = findLoadedClass(name);
-                if (cls == null) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    InputStream is = PackageClassLoader.class.getClassLoader().getResourceAsStream(name.replace('.', '/') + ".class");
+                    byte[] buf = new byte[4096];
+                    int read;
                     try {
-                        final Path p = Paths.get(testBuildBase, name.replace('.', '/') + ".class");
-                        byte[] bytes = Files.readAllBytes(p);
-                        cls = defineClass(name, bytes, 0, bytes.length);
-                    } catch (IOException ex) {
-                        throw new ClassNotFoundException(null, ex);
+                        while ((read = is.read(buf)) != -1) {
+                            baos.write(buf, 0, read);
+                        }
+                    } catch (IOException x) {
+                        assert false : x;
                     }
-                    final Package pkg = getPackageFast(TEST_PACKAGE, true);
-                    if (pkg == null) {
-                        definePackage(TEST_PACKAGE, null, null, null, null, null, null, null);
-                    }
+                    return defineClass(name, baos.toByteArray(), 0, baos.size());
                 }
-                return cls;
+                return null;
+            }
+
+            @Override
+            protected boolean shouldDelegateResource(String pkg, ClassLoader parent) {
+                return parent != null || !pkg.equals(TEST_PACKAGE.replace('.', '/') + "/");
+            }
+
+            @Override
+            public String toString() {
+                return PackageClassLoader.class.getName();
             }
 
         }
+        
         final ProxyClassLoader cl = new PackageClassLoader();
         final Class<? extends Annotation> annotClz = (Class<? extends Annotation>) cl.loadClass(TEST_PACKAGE + ".NB11PackageTestAnnotation");
         final Package pkg = annotClz.getPackage();

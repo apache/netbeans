@@ -25,6 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.geom.AffineTransform;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 /**
@@ -34,8 +35,7 @@ import javax.swing.border.MatteBorder;
  * @author Eirik Bakke (ebakke@ultorg.com)
  */
 final class DPISafeBorder implements Border {
-    private final Insets insets;
-    private final Color color;
+    private final Border delegate;
 
     /**
      * Create a new instance with the same semantics as that produced by
@@ -44,16 +44,26 @@ final class DPISafeBorder implements Border {
      * @param color may not be null
      */
     public static Border matte(int top, int left, int bottom, int right, Color color) {
-        return new DPISafeBorder(new Insets(top, left, bottom, right), color);
+        return fromDelegate(new MatteBorder(new Insets(top, left, bottom, right), color));
     }
 
-    private DPISafeBorder(Insets insets, Color color) {
-        if (insets == null)
+    public static Border fromDelegate(Border delegate) {
+        if (delegate == null)
             throw new NullPointerException();
-        if (color == null)
+        if (delegate instanceof MatteBorder) {
+            return new DPISafeBorder(delegate);
+        } else if (delegate instanceof LineBorder && !((LineBorder) delegate).getRoundedCorners()) {
+            return new DPISafeBorder(delegate);
+        } else {
+            return delegate;
+        }
+    }
+
+    private DPISafeBorder(Border delegate) {
+        if (delegate == null) {
             throw new NullPointerException();
-        this.insets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
-        this.color = color;
+        }
+        this.delegate = delegate;
     }
 
     @Override
@@ -78,11 +88,15 @@ final class DPISafeBorder implements Border {
         {
               // HiDPI scaling is active.
               scale = tx.getScaleX();
-              /* Round the starting (top-left) position up and the end (bottom-right) position down,
-              to ensure we are painting the border in an area that will not be painted over by an
-              adjacent component. */
-              int deviceX = (int) Math.ceil(tx.getTranslateX());
-              int deviceY = (int) Math.ceil(tx.getTranslateY());
+              /* To be completely safe from overpainting the previous adjacent component, we would
+              probably need to round up here. But for borders to work properly on JTextField, we
+              must round down. And it seems to work fine in the
+              EDITOR_TAB_CONTENT_BORDER/VIEW_TAB_CONTENT_BORDER cases as well. */
+              int deviceX = (int) tx.getTranslateX();
+              int deviceY = (int) tx.getTranslateY();
+              /* Rounding down here should guarantee that we do not paint in an area that will be
+              painted over by the next adjacent component. Rounding up, or to the nearest integer,
+              is confirmed to cause problems. */
               int deviceXend = (int) (tx.getTranslateX() + width * scale);
               int deviceYend = (int) (tx.getTranslateY() + height * scale);
               deviceWidth = deviceXend - deviceX;
@@ -95,21 +109,38 @@ final class DPISafeBorder implements Border {
             deviceWidth = width;
             deviceHeight = height;
         }
-        final int deviceLeft   = deviceBorderWidth(scale, insets.left);
-        final int deviceRight  = deviceBorderWidth(scale, insets.right);
-        final int deviceTop    = deviceBorderWidth(scale, insets.top);
-        final int deviceBottom = deviceBorderWidth(scale, insets.bottom);
+        final Insets insets = getBorderInsets(c);
+        // Thicknesses of respective borders, in device pixels.
+        final int dtLeft, dtRight, dtTop, dtBottom;
 
+        final Color color;
+        if (delegate instanceof MatteBorder) {
+            color = ((MatteBorder) delegate).getMatteColor();
+            dtLeft   = deviceBorderWidth(scale, insets.left);
+            dtRight  = deviceBorderWidth(scale, insets.right);
+            dtTop    = deviceBorderWidth(scale, insets.top);
+            dtBottom = deviceBorderWidth(scale, insets.bottom);
+        } else if (delegate instanceof LineBorder) {
+            LineBorder lineBorder = (LineBorder) delegate;
+            color = lineBorder.getLineColor();
+            final int dt = deviceBorderWidth(scale, lineBorder.getThickness());
+            dtLeft   = dt;
+            dtRight  = dt;
+            dtTop    = dt;
+            dtBottom = dt;
+        } else {
+            throw new RuntimeException("Expected either a MatteBorder or LineBorder delegate");
+        }
         g.setColor(color);
 
         // Top border.
-        g.fillRect(0, 0, deviceWidth - deviceRight, deviceTop);
+        g.fillRect(0, 0, deviceWidth - dtRight, dtTop);
         // Left border.
-        g.fillRect(0, deviceTop, deviceLeft, deviceHeight - deviceTop);
+        g.fillRect(0, dtTop, dtLeft, deviceHeight - dtTop);
         // Bottom border.
-        g.fillRect(deviceLeft, deviceHeight - deviceBottom, deviceWidth - deviceLeft, deviceBottom);
+        g.fillRect(dtLeft, deviceHeight - dtBottom, deviceWidth - dtLeft, dtBottom);
         // Right border.
-        g.fillRect(deviceWidth - deviceRight, 0, deviceRight, deviceHeight - deviceBottom);
+        g.fillRect(deviceWidth - dtRight, 0, dtRight, deviceHeight - dtBottom);
 
         g.setTransform(oldTransform);
         g.setColor(oldColor);
@@ -123,7 +154,7 @@ final class DPISafeBorder implements Border {
 
     @Override
     public Insets getBorderInsets(Component c) {
-        return new Insets(insets.top, insets.left, insets.bottom, insets.right);
+        return delegate.getBorderInsets(c);
     }
 
     @Override

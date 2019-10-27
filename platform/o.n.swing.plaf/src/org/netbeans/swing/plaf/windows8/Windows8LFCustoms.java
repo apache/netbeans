@@ -19,12 +19,21 @@
 
 package org.netbeans.swing.plaf.windows8;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import org.netbeans.swing.plaf.LFCustoms;
-import org.netbeans.swing.plaf.util.GuaranteedValue;
 import org.netbeans.swing.plaf.util.UIBootstrapValue;
 import org.netbeans.swing.plaf.util.UIUtils;
 
@@ -54,18 +63,37 @@ public final class Windows8LFCustoms extends LFCustoms {
     
     static final String SCROLLPANE_BORDER_COLOR = "scrollpane_border"; //NOI18N
 
+    private static final String[] DEFAULT_GUI_FONT_PROPERTIES = new String[] {
+        "TitledBorder.font", "Slider.font", "PasswordField.font", "TableHeader.font", "TextPane.font",
+        "ProgressBar.font", "Viewport.font", "TabbedPane.font", "List.font", "CheckBox.font",
+        "Table.font", "ScrollPane.font", "ToggleButton.font", "Panel.font", "RadioButton.font",
+        "FormattedTextField.font", "TextField.font", "Spinner.font", "Button.font", "EditorPane.font",
+        "Label.font", "ComboBox.font", "Tree.font", "TextArea.font"};
+
+    private static final String[] ADJUST_HIDPI_BORDERS = new String[] {
+        "TextField.border", "PasswordField.border", "FormattedTextField.border",
+        "ScrollPane.border"};
+
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
+        /* Don't try to fetch this font size from the LAF; it won't work reliably for HiDPI
+        configurations (see a related workaround below). */
         int fontsize = 11;
         Integer in = (Integer) UIManager.get(CUSTOM_FONT_SIZE); //NOI18N
         if (in != null) {
             fontsize = in.intValue();
         }
-        
-        Object[] result = new Object[] {
-            //Work around a bug in windows which sets the text area font to
-            //"MonoSpaced", causing all accessible dialogs to have monospaced text
-            "TextArea.font", new GuaranteedValue ("Label.font", new Font("Dialog", Font.PLAIN, fontsize)),
+        //Work around a bug in windows which sets the text area font to
+        //"MonoSpaced", causing all accessible dialogs to have monospaced text
+        Font textAreaFont = UIManager.getFont("Label.font");
+        if (textAreaFont == null) {
+          textAreaFont = new Font("Dialog", Font.PLAIN, fontsize);
+        } else {
+          textAreaFont = textAreaFont.deriveFont((float) fontsize);
+        }
+
+        Object[] constants = new Object[] {
+            "TextArea.font", textAreaFont,
 
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
 
@@ -84,7 +112,82 @@ public final class Windows8LFCustoms extends LFCustoms {
             apps. Fixing that would be a bigger job, though (replacing WindowsPopupMenuSeparatorUI
             to override getPreferredSize). */
         };
-        return result;
+        List<Object> result = new ArrayList<>();
+        result.addAll(Arrays.asList(constants));
+
+        /* Workaround for Windows LAF JDK bug that causes fonts to appear at the wrong size on
+        certain configurations involving HiDPI monitors. Currently, WindowsLookAndFeel derive
+        font properties such as Label.font from the Windows API call
+        GetStockObject(DEFAULT_GUI_FONT), which appears to be unreliable when HiDPI display
+        configurations are changed without logging out of Windows and back in again (as may
+        frequently happen, for instance, when an external monitor is connected or
+        disconnected). See the "win.defaultGUI.font" property in WindowsLookAndFeel and
+        java.desktop/windows/native/libawt/windows/awt_DesktopProperties.cpp . */
+        /* If a custom font size is set, the font sizes have already been set in
+        AllLFCustoms.initCustomFontSize. */
+        if (UIManager.get(CUSTOM_FONT_SIZE) == null) {
+            /* Use the same logic as in AllLFCustoms.switchFont, since it seems to take some special
+            precautions (e.g. using deriveFont instead of FontUIResource for the Windows case). */
+            Map<Font,Font> fontTranslation = new HashMap<>();
+            for (String uiKey : DEFAULT_GUI_FONT_PROPERTIES) {
+                if (uiKey.equals("TextArea.font")) {
+                  // Skip this one; it was set earlier as part of an unrelated workaround.
+                  continue;
+                }
+                Font oldFont = UIManager.getFont(uiKey);
+                if (oldFont == null) {
+                   continue;
+                }
+                Font newFont = fontTranslation.get(oldFont);
+                if (newFont == null) {
+                    newFont = oldFont.deriveFont((float) fontsize);
+                    fontTranslation.put(oldFont, newFont);
+                }
+                result.add(uiKey);
+                result.add(newFont);
+            }
+        }
+
+        if (WindowsDPIWorkaroundIcon.isWorkaroundRequired()) {
+            // Use entrySet rather than keySet to actually get all values.
+            for (Map.Entry<Object,Object> entry : UIManager.getDefaults().entrySet()) {
+                Object key = entry.getKey();
+                /* Force loading of lazily loaded values, so we can see if the actual implementation
+                type is of the kind that needs to be patched. All currently known icon properties
+                are suffixed "icon" or "Icon". All but one is of the kind that needs to be
+                patched. */
+                Object value = key.toString().toLowerCase(Locale.ROOT).endsWith("icon")
+                        ? UIManager.getDefaults().get(key) : null;
+                if (value == null) {
+                    continue;
+                }
+                String valueCN = value.getClass().getName();
+                if (value instanceof Icon &&
+                    (valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsIconFactory$") ||
+                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$")) &&
+                    /* This particular one can't be used as a delegate, as it intentionally behaves
+                    differently when the application has overridden UIDefaults. */
+                    !valueCN.contains("VistaMenuItemCheckIcon"))
+                {
+                    result.add(key);
+                    result.add(new WindowsDPIWorkaroundIcon((Icon) value));
+                }
+            }
+        }
+        /* Workaround for ugly borders on fractional HiDPI scalings (e.g. 150%), including
+        NETBEANS-338. It would have been nice to fix this for JComboBox as well, but that one does
+        not use the borders from UIManager. */
+        for (String key : ADJUST_HIDPI_BORDERS) {
+          Object value = UIManager.getDefaults().get(key);
+          if (value instanceof Border) {
+            Border adjustedBorder = DPISafeBorder.fromDelegate((Border) value);
+            if (adjustedBorder != value) {
+                result.add(key);
+                result.add(adjustedBorder);
+            }
+          }
+        }
+        return result.toArray();
     }
 
     @Override

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.editor.breadcrumbs/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/breadcrumbs/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.23
+OpenIDE-Module-Specification-Version: 1.24
 

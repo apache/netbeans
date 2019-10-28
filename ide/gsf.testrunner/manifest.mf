@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.gsf.testrunner/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gsf/testrunner/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/gsf/testrunner/layer.xml
-OpenIDE-Module-Specification-Version: 2.15
+OpenIDE-Module-Specification-Version: 2.16
 

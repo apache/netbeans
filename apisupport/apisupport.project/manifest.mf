@@ -4,5 +4,5 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/apisupport/project/api/Bu
 OpenIDE-Module-Requires: javax.script.ScriptEngine.freemarker
 OpenIDE-Module-Layer: org/netbeans/modules/apisupport/project/ui/resources/layer.xml
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.82
+OpenIDE-Module-Specification-Version: 1.83
 

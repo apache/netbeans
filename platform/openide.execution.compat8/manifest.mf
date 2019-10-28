@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.openide.execution.compat8
 OpenIDE-Module-Localizing-Bundle: org/openide/execution/compat8/Bundle.properties
-OpenIDE-Module-Specification-Version: 9.8
+OpenIDE-Module-Specification-Version: 9.9
 OpenIDE-Module-Fragment-Host: org.openide.execution
 

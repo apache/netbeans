@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.apisupport.ant
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/apisupport/project/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.78
+OpenIDE-Module-Specification-Version: 2.79
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module-Layer: org/netbeans/modules/apisupport/project/resources/layer.xml

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66.0
+#Version 1.67.0
 
 CLSS public abstract interface com.sun.source.doctree.DocTreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitAttribute(com.sun.source.doctree.AttributeTree,{com.sun.source.doctree.DocTreeVisitor%1})
@@ -102,6 +102,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.sourc
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 
 CLSS public com.sun.source.util.TreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -179,6 +181,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.Us
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract interface java.io.Serializable

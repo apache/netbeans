@@ -193,10 +193,12 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
 
         private final BodyDeclaration bodyDeclaration;
         private final boolean isInInterface;
+        private final boolean isAbstract;
 
         public FixInfo(BodyDeclaration bodyDeclaration, boolean isInInterface) {
             this.bodyDeclaration = bodyDeclaration;
             this.isInInterface = isInInterface;
+            this.isAbstract = Modifier.isAbstract(bodyDeclaration.getModifier());
         }
 
         public Pair<String, OffsetRange> getVisibilityRange(Document document) {
@@ -228,6 +230,11 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 if (indexOfVisibility != -1) {
                     visibilityStart += indexOfVisibility;
                     visibilityEnd = visibilityStart + visibility.length();
+                } else if (indexOfVisibility == -1 && isAbstract) {
+                    // abstract function implicitPublic();
+                    //          ^add here
+                    visibilityStart += "abstract ".length(); // NOI18N
+                    visibilityEnd = visibilityStart;
                 }
                 return Pair.of(visibility, new OffsetRange(visibilityStart, visibilityEnd));
             } catch (BadLocationException ex) {
@@ -245,7 +252,9 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 case "implicit": // NOI18N
                     fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PUBLIC + " ", document)); // NOI18N
                     if (!isInInterface) {
-                        fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE + " ", document)); // NOI18N
+                        if (!isAbstract) {
+                            fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE + " ", document)); // NOI18N
+                        }
                         fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PROTECTED + " ", document)); // NOI18N
                     }
                     break;
@@ -256,7 +265,9 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                     break;
                 case PhpModifiers.VISIBILITY_PUBLIC:
                     if (!isInInterface) {
-                        fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE, document));
+                        if (!isAbstract) {
+                            fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE, document));
+                        }
                         fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PROTECTED, document));
                     }
                     break;
@@ -266,7 +277,9 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                     break;
                 case PhpModifiers.VISIBILITY_PROTECTED:
                     fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PUBLIC, document));
-                    fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE, document));
+                    if (!isAbstract) {
+                        fixes.add(new Fix(range, PhpModifiers.VISIBILITY_PRIVATE, document));
+                    }
                     break;
                 default:
                     break;

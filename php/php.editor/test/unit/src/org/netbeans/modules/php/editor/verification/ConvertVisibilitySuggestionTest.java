@@ -141,6 +141,30 @@ public class ConvertVisibilitySuggestionTest extends PHPHintsTestBase {
         checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "const CON^STANT = \"global\";");
     }
 
+    public void testConvertVisibilitySuggestionAbstractMethod_01() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract function abstractImplici^tPublic();");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractMethod_02() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract public function abstractP^ublic();");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractMethod_03() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract protected ^function abstractProtected();");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractMethod_04() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract static function abstractImplicitPu^blicStatic();");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractMethod_05() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract ^public static function abstractPublicStatic();");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractMethod_06() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract protected static function abstractProtectedStat^ic();");
+    }
+
     // Fix
     public void testConvertVisibilitySuggestionPropertyFix_01() throws Exception {
         applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityProperty.php", "    var ^$var = \"public\";", "Convert Visibility");
@@ -236,6 +260,30 @@ public class ConvertVisibilitySuggestionTest extends PHPHintsTestBase {
 
     public void testConvertVisibilitySuggestionInterfaceFix_03() throws Exception {
         applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityInterface.php", "    static function interfaceImplicitStaticMetho^d();", "Convert Visibility");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_01() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract function abst^ractImplicitPublic();", "Convert Visibility");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_02() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract public ^function abstractPublic();", "Convert Visibility");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_03() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract protected function ^abstractProtected();", "Convert Visibility");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_04() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract ^static function abstractImplicitPublicStatic();", "protected");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_05() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract public s^tatic function abstractPublicStatic();", "Convert Visibility");
+    }
+
+    public void testConvertVisibilitySuggestionAbstractClassFix_06() throws Exception {
+        applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityAbstractClass.php", "    abstract protected static function abs^tractProtectedStatic();", "Convert Visibility");
     }
 
 }

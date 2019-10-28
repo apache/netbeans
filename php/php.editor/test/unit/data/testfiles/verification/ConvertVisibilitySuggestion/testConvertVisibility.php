@@ -63,6 +63,18 @@ class Visibility {
 
 }
 
+abstract class AbstarctClass {
+
+    abstract function abstractImplicitPublic();
+    abstract public function abstractPublic();
+    abstract protected function abstractProtected();
+    // can't be declared private
+    // abstract private function abstractPrivate();
+    abstract static function abstractImplicitPublicStatic();
+    abstract public static function abstractPublicStatic();
+    abstract protected static function abstractProtectedStatic();
+}
+
 interface InterfaceName {
 
     const INTERFACE_IMPLICIT_CONST = "implicit";

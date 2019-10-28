@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript2.knockout
 OpenIDE-Module-Layer: org/netbeans/modules/javascript2/knockout/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript2/knockout/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.16
+OpenIDE-Module-Specification-Version: 1.17
 AutoUpdate-Show-In-Client: true

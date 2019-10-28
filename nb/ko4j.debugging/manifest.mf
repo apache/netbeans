@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.ko4j.debugging
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ko4j/debugging/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.8
+OpenIDE-Module-Specification-Version: 1.9
 OpenIDE-Module-Needs: org.netbeans.modules.web.browser.api.PageInspector
 OpenIDE-Module-Provides: org.netbeans.modules.ko4j.debugging
 

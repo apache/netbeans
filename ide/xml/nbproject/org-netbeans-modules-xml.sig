@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.38
+#Version 1.39
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -452,6 +452,12 @@ meth public abstract void readExternal(java.io.ObjectInput) throws java.io.IOExc
 meth public abstract void writeExternal(java.io.ObjectOutput) throws java.io.IOException
 
 CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -908,6 +914,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void setModified(boolean)
 
 CLSS public org.netbeans.modules.xml.actions.CheckEntityAction
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf org.netbeans.modules.xml.actions.CollectXMLAction$XMLAction
 meth protected int mode()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52
+#Version 2.1
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -153,6 +153,10 @@ hfds number,serialVersionUID,size,unsigned,value
 CLSS public abstract interface com.sun.jna.InvocationMapper
 meth public abstract java.lang.reflect.InvocationHandler getInvocationHandler(com.sun.jna.NativeLibrary,java.lang.reflect.Method)
 
+CLSS public final com.sun.jna.JNIEnv
+fld public final static com.sun.jna.JNIEnv CURRENT
+supr java.lang.Object
+
 CLSS public com.sun.jna.LastErrorException
 cons protected init(int,java.lang.String)
 cons public init(int)
@@ -254,28 +258,37 @@ supr com.sun.jna.FunctionResultContext
 hfds method
 
 CLSS public final com.sun.jna.Native
+fld public final static boolean DEBUG_JNA_LOAD
+fld public final static boolean DEBUG_LOAD
 fld public final static int BOOL_SIZE
+fld public final static int LONG_DOUBLE_SIZE
 fld public final static int LONG_SIZE
 fld public final static int POINTER_SIZE
 fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
-fld public final static java.lang.String VERSION = "4.4.0"
-fld public final static java.lang.String VERSION_NATIVE = "5.1.0"
-fld public static boolean DEBUG_JNA_LOAD
-fld public static boolean DEBUG_LOAD
+fld public final static java.lang.String VERSION = "5.4.0"
+fld public final static java.lang.String VERSION_NATIVE = "6.1.0"
+fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
+meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>)
+meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
+meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.String,java.lang.Class<{%%0}>)
+meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.Class<{%%0}>)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.String,java.lang.Class<{%%0}>)
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
-meth public static boolean getPreserveLastError()
  anno 0 java.lang.Deprecated()
 meth public static boolean isProtected()
 meth public static boolean isSupportedNativeType(java.lang.Class<?>)
 meth public static boolean registered(java.lang.Class<?>)
 meth public static byte[] toByteArray(java.lang.String)
 meth public static byte[] toByteArray(java.lang.String,java.lang.String)
+meth public static byte[] toByteArray(java.lang.String,java.nio.charset.Charset)
 meth public static char[] toCharArray(java.lang.String)
 meth public static com.sun.jna.Callback$UncaughtExceptionHandler getCallbackExceptionHandler()
 meth public static com.sun.jna.Library synchronizedLibrary(com.sun.jna.Library)
@@ -283,8 +296,6 @@ meth public static com.sun.jna.Pointer getComponentPointer(java.awt.Component)
 meth public static com.sun.jna.Pointer getDirectBufferPointer(java.nio.Buffer)
 meth public static com.sun.jna.Pointer getWindowPointer(java.awt.Window)
 meth public static com.sun.jna.TypeMapper getTypeMapper(java.lang.Class<?>)
-meth public static float parseVersion(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public static int getLastError()
 meth public static int getNativeSize(java.lang.Class<?>)
 meth public static int getNativeSize(java.lang.Class<?>,java.lang.Object)
@@ -296,9 +307,8 @@ meth public static java.lang.String getStringEncoding(java.lang.Class<?>)
 meth public static java.lang.String getWebStartLibraryPath(java.lang.String)
 meth public static java.lang.String toString(byte[])
 meth public static java.lang.String toString(byte[],java.lang.String)
+meth public static java.lang.String toString(byte[],java.nio.charset.Charset)
 meth public static java.lang.String toString(char[])
-meth public static java.nio.ByteBuffer getDirectByteBuffer(long,long)
- anno 0 java.lang.Deprecated()
 meth public static java.util.List<java.lang.String> toStringList(char[])
 meth public static java.util.List<java.lang.String> toStringList(char[],int,int)
 meth public static java.util.Map<java.lang.String,java.lang.Object> getLibraryOptions(java.lang.Class<?>)
@@ -319,13 +329,11 @@ meth public static void register(java.lang.String)
 meth public static void setCallbackExceptionHandler(com.sun.jna.Callback$UncaughtExceptionHandler)
 meth public static void setCallbackThreadInitializer(com.sun.jna.Callback,com.sun.jna.CallbackThreadInitializer)
 meth public static void setLastError(int)
-meth public static void setPreserveLastError(boolean)
- anno 0 java.lang.Deprecated()
 meth public static void setProtected(boolean)
 meth public static void unregister()
 meth public static void unregister(java.lang.Class<?>)
 supr java.lang.Object
-hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_POINTER,CVT_POINTER_TYPE,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,typeOptions
+hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_JNIENV,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_OBJECT,CVT_POINTER,CVT_POINTER_TYPE,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEBUG_JNA_LOAD_LEVEL,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,LOG,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_LONG_DOUBLE,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,typeOptions
 hcls AWT,Buffers
 
 CLSS public abstract interface static com.sun.jna.Native$ffi_callback
@@ -350,7 +358,7 @@ meth public java.lang.String toString()
 meth public java.util.Map<java.lang.String,?> getOptions()
 meth public void dispose()
 supr java.lang.Object
-hfds DEFAULT_OPEN_OPTIONS,callFlags,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths
+hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,addSuppressedMethod,callFlags,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths
 
 CLSS public com.sun.jna.NativeLong
 cons public init()
@@ -403,12 +411,12 @@ meth public final static boolean hasRuntimeExec()
 meth public final static boolean is64Bit()
 meth public final static boolean isAIX()
 meth public final static boolean isARM()
-meth public final static boolean isAix()
 meth public final static boolean isAndroid()
 meth public final static boolean isFreeBSD()
 meth public final static boolean isGNU()
 meth public final static boolean isIntel()
 meth public final static boolean isLinux()
+meth public final static boolean isMIPS()
 meth public final static boolean isMac()
 meth public final static boolean isNetBSD()
 meth public final static boolean isOpenBSD()
@@ -427,7 +435,6 @@ CLSS public com.sun.jna.Pointer
 cons public init(long)
 fld protected long peer
 fld public final static com.sun.jna.Pointer NULL
-fld public final static int SIZE
 meth public boolean equals(java.lang.Object)
 meth public byte getByte(long)
 meth public byte[] getByteArray(long,int)
@@ -450,17 +457,11 @@ meth public int hashCode()
 meth public int[] getIntArray(long,int)
 meth public java.lang.String dump(long,int)
 meth public java.lang.String getString(long)
-meth public java.lang.String getString(long,boolean)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String getString(long,java.lang.String)
 meth public java.lang.String getWideString(long)
 meth public java.lang.String toString()
 meth public java.lang.String[] getStringArray(long)
-meth public java.lang.String[] getStringArray(long,boolean)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getStringArray(long,int)
-meth public java.lang.String[] getStringArray(long,int,boolean)
- anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getStringArray(long,int,java.lang.String)
 meth public java.lang.String[] getStringArray(long,java.lang.String)
 meth public java.lang.String[] getWideStringArray(long)
@@ -494,8 +495,6 @@ meth public void setPointer(long,com.sun.jna.Pointer)
 meth public void setShort(long,short)
 meth public void setString(long,com.sun.jna.WString)
 meth public void setString(long,java.lang.String)
-meth public void setString(long,java.lang.String,boolean)
- anno 0 java.lang.Deprecated()
 meth public void setString(long,java.lang.String,java.lang.String)
 meth public void setWideString(long,java.lang.String)
 meth public void write(long,byte[],int,int)
@@ -549,12 +548,10 @@ fld public final static int ALIGN_GNUC = 2
 fld public final static int ALIGN_MSVC = 3
 fld public final static int ALIGN_NONE = 1
 innr protected static StructField
+innr public abstract interface static !annotation FieldOrder
 innr public abstract interface static ByReference
 innr public abstract interface static ByValue
-meth protected abstract java.util.List<java.lang.String> getFieldOrder()
 meth protected com.sun.jna.Memory autoAllocate(int)
-meth protected final void setFieldOrder(java.lang.String[])
- anno 0 java.lang.Deprecated()
 meth protected int calculateSize(boolean)
 meth protected int fieldOffset(java.lang.String)
 meth protected int getNativeAlignment(java.lang.Class<?>,java.lang.Object,boolean)
@@ -563,6 +560,7 @@ meth protected int getNativeSize(java.lang.Class<?>,java.lang.Object)
 meth protected int getStructAlignment()
 meth protected java.lang.Object readField(com.sun.jna.Structure$StructField)
 meth protected java.lang.String getStringEncoding()
+meth protected java.util.List<java.lang.String> getFieldOrder()
 meth protected java.util.List<java.lang.reflect.Field> getFieldList()
 meth protected java.util.List<java.lang.reflect.Field> getFields(boolean)
 meth protected void allocateMemory()
@@ -590,8 +588,8 @@ meth public int size()
 meth public java.lang.Object readField(java.lang.String)
 meth public java.lang.String toString()
 meth public java.lang.String toString(boolean)
-meth public static com.sun.jna.Structure newInstance(java.lang.Class<?>)
-meth public static com.sun.jna.Structure newInstance(java.lang.Class<?>,com.sun.jna.Pointer)
+meth public static <%0 extends com.sun.jna.Structure> {%%0} newInstance(java.lang.Class<{%%0}>)
+meth public static <%0 extends com.sun.jna.Structure> {%%0} newInstance(java.lang.Class<{%%0}>,com.sun.jna.Pointer)
 meth public static java.util.List<java.lang.String> createFieldsOrder(java.lang.String)
 meth public static java.util.List<java.lang.String> createFieldsOrder(java.util.List<java.lang.String>,java.util.List<java.lang.String>)
 meth public static void autoRead(com.sun.jna.Structure[])
@@ -607,7 +605,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
 hcls AutoAllocated,FFIType,LayoutInfo,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
@@ -615,6 +613,14 @@ CLSS public abstract interface static com.sun.jna.Structure$ByReference
 
 CLSS public abstract interface static com.sun.jna.Structure$ByValue
  outer com.sun.jna.Structure
+
+CLSS public abstract interface static !annotation com.sun.jna.Structure$FieldOrder
+ outer com.sun.jna.Structure
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] value()
 
 CLSS protected static com.sun.jna.Structure$StructField
  outer com.sun.jna.Structure
@@ -888,6 +894,32 @@ meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
 hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract java.lang.ref.Reference<%0 extends java.lang.Object>
 meth public boolean enqueue()

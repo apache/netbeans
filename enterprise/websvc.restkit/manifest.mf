@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.restkit/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/restkit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.30
+OpenIDE-Module-Specification-Version: 1.31
 
 

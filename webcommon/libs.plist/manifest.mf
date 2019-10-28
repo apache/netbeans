@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.plist
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/plist/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.12
+OpenIDE-Module-Specification-Version: 1.13
 

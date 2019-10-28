@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.smack
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/smack/Bundle.properties
-OpenIDE-Module-Specification-Version: 3.32
+OpenIDE-Module-Specification-Version: 3.33
 

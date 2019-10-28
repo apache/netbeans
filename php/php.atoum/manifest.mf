@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.atoum
 OpenIDE-Module-Layer: org/netbeans/modules/php/atoum/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/atoum/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.22
+OpenIDE-Module-Specification-Version: 0.23
 

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.editor.bookmarks/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/bookmarks/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.43
+OpenIDE-Module-Specification-Version: 1.44
 OpenIDE-Module-Layer: org/netbeans/modules/editor/bookmarks/resources/layer.xml
 OpenIDE-Module-Install: org/netbeans/modules/editor/bookmarks/EditorBookmarksModule.class
 AutoUpdate-Show-In-Client: false

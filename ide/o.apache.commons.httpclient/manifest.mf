@@ -1,2 +1,2 @@
 OpenIDE-Module: org.apache.commons.httpclient
-OpenIDE-Module-Specification-Version: 3.11
+OpenIDE-Module-Specification-Version: 3.12

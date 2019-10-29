@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.analysis.results.Result;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.openide.filesystems.FileObject;
@@ -56,15 +57,16 @@ public class PHPStanReportParser extends DefaultHandler {
     private Result currentResult = null;
     private String currentFile = null;
     private final FileObject root;
-    private final File workDir;
+    @NullAllowed
+    private final FileObject workDir;
 
-    private PHPStanReportParser(FileObject root, File workDir) throws SAXException {
+    private PHPStanReportParser(FileObject root, @NullAllowed FileObject workDir) throws SAXException {
         this.xmlReader = FileUtils.createXmlReader();
         this.root = root;
         this.workDir = workDir;
     }
 
-    private static PHPStanReportParser create(Reader reader, FileObject root, File workDir) throws SAXException, IOException {
+    private static PHPStanReportParser create(Reader reader, FileObject root, @NullAllowed FileObject workDir) throws SAXException, IOException {
         PHPStanReportParser parser = new PHPStanReportParser(root, workDir);
         parser.xmlReader.setContentHandler(parser);
         parser.xmlReader.parse(new InputSource(reader));
@@ -72,7 +74,7 @@ public class PHPStanReportParser extends DefaultHandler {
     }
 
     @CheckForNull
-    public static List<Result> parse(File file, FileObject root, File workDir) {
+    public static List<Result> parse(File file, FileObject root, @NullAllowed FileObject workDir) {
         try {
             sanitizeFile(file);
             try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) { // NOI18N
@@ -186,29 +188,38 @@ public class PHPStanReportParser extends DefaultHandler {
     @CheckForNull
     private String getCurrentFile(String fileName) {
         String sanitizedFileName = sanitizeFileName(fileName);
+        // if working directory is null, the file name is the absolute path
+        // e.g. <file name="/path/to/MyPHPProject/app/Test1.php">
+        File file = new File(sanitizedFileName);
+        if (file.isAbsolute()) {
+            return file.getAbsolutePath();
+        }
+
+        String currentFilePath = sanitizedFileName;
         FileObject rootDirectory = root;
         if (!root.isFolder()) {
             rootDirectory = root.getParent();
         }
         if (rootDirectory.isFolder()) {
+            // windows: <file name="app\index.php">
+            sanitizedFileName = sanitizedFileName.replace('\\', '/');
             FileObject current = rootDirectory.getFileObject(sanitizedFileName);
             if (current == null) {
                 // NETBANS-3022 try checking relative file path from working directory
                 if (workDir != null) {
-                    rootDirectory = FileUtil.toFileObject(workDir);
-                    if (rootDirectory != null) {
-                        current = rootDirectory.getFileObject(sanitizedFileName);
-                    }
+                    rootDirectory = workDir;
+                    current = rootDirectory.getFileObject(sanitizedFileName);
                 }
             }
             if (current == null) {
                 LOGGER.log(Level.WARNING, "Cannot get the current file: file name {0}, root directory {1}", // NOI18N
                         new Object[]{fileName, FileUtil.toFile(rootDirectory).getAbsolutePath()});
-                return null;
+                currentFilePath = null;
+            } else {
+                currentFilePath = FileUtil.toFile(current).getAbsolutePath();
             }
-            return FileUtil.toFile(current).getAbsolutePath();
         }
-        return sanitizedFileName;
+        return currentFilePath;
     }
 
     private String sanitizeFileName(String fileName) {
@@ -219,8 +230,7 @@ public class PHPStanReportParser extends DefaultHandler {
                 return fileName.substring(0, lastIndexOfPhpExt + PHP_EXT.length());
             }
         }
-        // windows: <file name="app\index.php">
-        return fileName.replace('\\', '/');
+        return fileName;
     }
 
     //~ Getters

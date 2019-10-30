@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.31
+#Version 3.32
 
 CLSS public abstract interface java.io.Serializable
 
@@ -344,6 +344,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.jellytools.EditorWindowOperator
 cons public init()
+ anno 0 java.lang.Deprecated()
 meth public static boolean jumpLeft()
 meth public static org.netbeans.jellytools.EditorOperator getEditor()
 meth public static org.netbeans.jellytools.EditorOperator getEditor(int)
@@ -1051,7 +1052,9 @@ cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke)
 cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
@@ -1114,6 +1117,7 @@ hfds comparator,defaultComparator,sequence
 
 CLSS public static org.netbeans.jellytools.actions.Action$Shortcut
  outer org.netbeans.jellytools.actions.Action
+ anno 0 java.lang.Deprecated()
 cons public init(int)
 cons public init(int,int)
 fld protected int keyCode
@@ -1137,6 +1141,7 @@ cons public init(java.lang.String,java.lang.String,javax.swing.KeyStroke[])
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut)
  anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,java.lang.String,org.netbeans.jellytools.actions.Action$Shortcut[])
+ anno 0 java.lang.Deprecated()
 meth public void performAPI()
 meth public void performMenu()
 meth public void performPopup(org.netbeans.jellytools.nodes.Node[])
@@ -1409,9 +1414,11 @@ hfds runtimeMenu
 CLSS public org.netbeans.jellytools.actions.SaveAction
 cons public init()
 meth public void performPopup(org.netbeans.jellytools.TopComponentOperator)
+ anno 0 java.lang.Deprecated()
 meth public void performPopup(org.netbeans.jellytools.nodes.Node)
 meth public void performPopup(org.netbeans.jellytools.nodes.Node[])
 meth public void performPopup(org.netbeans.jemmy.operators.ComponentOperator)
+ anno 0 java.lang.Deprecated()
 supr org.netbeans.jellytools.actions.Action
 hfds keystroke,saveMenu,savePopup
 

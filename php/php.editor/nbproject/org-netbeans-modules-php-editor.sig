@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.80.0
+#Version 1.84.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -760,6 +760,7 @@ CLSS public abstract interface org.netbeans.modules.php.editor.api.elements.Fiel
 fld public final static org.netbeans.modules.php.editor.api.PhpElementKind KIND
 intf org.netbeans.modules.php.editor.api.elements.TypeMemberElement
 intf org.netbeans.modules.php.editor.api.elements.TypedInstanceElement
+meth public abstract boolean isAnnotation()
 meth public abstract java.lang.String getName(boolean)
 
 CLSS public abstract interface org.netbeans.modules.php.editor.api.elements.FullyQualifiedElement
@@ -946,6 +947,7 @@ CLSS public final org.netbeans.modules.php.editor.lexer.LexUtilities
 innr public final static !enum LineBalance
 meth public !varargs static boolean textEquals(java.lang.CharSequence,char[])
 meth public static boolean isCommentOnlyLine(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+meth public static boolean isPHPOperator(org.netbeans.modules.php.editor.lexer.PHPTokenId)
 meth public static char getTokenChar(org.netbeans.editor.BaseDocument,int)
 meth public static int findStartTokenOfExpression(org.netbeans.api.lexer.TokenSequence)
 meth public static int getLineBalance(org.netbeans.editor.BaseDocument,int,org.netbeans.api.lexer.TokenId,org.netbeans.api.lexer.TokenId,org.netbeans.modules.php.editor.lexer.LexUtilities$LineBalance)
@@ -1104,6 +1106,7 @@ fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_EXT
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FALSE
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FINAL
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FINALLY
+fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FN
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FOR
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FOREACH
 fld public final static org.netbeans.modules.php.editor.lexer.PHPTokenId PHP_FUNCTION
@@ -1218,6 +1221,9 @@ meth public static org.netbeans.modules.php.editor.lexer.PHPTopTokenId[] values(
 supr java.lang.Enum<org.netbeans.modules.php.editor.lexer.PHPTopTokenId>
 hfds LANGUAGE,fixedText,primaryCategory
 
+CLSS public abstract interface org.netbeans.modules.php.editor.model.ArrowFunctionScope
+intf org.netbeans.modules.php.editor.model.FunctionScope
+
 CLSS public abstract interface org.netbeans.modules.php.editor.model.ClassConstantElement
 intf org.netbeans.modules.php.editor.model.ClassMemberElement
 intf org.netbeans.modules.php.editor.model.ConstantElement
@@ -1253,6 +1259,7 @@ meth public abstract java.lang.String getValue()
 CLSS public abstract interface org.netbeans.modules.php.editor.model.FieldElement
 intf org.netbeans.modules.php.editor.model.ClassMemberElement
 intf org.netbeans.modules.php.editor.model.TypeAssignments
+meth public abstract boolean isAnnotation()
 meth public abstract java.util.Collection<? extends java.lang.String> getDefaultTypeNames()
 
 CLSS public abstract interface org.netbeans.modules.php.editor.model.FileScope
@@ -1395,6 +1402,7 @@ meth public static <%0 extends org.netbeans.modules.php.editor.model.ModelElemen
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static <%0 extends org.netbeans.modules.php.editor.model.ModelElement> {%%0} getLast(java.util.List<? extends {%%0}>)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static boolean isAnonymousFunction(org.netbeans.modules.php.editor.model.Scope)
 meth public static java.lang.String getCamelCaseName(org.netbeans.modules.php.editor.model.ModelElement)
 meth public static java.lang.String toCamelCase(java.lang.String)
 meth public static java.util.Collection<? extends org.netbeans.modules.php.editor.model.ClassScope> getDeclaredClasses(org.netbeans.modules.php.editor.model.FileScope)
@@ -1706,166 +1714,167 @@ hfds ZZ_ACTION,ZZ_ACTION_PACKED_0,ZZ_ATTRIBUTE,ZZ_ATTRIBUTE_PACKED_0,ZZ_BUFFERSI
 
 CLSS public abstract interface org.netbeans.modules.php.editor.parser.ASTPHP5Symbols
 fld public final static int EOF = 0
-fld public final static int T_ABSTRACT = 142
-fld public final static int T_AND_EQUAL = 94
-fld public final static int T_ARRAY = 56
-fld public final static int T_ARRAY_CAST = 130
+fld public final static int T_ABSTRACT = 143
+fld public final static int T_AND_EQUAL = 95
+fld public final static int T_ARRAY = 57
+fld public final static int T_ARRAY_CAST = 131
 fld public final static int T_AS = 25
-fld public final static int T_AT = 134
-fld public final static int T_BACKQUATE = 152
-fld public final static int T_BOOLEAN_AND = 102
-fld public final static int T_BOOLEAN_OR = 101
-fld public final static int T_BOOL_CAST = 132
+fld public final static int T_AT = 135
+fld public final static int T_BACKQUATE = 153
+fld public final static int T_BOOLEAN_AND = 103
+fld public final static int T_BOOLEAN_OR = 102
+fld public final static int T_BOOL_CAST = 133
 fld public final static int T_BREAK = 30
-fld public final static int T_CALLABLE = 57
+fld public final static int T_CALLABLE = 58
 fld public final static int T_CASE = 28
-fld public final static int T_CATCH = 39
-fld public final static int T_CLASS = 49
-fld public final static int T_CLASS_C = 58
+fld public final static int T_CATCH = 40
+fld public final static int T_CLASS = 50
+fld public final static int T_CLASS_C = 59
 fld public final static int T_CLONE = 24
-fld public final static int T_CLOSE_PARENTHESE = 148
-fld public final static int T_CLOSE_RECT = 136
-fld public final static int T_COALESCE = 160
-fld public final static int T_COALESCE_EQUAL = 161
-fld public final static int T_COMMA = 82
-fld public final static int T_CONCAT_EQUAL = 92
-fld public final static int T_CONST = 34
+fld public final static int T_CLOSE_PARENTHESE = 149
+fld public final static int T_CLOSE_RECT = 137
+fld public final static int T_COALESCE = 161
+fld public final static int T_COALESCE_EQUAL = 162
+fld public final static int T_COMMA = 83
+fld public final static int T_CONCAT_EQUAL = 93
+fld public final static int T_CONST = 35
 fld public final static int T_CONSTANT_ENCAPSED_STRING = 12
 fld public final static int T_CONTINUE = 31
-fld public final static int T_CURLY_CLOSE = 69
-fld public final static int T_CURLY_OPEN = 68
-fld public final static int T_CURLY_OPEN_WITH_DOLAR = 67
-fld public final static int T_DEC = 126
+fld public final static int T_CURLY_CLOSE = 70
+fld public final static int T_CURLY_OPEN = 69
+fld public final static int T_CURLY_OPEN_WITH_DOLAR = 68
+fld public final static int T_DEC = 127
 fld public final static int T_DECLARE = 21
 fld public final static int T_DEFAULT = 29
-fld public final static int T_DEFINE = 76
-fld public final static int T_DIR = 73
-fld public final static int T_DIV = 120
-fld public final static int T_DIV_EQUAL = 91
+fld public final static int T_DEFINE = 77
+fld public final static int T_DIR = 74
+fld public final static int T_DIV = 121
+fld public final static int T_DIV_EQUAL = 92
 fld public final static int T_DNUMBER = 5
 fld public final static int T_DO = 14
-fld public final static int T_DOLLAR = 150
-fld public final static int T_DOLLAR_OPEN_CURLY_BRACES = 66
-fld public final static int T_DOUBLE_ARROW = 54
-fld public final static int T_DOUBLE_CAST = 128
+fld public final static int T_DOLLAR = 151
+fld public final static int T_DOLLAR_OPEN_CURLY_BRACES = 67
+fld public final static int T_DOUBLE_ARROW = 55
+fld public final static int T_DOUBLE_CAST = 129
 fld public final static int T_ECHO = 13
-fld public final static int T_ELLIPSIS = 159
-fld public final static int T_ELSE = 140
-fld public final static int T_ELSEIF = 139
-fld public final static int T_EMPTY = 47
+fld public final static int T_ELLIPSIS = 160
+fld public final static int T_ELSE = 141
+fld public final static int T_ELSEIF = 140
+fld public final static int T_EMPTY = 48
 fld public final static int T_ENCAPSED_AND_WHITESPACE = 11
 fld public final static int T_ENDDECLARE = 22
 fld public final static int T_ENDFOR = 18
 fld public final static int T_ENDFOREACH = 20
-fld public final static int T_ENDIF = 138
+fld public final static int T_ENDIF = 139
 fld public final static int T_ENDSWITCH = 27
 fld public final static int T_ENDWHILE = 16
-fld public final static int T_END_HEREDOC = 65
-fld public final static int T_END_NOWDOC = 154
-fld public final static int T_EQUAL = 87
-fld public final static int T_EVAL = 79
+fld public final static int T_END_HEREDOC = 66
+fld public final static int T_END_NOWDOC = 155
+fld public final static int T_EQUAL = 88
+fld public final static int T_EVAL = 80
 fld public final static int T_EXIT = 2
-fld public final static int T_EXTENDS = 51
-fld public final static int T_FILE = 63
-fld public final static int T_FINAL = 143
-fld public final static int T_FINALLY = 41
+fld public final static int T_EXTENDS = 52
+fld public final static int T_FILE = 64
+fld public final static int T_FINAL = 144
+fld public final static int T_FINALLY = 42
+fld public final static int T_FN = 33
 fld public final static int T_FOR = 17
 fld public final static int T_FOREACH = 19
-fld public final static int T_FUNCTION = 33
-fld public final static int T_FUNC_C = 61
-fld public final static int T_GLOBAL = 43
+fld public final static int T_FUNCTION = 34
+fld public final static int T_FUNC_C = 62
+fld public final static int T_GLOBAL = 44
 fld public final static int T_GOTO = 32
-fld public final static int T_HALT_COMPILER = 48
+fld public final static int T_HALT_COMPILER = 49
 fld public final static int T_IF = 3
-fld public final static int T_IMPLEMENTS = 52
-fld public final static int T_INC = 125
-fld public final static int T_INCLUDE = 77
-fld public final static int T_INCLUDE_ONCE = 78
+fld public final static int T_IMPLEMENTS = 53
+fld public final static int T_INC = 126
+fld public final static int T_INCLUDE = 78
+fld public final static int T_INCLUDE_ONCE = 79
 fld public final static int T_INLINE_HTML = 10
 fld public final static int T_INSTANCEOF = 23
-fld public final static int T_INSTEADOF = 156
-fld public final static int T_INTERFACE = 50
-fld public final static int T_INT_CAST = 127
-fld public final static int T_ISSET = 46
-fld public final static int T_IS_EQUAL = 106
-fld public final static int T_IS_GREATER_OR_EQUAL = 111
-fld public final static int T_IS_IDENTICAL = 108
-fld public final static int T_IS_NOT_EQUAL = 107
-fld public final static int T_IS_NOT_IDENTICAL = 109
-fld public final static int T_IS_SMALLER_OR_EQUAL = 110
-fld public final static int T_KOVA = 104
-fld public final static int T_LGREATER = 114
-fld public final static int T_LINE = 62
-fld public final static int T_LIST = 55
+fld public final static int T_INSTEADOF = 157
+fld public final static int T_INTERFACE = 51
+fld public final static int T_INT_CAST = 128
+fld public final static int T_ISSET = 47
+fld public final static int T_IS_EQUAL = 107
+fld public final static int T_IS_GREATER_OR_EQUAL = 112
+fld public final static int T_IS_IDENTICAL = 109
+fld public final static int T_IS_NOT_EQUAL = 108
+fld public final static int T_IS_NOT_IDENTICAL = 110
+fld public final static int T_IS_SMALLER_OR_EQUAL = 111
+fld public final static int T_KOVA = 105
+fld public final static int T_LGREATER = 115
+fld public final static int T_LINE = 63
+fld public final static int T_LIST = 56
 fld public final static int T_LNUMBER = 4
-fld public final static int T_LOGICAL_AND = 85
-fld public final static int T_LOGICAL_OR = 83
-fld public final static int T_LOGICAL_XOR = 84
-fld public final static int T_METHOD_C = 60
-fld public final static int T_MINUS = 118
-fld public final static int T_MINUS_EQUAL = 89
-fld public final static int T_MOD_EQUAL = 93
-fld public final static int T_MUL_EQUAL = 90
-fld public final static int T_NAMESPACE = 71
-fld public final static int T_NEKUDA = 124
-fld public final static int T_NEKUDOTAIM = 149
-fld public final static int T_NEW = 137
-fld public final static int T_NOT = 122
-fld public final static int T_NS_C = 72
-fld public final static int T_NS_SEPARATOR = 74
+fld public final static int T_LOGICAL_AND = 86
+fld public final static int T_LOGICAL_OR = 84
+fld public final static int T_LOGICAL_XOR = 85
+fld public final static int T_METHOD_C = 61
+fld public final static int T_MINUS = 119
+fld public final static int T_MINUS_EQUAL = 90
+fld public final static int T_MOD_EQUAL = 94
+fld public final static int T_MUL_EQUAL = 91
+fld public final static int T_NAMESPACE = 72
+fld public final static int T_NEKUDA = 125
+fld public final static int T_NEKUDOTAIM = 150
+fld public final static int T_NEW = 138
+fld public final static int T_NOT = 123
+fld public final static int T_NS_C = 73
+fld public final static int T_NS_SEPARATOR = 75
 fld public final static int T_NUM_STRING = 9
-fld public final static int T_OBJECT_CAST = 131
-fld public final static int T_OBJECT_OPERATOR = 53
-fld public final static int T_OPEN_PARENTHESE = 147
-fld public final static int T_OPEN_RECT = 135
-fld public final static int T_OR = 103
-fld public final static int T_OR_EQUAL = 95
-fld public final static int T_PAAMAYIM_NEKUDOTAYIM = 70
-fld public final static int T_PLUS = 117
-fld public final static int T_PLUS_EQUAL = 88
-fld public final static int T_POW = 157
-fld public final static int T_POW_EQUAL = 158
-fld public final static int T_PRECENT = 121
-fld public final static int T_PRINT = 86
-fld public final static int T_PRIVATE = 144
-fld public final static int T_PROTECTED = 145
-fld public final static int T_PUBLIC = 146
-fld public final static int T_QUATE = 151
-fld public final static int T_QUESTION_MARK = 99
-fld public final static int T_REFERENCE = 105
-fld public final static int T_REQUIRE = 80
-fld public final static int T_REQUIRE_ONCE = 81
-fld public final static int T_RETURN = 35
-fld public final static int T_RGREATER = 113
-fld public final static int T_SEMICOLON = 100
-fld public final static int T_SL = 115
-fld public final static int T_SL_EQUAL = 97
-fld public final static int T_SPACESHIP = 112
-fld public final static int T_SR = 116
-fld public final static int T_SR_EQUAL = 98
-fld public final static int T_START_HEREDOC = 64
-fld public final static int T_START_NOWDOC = 153
-fld public final static int T_STATIC = 141
+fld public final static int T_OBJECT_CAST = 132
+fld public final static int T_OBJECT_OPERATOR = 54
+fld public final static int T_OPEN_PARENTHESE = 148
+fld public final static int T_OPEN_RECT = 136
+fld public final static int T_OR = 104
+fld public final static int T_OR_EQUAL = 96
+fld public final static int T_PAAMAYIM_NEKUDOTAYIM = 71
+fld public final static int T_PLUS = 118
+fld public final static int T_PLUS_EQUAL = 89
+fld public final static int T_POW = 158
+fld public final static int T_POW_EQUAL = 159
+fld public final static int T_PRECENT = 122
+fld public final static int T_PRINT = 87
+fld public final static int T_PRIVATE = 145
+fld public final static int T_PROTECTED = 146
+fld public final static int T_PUBLIC = 147
+fld public final static int T_QUATE = 152
+fld public final static int T_QUESTION_MARK = 100
+fld public final static int T_REFERENCE = 106
+fld public final static int T_REQUIRE = 81
+fld public final static int T_REQUIRE_ONCE = 82
+fld public final static int T_RETURN = 36
+fld public final static int T_RGREATER = 114
+fld public final static int T_SEMICOLON = 101
+fld public final static int T_SL = 116
+fld public final static int T_SL_EQUAL = 98
+fld public final static int T_SPACESHIP = 113
+fld public final static int T_SR = 117
+fld public final static int T_SR_EQUAL = 99
+fld public final static int T_START_HEREDOC = 65
+fld public final static int T_START_NOWDOC = 154
+fld public final static int T_STATIC = 142
 fld public final static int T_STRING = 6
-fld public final static int T_STRING_CAST = 129
+fld public final static int T_STRING_CAST = 130
 fld public final static int T_STRING_VARNAME = 7
 fld public final static int T_SWITCH = 26
-fld public final static int T_THROW = 40
-fld public final static int T_TILDA = 123
-fld public final static int T_TIMES = 119
-fld public final static int T_TRAIT = 155
-fld public final static int T_TRAIT_C = 59
-fld public final static int T_TRY = 38
-fld public final static int T_UNSET = 45
-fld public final static int T_UNSET_CAST = 133
-fld public final static int T_USE = 42
-fld public final static int T_VAR = 44
+fld public final static int T_THROW = 41
+fld public final static int T_TILDA = 124
+fld public final static int T_TIMES = 120
+fld public final static int T_TRAIT = 156
+fld public final static int T_TRAIT_C = 60
+fld public final static int T_TRY = 39
+fld public final static int T_UNSET = 46
+fld public final static int T_UNSET_CAST = 134
+fld public final static int T_USE = 43
+fld public final static int T_VAR = 45
 fld public final static int T_VARIABLE = 8
-fld public final static int T_VAR_COMMENT = 75
+fld public final static int T_VAR_COMMENT = 76
 fld public final static int T_WHILE = 15
-fld public final static int T_XOR_EQUAL = 96
-fld public final static int T_YIELD = 36
-fld public final static int T_YIELD_FROM = 37
+fld public final static int T_XOR_EQUAL = 97
+fld public final static int T_YIELD = 37
+fld public final static int T_YIELD_FROM = 38
 fld public final static int error = 1
 
 CLSS public org.netbeans.modules.php.editor.parser.EncodedActionTable1
@@ -2170,6 +2179,11 @@ cons public init(int,int)
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Statement
 
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression
+cons public init(int,int)
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
+
 CLSS public abstract org.netbeans.modules.php.editor.parser.astnodes.ASTNode
 cons public init(int,int)
 meth public abstract void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
@@ -2240,6 +2254,19 @@ meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getValue(
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.ASTNode
 hfds key,value
+
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration
+cons public init(int,int,java.util.List,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression,boolean,boolean)
+meth public boolean isReference()
+meth public boolean isStatic()
+meth public java.lang.String toString()
+meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.FormalParameter> getFormalParameters()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getExpression()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getReturnType()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
+hfds expression,formalParameters,isReference,isStatic,returnType
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.Assignment
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.VariableBase,org.netbeans.modules.php.editor.parser.astnodes.Assignment$Type,org.netbeans.modules.php.editor.parser.astnodes.Expression)
@@ -2567,14 +2594,16 @@ supr org.netbeans.modules.php.editor.parser.astnodes.Dispatch
 hfds field
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration
-cons public init(int,int,int,java.util.List)
+cons public init(int,int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,java.util.List)
 meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration> getFields()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getFieldType()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Expression[] getInitialValues()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Variable[] getVariableNames()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration
-hfds fields
+hfds fieldType,fields
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.FinallyClause
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Block)
@@ -2899,12 +2928,14 @@ hfds description,tags
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag
 cons public init(int,int,org.netbeans.modules.php.spi.annotation.AnnotationParsedLine,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode>,org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag>,java.lang.String)
+cons public init(int,int,org.netbeans.modules.php.spi.annotation.AnnotationParsedLine,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode>,org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode,java.util.List<org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag>,java.lang.String,boolean)
+meth public boolean isStatic()
 meth public java.lang.String getDocumentation()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag> getParameters()
 meth public org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode getMethodName()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag
-hfds name,params
+hfds isStatic,name,params
 hcls CommentExtractor,CommentExtractorImpl
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode
@@ -3119,13 +3150,14 @@ supr java.lang.Object
 hfds children,endOffset,kind,startOffset
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration
-cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Variable,org.netbeans.modules.php.editor.parser.astnodes.Expression)
+cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Variable,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression)
 meth public java.lang.String toString()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getFieldType()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getValue()
 meth public org.netbeans.modules.php.editor.parser.astnodes.Variable getName()
 meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.ASTNode
-hfds name,value
+hfds fieldType,name,value
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.NamespaceName,org.netbeans.modules.php.editor.parser.astnodes.Identifier)
@@ -3297,6 +3329,12 @@ meth public static org.netbeans.modules.php.editor.parser.astnodes.UnaryOperatio
 supr java.lang.Enum<org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation$Operator>
 hfds operatorSign
 
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement
+cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression)
+meth public java.lang.String toString()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.ArrayElement
+
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.UseStatement
 cons public init(int,int,java.util.List)
 cons public init(int,int,java.util.List,org.netbeans.modules.php.editor.parser.astnodes.UseStatement$Type)
@@ -3369,12 +3407,14 @@ hfds expression
 
 CLSS public abstract interface org.netbeans.modules.php.editor.parser.astnodes.Visitor
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTError)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTNode)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayElement)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.Assignment)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.Block)
@@ -3458,6 +3498,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.TryStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.UseStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart)
@@ -3498,11 +3539,13 @@ meth protected void addToPath(org.netbeans.modules.php.editor.parser.astnodes.AS
 meth protected void removeFromPath()
 meth public java.util.List<org.netbeans.modules.php.editor.parser.astnodes.ASTNode> getPath()
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTError)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTNode)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayElement)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Assignment)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Block)
@@ -3574,6 +3617,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TraitDecl
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TryStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart)
@@ -3590,12 +3634,14 @@ intf org.netbeans.modules.php.editor.parser.astnodes.Visitor
 meth public void scan(java.lang.Iterable<? extends org.netbeans.modules.php.editor.parser.astnodes.ASTNode>)
 meth public void scan(org.netbeans.modules.php.editor.parser.astnodes.ASTNode)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTError)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTErrorExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ASTNode)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrayElement)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Assignment)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Block)
@@ -3679,6 +3725,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TraitDecl
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.TryStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart)

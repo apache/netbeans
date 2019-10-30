@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.projectapi.nb
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/projectapi/nb/Bundle.properties
 OpenIDE-Module-Provides: cnb.org.netbeans.modules.projectapi.nb
-OpenIDE-Module-Specification-Version: 1.9
+OpenIDE-Module-Specification-Version: 1.10
 AutoUpdate-Show-In-Client: false

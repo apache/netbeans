@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.html.ojet
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/html/ojet/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/html/ojet/resources/layer.xml
-OpenIDE-Module-Specification-Version: 0.14
+OpenIDE-Module-Specification-Version: 0.15
 

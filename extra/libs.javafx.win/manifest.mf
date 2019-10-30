@@ -3,7 +3,7 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.libs.javafx.win
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javafx/win/Bundle.properties
 OpenIDE-Module-Fragment-Host: org.netbeans.libs.javafx
-OpenIDE-Module-Specification-Version: 13.1
+OpenIDE-Module-Specification-Version: 13.2
 OpenIDE-Module-Java-Dependencies: Java > 11
 OpenIDE-Module-Needs: org.openide.modules.os.Windows
 OpenIDE-Module-Provides: org.openide.modules.jre.JavaFX

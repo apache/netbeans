@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.88
+#Version 1.89
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1248,6 +1248,7 @@ meth public final java.lang.String getTokenAcceptorId()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
 meth public java.util.Collection<java.lang.String> getFixedValues()
+ anno 0 java.lang.Deprecated()
 meth public void accept(org.netbeans.modules.css.lib.api.properties.GrammarElementVisitor)
 supr org.netbeans.modules.css.lib.api.properties.ValueGrammarElement
 hfds name,tokenAcceptor

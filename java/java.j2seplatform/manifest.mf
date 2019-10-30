@@ -4,5 +4,5 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/j2seplatform/Bundle.
 OpenIDE-Module-Layer: org/netbeans/modules/java/j2seplatform/resources/layer.xml
 OpenIDE-Module-Install: org/netbeans/modules/java/j2seplatform/J2SEPlatformModule.class
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.47
+OpenIDE-Module-Specification-Version: 1.48
 OpenIDE-Module-Provides: j2seplatform

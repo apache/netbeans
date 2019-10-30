@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.30
+#Version 1.40
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)

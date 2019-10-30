@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.debugger.jpda.heapwalk/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/heapwalk/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/debugger/jpda/heapwalk/resources/mf-layer.xml
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 OpenIDE-Module-Requires: org.netbeans.api.debugger.jpda.JPDADebuggerEngineImpl,
   org.netbeans.spi.debugger.ui
 OpenIDE-Module-Provides: org.netbeans.modules.debugger.jpda.heapwalk

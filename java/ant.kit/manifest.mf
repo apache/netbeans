@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.ant.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ant/kit/Bundle.properties
 OpenIDE-Module-Requires: BuildActions
 OpenIDE-Module-Recommends: org.netbeans.modules.testng.ant.AntTestNGSupport,org.netbeans.modules.junit.ant.JUnitAntLogger,org.netbeans.modules.junit.ant.ui.AntJUnitManagerProvider
-OpenIDE-Module-Specification-Version: 1.35
+OpenIDE-Module-Specification-Version: 1.36
 

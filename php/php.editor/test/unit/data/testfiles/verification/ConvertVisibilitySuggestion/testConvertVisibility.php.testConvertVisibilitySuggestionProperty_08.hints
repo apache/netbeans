@@ -1,0 +1,5 @@
+    protected static $protectedStatic = "protect^ed";
+----------------------------------------------------
+HINT:You can convert the visibility if needed
+FIX:Convert Visibility to "public"
+FIX:Convert Visibility to "private"

@@ -5683,7 +5683,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (varArgs && !parIt.hasNext() && param.getKind() == TypeKind.ARRAY) {
                             toAdd = ((ArrayType) param).getComponentType();
                         }
-                        if (toAdd != null && ret.add(toAdd) && toAdd.getKind() != TypeKind.TYPEVAR) {
+                        while (toAdd != null && toAdd.getKind() == TypeKind.TYPEVAR) {
+                            toAdd = ((TypeVariable) toAdd).getUpperBound();
+                        }
+                        if (toAdd != null && ret.add(toAdd)) {
                             TypeMirror toRemove = null;
                             for (TypeMirror tm : ret) {
                                 if (tm != toAdd) {

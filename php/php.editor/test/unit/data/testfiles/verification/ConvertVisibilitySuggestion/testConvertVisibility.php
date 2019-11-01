@@ -63,7 +63,7 @@ class Visibility {
 
 }
 
-abstract class AbstarctClass {
+abstract class AbstractVisibilityClass {
 
     abstract function abstractImplicitPublic();
     abstract public function abstractPublic();
@@ -75,7 +75,7 @@ abstract class AbstarctClass {
     abstract protected static function abstractProtectedStatic();
 }
 
-interface InterfaceName {
+interface VisibilityInterface {
 
     const INTERFACE_IMPLICIT_CONST = "implicit";
     public const INTERFACE_PUBLIC_CONST = "implicit";

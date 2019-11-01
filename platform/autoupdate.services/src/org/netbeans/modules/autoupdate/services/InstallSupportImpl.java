@@ -924,9 +924,10 @@ public class InstallSupportImpl {
             String label) throws MalformedURLException, IOException {
         
         OpenConnectionListener listener = new OpenConnectionListener(source);
-        final Task task = NetworkAccess.createNetworkAcessTask(source,
+        final Task task = NetworkAccess.createNetworkAccessTask(source,
                 AutoupdateSettings.getOpenConnectionTimeout(),
-                listener);
+                listener,
+                false);
         new Thread(new Runnable() {
             @SuppressWarnings("SleepWhileInLoop")
             @Override

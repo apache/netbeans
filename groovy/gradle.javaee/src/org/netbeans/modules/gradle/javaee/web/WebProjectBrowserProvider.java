@@ -72,12 +72,8 @@ public final class WebProjectBrowserProvider implements ProjectBrowserProvider, 
 
     @Override
     public void setActiveBrowser(final WebBrowser browser) throws IllegalArgumentException, IOException {
-        ProjectManager.mutex().writeAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                JavaEEProjectSettings.setBrowserID(project, browser.getId());
-            }
+        ProjectManager.mutex().writeAccess(() -> {
+            JavaEEProjectSettings.setBrowserID(project, browser.getId());
         });
         pcs.firePropertyChange(PROP_BROWSER_ACTIVE, null, null);
     }
@@ -116,12 +112,9 @@ public final class WebProjectBrowserProvider implements ProjectBrowserProvider, 
     }
     
     private Preferences getPreferences() {
-        Preferences prefs = project.getLookup().lookup(GradleJavaEEProjectSettings.class).getPreferences();
         if (preferences == null) {
-            preferences = prefs;
-        } else {
-            assert preferences == prefs : "Project JavaEE preferences has been changed on: " + project.getProjectDirectory();
+            preferences = project.getLookup().lookup(GradleJavaEEProjectSettings.class).getPreferences();
         }
-        return prefs;
+        return preferences;
     }
 }

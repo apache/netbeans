@@ -27,12 +27,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.cert.CertPath;
 import java.security.cert.Certificate;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.autoupdate.TestUtils;
 import org.netbeans.junit.NbTestCase;
+
+import static org.netbeans.modules.autoupdate.services.Utilities.VERIFICATION_RESULT_COMPARATOR;
 
 public class VerifyFileTest extends NbTestCase {
 
@@ -58,9 +61,33 @@ public class VerifyFileTest extends NbTestCase {
         assertNotNull(urlToFile);
         File jar = org.openide.util.Utilities.toFile(urlToFile.toURI());
         assertTrue(jar.exists());
-        Collection<Certificate> nbmCertificates = Utilities.getNbmCertificates(jar);
-        Collection<Certificate> trustedCertificates = Utilities.getCertificates(ks);
-        return Utilities.verifyCertificates(nbmCertificates, trustedCertificates);
+        String res = null;
+        try {
+            Collection<CertPath> nbmCerts = Utilities.getNbmCertificates(jar);
+            Collection<Certificate> trustedCerts = Utilities.getCertificates(ks);
+            if (nbmCerts == null) {
+                res = Utilities.N_A;
+            } else if (nbmCerts.isEmpty()) {
+                res = Utilities.UNSIGNED;
+            } else {
+                // Iterate all certpaths that can be considered for the NBM
+                // choose the certpath, that has the highest trust level
+                // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED -> UNSIGNED
+                // or comes first
+                for (CertPath cp : nbmCerts) {
+                    String localRes = Utilities.verifyCertificates(cp, trustedCerts);
+                    if (res == null
+                        || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
+                        res = localRes;
+                    }
+                }
+            }
+        } catch (SecurityException ex) {
+            LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
+            res = Utilities.MODIFIED;
+        }
+
+        return res;
     }
 
     @SuppressWarnings("unchecked")
@@ -84,6 +111,10 @@ public class VerifyFileTest extends NbTestCase {
 
     public void testTrustedSignedTwice() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
         assertEquals(Utilities.TRUSTED, doVerification("data/dummy-signed-twice.jar"));
+    }
+
+    public void testUnsignedPartiallySigned() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
+        assertEquals(Utilities.MODIFIED, doVerification("data/dummy-partial-signed.jar"));
     }
 
     private static KeyStore getKeyStore(File file, String password) {

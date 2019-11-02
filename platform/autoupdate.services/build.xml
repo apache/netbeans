@@ -53,6 +53,7 @@
 
     <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
         <touch file="${build.dir}/Dummy.class" />
+        <touch file="${build.dir}/Dummy2.class" />
         <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed.jar">
             <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
         </jar>
@@ -71,6 +72,17 @@
                  keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
                  storepass="password"
                  alias="test-two" />
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar"
+                 keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
+                 storepass="password"
+                 alias="test-one" />
+        <zip destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar"
+             update="true">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy2.class" />
+        </zip>
     </target>
 
 </project>

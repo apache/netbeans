@@ -22,6 +22,7 @@ package org.netbeans.modules.autoupdate.services;
 import java.io.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.security.CodeSigner;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -46,6 +47,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.api.autoupdate.UpdateElement;
@@ -104,10 +106,9 @@ public class Utilities {
     private static final String KS_USER_PASSWORD = "open4user";
     private static Lookup.Result<KeyStoreProvider> result;
     private static final Logger err = Logger.getLogger(Utilities.class.getName ());
-    
-    
+
     public static Collection<KeyStore> getKeyStore () {
-        if (result == null) {            
+        if (result == null) {
             result = Lookup.getDefault ().lookupResult (KeyStoreProvider.class);
             result.addLookupListener (new KeyStoreProviderListener ());
         }
@@ -115,27 +116,32 @@ public class Utilities {
         if (c == null || c.isEmpty ()) {
             return Collections.emptyList ();
         }
-        List<KeyStore> kss = new ArrayList<>();
-        
+
+	List<KeyStore> kss = new ArrayList<>();
         for (KeyStoreProvider provider : c) {
             KeyStore ks = provider.getKeyStore ();
             if (ks != null) {
                 kss.add (ks);
             }
         }
-        
+
         return kss;
     }
-    
-    public static String verifyCertificates(Collection<Certificate> archiveCertificates, Collection<Certificate> trustedCertificates) {
-        if (archiveCertificates == null) {
-            return N_A;
-        }       
+
+    /**
+     *
+     * @param archiveCertPath
+     * @param trustedCertificates
+     * @return
+     */
+    public static String verifyCertificates(CertPath archiveCertPath, Collection<? extends Certificate> trustedCertificates) {
+        assert archiveCertPath != null;
+        List<? extends Certificate> archiveCertificates = archiveCertPath.getCertificates();
         if (!archiveCertificates.isEmpty()) {
             Collection<Certificate> c = new HashSet<>(trustedCertificates);
             c.retainAll(archiveCertificates);
-            if (c.isEmpty()) {                
-                Map<Principal, X509Certificate> certSubjectsMap = new HashMap<>();               
+            if (c.isEmpty()) {
+                Map<Principal, X509Certificate> certSubjectsMap = new HashMap<>();
                 Set<Principal> certIssuersSet = new HashSet<>();
                 for (Certificate cert : archiveCertificates) {
                     if (cert != null) {
@@ -146,17 +152,15 @@ public class Utilities {
                         }
                     }
                 }
-                
                 Map<X509Certificate, X509Certificate> candidates = new HashMap<>();
-                    
                 for (Principal p : certSubjectsMap.keySet()) {
                     // cert chain may not be ordered - trust anchor could before certificate itself
                     if (certIssuersSet.contains(p)) {
                         continue;
                     }
-                    
+
                     X509Certificate cert = certSubjectsMap.get(p);
-                
+
                     Principal tap = cert.getIssuerDN();
                     if (tap != null) {
                         X509Certificate tempTrustAnchor = certSubjectsMap.get(tap);
@@ -164,12 +168,12 @@ public class Utilities {
                             candidates.put(cert, tempTrustAnchor);
                         }
                     }
-                }                                               
+                }
 
                 // TRUSTED = 2
                 // SIGNATURE_VERIFIED = 1
                 // SIGNATURE_UNVERIFIED = 0
-                int res = 0;                
+                int res = 0;
                 for (X509Certificate cert : candidates.keySet()) {
                     X509Certificate trustCert = candidates.get(cert);
                     PKIXCertPathValidatorResult validResult = null;
@@ -196,9 +200,9 @@ public class Utilities {
                         err.log(Level.INFO, "Cannot validate certificate path - " + ex.getMessage(), ex);
                         //SIGNATURE_UNVERIFIED - result = 0;
                     } catch (SecurityException ex) {
-                        // When jar/nbm correctly signed, but content modified                    
+                        // When jar/nbm correctly signed, but content modified
                         err.log(Level.INFO, "The content of the jar/nbm has been modified - " + ex.getMessage(), ex);
-                        return MODIFIED;                    
+                        return MODIFIED;
                     }
 
                     if (validResult != null) {
@@ -209,17 +213,17 @@ public class Utilities {
                             break;
                         } else {
                             res = 1;
-                        }                        
+                        }
                     }
                 }
-                
+
                 switch (res) {
                     case 2:
                         return TRUSTED;
                     case 1:
                         return SIGNATURE_VERIFIED;
                     default:
-                        return SIGNATURE_UNVERIFIED;                    
+                        return SIGNATURE_UNVERIFIED;
                 }
             } else {
                 // signed by trusted certificate stored in user's keystore od ide.ks
@@ -228,7 +232,43 @@ public class Utilities {
         }
         return UNSIGNED;
     }
-    
+
+    /**
+     * Establishes an order for verificication result strings. Only the values
+     * <ul>
+     * <li>{@code null}</li>
+     * <li>{@link #UNSIGNED}</li>
+     * <li>{@link #SIGNATURE_UNVERIFIED}</li>
+     * <li>{@link #SIGNATURE_VERIFIED}</li>
+     * <li>{@link #TRUSTED}</li>
+     * </ul>
+     *
+     * @param verificationResult1
+     * @param verificationResult2
+     * @return
+     */
+    public static final Comparator<String> VERIFICATION_RESULT_COMPARATOR = new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+            int i1 = mapVerificationResultToInt(o1);
+            int i2 = mapVerificationResultToInt(o2);
+            return i1 - i2;
+        }
+    };
+
+    private static int mapVerificationResultToInt(String input) {
+        if(input == null) {
+            return 0;
+        }
+        switch(input) {
+            case UNSIGNED: return 1;
+            case SIGNATURE_UNVERIFIED: return 2;
+            case SIGNATURE_VERIFIED: return 3;
+            case TRUSTED: return 4;
+            default: throw new IllegalArgumentException("Unmappable value: " + input);
+        }
+    }
+
     public static Collection<Certificate> getCertificates (KeyStore keyStore) throws KeyStoreException {
         Set<Certificate> certs = new HashSet<Certificate> ();
         for (String alias: Collections.list (keyStore.aliases ())) {
@@ -240,33 +280,72 @@ public class Utilities {
         }
         return certs;
     }
-    
-    public static Collection<Certificate> getNbmCertificates (File nbmFile) throws IOException {
-        Set<Certificate> certs = new HashSet<Certificate>();
-        JarFile jf = new JarFile(nbmFile);
+
+    /**
+     * Get the certpaths that were used to sign the NBM content.
+     *
+     * @param nbmFile
+     * @return collection of CertPaths, that were used to sign the non-signature
+     * entries of the NBM
+     * @throws IOException
+     * @throws SecurityException if JAR was tampered with or if the certificate
+     *         chains are not consistent
+     */
+    public static Collection<CertPath> getNbmCertificates (File nbmFile) throws IOException, SecurityException {
+        Set<CertPath> certs = null;
+
+        // Empty means only the MANIFEST.MF is present - special cased to be in
+        // line with established behaviour
         boolean empty = true;
-        try {
+
+        // The idea:
+        // - iterate over all JAR entries
+        // - read each entry (as required by the JarFile specificiation for verification)
+        // - extract the certificate paths, that were used to sign the
+        //   entry
+        // - compare it with the previously read entries. If they are not
+        //   identical, raise a SecurityException.
+        //
+        // Excluded from the above algorithm are:
+        // - directory entries
+        // - files that are part of the signature (each entry in META-INF, that
+        //   ends with .SF, .DSA, .RSA or .EC
+        try (JarFile jf = new JarFile(nbmFile)) {
             for (JarEntry entry : Collections.list(jf.entries())) {
                 verifyEntry(jf, entry);
-                if (!entry.getName().startsWith("META-INF/")) {
-                    empty = false;
-                    if (entry.getCertificates() != null) {
-                        certs.addAll(Arrays.asList(entry.getCertificates()));
+                if ((! entry.isDirectory()) && (! isSignatureEntry(entry))) {
+                    if(! entry.getName().equals("META-INF/MANIFEST.MF")) {
+                        empty = false;
+                    }
+                    Set<CertPath> entryCerts = new HashSet<>();
+                    CodeSigner[] codeSigners = entry.getCodeSigners();
+                    if (codeSigners != null) {
+                        for (CodeSigner cs : entry.getCodeSigners()) {
+                            entryCerts.add(cs.getSignerCertPath());
+                        }
+                    }
+                    if(certs == null) {
+                        certs = entryCerts;
+                    } else if (! certs.equals(entryCerts)) {
+                        throw new SecurityException("Inconsistent certificate paths used for signing");
                     }
                 }
             }
-        } finally {
-            jf.close();
         }
 
         return empty ? null : certs;
     }
-    
+
+    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("META-INF/([^/]+)\\.(SF|DSA|RSA|EC)");
+    private static boolean isSignatureEntry(JarEntry je) {
+	return SIGNATURE_PATTERN.matcher(je.getName()).matches();
+    }
+
     /**
      * @throws SecurityException
      */
     @SuppressWarnings("empty-statement")
-    private static void verifyEntry (JarFile jf, JarEntry je) throws IOException {
+    private static void verifyEntry (JarFile jf, JarEntry je) throws IOException, SecurityException {
         InputStream is = null;
         try {
             is = jf.getInputStream (je);

@@ -30,11 +30,11 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.cert.CertPath;
 import java.security.cert.Certificate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -65,6 +65,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.xml.sax.SAXException;
+
+import static org.netbeans.modules.autoupdate.services.Utilities.VERIFICATION_RESULT_COMPARATOR;
 
 /**
  *
@@ -1050,29 +1052,55 @@ public class InstallSupportImpl {
     }
     
     private int verifyNbm (UpdateElement el, File nbmFile, ProgressHandle progress, int verified) throws OperationException {
-        String res;
+        String res = null;
         try {
             // get trusted certificates
-            List<Certificate> trustedCerts = new ArrayList<Certificate> ();
+            Set<Certificate> trustedCerts = new HashSet<> ();
             for (KeyStore ks : Utilities.getKeyStore ()) {
-                trustedCerts.addAll (Utilities.getCertificates (ks));
+                trustedCerts.addAll(Utilities.getCertificates(ks));
             }
             // load user certificates
             KeyStore ks = Utilities.loadKeyStore ();
             if (ks != null) {
-                trustedCerts.addAll (Utilities.getCertificates (ks));
+                trustedCerts.addAll(Utilities.getCertificates(ks));
             }
-            
+
             verified += el.getDownloadSize ();
             if (progress != null) {
                 progress.progress (el.getDisplayName (), verified < wasDownloaded ? verified : wasDownloaded);
             }
-            Collection<Certificate> nbmCerts = Utilities.getNbmCertificates (nbmFile);
-            if (nbmCerts != null && nbmCerts.size () > 0) {
-                certs.put (el, nbmCerts);
-            }
-            res = Utilities.verifyCertificates(nbmCerts, trustedCerts);
+
             UpdateElementImpl impl = Trampoline.API.impl(el);
+
+            try {
+                Collection<CertPath> nbmCerts = Utilities.getNbmCertificates(nbmFile);
+                if(nbmCerts == null) {
+                    res = Utilities.N_A;
+                } else if (nbmCerts.isEmpty()) {
+                    res = Utilities.UNSIGNED;
+                } else {
+                    // Iterate all certpaths that can be considered for the NBM
+                    // choose the certpath, that has the highest trust level
+                    // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED
+                    // or comes first
+                    for(CertPath cp: nbmCerts) {
+                        String localRes = Utilities.verifyCertificates(cp, trustedCerts);
+                        // If there is no previous result or if the local
+                        // verification yielded a better result than the
+                        // previous result, replace it
+                        if (res == null
+                            || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
+                            res = localRes;
+                            certs.put(el, (List<Certificate>) cp.getCertificates());
+                        }
+                    }
+                }
+            } catch (SecurityException ex) {
+                LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
+                res = Utilities.MODIFIED;
+                modified.add(impl);
+            }
+
             if (res != null) {
                 switch (res) {
                     case Utilities.MODIFIED:

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.49
 
 CLSS public java.lang.Object
 cons public init()
@@ -73,6 +73,7 @@ meth public java.util.List<org.netbeans.modules.editor.indent.spi.Context$Region
 meth public javax.swing.text.Document document()
 meth public org.openide.util.Lookup getLookup()
 meth public void modifyIndent(int,int) throws javax.swing.text.BadLocationException
+meth public void modifyIndent(int,int,java.lang.String) throws javax.swing.text.BadLocationException
 meth public void setCaretOffset(int) throws javax.swing.text.BadLocationException
 supr java.lang.Object
 hfds mimeItem

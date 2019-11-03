@@ -311,6 +311,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     Modules modules = Modules.instance(jtFin.getContext());
                     compiler.shouldStopPolicyIfError = CompileState.FLOW; 
                     for (Element type : types) {
+                        if (type.asType() == null || type.asType().getKind() == TypeKind.ERROR) {
+                            //likely a duplicate of another class, don't touch:
+                            continue;
+                        }
                         TreePath tp = Trees.instance(jtFin).getPath(type);
                         assert tp != null;
                         log.nerrors = 0;
@@ -510,6 +514,8 @@ final class VanillaCompileWorker extends CompileWorker {
                             s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
                     ).iterator().next();
                     decl.body = make.Block(0, com.sun.tools.javac.util.List.of(make.Throw(nct)));
+                } else {
+                    decl.body = null;
                 }
                 Type.MethodType mt;
                 if (msym.type.hasTag(TypeTag.FORALL)) {
@@ -536,6 +542,10 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitClass(ClassTree node, Void p) {
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
+                if (csym.asType() == null || csym.asType().getKind() == TypeKind.ERROR) {
+                    //likely a duplicate of another class, don't touch:
+                    return null;
+                }
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
                 ct.allparams_field = error2Object(ct.allparams_field);
@@ -600,22 +610,30 @@ final class VanillaCompileWorker extends CompileWorker {
                         wt.type = error2Object(wt.type);
                         TypeVar tv = wt.bound;
                         if (tv != null) {
-                            String[] boundNames = {"bound", "_bound"};
-                            for (String boundName : boundNames) {
-                                try {
-                                    Field bound = tv.getClass().getDeclaredField(boundName);
-                                    bound.setAccessible(true);
-                                    bound.set(tv, error2Object((Type) bound.get(tv)));
-                                } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
-                                    JavaIndex.LOG.log(Level.FINEST, null, ex);
-                                }
-                            }
-                            tv.lower = error2Object(tv.lower);
+                            clearTypeVar(tv);
                         }
+                        break;
+                    }
+                    case TYPEVAR: {
+                        clearTypeVar((Type.TypeVar) t);
                         break;
                     }
                 }
                 return t;
+            }
+
+            private void clearTypeVar(Type.TypeVar tv) {
+                String[] boundNames = {"bound", "_bound"};
+                for (String boundName : boundNames) {
+                    try {
+                        Field bound = tv.getClass().getDeclaredField(boundName);
+                        bound.setAccessible(true);
+                        bound.set(tv, error2Object((Type) bound.get(tv)));
+                    } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                        JavaIndex.LOG.log(Level.FINEST, null, ex);
+                    }
+                }
+                tv.lower = error2Object(tv.lower);
             }
 
             private com.sun.tools.javac.util.List<Type> error2Object(com.sun.tools.javac.util.List<Type> types) {

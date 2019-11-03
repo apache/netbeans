@@ -36,9 +36,10 @@ public class AmazonInstanceTest {
 
     @Test
     public void testCreateEmptyWar() throws IOException {
-        AmazonInstance ai = new AmazonInstance("dommy", "dummy", "dummy", "dummy");
+        AmazonInstance ai = new AmazonInstance("dommy", "dummy", "dummy", "dummy", "dummy");
         byte[] warData = ai.createEmptyWar();
-        Files.write(Paths.get("/home/matthias/test.zip"), warData, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        String filePath = System.getProperty("java.io.tmpdir") + "/test.zip";
+        Files.write(Paths.get(filePath), warData, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         Assert.assertNotNull(warData);
         Assert.assertTrue(warData.length > 0);
         boolean welcomePageFound = false;
@@ -59,6 +60,8 @@ public class AmazonInstanceTest {
         Assert.assertTrue(welcomePageFound);
         Assert.assertTrue(webXmlFound);
         Assert.assertTrue(manifestFound);
+        
+        Files.deleteIfExists(Paths.get(filePath));
     }
 
     private boolean streamContainsData(InputStream is) throws IOException {

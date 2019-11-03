@@ -242,7 +242,7 @@
              value="${nb.version}"/>
 
 	<set property="nb.full.version"
-             value="11.0.0.0.${nb.build.number}"/>
+             value="${nb.version.number}.0.0.${nb.build.number}"/>
 
         <set property="nb.zip.files.prefix"
              value="${nb.files.prefix}"/>
@@ -654,7 +654,6 @@ jarsigner.storepass=${jarsigner.storepass}
         <antcall target="build-engine"/>
                 
         <antcall target="build-netbeans-components"/>
-        <antcall target="build-nb-all"/>
         <antcall target="build-nbjdk-components"/>
         <antcall target="build-nbweblogic-components"/>        
 
@@ -687,10 +686,10 @@ jarsigner.storepass=${jarsigner.storepass}
         </antcall>
     </target>    
 
-    <target name="build-netbeans-components" if="do.build.netbeans">
+    <target name="build-netbeans-components" if="do.build.nb-all">
 	<set property="netbeans.group.uid" value=""/>
 	<antcall target="build-list">
-	    <param name="build.list" value="nb-base nb-extide nb-javase nb-platform-sdk nb-javafx nb-javafx-mod nb-webcommon nb-javaee nb-javacard nb-javame nb-groovy nb-cnd nb-php nb-ergonomics runtimes-group glassfish-mod tomcat jre-nested"/>
+	    <param name="build.list" value="nb-all nb-extide nb-javase nb-webcommon nb-javaee nb-php"/>
         </antcall>
      </target>
 
@@ -743,7 +742,13 @@ jarsigner.storepass=${jarsigner.storepass}
                         platform="${bundle.platform}"
                         target="${bundle.prefix}${bundle.extension}">
             <component uid="nb-all"   version="${nb.full.version}"/>
-            <bundleProperty name="${welcome.type}" value="nb-all"/>
+            <component uid="nb-extide"   version="${nb.full.version}"/>
+            <component uid="nb-javase"   version="${nb.full.version}"/>
+            <component uid="nb-php"   version="${nb.full.version}"/>
+            <component uid="nb-webcommon"   version="${nb.full.version}"/>
+            <component uid="nb-javaee"   version="${nb.full.version}"/>
+            <!--component uid="nb-cnd"   version="${nb.full.version}"/-->
+            <!--bundleProperty name="${welcome.type}" value="nb-all"/-->
             <!--                 <bundleProperty name="nbi.overall.license.resource" value="${license.resource}"/>
             -->
         </create-bundle>

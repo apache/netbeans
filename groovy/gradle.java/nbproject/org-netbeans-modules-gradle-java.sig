@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.2
+#Version 1.4
 
 CLSS public abstract interface java.io.Serializable
 
@@ -87,10 +87,15 @@ meth public java.lang.String getName()
 meth public java.lang.String getProcessResourcesTaskName()
 meth public java.lang.String getRuntimeConfigurationName()
 meth public java.lang.String getSourcesCompatibility()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String getSourcesCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.lang.String getTargetCompatibility()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String getTargetCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.lang.String getTaskName(java.lang.String,java.lang.String)
 meth public java.lang.String relativePath(java.io.File)
 meth public java.lang.String toString()
+meth public java.util.List<java.lang.String> getCompilerArgs(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType)
 meth public java.util.Set<java.io.File> getCompileClassPath()
 meth public java.util.Set<java.io.File> getOutputClassDirs()
 meth public java.util.Set<java.io.File> getRuntimeClassPath()
@@ -99,7 +104,7 @@ meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceS
 meth public java.util.Set<org.netbeans.modules.gradle.java.api.GradleJavaSourceSet> getSourceDependencies()
 meth public org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$SourceType getSourceType(java.io.File)
 supr java.lang.Object
-hfds compileClassPath,compileConfigurationName,name,outputClassDirs,outputResources,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
+hfds DEFAULT_SOURCE_COMPATIBILITY,compileClassPath,compileConfigurationName,compilerArgs,name,outputClassDirs,outputResources,runtimeClassPath,runtimeConfigurationName,sourceDependencies,sources,sourcesCompatibility,targetCompatibility,testSourceSet,webApp
 
 CLSS public final static !enum org.netbeans.modules.gradle.java.api.GradleJavaSourceSet$ClassPathType
  outer org.netbeans.modules.gradle.java.api.GradleJavaSourceSet

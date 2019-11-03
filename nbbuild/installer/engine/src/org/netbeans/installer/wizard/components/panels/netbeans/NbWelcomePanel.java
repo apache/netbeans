@@ -396,7 +396,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
         
         List <Product> jdkDependentProducts = new ArrayList<Product> ();
         for (Product product : lastChosenProducts) {
-            final List<Dependency> dependencies = product.getDependencyByUid("nb-base");
+            final List<Dependency> dependencies = product.getDependencyByUid("nb-all");
             if (dependencies.size() > 0 && product.getUid().startsWith("nb-")) {
                 final List<Product> sources =
                         Registry.getInstance().getProducts(dependencies.get(0));

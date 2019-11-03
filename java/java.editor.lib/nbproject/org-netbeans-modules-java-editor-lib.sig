@@ -1,5 +1,11 @@
 #Signature file v4.1
-#Version 1.43
+#Version 1.44
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,7 +21,34 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
+
 CLSS public org.netbeans.editor.Formatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 meth public boolean expandTabs()
 meth public int getShiftWidth()
@@ -29,8 +62,11 @@ meth public java.lang.Class getKitClass()
 meth public java.lang.String getIndentString(int)
 meth public java.lang.String getIndentString(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void setFormatter(java.lang.Class,org.netbeans.editor.Formatter)
+ anno 0 java.lang.Deprecated()
 meth public void changeBlockIndent(org.netbeans.editor.BaseDocument,int,int,int) throws javax.swing.text.BadLocationException
 meth public void changeRowIndent(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
 meth public void indentLock()
@@ -131,6 +167,7 @@ meth public org.netbeans.editor.ext.FormatTokenPosition removeLineEndWhitespace(
 supr org.netbeans.editor.ext.FormatSupport
 
 CLSS public org.netbeans.editor.ext.ExtFormatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 innr public static Simple
 intf org.netbeans.editor.ext.FormatLayer

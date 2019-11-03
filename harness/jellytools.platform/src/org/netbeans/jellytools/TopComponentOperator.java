@@ -548,7 +548,7 @@ public class TopComponentOperator extends JComponentOperator {
     public void pushMenuOnTab(String popupPath) {
         if (isOpened()) {
             this.makeComponentVisible();
-            TabbedContainer ta = (TabbedContainer) findTabbedAdapter();
+            TabbedContainer ta = findTabbedAdapter();
 
             int index = ta.indexOf((TopComponent) getSource());
 

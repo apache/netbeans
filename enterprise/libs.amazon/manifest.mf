@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.amazon/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/amazon/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.16
+OpenIDE-Module-Specification-Version: 1.17
 

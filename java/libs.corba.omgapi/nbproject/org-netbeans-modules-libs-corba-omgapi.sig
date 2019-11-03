@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.0
+#Version 1.1
 
 CLSS public com.sun.corba.ee.org.omg.CORBA.GetPropertyAction
 cons public init(java.lang.String)

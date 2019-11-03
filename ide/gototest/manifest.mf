@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.gototest/1
 OpenIDE-Module-Layer: org/netbeans/modules/gototest/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gototest/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.39
+OpenIDE-Module-Specification-Version: 1.40

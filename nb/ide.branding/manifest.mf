@@ -2,6 +2,6 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.ide.branding/1
 OpenIDE-Module-Layer: org/netbeans/modules/ide/branding/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/ide/branding/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.38
+OpenIDE-Module-Specification-Version: 1.39
 AutoUpdate-Show-In-Client: false
 

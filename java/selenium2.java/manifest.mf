@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.selenium2.java
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/selenium2/java/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.selenium2.java
-OpenIDE-Module-Specification-Version: 1.8
+OpenIDE-Module-Specification-Version: 1.9
 

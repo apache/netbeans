@@ -3,6 +3,6 @@ OpenIDE-Module: org.netbeans.modules.timers/1
 OpenIDE-Module-Layer: org/netbeans/modules/timers/resources/layer.xml
 OpenIDE-Module-Install: org/netbeans/modules/timers/Install.class
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/timers/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 AutoUpdate-Show-In-Client: true
 

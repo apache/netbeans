@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 OpenIDE-Module: org.netbeans.modules.xml.retriever/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/retriever/Bundle.properties

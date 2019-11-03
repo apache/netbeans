@@ -444,7 +444,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "/**\n"
                 + " * \n"
                 + " * @param string|null $string\n"
-                + " * @return Foo|null^\n"
+                + " * @return \\Foo|null^\n"
                 + " */\n"
                 + "function test(?string $string): ?Foo {\n"
                 + "    \n"

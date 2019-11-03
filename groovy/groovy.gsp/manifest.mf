@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.groovy.gsp
 OpenIDE-Module-Layer: org/netbeans/modules/groovy/gsp/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/groovy/gsp/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.40
+OpenIDE-Module-Specification-Version: 1.41

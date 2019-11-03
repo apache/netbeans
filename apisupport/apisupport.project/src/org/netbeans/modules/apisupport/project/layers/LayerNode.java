@@ -184,9 +184,7 @@ public final class LayerNode extends FilterNode implements Node.Cookie {
                     if (highlighted != null) {
                         // Boldface resources which do come from this project.
                         boolean local = false;
-                        Iterator it = files.iterator();
-                        while (it.hasNext()) {
-                            FileObject f = (FileObject) it.next();
+                        for (FileObject f : files) {
                             if (!f.isRoot() && highlighted.findResource(f.getPath()) != null) {
                                 local = true;
                                 break;

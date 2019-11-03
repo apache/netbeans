@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.performance.web
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/performance/web/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.9
+OpenIDE-Module-Specification-Version: 1.10
 

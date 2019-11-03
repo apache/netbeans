@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.core.nativeaccess/1
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/nativeaccess/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.core.windows.nativeaccess.NativeWindowSystem
 

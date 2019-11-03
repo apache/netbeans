@@ -38,9 +38,11 @@ Apache NetBeans is an open source development environment, tooling platform, and
   * JDK 9 or above (to run NetBeans)
   * MinGW (optional), to build Windows Launchers
 
-**Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+#### Notes:
 
-**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
+* NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+* NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
+* Set JAVA_HOME and ANT_HOME appropriately or leave them undefined.
 
 ### Building NetBeans
 

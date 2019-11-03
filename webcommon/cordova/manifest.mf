@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.cordova
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cordova/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.39
+OpenIDE-Module-Specification-Version: 1.40
 OpenIDE-Module-Layer: org/netbeans/modules/cordova/resources/layer.xml
 OpenIDE-Module-Recommends: cnb.org.netbeans.modules.cordova.platforms.ios
 

@@ -22,11 +22,11 @@ package org.netbeans.modules.masterfs.watcher.windows;
 import org.netbeans.modules.masterfs.providers.Notifier;
 import com.sun.jna.FromNativeContext;
 import com.sun.jna.IntegerType;
-import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.PointerType;
 import com.sun.jna.Structure;
+import com.sun.jna.Structure.FieldOrder;
 import com.sun.jna.ptr.ByReference;
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +36,8 @@ import java.util.Map;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
-import com.sun.jna.win32.W32APIFunctionMapper;
-import com.sun.jna.win32.W32APITypeMapper;
+import com.sun.jna.win32.W32APIOptions;
 import java.io.InterruptedIOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -90,33 +87,22 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
 
         public ULONG_PTR(long value) {
-                super(Pointer.SIZE, value);
+                super(Native.POINTER_SIZE, value);
         }
     }
 
+    @SuppressWarnings("PublicField")
+    @FieldOrder({"Internal", "InternalHigh", "Offset", "OffsetHigh", "hEvent"})
     public static class OVERLAPPED extends Structure {
         public ULONG_PTR Internal;
         public ULONG_PTR InternalHigh;
         public int Offset;
         public int OffsetHigh;
         public HANDLE hEvent;
-
-        @Override
-        protected List getFieldOrder() {
-            return Arrays.asList( new String[] {
-                "Internal",
-                "InternalHigh",
-                "Offset",
-                "OffsetHigh",
-                "hEvent",
-            } );
-        }
     }
 
     public static HANDLE INVALID_HANDLE_VALUE = new HANDLE(Pointer.createConstant(
-    		Pointer.SIZE == 8 ? -1 : 0xFFFFFFFFL));
-
-
+    		Native.POINTER_SIZE == 8 ? -1 : 0xFFFFFFFFL));
 
     public static class HANDLEByReference extends ByReference {
 
@@ -125,7 +111,7 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
 
         public HANDLEByReference(HANDLE h) {
-            super(Pointer.SIZE);
+            super(Native.POINTER_SIZE);
             setValue(h);
         }
 
@@ -145,6 +131,8 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
     }
 
+    @SuppressWarnings("PublicField")
+    @FieldOrder({"NextEntryOffset", "Action", "FileNameLength", "FileName"})
     public static class FILE_NOTIFY_INFORMATION extends Structure {
         public int NextEntryOffset;
         public int Action;
@@ -160,16 +148,6 @@ public final class WindowsNotifier extends Notifier<Void> {
                                + size() + ", requested " + size);
             }
             allocateMemory(size);
-        }
-
-        @Override
-        protected List getFieldOrder() {
-            return Arrays.asList( new String[] {
-                "NextEntryOffset",
-                "Action",
-                "FileNameLength",
-                "FileName",
-            } );
         }
 
         /** WARNING: this filename may be either the short or long form of the filename. */
@@ -195,19 +173,12 @@ public final class WindowsNotifier extends Notifier<Void> {
         }
     }
 
+    @SuppressWarnings("PublicField")
+    @FieldOrder({"nLength", "lpSecurityDescriptor", "bInheritHandle"})
     public static class SECURITY_ATTRIBUTES extends Structure {
         public final int nLength = size();
         public Pointer lpSecurityDescriptor;
         public boolean bInheritHandle;
-
-        @Override
-        protected List getFieldOrder() {
-            return Arrays.asList( new String[] {
-                "nLength",
-                "lpSecurityDescriptor",
-                "bInheritHandle",
-            } );
-        }
     }
 
     interface Kernel32 extends StdCallLibrary {
@@ -244,13 +215,7 @@ public final class WindowsNotifier extends Notifier<Void> {
 
     }
 
-    final static Kernel32 KERNEL32 = Native.loadLibrary("kernel32", Kernel32.class,
-            new HashMap() {{
-                put(Library.OPTION_TYPE_MAPPER, W32APITypeMapper.UNICODE);
-                put(Library.OPTION_FUNCTION_MAPPER, W32APIFunctionMapper.UNICODE);
-            }});
-
-
+    final static Kernel32 KERNEL32 = Native.load("kernel32", Kernel32.class, W32APIOptions.UNICODE_OPTIONS);
 
     public WindowsNotifier() { // prepare port, start thread?
     }

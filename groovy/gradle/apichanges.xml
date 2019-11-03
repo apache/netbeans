@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change>
+            <api name="execution"/>
+            <summary>Added <code>RunUtils.cancelGradle(RunConfig)</code> to allow plugins to cancel an executed Gradle process.</summary>
+            <version major="1" minor="4"/>
+            <date year="2019" month="10" day="22"/>
+            <author login="lkishalmi"/>
+            <compatibility source="compatible"/>
+            <description>
+                <p>
+                    Added <code>RunUtils.cancelGradle(RunConfig)</code> to allow plugins to cancel an executed Gradle process.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+            <issue number="NETBEANS-3279"/>
+        </change>
     </changes>
 
     <!-- Now the surrounding HTML text and document structure: -->

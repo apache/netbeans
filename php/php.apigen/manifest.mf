@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.apigen
 OpenIDE-Module-Layer: org/netbeans/modules/php/apigen/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/apigen/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.33
+OpenIDE-Module-Specification-Version: 1.34

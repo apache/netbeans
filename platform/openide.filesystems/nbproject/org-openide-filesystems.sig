@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.15
+#Version 9.16
 
 CLSS public java.io.IOException
 cons public init()
@@ -536,7 +536,7 @@ meth public static void removeRecursiveListener(org.openide.filesystems.FileChan
 meth public static void setMIMEType(java.lang.String,java.lang.String)
 meth public static void setOrder(java.util.List<org.openide.filesystems.FileObject>) throws java.io.IOException
 supr java.lang.Object
-hfds LOG,REFRESH_RP,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
+hfds LOG,REFRESH_RP,archiveRootProviderCache,archiveRootProviders,diskFileSystem,normalizedRef,refreshTask,transientAttributes
 hcls NonCanonicalizingFile
 
 CLSS public org.openide.filesystems.JarFileSystem

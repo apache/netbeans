@@ -94,6 +94,7 @@ public final class AmazonJ2EEServerInstanceProvider implements ServerInstancePro
                     props.put(AmazonDeploymentFactory.IP_CONTAINER_TYPE, inst.getContainerType());
                     props.put(InstanceProperties.URL_ATTR, inst.getId());
                     props.put(AmazonDeploymentFactory.IP_REGION_URL, ai.getRegionURL());
+                    props.put(AmazonDeploymentFactory.IP_REGION_CODE, ai.getRegionCode());
                     try {
                         ip = InstanceProperties.createInstancePropertiesNonPersistent(inst.getId(), 
                                 ai.getKeyId(), ai.getKey(), inst.getDisplayName(), props);

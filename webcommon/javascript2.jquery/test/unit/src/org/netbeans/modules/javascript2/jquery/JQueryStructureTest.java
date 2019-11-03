@@ -38,10 +38,6 @@ public class JQueryStructureTest extends JsTestBase {
         super.assertDescriptionMatches(fileObject, description, includeTestName, ext, true);
     }
     
-    public void testIssue238856() throws Exception {
-        checkStructure("testfiles/jquery/issue238856.js");
-    }
-    
     public void testIssue236722() throws Exception {
         checkStructure("testfiles/jquery/issue236722.js");
     }

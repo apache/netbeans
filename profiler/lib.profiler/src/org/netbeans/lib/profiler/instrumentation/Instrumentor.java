@@ -140,7 +140,7 @@ public class Instrumentor implements CommonConstants {
 
     // --------------------------------------- Public interface ----------------------------------------------------------
     public String[] getRootClassNames() {
-        List /*<String>*/ rootClassNames = rootMethods.getRootClassNames();
+        List<String> rootClassNames = rootMethods.getRootClassNames();
         RuntimeProfilingPoint[] pps = settings.getRuntimeProfilingPoints();
 
         if ((rootClassNames == null) && (pps.length > 0)) {

@@ -65,7 +65,7 @@ public class ImagePrintSupport implements PrintCookie, Printable, ImageObserver 
             AffineTransform af = new AffineTransform();
             if( pf.getOrientation() == pf.LANDSCAPE ){
             }else{
-                af.translate( (double)pf.getImageableX(), (double)pf.getImageableY() );
+                af.translate(pf.getImageableX(), pf.getImageableY());
             }
             
             /** notify if too big for page **/

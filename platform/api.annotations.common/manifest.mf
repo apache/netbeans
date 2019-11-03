@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.api.annotations.common/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/annotations/common/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.33
+OpenIDE-Module-Specification-Version: 1.34
 

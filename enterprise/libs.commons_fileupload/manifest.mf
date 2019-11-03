@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.libs.commons_fileupload/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/commons_fileupload/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.31
+OpenIDE-Module-Specification-Version: 1.32

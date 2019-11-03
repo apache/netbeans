@@ -59,7 +59,7 @@
             </p>
 
             <h1>Introduction</h1>
-            <p>This document lists changes made to the <a href="@org-netbeans-modules-db-metadata-model@/overview-summary.html">Core IDE API</a>.</p>
+            <p>This document lists changes made to the <a href="@org-netbeans-modules-db-metadata-model@/overview-summary.html">DB Metadata Model API</a>.</p>
 
             <hr/>
             <standard-changelists module-code-name="org.netbeans.modules.db.metadata.model"/>

@@ -52,7 +52,6 @@ public class NBJavacTrees extends JavacTrees {
             }
         });
     }
-
     protected NBJavacTrees(Context context) {
         super(context);
     }

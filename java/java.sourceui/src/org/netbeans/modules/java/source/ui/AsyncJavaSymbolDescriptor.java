@@ -214,6 +214,7 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
             final Symtab syms = Symtab.instance(jt.getContext());
             final Set<?> pkgs = new HashSet<>(getPackages(syms).keySet());
             final Set<?> clzs = new HashSet<>(getClasses(syms).keySet());
+            jt.getElements().getTypeElement("java.lang.Object"); // Ensure proper javac initialization
             final TypeElement te = (TypeElement) ElementUtils.getTypeElementByBinaryName(jt,
                     ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0]);
             if (te != null) {

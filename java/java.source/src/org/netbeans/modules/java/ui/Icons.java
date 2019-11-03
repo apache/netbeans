@@ -19,15 +19,12 @@
 
 package org.netbeans.modules.java.ui;
 
-import java.awt.Image;
 import java.util.Collection;
 import java.util.Collections;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -44,64 +41,59 @@ public final class Icons {
     private Icons() {
     }
     
-    public static Icon getBusyIcon () {
-        Image img = ImageUtilities.loadImage (WAIT);
-        if (img == null) {
-            return null;
-        }
-        else {
-            return ImageUtilities.image2Icon (img);
-        }
+    public static ImageIcon getBusyIcon () {
+        ImageIcon icon = ImageUtilities.loadImageIcon(WAIT, false);
+        return icon;
     }
             
     
-    public static Icon getElementIcon( ElementKind elementKind, Collection<Modifier> modifiers ) {
+    public static ImageIcon getElementIcon( ElementKind elementKind, Collection<Modifier> modifiers ) {
         
         if ( modifiers == null ) {
             modifiers = Collections.<Modifier>emptyList();
         }
         
-        Image img = null;
+        ImageIcon icon = null;
 	
 	switch( elementKind ) {
             case MODULE:
-                img = ImageUtilities.loadImage( ICON_BASE + "module" + PNG_EXTENSION );
+                icon = ImageUtilities.loadImageIcon(ICON_BASE + "module" + PNG_EXTENSION, false );
 		break;
 	    case PACKAGE:
-		img = ImageUtilities.loadImage( ICON_BASE + "package" + GIF_EXTENSION );
+		icon = ImageUtilities.loadImageIcon(ICON_BASE + "package" + GIF_EXTENSION, false );
 		break;
 	    case ENUM:	
-		img = ImageUtilities.loadImage( ICON_BASE + "enum" + PNG_EXTENSION );
+		icon = ImageUtilities.loadImageIcon( ICON_BASE + "enum" + PNG_EXTENSION, false );
 		break;
 	    case ANNOTATION_TYPE:
-		img = ImageUtilities.loadImage( ICON_BASE + "annotation" + PNG_EXTENSION );
+		icon = ImageUtilities.loadImageIcon( ICON_BASE + "annotation" + PNG_EXTENSION, false );
 		break;
 	    case CLASS:	
-		img = ImageUtilities.loadImage( ICON_BASE + "class" + PNG_EXTENSION );
+		icon = ImageUtilities.loadImageIcon( ICON_BASE + "class" + PNG_EXTENSION, false );
 		break;
 	    case INTERFACE:
-		img = ImageUtilities.loadImage( ICON_BASE + "interface"  + PNG_EXTENSION );
+		icon = ImageUtilities.loadImageIcon( ICON_BASE + "interface"  + PNG_EXTENSION, false );
 		break;
 	    case FIELD:
-		img = ImageUtilities.loadImage( getIconName(elementKind, ICON_BASE + "field", PNG_EXTENSION, modifiers ) );
+		icon = ImageUtilities.loadImageIcon(getIconName(elementKind, ICON_BASE + "field", PNG_EXTENSION, modifiers ), false );
 		break;
 	    case ENUM_CONSTANT: 
-		img = ImageUtilities.loadImage( ICON_BASE + "constant" + PNG_EXTENSION );
+		icon = ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false );
 		break;
 	    case CONSTRUCTOR:
-		img = ImageUtilities.loadImage( getIconName(elementKind, ICON_BASE + "constructor", PNG_EXTENSION, modifiers ) );
+		icon = ImageUtilities.loadImageIcon(getIconName(elementKind, ICON_BASE + "constructor", PNG_EXTENSION, modifiers ), false );
 		break;
 	    case INSTANCE_INIT: 	
 	    case STATIC_INIT: 	
-		img = ImageUtilities.loadImage( getIconName(elementKind, ICON_BASE + "initializer", PNG_EXTENSION, modifiers ) );
+		icon = ImageUtilities.loadImageIcon(getIconName(elementKind, ICON_BASE + "initializer", PNG_EXTENSION, modifiers ), false );
 		break;
 	    case METHOD: 	
-		img = ImageUtilities.loadImage( getIconName(elementKind, ICON_BASE + "method", PNG_EXTENSION, modifiers ) );
+		icon = ImageUtilities.loadImageIcon(getIconName(elementKind, ICON_BASE + "method", PNG_EXTENSION, modifiers ), false );
 		break;
 	    default:	
-	        img = null;
+	        icon = null;
         }
-	return img == null ? null : ImageUtilities.image2Icon (img);
+	return icon;
         
     }
     

@@ -1,0 +1,1 @@
+fn(int $|>MARK_OCCURRENCES:x<|): int => $^|>MARK_OCCURRENCES:x<|; // return type

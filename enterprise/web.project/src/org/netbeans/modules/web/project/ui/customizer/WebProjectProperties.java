@@ -381,6 +381,8 @@ final public class WebProjectProperties {
             minimalSourceLevel = new SpecificationVersion("1.5");
         } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.7");
+        } else if (Profile.JAVA_EE_8_FULL.equals(profile)) {
+            minimalSourceLevel = new SpecificationVersion("1.8");
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel (PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();

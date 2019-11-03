@@ -24,7 +24,7 @@
     <welcome file="Welcome.html"></welcome>
     <license file="License.txt"></license>
     <background file="background.tif" scaling="none" alignment="bottomleft"></background>
-    <options allow-external-scripts="yes" customize="never" rootVolumeOnly="true" hostArchitectures="i386"></options>
+    <options allow-external-scripts="yes" customize="yes" rootVolumeOnly="false" hostArchitectures="i386"></options>
     <installation-check script="checkSystem()"></installation-check>
     <volume-check script="checkSystemversion()"></volume-check>
     <script>
@@ -136,12 +136,32 @@ function checkSystemversion() {
         <line choice="postinstallscripts"></line>
     </choices-outline>
     <choice id="netbeans" title="netbeans-title" description="netbeans-description" start_selected="true" start_enabled="true" start_visible="true"></choice>
-    <choice id="nbide" title="nbide-title" description="nbide--description" start_selected="true" start_enabled="true" start_visible="true">
+    <choice id="nbide" title="nbide-title" description="nbide-description" start_selected="true" start_enabled="true" start_visible="true">
         <pkg-ref id="ident.pkg.nbide"></pkg-ref>
+    </choice>
+    <choice id="javase" title="javase-title" description="javase-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.javase"></pkg-ref>
+    </choice>
+    <choice id="javaee" title="javaee-title" description="javaee-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.javaee"></pkg-ref>
+    </choice>
+    <choice id="webcommon" title="webcommon-title" description="webcommon-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.webcommon"></pkg-ref>
+    </choice>
+    <choice id="php" title="php-title" description="php-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.php"></pkg-ref>
+    </choice>
+    <choice id="cpp" title="cpp-title" description="cpp-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.cpp"></pkg-ref>
     </choice>
     <choice id="postinstallscripts" title="postinstallscripts-title" description="postinstallscripts-description" start_selected="true" start_enabled="true" start_visible="false" selected="true" enabled="true" visible="false">
         <pkg-ref id="ident.pkg.postinstallscripts"></pkg-ref>
     </choice>
     <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_NBIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.javase" version="0.0.0.0.1" installKBytes="@SIZE_JAVASE@" auth="Root" onConclusion="None">javase-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.javaee" version="0.0.0.0.1" installKBytes="@SIZE_JAVAEE@" auth="Root" onConclusion="None">javaee-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.webcommon" version="0.0.0.0.1" installKBytes="@SIZE_WEBCOMMON@" auth="Root" onConclusion="None">webcommon-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.php" version="0.0.0.0.1" installKBytes="@SIZE_PHP@" auth="Root" onConclusion="None">php-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.cpp" version="0.0.0.0.1" installKBytes="@SIZE_CPP@" auth="Root" onConclusion="None">cpp-@NB_ID@.pkg</pkg-ref>
     <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
 </installer-gui-script>

@@ -1043,7 +1043,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
     private Profile getProfile() {
         Properties properties = panel.getController().getProperties();
         String j2eeLevel = (String)properties.getProperty("j2eeLevel"); // NOI18N
-        return j2eeLevel == null ? Profile.JAVA_EE_7_FULL : Profile.fromPropertiesString(j2eeLevel);
+        return j2eeLevel == null ? Profile.JAVA_EE_8_FULL : Profile.fromPropertiesString(j2eeLevel);
     }
 
     void update() {

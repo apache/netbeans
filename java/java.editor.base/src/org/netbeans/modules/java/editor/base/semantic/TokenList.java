@@ -240,6 +240,30 @@ public class TokenList {
         });
     }
     
+    public Token currentToken() {
+        Token[] res = new Token[1];
+        doc.render(new Runnable() {
+            @Override
+            public void run() {
+                if (cancel.get()) {
+                    return ;
+                }
+
+                if (ts != null && !ts.isValid()) {
+                    cancel.set(true);
+                    return ;
+                }
+
+                if (ts == null) {
+                    return ;
+                }
+
+                res[0] = ts.token();
+            }
+        });
+        return res[0];
+    }
+
     public void moduleNameHere(final ExpressionTree tree, final Map<Tree, List<Token>> tree2Tokens) {
         doc.render(new Runnable() {
             @Override

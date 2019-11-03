@@ -54,16 +54,16 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
     private static final OutputProcessor JAVAC_PROCESSOR = new JavaCompilerProcessor();
     private static final OutputProcessor GROOVYC_PROCESSOR = new GroovyCompilerProcessor();
 
-    
+
     @Override
     public Set<? extends OutputProcessor> createOutputProcessors(RunConfig cfg) {
         return new HashSet<>(Arrays.asList(URL_PROCESSOR, GRADLE_PROCESSOR, JAVAC_PROCESSOR, GROOVYC_PROCESSOR));
     }
 
-    private static final class URLOutputProcessor implements OutputProcessor {
+    static final class URLOutputProcessor implements OutputProcessor {
 
-        private static final Pattern URL_PATTERN = Pattern.compile("((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
-        
+        private static final Pattern URL_PATTERN = Pattern.compile("(((https?|ftp|file)://|file:/)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
+
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
             Matcher m = URL_PATTERN.matcher(line);
@@ -84,10 +84,10 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
             }
             return last > 0;
         }
-        
+
     }
 
-    private static class GradleOutputProcessor implements OutputProcessor {
+    static class GradleOutputProcessor implements OutputProcessor {
 
         private static final Pattern GRADLE_ERROR = Pattern.compile("(Build file|Script) '(.*)\\.gradle' line: ([0-9]+)");
 
@@ -100,21 +100,19 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
                 File gradleFile = FileUtil.normalizeFile(new File( buildFile + ".gradle"));
                 FileObject file = FileUtil.toFileObject(gradleFile);
-                if (file != null) {
-                    int l = 1;
-                    try {
-                        l = Integer.parseInt(lineNum);
-                    } catch (NumberFormatException ex) {
-                    }
-                    out.print("Script '" + buildFile + ".gradle' line: " + lineNum, OutputListeners.openFileAt(file, l, 1));
-                    return true;
+                int l = 1;
+                try {
+                    l = Integer.parseInt(lineNum);
+                } catch (NumberFormatException ex) {
                 }
+                out.print("Script '" + buildFile + ".gradle' line: " + lineNum, OutputListeners.openFileAt(file, l, 1));
+                return true;
             }
             return false;
-        }    
+        }
     }
 
-    private static class JavaCompilerProcessor implements OutputProcessor {
+    static class JavaCompilerProcessor implements OutputProcessor {
 
         private static final Pattern JAVA_ERROR = Pattern.compile("(.*)\\.java\\:([0-9]+)\\: (error|warning)\\:(.*)");
 
@@ -129,25 +127,24 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
 
                 File javaFile = FileUtil.normalizeFile(new File(classBase + ".java"));
                 FileObject file = FileUtil.toFileObject(javaFile);
-                if (file != null) {
-                    int l = 1;
-                    try {
-                        l = Integer.parseInt(lineNum);
-                    } catch (NumberFormatException ex) {
-                    }
-                    out.print(classBase + ".java:" + lineNum, OutputListeners.openFileAt(file, l, 1));
-                    out.print(": " + type + ":" + text);
-                    return true;
+                int l = 1;
+                try {
+                    l = Integer.parseInt(lineNum);
+                } catch (NumberFormatException ex) {
                 }
+                out.print(classBase + ".java:" + lineNum, OutputListeners.openFileAt(file, l, 1));
+                out.print(": " + type + ":" + text);
+                return true;
             }
             return false;
         }
 
     }
 
-    private static class GroovyCompilerProcessor implements OutputProcessor {
+    static class GroovyCompilerProcessor implements OutputProcessor {
 
-        private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: ([0-9]+)\\: (.*)( at line: ([0-9]+) column: ([0-9]+). File: (.*) @ (.*))?");
+        private static final Pattern GROOVY_ERROR = Pattern.compile("(.*)\\.groovy\\: ([0-9]+)\\: (.+)");
+        private static final Pattern COLUMN_INFO = Pattern.compile(" @ line ([0-9]+), column ([0-9]+)\\.$");
 
         @Override
         public boolean processLine(OutputDisplayer out, String line) {
@@ -157,29 +154,29 @@ public class GradleProcessorFactory implements OutputProcessorFactory {
                 String text = m.group(3);
                 String lineNum = m.group(2);
                 String colNum = "1";
-                if (m.group(4) != null) {
-                    lineNum = m.group(5);
-                    colNum = m.group(6);
+
+                Matcher colm = COLUMN_INFO.matcher(text);
+                if (colm.find()) {
+                    lineNum = colm.group(1);
+                    colNum = colm.group(2);
                 }
 
-                File javaFile = FileUtil.normalizeFile(new File(classBase + ".groovy"));
-                FileObject file = FileUtil.toFileObject(javaFile);
-                if (file != null) {
-                    int l = 1;
-                    int c = 1;
-                    try {
-                        l = Integer.parseInt(lineNum);
-                        c = Integer.parseInt(colNum);
-                    } catch (NumberFormatException ex) {
-                    }
-                    out.print(classBase + ".groovy:" + lineNum + ':' + colNum, OutputListeners.openFileAt(file, l, c));
-                    out.print(": " + text);
-                    return true;
+                File groovyFile = FileUtil.normalizeFile(new File(classBase + ".groovy"));
+                FileObject file = FileUtil.toFileObject(groovyFile);
+                int l = 1;
+                int c = 1;
+                try {
+                    l = Integer.parseInt(lineNum);
+                    c = Integer.parseInt(colNum);
+                } catch (NumberFormatException ex) {
                 }
+                out.print(classBase + ".groovy: " + lineNum, OutputListeners.openFileAt(file, l, c));
+                out.print(": " + text);
+                return true;
             }
             return false;
         }
 
     }
-    
+
 }

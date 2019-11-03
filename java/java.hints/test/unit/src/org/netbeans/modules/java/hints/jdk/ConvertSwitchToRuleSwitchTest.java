@@ -497,20 +497,20 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
-                       "     private void test(int p) {\n" +
-                       "         String result;\n" +
-                       "         switch (p) {\n" +
-                       "             case 1:\n" +
-                       "             case 2: result = \"2\"; break;\n" +
-                       "             case 3: result = \"3\"; break;\n" +
-                       "             default: result = \"default\"; break;\n" +
-                       "         }\n" +
-                       "     }\n" +
+                       "    private void test(int p) {\n" +
+                       "        String result;\n" +
+                       "        switch (p) {\n" +
+                       "            case 1:\n" +
+                       "            case 2: result = \"2\"; break;\n" +
+                       "            case 3: result = \"3\"; break;\n" +
+                       "            default: result = \"default\"; break;\n" +
+                       "        }\n" +
+                       "    }\n" +
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertSwitchToRuleSwitch.class)
-                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;" +
@@ -523,6 +523,67 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "             default -> \"default\";\n" +
                               "         };\n" +
                               "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionMultiCase2() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "    private void test(int p) {\n" +
+                       "        String result;\n" +
+                       "        switch (p) {\n" +
+                       "            case 1:\n" +
+                       "            case 2: result = \"2\"; break;\n" +
+                       "            case 3: result = \"3\"; break;\n" +
+                       "            default: result = \"default\";\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "    private void test(int p) {\n" +
+                              "        String result;\n" +
+                              "        result = switch (p) {\n" +
+                              "            case 1, 2 -> \"2\";\n" +
+                              "            case 3 -> \"3\";\n" +
+                              "            default -> \"default\";\n" +
+                              "        };\n" +
+                              "    }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionOnlyDefault() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "    private void test(int p) {\n" +
+                       "        String result;\n" +
+                       "        switch (p) {\n" +
+                       "            default: result = \"default\";\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "    private void test(int p) {\n" +
+                              "        String result;\n" +
+                              "        result = switch (p) {\n" +
+                              "            default -> \"default\";\n" +
+                              "        };\n" +
+                              "    }\n" +
                               "}\n");
     }
 
@@ -590,6 +651,100 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "             case 1 -> \"1\";\n" +
                               "             default -> \"default\";\n" +
                               "         };\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionTypeCast() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p, Object o1, Object o2) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 1: result =  (String)o1; break;\n" +
+                       "             default: result = (String)o2; break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private void test(int p, Object o1, Object o2) {\n" +
+                              "         String result;\n" +
+                              "         result = (String) (switch (p) {\n" +
+                              "             case 1 -> o1;\n" +
+                              "             default -> o2;\n" +
+                              "         });\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionTypeCastReturn() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private String test(int p, Object o1, Object o2) {\n" +
+                       "         switch (p) {\n" +
+                       "             case 1: return (String)o1;\n" +
+                       "             default: return (String)o2;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private String test(int p, Object o1, Object o2) {\n" +
+                              "         return (String) (switch (p) {\n" +
+                              "             case 1 -> o1;\n" +
+                              "             default -> o2;\n" +
+                              "         });\n" +
+                              "     }\n" +
+                              "}\n");
+    }
+
+    public void testSwitch2SwitchExpressionNestedSwitchExpression() throws Exception {
+        HintTest.create()
+                .input("package test;" +
+                       "public class Test {\n" +
+                       "     private void test(int p, int q, Object o1, Object o2) {\n" +
+                       "         String result;\n" +
+                       "         switch (p) {\n" +
+                       "             case 1: result =  (String)(switch(q){ \n" +
+                       "                        case 2 -> o2; \n" +
+                       "                        default -> o1;\n" +
+                       "                        }); break; \n" +
+                       "             default: result = (String)o2; break;\n" +
+                       "         }\n" +
+                       "     }\n" +
+                       "}\n")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;" +
+                              "public class Test {\n" +
+                              "     private void test(int p, int q, Object o1, Object o2) {\n" +
+                              "         String result;\n" +
+                              "         result = (String) (switch (p) {\n" +
+                              "             case 1 -> switch(q){ \n" +
+                              "                        case 2 -> o2; \n" +
+                              "                        default -> o1;\n" +
+                              "                        };\n" +
+                              "             default -> o2;\n" +
+                              "         });\n" +
                               "     }\n" +
                               "}\n");
     }

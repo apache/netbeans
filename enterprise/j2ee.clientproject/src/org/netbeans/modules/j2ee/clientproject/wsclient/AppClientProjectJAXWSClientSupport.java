@@ -98,6 +98,10 @@ public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSuppor
                 return JAVA_EE_VERSION_17;
             } else if (Profile.JAVA_EE_7_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_17;
+            } else if (Profile.JAVA_EE_8_WEB.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
+            } else if (Profile.JAVA_EE_8_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAVA_EE_VERSION_18;
             } else if (Profile.JAVA_EE_5.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

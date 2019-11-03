@@ -63,16 +63,16 @@
         
         <echo message="Delete launchers for another platforms"/>
         <delete>
-            <fileset dir="${appdir}/Contents/Resources/NetBeans/bin" includes="*.exe"/>
+            <fileset dir="${appdir}/Contents/Resources/NetBeans/netbeans/bin" includes="*.exe"/>
         </delete>
         
         <echo message="Copying the icon into the correct place" />
-        <copy file="${appdir}/Contents/Resources/NetBeans/${nbClusterDir}/netbeans.icns" todir="${appdir}/Contents/Resources"/>
+        <copy file="${appdir}/Contents/Resources/NetBeans/netbeans/${nbClusterDir}/netbeans.icns" todir="${appdir}/Contents/Resources"/>
         
         <echo message="Creating launch script symlink ${appdir}/Contents/MacOS/netbeans"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="ln -s '../Resources/NetBeans/bin/netbeans' '${appdir}/Contents/MacOS/netbeans'"/>
+            <arg value="ln -s '../Resources/NetBeans/netbeans/bin/netbeans' '${appdir}/Contents/MacOS/netbeans'"/>
         </exec>
     </target>
     
@@ -103,7 +103,6 @@ NB_ID="${nb.id}"
             <fileset dir="${basedir}/pkg/scripts"/>
         </copy>
         
-        <copy file="${basedir}/../../commonfiles/unpack200.sh" tofile="${scriptsdir}/unpack200.sh"/>
         <copy file="${basedir}/../../commonfiles/get_current_jdk.sh" tofile="${scriptsdir}/get_current_jdk.sh"/>
         <copy file="${basedir}/../../commonfiles/postupgrade_generic" tofile="${scriptsdir}/postupgrade" overwrite="false"/>
         <copy file="${basedir}/../../commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall" overwrite="false"/>

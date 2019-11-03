@@ -22,16 +22,13 @@ import java.util.Properties;
 import org.netbeans.modules.html.parser.model.HtmlTagProvider;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
-import static junit.framework.Assert.assertNotNull;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.junit.Ignore;
 import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzer;
 import org.netbeans.modules.html.editor.lib.api.elements.Attribute;
 import org.netbeans.modules.html.editor.lib.api.elements.CloseTag;
@@ -1150,7 +1147,7 @@ public class Html5ParserTest extends NbTestCase {
         //is correct, second one is completely
         //out of the source are and a third one which represents
         //the close tag after the quotes.
-        assertEquals(2, attrs.size());
+        assertEquals(3, attrs.size());
 
         Attribute href = attrs.iterator().next();
         assertNotNull(href);
@@ -1283,6 +1280,116 @@ public class Html5ParserTest extends NbTestCase {
         
         assertFalse(attrs.hasNext());
         
+    }
+
+    public void testAngularPropertyBind() throws ParseException {
+        HtmlParseResult propertyBind = parse("<input x='y' [ngModel]='test' />");
+        assertTrue(propertyBind.getProblems().isEmpty());
+        Node root = propertyBind.root();
+        OpenTag inputElement = ElementUtils.query(root, "html/body/input");
+        assertNotNull(inputElement);
+        assertTrue(inputElement.attributes().size() == 2);
+        boolean validatedPlain = false;
+        boolean validatedAngularStyle = false;
+        for(Attribute attr: inputElement.attributes()) {
+            String attrName = attr.name().toString();
+            String attrValue = attr.unquotedValue().toString();
+            if(attrName.equals("x") && attrValue.equals("y")) {
+                validatedPlain = true;
+            } else if (attrName.equals("[ngModel]") && attrValue.equals("test")) {
+                validatedAngularStyle = true;
+            }
+        }
+        assertTrue(validatedPlain);
+        assertTrue(validatedAngularStyle);
+    }
+
+    public void testAngularEventBind() throws ParseException {
+        HtmlParseResult propertyBind = parse("<input x='y' (click)='test' />");
+        assertTrue(propertyBind.getProblems().isEmpty());
+        Node root = propertyBind.root();
+        OpenTag inputElement = ElementUtils.query(root, "html/body/input");
+        assertNotNull(inputElement);
+        assertTrue(inputElement.attributes().size() == 2);
+        boolean validatedPlain = false;
+        boolean validatedAngularStyle = false;
+        for(Attribute attr: inputElement.attributes()) {
+            String attrName = attr.name().toString();
+            String attrValue = attr.unquotedValue().toString();
+            if(attrName.equals("x") && attrValue.equals("y")) {
+                validatedPlain = true;
+            } else if (attrName.equals("(click)") && attrValue.equals("test")) {
+                validatedAngularStyle = true;
+            }
+        }
+        assertTrue(validatedPlain);
+        assertTrue(validatedAngularStyle);
+    }
+
+    public void testAngularTwoWayBind() throws ParseException {
+        HtmlParseResult propertyBind = parse("<input x='y' [(value)]='test' />");
+        assertTrue(propertyBind.getProblems().isEmpty());
+        Node root = propertyBind.root();
+        OpenTag inputElement = ElementUtils.query(root, "html/body/input");
+        assertNotNull(inputElement);
+        assertTrue(inputElement.attributes().size() == 2);
+        boolean validatedPlain = false;
+        boolean validatedAngularStyle = false;
+        for(Attribute attr: inputElement.attributes()) {
+            String attrName = attr.name().toString();
+            String attrValue = attr.unquotedValue().toString();
+            if(attrName.equals("x") && attrValue.equals("y")) {
+                validatedPlain = true;
+            } else if (attrName.equals("[(value)]") && attrValue.equals("test")) {
+                validatedAngularStyle = true;
+            }
+        }
+        assertTrue(validatedPlain);
+        assertTrue(validatedAngularStyle);
+    }
+
+    public void testAngularStructuralDirective() throws ParseException {
+        HtmlParseResult propertyBind = parse("<input x='y' *ngIf='test' />");
+        assertTrue(propertyBind.getProblems().isEmpty());
+        Node root = propertyBind.root();
+        OpenTag inputElement = ElementUtils.query(root, "html/body/input");
+        assertNotNull(inputElement);
+        assertTrue(inputElement.attributes().size() == 2);
+        boolean validatedPlain = false;
+        boolean validatedAngularStyle = false;
+        for(Attribute attr: inputElement.attributes()) {
+            String attrName = attr.name().toString();
+            String attrValue = attr.unquotedValue().toString();
+            if(attrName.equals("x") && attrValue.equals("y")) {
+                validatedPlain = true;
+            } else if (attrName.equals("*ngIf") && attrValue.equals("test")) {
+                validatedAngularStyle = true;
+            }
+        }
+        assertTrue(validatedPlain);
+        assertTrue(validatedAngularStyle);
+    }
+
+    public void testAngularTemplateReference() throws ParseException {
+        HtmlParseResult propertyBind = parse("<input x='y' #ref />");
+        assertTrue(propertyBind.getProblems().isEmpty());
+        Node root = propertyBind.root();
+        OpenTag inputElement = ElementUtils.query(root, "html/body/input");
+        assertNotNull(inputElement);
+        assertTrue(inputElement.attributes().size() == 2);
+        boolean validatedPlain = false;
+        boolean validatedAngularStyle = false;
+        for(Attribute attr: inputElement.attributes()) {
+            String attrName = attr.name().toString();
+            String attrValue = attr.unquotedValue() != null ? attr.unquotedValue().toString() : null;
+            if(attrName.equals("x") && "y".equals(attrValue)) {
+                validatedPlain = true;
+            } else if (attrName.equals("#ref") && attrValue == null) {
+                validatedAngularStyle = true;
+            }
+        }
+        assertTrue(validatedPlain);
+        assertTrue(validatedAngularStyle);
     }
 
     private void assertNodeOffsets(final Node root) {

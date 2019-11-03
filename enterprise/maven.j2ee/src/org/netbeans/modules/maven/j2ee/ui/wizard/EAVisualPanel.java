@@ -101,7 +101,7 @@ public final class EAVisualPanel extends JPanel  {
         Profile profile = helper.getSelectedProfile();
 
         if (profile == null) {
-            profile = Profile.JAVA_EE_6_FULL;
+            profile = Profile.JAVA_EE_8_FULL;
         }
 
         helper.storeServerSettings(d);

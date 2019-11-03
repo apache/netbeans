@@ -170,23 +170,43 @@ public final class Context {
         }
 
         String newIndentString = IndentUtils.createIndentString(doc, newIndent);
+
+        modifyIndent(lineStartOffset, oldIndentEndOffset - lineStartOffset, newIndentString);
+    }
+
+    /**
+     * Modify indent of the line at the offset passed as the parameter, by stripping the given
+     * number of input characters and inserting the given indent.
+     *
+     * @param lineStartOffset start offset of a line where the indent is being modified.
+     * @param oldIndentCharCount number of characters to remove.
+     * @param newIndent new indent.
+     * @throws javax.swing.text.BadLocationException if the given lineStartOffset is not within
+     *  corresponding document's bounds.
+     * @since 1.49
+     */
+    public void modifyIndent(int lineStartOffset, int oldIndentCharCount, String newIndent) throws BadLocationException {
+        Document doc = document();
+        IndentImpl.checkOffsetInDocument(doc, lineStartOffset);
+        CharSequence docText = DocumentUtilities.getText(doc);
+        int oldIndentEndOffset = lineStartOffset + oldIndentCharCount;
         // Attempt to match the begining characters
         int offset = lineStartOffset;
-        for (int i = 0; i < newIndentString.length() && lineStartOffset + i < oldIndentEndOffset; i++) {
-            if (newIndentString.charAt(i) != docText.charAt(lineStartOffset + i)) {
+        for (int i = 0; i < newIndent.length() && lineStartOffset + i < oldIndentEndOffset; i++) {
+            if (newIndent.charAt(i) != docText.charAt(lineStartOffset + i)) {
                 offset = lineStartOffset + i;
-                newIndentString = newIndentString.substring(i);
+                newIndent = newIndent.substring(i);
                 break;
             }
         }
         
         // Replace the old indent
-        if (!doc.getText(offset, oldIndentEndOffset - offset).equals(newIndentString)) {
+        if (!doc.getText(offset, oldIndentEndOffset - offset).equals(newIndent)) {
             if (offset < oldIndentEndOffset) {
                 doc.remove(offset, oldIndentEndOffset - offset);
             }
-            if (newIndentString.length() > 0) {
-                doc.insertString(offset, newIndentString, null);
+            if (newIndent.length() > 0) {
+                doc.insertString(offset, newIndent, null);
             }
         }
     }

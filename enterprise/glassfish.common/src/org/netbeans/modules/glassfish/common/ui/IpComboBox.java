@@ -156,12 +156,13 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see InetAddr}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      * @param comboBoxModel Data model for this combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      */
+    @Deprecated
     public IpComboBox(final ComboBoxModel comboBoxModel)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -171,12 +172,13 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see InetAddr}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      * @param items An array of objects to insert into the combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      */
+    @Deprecated
     public IpComboBox(final Object items[])
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -186,12 +188,13 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see InetAddr}.
      * <p/>
-     * @deprecated Use {@see #JavaPlatformsComboBox()}
-     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      * @param items {@see Vector} of objects to insert into the combo box.
      * @throws UnsupportedOperationException is thrown any time
      *         this constructor is called.
+     * @deprecated Use {@see #JavaPlatformsComboBox()}
+     *             or {@see #JavaPlatformsComboBox(InetAddr[])} instead.
      */
+    @Deprecated
     public IpComboBox(final Vector<?> items)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(CONSTRUCTOR_EXCEPTION_MSG);
@@ -304,8 +307,7 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
         for (i = 0; i < count; i++) {
             InetAddr element = dataModel.getElementAt(i);
             // Passed IP address has highest priority.
-            if (((InetAddress) ip).equals(
-                    element.getIp())) {
+            if (ip.equals(element.getIp())) {
                 super.setSelectedItem(element);
                 isSelectedSet = true;
                 break;

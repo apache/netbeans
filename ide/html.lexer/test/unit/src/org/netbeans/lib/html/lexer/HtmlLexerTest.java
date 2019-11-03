@@ -217,63 +217,65 @@ public class HtmlLexerTest extends NbTestCase {
 
         //just the underscore cannot be the argument name
         checkTokens("<x:customTag _='value'/>",
-                "<|TAG_OPEN_SYMBOL", "x:customTag|TAG_OPEN", " |WS", "_=|ERROR",
-                "'value'/>|TEXT");
+                "<|TAG_OPEN_SYMBOL", "x:customTag|TAG_OPEN", " |WS", "_|ARGUMENT",
+                "=|OPERATOR", "'value'|VALUE", "/>|TAG_CLOSE_SYMBOL");
 
     }
     
     public void testCurlyBracesInTag() {
-        //error in ws
+        // standalone
         checkTokens("<div {a} align=center>",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ERROR", 
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ARGUMENT",
                 " |WS", "align|ARGUMENT", "=|OPERATOR", "center|VALUE", ">|TAG_CLOSE_SYMBOL");
         
-        //error before attribute
+        //in attribute
         checkTokens("<div {a}align=center>",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align=center|ERROR", ">|TAG_CLOSE_SYMBOL");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
+                "=|OPERATOR", "center|VALUE", ">|TAG_CLOSE_SYMBOL");
         
         //end line in error
         checkTokens("<div {a}align=center\n <div>",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align=center|ERROR", 
-                "\n |WS", "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", ">|TAG_CLOSE_SYMBOL");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}align|ARGUMENT",
+                "=|OPERATOR", "center|VALUE", "\n |WS", "<div|ARGUMENT",
+                ">|TAG_CLOSE_SYMBOL");
         
-        // tag close symbol in error
+        // tag close symbol
         checkTokens("<div {a> xxx",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ERROR", ">|TAG_CLOSE_SYMBOL", " xxx|TEXT");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ARGUMENT", ">|TAG_CLOSE_SYMBOL", " xxx|TEXT");
         
         checkTokens("<div {a/> xxx",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ERROR", "/>|TAG_CLOSE_SYMBOL", " xxx|TEXT");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ARGUMENT", "/>|TAG_CLOSE_SYMBOL", " xxx|TEXT");
         
         //eof in error
         checkTokens("<div {a",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ERROR");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a|ARGUMENT");
                 
     }
     
     public void testCurlyBracesInTagWithClassAttr() {
-        //error in ws
+        // standalone
         checkTokens("<div {a} class=my>",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ERROR", " |WS", "class|ARGUMENT", "=|OPERATOR", "my|VALUE_CSS", ">|TAG_CLOSE_SYMBOL");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}|ARGUMENT", " |WS", "class|ARGUMENT", "=|OPERATOR", "my|VALUE_CSS", ">|TAG_CLOSE_SYMBOL");
         
-        //error before attribute
+        //before class attribute
         checkTokens("<div {a}class=my>",
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}class=my|ERROR", ">|TAG_CLOSE_SYMBOL");
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "{a}class|ARGUMENT", "=|OPERATOR", "my|VALUE", ">|TAG_CLOSE_SYMBOL");
         
         //after class in tag
         checkTokens("<div class=my {a} >",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "class|ARGUMENT", 
-                "=|OPERATOR", "my|VALUE_CSS", " |WS", "{a}|ERROR", " |WS", ">|TAG_CLOSE_SYMBOL" );
+                "=|OPERATOR", "my|VALUE_CSS", " |WS", "{a}|ARGUMENT", " |WS", ">|TAG_CLOSE_SYMBOL" );
 
         //after class in tag
         checkTokens("<div class=my {a} id=your>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "class|ARGUMENT", 
-                "=|OPERATOR", "my|VALUE_CSS", " |WS", "{a}|ERROR", " |WS", 
+                "=|OPERATOR", "my|VALUE_CSS", " |WS", "{a}|ARGUMENT", " |WS",
                 "id|ARGUMENT", "=|OPERATOR", "your|VALUE_CSS", ">|TAG_CLOSE_SYMBOL");
 
         //after class in tag
         checkTokens("<div class=\"my\" {a} id=\"your\">",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "class|ARGUMENT", 
-                "=|OPERATOR", "\"my\"|VALUE_CSS", " |WS", "{a}|ERROR", " |WS", 
+                "=|OPERATOR", "\"my\"|VALUE_CSS", " |WS", "{a}|ARGUMENT", " |WS",
                 "id|ARGUMENT", "=|OPERATOR", "\"your\"|VALUE_CSS", ">|TAG_CLOSE_SYMBOL");
         
         
@@ -302,7 +304,7 @@ public class HtmlLexerTest extends NbTestCase {
     public void testIssue213332_2() {
         checkTokens("<div align= </div>",
                 "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", " |WS", "align|ARGUMENT", "=|OPERATOR", " |WS", 
-                "</|TAG_OPEN_SYMBOL", "div|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL");
+                "<|ARGUMENT", "/|ERROR", "div|ARGUMENT", ">|TAG_CLOSE_SYMBOL");
     }
 
     //Bug 218629 - Wrong syntax coloring in HTML for non-english text 
@@ -336,15 +338,44 @@ public class HtmlLexerTest extends NbTestCase {
         checkTokens("&that;", "&that;|CHARACTER");
     }
     
-     public void testLexingOfScriptTagWithHtmlContent() {
+    public void testLexingOfScriptTagWithHtmlContent() {
         checkTokens("<script type='text/html'><div></div></script>",
-                "<|TAG_OPEN_SYMBOL", "script|TAG_OPEN", " |WS", "type|ARGUMENT", 
-                "=|OPERATOR", "'text/html'|VALUE", ">|TAG_CLOSE_SYMBOL", 
-                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", ">|TAG_CLOSE_SYMBOL", 
-                "</|TAG_OPEN_SYMBOL", "div|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL", 
+                "<|TAG_OPEN_SYMBOL", "script|TAG_OPEN", " |WS", "type|ARGUMENT",
+                "=|OPERATOR", "'text/html'|VALUE", ">|TAG_CLOSE_SYMBOL",
+                "<|TAG_OPEN_SYMBOL", "div|TAG_OPEN", ">|TAG_CLOSE_SYMBOL",
+                "</|TAG_OPEN_SYMBOL", "div|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL",
                 "</|TAG_OPEN_SYMBOL", "script|TAG_CLOSE", ">|TAG_CLOSE_SYMBOL");
     }
-    
+
+    public void testParsingAngularAttributes() {
+        // property bind
+        checkTokens("<input x='y' [ngModel]='test' />",
+            "<|TAG_OPEN_SYMBOL", "input|TAG_OPEN", " |WS", "x|ARGUMENT",
+            "=|OPERATOR", "'y'|VALUE", " |WS", "[ngModel]|ARGUMENT",
+            "=|OPERATOR", "'test'|VALUE", " |WS", "/>|TAG_CLOSE_SYMBOL");
+        // event bind
+        checkTokens("<input x='y' (change)='test' />",
+            "<|TAG_OPEN_SYMBOL", "input|TAG_OPEN", " |WS", "x|ARGUMENT",
+            "=|OPERATOR", "'y'|VALUE", " |WS", "(change)|ARGUMENT",
+            "=|OPERATOR", "'test'|VALUE", " |WS", "/>|TAG_CLOSE_SYMBOL");
+        // twoway bind
+        checkTokens("<input x='y' [(value)]='test' />",
+            "<|TAG_OPEN_SYMBOL", "input|TAG_OPEN", " |WS", "x|ARGUMENT",
+            "=|OPERATOR", "'y'|VALUE", " |WS", "[(value)]|ARGUMENT",
+            "=|OPERATOR", "'test'|VALUE", " |WS", "/>|TAG_CLOSE_SYMBOL");
+        // template reference
+        checkTokens("<input x='y' #ref />",
+            "<|TAG_OPEN_SYMBOL", "input|TAG_OPEN", " |WS", "x|ARGUMENT",
+            "=|OPERATOR", "'y'|VALUE", " |WS", "#ref|ARGUMENT",
+            " |WS", "/>|TAG_CLOSE_SYMBOL");
+        // structural directive
+        checkTokens("<input x='y' *ngIf='test' />",
+            "<|TAG_OPEN_SYMBOL", "input|TAG_OPEN", " |WS", "x|ARGUMENT",
+            "=|OPERATOR", "'y'|VALUE", " |WS", "*ngIf|ARGUMENT",
+            "=|OPERATOR", "'test'|VALUE", " |WS", "/>|TAG_CLOSE_SYMBOL");
+    }
+
+
     //--------------------------------------------------------------------------
     
     public static void checkTokens(String text, String... descriptions) {

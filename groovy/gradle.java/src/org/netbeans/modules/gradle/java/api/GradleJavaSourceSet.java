@@ -66,13 +66,15 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public static final String MAIN_SOURCESET_NAME = "main"; //NOI18N
     public static final String TEST_SOURCESET_NAME = "test"; //NOI18N
+    private static final String DEFAULT_SOURCE_COMPATIBILITY = "1.5"; //NOI18N
 
     Map<SourceType, Set<File>> sources = new EnumMap<>(SourceType.class);
     String name;
     String runtimeConfigurationName;
     String compileConfigurationName;
-    String sourcesCompatibility = "1.5"; //NOI18N
-    String targetCompatibility = sourcesCompatibility;
+    Map<SourceType, String> sourcesCompatibility = Collections.emptyMap();
+    Map<SourceType, String> targetCompatibility = Collections.emptyMap();
+    Map<SourceType, List<String>> compilerArgs = Collections.emptyMap();
     boolean testSourceSet;
     Set<File> outputClassDirs;
     File outputResources;
@@ -94,12 +96,60 @@ public final class GradleJavaSourceSet implements Serializable {
         return testSourceSet;
     }
 
+    /**
+     * This method returns the Java source compatibility defined for this source
+     * set.
+     *
+     * @deprecated Use {@link #getSourcesCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType)} instead.
+     * @return
+     */
+    @Deprecated
     public String getSourcesCompatibility() {
-        return sourcesCompatibility;
+        return getSourcesCompatibility(SourceType.JAVA);
     }
 
+    /**
+     * This method returns the source compatibility defined for this source
+     * set for the given language type.
+     *
+     * The value is actually extracted from the compiler task defined for
+     * this source set and language type. If that cannot be determined for some
+     * reason this method returns "1.5".
+     *
+     * @since 1.4
+     * @param type
+     * @return the defined source compatibility or "1.5"
+     */
+    public String getSourcesCompatibility(SourceType type) {
+        return sourcesCompatibility.getOrDefault(type, DEFAULT_SOURCE_COMPATIBILITY);
+    }
+
+    /**
+     * This method returns the Java target compatibility defined for this source
+     * set.
+     *
+     * @deprecated Use {@link #getTargetCompatibility(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType)} instead.
+     * @return
+     */
+    @Deprecated
     public String getTargetCompatibility() {
-        return targetCompatibility;
+        return getTargetCompatibility(SourceType.JAVA);
+    }
+
+    /**
+     * This method returns the target compatibility defined for this source
+     * set for the given language type.
+     *
+     * The value is actually extracted from the compiler task defined for
+     * this source set and language type. If that cannot be determined for some
+     * reason this method returns the defined source compatibility.
+     *
+     * @since 1.4
+     * @param type
+     * @return the defined target compatibility
+     */
+    public String getTargetCompatibility(SourceType type) {
+        return targetCompatibility.getOrDefault(type, getSourcesCompatibility(type));
     }
 
     public String getRuntimeConfigurationName() {
@@ -411,6 +461,22 @@ public final class GradleJavaSourceSet implements Serializable {
                 return getCompileTaskName("Scala"); //NOI18N
         }
         return null;
+    }
+
+    /**
+     * Returns the compiler arguments for this source set defined for the given
+     * language.
+     *
+     * The value is actually extracted from the compiler task defined for
+     * this source set and language type. If that cannot be determined for some
+     * reason this method returns an empty list.
+     * @since 1.4
+     * @param type
+     * @return 
+     */
+    public List<String> getCompilerArgs(SourceType type) {
+        List<String> args = compilerArgs.get(type);
+        return args != null ? args : Collections.<String>emptyList();
     }
 
     public String getCompileTaskName(String language) {

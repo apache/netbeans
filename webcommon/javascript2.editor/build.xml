@@ -24,6 +24,8 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
+        <mkdir dir="build/testfiles" />
+        <unzip src="external/testfiles-jsdoc-1.zip" dest="build/testfiles"/>
         <unzip src="external/js.foundation-parser-1.0.zip" dest="test/unit/data/testfiles/ecmascript6"/>
         <unzip src="external/javascript2.editor-requirejs-2.1.14-resources.zip" dest="."/>
         <unzip src="external/javascript2.editor-jquery-1.6-resources.zip" dest="."/>
@@ -40,15 +42,5 @@
         <copy file="external/js-domstubs-DOM3.zip" tofile="${cluster}/jsstubs/domstubs.zip"/>
     </target>
     <target name="release" depends="projectized.release,-bundle-corestubs,-bundle-domstubs,-bundle-reststubs"/>
-
-<!--    <target name="-verify-bootclasspath" depends="build-init">
-        <fail message="Nashorn is not on a bootclasspath">
-            <condition>
-                <not>
-                     <available file="${nashorn.prepend}" />
-                </not>
-            </condition>
-        </fail>
-    </target>-->
 </project>
 

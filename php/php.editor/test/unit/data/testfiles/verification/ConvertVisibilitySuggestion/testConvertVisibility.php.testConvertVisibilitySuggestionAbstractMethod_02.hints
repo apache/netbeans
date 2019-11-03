@@ -1,0 +1,4 @@
+    abstract public function abstractP^ublic();
+----------------------------------------------
+HINT:You can convert the visibility if needed
+FIX:Convert Visibility to "protected"

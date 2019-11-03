@@ -36,9 +36,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * A catalog that provides web, application, web services, web services client, javaee, j2ee, 
+ * A catalog that provides web, application, web services, web services client, javaee, j2ee,
  * ejb-jar and application client deployment descriptor schemas for code completion and validation.
- * 
+ *
  * @author Erno Mononen
  */
 public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor2, EntityResolver  {
@@ -47,12 +47,12 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
     private static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee"; //NOI18N
     private static final String XML_NS = "http://www.w3.org/2001/XMLSchema"; //NOI18N
     private static final String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
-    private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/dd/impl/resources/"; //NO18N 
-    
+    private static final String RESOURCE_PATH = "nbres:/org/netbeans/modules/j2ee/dd/impl/resources/"; //NO18N
+
     private List<SchemaInfo> schemas = new ArrayList<SchemaInfo>();
-    
+
     private static final Logger LOGGER = Logger.getLogger(EnterpriseCatalog.class.getName());
-    
+
     public EnterpriseCatalog() {
         initialize();
     }
@@ -93,12 +93,15 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("web-app_2_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_1.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("web-app_4_0.xsd", NEW_JAVAEE_NS));
 
         schemas.add(new SchemaInfo("web-common_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_3_1.xsd", NEW_JAVAEE_NS));
-        
+        schemas.add(new SchemaInfo("web-common_4_0.xsd", NEW_JAVAEE_NS));
+
         schemas.add(new SchemaInfo("web-fragment_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_3_1.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("web-fragment_4_0.xsd", NEW_JAVAEE_NS));
         // jsp
         schemas.add(new SchemaInfo("jsp_2_0.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("jsp_2_1.xsd", JAVAEE_NS));
@@ -109,6 +112,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("javaee_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_7.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("javaee_8.xsd", NEW_JAVAEE_NS));
         // web 2.2 and 2.3 dtds
         schemas.add(new SchemaInfo("web-app_2_2.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", true)); //NO18N
         schemas.add(new SchemaInfo("web-app_2_3.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", true)); //NO18N
@@ -119,9 +123,10 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         schemas.add(new SchemaInfo("permissions_7.xsd", NEW_JAVAEE_NS));
         // batch API
         schemas.add(new SchemaInfo("batchXML_1_0.xsd", NEW_JAVAEE_NS));
+        schemas.add(new SchemaInfo("jobXML_1_0.xsd", NEW_JAVAEE_NS));
 
     }
-    
+
     public String getIconResource(int type) {
         return "org/netbeans/modules/j2ee/ddloaders/catalog/resources/DDCatalog.gif"; // NOI18N
     }
@@ -204,9 +209,9 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
     /**
      * A simple holder for the information needed
      * for resolving the resource path and public id of a schema.
-     */ 
+     */
     private static class SchemaInfo {
-        
+
         private final String schemaName;
         private final String namespace;
         private final boolean dtd;
@@ -220,7 +225,7 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
             this.namespace = namespace;
             this.dtd = dtd;
         }
-        
+
         public String getResourcePath() {
             return RESOURCE_PATH + getSchemaName();
         }
@@ -228,13 +233,13 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         public String getSchemaName() {
             return schemaName;
         }
-        
+
         public String getPublicId(){
             if (dtd){
                 return namespace;
             }
             return "SCHEMA:" + namespace + "/" + schemaName; //NO18N
         }
-        
+
     }
 }

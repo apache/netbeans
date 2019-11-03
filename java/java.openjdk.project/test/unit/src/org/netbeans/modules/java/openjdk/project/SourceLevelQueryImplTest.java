@@ -26,6 +26,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.Utilities.TestLookup;
+import org.netbeans.modules.java.openjdk.common.BuildUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -57,7 +58,7 @@ public class SourceLevelQueryImplTest extends NbTestCase {
         copyString2File(jlObject, "");
         copyString2File(FileUtil.createData(root, ".jcheck/conf"), "project=jdk8\n");
 
-        Project legacyProject = FileOwnerQuery.getOwner(root.getFileObject("jdk"));
+        Project legacyProject = FileOwnerQuery.getOwner(BuildUtils.getFileObject(root, "jdk"));
 
         assertNotNull(legacyProject);
 

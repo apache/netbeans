@@ -110,59 +110,39 @@
     </target>        
 
     <target name="init-clusters">
-        <property name="main.clusters" value="
-                                         cnd(cpp), cndext(cpp), dlight(cpp),
-                                         apisupport(javase), profiler(javase), java(javase),                                                                              
-					 groovy(groovy),
-                                         php(php), 
-                                         enterprise(javaee), 
-                                         webcommon(webcommon),
-                                         extide(extide), websvccommon(extide),
-                                         mobility(javame),
-                                         ergonomics(ergonomics),
-                                         ide(nbide), nb-etc(nbide), harness(nbide), platform(nbide)
+        <property name="clusters" value="
+                                         java(javase),
+                                         php(php),
+                                         enterprise(javaee), websvccommon(javaee),
+                                         webcommon(webcommon), websvccommon(webcommon),
+                                         base(nbide)
                                          "/>
-        
-        <property name="jdk-bundle.clusters" value="apisupport(javase), profiler(javase), java(javase),
-                                                    extide(extide), websvccommon(extide),
-                                                    ide(nbide), nb-etc(nbide), harness(nbide), platform(nbide)
-                                         "/>
-
-        <property name="fx.clusters" value="javafx(javafx), javafx-mac(javafx)"/>
-
-        <condition property="all.clusters" value="${main.clusters},${fx.clusters}" else="${main.clusters}"> 
-            <equals arg1="${javafx.build}" arg2="1"/>
-        </condition>
-        
-        <condition property="clusters" value="${jdk-bundle.clusters}" else="${all.clusters}"> 
-            <istrue value="${do.build.jdk}"/>
-        </condition>
-        
     </target>
 
     <target name="unzip-nb" description="Unzip clusters to modules" depends="init-clusters">
-        <!--for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="module.name"-->
-            <ant target="unzip-cluster"/>                           
-            <!--exec executable="sh" failonerror="no">
+        <for-each list="${clusters}" separator="," property="cluster.name"  propertyArg="module.name">
+            <ant target="unzip-cluster"/>
+            <exec executable="sh" failonerror="no">
                 <arg value="-c"/>
                 <arg value="cd ${basedir}/netBeans/${module.name}/build/netbeans ; rm -rf META-INF"/>
             </exec>        
-        </for-each-->
+        </for-each>
 
 
     </target>
     
     <target name="unzip-cluster">
+        <mkdir dir="${basedir}/netBeans/${module.name}/build/netbeans"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="unzip -o -d ${basedir}/netBeans/nbide/build ${common.name}${nb.binary.name}"/>
+            <arg value="unzip -o -d ${basedir}/netBeans/${module.name}/build/netbeans ${common.name}${nb.binary.name}-${cluster.name}.zip"/>
         </exec>    
     </target>
     
     <target name="size-pack-module" description="Count up size of the module, pack200">           
         <exec executable="sh" failonerror="no" outputproperty="size">
             <arg value="-c"/>
-            <arg value="cd ${basedir}/netBeans/nbide; du -sk build | sed 's/[\t]*build//'"/>
+            <arg value="cd ${basedir}/netBeans/${module.name}; du -sk build | sed 's/[\t]*build//'"/>
         </exec>        
         <echo message="sizeof.${module.name}=${size}${line.separator}" file="${basedir}/build/sizes.pro" append="true"/>                    
         <!--exec executable="sh" failonerror="yes">
@@ -177,10 +157,6 @@
         <property name="tmpDir" value="${module.builddir}/tmp"/>
         <property name="nbDir" value="${module.builddir}/netbeans"/>
         <mkdir dir="${tmpDir}"/>
-        <exec executable="sh" failonerror="yes">
-            <arg value="-c"/>
-            <arg value="sh ${basedir}/commonfiles/unpack200_to_dir.sh ${nbDir} ${tmpDir}"/>
-        </exec>
 
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
@@ -195,7 +171,7 @@
             <property name="module.builddir" value="${basedir}/netBeans/nbide/build"/>
         </ant>
         <ant dir="${basedir}/netBeans/nbide"/>          
-        <!--ant target="build-modules"/-->       
+        <ant target="build-modules"/>
     </target>
 
 
@@ -203,12 +179,7 @@
         <property name="main.modules" value="
                                         javase(${javase-title}),
                                         javaee(${javaee-title}),
-                                        javame(${javame-title}),
-                                        cpp(${cpp-title}),                                       
-                                        groovy(${groovy-title}),
                                         webcommon(${webcommon-title}),
-                                        extide(${extide-title}),
-                                        ergonomics(${ergonomics-title}),
                                         php(${php-title})
                                         "/>
         <property name="jdk-bundle.modules" value="
@@ -257,7 +228,7 @@
         <echo message="Building ${module.name} into ${basedir}/build/${module.name}-${nb.id}.pkg"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
+            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --sign '${sign_iden_name}' --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
         </exec>
         <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
             <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/${module.name}-${nb.id}.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
@@ -295,24 +266,18 @@
     </target>          
 
     <target name="init-bundles">
-        <property name="main.bundles" value="(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/javame-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/groovy-${nb.id}.pkg ./build/ergonomics-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),
-                                              -javase(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/extide-${nb.id}.pkg),
-                                              -javaee(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/javaee-${nb.id}.pkg ./build/glassfish-${glassfish.id}.pkg ./build/tomcat-${tomcat.id}.pkg),                                              
-                                              -php(./build/nbide-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg ./build/extide-${nb.id}.pkg ./build/php-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg),
-                                              -cpp(./build/nbide-${nb.id}.pkg ./build/cpp-${nb.id}.pkg ./build/jre-nested-${jre.version.string.long}.pkg)
-                                          "/>
+        <property name="main.bundles" value="(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/webcommon-${nb.id}.pkg  ./build/javaee-${nb.id}.pkg ./build/php-${nb.id}.pkg)"/>
         <property name="fx.bundles" value="    
                                                -javafx-full(./build/*pkg),
                                                -javafx(./build/nbide-${nb.id}.pkg ./build/javase-${nb.id}.pkg ./build/javafx-${nb.id}.pkg)
                                           "/>
 
         <property name="jdk-bundle.bundles" value="-jdk(./build/nbide-${nb.id}.pkg ./build/jdk.pkg)"/>
-        <property name="nbide.bundles" value="-nbide(./build/nbide-${nb.id}.pkg)"/>
 
         <condition property="all.bundles" value="${main.bundles},${fx.bundles}" else="${main.bundles}"> 
             <equals arg1="${javafx.build}" arg2="1"/>
         </condition>
-        <condition property="bundles" value="${jdk-bundle.bundles}" else="${nbide.bundles}"> 
+        <condition property="bundles" value="${jdk-bundle.bundles}" else="${all.bundles}">
             <istrue value="${do.build.jdk}"/>
         </condition>
         
@@ -495,6 +460,7 @@
                 <filter token="SIZE_GLASSFISH" value="${sizeof.glassfish}"/>
                 <filter token="SIZE_TOMCAT" value="${sizeof.tomcat}"/>                
                 <filter token="SIZE_BASEIDE" value="${sizeof.nbide}"/>                
+                <filter token="SIZE_NBIDE" value="${sizeof.nbide}"/>
                 <filter token="SIZE_PHP" value="${sizeof.php}"/>    
             </filterset>
         </copy> 

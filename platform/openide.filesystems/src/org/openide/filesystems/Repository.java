@@ -705,11 +705,7 @@ public class Repository implements Serializable {
     @Deprecated
     public final synchronized void writeExternal(ObjectOutput oos)
     throws IOException {
-        Iterator iter = fileSystems.iterator();
-
-        while (iter.hasNext()) {
-            FileSystem fs = (FileSystem) iter.next();
-
+        for (FileSystem fs : fileSystems) {
             if (!fs.isDefault()) {
                 oos.writeObject(new NbMarshalledObject(fs));
             }
@@ -777,8 +773,9 @@ public class Repository implements Serializable {
         init();
 
         // all is successfuly read
-        for (Iterator iter = temp.iterator(); iter.hasNext();)
-            addFileSystem((FileSystem) iter.next());
+        for (FileSystem fileSystem : temp) {
+            addFileSystem(fileSystem);
+        }
     }
 
     /** Finds file when its name is provided. It scans in the list of

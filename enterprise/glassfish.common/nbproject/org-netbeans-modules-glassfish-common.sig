@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.1
+#Version 1.80
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1411,6 +1411,7 @@ hfds delegate
 CLSS public final org.netbeans.modules.glassfish.common.GlassfishInstanceProvider
 fld public final static java.lang.String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"
 fld public final static java.lang.String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"
+fld public final static java.lang.String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"
 fld public final static java.lang.String GLASSFISH_AUTOREGISTERED_INSTANCE = "glassfish_autoregistered_instance"
 fld public final static java.lang.String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"
 fld public final static java.util.Set<java.lang.String> activeRegistrationSet
@@ -1437,7 +1438,7 @@ meth public void addServerInstance(org.netbeans.modules.glassfish.common.Glassfi
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void resultChanged(org.openide.util.LookupEvent)
 supr java.lang.Object
-hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
+hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,EE8_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
 
 CLSS public org.netbeans.modules.glassfish.common.Installer
 cons public init()
@@ -1514,7 +1515,8 @@ fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLAS
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_4_1_1
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_4_1_2
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_5_0
-fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_5_1
+fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_5_0_1
+fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_5_1_0
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public int getVersion()
 meth public java.lang.String getDirectUrl()
@@ -1828,9 +1830,12 @@ hfds LOGGER
 CLSS public org.netbeans.modules.glassfish.common.ui.IpComboBox
 cons public init(boolean)
 cons public init(java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.Set<? extends java.net.InetAddress>,boolean)
 cons public init(java.util.Vector<?>)
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.ComboBoxModel)
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String IP_4_127_0_0_1_NAME = "localhost"
 innr public static InetAddr
 innr public static InetAddrComparator
@@ -1870,8 +1875,11 @@ hfds mailHostField,mailHostLabel,resourceEnabledCB,returnField,returnLabel,userF
 CLSS public org.netbeans.modules.glassfish.common.ui.JavaPlatformsComboBox
 cons public init()
 cons public init(java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.Vector<?>)
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.ComboBoxModel)
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.api.java.platform.JavaPlatform[])
 fld public final static java.lang.String EMPTY_DISPLAY_NAME
 innr public static Platform
@@ -2231,6 +2239,8 @@ meth public static java.io.File getWsJarName(java.lang.String,java.lang.String)
 meth public static java.net.URL fileToUrl(java.io.File) throws java.net.MalformedURLException
 meth public static java.util.List<java.lang.String> filterByManifest(java.util.List<java.lang.String>,org.openide.filesystems.FileObject,int,boolean)
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe6Utilities()
+meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe7Utilities()
+meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe8Utilities()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Object
 hfds gip,gwp

@@ -136,7 +136,7 @@ public abstract class J2eeModuleHelper {
         return secondarySunDDName != null ?
             module.getDeploymentConfigurationFile(secondarySunDDName) : null;
     }
-
+    
     public RootInterface getStandardRootDD(J2eeModule module) {
         RootInterface stdRootDD = null;
         if (standardDDName != null) {
@@ -177,7 +177,7 @@ public abstract class J2eeModuleHelper {
     public static class WebDDHelper extends J2eeModuleHelper {
 
         private WebDDHelper() {
-            this(GF_WEB_XML_V1, null);
+            this(GF_WEB_XML_V2, null);
         }
 
         private WebDDHelper(String dd1, String dd2) {
@@ -200,6 +200,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.SUN_APPSERVER_9_0;
             } else if (ServletVersion.SERVLET_3_0.equals(servletVersion)) {
                 result = ASDDVersion.SUN_APPSERVER_10_0;
+            } else if (ServletVersion.SERVLET_4_0.equals(servletVersion)) {
+                result = ASDDVersion.GLASSFISH_5_1;
             }
             return result;
         }
@@ -228,6 +230,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.SUN_APPSERVER_9_0;
             } else if (ServletVersion.SERVLET_3_0.equals(servletVersion)) {
                 result = ASDDVersion.SUN_APPSERVER_10_0;
+            } else if (ServletVersion.SERVLET_4_0.equals(servletVersion)) {
+                result = ASDDVersion.GLASSFISH_5_1;
             }
             return result;
         }

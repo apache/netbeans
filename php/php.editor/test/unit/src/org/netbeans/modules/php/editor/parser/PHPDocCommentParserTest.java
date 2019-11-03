@@ -355,6 +355,36 @@ public class PHPDocCommentParserTest extends PHPTestBase {
         perform(comment, "testIssue257953");
     }
 
+    public void testMethod01() throws Exception {
+        String comment = " * @method int get(int $i) message foo bar";
+        perform(comment, "Method01");
+    }
+
+    public void testMethod02() throws Exception {
+        String comment = " * @method get(int $i) message foo bar";
+        perform(comment, "Method02");
+    }
+
+    public void testMethod03() throws Exception {
+        String comment = " * @method ?int get(?int $i) message foo bar";
+        perform(comment, "Method03");
+    }
+
+    public void testMethodStatic01() throws Exception {
+        String comment = " * @method static int get(int $i) message foo bar";
+        perform(comment, "MethodStatic01");
+    }
+
+    public void testMethodStatic02() throws Exception {
+        String comment = " * @method static get(int $i) message foo bar";
+        perform(comment, "MethodStatic02");
+    }
+
+    public void testMethodStatic03() throws Exception {
+        String comment = " * @method static ?int get(?int $i) message foo bar";
+        perform(comment, "MethodStatic03");
+    }
+
     public void perform(String comment, String filename) throws Exception {
         PHPDocCommentParser parser = new PHPDocCommentParser();
         PHPDocBlock block = parser.parse(0, comment.length(), comment);

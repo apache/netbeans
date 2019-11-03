@@ -30,6 +30,7 @@ import org.netbeans.modules.db.mysql.util.Utils;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -51,7 +52,7 @@ public class MySQLDatabaseServerTest extends TestBase {
 
         // We need to set up netbeans.dirs so that the NBInst URLMapper correctly
         // finds the mysql jar file
-        File jarFile = new File(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        File jarFile = Utilities.toFile(JDBCDriverManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         File clusterDir = jarFile.getParentFile().getParentFile();
         System.setProperty("netbeans.dirs", clusterDir.getAbsolutePath());
 
@@ -81,8 +82,7 @@ public class MySQLDatabaseServerTest extends TestBase {
     }
 
     private void testStringProperty(String propName, String defaultValue) throws Exception {
-        propName = propName.substring(0, 1).toUpperCase() +
-                propName.substring(1);
+        propName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
         String setter = "set" + propName;
         String getter = "get" + propName;
 

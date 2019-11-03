@@ -68,10 +68,12 @@ import javax.tools.JavaFileObject;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.util.Log;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
@@ -116,6 +118,7 @@ public class Reindenter implements IndentTask {
         for (Region region : context.indentRegions()) {
             if (initRegionData(region)) {
                 HashSet<Integer> linesToAddStar = new HashSet<Integer>();
+                Map<Integer, Integer> oldIndents = new HashMap<>();
                 LinkedList<Integer> startOffsets = getStartOffsets(region);
                 for (ListIterator<Integer> it = startOffsets.listIterator(); it.hasNext();) {
                     int startOffset = it.next();
@@ -151,6 +154,17 @@ public class Reindenter implements IndentTask {
                             if (!blockCommentLine.startsWith("*")) { //NOI18N
                                 linesToAddStar.add(startOffset);
                             }
+                        } else if (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                            String tokenText = ts.token().text().toString();
+                            String[] lines = tokenText.split("\n");
+                            int indent = Arrays.stream(lines, 1, lines.length)
+                                               .mapToInt(this::leadingIndent)
+                                               .min()
+                                               .orElse(0);
+                            int initialLineStartOffset = context.lineStartOffset(ts.offset());
+                            int indentUpdate = newIndents.getOrDefault(initialLineStartOffset, 0);
+                            oldIndents.put(startOffset, indent);
+                            newIndents.put(startOffset, ts.offset() - initialLineStartOffset + indentUpdate);
                         } else {
                             if (delta == 0 && ts.moveNext() && ts.token().id() == JavaTokenId.LINE_COMMENT) {
                                 newIndents.put(startOffset, 0);
@@ -168,7 +182,12 @@ public class Reindenter implements IndentTask {
                         context.document().insertString(startOffset, "* ", null); //NOI18N
                     }
                     if (newIndent != null) {
-                        context.modifyIndent(startOffset, newIndent);
+                        Integer oldIndent = oldIndents.get(startOffset);
+                        if (oldIndent != null) {
+                            context.modifyIndent(startOffset, oldIndent, IndentUtils.createIndentString(newIndent, true, -1));
+                        } else {
+                            context.modifyIndent(startOffset, newIndent);
+                        }
                     }
                     if (!startOffsets.isEmpty()) {
                         char c;
@@ -183,6 +202,19 @@ public class Reindenter implements IndentTask {
                 }
             }
         }
+    }
+
+    private int leadingIndent(String line) {
+        int indent = 0;
+
+        for (int i = 0; i < line.length(); i++) { //TODO: code points
+            if (Character.isWhitespace(line.charAt(i)))
+                indent++;
+            else
+                break;
+        }
+
+        return indent;
     }
 
     @Override

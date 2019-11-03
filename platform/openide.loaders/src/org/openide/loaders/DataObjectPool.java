@@ -686,7 +686,7 @@ implements ChangeListener {
                         }
                         // notify all in folder
                         for (int i = 0; i < siblings.length; i++) {
-                            itm = (Item) DataObjectPool.POOL.map.get(siblings[i]);
+                            itm = DataObjectPool.POOL.map.get(siblings[i]);
                             if (itm == null) {
                                 continue;
                             }

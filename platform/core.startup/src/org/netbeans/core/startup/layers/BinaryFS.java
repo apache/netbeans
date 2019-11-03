@@ -510,7 +510,7 @@ final class BinaryFS extends FileSystem implements DataInput {
             FileObject topFO = null;
             // XXX big hack! See #29356 for explanation for this nonsense.
             try {
-                Class mfoClass = Class.forName("org.openide.filesystems.MultiFileObject"); //NOI18N
+                Class<?> mfoClass = Class.forName("org.openide.filesystems.MultiFileObject"); //NOI18N
                 Field field = mfoClass.getDeclaredField("attrAskedFileObject"); //NOI18N
                 field.setAccessible(true);
 
@@ -744,12 +744,12 @@ final class BinaryFS extends FileSystem implements DataInput {
                 // Cf. XMLMapAttr.Attr.methodValue:
                 Class<?> cls = findClass(method.substring(0, i));
                 String methodName = method.substring(i + 1);
-                Class[][] paramArray = {
+                Class<?>[][] paramArray = {
                     {FileObject.class, String.class}, {String.class, FileObject.class},
                     {FileObject.class}, {String.class}, {},
                     {Map.class, String.class}, {Map.class},
                 };
-                for (Class[] paramTypes : paramArray) {
+                for (Class<?>[] paramTypes : paramArray) {
                     Method m;
                     try {
                         m = cls.getDeclaredMethod(methodName, paramTypes);
@@ -795,7 +795,7 @@ final class BinaryFS extends FileSystem implements DataInput {
          * @return the class
          * @exception ClassNotFoundException if class was not found
          */
-        private Class findClass (String name) throws ClassNotFoundException {
+        private Class<?> findClass (String name) throws ClassNotFoundException {
             ClassLoader c = Lookup.getDefault().lookup(ClassLoader.class);
             String tname = BaseUtilities.translate (name);
             try {

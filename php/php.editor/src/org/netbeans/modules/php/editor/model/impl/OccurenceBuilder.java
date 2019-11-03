@@ -72,6 +72,7 @@ import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.VariableScope;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfoUtils;
 import org.netbeans.modules.php.editor.model.nodes.ClassConstantDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ConstantDeclarationInfo;
@@ -100,6 +101,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
@@ -460,7 +462,7 @@ class OccurenceBuilder {
 
     void prepare(final MagicMethodDeclarationInfo node, MethodScope scope) {
         if (canBePrepared(node.getOriginalNode(), scope)) {
-            if (node.getKind().equals(Kind.METHOD)) {
+            if (ASTNodeInfoUtils.isMethod(node.getKind())) {
                 magicMethodDeclarations.put(node, scope);
             }
         }
@@ -998,6 +1000,7 @@ class OccurenceBuilder {
                     buildMethodInvocations(elementInfo, fileScope, Accuracy.UNIQUE, occurences);
                 }
                 buildMethodDeclarations(elementInfo, fileScope, occurences);
+                buildMagicMethodDeclarations(elementInfo, fileScope, cachedOccurences);
             }
         }
     }
@@ -2461,7 +2464,8 @@ class OccurenceBuilder {
                 } else {
                     if (getScope().getInScope() instanceof TypeScope) {
                         if (originalNode instanceof MethodDeclaration
-                                || originalNode instanceof SingleFieldDeclaration) {
+                                || originalNode instanceof SingleFieldDeclaration
+                                || originalNode instanceof PHPDocMethodTag) { // NETBEANS-1861
                             return ((TypeScope) getScope().getInScope()).getFullyQualifiedName();
                         }
                     }

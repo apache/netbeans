@@ -951,7 +951,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             oos.close();
             byte bArray[] = bos.toByteArray();
             // Check to see if this is the same as a default instance.
-            Class clazz = v.getClass();
+            Class<?> clazz = v.getClass();
             boolean usenewinstance = false;
             try {
                 Object v2 = clazz.newInstance();

@@ -39,7 +39,7 @@ public abstract class CslCorePackageAccessor {
     public static synchronized CslCorePackageAccessor get() {
         // Trying to wake up HighlightsLayer ...
         try {
-            Class clazz = Class.forName(LanguageRegistry.class.getName());
+            Class<?> clazz = Class.forName(LanguageRegistry.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

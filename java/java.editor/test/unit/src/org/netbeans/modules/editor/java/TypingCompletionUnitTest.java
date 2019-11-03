@@ -23,6 +23,7 @@ import java.awt.EventQueue;
 import java.awt.event.KeyEvent;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -1153,18 +1154,46 @@ public class TypingCompletionUnitTest extends NbTestCase {
         ctx.assertDocumentTextEquals("()|");
     }
     
-    public void testRemoveQuotesBackSpace() throws Exception {
+    public void testRemoveQuotesBackSpace1() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"|\"");
+        ctx.typeChar('\b');
+        ctx.assertDocumentTextEquals("|");
+    }
+    
+    public void testRemoveQuotesBackSpace2() throws Exception {
         Context ctx = new Context(new JavaKit(),
                 "\"\"\"|\"");
         ctx.typeChar('\b');
         ctx.assertDocumentTextEquals("\"\"|");
     }
     
-    public void testRemoveQuotesDelete() throws Exception {
+    public void testRemoveQuotesBackSpace3() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"\"\"|\";");
+        ctx.typeChar('\b');
+        ctx.assertDocumentTextEquals("\"\"|;");
+    }
+    
+    public void testRemoveQuotesDelete1() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "|\"\"");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("|");
+    }
+    
+    public void testRemoveQuotesDelete2() throws Exception {
         Context ctx = new Context(new JavaKit(),
                 "\"\"|\"\"");
         ctx.typeChar('\f');
         ctx.assertDocumentTextEquals("\"\"|");
+    }
+    
+    public void testRemoveQuotesDelete3() throws Exception {
+        Context ctx = new Context(new JavaKit(),
+                "\"\"|\"\";");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("\"\"|;");
     }
     
     public void testRemoveQuotes2BackSpace() throws Exception {
@@ -1239,7 +1268,67 @@ public class TypingCompletionUnitTest extends NbTestCase {
         ctx.typeChar(')');
         ctx.assertDocumentTextEquals("//()|)");
     }
-     
+
+    public void testTextBlock1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "\"\"|");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n|\"\"\"");
+    }
+
+    public void testTextBlock2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n|\"\"\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"|\"\"");
+    }
+
+    public void testTextBlock3() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n\"|\"\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"\"|\"");
+    }
+
+    public void testTextBlock4() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "\"\"\"\n\"\"|\"");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("\"\"\"\n\"\"\"|");
+    }
+    
+    public void testTextBlock5() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "t(|\"\")");
+        ctx.typeChar('\"');
+        ctx.assertDocumentTextEquals("t(\"\"\"\n  |\"\"\")");
+    } 
+    
     public void testCorrectHandlingOfStringEscapes184059() throws Exception {
         assertTrue(isInsideString("foo\n\"bar|\""));
         assertTrue(isInsideString("foo\n\"bar\\\"|\""));

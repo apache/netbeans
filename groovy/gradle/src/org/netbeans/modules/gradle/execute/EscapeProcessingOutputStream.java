@@ -64,7 +64,7 @@ class EscapeProcessingOutputStream extends OutputStream {
                 if (b == '\n') {
                     buffer.put(b);
                     processBulk();
-                } else if ((b >= 0x20) || (b == 0x09)) {
+                } else if ((b >= 0x20) || (b == 0x09) || (b < 0)) {
                     buffer.put(b);
                 }
             }

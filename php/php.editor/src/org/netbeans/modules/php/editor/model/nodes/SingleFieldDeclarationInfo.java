@@ -21,9 +21,11 @@ package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 
@@ -65,6 +67,18 @@ public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDec
 
     public PhpModifiers getAccessModifiers() {
         return PhpModifiers.fromBitMask(fieldsDeclaration.getModifier());
+    }
+
+    @CheckForNull
+    public String getFieldType() {
+        Expression fieldType = fieldsDeclaration.getFieldType();
+        if (fieldType != null) {
+            QualifiedName fieldTypeName = QualifiedName.create(fieldType);
+            if (fieldTypeName != null) {
+                return fieldTypeName.toString();
+            }
+        }
+        return null;
     }
 
     @Override

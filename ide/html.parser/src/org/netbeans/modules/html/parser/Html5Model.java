@@ -79,6 +79,7 @@ public final class Html5Model implements HtmlModel, HtmlModelProvider {
      * @deprecated 
      */
     @Override
+    @Deprecated
     public String getModelId() {
         return null;
     }

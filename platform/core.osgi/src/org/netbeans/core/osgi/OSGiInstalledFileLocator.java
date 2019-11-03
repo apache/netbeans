@@ -107,7 +107,7 @@ class OSGiInstalledFileLocator extends InstalledFileLocator {
                     continue;
                 }
                 // OK, this bundle seems to own the file. Unpack everything it contains at once.
-                String execFilesS = (String) owner.getHeaders().get("NetBeans-Executable-Files");
+                String execFilesS = owner.getHeaders().get("NetBeans-Executable-Files");
                 List<String> execFiles = execFilesS == null ? Collections.<String>emptyList() : Arrays.asList(execFilesS.split(","));
                 try {
                     for (URL resource : NbCollections.iterable(NbCollections.checkedEnumerationByFilter(owner.findEntries(FILES, null, true), URL.class, true))) {

@@ -42,7 +42,7 @@ public abstract class BaseCallGraphBuilder implements ProfilingResultListener, C
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    protected List /*<Runnable>*/ afterBatchCommands = new ArrayList /*<Runnable>*/();
+    protected List/*<Runnable>*/ afterBatchCommands = new ArrayList<>();
     protected ProfilingSessionStatus status;
     protected final Set cctListeners = new CopyOnWriteArraySet();
     protected WeakReference clientRef;

@@ -46,7 +46,12 @@ public class RequireJsCustomizer implements ProjectCustomizer.CompositeCategoryP
         projectType = FrameworksUtils.MAVEN_PROJECT,
         category = FrameworksUtils.CATEGORY,
         position = 260
-    )   
+    ),
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+        projectType = FrameworksUtils.GRADLE_PROJECT,
+        category = FrameworksUtils.CATEGORY,
+        position = 260
+    ),
 })
     
     public static RequireJsCustomizer createCustomizer() {

@@ -631,4 +631,16 @@ public final class ModelUtils {
         }
         return result;
     }
+
+    /**
+     * Check whether the scope is anonymous function scope.
+     *
+     * @param scope the scope
+     * @return {@code true} if the scope is anonymous function scope,
+     * {@code false} otherwise
+     */
+    public static boolean isAnonymousFunction(Scope scope) {
+        return scope instanceof FunctionScope
+                && ((FunctionScope) scope).isAnonymous();
+    }
 }

@@ -139,7 +139,7 @@ final class DataLdrActions extends FolderInstance {
         ArrayList<javax.swing.Action> list = new ArrayList<javax.swing.Action> ();
         for (int i = 0; i < cookies.length; i++) {
             try {
-                Class clazz = cookies[i].instanceClass();
+                Class<?> clazz = cookies[i].instanceClass();
                 if (javax.swing.JSeparator.class.isAssignableFrom(clazz)) {
                     list.add(null);
                     continue;

@@ -115,6 +115,11 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new UnusedUsesHint(), "testUnusedUsesHint.php");
     }
 
+    public void testUnusedUsesHintWithTypedProperties() throws Exception {
+        // PHP 7.4
+        checkHints(new UnusedUsesHint(), "testUnusedUsesHintWithTypedProperties.php");
+    }
+
     public void testAmbiguousComparisonHint() throws Exception {
         checkHints(new AmbiguousComparisonHint(), "testAmbiguousComparisonHint.php");
     }
@@ -715,9 +720,17 @@ public class HintsTest extends PHPHintsTestBase {
         applyHint(new InitializeFieldSuggestion(), "testIssue270368_04.php", "function __construct(\\Foo\\Bar $^test) {", "Initialize Field");
     }
 
+    public void testFieldRedeclarationTypedProperties20Hint_01() throws Exception {
+        // PHP 7.4
+        checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_01.php");
+    }
 
-   //~ Inner classes
+    public void testFieldRedeclarationTypedProperties20Hint_02() throws Exception {
+        // PHP 7.4
+        checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_02.php");
+    }
 
+    //~ Inner classes
     private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
 
         private final PhpVersion phpVersion;

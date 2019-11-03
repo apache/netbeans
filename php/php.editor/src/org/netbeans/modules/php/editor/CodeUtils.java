@@ -437,6 +437,21 @@ public final class CodeUtils {
         return variableName;
     }
 
+    @CheckForNull
+    public static String extractFormalParameterName(FormalParameter param) {
+        Expression expression = param.getParameterName();
+        if (expression instanceof Reference) {
+            expression = ((Reference) expression).getExpression();
+        }
+        if (expression instanceof Variadic) {
+            expression = ((Variadic) expression).getExpression();
+        }
+        if (expression instanceof Variable) {
+            Variable variable = (Variable) expression;
+            return extractVariableName(variable);
+        }
+        return null;
+    }
 
     public static String extractVariableType(Assignment assignment) {
         Expression rightSideExpression = assignment.getRightHandSide();

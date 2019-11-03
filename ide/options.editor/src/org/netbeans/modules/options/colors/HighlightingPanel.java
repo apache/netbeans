@@ -494,7 +494,7 @@ public class HighlightingPanel extends JPanel implements ActionListener, ItemLis
     }
     
     private AttributeSet getDefaultColoring() {
-        Collection/*<AttributeSet>*/ defaults = colorModel.getCategories(currentProfile, ColorModel.ALL_LANGUAGES);
+        Collection<AttributeSet> defaults = colorModel.getCategories(currentProfile, ColorModel.ALL_LANGUAGES);
         
         for(Iterator i = defaults.iterator(); i.hasNext(); ) {
             AttributeSet as = (AttributeSet) i.next();

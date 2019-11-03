@@ -18,6 +18,12 @@
  */
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -125,7 +131,7 @@ public class TypeUtilitiesTest extends NbTestCase {
     public void testTypeName() throws Exception {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src  = root.createData("Test.java");
-        TestUtilities.copyStringToFile(src, "package test; public class Test {}");
+        TestUtilities.copyStringToFile(src, "package test; public class Test { { get().run(); } private <Z extends Exception&Runnable> Z get() { return null; } }");
         JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0])), ClassPathSupport.createClassPath(new URL[0]), ClassPathSupport.createClassPath(new URL[0])), src);
         
         js.runUserActionTask(new Task<CompilationController>() {
@@ -136,6 +142,12 @@ public class TypeUtilitiesTest extends NbTestCase {
                 assertEquals("List<String>[]", info.getTypeUtilities().getTypeName(info.getTreeUtilities().parseType("java.util.List<java.lang.String>[]", context)));
                 assertEquals("java.util.List<java.lang.String>...", info.getTypeUtilities().getTypeName(info.getTreeUtilities().parseType("java.util.List<java.lang.String>[]", context), TypeUtilities.TypeNameOptions.PRINT_FQN, TypeUtilities.TypeNameOptions.PRINT_AS_VARARG));
                 assertEquals("List<String>...", info.getTypeUtilities().getTypeName(info.getTreeUtilities().parseType("java.util.List<java.lang.String>[]", context), TypeUtilities.TypeNameOptions.PRINT_AS_VARARG));
+                ClassTree clazz = (ClassTree) info.getCompilationUnit().getTypeDecls().get(0);
+                BlockTree init = (BlockTree) clazz.getMembers().get(1);
+                ExpressionStatementTree var = (ExpressionStatementTree) init.getStatements().get(0);
+                ExpressionTree getInvocation = ((MemberSelectTree) ((MethodInvocationTree) var.getExpression()).getMethodSelect()).getExpression();
+                TypeMirror intersectionType = info.getTrees().getTypeMirror(info.getTrees().getPath(info.getCompilationUnit(), getInvocation));
+                assertEquals("Exception & Runnable", info.getTypeUtilities().getTypeName(intersectionType));
             }
         }, true);
         

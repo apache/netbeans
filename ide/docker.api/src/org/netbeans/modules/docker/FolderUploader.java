@@ -31,9 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
-import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.netbeans.modules.docker.api.DockerInstance;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -67,8 +66,8 @@ public class FolderUploader {
                 try {
                     GZIPOutputStream gzos = new GZIPOutputStream(cos);
                     try {
-                        ArchiveOutputStream aos = new ArchiveStreamFactory().createArchiveOutputStream(
-                                ArchiveStreamFactory.TAR, gzos);
+                        TarArchiveOutputStream aos = new TarArchiveOutputStream(gzos);
+                        aos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                         try {
                             // FIXME exclude dockerignored files
                             FileObject context = folder;

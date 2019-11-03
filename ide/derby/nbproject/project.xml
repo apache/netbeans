@@ -215,6 +215,7 @@
                 <friend>org.netbeans.modules.db.kit</friend>
                 <friend>org.netbeans.modules.derby.bundled</friend>
                 <friend>org.netbeans.modules.glassfish.common</friend>
+                <friend>org.netbeans.modules.payara.common</friend>
                 <friend>org.netbeans.modules.j2ee.blueprints</friend>
                 <friend>org.netbeans.modules.j2ee.samples</friend>
                 <friend>org.netbeans.modules.j2ee.sun.appsrv81</friend>

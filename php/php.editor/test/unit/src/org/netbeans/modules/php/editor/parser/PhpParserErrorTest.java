@@ -961,4 +961,84 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/nullCoalescingAssignmentOperator_01.php");
     }
 
+    public void testTypedProperties20Class() throws Exception {
+        checkErrors("testfiles/parser/php74/typedPropertiesClass.php");
+    }
+
+    public void testTypedProperties20Trait() throws Exception {
+        checkErrors("testfiles/parser/php74/typedPropertiesTrait.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_01.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_02.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_03.php");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        checkErrors("testfiles/parser/php74/spreadOperatorInArrayExpression_04.php");
+    }
+
+    public void testNumericLiteralSeparator_01() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparator_01.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_01() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_01.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_02() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_02.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_03() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_03.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_04() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_04.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_05() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_05.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_06() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_06.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_07() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_07.php");
+    }
+
+    public void testNumericLiteralSeparatorParseError_08() throws Exception {
+        checkErrors("testfiles/parser/php74/numericLiteralSeparatorParseError_08.php");
+    }
+
+    public void testArrowFunctions_01() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctions_01.php");
+    }
+
+    public void testArrowFunctionsParseError_01() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_01.php");
+    }
+
+    public void testArrowFunctionsParseError_02() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_02.php");
+    }
+
+    public void testArrowFunctionsParseError_03() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_03.php");
+    }
+
+    public void testArrowFunctionsParseError_04() throws Exception {
+        checkErrors("testfiles/parser/php74/arrowFunctionsParseError_04.php");
+    }
+
 }

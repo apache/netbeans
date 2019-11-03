@@ -465,7 +465,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
     }
     
     private AttributeSet getDefaultColoring() {
-        Collection/*<AttributeSet>*/ defaults = colorModel.getCategories(currentScheme, ColorModel.ALL_LANGUAGES);
+        Collection<AttributeSet> defaults = colorModel.getCategories(currentScheme, ColorModel.ALL_LANGUAGES);
         
         for(Iterator i = defaults.iterator(); i.hasNext(); ) {
             AttributeSet as = (AttributeSet) i.next();

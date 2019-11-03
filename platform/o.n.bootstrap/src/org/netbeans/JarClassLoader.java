@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.file.NoSuchFileException;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
@@ -519,7 +520,7 @@ public class JarClassLoader extends ProxyClassLoader {
                                         JarFile ret;
                                         try {
                                             ret = new JarFile(file, false);
-                                        } catch (FileNotFoundException ex) {
+                                        } catch (FileNotFoundException | NoSuchFileException ex) {
                                             throw (ZipException)new ZipException(ex.getMessage()).initCause(ex);
                                         }
                                         long took = System.currentTimeMillis() - now;

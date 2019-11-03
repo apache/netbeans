@@ -25,11 +25,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.CodeSigner;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.cert.CertPath;
 import java.security.cert.Certificate;
+import java.security.cert.TrustAnchor;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.autoupdate.TestUtils;
@@ -42,6 +46,7 @@ public class VerifyFileTest extends NbTestCase {
     private static final Logger LOG = Logger.getLogger(VerifyFileTest.class.getName());
 
     private KeyStore ks;
+    private KeyStore validateKs;
 
     public VerifyFileTest(String testName) {
         super(testName);
@@ -51,9 +56,14 @@ public class VerifyFileTest extends NbTestCase {
     protected void setUp() throws Exception {
         URL urlToKS = TestUtils.class.getResource("data/test-keystore.jks");
         assertNotNull(urlToKS);
+        URL urlToValidateKS = TestUtils.class.getResource("data/test-validate-keystore.jks");
+        assertNotNull(urlToValidateKS);
         File ksFile = org.openide.util.Utilities.toFile(urlToKS.toURI());
         assertTrue(ksFile.exists());
+        File validateKsFile = org.openide.util.Utilities.toFile(urlToValidateKS.toURI());
+        assertTrue(validateKsFile.exists());
         ks = getKeyStore(ksFile, "password");
+        validateKs = getKeyStore(validateKsFile, "password");
     }
 
     private String doVerification(String path) throws URISyntaxException, IOException, KeyStoreException {
@@ -63,8 +73,11 @@ public class VerifyFileTest extends NbTestCase {
         assertTrue(jar.exists());
         String res = null;
         try {
-            Collection<CertPath> nbmCerts = Utilities.getNbmCertificates(jar);
+            Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(jar);
             Collection<Certificate> trustedCerts = Utilities.getCertificates(ks);
+            Set<TrustAnchor> trustedCACerts = Collections.EMPTY_SET;
+            Collection<Certificate> validationAnchors = new HashSet<>(Utilities.getCertificates(validateKs));
+            Set<TrustAnchor> validationCACerts = Collections.EMPTY_SET;
             if (nbmCerts == null) {
                 res = Utilities.N_A;
             } else if (nbmCerts.isEmpty()) {
@@ -74,8 +87,8 @@ public class VerifyFileTest extends NbTestCase {
                 // choose the certpath, that has the highest trust level
                 // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED -> UNSIGNED
                 // or comes first
-                for (CertPath cp : nbmCerts) {
-                    String localRes = Utilities.verifyCertificates(cp, trustedCerts);
+                for (CodeSigner cp : nbmCerts) {
+                    String localRes = Utilities.verifyCertificates(cp, trustedCerts, trustedCACerts, validationAnchors, validationCACerts);
                     if (res == null
                         || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
                         res = localRes;
@@ -111,6 +124,14 @@ public class VerifyFileTest extends NbTestCase {
 
     public void testTrustedSignedTwice() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
         assertEquals(Utilities.TRUSTED, doVerification("data/dummy-signed-twice.jar"));
+    }
+
+    public void testValidatedSigned() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
+        assertEquals(Utilities.SIGNATURE_VERIFIED, doVerification("data/dummy-validated.jar"));
+    }
+
+    public void testUnvalidatedSigned() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
+        assertEquals(Utilities.SIGNATURE_UNVERIFIED, doVerification("data/dummy-unvalidated.jar"));
     }
 
     public void testUnsignedPartiallySigned() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {

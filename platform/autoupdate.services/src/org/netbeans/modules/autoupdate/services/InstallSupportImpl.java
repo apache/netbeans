@@ -28,10 +28,13 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.security.CodeSigner;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.CertPath;
 import java.security.cert.Certificate;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,6 +55,7 @@ import org.netbeans.modules.autoupdate.updateprovider.ModuleItem;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess.Task;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
+import org.netbeans.spi.autoupdate.KeyStoreProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.updater.ModuleDeactivator;
 import org.netbeans.updater.ModuleUpdater;
@@ -1056,8 +1060,20 @@ public class InstallSupportImpl {
         try {
             // get trusted certificates
             Set<Certificate> trustedCerts = new HashSet<> ();
-            for (KeyStore ks : Utilities.getKeyStore ()) {
+            Set<Certificate> validationCerts = new HashSet<>();
+            Set<TrustAnchor> trustedCACerts = new HashSet<>();
+            Set<TrustAnchor> validationCACerts = new HashSet<>();
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.TRUST)) {
                 trustedCerts.addAll(Utilities.getCertificates(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.VALIDATE)) {
+                validationCerts.addAll(Utilities.getCertificates(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.TRUST_CA)) {
+                trustedCACerts.addAll(Utilities.getTrustAnchor(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.VALIDATE_CA)) {
+                validationCACerts.addAll(Utilities.getTrustAnchor(ks));
             }
             // load user certificates
             KeyStore ks = Utilities.loadKeyStore ();
@@ -1073,7 +1089,7 @@ public class InstallSupportImpl {
             UpdateElementImpl impl = Trampoline.API.impl(el);
 
             try {
-                Collection<CertPath> nbmCerts = Utilities.getNbmCertificates(nbmFile);
+                Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
                 if(nbmCerts == null) {
                     res = Utilities.N_A;
                 } else if (nbmCerts.isEmpty()) {
@@ -1083,15 +1099,15 @@ public class InstallSupportImpl {
                     // choose the certpath, that has the highest trust level
                     // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED
                     // or comes first
-                    for(CertPath cp: nbmCerts) {
-                        String localRes = Utilities.verifyCertificates(cp, trustedCerts);
+                    for(CodeSigner cs: nbmCerts) {
+                        String localRes = Utilities.verifyCertificates(cs, trustedCerts, trustedCACerts, validationCerts, validationCACerts);
                         // If there is no previous result or if the local
                         // verification yielded a better result than the
                         // previous result, replace it
                         if (res == null
                             || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
                             res = localRes;
-                            certs.put(el, (List<Certificate>) cp.getCertificates());
+                            certs.put(el, (List<Certificate>) cs.getSignerCertPath().getCertificates());
                         }
                     }
                 }

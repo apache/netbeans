@@ -89,6 +89,7 @@ public class VanillaPartialReparser implements PartialReparser {
     private final Field parserDocComments;
     private final Method lineMapBuild;
     private final Method typeEnterSuperCall;
+    private final boolean allowPartialReparse;
 
     public VanillaPartialReparser() {
         Method unenter;
@@ -131,6 +132,10 @@ public class VanillaPartialReparser implements PartialReparser {
             typeEnterSuperCall = null;
         }
         this.typeEnterSuperCall = typeEnterSuperCall;
+        allowPartialReparse = unenter != null && lazyDocCommentsTable != null &&
+                              parserDocComments != null && lineMapBuild != null &&
+                              typeEnterSuperCall != null &&
+                              Boolean.getBoolean("java.enable.partial.reparse");
     }
 
     @Override
@@ -138,6 +143,8 @@ public class VanillaPartialReparser implements PartialReparser {
             final Snapshot snapshot,
             final MethodTree orig,
             final String newBody) throws IOException {
+        if (!allowPartialReparse)
+            return false;
         assert ci != null;
         final FileObject fo = ci.getFileObject();
         if (LOGGER.isLoggable(Level.FINER)) {

@@ -585,4 +585,8 @@ public class PartialReparseTest extends NbTestCase {
         }
 
     }
+
+    static {
+        System.setProperty("java.enable.partial.reparse", "true");
+    }
 }

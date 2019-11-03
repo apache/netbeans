@@ -84,7 +84,7 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change name="initial-api">
+        <change id="initial-api">
             <api name="j2ee.persistence.api"/>
             <summary>Initial version released</summary>
             <version major="1" minor="0"/>
@@ -99,7 +99,7 @@ is the proper place.
             <api name="j2ee.persistence.api"/>
             <summary>Making public API</summary>
             <version major="1" minor="42" subminor="1"/>
-            <date day="03" month="11" year="2019"/>
+            <date day="3" month="11" year="2019"/>
             <author login="jgauravgupta"/>
             <compatibility addition="no" deletion="no" modification="no" binary="compatible" source="compatible"/>
             <description>

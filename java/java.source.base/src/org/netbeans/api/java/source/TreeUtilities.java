@@ -876,7 +876,7 @@ public final class TreeUtilities {
             }            
         };
         NBResolve resolve = NBResolve.instance(jti.getContext());
-        resolve.disableAccessibilityChecks(); //XXX!
+        resolve.disableAccessibilityChecks();
 //        Enter enter = Enter.instance(jti.getContext());
 //        enter.shadowTypeEnvs(true);
 //        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());

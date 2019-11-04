@@ -80,7 +80,7 @@ public final class LinuxNotifier extends Notifier<LinuxNotifier.LKey> {
     private final Map<Integer, LKey> map = new HashMap<Integer, LKey>();
 
     public LinuxNotifier() {
-        IMPL = (InotifyImpl) Native.load("c", InotifyImpl.class);
+        IMPL = Native.load("c", InotifyImpl.class);
     }
 
     private String getString(int maxLen) {

@@ -50,8 +50,8 @@ public class ConfigurationUtils {
     
     // We can override equals() and hashcode() methods here for accepting 2 keys in HashMap
     // However due to the performance issue and clear codes, use 2 HashMap here will be better
-    private static WeakHashMap<FileObject, WeakReference<JSFConfigModel>> configModelsEditable = new WeakHashMap();
-    private static WeakHashMap<FileObject, WeakReference<JSFConfigModel>> configModelsNonEditable = new WeakHashMap();
+    private static WeakHashMap<FileObject, WeakReference<JSFConfigModel>> configModelsEditable = new WeakHashMap<>();
+    private static WeakHashMap<FileObject, WeakReference<JSFConfigModel>> configModelsNonEditable = new WeakHashMap<>();
 
     /**
      * This methods returns the model source for the faces config file.

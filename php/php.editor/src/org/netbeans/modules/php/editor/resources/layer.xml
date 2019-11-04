@@ -394,6 +394,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-ArrowFunctionSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-AssignVariableSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-CombinedAssignmentOperatorSuggestion.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-ConvertVisibilitySuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-DeclareStrictTypesSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IdenticalComparisonSuggestion.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-InitializeFieldSuggestion.instance"/>

@@ -105,7 +105,7 @@ public final class ProjectImportLocationWizardPanel implements WizardDescriptor.
     public void storeSettings (Object settings) {
         WizardDescriptor d = (WizardDescriptor) settings;
         panel.store(d);
-        ((WizardDescriptor) d).putProperty ("NewProjectWizard_Title", null); //NOI18N
+        d.putProperty("NewProjectWizard_Title", null); //NOI18N
     }
 
     public String getBuildFile() {

@@ -242,7 +242,7 @@ public class WizardDescriptor extends DialogDescriptor {
     private final JButton cancelButton = new JButton();
     private final JButton previousButton = new JButton();
     private FinishAction finishOption;
-    private Set /*<Object>*/ newObjects = Collections.EMPTY_SET;
+    private Set<Object> newObjects = Collections.EMPTY_SET;
 
     /** a component with wait cursor */
     private Component waitingComponent;

@@ -105,10 +105,10 @@ public class CatalogAction implements ActionListener {
             assert nodes != null && nodes.length > 0 : "Selected templates cannot be null or empty.";
             Set nodes2open = getNodes2Open (nodes);
             assert ! nodes2open.isEmpty () : "Selected templates to open cannot by empty for nodes " + Arrays.asList (nodes);
-            Iterator/*<Node>*/ it = nodes2open.iterator ();
+            Iterator<Node> it = nodes2open.iterator();
             while (it.hasNext ()) {
                 Node n = (Node) it.next ();
-                ViewCookie vc = (ViewCookie) n.getLookup ().lookup (ViewCookie.class);
+                ViewCookie vc = n.getLookup().lookup(ViewCookie.class);
                 if (vc != null) {
                     vc.view();
                 } else {
@@ -127,7 +127,7 @@ public class CatalogAction implements ActionListener {
                     Node n = nodes [i];
 //                    EditCookie ec = (EditCookie) n.getLookup ().lookup (EditCookie.class);
 //                    OpenCookie oc = (OpenCookie) n.getLookup ().lookup (OpenCookie.class);
-                    ViewCookie vc = (ViewCookie) n.getLookup ().lookup (ViewCookie.class);
+                    ViewCookie vc = n.getLookup().lookup(ViewCookie.class);
                     res = vc != null; //ec != null || oc != null;
                     
                     i++;

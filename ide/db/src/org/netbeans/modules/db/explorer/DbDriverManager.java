@@ -64,12 +64,12 @@ public class DbDriverManager {
     /**
      * Maps each connection to the driver used to create that connection.
      */
-    private Map/*<Connection, Driver>*/ conn2Driver = new WeakHashMap();
+    private Map<Connection, Driver> conn2Driver = new WeakHashMap<>();
     
     /**
      * Maps each driver to the class loader for that driver.
      */
-    private Map/*<JDBCDriver, ClassLoader>*/ driver2Loader = new WeakHashMap();
+    private Map<JDBCDriver, ClassLoader> driver2Loader = new WeakHashMap<>();
     
     private DbDriverManager() {
     }

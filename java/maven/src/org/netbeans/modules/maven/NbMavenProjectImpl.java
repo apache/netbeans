@@ -77,6 +77,7 @@ import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.problems.ProblemReporterImpl;
 import org.netbeans.modules.maven.queries.PomCompilerOptionsQueryImpl;
 import org.netbeans.modules.maven.queries.UnitTestsCompilerOptionsQueryImpl;
@@ -260,6 +261,14 @@ public final class NbMavenProjectImpl implements Project {
 
     public ProblemReporterImpl getProblemReporter() {
         return problemReporter;
+    }
+
+    public String getHintJavaPlatform() {
+        String hint = getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+        if (hint == null) {
+            hint = MavenSettings.getDefault().getDefaultJdk();
+        }
+        return hint == null || hint.isEmpty() ? null : hint;
     }
 
     /**

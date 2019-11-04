@@ -57,7 +57,7 @@ public final class BootClassPathImpl extends AbstractBootPathImpl {
                 boolean[] includeJDK = { true };
                 boolean[] includeFX = { false };
                 result.addAll(ecpImpl.getResources(includeJDK, includeFX));
-                lastHintValue = project.getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+                lastHintValue = project.getHintJavaPlatform();
                 if (includeJDK[0]) {
                     JavaPlatform pat = findActivePlatform();
                     boolean hasFx = false;
@@ -80,7 +80,7 @@ public final class BootClassPathImpl extends AbstractBootPathImpl {
 
     public @Override void propertyChange(PropertyChangeEvent evt) {
         super.propertyChange(evt);
-        String newVal = project.getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+        String newVal = project.getHintJavaPlatform();
         if (evt.getSource() == project && evt.getPropertyName().equals(NbMavenProject.PROP_PROJECT)) {
             if (ecpImpl.resetCache()) {
                 resetCache();

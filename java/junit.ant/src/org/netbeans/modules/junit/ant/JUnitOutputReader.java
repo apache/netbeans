@@ -288,6 +288,7 @@ final class JUnitOutputReader {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     synchronized void messageLogged(final AntEvent event) {
         final String msg = event.getMessage();
         if (msg == null) {

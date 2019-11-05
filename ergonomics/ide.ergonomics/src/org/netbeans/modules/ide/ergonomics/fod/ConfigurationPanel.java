@@ -54,6 +54,9 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.TaskListener;
+import org.openide.modules.ModuleInfo;
+import org.openide.modules.SpecificationVersion;
+import org.openide.util.Lookup;
 
 /**
  * Provider for fake web module extenders. Able to download and enable the
@@ -95,10 +98,24 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
         Set<FeatureInfo.ExtraModuleInfo> extraModules = featureInfo.getExtraModules();
-
+        Collection<? extends ModuleInfo> lookupAll = Lookup.getDefault().lookupAll(ModuleInfo.class);
+        FindComponentModules findModules = new FindComponentModules(info);
+        Collection<UpdateElement> modulesToInstall = findModules.getModulesForInstall();
         selectionsPanel.removeAll();
         for (FeatureInfo.ExtraModuleInfo extraModule : extraModules) {
             JCheckBox jCheckBox = new JCheckBox(extraModule.displayName());
+            for (ModuleInfo moduleInfo : lookupAll) {
+                if (extraModule.matches(moduleInfo.getCodeName())) {
+                    jCheckBox.setText(moduleInfo.getDisplayName());
+                }
+            }
+            
+            for (UpdateElement updateElement : modulesToInstall) {
+                if (extraModule.matches(updateElement.getCodeName())){
+                    jCheckBox.setText(updateElement.getDisplayName());
+                }
+            }
+            
             if (extraModule.isRequiredFor(jdk)) {
                 jCheckBox.setSelected(true);
                 jCheckBox.setEnabled(false);
@@ -107,9 +124,10 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             jCheckBox.addActionListener(e -> {
                 if (jCheckBox.isSelected()) {
                     extrasFilter.add(extraModule);
+                } else {
+                    extrasFilter.remove(extraModule);
                 }
-                else extrasFilter.remove(extraModule);
-            });         
+            });
             selectionsPanel.add(jCheckBox);
         }
         if (activateNow) {

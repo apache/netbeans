@@ -68,7 +68,7 @@ public class BiIncludeAllAction extends NodeAction  {
             return false;
 
         for(int i = 0; i < activatedNodes.length; i++ ) {
-            BiNode.SubNode bis = ((BiNode.SubNode)activatedNodes[i].getCookie( BiNode.SubNode.class ));
+            BiNode.SubNode bis = activatedNodes[i].getCookie( BiNode.SubNode.class );
             if ( bis == null )
                 return false;
             Node[] nodes = bis.getChildren().getNodes();
@@ -102,7 +102,7 @@ public class BiIncludeAllAction extends NodeAction  {
 
         for(int i = 0; i < nodes.length; i++ ) {
             if( nodes[i].getCookie( BiNode.SubNode.class ) != null )
-                ((BiNode.SubNode)nodes[i].getCookie( BiNode.SubNode.class )).includeAll( true );
+                nodes[i].getCookie( BiNode.SubNode.class ).includeAll( true );
         }
 
     }

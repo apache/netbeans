@@ -216,7 +216,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" pref="44" max="-2" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
+                      <EmptySpace pref="218" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -322,7 +322,7 @@
                       <Component id="cbDisableIndex" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                      <EmptySpace pref="290" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -422,7 +422,7 @@
                           <Component id="txtDirectory" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnDirectory" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="30" max="32767" attributes="0"/>
+                      <EmptySpace pref="180" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -485,17 +485,6 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="lblCommandLine" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblExternalVersion" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="comMavenHome" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -523,15 +512,38 @@
                               </Group>
                               <EmptySpace min="0" pref="45" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblOptions" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtOptions" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnOptions" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblCommandLine" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblJdkHome" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="comMavenHome" max="32767" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="comJdkHome" max="32767" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="comManageJdks" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lblOptions" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="txtOptions" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnOptions" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
+                      <Component id="lblExternalVersion" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -545,7 +557,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblExternalVersion" min="-2" pref="14" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblJdkHome" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="comJdkHome" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="comManageJdks" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblOptions" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtOptions" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -700,6 +718,33 @@
                   <ResourceString bundle="org/netbeans/modules/maven/options/Bundle.properties" key="SettingsPanel.cbShowInfoLevel.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblJdkHome">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/maven/options/Bundle.properties" key="SettingsPanel.lblJdkHome.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="lblCommandLine.setLabelFor(comMavenHome);"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="comJdkHome">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="comManageJdks">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/maven/options/Bundle.properties" key="SettingsPanel.comManageJdks.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comManageJdksActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

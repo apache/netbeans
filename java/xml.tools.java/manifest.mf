@@ -3,7 +3,7 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.xml.tools.java
 OpenIDE-Module-Layer: org/netbeans/modules/xml/tools/java/resources/mf-layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/tools/java/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.35
+OpenIDE-Module-Specification-Version: 1.36
 
 
 

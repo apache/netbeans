@@ -34,7 +34,7 @@ public final class PlatformsCustomizer {
 
     /**
      * Shows platforms customizer
-     * @param  platform which should be seelcted, may be null
+     * @param  platform which should be selected, may be null
      * @return boolean for future extension, currently always true
      */
     public static boolean showCustomizer (JavaPlatform platform) {

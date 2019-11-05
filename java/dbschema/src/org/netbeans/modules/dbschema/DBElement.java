@@ -48,7 +48,7 @@ public abstract class DBElement implements Comparable, DBElementProperties {
      * @return implementation for the element
      */
     public final Impl getElementImpl() {
-        return (DBElement.Impl) impl;
+        return impl;
     }
 
    /** Sets the implementation factory of this database element.

@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.hudson.php
 OpenIDE-Module-Layer: org/netbeans/modules/hudson/php/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/hudson/php/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.24
+OpenIDE-Module-Specification-Version: 1.25

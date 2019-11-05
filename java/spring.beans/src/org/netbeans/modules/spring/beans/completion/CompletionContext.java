@@ -82,7 +82,7 @@ public class CompletionContext {
 
         Object sdp = bDoc.getProperty(Document.StreamDescriptionProperty);
         internalDoc.putProperty(Document.StreamDescriptionProperty, sdp);
-        this.support = (XMLSyntaxSupport)XMLSyntaxSupport.getSyntaxSupport(internalDoc);
+        this.support = XMLSyntaxSupport.getSyntaxSupport(internalDoc);
         this.documentContext = DocumentContext.create(internalDoc, caretOffset);
 
         // get last inserted character from the actual document
@@ -346,7 +346,7 @@ public class CompletionContext {
     public List<String> getExistingAttributes() {
         if (existingAttributes == null) {
             try {
-                existingAttributes = (List<String>)support.runWithSequence(
+                existingAttributes = support.runWithSequence(
                         documentContext.getCurrentTokenOffset(),
                         this::getExistingAttributesLocked
                 );

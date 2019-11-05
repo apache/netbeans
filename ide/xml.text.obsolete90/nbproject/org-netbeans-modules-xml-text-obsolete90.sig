@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.5.0
+#Version 1.6.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -637,6 +637,7 @@ hfds IN_PASTE,KEYMAPS_AND_ACTIONS_LOCK,KIT_CNT_PREALLOC,LOG,PROP_NAVIGATE_BOUNDA
 hcls ClearUIForNullKitListener,DefaultSyntax,DefaultSyntaxTokenContext,KeybindingsAndPreferencesTracker,NullTextUI,SearchableKit
 
 CLSS public org.netbeans.editor.Formatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 meth public boolean expandTabs()
 meth public int getShiftWidth()
@@ -650,8 +651,11 @@ meth public java.lang.Class getKitClass()
 meth public java.lang.String getIndentString(int)
 meth public java.lang.String getIndentString(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static void setFormatter(java.lang.Class,org.netbeans.editor.Formatter)
+ anno 0 java.lang.Deprecated()
 meth public void changeBlockIndent(org.netbeans.editor.BaseDocument,int,int,int) throws javax.swing.text.BadLocationException
 meth public void changeRowIndent(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
 meth public void indentLock()
@@ -827,6 +831,7 @@ meth public org.netbeans.editor.ext.FormatTokenPosition removeLineEndWhitespace(
 supr org.netbeans.editor.ext.FormatSupport
 
 CLSS public org.netbeans.editor.ext.ExtFormatter
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 innr public static Simple
 intf org.netbeans.editor.ext.FormatLayer

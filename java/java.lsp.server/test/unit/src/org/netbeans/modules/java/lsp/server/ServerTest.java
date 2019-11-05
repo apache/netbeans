@@ -78,6 +78,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -144,7 +145,7 @@ public class ServerTest extends NbTestCase {
     public void testMain() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
-        String code = "public class Test { int i = \"\".hashCode(); }";
+        String code = "public class Test { int i = \"\".hashCode(); public void run() { this.test(); } /**Test.*/public void test() {} }";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
@@ -197,11 +198,27 @@ public class ServerTest extends NbTestCase {
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:equals(Object anObject) : boolean", "Method:equalsIgnoreCase(String anotherString) : boolean"), actualItems);
+        int testStart = code.indexOf("test") + "equ".length() - "hashCode".length();
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, testStart + 3))).get();
+        List<CompletionItem> actualCompletionItem = completion.getRight().getItems();
+        actualItems = actualCompletionItem.stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Method:test() : void"), actualItems);
+        assertEquals(null, actualCompletionItem.get(0).getDocumentation());
+        CompletionItem resolvedItem = server.getTextDocumentService().resolveCompletionItem(actualCompletionItem.get(0)).get();
+        assertEquals("**[Test](*0)**\n" +
+                     "\n" +
+                     "```\n" +
+                     "public void test()\n" +
+                     "```\n" +
+                     "\n" +
+                     "Test.\n" +
+                     "\n",
+                     resolvedItem.getDocumentation().getRight().getValue());
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, 0))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertTrue(actualItems.contains("Keyword:interface"));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "equ".length())), "equ".length(), "hashCode"))));
-        int closingBrace = code.indexOf("}");
+        int closingBrace = code.lastIndexOf("}");
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private String c(Object o) {\nreturn o;\n}"))));
         List<Diagnostic> diagnostics = assertDiags(diags, "Error:1:0-1:9"); //errors
         assertDiags(diags, "Error:1:0-1:9");//hints
@@ -221,7 +238,7 @@ public class ServerTest extends NbTestCase {
         assertEquals("(String) ", edit.getNewText());
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
-        assertDiags(diags, "Error:1:0-1:9", "Warning:0:81-0:86", "Warning:0:85-0:86");//hints
+        assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
     }
 
     private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {

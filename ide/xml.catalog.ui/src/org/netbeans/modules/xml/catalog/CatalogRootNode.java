@@ -297,7 +297,7 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
         if (activatedNodes.length == 0) return;
         try {
             Node current = activatedNodes[0];
-            CatalogRootNode me = (CatalogRootNode) current.getCookie(CatalogRootNode.class);
+            CatalogRootNode me = current.getCookie(CatalogRootNode.class);
             CatalogMounter newType = me.new CatalogMounter();
             newType.create();
         } catch (IOException ex) {

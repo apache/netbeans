@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.56
+#Version 3.57
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1979,6 +1979,7 @@ meth public static boolean isAuthenticationDialogSuppressed()
 meth public static char[] getAuthenticationPassword(java.net.URI)
 meth public static java.lang.String getAuthenticationUsername(java.net.URI)
 meth public static java.lang.String getKeyForAuthenticationPassword(java.net.URI)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String getProxyHost(java.net.URI)
 meth public static java.lang.String getProxyPort(java.net.URI)
 supr java.lang.Object

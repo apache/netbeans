@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 public class WebServiceGroup {
     
-    Set listeners = new HashSet();
+    Set<WebServiceGroupListener> listeners = new HashSet<>();
     String groupId = null;
     String groupName = null;
     boolean userDefined = true;
@@ -99,7 +99,7 @@ public class WebServiceGroup {
             webserviceIds.add(webServiceId);
             
             if (quietly) return;
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
                 ((WebServiceGroupListener)iter.next()).webServiceAdded(evt);
@@ -107,7 +107,7 @@ public class WebServiceGroup {
         }else if (!quietly) {
             // This is a hack to make the nodes to appear while restoring 
             // the W/S meta data at IDE start (lag due to WSDL parsing)
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
                 ((WebServiceGroupListener)iter.next()).webServiceAdded(evt);
@@ -121,7 +121,7 @@ public class WebServiceGroup {
             webserviceIds.remove(webServiceId);
             if (quietly) return;
             
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
                 ((WebServiceGroupListener)iter.next()).webServiceRemoved(evt);
@@ -131,7 +131,7 @@ public class WebServiceGroup {
     
     public void modify(String webServiceId) {
         // It is here solely to notify the listners
-        Iterator iter = listeners.iterator();
+        Iterator<WebServiceGroupListener> iter = listeners.iterator();
         while(iter.hasNext()) {
             WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
             ((WebServiceGroupListener)iter.next()).webServiceRemoved(evt);

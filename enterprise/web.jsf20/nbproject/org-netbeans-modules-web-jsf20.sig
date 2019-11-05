@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.37.0
+#Version 1.38.0
 
 CLSS public com.sun.faces.RIConstants
 fld public final static int FLOW_DEFINITION_ID_SUFFIX_LENGTH

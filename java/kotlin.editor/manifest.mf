@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.kotlin.editor
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/kotlin/editor/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.1
+OpenIDE-Module-Specification-Version: 1.2

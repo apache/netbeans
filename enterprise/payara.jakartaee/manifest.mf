@@ -4,5 +4,5 @@ OpenIDE-Module: org.netbeans.modules.payara.jakartaee/0
 OpenIDE-Module-Layer: org/netbeans/modules/payara/jakartaee/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/payara/jakartaee/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.serverplugins.javaee
-OpenIDE-Module-Specification-Version: 2.1
+OpenIDE-Module-Specification-Version: 2.2
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.13
+#Version 9.14
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -1041,6 +1041,7 @@ meth public static boolean isAuthenticationDialogSuppressed()
 meth public static char[] getAuthenticationPassword(java.net.URI)
 meth public static java.lang.String getAuthenticationUsername(java.net.URI)
 meth public static java.lang.String getKeyForAuthenticationPassword(java.net.URI)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String getProxyHost(java.net.URI)
 meth public static java.lang.String getProxyPort(java.net.URI)
 supr java.lang.Object

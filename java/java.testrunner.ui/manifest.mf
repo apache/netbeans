@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.java.testrunner.ui
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/testrunner/ui/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.java.testrunner.ui.api.JavaManager
-OpenIDE-Module-Specification-Version: 1.10
+OpenIDE-Module-Specification-Version: 1.11
 

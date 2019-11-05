@@ -1522,6 +1522,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void insideMemberSelect(Env env) throws IOException {
         int offset = env.getOffset();
         String prefix = env.getPrefix();
@@ -2678,6 +2679,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void insideExpressionStatement(Env env) throws IOException {
         TreePath path = env.getPath();
         ExpressionStatementTree est = (ExpressionStatementTree) path.getLeaf();
@@ -3241,6 +3243,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private Iterable<? extends Element> getLocalMembersAndVars(final Env env) throws IOException {
         final String prefix = env.getPrefix();
         final CompilationController controller = env.getController();
@@ -3345,6 +3348,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addChainedMembers(final Env env, final Iterable<? extends Element> locals) throws IOException {
         final Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
         if (smartTypes != null && !smartTypes.isEmpty()) {
@@ -3441,6 +3445,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addMemberConstantsAndTypes(final Env env, final TypeMirror type, final Element elem) throws IOException {
         Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
         final CompilationController controller = env.getController();
@@ -4112,6 +4117,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return subtypes;
     }
 
+    @SuppressWarnings("fallthrough")
     private void addMethodArguments(Env env, MethodInvocationTree mit) throws IOException {
         final CompilationController controller = env.getController();
         TreePath path = env.getPath();
@@ -4446,6 +4452,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addKeywordsForStatement(Env env) {
         String prefix = env.getPrefix();
         for (String kw : STATEMENT_KEYWORDS) {
@@ -4840,6 +4847,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return null;
     }
 
+    @SuppressWarnings("fallthrough")
     private VariableElement getFieldOrVar(Env env, final String simpleName) throws IOException {
         if (simpleName == null || simpleName.length() == 0) {
             return null;
@@ -5034,6 +5042,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return smartTypes;
     }
 
+    @SuppressWarnings("fallthrough")
     private Set<? extends TypeMirror> getSmartTypesImpl(Env env) throws IOException {
         int offset = env.getOffset();
         final CompilationController controller = env.getController();

@@ -140,6 +140,7 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
                 break;
             case DIRECT:
                 LOGGER.log(Level.INFO, "System network proxy - mode: direct"); //NOI18N
+                break;
             default:
                 LOGGER.log(Level.INFO, "System network proxy: fell to default (correct if direct mode went before)"); //NOI18N
                 getPreferences().remove(ProxySettings.SYSTEM_PROXY_HTTP_HOST);

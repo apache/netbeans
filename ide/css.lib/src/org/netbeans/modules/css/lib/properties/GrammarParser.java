@@ -71,7 +71,8 @@ public class GrammarParser {
         }
         return root;
     }
-    
+
+    @SuppressWarnings("fallthrough")
     private void parseElements(ParserInput input, GroupGrammarElement parent, boolean ignoreInherits,
             AtomicInteger group_index, int openedParenthesis) {
         GrammarElement last = null;

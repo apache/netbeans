@@ -57,6 +57,8 @@ LDLIBSOPTIONS=-L/usr/local/lib -limobiledevice /opt/local/lib/libplist.dylib
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EXT}
+	${CP} /opt/local/lib/libplist.dylib ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
+	-install_name_tool -change libplist.dylib @executable_path/libplist.dylib ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EXT}
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EXT}: /opt/local/lib/libplist.dylib
 
@@ -64,10 +66,10 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EX
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -dynamiclib -install_name libiDeviceNativeBinding.${CND_DLIB_EXT} -fPIC
 
-${OBJECTDIR}/webinspectorjni.o: webinspectorjni.c 
+${OBJECTDIR}/webinspectorjni.o: webinspectorjni.c
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -g -I/Library/Java/JavaVirtualMachines/jdk1.7.0_17.jdk/Contents/Home/include/ -I/opt/local/include -I/Library/Java/JavaVirtualMachines/jdk1.7.0_17.jdk/Contents/Home/include/darwin -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/webinspectorjni.o webinspectorjni.c
+	${RM} "$@.d"
+	$(COMPILE.c) -g -I/Library/Java/JavaVirtualMachines/jdk1.7.0_17.jdk/Contents/Home/include/ -I/opt/local/include -I/Library/Java/JavaVirtualMachines/jdk1.7.0_17.jdk/Contents/Home/include/darwin -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/webinspectorjni.o webinspectorjni.c
 
 # Subprojects
 .build-subprojects:
@@ -75,6 +77,7 @@ ${OBJECTDIR}/webinspectorjni.o: webinspectorjni.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} -r ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libplist.dylib
 	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libiDeviceNativeBinding.${CND_DLIB_EXT}
 
 # Subprojects

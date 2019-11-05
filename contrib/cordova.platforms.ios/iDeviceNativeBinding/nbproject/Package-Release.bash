@@ -61,6 +61,10 @@ mkdir -p ${NBTMPDIR}
 # Copy files and create directories and links
 cd "${TOP}"
 makeDirectory "${NBTMPDIR}/libiDeviceNativeBinding.dylib/lib"
+copyFileToTmpDir "${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libplist.dylib" "${NBTMPDIR}/${PACKAGE_TOP_DIR}lib/libplist.dylib" 0644
+
+cd "${TOP}"
+makeDirectory "${NBTMPDIR}/libiDeviceNativeBinding.dylib/lib"
 copyFileToTmpDir "${OUTPUT_PATH}" "${NBTMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASENAME}" 0644
 
 

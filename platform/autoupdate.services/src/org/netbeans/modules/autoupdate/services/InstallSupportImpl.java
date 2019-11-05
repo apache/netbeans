@@ -1056,6 +1056,13 @@ public class InstallSupportImpl {
     }
     
     private int verifyNbm (UpdateElement el, File nbmFile, ProgressHandle progress, int verified) throws OperationException {
+        UpdateElementImpl impl = Trampoline.API.impl(el);
+
+        modified.remove(impl);
+        trusted.remove(impl);
+        signedVerified.remove(impl);
+        signedUnverified.remove(impl);
+
         String res = null;
         try {
             // get trusted certificates
@@ -1086,8 +1093,6 @@ public class InstallSupportImpl {
                 progress.progress (el.getDisplayName (), verified < wasDownloaded ? verified : wasDownloaded);
             }
 
-            UpdateElementImpl impl = Trampoline.API.impl(el);
-
             try {
                 Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
                 if(nbmCerts == null) {
@@ -1114,7 +1119,6 @@ public class InstallSupportImpl {
             } catch (SecurityException ex) {
                 LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
                 res = Utilities.MODIFIED;
-                modified.add(impl);
             }
 
             if (res != null) {

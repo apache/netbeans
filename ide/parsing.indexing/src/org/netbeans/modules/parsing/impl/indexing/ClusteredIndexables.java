@@ -616,6 +616,7 @@ public final class ClusteredIndexables {
             }
 
             @Override
+            @SuppressWarnings("fallthrough")
             public boolean hasNext() {
                 if (current != null) {
                     return true;

@@ -721,6 +721,7 @@ public class LatteMarkupColoringLexer {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
+  @SuppressWarnings("fallthrough")
   public LatteMarkupTokenId findNextToken() throws java.io.IOException {
     int zzInput;
     int zzAction;
@@ -859,21 +860,19 @@ public class LatteMarkupColoringLexer {
           }
         case 36: break;
         default:
-          if (zzInput == YYEOF)
-            //zzAtEOF = true;
-              {         if(input.readLength() > 0) {
-            // backup eof
-            input.backup(1);
-            //and return the text as error token
-            return LatteMarkupTokenId.T_ERROR;
-        } else {
-            return null;
-        }
- }
-
-          else {
-            zzScanError(ZZ_NO_MATCH);
-          }
+            if (zzInput == YYEOF) //zzAtEOF = true;
+            {
+                if (input.readLength() > 0) {
+                    // backup eof
+                    input.backup(1);
+                    //and return the text as error token
+                    return LatteMarkupTokenId.T_ERROR;
+                } else {
+                    return null;
+                }
+            } else {
+                zzScanError(ZZ_NO_MATCH);
+            }
       }
     }
   }

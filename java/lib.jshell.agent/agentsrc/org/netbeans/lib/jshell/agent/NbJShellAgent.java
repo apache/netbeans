@@ -400,7 +400,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             istm = new ByteArrayInputStream(classfileBuffer);
             ClassReader reader = new ClassReader(istm);
             ClassWriter wr = new ClassWriter(reader, 0);
-            ClassNode clazz = new ClassNode();
+            ClassNode clazz = new ClassNode(Opcodes.ASM5);
             reader.accept(clazz, 0);
             
             boolean found = false;

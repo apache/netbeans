@@ -1,8 +1,8 @@
 Name: OW2 ASM
-Version: 5.0.1
+Version: 5.1
 License: BSD-INRIA
 Origin: OW2 Consortium
-URL: http://forge.ow2.org/project/download.php?group_id=23&file_id=19789
+URL: https://repository.ow2.org/nexus/content/repositories/releases/org/ow2/asm/asm-all/5.1/
 Description: Bytecode manipulation library
 
 *******************************************************************************

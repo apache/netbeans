@@ -57,7 +57,7 @@ final class Asm {
         // must analyze the extender class, as some annotations there may trigger
         ClassReader clr = new ClassReader(data);
         ClassWriter wr = new ClassWriter(clr, 0);
-        ClassNode theClass = new ClassNode();
+        ClassNode theClass = new ClassNode(Opcodes.ASM5);
         
         clr.accept(theClass, 0);
         
@@ -74,7 +74,7 @@ final class Asm {
                 throw new IOException("Could not find classfile for extender class"); // NOI18N
             }
             ClassReader extenderReader = new ClassReader(istm);
-            ClassNode extenderClass = new ClassNode();
+            ClassNode extenderClass = new ClassNode(Opcodes.ASM5);
             extenderReader.accept(extenderClass, ClassReader.SKIP_FRAMES);
             
             // search for a no-arg ctor, replace all invokespecial calls in ctors
@@ -292,18 +292,27 @@ final class Asm {
     }
     
     private static class CtorDelVisitor extends AnnotationVisitor {
-        int[]   indices;
+        
+        int[] indices;
        
-        public CtorDelVisitor(int i) {
-            super(i);
+        /**
+         * Constructs a new {@link AnnotationVisitor}.
+         *
+         * @param api the ASM API version implemented by this visitor. Must be one of {@link
+         *     Opcodes#ASM4}, {@link Opcodes#ASM5}
+         */
+        public CtorDelVisitor(int api) {
+            super(api);
         }
 
         @Override
         public void visit(String string, Object o) {
+
             if ("delegateParams".equals(string)) {  // NOI18N
                 indices = (int[])o;
             }
             super.visit(string, o);
+
         }
     }
     

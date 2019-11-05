@@ -169,6 +169,7 @@ public final class JavadocCompletionUtils {
      * @param e element for which the tokens are queried
      * @return javadoc token sequence or null.
      */
+    @SuppressWarnings("fallthrough")
     public static TokenSequence<JavadocTokenId> findJavadocTokenSequence(CompilationInfo javac, Tree tree, Element e) {
         if (e == null || javac.getElementUtilities().isSynthetic(e))
             return null;

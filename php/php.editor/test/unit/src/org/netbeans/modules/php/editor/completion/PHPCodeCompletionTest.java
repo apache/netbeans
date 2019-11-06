@@ -781,6 +781,7 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
     }
 
     public void testIssue153707_01() throws Exception {
+        // FIXME: maybe, should add only variables and $this->
         checkCompletion("testfiles/completion/lib/_base/issue153707.php", "class property: ^", false);
     }
 

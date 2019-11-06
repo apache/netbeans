@@ -1,14 +1,22 @@
 Code completion result for source line:
-$af = static fn() => |isset($this); // static
+| // trait 1
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctions.php
-METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
-METHOD     new()                           [STATIC]   ArrowFunctions
-METHOD     test()                          [PUBLIC]   ArrowFunctions
-VARIABLE   ? $af                           [PUBLIC]   arrowFunctions.php
-VARIABLE   int $test                       [PUBLIC]   arrowFunctions.php
-CONSTANT   CONSTANT_INT 1000               [PUBLIC]   arrowFunctions.php
-KEYWORD    ArrowFunctions $this->                     null
+CLASS      Class1855                       [PUBLIC]   nb1855.php
+CLASS      ParentClass                     [PUBLIC]   nb1855.php
+METHOD     privateTraitMethod($param)      [PRIVATE]  Trait1855
+METHOD     privateTraitStaticMethod($para  [PRIVATE,  Trait1855
+METHOD     protectedTraitMethod($param)    [PROTECTE  Trait1855
+METHOD     protectedTraitStaticMethod($pa  [PROTECTE  Trait1855
+METHOD     publicTraitMethod($param)       [PUBLIC]   Trait1855
+METHOD     publicTraitStaticMethod($param  [STATIC]   Trait1855
+VARIABLE   ? $param                        [PUBLIC]   nb1855.php
+VARIABLE   ? $privateTraitStaticProperty   [PRIVATE,  Trait1855
+VARIABLE   ? $protectedTraitStaticPropert  [PROTECTE  Trait1855
+VARIABLE   ? $publicStaticTraitProperty    [STATIC]   Trait1855
+VARIABLE   ? privateTraitProperty          [PRIVATE]  Trait1855
+VARIABLE   ? protectedTraitProperty        [PROTECTE  Trait1855
+VARIABLE   ? publicTraitProperty           [PUBLIC]   Trait1855
+KEYWORD    Trait1855 $this->                          null
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null
 KEYWORD    static::                                   null

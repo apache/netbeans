@@ -4,7 +4,11 @@ echo "class property: |$this->name\n";
 PACKAGE    ANS                             [PUBLIC]   null
 PACKAGE    CNS                             [PUBLIC]   null
 CLASS      Book                            [PUBLIC]   issue153707.php
+METHOD     getName()                       [PUBLIC]   Book
+METHOD     setName($name)                  [PUBLIC]   Book
 VARIABLE   ? $name                         [PUBLIC]   issue153707.php
+VARIABLE   ? name                          [PUBLIC]   Book
+CONSTANT   TEST 'Simon'                    [PUBLIC]   Book
 KEYWORD    Book $this->                               null
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null

@@ -1,6 +1,8 @@
 Code completion result for source line:
 return new class($|this->prop) extends Outer {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? prop                          [PRIVATE]  \My\Outer
+VARIABLE   ? prop2                         [PROTECTE  \My\Outer
 KEYWORD    Outer $this->                              null
 ------------------------------------
 VARIABLE   $GLOBALS                                   PHP Platform

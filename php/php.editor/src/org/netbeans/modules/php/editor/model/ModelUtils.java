@@ -237,6 +237,16 @@ public final class ModelUtils {
     }
 
     @NonNull
+    public static Collection<? extends TypeScope> resolveType(Model model, int offset) {
+        VariableScope variableScope = model.getVariableScope(offset);
+        TypeScope typeScope = getTypeScope(variableScope);
+        if (typeScope != null) {
+            return Collections.singletonList(typeScope);
+        }
+        return Collections.emptyList();
+    }
+
+    @NonNull
     public static Collection<? extends TypeScope> resolveTypeAfterReferenceToken(Model model, TokenSequence<PHPTokenId> tokenSequence,
             int offset, boolean specialVariable) {
         tokenSequence.move(offset);

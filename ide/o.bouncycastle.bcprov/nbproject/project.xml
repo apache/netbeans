@@ -23,12 +23,12 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.eclipse.jgit.java7</code-name-base>
+            <code-name-base>org.bouncycastle.bcprov</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>org-eclipse-jgit-java7.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit.java7-3.6.2.201501210735-r.jar</binary-origin>
+                <runtime-relative-path>org-bouncycastle-bcprov.jar</runtime-relative-path>
+                <binary-origin>external/bcprov-jdk15on-1.63.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -20,6 +20,7 @@
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,14 +28,12 @@ import java.io.OutputStream;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.netbeans.libs.git.GitClient;
 import org.netbeans.libs.git.GitClient.DiffMode;
 import org.netbeans.libs.git.jgit.AbstractGitTestCase;
-import org.netbeans.libs.git.progress.ProgressMonitor;
 
 /**
  *
@@ -182,33 +181,26 @@ public class ExportDiffTest extends AbstractGitTestCase {
     public void testDiffRenameDetectionProblem () throws Exception {
         File file = new File(workDir, "file");
         File renamed = new File(workDir, "renamed");
-        File patchFile = new File(workDir.getParentFile(), "diff.patch");
         write(file, "hey, i will be renamed\n");
         add(file);
         commit(file);
-        
+
         file.renameTo(renamed);
         write(renamed, "hey, i will be renamed\nand now i am\n");
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(patchFile));
-        DiffFormatter formatter = new DiffFormatter(out);
-        formatter.setRepository(repository);
-        ObjectReader or = null;
-        try {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
+        try (OutputStream out = new BufferedOutputStream(baos);
+            DiffFormatter formatter = new DiffFormatter(out);) {
+            formatter.setRepository(repository);
             formatter.setDetectRenames(true);
-            AbstractTreeIterator firstTree = new DirCacheIterator(repository.readDirCache());;
+            AbstractTreeIterator firstTree = new DirCacheIterator(repository.readDirCache());
             AbstractTreeIterator secondTree = new FileTreeIterator(repository);
             formatter.format(firstTree, secondTree);
             formatter.flush();
-            fail("Fixed in JGit, modify and simplify the sources in ExportDiff command");
-        } catch (IOException ex) {
-            assertEquals("Missing blob 7b34a309b8dbae2686c9e597efef28a612e48aff", ex.getMessage());
-        } finally {
-            if (or != null) {
-                or.release();
-            }
-            formatter.release();
         }
-        
+        assertFalse(
+            "Fixed in JGit, modify and simplify the sources in ExportDiff command",
+            baos.toString().contains("similarity index ")
+        );
     }
     
     public void testDiffTwoCommits () throws Exception {
@@ -233,15 +225,15 @@ public class ExportDiffTest extends AbstractGitTestCase {
     }
 
     private void exportDiff (File[] files, File patchFile, DiffMode diffMode) throws Exception {
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(patchFile));
-        getClient(workDir).exportDiff(files, diffMode, out, NULL_PROGRESS_MONITOR);
-        out.close();
+        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(patchFile))) {
+            getClient(workDir).exportDiff(files, diffMode, out, NULL_PROGRESS_MONITOR);
+        }
     }
 
     private void exportDiff (File[] files, File patchFile, String base, String to) throws Exception {
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(patchFile));
-        getClient(workDir).exportDiff(files, base, to, out, NULL_PROGRESS_MONITOR);
-        out.close();
+        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(patchFile))) {
+            getClient(workDir).exportDiff(files, base, to, out, NULL_PROGRESS_MONITOR);
+        }
     }
 
     private void makeInitialCommit () throws Exception {

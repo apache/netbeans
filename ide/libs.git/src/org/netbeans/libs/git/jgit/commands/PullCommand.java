@@ -84,7 +84,7 @@ public class PullCommand extends TransportCommand {
     private String findRemoteBranchName () throws GitException {
         Ref ref = null;
         try {
-            ref = getRepository().getRef(branchToMerge);
+            ref = getRepository().findRef(branchToMerge);
         } catch (IOException ex) {
             throw new GitException(ex);
         }

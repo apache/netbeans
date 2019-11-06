@@ -50,9 +50,8 @@ public class ListTagCommand extends GitCommand {
     protected void run () throws GitException {
         Repository repository = getRepository();
         Map<String, Ref> tags = repository.getTags();
-        allTags = new LinkedHashMap<String, GitTag>(tags.size());
-        RevWalk walk = new RevWalk(repository);
-        try {
+        allTags = new LinkedHashMap<>(tags.size());
+        try (RevWalk walk = new RevWalk(repository);) {
             for (Map.Entry<String, Ref> e : tags.entrySet()) {
                 GitTag tag;
                 try {
@@ -69,8 +68,6 @@ public class ListTagCommand extends GitCommand {
             throw new GitException.MissingObjectException(ex.getObjectId().getName(), GitObjectType.TAG);
         } catch (IOException ex) {
             throw new GitException(ex);
-        } finally {
-            walk.release();
         }
     }
 

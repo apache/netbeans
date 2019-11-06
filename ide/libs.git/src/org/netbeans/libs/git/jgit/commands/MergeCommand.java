@@ -58,7 +58,7 @@ public class MergeCommand extends GitCommand {
         setFastForward(command);
         Ref ref = null;
         try {
-            ref = repository.getRef(revision);
+            ref = repository.findRef(revision);
         } catch (IOException ex) {
             throw new GitException(ex);
         }

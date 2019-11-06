@@ -1,12 +1,11 @@
-Name: JSch
-Version: 0.1.54
-License: BSD-jsch
-Origin: JCraft Inc.
-URL: http://www.jcraft.com/jsch/
-Description: Java implementation of SSH2
+Name: JZlib
+Version: 1.1.3
+License: BSD-jzlib
+Origin: JCraft, Inc.
+URL: http://www.jcraft.com/jzlib/
+Description: Java implementation of zlib
 
-Copyright (c) 2002-2015 Atsuhiko Yamanaka, JCraft,Inc.
-All rights reserved.
+Copyright (c) 2000-2011 ymnk, JCraft,Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

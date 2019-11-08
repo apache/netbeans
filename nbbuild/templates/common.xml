@@ -78,10 +78,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-7.2.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-7.2.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-all-5.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-7.2.jar"/>
     </target>
 
     <target name="-release.dir">

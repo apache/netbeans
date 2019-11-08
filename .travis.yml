@@ -164,7 +164,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.compat8 test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.nb test
             - hide-logs.sh ant $OPTS -f platform/openide.io test
-            - hide-logs.sh ant $OPTS -f platform/openide.loaders test
+            - travis_wait hide-logs.sh ant $OPTS -f platform/openide.loaders test
             - hide-logs.sh ant $OPTS -f platform/openide.modules test
             - hide-logs.sh ant $OPTS -f platform/openide.nodes test
             - hide-logs.sh ant $OPTS -f platform/openide.options test

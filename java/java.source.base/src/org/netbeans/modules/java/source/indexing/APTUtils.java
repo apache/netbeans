@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.tools.javac.util.Abort;
+import com.sun.tools.javac.util.ClientCodeException;
 import com.sun.tools.javac.util.Context;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -50,9 +52,18 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.processing.Completion;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.tools.Diagnostic;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -77,6 +88,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.BaseUtilities;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -359,7 +371,8 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                 Class<?> clazz = Class.forName(name, true, cl);
                 Object instance = clazz.newInstance();
                 if (instance instanceof Processor) {
-                    result.add((Processor) instance);
+                    result.add(new ErrorToleratingProcessor((Processor) instance));
+//                    result.add((Processor) instance);
                 }
             } catch (ThreadDeath td) {
                 throw td;
@@ -929,4 +942,67 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             }
         }
     }
+
+    private static final class ErrorToleratingProcessor implements Processor {
+
+        private final Processor delegate;
+        private ProcessingEnvironment processingEnv;
+        private boolean valid = true;
+
+        public ErrorToleratingProcessor(Processor delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Set<String> getSupportedOptions() {
+            return delegate.getSupportedOptions();
+        }
+
+        @Override
+        public Set<String> getSupportedAnnotationTypes() {
+            return delegate.getSupportedAnnotationTypes();
+        }
+
+        @Override
+        public SourceVersion getSupportedSourceVersion() {
+            return delegate.getSupportedSourceVersion();
+        }
+
+        @Override
+        public void init(ProcessingEnvironment processingEnv) {
+            delegate.init(processingEnv);
+            this.processingEnv = processingEnv;
+        }
+
+        @Override
+        @Messages("ERR_ProcessorException=Annotation processor {0} failed with an exception: {1}")
+        public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+            if (!valid) {
+                return false;
+            }
+            try {
+                return delegate.process(annotations, roundEnv);
+            } catch (ClientCodeException | ThreadDeath | Abort err) {
+                valid = false;
+                throw err;
+            } catch (Throwable t) {
+                valid = false;
+                Element el = roundEnv.getRootElements().isEmpty() ? null : roundEnv.getRootElements().iterator().next();
+                StringBuilder exception = new StringBuilder();
+                exception.append(t.getMessage()).append("\n");
+                for (StackTraceElement ste : t.getStackTrace()) {
+                    exception.append(ste).append("\n");
+                }
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, Bundle.ERR_ProcessorException(delegate.getClass().getName(), exception.toString()), el);
+                return false;
+            }
+        }
+
+        @Override
+        public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
+            return delegate.getCompletions(element, annotation, member, userText);
+        }
+
+    }
+
 }

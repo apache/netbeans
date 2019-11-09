@@ -67,6 +67,7 @@
     <taskdef name="deregisterexternalhook" classname="org.netbeans.nbbuild.extlibs.DeregisterExternalHook" classpath="${build.ant.classes.dir}"/>
     <deregisterexternalhook root=".."/>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>
+    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${build.ant.classes.dir}"/>
     <property name="have-downloadbinaries-task" value="true" />
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
         <manifest dir="${nb_all}">
@@ -115,6 +116,8 @@
             <isset property="metabuild.jsonurl"/>
         </not>
     </condition>
+    <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
+    <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
     <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>

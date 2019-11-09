@@ -161,6 +161,11 @@ public class BrowserSupportModule extends CssEditorModule implements CssModule {
                 return true;
             }
         }
+
+        @Override
+        public String getPropertySupportedVersion(String propertyName) {
+            return "";
+        }
         
     }
     

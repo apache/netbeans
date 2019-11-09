@@ -22,10 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import org.netbeans.modules.css.editor.module.spi.Browser;
@@ -47,7 +45,7 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
     private String resourcePath;
     private Browser browser;
     private CssModule module;
-    private final Set<String> supportedPropertiesNames = new HashSet<>();
+    private final Map<String, String> supportedPropertiesNames = new HashMap<>();
     private final Map<String, PropertyDefinition> vendorSpecificProperties = new HashMap<>();
 
     public BrowserSpecificDefinitionParser(String resourcePath, Browser browser, CssModule module) {
@@ -68,6 +66,8 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
             if (value.isEmpty()) {
                 continue; //ignore empty keys, the meaning is the same as if there was no such key in the file
             }
+            supportedPropertiesNames.put(name, value);
+            
             char firstValueChar = value.charAt(0);
 
             //parse bundle key - there might be more properties separated by semicolons
@@ -83,7 +83,7 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
                 if (propertyName.startsWith(browser.getVendorSpecificPropertyPrefix())) {
                     //vendor specific property
                     vendorSpecificProperties.put(propertyName, new PropertyDefinition(propertyName, value, browser.getPropertyCategory(), module));
-                    supportedPropertiesNames.add(propertyName);
+                    supportedPropertiesNames.put(propertyName, "");
 
                 } else {
                     //standard property
@@ -92,18 +92,18 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
                             //experimental property only
                             String vendorSpecificPropertyName = createVendorSpecificPropertyName(browser.getVendorSpecificPropertyPrefix(), propertyName);
                             vendorSpecificProperties.put(vendorSpecificPropertyName, new ProxyProperty(vendorSpecificPropertyName, browser.getPropertyCategory(), propertyName));
-                            supportedPropertiesNames.add(vendorSpecificPropertyName);
+                            supportedPropertiesNames.put(vendorSpecificPropertyName, "");
                             break;
                         case '+':
                             //standard property support only
-                            supportedPropertiesNames.add(propertyName);
+                            supportedPropertiesNames.put(propertyName, value.substring(1));
                             break;
                         case '*':
                             //standard + experimental property                            
                             vendorSpecificPropertyName = createVendorSpecificPropertyName(browser.getVendorSpecificPropertyPrefix(), propertyName);
                             vendorSpecificProperties.put(vendorSpecificPropertyName, new ProxyProperty(vendorSpecificPropertyName, browser.getPropertyCategory(), propertyName));
-                            supportedPropertiesNames.add(propertyName);
-                            supportedPropertiesNames.add(vendorSpecificPropertyName);
+                            supportedPropertiesNames.put(propertyName, value.substring(1));
+                            supportedPropertiesNames.put(vendorSpecificPropertyName, "");
                             break;
                         case '-':
                             //discontinued support
@@ -113,14 +113,14 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
                         default:
                             //even standard property can be vendor specific (zoom for webkit)
                             vendorSpecificProperties.put(propertyName, new PropertyDefinition(propertyName, value, browser.getPropertyCategory(), module));
-                            supportedPropertiesNames.add(propertyName);
+                            supportedPropertiesNames.put(propertyName, value.substring(1));
 
                     }
 
                 }
 
             }
-
+            
         }
 
     }
@@ -134,11 +134,16 @@ public class BrowserSpecificDefinitionParser extends PropertySupportResolver {
 
     @Override
     public boolean isPropertySupported(String propertyName) {
-        return supportedPropertiesNames.contains(propertyName);
+        return supportedPropertiesNames.containsKey(propertyName);
     }
-
+    
     public Map<String, PropertyDefinition> getVendorSpecificProperties() {
         return vendorSpecificProperties;
+    }
+
+    @Override
+    public String getPropertySupportedVersion(String propertyName) {
+        return supportedPropertiesNames.getOrDefault(propertyName, "");
     }
 
     private class ProxyProperty extends PropertyDefinition {

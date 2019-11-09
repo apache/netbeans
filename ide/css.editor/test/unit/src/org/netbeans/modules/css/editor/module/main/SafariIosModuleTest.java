@@ -18,19 +18,32 @@
  */
 package org.netbeans.modules.css.editor.module.main;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import org.netbeans.modules.css.editor.module.spi.Browser;
 import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
-import org.netbeans.modules.css.lib.api.properties.PropertyCategory;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
-@ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
+public class SafariIosModuleTest extends CssModuleTestBase {
 
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
+    public SafariIosModuleTest(String name) {
+        super(name);
     }
     
+    public void testBrowser() {
+        CssEditorModule safariIosModule = getCssModuleByClass(SafariIosModule.class);
+        assertNotNull(safariIosModule);
+        
+        Browser safariIos = safariIosModule.getExtraBrowsers(null).iterator().next();
+        
+        assertEquals("Safari iOS", safariIos.getName());
+        assertEquals("Apple", safariIos.getVendor());
+        assertNotNull(safariIos.getDescription());
+        
+        assertNotNull(safariIos.getActiveIcon());
+        assertNotNull(safariIos.getInactiveIcon());
+    }
 }

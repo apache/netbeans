@@ -24,13 +24,12 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
 @ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
-
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
-    }
+public class FirefoxAndroidModule extends BrowserSupportModule {
     
+    public FirefoxAndroidModule() {
+        super(new DefaultBrowser("Firefox Android", "Mozilla", "gecko", "moz", "firefoxAndroid20", PropertyCategory.FIREFOX), "firefox_android"); //NOI18N
+    }
 }

@@ -18,19 +18,30 @@
  */
 package org.netbeans.modules.css.editor.module.main;
 
+import org.netbeans.modules.css.editor.module.spi.Browser;
 import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
-import org.netbeans.modules.css.lib.api.properties.PropertyCategory;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
-@ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
+public class OperaModuleTest extends CssModuleTestBase{
 
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
+    public OperaModuleTest(String name) {
+        super(name);
     }
     
+    public void testBrowser() {
+        CssEditorModule operaModule = getCssModuleByClass(OperaModule.class);
+        assertNotNull(operaModule);
+        
+        Browser opera = operaModule.getExtraBrowsers(null).iterator().next();
+        
+        assertEquals("Opera", opera.getName());
+        assertEquals("Opera", opera.getVendor());
+        assertNotNull(opera.getDescription());
+        
+        assertNotNull(opera.getActiveIcon());
+        assertNotNull(opera.getInactiveIcon());
+    }
 }

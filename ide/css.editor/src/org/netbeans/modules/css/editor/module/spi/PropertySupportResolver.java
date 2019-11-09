@@ -26,6 +26,10 @@ public abstract class PropertySupportResolver {
     
     public abstract boolean isPropertySupported(String propertyName);
     
+    public String getPropertySupportedVersion(String propertyName) {
+        return "";
+    };
+    
     public static interface Factory {
         
         public PropertySupportResolver createPropertySupportResolver(Browser browser);

@@ -419,6 +419,20 @@ public class CssModuleSupport {
         return false;
     }
 
+    public static String getPropertySupportedVersion(String propertyName, Browser browser) {
+        for (CssEditorModule module : getModules()) {
+            PropertySupportResolver.Factory factory = module.getPropertySupportResolverFactory();
+            if (factory != null) {
+                PropertySupportResolver resolver = factory.createPropertySupportResolver(browser);
+                if (resolver != null) {
+                    return resolver.getPropertySupportedVersion(propertyName);
+                    }
+                }
+            }
+
+        return "";
+    }
+    
     public static HelpResolver getHelpResolver() {
         return new HelpResolver() {
 

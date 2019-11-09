@@ -18,19 +18,31 @@
  */
 package org.netbeans.modules.css.editor.module.main;
 
+import static junit.framework.TestCase.assertNotNull;
+import org.netbeans.modules.css.editor.module.spi.Browser;
 import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
-import org.netbeans.modules.css.lib.api.properties.PropertyCategory;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
-@ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
+public class ChromeAndroidModuleTest extends CssModuleTestBase {
 
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
+    public ChromeAndroidModuleTest(String name) {
+        super(name);
     }
     
+    public void testBrowser() {
+        CssEditorModule chromeAndroidModule = getCssModuleByClass(ChromeAndroidModule.class);
+        assertNotNull(chromeAndroidModule);
+        
+        Browser chromeAndroid = chromeAndroidModule.getExtraBrowsers(null).iterator().next();
+        
+        assertEquals("Chrome Android", chromeAndroid.getName());
+        assertEquals("Google", chromeAndroid.getVendor());
+        assertNotNull(chromeAndroid.getDescription());
+        
+        assertNotNull(chromeAndroid.getActiveIcon());
+        assertNotNull(chromeAndroid.getInactiveIcon());
+    }
 }

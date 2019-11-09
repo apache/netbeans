@@ -18,19 +18,20 @@
  */
 package org.netbeans.modules.css.editor.module.main;
 
+import org.netbeans.modules.css.editor.module.spi.Browser;
 import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
 import org.netbeans.modules.css.lib.api.properties.PropertyCategory;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
 @ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
-
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
+public class EdgeModule extends BrowserSupportModule {
+    
+    public EdgeModule() {
+        super(new DefaultBrowser("Edge", "Microsoft", "EdgeHTML", "ms", "edge20", PropertyCategory.INTERNET_EXPLORER), "edge"); //NOI18N
     }
     
 }

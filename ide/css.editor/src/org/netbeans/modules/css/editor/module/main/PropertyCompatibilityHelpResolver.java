@@ -35,11 +35,12 @@ public class PropertyCompatibilityHelpResolver extends HelpResolver {
     public String getHelp(FileObject context, PropertyDefinition property) {
         StringBuilder sb = new StringBuilder();
         //XXX using legacy html code instead of css styling due to the jdk swingbrowser
-        sb.append("<table width=\"100%\" border=\"0\"><tr><td><div style=\"font-size: large; font-weight: bold\">"); //NOI18N
+        sb.append("<table width=\"100%\" border=\"0\"><tr><td width=\"55%\"><div style=\"font-size: large; font-weight: bold\">"); //NOI18N
         sb.append(property.getName());
         sb.append("</div></td>"); //NOI18N
-        sb.append("<td width=\"125\">"); //NOI18N
+
         for (Browser browser : CssModuleSupport.getBrowsers(context)) {
+            sb.append("<td width=\"5%\" align=\"center\">"); //NOI18N
             URL browserIcon = CssModuleSupport.isPropertySupported(property.getName(), browser)
                     ? browser.getActiveIcon()
                     : browser.getInactiveIcon();
@@ -48,8 +49,15 @@ public class PropertyCompatibilityHelpResolver extends HelpResolver {
                 sb.append(browserIcon.toExternalForm());
                 sb.append("\">"); // NOI18N
             }
+            sb.append("</td>");
         }
-        sb.append("</td></tr></table>"); //NOI18N
+        sb.append("</td></tr><tr><td width=\"55%\""); //NOI18N
+        for (Browser browser : CssModuleSupport.getBrowsers(context)) {
+            sb.append("<td width=\"5%\" align=\"center\"><span style=\"font-size: 0.75em\">");
+            sb.append(CssModuleSupport.getPropertySupportedVersion(property.getName(), browser));
+            sb.append("</span></td>");
+        }       
+        sb.append("</tr></table><hr>"); //NOI18N
         
         return sb.toString();
     }

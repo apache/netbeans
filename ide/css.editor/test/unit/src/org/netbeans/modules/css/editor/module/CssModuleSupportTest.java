@@ -18,7 +18,11 @@
  */
 package org.netbeans.modules.css.editor.module;
 
+import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.css.editor.module.main.ChromeModule;
+import org.netbeans.modules.css.editor.module.spi.Browser;
+import org.netbeans.modules.css.editor.module.spi.CssEditorModule;
 import org.netbeans.modules.css.lib.api.properties.Properties;
 import org.netbeans.modules.css.lib.api.properties.PropertyDefinition;
 
@@ -42,6 +46,20 @@ public class CssModuleSupportTest extends NbTestCase {
         p = Properties.getPropertyDefinition( "perspective", true);
         assertNotNull(p);
         assertEquals("@perspective", p.getName());
+    }
+    
+    public void testGetPropertySupportedVersion() {
+        String propertyName = "animation";
+        
+        CssEditorModule chromeModule = CssModuleSupport.getModules().stream()
+                .filter(m -> m.getClass().equals(ChromeModule.class))
+                .findFirst()
+                .get();
+        
+        Browser chrome = chromeModule.getExtraBrowsers(null).iterator().next();
+        
+        assertEquals("43", CssModuleSupport.getPropertySupportedVersion(propertyName, chrome));
+        
     }
     
     public void testAllPropertiesHaveSomeGrammar() {

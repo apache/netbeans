@@ -24,13 +24,13 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author mfukala@netbeans.org
+ * @author peedeeboy
  */
 @ServiceProvider(service = CssEditorModule.class)
-public class ChromeModule extends BrowserSupportModule {
+public class OperaAndroidModule extends BrowserSupportModule {
 
-    public ChromeModule() {
-        super(new DefaultBrowser("Chrome", "Google", "webkit", "webkit", "chrome20", PropertyCategory.CHROME), "chrome"); //NOI18N
+    public OperaAndroidModule() {
+        super(new DefaultBrowser("Opera Android", "Opera", "presto", "o", "operaAndroid20", PropertyCategory.OPERA), "opera_android"); //NOI18N
     }
-    
+       
 }

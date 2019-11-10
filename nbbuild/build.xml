@@ -1282,9 +1282,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   </target>
 
   <target name="clean" depends="-init-clean,bootstrap" description="Clean everything possible.">
-      <taskdef name="try-else" classname="org.netbeans.nbbuild.TryElse" classpath="${nbantext.jar}"/>
-      <property name="vanilla.javac.exists" value="true"/>
-      <try-else first="-hg-clean" second="-real-clean"/>
+      <antcall target="-real-clean"></antcall>
   </target>
 
   <target name="-clean-external">
@@ -1340,62 +1338,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <delete file="moduledefs-tmp.properties"/>
     <delete dir="nbms" />
     <delete dir="${netbeans.dest.dir}"/>
-  </target>
-
-  <target name="-hg-clean">
-    <fail message="Not running in a Mercurial checkout.">
-      <condition>
-        <not>
-          <available type="dir" file="../.hg"/>
-        </not>
-      </condition>
-    </fail>
-    <taskdef name="hgexec" classname="org.netbeans.nbbuild.HgExec" classpath="${nbantext.jar}"/>
-    <antcall target="-do-hg-clean">
-      <!-- <include name="."/> does not seem to work in a dirset -->
-      <param name="basedir" location=".."/>
-    </antcall>
-    <subant target="-do-hg-clean" genericantfile="build.xml">
-      <dirset dir="..">
-        <include name="contrib"/>
-        <include name="otherlicenses"/>
-      </dirset>
-    </subant>
-    <delete>
-      <fileset dir="nbproject">
-        <include name="private/scan-cache-*"/>
-      </fileset>
-    </delete>
-  </target>
-  <target name="-do-hg-clean">
-    <echo>Cleaning untracked files in ${basedir}...</echo>
-    <hgexec failonerror="yes" outputproperty="hg.unknown.files">
-      <arg value="--cwd"/>
-      <arg file="."/>
-      <arg value="--config"/>
-      <arg value="defaults.status="/>
-      <arg value="status"/>
-      <arg value="--unknown"/>
-      <arg value="--no-status"/>
-    </hgexec>
-    <fail message="Will not run clean; checkout contains unknown and not ignored files (did you forget to hg add?):&#10;${hg.unknown.files}">
-        <condition>
-            <not>
-                <equals arg1="${hg.unknown.files}" arg2=""/>
-            </not>
-        </condition>
-    </fail>
-    <hgexec failonerror="yes">
-      <arg value="--cwd"/>
-      <arg file="."/>
-      <arg value="--config"/>
-      <arg value="extensions.purge="/>
-      <arg value="clean"/>
-      <arg value="--all"/>
-      <arg value="--exclude"/>
-      <!-- Do not use **/nbproject/private/ as this will match some test/{results,work} dirs: -->
-      <arg value="glob:{*/nbproject/private/**,*/*/nbproject/private/**,**/user.build.properties}"/>
-    </hgexec>
   </target>
 
   <target name="rebuild-cluster" depends="init" description="Builds only one cluster with dependencies ; takes e.g. '-Drebuild.cluster.name=nb.cluster.java' as parameter">

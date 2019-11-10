@@ -19,10 +19,12 @@
 
 package org.netbeans.modules.autoupdate.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
+import org.netbeans.modules.autoupdate.updateprovider.MessageDigestValue;
 import org.netbeans.modules.autoupdate.updateprovider.InstallInfo;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
 import org.openide.modules.ModuleInfo;
@@ -35,8 +37,13 @@ import org.openide.modules.SpecificationVersion;
 public abstract class UpdateElementImpl extends Object {
     private UpdateUnit unit;
     private UpdateElement element;
+    private List<MessageDigestValue> messageDigests = new ArrayList<>();
     
-    public UpdateElementImpl (UpdateItemImpl item, String providerName) {}
+    public UpdateElementImpl (UpdateItemImpl item, String providerName) {
+        if(item.getMessageDigests() != null) {
+            messageDigests.addAll(item.getMessageDigests());
+        }
+    }
     
     public UpdateUnit getUpdateUnit () {
         return unit;
@@ -99,4 +106,11 @@ public abstract class UpdateElementImpl extends Object {
     // XXX: try to rid of this
     public abstract InstallInfo getInstallInfo ();
 
+    public List<MessageDigestValue> getMessageDigests() {
+        return messageDigests;
+    }
+
+    public void setMessageDigests(List<MessageDigestValue> messageDigests) {
+        this.messageDigests = messageDigests;
+    }
 }

@@ -31,10 +31,8 @@ import java.net.UnknownHostException;
 import java.security.CodeSigner;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.cert.CertPath;
 import java.security.cert.Certificate;
 import java.security.cert.TrustAnchor;
-import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +49,7 @@ import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParser;
+import org.netbeans.modules.autoupdate.updateprovider.MessageDigestValue;
 import org.netbeans.modules.autoupdate.updateprovider.ModuleItem;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess.Task;
@@ -1017,7 +1016,7 @@ public class InstallSupportImpl {
             //        + ") of is equal to estimatedSize (" + estimatedSize + ").";
             if (estimatedSize != increment) {
                 LOG.log (Level.FINEST, "Increment (" + increment + ") of is not equal to estimatedSize (" + estimatedSize + ").");
-            }            
+            }
         } catch (IOException ioe) {
             LOG.log (Level.INFO, "Writing content of URL " + source + " failed.", ioe);
         } finally {
@@ -1029,6 +1028,7 @@ public class InstallSupportImpl {
                 LOG.log (Level.INFO, ioe.getMessage (), ioe);
             }
         }
+
         if (contentLength != -1 && increment != contentLength) {
             if(canceled) {
                 LOG.log(Level.INFO, "Download of " + source + " was cancelled");
@@ -1119,6 +1119,29 @@ public class InstallSupportImpl {
             } catch (SecurityException ex) {
                 LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
                 res = Utilities.MODIFIED;
+            }
+
+            {
+                MessageDigestChecker mdChecker = new MessageDigestChecker(impl.getMessageDigests());
+                byte[] buffer = new byte[102400];
+                int read;
+                try(FileInputStream fis = new FileInputStream(nbmFile)) {
+                    while((read = fis.read(buffer)) > 0) {
+                        mdChecker.update(buffer, 0, read);
+                    }
+                }
+                if(!mdChecker.validate()) {
+                    for (String algorithm : mdChecker.getFailingHashes()) {
+                        LOG.log(Level.INFO,
+                            "Failed to validate message digest for ''{0}'' expected ''{1}'' got ''{2}''",
+                            new Object[]{
+                                nbmFile.getAbsolutePath(),
+                                mdChecker.getExpectedHashAsString(algorithm),
+                                mdChecker.getCalculatedHashAsString(algorithm)
+                            });
+                    }
+                    res = Utilities.MODIFIED;
+                }
             }
 
             if (res != null) {

@@ -163,14 +163,21 @@ public class DownloadBinaries extends Task {
     private byte[] mavenFile(MavenCoordinate mc) throws IOException {
         String cacheName = mc.toMavenPath();
         File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
-        final String url;
-        if (local.exists()) {
-            url = local.toURI().toString();
-        } else {
-            url = "http://central.maven.org/maven2/" + cacheName;
+        List<String> urls = new ArrayList<>();
+        urls.add(local.toURI().toString());
+        urls.add("http://central.maven.org/maven2/" + cacheName);
+        for (String prefix : server.split(" ")) {
+            urls.add(prefix + cacheName);
         }
-        URL u = new URL(url);
-        return downloadFromServer(u);
+        for (String url : urls) {
+            try {
+                URL u = new URL(url);
+                return downloadFromServer(u);
+            } catch (IOException ex) {
+                //Try the next URL
+            }
+        }
+        throw new BuildException("Could not download " + cacheName + " from maven and " + server, null, getLocation());
     }
 
     private boolean fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
@@ -259,8 +266,12 @@ public class DownloadBinaries extends Task {
         }
         Throwable firstProblem = null;
         for (String prefix : server.split(" ")) {
-            URL url = new URL(prefix + cacheName);
-            return downloadFromServer(url);
+            try {
+                URL url = new URL(prefix + cacheName);
+                return downloadFromServer(url);
+            } catch (IOException ex) {
+                //Try the next URL
+            }
         }
         throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
     }

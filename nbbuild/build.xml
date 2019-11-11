@@ -197,7 +197,7 @@ metabuild.hash=${metabuild.hash}</echo>
   <target name="getgitinformation" depends="-git.up,-git.down" />
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.maven.repos}">
         <manifest dir="${nb_all}">
             <include name="**/external/binaries-list"/>
         </manifest>

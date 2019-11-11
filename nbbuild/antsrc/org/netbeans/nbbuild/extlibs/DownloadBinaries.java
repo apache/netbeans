@@ -80,6 +80,19 @@ public class DownloadBinaries extends Task {
         this.server = server;
     }
 
+    private String repos = "https://repo1.maven.org/maven2/";
+    
+    
+    /**
+     * Space separated URL prefixes for maven repositories.
+     * Should generally include a trailing slash.
+     * You may include multiple URLs separated by spaces
+     * in which case they will be tried in order.
+     */
+    public void setRepos(String repos) {
+        this.repos = repos;
+    }
+    
     private final List<FileSet> manifests = new ArrayList<>();
     /**
      * Add one or more manifests of files to download.
@@ -164,14 +177,16 @@ public class DownloadBinaries extends Task {
         String cacheName = mc.toMavenPath();
         File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
         List<String> urls = new ArrayList<>();
-        urls.add(local.toURI().toString());
-        urls.add("http://central.maven.org/maven2/" + cacheName);
-        for (String prefix : server.split(" ")) {
+        if (local.isFile()) {
+            urls.add(local.toURI().toString());
+        }
+        for (String prefix : repos.split(" ")) {
             urls.add(prefix + cacheName);
         }
         for (String url : urls) {
             try {
                 URL u = new URL(url);
+                log("Trying: " + url, Project.MSG_VERBOSE);
                 return downloadFromServer(u);
             } catch (IOException ex) {
                 //Try the next URL
@@ -268,6 +283,7 @@ public class DownloadBinaries extends Task {
         for (String prefix : server.split(" ")) {
             try {
                 URL url = new URL(prefix + cacheName);
+                log("Trying: " + url, Project.MSG_VERBOSE);
                 return downloadFromServer(url);
             } catch (IOException ex) {
                 //Try the next URL

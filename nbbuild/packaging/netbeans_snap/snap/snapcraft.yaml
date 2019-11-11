@@ -24,8 +24,8 @@ description: |
   PHP and C/C++ developers.
   It is free and open source and has a large community of users and developers
   around the world.
-  
-  It requires Java 8 or later Java Development Kit installed.
+
+  Provided with OpenJDK 11 LTS from https://adoptopenjdk.net/
 
 icon: ../../../platform/core.startup/src/org/netbeans/core/startup/frame512.png
 confinement: classic
@@ -41,7 +41,7 @@ parts:
       snapcraftctl pull
       snapcraftctl set-version "${VERSION}"
     parse-info: []
-      
+  
   build:
     build-attributes: [ no-patchelf ]
     build-packages:
@@ -59,8 +59,23 @@ parts:
         sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
         sed -i 's/${HOME}\/.cache\/netbeans/${SNAP_USER_COMMON}\/cache/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
         sed -i 's/-J-Dapple.laf.useScreenMenuBar=true/-J-Dplugin.manager.install.global=false -J-Dawt.useSystemAAFontSettings=on/' $SNAPCRAFT_PART_INSTALL/netbeans/etc/netbeans.conf
+        sed -i 's/#netbeans_jdkhome="\/path\/to\/jdk"/netbeans_jdkhome="\/snap\/netbeans\/current\/openjdk-11"/' $SNAPCRAFT_PART_INSTALL/netbeans/etc/netbeans.conf
     stage:
         - $netbeans
+  openjdk:
+    source: https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.5%2B10/OpenJDK11U-jdk_x64_linux_hotspot_11.0.5_10.tar.gz
+    plugin: dump
+    build-attributes: [ no-patchelf ]
+    organize:
+      bin: openjdk-11/bin
+      conf: openjdk-11/conf
+      demo: openjdk-11/demo
+      include: openjdk-11/include
+      jmods: openjdk-11/jmods
+      legal: openjdk-11/legal
+      lib: openjdk-11/lib
+      man: openjdk-11/man
+      release: openjdk-11/release
 
 apps:
   netbeans:

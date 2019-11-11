@@ -176,6 +176,8 @@ public class ProblemPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         taTitle = new javax.swing.JTextPane();
 
+        setPreferredSize(new java.awt.Dimension(700, 400));
+
         org.openide.awt.Mnemonics.setLocalizedText(cbShowAgain, org.openide.util.NbBundle.getMessage(ProblemPanel.class, "ProblemPanel.cbShowAgain.text")); // NOI18N
         cbShowAgain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,15 +186,11 @@ public class ProblemPanel extends javax.swing.JPanel {
         });
 
         tpMessage.setEditable(false);
-        tpMessage.setContentType("text/html"); // NOI18N
         tpMessage.setOpaque(false);
-        tpMessage.setPreferredSize(new java.awt.Dimension(400, 100));
         jScrollPane1.setViewportView(tpMessage);
 
         taTitle.setEditable(false);
-        taTitle.setContentType("text/html"); // NOI18N
         taTitle.setOpaque(false);
-        taTitle.setPreferredSize(new java.awt.Dimension(200, 100));
         jScrollPane2.setViewportView(taTitle);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -200,15 +198,15 @@ public class ProblemPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(cbShowAgain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
             .addComponent(jScrollPane2)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbShowAgain))
         );

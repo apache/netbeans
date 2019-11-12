@@ -224,7 +224,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
             if (emod != null) {
                 projects.add(affectedProject);
             } else {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             for (Project project : OpenProjects.getDefault().getOpenProjects()) {
                 Object isJ2eeApp = project.getLookup().lookup(J2eeApplicationProvider.class);

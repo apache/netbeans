@@ -40,7 +40,7 @@ public class ObservableSet<E> implements Set<E> {
     
     private final PropertyChangeSupport pchs = new PropertyChangeSupport(this);
     
-    private Set<E> set = Collections.EMPTY_SET;
+    private Set<E> set = Collections.emptySet();
     
     @Override
     public int size() {

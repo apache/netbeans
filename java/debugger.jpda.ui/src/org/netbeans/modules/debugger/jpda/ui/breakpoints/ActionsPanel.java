@@ -327,7 +327,7 @@ private void cbSuspendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     
     private static Set<Breakpoint> createBreakpointsSet(Object selectedGroup) {
         if (selectedGroup == null || selectedGroup == NONE_BREAKPOINT_GROUP) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         } else {
             TestGroupProperties tgp = createTestProperties(selectedGroup);
             if (tgp != null) {
@@ -338,7 +338,7 @@ private void cbSuspendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                 if (!customGroup.isEmpty()) {
                     return new BreakpointsFromGroup(customGroup);
                 } else {
-                    return Collections.EMPTY_SET;
+                    return Collections.emptySet();
                 }
             }
         }

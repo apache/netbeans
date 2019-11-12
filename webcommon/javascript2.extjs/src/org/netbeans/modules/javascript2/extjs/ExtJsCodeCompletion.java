@@ -66,24 +66,24 @@ public class ExtJsCodeCompletion implements CompletionProvider {
     @Override
     public List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix) {
         if (jsCompletionContext != CompletionContext.OBJECT_PROPERTY_NAME) {
-            return Collections.emptyList();
+            return Collections.<CompletionProposal>emptyList();
         }
         // find the object that can be configured
         TokenHierarchy<?> th = ccContext.getParserResult().getSnapshot().getTokenHierarchy();
         if (th == null) {
-            return Collections.emptyList();
+            return Collections.<CompletionProposal>emptyList();
         }
         int carretOffset  = ccContext.getCaretOffset();
         int eOffset = ccContext.getParserResult().getSnapshot().getEmbeddedOffset(carretOffset);
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(th, eOffset);
         if (ts == null) {
-            return Collections.emptyList();
+            return Collections.<CompletionProposal>emptyList();
         }
         
         ts.move(eOffset);
         
         if (!ts.moveNext() && !ts.movePrevious()){
-            return Collections.emptyList();
+            return Collections.<CompletionProposal>emptyList();
         }
         
         Token<? extends JsTokenId> token = null;
@@ -100,7 +100,7 @@ public class ExtJsCodeCompletion implements CompletionProvider {
             }
         }
         if (token == null || balance != 0) {
-            return Collections.emptyList();
+            return Collections.<CompletionProposal>emptyList();
         }
         
         // now we should be at the beginning of the object literal. 
@@ -129,7 +129,7 @@ public class ExtJsCodeCompletion implements CompletionProvider {
             }
             return result;
         }
-        return Collections.emptyList();
+        return Collections.<CompletionProposal>emptyList();
     }
 
     @Override

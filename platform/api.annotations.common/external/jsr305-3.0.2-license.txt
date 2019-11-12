@@ -1,9 +1,9 @@
-Name: jsr305-2.0.0.jar
-Version: 2.0.0
+Name: jsr305-3.0.2.jar
+Version: 3.0.2
 Description: JSR305 Annotations for Findbugs
 License: BSD
 Origin: FindBugs
-URL: http://central.maven.org/maven2/com/google/code/findbugs/jsr305/2.0.0/jsr305-2.0.0.jar
+URL: http://central.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar
 Type: compile-time
 Comment: Use of JSR 305 is governed by the terms of the license below:
 Comment: The JSR-305 reference implementation (lib/jsr305.jar) is distributed

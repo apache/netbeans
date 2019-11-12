@@ -1,4 +1,4 @@
-The Java code in the package javax.annotation.concurrent in jsr305-2.0.0.jar
+The Java code in the package javax.annotation.concurrent in jsr305-3.0.2.jar
 is copyright (c) 2005 Brian Goetz and is released under the Creative Commons 
 Attribution License (http://creativecommons.org/licenses/by/2.5)
 

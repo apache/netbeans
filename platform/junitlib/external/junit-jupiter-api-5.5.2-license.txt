@@ -1,9 +1,10 @@
-Name: JUnit Jupiter Params
-Version: 5.3.1
+Name: JUnit Jupiter API
+Version: 5.5.2
 License: EPL-v20
-Description: JUnit Jupiter Params
+Description: JUnit Jupiter API
 Origin: JUnit
-URL: http://search.maven.org/#artifactdetails|org.junit.jupiter|junit-jupiter-params|5.3.1|jar
+Files: junit-jupiter-api-5.5.2-sources.jar junit-jupiter-api-5.5.2-javadoc.jar
+
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

@@ -355,7 +355,7 @@ class ProtractorRunner {
             }
             String output2display = testRunnerReporter.processLine(line);
             if(output2display == null) {
-                return Collections.emptyList();
+                return Collections.<ConvertedLine>emptyList();
             }
             TestRunnerReporter.CallStackCallback callStackCallback = new TestRunnerReporter.CallStackCallback(runInfo.getProject());
             Pair<File, int[]> parsedLocation = callStackCallback.parseLocation(line, false);

@@ -81,7 +81,7 @@ public abstract class SyntaxElement implements org.netbeans.modules.xml.text.api
         if(cached_first == null) {
             try {
                 TokenItem new_first = support.getTokenChain(offset, offset + 1); //it is a first token offset, so we shouldn't overlap the document length
-                first = new WeakReference(new_first);
+                first = new WeakReference<>(new_first);
                 return new_first;
             }catch(BadLocationException e) {
                 return null;
@@ -101,11 +101,11 @@ public abstract class SyntaxElement implements org.netbeans.modules.xml.text.api
     }
     
     void setNext(SyntaxElement se) {
-        next = new WeakReference(se);
+        next = new WeakReference<>(se);
     }
     
     void setPrevious(SyntaxElement se) {
-        previous = new WeakReference(se);
+        previous = new WeakReference<>(se);
     }
 
     /**

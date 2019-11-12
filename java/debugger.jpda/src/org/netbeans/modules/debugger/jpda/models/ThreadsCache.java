@@ -221,7 +221,7 @@ public class ThreadsCache implements Executor {
     }
 
     public synchronized List<ThreadReference> getAllThreads() {
-        return Collections.unmodifiableList(new ArrayList(allThreads));
+        return Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(allThreads));
     }
     
     public synchronized List<ThreadGroupReference> getTopLevelThreadGroups() {
@@ -245,7 +245,7 @@ public class ThreadsCache implements Executor {
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList(topGroups));
+        return Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(topGroups));
     }
     
     public synchronized List<ThreadReference> getThreads(ThreadGroupReference group) {
@@ -262,7 +262,7 @@ public class ThreadsCache implements Executor {
         if (threads == null) {
             threads = Collections.emptyList();
         } else {
-            threads = Collections.unmodifiableList(new ArrayList(threads));
+            threads = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(threads));
         }
         return threads;
     }
@@ -285,7 +285,7 @@ public class ThreadsCache implements Executor {
         if (groups == null) {
             groups = Collections.emptyList();
         } else {
-            groups = Collections.unmodifiableList(new ArrayList(groups));
+            groups = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(groups));
         }
         return groups;
     }

@@ -95,7 +95,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         FileObject script = project.getFileObject();
         assert script != null : "No file found for " + project;
         String initialTargets = (String) script.getAttribute(ATTR_TARGETS);
-        SortedSet<String> relevantTargets = new TreeSet(Collator.getInstance());
+        SortedSet<String> relevantTargets = new TreeSet<>(Collator.getInstance());
         Iterator it = allTargets.iterator();
         while (it.hasNext()) {
             TargetLister.Target target = (TargetLister.Target) it.next();

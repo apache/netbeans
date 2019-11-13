@@ -1,5 +1,5 @@
 Gradle Inc.'s Gradle Tooling API
-Copyright 2007-2018 Gradle Inc.
+Copyright 2007-2019 Gradle Inc.
 
 This product includes software developed at
 Gradle Inc. (https://gradle.org/).

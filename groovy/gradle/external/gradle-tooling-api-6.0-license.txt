@@ -1,6 +1,7 @@
-Name: Gradle Tooling API
-Description: Gradle Tooling API Library
-Version: 4.10.2
+Name: Gradle Wrapper
+Description: Gradle Tooling API
+Version: 6.0
+Files: gradle-tooling-api-6.0.jar
 License: Apache-2.0
 Origin: Gradle Inc.
 URL: https://gradle.org/

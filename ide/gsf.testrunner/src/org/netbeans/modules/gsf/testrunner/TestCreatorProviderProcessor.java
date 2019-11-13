@@ -19,13 +19,9 @@
 package org.netbeans.modules.gsf.testrunner;
 
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider;
@@ -41,7 +37,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider.Registration")
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class TestCreatorProviderProcessor extends LayerGeneratingProcessor {
 
     @Override

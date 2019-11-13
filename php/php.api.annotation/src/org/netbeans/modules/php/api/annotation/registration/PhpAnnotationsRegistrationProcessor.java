@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.php.api.annotation.PhpAnnotations;
@@ -34,7 +32,6 @@ import org.openide.util.lookup.ServiceProvider;
 
 @SupportedAnnotationTypes("org.netbeans.modules.php.spi.annotation.AnnotationCompletionTagProvider.Registration")
 @ServiceProvider(service = Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PhpAnnotationsRegistrationProcessor extends LayerGeneratingProcessor {
 
     @Override

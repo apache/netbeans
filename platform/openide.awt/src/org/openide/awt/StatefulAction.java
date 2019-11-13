@@ -19,6 +19,7 @@
 package org.openide.awt;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.logging.Level;
 import javax.swing.Action;
 import org.openide.util.Lookup;
@@ -79,6 +80,33 @@ final class StatefulAction<T> extends ContextAction<T> {
                 return checkValueMonitor.enabled(all, () -> (Action)performer.delegate(everything, all));
             });
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 97 * hash + Objects.hashCode(this.checkValueMonitor);
+        return hash;
+    }
+
+    /**
+     * Overrides ContextAction. Must found in the {@link #checkValueMonitor} otherwise
+     * two actions driven by different property could clash in {@link ContextManager}
+     * and won't get 'enable' notification when data appears.
+     * 
+     * @param obj other object
+     * @return true, if equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final StatefulAction<?> other = (StatefulAction<?>) obj;
+        if (!Objects.equals(this.checkValueMonitor, other.checkValueMonitor)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

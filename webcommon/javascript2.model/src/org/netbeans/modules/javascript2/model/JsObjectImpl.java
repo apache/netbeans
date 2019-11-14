@@ -283,7 +283,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
 
     @Override
     public Collection<? extends TypeUsage> getAssignmentForOffset(int offset) {
-        List<? extends TypeUsage> result = new ArrayList();
+        List<? extends TypeUsage> result = new ArrayList<>();
         Map.Entry<Integer, Collection<TypeUsage>> found = assignments.floorEntry(offset);
         int tmpOffset = offset;
         while (found != null) {
@@ -438,7 +438,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 || (parent != null && parent.getOffset() == getOffset() && ModelUtils.ARGUMENTS.equals(getName())) ) {
             return;
         }
-        Collection<TypeUsage> resolved = new ArrayList();
+        Collection<TypeUsage> resolved = new ArrayList<>();
         for (Collection<TypeUsage> unresolved : assignments.values()) {
             resolved.clear();
             JsObject global = ModelUtils.getGlobalObject(parent);

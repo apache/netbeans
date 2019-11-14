@@ -143,7 +143,7 @@ public class AttachDialog extends AttachWizard {
             RunningVM[] vms = JpsProxy.getRunningVMs();
             if (vms == null || vms.length == 0) return false; // no locally running processes for dynamic attach
             
-            List<RunningVM> targets = new ArrayList();
+            List<RunningVM> targets = new ArrayList<>();
             for (RunningVM vm : vms)
                 if (getProcessName(vm.getMainClass()).equals(name))
                     targets.add(vm); // all processes with the preferred process name ready for profiling

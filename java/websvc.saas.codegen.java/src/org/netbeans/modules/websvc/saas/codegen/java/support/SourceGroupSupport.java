@@ -184,9 +184,9 @@ public class SourceGroupSupport {
     private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
-        List<SourceGroup> result = new ArrayList<SourceGroup>();
+        List<SourceGroup> result = new ArrayList<>();
         List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
             FileObject sourceRoot = sourceRoots.get(i);

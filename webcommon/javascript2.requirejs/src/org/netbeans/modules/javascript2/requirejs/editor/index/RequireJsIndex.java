@@ -154,7 +154,7 @@ public class RequireJsIndex {
             Exceptions.printStackTrace(ex);
         }
         if (result != null && !result.isEmpty()) {
-            List<String> paths = new ArrayList();
+            List<String> paths = new ArrayList<>();
             for (IndexResult indexResult : result) {
                 paths.addAll(Arrays.asList(indexResult.getValues(RequireJsIndexer.FIELD_BASE_PATH)));
             }

@@ -232,7 +232,7 @@ public class FSCompletionUtils {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            Collection<String> basePaths = new ArrayList();
+            Collection<String> basePaths = new ArrayList<>();
             Map<String, String> configPaths = new HashMap();
 
             if (rIndex != null) {

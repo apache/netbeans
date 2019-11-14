@@ -121,7 +121,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     }
 
     private List<Item> expandResults (List<? extends LogEntry> results) {
-        ArrayList<Item> newResults = new ArrayList(results.size() * 6);
+        List<Item> newResults = new ArrayList<>(results.size() * 6);
         for (LogEntry le : results) {
             le.removePropertyChangeListener(LogEntry.PROP_EVENTS_CHANGED, list);
             le.addPropertyChangeListener(LogEntry.PROP_EVENTS_CHANGED, list);

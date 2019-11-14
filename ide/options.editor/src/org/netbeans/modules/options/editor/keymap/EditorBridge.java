@@ -177,7 +177,7 @@ public final class EditorBridge extends KeymapManager {
                 }
                 List<MultiKeyBinding> bindings = actionToMkb.get(an);
                 if (bindings == null) {
-                    bindings = new ArrayList(2);
+                    bindings = new ArrayList<>(2);
                     actionToMkb.put(an, bindings);
                 }
                 bindings.add(mkb);

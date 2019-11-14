@@ -115,7 +115,7 @@ public class Utilities {
         if (c == null || c.isEmpty ()) {
             return Collections.emptyList ();
         }
-        List<KeyStore> kss = new ArrayList ();
+        List<KeyStore> kss = new ArrayList<>();
         
         for (KeyStoreProvider provider : c) {
             KeyStore ks = provider.getKeyStore ();

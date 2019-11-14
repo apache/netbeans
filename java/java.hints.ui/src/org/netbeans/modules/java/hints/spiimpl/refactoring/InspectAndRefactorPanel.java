@@ -415,7 +415,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
 
             customScope = org.netbeans.modules.refactoring.api.Scope.create(todo, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
         } else if (selectedItem == currentProject) {
-            ArrayList<FileObject> roots = new ArrayList();
+            List<FileObject> roots = new ArrayList<>();
             for (SourceGroup gr:ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 roots.add(gr.getRootFolder());
             }

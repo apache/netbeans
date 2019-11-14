@@ -321,7 +321,7 @@ public class ThreadsCache implements Executor {
     
     private List<ThreadGroupReference> addGroups(ThreadGroupReference group) throws ObjectCollectedExceptionWrapper {
         if (threadMap != null && !threadMap.containsKey(group)) {
-            List<ThreadReference> threads = new ArrayList();
+            List<ThreadReference> threads = new ArrayList<>();
             threadMap.put(group, threads);
         }
         if (groupMap == null) {

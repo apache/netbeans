@@ -414,7 +414,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
         }
 
         private void refreshList() {
-            List<BundleNode> keys = new ArrayList();
+            List<BundleNode> keys = new ArrayList<>();
             for (BundleNode node : resourceBundleNodes) {
                 keys.add(node);
             }

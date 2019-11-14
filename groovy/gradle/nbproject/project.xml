@@ -366,8 +366,10 @@
                 <package>org.netbeans.modules.gradle.spi.nodes</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>gradle/slf4j-jdk14.jar</runtime-relative-path>
-                <binary-origin>external/slf4j-jdk14-1.7.25.jar</binary-origin>
+                <runtime-relative-path>../../ide/modules/org-slf4j-api.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>../../ide/modules/org-slf4j-jdk14.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/netbeans-gradle-tooling.jar</runtime-relative-path>
@@ -376,10 +378,6 @@
             <class-path-extension>
                 <runtime-relative-path>gradle/gradle-tooling-api.jar</runtime-relative-path>
                 <binary-origin>external/gradle-tooling-api-6.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>gradle/slf4j-api.jar</runtime-relative-path>
-                <binary-origin>external/slf4j-api-1.7.25.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

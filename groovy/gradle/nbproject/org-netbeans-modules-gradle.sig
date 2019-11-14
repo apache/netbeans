@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.3
+#Version 1.4
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -179,6 +179,7 @@ meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
 CLSS public abstract interface !annotation org.gradle.api.Incubating
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE, TYPE, ANNOTATION_TYPE, CONSTRUCTOR, FIELD, METHOD])
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface org.gradle.tooling.BuildAction<%0 extends java.lang.Object>
@@ -195,7 +196,6 @@ meth public abstract {org.gradle.tooling.BuildActionExecuter%0} run()
 
 CLSS public abstract interface static org.gradle.tooling.BuildActionExecuter$Builder
  outer org.gradle.tooling.BuildActionExecuter
- anno 0 org.gradle.api.Incubating()
 meth public abstract <%0 extends java.lang.Object> org.gradle.tooling.BuildActionExecuter$Builder buildFinished(org.gradle.tooling.BuildAction<{%%0}>,org.gradle.tooling.IntermediateResultHandler<? super {%%0}>)
 meth public abstract <%0 extends java.lang.Object> org.gradle.tooling.BuildActionExecuter$Builder projectsLoaded(org.gradle.tooling.BuildAction<{%%0}>,org.gradle.tooling.IntermediateResultHandler<? super {%%0}>)
 meth public abstract org.gradle.tooling.BuildActionExecuter<java.lang.Void> build()
@@ -247,9 +247,13 @@ meth public abstract void cancel()
 
 CLSS public abstract interface org.gradle.tooling.ConfigurableLauncher<%0 extends org.gradle.tooling.ConfigurableLauncher>
 intf org.gradle.tooling.LongRunningOperation
+meth public abstract !varargs {org.gradle.tooling.ConfigurableLauncher%0} addArguments(java.lang.String[])
+meth public abstract !varargs {org.gradle.tooling.ConfigurableLauncher%0} addJvmArguments(java.lang.String[])
 meth public abstract !varargs {org.gradle.tooling.ConfigurableLauncher%0} addProgressListener(org.gradle.tooling.events.ProgressListener,org.gradle.tooling.events.OperationType[])
 meth public abstract !varargs {org.gradle.tooling.ConfigurableLauncher%0} setJvmArguments(java.lang.String[])
 meth public abstract !varargs {org.gradle.tooling.ConfigurableLauncher%0} withArguments(java.lang.String[])
+meth public abstract {org.gradle.tooling.ConfigurableLauncher%0} addArguments(java.lang.Iterable<java.lang.String>)
+meth public abstract {org.gradle.tooling.ConfigurableLauncher%0} addJvmArguments(java.lang.Iterable<java.lang.String>)
 meth public abstract {org.gradle.tooling.ConfigurableLauncher%0} addProgressListener(org.gradle.tooling.ProgressListener)
 meth public abstract {org.gradle.tooling.ConfigurableLauncher%0} addProgressListener(org.gradle.tooling.events.ProgressListener)
 meth public abstract {org.gradle.tooling.ConfigurableLauncher%0} addProgressListener(org.gradle.tooling.events.ProgressListener,java.util.Set<org.gradle.tooling.events.OperationType>)
@@ -289,7 +293,6 @@ meth public static org.gradle.tooling.GradleConnector newConnector()
 supr java.lang.Object
 
 CLSS public abstract interface org.gradle.tooling.IntermediateResultHandler<%0 extends java.lang.Object>
- anno 0 org.gradle.api.Incubating()
 meth public abstract void onComplete({org.gradle.tooling.IntermediateResultHandler%0})
 
 CLSS public org.gradle.tooling.ListenerFailedException
@@ -299,11 +302,15 @@ supr org.gradle.tooling.GradleConnectionException
 hfds listenerFailures
 
 CLSS public abstract interface org.gradle.tooling.LongRunningOperation
+meth public abstract !varargs org.gradle.tooling.LongRunningOperation addArguments(java.lang.String[])
+meth public abstract !varargs org.gradle.tooling.LongRunningOperation addJvmArguments(java.lang.String[])
 meth public abstract !varargs org.gradle.tooling.LongRunningOperation addProgressListener(org.gradle.tooling.events.ProgressListener,org.gradle.tooling.events.OperationType[])
 meth public abstract !varargs org.gradle.tooling.LongRunningOperation setJvmArguments(java.lang.String[])
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
 meth public abstract !varargs org.gradle.tooling.LongRunningOperation withArguments(java.lang.String[])
  anno 1 org.gradle.internal.impldep.javax.annotation.Nullable()
+meth public abstract org.gradle.tooling.LongRunningOperation addArguments(java.lang.Iterable<java.lang.String>)
+meth public abstract org.gradle.tooling.LongRunningOperation addJvmArguments(java.lang.Iterable<java.lang.String>)
 meth public abstract org.gradle.tooling.LongRunningOperation addProgressListener(org.gradle.tooling.ProgressListener)
 meth public abstract org.gradle.tooling.LongRunningOperation addProgressListener(org.gradle.tooling.events.ProgressListener)
 meth public abstract org.gradle.tooling.LongRunningOperation addProgressListener(org.gradle.tooling.events.ProgressListener,java.util.Set<org.gradle.tooling.events.OperationType>)
@@ -341,7 +348,6 @@ meth public abstract <%0 extends java.lang.Object> org.gradle.tooling.ModelBuild
 meth public abstract <%0 extends java.lang.Object> void getModel(java.lang.Class<{%%0}>,org.gradle.tooling.ResultHandler<? super {%%0}>)
 meth public abstract <%0 extends java.lang.Object> {%%0} getModel(java.lang.Class<{%%0}>)
 meth public abstract org.gradle.tooling.BuildActionExecuter$Builder action()
- anno 0 org.gradle.api.Incubating()
 meth public abstract org.gradle.tooling.BuildLauncher newBuild()
 meth public abstract org.gradle.tooling.TestLauncher newTestLauncher()
 meth public abstract void close()
@@ -360,6 +366,8 @@ intf org.gradle.tooling.ConfigurableLauncher<org.gradle.tooling.TestLauncher>
 meth public abstract !varargs org.gradle.tooling.TestLauncher withJvmTestClasses(java.lang.String[])
 meth public abstract !varargs org.gradle.tooling.TestLauncher withJvmTestMethods(java.lang.String,java.lang.String[])
 meth public abstract !varargs org.gradle.tooling.TestLauncher withTests(org.gradle.tooling.events.test.TestOperationDescriptor[])
+meth public abstract org.gradle.tooling.TestLauncher debugTestsOn(int)
+ anno 0 org.gradle.api.Incubating()
 meth public abstract org.gradle.tooling.TestLauncher withJvmTestClasses(java.lang.Iterable<java.lang.String>)
 meth public abstract org.gradle.tooling.TestLauncher withJvmTestMethods(java.lang.String,java.lang.Iterable<java.lang.String>)
 meth public abstract org.gradle.tooling.TestLauncher withTests(java.lang.Iterable<? extends org.gradle.tooling.events.test.TestOperationDescriptor>)
@@ -375,6 +383,12 @@ CLSS public org.gradle.tooling.UnsupportedVersionException
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 supr org.gradle.tooling.GradleConnectionException
+
+CLSS public abstract interface org.gradle.tooling.events.BinaryPluginIdentifier
+intf org.gradle.tooling.events.PluginIdentifier
+meth public abstract java.lang.String getClassName()
+meth public abstract java.lang.String getPluginId()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
 
 CLSS public abstract interface org.gradle.tooling.events.FailureResult
 intf org.gradle.tooling.events.OperationResult
@@ -396,11 +410,19 @@ meth public abstract long getStartTime()
 
 CLSS public final !enum org.gradle.tooling.events.OperationType
 fld public final static org.gradle.tooling.events.OperationType GENERIC
+fld public final static org.gradle.tooling.events.OperationType PROJECT_CONFIGURATION
 fld public final static org.gradle.tooling.events.OperationType TASK
 fld public final static org.gradle.tooling.events.OperationType TEST
+fld public final static org.gradle.tooling.events.OperationType TEST_OUTPUT
+ anno 0 org.gradle.api.Incubating()
+fld public final static org.gradle.tooling.events.OperationType TRANSFORM
+fld public final static org.gradle.tooling.events.OperationType WORK_ITEM
 meth public static org.gradle.tooling.events.OperationType valueOf(java.lang.String)
 meth public static org.gradle.tooling.events.OperationType[] values()
 supr java.lang.Enum<org.gradle.tooling.events.OperationType>
+
+CLSS public abstract interface org.gradle.tooling.events.PluginIdentifier
+meth public abstract java.lang.String getDisplayName()
 
 CLSS public abstract interface org.gradle.tooling.events.ProgressEvent
 meth public abstract java.lang.String getDisplayName()
@@ -409,6 +431,10 @@ meth public abstract org.gradle.tooling.events.OperationDescriptor getDescriptor
 
 CLSS public abstract interface org.gradle.tooling.events.ProgressListener
 meth public abstract void statusChanged(org.gradle.tooling.events.ProgressEvent)
+
+CLSS public abstract interface org.gradle.tooling.events.ScriptPluginIdentifier
+intf org.gradle.tooling.events.PluginIdentifier
+meth public abstract java.net.URI getUri()
 
 CLSS public abstract interface org.gradle.tooling.events.SkippedResult
 intf org.gradle.tooling.events.OperationResult
@@ -424,6 +450,215 @@ meth public abstract long getTotal()
 
 CLSS public abstract interface org.gradle.tooling.events.SuccessResult
 intf org.gradle.tooling.events.OperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationFailureResult
+intf org.gradle.tooling.events.FailureResult
+intf org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationFinishEvent
+intf org.gradle.tooling.events.FinishEvent
+intf org.gradle.tooling.events.configuration.ProjectConfigurationProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor
+intf org.gradle.tooling.events.OperationDescriptor
+meth public abstract org.gradle.tooling.model.ProjectIdentifier getProject()
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult
+innr public abstract interface static PluginApplicationResult
+intf org.gradle.tooling.events.OperationResult
+meth public abstract java.util.List<? extends org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult> getPluginApplicationResults()
+
+CLSS public abstract interface static org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult
+ outer org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult
+meth public abstract java.time.Duration getTotalConfigurationTime()
+meth public abstract org.gradle.tooling.events.PluginIdentifier getPlugin()
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationProgressEvent
+ anno 0 org.gradle.api.Incubating()
+intf org.gradle.tooling.events.ProgressEvent
+meth public abstract org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor getDescriptor()
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationStartEvent
+intf org.gradle.tooling.events.StartEvent
+intf org.gradle.tooling.events.configuration.ProjectConfigurationProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.configuration.ProjectConfigurationSuccessResult
+intf org.gradle.tooling.events.SuccessResult
+intf org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultPluginApplicationResult
+cons public init(org.gradle.tooling.events.PluginIdentifier,java.time.Duration)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult
+meth public java.time.Duration getTotalConfigurationTime()
+meth public org.gradle.tooling.events.PluginIdentifier getPlugin()
+supr java.lang.Object
+hfds plugin,totalConfigurationTime
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultProjectConfigurationFailureResult
+cons public init(long,long,java.util.List<? extends org.gradle.tooling.Failure>,java.util.List<? extends org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult>)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationFailureResult
+meth public java.util.List<? extends org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult> getPluginApplicationResults()
+supr org.gradle.tooling.events.internal.DefaultOperationFailureResult
+hfds pluginApplicationResults
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultProjectConfigurationFinishEvent
+cons public init(long,java.lang.String,org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor,org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationFinishEvent
+meth public org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor getDescriptor()
+supr org.gradle.tooling.events.internal.DefaultFinishEvent
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultProjectConfigurationOperationDescriptor
+cons public init(org.gradle.tooling.internal.protocol.events.InternalProjectConfigurationDescriptor,org.gradle.tooling.events.OperationDescriptor)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor
+meth public org.gradle.tooling.model.ProjectIdentifier getProject()
+supr org.gradle.tooling.events.internal.DefaultOperationDescriptor
+hfds projectIdentifier
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultProjectConfigurationStartEvent
+cons public init(long,java.lang.String,org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationStartEvent
+meth public org.gradle.tooling.events.configuration.ProjectConfigurationOperationDescriptor getDescriptor()
+supr org.gradle.tooling.events.internal.DefaultStartEvent
+
+CLSS public org.gradle.tooling.events.configuration.internal.DefaultProjectConfigurationSuccessResult
+cons public init(long,long,java.util.List<? extends org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult>)
+intf org.gradle.tooling.events.configuration.ProjectConfigurationSuccessResult
+meth public java.util.List<? extends org.gradle.tooling.events.configuration.ProjectConfigurationOperationResult$PluginApplicationResult> getPluginApplicationResults()
+supr org.gradle.tooling.events.internal.DefaultOperationSuccessResult
+hfds pluginApplicationResults
+
+CLSS public org.gradle.tooling.events.internal.DefaultFinishEvent
+cons public init(long,java.lang.String,org.gradle.tooling.events.OperationDescriptor,org.gradle.tooling.events.OperationResult)
+intf org.gradle.tooling.events.FinishEvent
+intf org.gradle.tooling.events.ProgressEvent
+meth public java.lang.String getDisplayName()
+meth public java.lang.String toString()
+meth public long getEventTime()
+meth public org.gradle.tooling.events.OperationDescriptor getDescriptor()
+meth public org.gradle.tooling.events.OperationResult getResult()
+supr java.lang.Object
+hfds result
+
+CLSS public org.gradle.tooling.events.internal.DefaultOperationDescriptor
+cons public init(org.gradle.tooling.internal.protocol.events.InternalOperationDescriptor,org.gradle.tooling.events.OperationDescriptor)
+intf org.gradle.tooling.events.OperationDescriptor
+intf org.gradle.tooling.events.internal.OperationDescriptorWrapper
+meth public java.lang.String getDisplayName()
+meth public java.lang.String getName()
+meth public java.lang.String toString()
+meth public org.gradle.tooling.events.OperationDescriptor getParent()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+meth public org.gradle.tooling.internal.protocol.events.InternalOperationDescriptor getInternalOperationDescriptor()
+supr java.lang.Object
+hfds displayName,internalDescriptor,name,parent
+
+CLSS public org.gradle.tooling.events.internal.DefaultOperationFailureResult
+cons public init(long,long,java.util.List<? extends org.gradle.tooling.Failure>)
+intf org.gradle.tooling.events.FailureResult
+meth public java.util.List<? extends org.gradle.tooling.Failure> getFailures()
+meth public long getEndTime()
+meth public long getStartTime()
+supr java.lang.Object
+hfds endTime,failures,startTime
+
+CLSS public org.gradle.tooling.events.internal.DefaultOperationSuccessResult
+cons public init(long,long)
+intf org.gradle.tooling.events.SuccessResult
+meth public long getEndTime()
+meth public long getStartTime()
+supr java.lang.Object
+hfds endTime,startTime
+
+CLSS public org.gradle.tooling.events.internal.DefaultStartEvent
+cons public init(long,java.lang.String,org.gradle.tooling.events.OperationDescriptor)
+intf org.gradle.tooling.events.ProgressEvent
+intf org.gradle.tooling.events.StartEvent
+meth public java.lang.String getDisplayName()
+meth public java.lang.String toString()
+meth public long getEventTime()
+meth public org.gradle.tooling.events.OperationDescriptor getDescriptor()
+supr java.lang.Object
+
+CLSS public abstract interface org.gradle.tooling.events.internal.OperationDescriptorWrapper
+meth public abstract org.gradle.tooling.internal.protocol.events.InternalOperationDescriptor getInternalOperationDescriptor()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskExecutionResult
+intf org.gradle.tooling.events.task.TaskOperationResult
+meth public abstract boolean isIncremental()
+meth public abstract java.util.List<java.lang.String> getExecutionReasons()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskFailureResult
+intf org.gradle.tooling.events.FailureResult
+intf org.gradle.tooling.events.task.TaskExecutionResult
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskFinishEvent
+intf org.gradle.tooling.events.FinishEvent
+intf org.gradle.tooling.events.task.TaskProgressEvent
+meth public abstract org.gradle.tooling.events.task.TaskOperationResult getResult()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskOperationDescriptor
+intf org.gradle.tooling.events.OperationDescriptor
+meth public abstract java.lang.String getTaskPath()
+meth public abstract java.util.Set<? extends org.gradle.tooling.events.OperationDescriptor> getDependencies()
+meth public abstract org.gradle.tooling.events.PluginIdentifier getOriginPlugin()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskOperationResult
+intf org.gradle.tooling.events.OperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskProgressEvent
+intf org.gradle.tooling.events.ProgressEvent
+meth public abstract org.gradle.tooling.events.task.TaskOperationDescriptor getDescriptor()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskSkippedResult
+intf org.gradle.tooling.events.SkippedResult
+intf org.gradle.tooling.events.task.TaskOperationResult
+meth public abstract java.lang.String getSkipMessage()
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskStartEvent
+intf org.gradle.tooling.events.StartEvent
+intf org.gradle.tooling.events.task.TaskProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.task.TaskSuccessResult
+intf org.gradle.tooling.events.SuccessResult
+intf org.gradle.tooling.events.task.TaskExecutionResult
+meth public abstract boolean isFromCache()
+meth public abstract boolean isUpToDate()
+
+CLSS public abstract interface org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult
+innr public abstract interface static AnnotationProcessorResult
+intf org.gradle.tooling.events.task.TaskOperationResult
+meth public abstract java.util.List<org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult> getAnnotationProcessorResults()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+
+CLSS public abstract interface static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult
+ outer org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult
+innr public final static !enum Type
+meth public abstract java.lang.String getClassName()
+meth public abstract java.time.Duration getDuration()
+meth public abstract org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type getType()
+
+CLSS public final static !enum org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type
+ outer org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult
+fld public final static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type AGGREGATING
+fld public final static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type ISOLATING
+fld public final static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type UNKNOWN
+meth public static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type valueOf(java.lang.String)
+meth public static org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type[] values()
+supr java.lang.Enum<org.gradle.tooling.events.task.java.JavaCompileTaskOperationResult$AnnotationProcessorResult$Type>
+
+CLSS public final !enum org.gradle.tooling.events.test.Destination
+ anno 0 org.gradle.api.Incubating()
+fld public final static org.gradle.tooling.events.test.Destination StdErr
+fld public final static org.gradle.tooling.events.test.Destination StdOut
+intf java.io.Serializable
+meth public int getCode()
+meth public static org.gradle.tooling.events.test.Destination fromCode(int)
+meth public static org.gradle.tooling.events.test.Destination valueOf(java.lang.String)
+meth public static org.gradle.tooling.events.test.Destination[] values()
+supr java.lang.Enum<org.gradle.tooling.events.test.Destination>
+hfds code
 
 CLSS public final !enum org.gradle.tooling.events.test.JvmTestKind
 fld public final static org.gradle.tooling.events.test.JvmTestKind ATOMIC
@@ -460,6 +695,17 @@ intf org.gradle.tooling.events.OperationDescriptor
 CLSS public abstract interface org.gradle.tooling.events.test.TestOperationResult
 intf org.gradle.tooling.events.OperationResult
 
+CLSS public abstract interface org.gradle.tooling.events.test.TestOutputDescriptor
+ anno 0 org.gradle.api.Incubating()
+intf org.gradle.tooling.events.OperationDescriptor
+meth public abstract java.lang.String getMessage()
+meth public abstract org.gradle.tooling.events.test.Destination getDestination()
+
+CLSS public abstract interface org.gradle.tooling.events.test.TestOutputEvent
+ anno 0 org.gradle.api.Incubating()
+intf org.gradle.tooling.events.ProgressEvent
+meth public abstract org.gradle.tooling.events.test.TestOutputDescriptor getDescriptor()
+
 CLSS public abstract interface org.gradle.tooling.events.test.TestProgressEvent
 intf org.gradle.tooling.events.ProgressEvent
 meth public abstract org.gradle.tooling.events.test.TestOperationDescriptor getDescriptor()
@@ -475,6 +721,72 @@ intf org.gradle.tooling.events.test.TestProgressEvent
 CLSS public abstract interface org.gradle.tooling.events.test.TestSuccessResult
 intf org.gradle.tooling.events.SuccessResult
 intf org.gradle.tooling.events.test.TestOperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformFailureResult
+intf org.gradle.tooling.events.FailureResult
+intf org.gradle.tooling.events.transform.TransformOperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformFinishEvent
+intf org.gradle.tooling.events.FinishEvent
+intf org.gradle.tooling.events.transform.TransformProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformOperationDescriptor
+innr public abstract interface static SubjectDescriptor
+innr public abstract interface static TransformerDescriptor
+intf org.gradle.tooling.events.OperationDescriptor
+meth public abstract java.util.Set<? extends org.gradle.tooling.events.OperationDescriptor> getDependencies()
+meth public abstract org.gradle.tooling.events.transform.TransformOperationDescriptor$SubjectDescriptor getSubject()
+meth public abstract org.gradle.tooling.events.transform.TransformOperationDescriptor$TransformerDescriptor getTransformer()
+
+CLSS public abstract interface static org.gradle.tooling.events.transform.TransformOperationDescriptor$SubjectDescriptor
+ outer org.gradle.tooling.events.transform.TransformOperationDescriptor
+meth public abstract java.lang.String getDisplayName()
+
+CLSS public abstract interface static org.gradle.tooling.events.transform.TransformOperationDescriptor$TransformerDescriptor
+ outer org.gradle.tooling.events.transform.TransformOperationDescriptor
+meth public abstract java.lang.String getDisplayName()
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformOperationResult
+intf org.gradle.tooling.events.OperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformProgressEvent
+intf org.gradle.tooling.events.ProgressEvent
+meth public abstract org.gradle.tooling.events.transform.TransformOperationDescriptor getDescriptor()
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformStartEvent
+intf org.gradle.tooling.events.StartEvent
+intf org.gradle.tooling.events.transform.TransformProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.transform.TransformSuccessResult
+intf org.gradle.tooling.events.SuccessResult
+intf org.gradle.tooling.events.transform.TransformOperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemFailureResult
+intf org.gradle.tooling.events.FailureResult
+intf org.gradle.tooling.events.work.WorkItemOperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemFinishEvent
+intf org.gradle.tooling.events.FinishEvent
+intf org.gradle.tooling.events.work.WorkItemProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemOperationDescriptor
+intf org.gradle.tooling.events.OperationDescriptor
+meth public abstract java.lang.String getClassName()
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemOperationResult
+intf org.gradle.tooling.events.OperationResult
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemProgressEvent
+intf org.gradle.tooling.events.ProgressEvent
+meth public abstract org.gradle.tooling.events.work.WorkItemOperationDescriptor getDescriptor()
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemStartEvent
+intf org.gradle.tooling.events.StartEvent
+intf org.gradle.tooling.events.work.WorkItemProgressEvent
+
+CLSS public abstract interface org.gradle.tooling.events.work.WorkItemSuccessResult
+intf org.gradle.tooling.events.SuccessResult
+intf org.gradle.tooling.events.work.WorkItemOperationResult
 
 CLSS public org.gradle.tooling.exceptions.UnsupportedBuildArgumentException
 cons public init(java.lang.String)
@@ -613,6 +925,71 @@ CLSS public abstract interface org.gradle.tooling.model.build.JavaEnvironment
 meth public abstract java.io.File getJavaHome()
 meth public abstract java.util.List<java.lang.String> getJvmArguments()
 
+CLSS public abstract interface org.gradle.tooling.model.cpp.CompilationDetails
+meth public abstract java.io.File getCompileWorkingDir()
+meth public abstract java.io.File getCompilerExecutable()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+meth public abstract java.util.List<java.io.File> getFrameworkSearchPaths()
+meth public abstract java.util.List<java.io.File> getSystemHeaderSearchPaths()
+meth public abstract java.util.List<java.io.File> getUserHeaderSearchPaths()
+meth public abstract java.util.List<java.lang.String> getAdditionalArgs()
+meth public abstract java.util.Set<java.io.File> getHeaderDirs()
+meth public abstract java.util.Set<java.lang.String> getMacroUndefines()
+meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.cpp.MacroDirective> getMacroDefines()
+meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.cpp.SourceFile> getSources()
+meth public abstract org.gradle.tooling.model.Task getCompileTask()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppApplication
+intf org.gradle.tooling.model.cpp.CppComponent
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppBinary
+meth public abstract java.lang.String getBaseName()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getVariantName()
+meth public abstract org.gradle.tooling.model.cpp.CompilationDetails getCompilationDetails()
+meth public abstract org.gradle.tooling.model.cpp.LinkageDetails getLinkageDetails()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppComponent
+meth public abstract java.lang.String getBaseName()
+meth public abstract java.lang.String getName()
+meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.cpp.CppBinary> getBinaries()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppExecutable
+intf org.gradle.tooling.model.cpp.CppBinary
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppLibrary
+intf org.gradle.tooling.model.cpp.CppComponent
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppProject
+intf org.gradle.tooling.model.ProjectModel
+meth public abstract org.gradle.tooling.model.cpp.CppComponent getMainComponent()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+meth public abstract org.gradle.tooling.model.cpp.CppTestSuite getTestComponent()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppSharedLibrary
+intf org.gradle.tooling.model.cpp.CppBinary
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppStaticLibrary
+intf org.gradle.tooling.model.cpp.CppBinary
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.CppTestSuite
+intf org.gradle.tooling.model.cpp.CppComponent
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.LinkageDetails
+meth public abstract java.io.File getOutputLocation()
+meth public abstract java.util.List<java.lang.String> getAdditionalArgs()
+meth public abstract org.gradle.tooling.model.Task getLinkTask()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.MacroDirective
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getValue()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+
+CLSS public abstract interface org.gradle.tooling.model.cpp.SourceFile
+meth public abstract java.io.File getObjectFile()
+meth public abstract java.io.File getSourceFile()
+
 CLSS public abstract interface org.gradle.tooling.model.eclipse.AccessRule
 meth public abstract int getKind()
 meth public abstract java.lang.String getPattern()
@@ -654,6 +1031,7 @@ meth public abstract java.lang.String getPath()
 
 CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseProject
 intf org.gradle.tooling.model.eclipse.HierarchicalEclipseProject
+meth public abstract boolean hasAutoBuildTasks()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.EclipseBuildCommand> getBuildCommands()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.EclipseClasspathContainer> getClasspathContainers()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.EclipseExternalDependency> getClasspath()
@@ -670,11 +1048,14 @@ intf org.gradle.tooling.model.ProjectDependency
 intf org.gradle.tooling.model.eclipse.EclipseClasspathEntry
 meth public abstract boolean isExported()
 meth public abstract java.lang.String getPath()
-meth public abstract org.gradle.tooling.model.eclipse.HierarchicalEclipseProject getTargetProject()
- anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseProjectNature
 meth public abstract java.lang.String getId()
+
+CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseRuntime
+ anno 0 org.gradle.api.Incubating()
+meth public abstract org.gradle.tooling.model.eclipse.EclipseWorkspace getWorkspace()
+meth public abstract void setWorkspace(org.gradle.tooling.model.eclipse.EclipseWorkspace)
 
 CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseSourceDirectory
 intf org.gradle.tooling.model.SourceDirectory
@@ -686,6 +1067,22 @@ meth public abstract java.util.List<java.lang.String> getExcludes()
 meth public abstract java.util.List<java.lang.String> getIncludes()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.ClasspathAttribute> getClasspathAttributes()
 
+CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseWorkspace
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.io.File getLocation()
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.util.List<org.gradle.tooling.model.eclipse.EclipseWorkspaceProject> getProjects()
+ anno 0 org.gradle.api.Incubating()
+
+CLSS public abstract interface org.gradle.tooling.model.eclipse.EclipseWorkspaceProject
+ anno 0 org.gradle.api.Incubating()
+meth public abstract boolean isOpen()
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.io.File getLocation()
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.lang.String getName()
+ anno 0 org.gradle.api.Incubating()
+
 CLSS public abstract interface org.gradle.tooling.model.eclipse.HierarchicalEclipseProject
 intf org.gradle.tooling.model.HasGradleProject
 intf org.gradle.tooling.model.HierarchicalElement
@@ -695,6 +1092,13 @@ meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.grad
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.EclipseSourceDirectory> getSourceDirectories()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.eclipse.HierarchicalEclipseProject> getChildren()
 meth public abstract org.gradle.tooling.model.eclipse.HierarchicalEclipseProject getParent()
+
+CLSS public abstract interface org.gradle.tooling.model.eclipse.RunClosedProjectBuildDependencies
+ anno 0 org.gradle.api.Incubating()
+
+CLSS public abstract interface org.gradle.tooling.model.eclipse.RunEclipseAutoBuildTasks
+
+CLSS public abstract interface org.gradle.tooling.model.eclipse.RunEclipseSynchronizationTasks
 
 CLSS public abstract interface org.gradle.tooling.model.gradle.BasicGradleProject
 intf org.gradle.tooling.model.Model
@@ -720,7 +1124,6 @@ intf org.gradle.tooling.model.Model
 meth public abstract org.gradle.tooling.model.BuildIdentifier getBuildIdentifier()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.gradle.BasicGradleProject> getProjects()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.gradle.GradleBuild> getEditableBuilds()
- anno 0 org.gradle.api.Incubating()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.gradle.GradleBuild> getIncludedBuilds()
 meth public abstract org.gradle.tooling.model.gradle.BasicGradleProject getRootProject()
 
@@ -757,11 +1160,9 @@ meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.grad
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.idea.IdeaSourceDirectory> getGeneratedTestDirectories()
  anno 0 java.lang.Deprecated()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.idea.IdeaSourceDirectory> getResourceDirectories()
- anno 0 org.gradle.api.Incubating()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.idea.IdeaSourceDirectory> getSourceDirectories()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.idea.IdeaSourceDirectory> getTestDirectories()
 meth public abstract org.gradle.tooling.model.DomainObjectSet<? extends org.gradle.tooling.model.idea.IdeaSourceDirectory> getTestResourceDirectories()
- anno 0 org.gradle.api.Incubating()
 
 CLSS public abstract interface org.gradle.tooling.model.idea.IdeaDependency
 intf org.gradle.tooling.model.Dependency
@@ -795,8 +1196,6 @@ meth public abstract org.gradle.tooling.model.idea.IdeaProject getProject()
 CLSS public abstract interface org.gradle.tooling.model.idea.IdeaModuleDependency
 intf org.gradle.tooling.model.idea.IdeaDependency
 meth public abstract java.lang.String getTargetModuleName()
-meth public abstract org.gradle.tooling.model.idea.IdeaModule getDependencyModule()
- anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface org.gradle.tooling.model.idea.IdeaModuleIdentifier
 
@@ -820,6 +1219,59 @@ meth public abstract java.io.File getSource()
 CLSS public abstract interface org.gradle.tooling.model.idea.IdeaSourceDirectory
 intf org.gradle.tooling.model.SourceDirectory
 meth public abstract boolean isGenerated()
+
+CLSS public abstract interface org.gradle.tooling.model.java.InstalledJdk
+meth public abstract java.io.File getJavaHome()
+meth public abstract org.gradle.api.JavaVersion getJavaVersion()
+
+CLSS public abstract interface org.gradle.tooling.model.java.JavaRuntime
+meth public abstract java.io.File getJavaHome()
+meth public abstract org.gradle.api.JavaVersion getJavaVersion()
+
+CLSS public abstract interface org.gradle.tooling.model.kotlin.dsl.EditorPosition
+ anno 0 org.gradle.api.Incubating()
+meth public abstract int getColumn()
+meth public abstract int getLine()
+
+CLSS public abstract interface org.gradle.tooling.model.kotlin.dsl.EditorReport
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.lang.String getMessage()
+meth public abstract org.gradle.tooling.model.kotlin.dsl.EditorPosition getPosition()
+ anno 0 org.gradle.internal.impldep.javax.annotation.Nullable()
+meth public abstract org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity getSeverity()
+
+CLSS public final !enum org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity
+ anno 0 org.gradle.api.Incubating()
+fld public final static org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity ERROR
+fld public final static org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity WARNING
+meth public static org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity valueOf(java.lang.String)
+meth public static org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity[] values()
+supr java.lang.Enum<org.gradle.tooling.model.kotlin.dsl.EditorReportSeverity>
+
+CLSS public final org.gradle.tooling.model.kotlin.dsl.KotlinDslModelsParameters
+ anno 0 org.gradle.api.Incubating()
+cons public init()
+fld public final static java.lang.String CLASSPATH_MODE_SYSTEM_PROPERTY_DECLARATION = "-Dorg.gradle.kotlin.dsl.provider.mode=classpath"
+fld public final static java.lang.String CLASSPATH_MODE_SYSTEM_PROPERTY_VALUE = "classpath"
+fld public final static java.lang.String CORRELATION_ID_GRADLE_PROPERTY_NAME = "org.gradle.kotlin.dsl.provider.cid"
+fld public final static java.lang.String PREPARATION_TASK_NAME = "prepareKotlinBuildScriptModel"
+fld public final static java.lang.String PROVIDER_MODE_SYSTEM_PROPERTY_NAME = "org.gradle.kotlin.dsl.provider.mode"
+fld public final static java.lang.String STRICT_CLASSPATH_MODE_SYSTEM_PROPERTY_DECLARATION = "-Dorg.gradle.kotlin.dsl.provider.mode=strict-classpath"
+fld public final static java.lang.String STRICT_CLASSPATH_MODE_SYSTEM_PROPERTY_VALUE = "strict-classpath"
+supr java.lang.Object
+
+CLSS public abstract interface org.gradle.tooling.model.kotlin.dsl.KotlinDslScriptModel
+ anno 0 org.gradle.api.Incubating()
+meth public abstract java.util.List<java.io.File> getClassPath()
+meth public abstract java.util.List<java.io.File> getSourcePath()
+meth public abstract java.util.List<java.lang.String> getExceptions()
+meth public abstract java.util.List<java.lang.String> getImplicitImports()
+meth public abstract java.util.List<org.gradle.tooling.model.kotlin.dsl.EditorReport> getEditorReports()
+
+CLSS public abstract interface org.gradle.tooling.model.kotlin.dsl.KotlinDslScriptsModel
+ anno 0 org.gradle.api.Incubating()
+fld public final static java.lang.String SCRIPTS_GRADLE_PROPERTY_NAME = "org.gradle.tooling.model.kotlin.dsl.scripts"
+meth public abstract java.util.Map<java.io.File,org.gradle.tooling.model.kotlin.dsl.KotlinDslScriptModel> getScriptModels()
 
 CLSS public final org.netbeans.modules.gradle.api.GradleBaseProject
 fld public final static java.lang.String PRIVATE_TASK_GROUP = "<private>"
@@ -1213,6 +1665,7 @@ fld public final static java.lang.String PROP_AUGMENTED_BUILD = "augmented.build
 fld public final static java.lang.String PROP_COMPILE_ON_SAVE = "compile.on.save"
 fld public final static java.lang.String PROP_DEFAULT_CLI = "gradle.cli"
 fld public final static java.lang.String PROP_JDK_PLATFORM = "jdkPlatform"
+meth public static boolean cancelGradle(org.netbeans.modules.gradle.api.execute.RunConfig)
 meth public static boolean isAugmentedBuildEnabled(org.netbeans.api.project.Project)
 meth public static boolean isCompileOnSaveEnabled(org.netbeans.api.project.Project)
 meth public static java.io.File evaluateGradleDistribution(org.netbeans.api.project.Project,boolean)
@@ -1225,7 +1678,7 @@ meth public static org.openide.filesystems.FileObject[] extractFileObjectsfromLo
 meth public static org.openide.util.Pair<java.lang.String,org.netbeans.api.java.platform.JavaPlatform> getActivePlatform(java.lang.String)
 meth public static org.openide.util.Pair<java.lang.String,org.netbeans.api.java.platform.JavaPlatform> getActivePlatform(org.netbeans.api.project.Project)
 supr java.lang.Object
-hfds LOG
+hfds GRADLE_TASKS,LOG
 
 CLSS abstract interface org.netbeans.modules.gradle.api.execute.package-info
 

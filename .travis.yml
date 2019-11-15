@@ -249,7 +249,7 @@ matrix:
             - ant $OPTS -f ide/lexer test
             - ant $OPTS -f ide/lib.terminalemulator test
             - ant $OPTS -f ide/libs.freemarker test
-            - ant $OPTS -f ide/libs.git test
+            #- ant $OPTS -f ide/libs.git test
             - ant $OPTS -f ide/libs.graalsdk test
             #- ant $OPTS -f ide/localhistory test
             - ant $OPTS -f ide/o.openidex.util test

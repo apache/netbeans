@@ -232,7 +232,7 @@ matrix:
             - ant $OPTS -f ide/extbrowser test
             - ant $OPTS -f ide/extexecution.base test
             - ant $OPTS -f ide/gsf.testrunner.ui test
-            - ant $OPTS -f ide/html test
+            - travis_retry ant $OPTS -f ide/html test
             - ant $OPTS -f ide/html.custom test
             #- ant $OPTS -f ide/html.editor test
             #- ant $OPTS -f ide/html.lexer test

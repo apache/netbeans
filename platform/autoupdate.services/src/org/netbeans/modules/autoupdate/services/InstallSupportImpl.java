@@ -1093,34 +1093,6 @@ public class InstallSupportImpl {
                 progress.progress (el.getDisplayName (), verified < wasDownloaded ? verified : wasDownloaded);
             }
 
-            try {
-                Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
-                if(nbmCerts == null) {
-                    res = Utilities.N_A;
-                } else if (nbmCerts.isEmpty()) {
-                    res = Utilities.UNSIGNED;
-                } else {
-                    // Iterate all certpaths that can be considered for the NBM
-                    // choose the certpath, that has the highest trust level
-                    // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED
-                    // or comes first
-                    for(CodeSigner cs: nbmCerts) {
-                        String localRes = Utilities.verifyCertificates(cs, trustedCerts, trustedCACerts, validationCerts, validationCACerts);
-                        // If there is no previous result or if the local
-                        // verification yielded a better result than the
-                        // previous result, replace it
-                        if (res == null
-                            || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
-                            res = localRes;
-                            certs.put(el, (List<Certificate>) cs.getSignerCertPath().getCertificates());
-                        }
-                    }
-                }
-            } catch (SecurityException ex) {
-                LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
-                res = Utilities.MODIFIED;
-            }
-
             {
                 MessageDigestChecker mdChecker = new MessageDigestChecker(impl.getMessageDigests());
                 byte[] buffer = new byte[102400];
@@ -1140,6 +1112,38 @@ public class InstallSupportImpl {
                                 mdChecker.getCalculatedHashAsString(algorithm)
                             });
                     }
+                    res = Utilities.MODIFIED;
+                } else if (mdChecker.isDigestAvailable() && impl.isCatalogTrusted()) {
+                    res = Utilities.TRUSTED;
+                }
+            }
+
+            if(res == null) {
+                try {
+                    Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
+                    if (nbmCerts == null) {
+                        res = Utilities.N_A;
+                    } else if (nbmCerts.isEmpty()) {
+                        res = Utilities.UNSIGNED;
+                    } else {
+                        // Iterate all certpaths that can be considered for the NBM
+                        // choose the certpath, that has the highest trust level
+                        // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED
+                        // or comes first
+                        for (CodeSigner cs : nbmCerts) {
+                            String localRes = Utilities.verifyCertificates(cs, trustedCerts, trustedCACerts, validationCerts, validationCACerts);
+                            // If there is no previous result or if the local
+                            // verification yielded a better result than the
+                            // previous result, replace it
+                            if (res == null
+                                || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
+                                res = localRes;
+                                certs.put(el, (List<Certificate>) cs.getSignerCertPath().getCertificates());
+                            }
+                        }
+                    }
+                } catch (SecurityException ex) {
+                    LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
                     res = Utilities.MODIFIED;
                 }
             }

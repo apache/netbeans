@@ -31,6 +31,7 @@ import org.netbeans.spi.autoupdate.UpdateItem;
 public abstract class UpdateItemImpl {
     private UpdateItem originalUpdateItem;
     private List<MessageDigestValue> messageDigests = new ArrayList<>();
+    private boolean catalogTrusted = false;
 
     /** Creates a new instance of UpdateItemImpl */
     UpdateItemImpl () {
@@ -74,5 +75,13 @@ public abstract class UpdateItemImpl {
 
     public void setMessageDigests(List<MessageDigestValue> messageDigests) {
         this.messageDigests = new ArrayList<>(messageDigests);
+    }
+
+    public boolean isCatalogTrusted() {
+        return catalogTrusted;
+    }
+
+    public void setCatalogTrusted(boolean catalogTrusted) {
+        this.catalogTrusted = catalogTrusted;
     }
 }

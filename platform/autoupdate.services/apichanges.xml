@@ -33,6 +33,24 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="enable-trusted-update-centers">
+            <api name="general"/>
+            <summary>KeyStoreProviders can now report which trustlevel they intent to supply</summary>
+            <version major="1" minor="62"/>
+            <date day="4" month="11" year="2019"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    The UpdateUnitProvider can now be declared trusted. If
+                    UpdateItems are provided by a trusted UpdateUnitProvider
+                    and can be linked to it (for example because the provider provides
+                    checksums in the catalog), they are considered trusted by the Autoupdate
+                    mechanism and will not trigger certificate warnings.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+        </change>
         <change id="keystores-for-validation">
             <api name="general"/>
             <summary>KeyStoreProviders can now report which trustlevel they intent to supply</summary>

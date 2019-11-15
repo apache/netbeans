@@ -38,11 +38,13 @@ public abstract class UpdateElementImpl extends Object {
     private UpdateUnit unit;
     private UpdateElement element;
     private List<MessageDigestValue> messageDigests = new ArrayList<>();
-    
+    private boolean catalogTrusted = false;
+
     public UpdateElementImpl (UpdateItemImpl item, String providerName) {
         if(item.getMessageDigests() != null) {
             messageDigests.addAll(item.getMessageDigests());
         }
+        this.catalogTrusted = item.isCatalogTrusted();
     }
     
     public UpdateUnit getUpdateUnit () {
@@ -113,4 +115,13 @@ public abstract class UpdateElementImpl extends Object {
     public void setMessageDigests(List<MessageDigestValue> messageDigests) {
         this.messageDigests = messageDigests;
     }
+
+    public boolean isCatalogTrusted() {
+        return catalogTrusted;
+    }
+
+    public void setCatalogTrusted(boolean catalogTrusted) {
+        this.catalogTrusted = catalogTrusted;
+    }
+
 }

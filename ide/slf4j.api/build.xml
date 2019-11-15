@@ -15,7 +15,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<project name="ide/o.slf4j.jdk14" default="build" basedir=".">
+<project name="ide/slf4j.api" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

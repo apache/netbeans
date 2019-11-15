@@ -23,11 +23,11 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.bouncycastle.bcprov</code-name-base>
+            <code-name-base>bcprov</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>org-bouncycastle-bcprov.jar</runtime-relative-path>
+                <runtime-relative-path>bcprov.jar</runtime-relative-path>
                 <binary-origin>external/bcprov-jdk15on-1.63.jar</binary-origin>
             </class-path-extension>
         </data>

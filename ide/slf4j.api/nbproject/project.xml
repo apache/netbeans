@@ -23,11 +23,11 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.slf4j.api</code-name-base>
+            <code-name-base>slf4j.api</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>org-slf4j-api.jar</runtime-relative-path>
+                <runtime-relative-path>slf4j-api.jar</runtime-relative-path>
                 <binary-origin>external/org.slf4j.api-1.7.28.jar</binary-origin>
             </class-path-extension>
         </data>

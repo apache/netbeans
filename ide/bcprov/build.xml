@@ -15,7 +15,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<project name="ide/o.bouncycastle.bcprov" default="build" basedir=".">
+<project name="ide/bcprov" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

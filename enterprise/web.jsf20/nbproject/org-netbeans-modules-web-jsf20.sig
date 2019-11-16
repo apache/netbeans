@@ -5,7 +5,7 @@ CLSS public com.sun.faces.RIConstants
 fld public final static int FLOW_DEFINITION_ID_SUFFIX_LENGTH
 fld public final static int FLOW_IN_JAR_PREFIX_LENGTH
 fld public final static java.lang.Class[] EMPTY_CLASS_ARGS
-fld public final static java.lang.Object NO_VALUE
+#fld public final static java.lang.Object NO_VALUE
 fld public final static java.lang.Object[] EMPTY_METH_ARGS
 fld public final static java.lang.String ALL_MEDIA = "*/*"
 fld public final static java.lang.String APPLICATION_XML_CONTENT_TYPE = "application/xml"
@@ -39,6 +39,12 @@ fld public final static java.lang.String TLV_RESOURCE_LOCATION = "com.sun.faces.
 fld public final static java.lang.String TREE_HAS_DYNAMIC_COMPONENTS = "com.sun.faces.TreeHasDynamicComponents"
 fld public final static java.lang.String VIEWID_KEY_NAME = "com.sun.faces.viewId"
 fld public final static java.lang.String XHTML_CONTENT_TYPE = "application/xhtml+xml"
+fld public final static java.lang.String PUSH_RESOURCE_URLS_KEY_NAME = "com.sun.faces.resourceUrls"
+fld public final static java.lang.String FACES_CONFIG_VERSION = "com.sun.faces.facesConfigVersion"
+fld public final static java.lang.String CDI_BEAN_MANAGER = "com.sun.faces.cdi.BeanManager"
+fld public final static java.lang.String CDI_AVAILABLE = "com.sun.faces.cdi.AvailableFlag"
+fld public final static java.lang.String CDI_1_1_OR_LATER = "com.sun.faces.cdi.OneOneOrLater"
+fld public final static java.lang.String ANNOTATED_CLASSES = "com.sun.faces.AnnotatedClasses"
 supr java.lang.Object
 
 CLSS public abstract interface java.io.Serializable

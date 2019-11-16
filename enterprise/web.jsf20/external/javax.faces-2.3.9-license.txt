@@ -1,5 +1,5 @@
 Name: JavaServer Faces
-Version: 2.2.7
+Version: 2.3.9
 License: CDDL-1.1
 Description: JavaServer Faces for building component-based user interfaces
 Origin: Oracle

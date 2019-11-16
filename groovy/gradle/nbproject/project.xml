@@ -322,6 +322,14 @@
                         <specification-version>6.70.1</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.jdk14</code-name-base>
+                    <run-dependency/>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -365,12 +373,6 @@
                 <package>org.netbeans.modules.gradle.spi.newproject</package>
                 <package>org.netbeans.modules.gradle.spi.nodes</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>../../ide/modules/org-slf4j-api.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>../../ide/modules/org-slf4j-jdk14.jar</runtime-relative-path>
-            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/netbeans-gradle-tooling.jar</runtime-relative-path>
                 <binary-origin>build/tooling/netbeans-gradle-tooling.jar</binary-origin>

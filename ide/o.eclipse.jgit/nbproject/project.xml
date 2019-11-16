@@ -38,7 +38,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.slf4j.api</code-name-base>
+                    <code-name-base>slf4j.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -46,7 +46,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.slf4j.jdk14</code-name-base>
+                    <code-name-base>slf4j.jdk14</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -54,7 +54,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.bouncycastle.bcprov</code-name-base>
+                    <code-name-base>bcprov</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
@@ -62,7 +62,7 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.bouncycastle.bcpg</code-name-base>
+                    <code-name-base>bcpg</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>

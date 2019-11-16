@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.test;
 
+import java.util.Arrays;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.util.Collection;
 import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
@@ -29,14 +30,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.gradle.tooling.Failure;
+import org.gradle.tooling.events.OperationDescriptor;
 import org.gradle.tooling.events.OperationType;
 import org.gradle.tooling.events.ProgressEvent;
 import org.gradle.tooling.events.ProgressListener;
+import org.gradle.tooling.events.test.Destination;
 import org.gradle.tooling.events.test.JvmTestOperationDescriptor;
 import org.gradle.tooling.events.test.TestFailureResult;
 import org.gradle.tooling.events.test.TestFinishEvent;
 import org.gradle.tooling.events.test.TestOperationDescriptor;
 import org.gradle.tooling.events.test.TestOperationResult;
+import org.gradle.tooling.events.test.TestOutputDescriptor;
+import org.gradle.tooling.events.test.TestOutputEvent;
+import org.gradle.tooling.events.test.TestProgressEvent;
 import org.gradle.tooling.events.test.TestSkippedResult;
 import org.gradle.tooling.events.test.TestStartEvent;
 import org.gradle.tooling.events.test.TestSuccessResult;
@@ -70,6 +76,15 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
     @Override
     public void statusChanged(ProgressEvent evt) {
+        if (evt instanceof TestOutputEvent) {
+            processTestOutput((TestOutputEvent) evt);
+        }
+        if (evt instanceof TestProgressEvent) {
+            processTestProgress((TestProgressEvent) evt);
+        }
+    }
+
+    private void processTestProgress(TestProgressEvent evt) {
         TestOperationDescriptor desc = (TestOperationDescriptor) evt.getDescriptor();
         if (evt instanceof TestStartEvent) {
             TestStartEvent start = (TestStartEvent) evt;
@@ -114,6 +129,20 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
             }
         }
     }
+
+    private void processTestOutput(TestOutputEvent evt) {
+        TestOutputDescriptor desc = evt.getDescriptor();
+        OperationDescriptor parent = desc.getParent();
+        CoreManager manager = getManager();
+        if (manager != null) {
+            manager.displayOutput(session, desc.getMessage(), desc.getDestination().equals(Destination.StdErr));
+        }
+        if ((parent != null) && (parent instanceof JvmTestOperationDescriptor)) {
+            Testcase tc = runningTests.get(getTestOpKey((JvmTestOperationDescriptor) parent));
+            tc.addOutputLines(Arrays.asList(desc.getMessage().split("\\R")));
+        }
+    }
+
 
     private void sessionStart(TestStartEvent evt) {
         session = new TestSession(evt.getDisplayName(), project, TestSession.SessionType.TEST);
@@ -269,7 +298,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
 
     @Override
     public Set<OperationType> getSupportedOperationTypes() {
-        return EnumSet.of(OperationType.TEST);
+        return EnumSet.of(OperationType.TEST, OperationType.TEST_OUTPUT);
     }
 
 }

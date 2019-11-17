@@ -231,7 +231,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                                     getJava8RuntimeClassPath(),
                                     null)
                         ),
-                        getJava8CompileClassPath()
+                        getJava8RuntimeClassPath()
                 );
             }
             return runTime;

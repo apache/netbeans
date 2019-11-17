@@ -177,7 +177,7 @@ public class OutlineSortTest extends NbTestCase {
     }
 
     /**
-     * Prints the tree from the root, a list of row values, and a list of node values.
+     * Prints a list of row values, and a list of expected node values.  These should be the same.
      *
      * @param outline The outline component
      * @param nodeOrder A list of node values in their expected order.

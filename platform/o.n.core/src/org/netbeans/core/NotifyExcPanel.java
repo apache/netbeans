@@ -601,9 +601,7 @@ public final class NotifyExcPanel extends JPanel implements ActionListener {
      */
     private static boolean shallNotify(Level level, boolean dialog) {
         int minAlert = Integer.getInteger("netbeans.exception.alert.min.level", 900); // NOI18N
-        boolean assertionsOn = false;
-        assert assertionsOn = true;
-        int defReport = assertionsOn ? 900 : 1001;
+        int defReport = 1001;
         int minReport = Integer.getInteger("netbeans.exception.report.min.level", defReport); // NOI18N
 
         if (dialog) {

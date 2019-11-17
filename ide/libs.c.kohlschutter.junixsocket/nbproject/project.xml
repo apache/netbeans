@@ -29,16 +29,16 @@
                 <package>org.newsclub.net.unix</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/junixsocket-native-common-2.2.0.jar</runtime-relative-path>
-                <binary-origin>external/junixsocket-native-common-2.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/junixsocket-native-common-2.2.1.jar</runtime-relative-path>
+                <binary-origin>external/junixsocket-native-common-2.2.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/junixsocket-core-2.2.0.jar</runtime-relative-path>
-                <binary-origin>external/junixsocket-core-2.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/junixsocket-core-2.2.1.jar</runtime-relative-path>
+                <binary-origin>external/junixsocket-core-2.2.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/junixsocket-common-2.2.0.jar</runtime-relative-path>
-                <binary-origin>external/junixsocket-common-2.2.0.jar</binary-origin>
+                <runtime-relative-path>ext/junixsocket-common-2.2.1.jar</runtime-relative-path>
+                <binary-origin>external/junixsocket-common-2.2.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

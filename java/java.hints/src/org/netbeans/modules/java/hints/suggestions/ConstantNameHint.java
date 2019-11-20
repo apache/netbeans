@@ -127,7 +127,7 @@ public class ConstantNameHint {
         }
         Preferences prefs = ctx.getPreferences();
         
-        boolean onlyImmClasses = prefs.getBoolean(PREF_CHECK_ONLY_IMMUTABLES, false);
+        boolean onlyImmClasses = prefs.getBoolean(PREF_CHECK_ONLY_IMMUTABLES, DEFAULT_CHECK_ONLY_IMMUTABLES);
         if (onlyImmClasses && !isImmutableValue(ctx.getInfo(), p, ctx.getPreferences())) {
             return null;
         }

@@ -189,7 +189,7 @@ public class UninstallUtils {
             }
             return descendants;
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.<File>emptyList();
         }
     }
 

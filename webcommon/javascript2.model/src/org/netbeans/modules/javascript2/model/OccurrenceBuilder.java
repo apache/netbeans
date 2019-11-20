@@ -173,7 +173,7 @@ public class OccurrenceBuilder {
                     item.leftSite, parserResult.getSnapshot().getMimeType(), null);
         } else {
             FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
-            newObject = new JsFunctionImpl(fo, parent, nameIden, Collections.EMPTY_LIST,
+            newObject = new JsFunctionImpl(fo, parent, nameIden, Collections.emptyList(),
                     parserResult.getSnapshot().getMimeType(), null);
         }
         newObject.addOccurrence(nameIden.getOffsetRange());

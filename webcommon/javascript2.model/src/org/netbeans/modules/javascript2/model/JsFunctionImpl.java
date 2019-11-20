@@ -80,7 +80,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     }
 
     private JsFunctionImpl(FileObject file, Identifier name, String mimeType, String sourceLabel) {
-        this(null, null, name, Collections.EMPTY_LIST, name.getOffsetRange(), mimeType, sourceLabel);
+        this(null, null, name, Collections.emptyList(), name.getOffsetRange(), mimeType, sourceLabel);
         this.setFileObject(file);
     }
     
@@ -160,7 +160,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     @Override
     public Collection<? extends TypeUsage> getReturnTypes() {
         if (areReturnTypesResolved) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<TypeUsage> returns = new HashSet();
         HashSet<String> nameReturnTypes = new HashSet<String>();

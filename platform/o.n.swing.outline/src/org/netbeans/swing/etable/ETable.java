@@ -594,7 +594,8 @@ public class ETable extends JTable {
                     }
                     hiddenColumnIndexes[hci] = index;
                 }
-                List<TableColumn> sortedColumns = (sortable) ? etcm.getSortedColumns() : Collections.EMPTY_LIST;
+                List<TableColumn> sortedColumns = (sortable) ? etcm.getSortedColumns() : Collections.<TableColumn>emptyList();
+
                 int ns = sortedColumns.size();
                 if (ns > 0) {
                     sortedColumnIndexes = new int[ns];

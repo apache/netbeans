@@ -672,7 +672,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             final List<Component> initiallyOpened;
             final Set<Component> initiallyOpenedMinimized;
             if (componentsInitiallyOpened.isEmpty()) {
-                initiallyOpened = Collections.EMPTY_LIST;
+                initiallyOpened = Collections.emptyList();
                 initiallyOpenedMinimized = Collections.EMPTY_SET;
             } else {
                 initiallyOpened = new ArrayList<Component>();

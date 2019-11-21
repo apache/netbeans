@@ -199,7 +199,7 @@ public class Snapshot {
 
             @Override
             protected Iterator<JavaClass> getTraversingIterator(JavaClass popped) {
-                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.emptyList().iterator();
+                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.<JavaClass>emptyList().iterator();
             }
         };
     }

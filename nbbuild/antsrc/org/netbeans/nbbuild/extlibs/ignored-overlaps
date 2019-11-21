@@ -23,8 +23,8 @@
 # apisupport does not even technically use it - it is only part of a sample app.
 apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar
 
-# db.sql.visualeditor/external/javacc-3.2.jar is used at compile-time only
-ide/db.sql.visualeditor/external/javacc-3.2.jar java/performance/external/javacc-3.2.jar
+# db.sql.visualeditor/external/javacc-7.0.10.jar is used at compile-time only
+ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/javacc-7.0.10.jar
 
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
 # and commons-io-2.5.jar, same as java.lsp.server

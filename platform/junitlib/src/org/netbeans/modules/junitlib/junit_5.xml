@@ -25,29 +25,29 @@
     <localizing-bundle>org.netbeans.modules.junitlib.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-api-5.3.1.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-params-5.3.1.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-engine-5.3.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-api-5.5.2.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-params-5.5.2.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.junit5/modules/ext/junit-jupiter-engine-5.5.2.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-api-5.3.1-javadoc.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-params-5.3.1-javadoc.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-engine-5.3.1-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-api-5.5.2-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-params-5.5.2-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-engine-5.5.2-javadoc.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-api-5.3.1-sources.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-params-5.3.1-sources.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-engine-5.3.1-sources.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-api-5.5.2-sources.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-params-5.5.2-sources.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-jupiter-engine-5.5.2-sources.jar!/</resource>
     </volume>
     <properties>
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.junit.jupiter:junit-jupiter-api:5.3.1:jar
-                org.junit.jupiter:junit-jupiter-params:5.3.1:jar
-                org.junit.jupiter:junit-jupiter-engine:5.3.1:jar
+                org.junit.jupiter:junit-jupiter-api:5.5.2:jar
+                org.junit.jupiter:junit-jupiter-params:5.5.2:jar
+                org.junit.jupiter:junit-jupiter-engine:5.5.2:jar
             </value>
         </property>
     </properties>

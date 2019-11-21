@@ -8,7 +8,7 @@
 =========================================================================
 
 Apache Derby
-Copyright 2004-2015 The Apache Software Foundation
+Copyright 2004-2019 The Apache Software Foundation
 
 This product includes software developed by
 The Apache Software Foundation (http://www.apache.org/).

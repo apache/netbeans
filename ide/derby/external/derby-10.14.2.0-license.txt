@@ -1,11 +1,11 @@
 Name: Apache Derby
 Origin: https://db.apache.org/derby/
-Version: 10.14.1.0
+Version: 10.14.2.0
 License: Apache-2.0
 Type: compile-time
 Comment: Dependency used to create sample database from sql
 Description: Apache Derby, an Apache DB subproject, is an open source relational database implemented entirely in Java and available under the Apache License, Version 2.0.
-Files: derby-10.14.1.0.jar, derbytools-10.14.1.0.jar
+Files: derby-10.14.2.0.jar, derbytools-10.14.2.0.jar
 
                                  Apache License
                            Version 2.0, January 2004

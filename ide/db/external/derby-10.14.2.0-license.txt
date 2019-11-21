@@ -1,8 +1,7 @@
 Name: Derby
-Version: 10.2.2.0
+Version: 10.14.2.0
 License: Apache-2.0
-Type: compile-time
-Comment: Dependency required to run the unittests of the DB support
+OSR: 3320
 Description: Apache Derby, an Apache DB subproject, is an open source relational database implemented entirely in Java
 Origin: http://db.apache.org/derby/
 

@@ -3017,7 +3017,7 @@
           <name>derby-sample</name>
         </OBJECT>
       </_name>
-      <_driverVersion>10.1.3.1</_driverVersion>
+      <_driverVersion>10.14.2.0</_driverVersion>
       <_catalog>
         <OBJECT CLASS="com.sun.forte4j.modules.dbmodel.DBIdentifier" ID="org.netbeans.modules.dbschema.DBIdentifier4307037">
           <name></name>
@@ -3026,7 +3026,7 @@
       <element>
         <OBJECT REFERENCE="org.netbeans.modules.dbschema.SchemaElement2050233071"/>
       </element>
-      <_databaseProductVersion>10.1.3.1</_databaseProductVersion>
+      <_databaseProductVersion>10.14.2.0</_databaseProductVersion>
       <_driver>org.apache.derby.jdbc.ClientDriver</_driver>
       <_databaseProductName>Apache Derby</_databaseProductName>
       <_schema>

@@ -257,7 +257,7 @@ public class MochaRunner {
         List<File> siteRoots = getRoots(project, WebClientProjectConstants.SOURCES_TYPE_HTML5_SITE_ROOT);
         List<File> testRoots = getRoots(project, isSelenium ? WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST_SELENIUM : WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST);
         List<String> localPaths = new ArrayList<>(sourceRoots.size());
-        List<String> localPathsExclusionFilter = Collections.EMPTY_LIST;
+        List<String> localPathsExclusionFilter = Collections.emptyList();
         sourceRoots.addAll(testRoots);
         for (File src : sourceRoots) {
             localPaths.add(src.getAbsolutePath());
@@ -270,7 +270,7 @@ public class MochaRunner {
                 }
             }
         }
-        return new Connector.Properties(host, port, localPaths, Collections.EMPTY_LIST, localPathsExclusionFilter);
+        return new Connector.Properties(host, port, localPaths, Collections.<String>emptyList(), localPathsExclusionFilter);
     }
     
     private static List<File> getRoots(Project project, String type) {
@@ -337,7 +337,7 @@ public class MochaRunner {
             }
             String output2display = testRunnerReporter.processLine(line);
             if(output2display == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             TestRunnerReporter.CallStackCallback callStackCallback = new TestRunnerReporter.CallStackCallback(runInfo.getProject());
             Pair<File, int[]> parsedLocation = callStackCallback.parseLocation(line, false);

@@ -110,7 +110,7 @@ public class ApplicationSubclassGenerator {
         RestApplicationModel restAppModel = restSupport.getRestApplicationsModel();
         RestServicesModel model = restSupport.getRestServicesModel();
         String clazz = null;
-        Collection<String> classNames = Collections.EMPTY_LIST;
+        Collection<String> classNames = Collections.emptyList();
         try {
             clazz = restAppModel.runReadAction(
                     new MetadataModelAction<RestApplications, String>() {

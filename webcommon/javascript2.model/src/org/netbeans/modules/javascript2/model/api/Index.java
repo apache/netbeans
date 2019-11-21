@@ -349,7 +349,7 @@ public final class Index {
                         if(split.length == 2 && !alreadyUsed.contains(split[0])) {
                             alreadyUsed.add(split[0]);
                             IndexedElement element = new IndexedElement(fo, split[0], split[0], false, false, split[1].equals("F") ? JsElement.Kind.FUNCTION : JsElement.Kind.OBJECT, 
-                                OffsetRange.NONE, Collections.singleton(Modifier.PUBLIC), Collections.EMPTY_LIST, false);
+                                OffsetRange.NONE, Collections.singleton(Modifier.PUBLIC), Collections.emptyList(), false);
                             usages.add(element);
                         }
                     }
@@ -365,7 +365,7 @@ public final class Index {
     
     private Collection <IndexedElement> getProperties(String fqn, int deepLevel, Collection<String> resolvedTypes) { 
         if (deepLevel > MAX_FIND_PROPERTIES_RECURSION) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<IndexedElement> result = new ArrayList<IndexedElement>();
         if (!resolvedTypes.contains(fqn)) {

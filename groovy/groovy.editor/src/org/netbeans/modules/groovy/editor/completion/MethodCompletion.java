@@ -443,7 +443,7 @@ public class MethodCompletion extends BaseCompletion {
      */
     private List<MethodParameter> getParameterListForMethod(Parameter[] parameters) {
         if (parameters.length == 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<MethodParameter> paramDescriptors = new ArrayList<>();

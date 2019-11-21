@@ -395,7 +395,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             return result;
         }
         visited.add(fqn);
-        Collection<? extends TypeUsage> offsetAssignments = Collections.EMPTY_LIST;
+        Collection<? extends TypeUsage> offsetAssignments = Collections.emptyList();
         Map.Entry<Integer, Collection<TypeUsage>> found = ((JsObjectImpl) jsObject).assignments.floorEntry(offset);
         if (found != null) {
             offsetAssignments = found.getValue();

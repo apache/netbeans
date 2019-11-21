@@ -279,7 +279,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
             Method startMethod = ClassTypeWrapper.concreteMethodByName(serviceClass, "startAccessLoop", "()Z");
             try {
                 t.notifyMethodInvoking();
-                Value ret = ClassTypeWrapper.invokeMethod(serviceClass, tr, startMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                Value ret = ClassTypeWrapper.invokeMethod(serviceClass, tr, startMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 if (ret instanceof PrimitiveValue) {
                     boolean success = PrimitiveValueWrapper.booleanValue((PrimitiveValue) ret);
                     RemoteServices.setAccessLoopStarted(t.getDebugger(), success);
@@ -292,7 +292,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                 if (trackComponentChanges && RemoteAWTScreenshot.FAST_SNAPSHOT_RETRIEVAL) {
                     Method startHierarchyListenerMethod = ClassTypeWrapper.concreteMethodByName(serviceClass, "startHierarchyListener", "()Ljava/lang/String;");
                     if (startHierarchyListenerMethod != null) {
-                        Value res = ClassTypeWrapper.invokeMethod(serviceClass, tr, startHierarchyListenerMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        Value res = ClassTypeWrapper.invokeMethod(serviceClass, tr, startHierarchyListenerMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         if (res instanceof StringReference) {
                             String reason = ((StringReference) res).value();
                             InputOutput io = t.getDebugger().getConsoleIO().getIO();

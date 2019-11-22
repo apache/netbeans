@@ -291,6 +291,16 @@ matrix:
             - ant $OPTS -f ide/xml.xam test
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
+            
+        - name: Test profiler modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f profiler/profiler.oql test
 
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8

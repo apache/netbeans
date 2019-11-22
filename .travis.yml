@@ -301,6 +301,16 @@ matrix:
           script:
             - ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
 
+        - name: Test profiler modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f profiler/profiler.oql test
+
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
           env:

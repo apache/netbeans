@@ -1,0 +1,34 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="center" attributes="16">
+                  <Group type="sequential" alignment="center" attributes="0">
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jButton2" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+                  <Component id="jToggleButton1" alignment="center" min="$pref" pref="121" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="238" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="jButton1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jButton2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Component id="jToggleButton1" min="$pref" max="$pref" attributes="16"/>
+              <EmptySpace pref="237" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

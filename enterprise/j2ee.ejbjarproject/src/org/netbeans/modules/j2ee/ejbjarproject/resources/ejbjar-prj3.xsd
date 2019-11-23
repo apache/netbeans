@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/j2ee-ejbjarproject/3"
+            xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3"
+            elementFormDefault="qualified">
+    <xsd:element name="data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="name" type="xsd:token"/>
+                <xsd:element name="minimum-ant-version" minOccurs="0">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                             <!-- #70913 - remove "1.5" and "1.6" in next schema version -->
+                            <xsd:enumeration value="1.5"/>
+                            <xsd:enumeration value="1.6"/>
+                            <xsd:enumeration value="1.6.5"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="explicit-platform" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:attribute name="explicit-source-supported" use="required">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:NMTOKEN">
+                                    <xsd:enumeration value="true"/>
+                                    <xsd:enumeration value="false"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:attribute>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="use-manifest" minOccurs="0"><xsd:complexType/></xsd:element>
+                <xsd:element name="included-library" type="libraryType" minOccurs="0" maxOccurs="unbounded"/> 
+                <xsd:element name="web-services"  minOccurs="0" maxOccurs="1" type="webServicesType"/>
+                <xsd:element name="web-service-clients" minOccurs="0" maxOccurs="1" type="webServiceClientsType"/>
+                <xsd:element name="source-roots">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="root" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:attribute name="id" use="required" type="xsd:token"/>
+                                    <xsd:attribute name="name" use="optional" type="xsd:token"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="test-roots">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="root" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:attribute name="id" use="required" type="xsd:token"/>
+                                    <xsd:attribute name="name" use="optional" type="xsd:token"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+             </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="libraryType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+        <!-- below two attributes are obsolete in releases NB 6.5 to NB 6.7.1 (issue #134642)
+             but from NB 6.8 'dirs' attribute is used again to resolve issue #163971.
+             in next version of project.xml both these attributes should be removed
+             and #163971 should be resolved by introducing a dedicated field for it -->
+                <xsd:attribute name="files" use="optional" type="xsd:integer"/>
+                <xsd:attribute name="dirs" use="optional" type="xsd:integer"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="webServicesType">
+       <xsd:sequence>
+          <xsd:element name="web-service" type="webServiceType" minOccurs="0" maxOccurs="unbounded"/>
+       </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="webServiceType">
+     <xsd:sequence>
+        <xsd:element name="web-service-name" type="xsd:string"/>
+        <xsd:element name="from-wsdl" minOccurs="0"><xsd:complexType/></xsd:element>
+     </xsd:sequence>
+   </xsd:complexType>
+   
+    <xsd:complexType name="webServiceClientsType">
+        <xsd:sequence>
+            <xsd:element name="web-service-client" type="webServiceClientType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+     
+    <xsd:complexType name="webServiceClientType">
+        <xsd:sequence>
+            <xsd:element name="web-service-client-name" type="xsd:token"/>
+            <xsd:element name="web-service-stub-type" type="xsd:token"/>
+            <xsd:element name="client-source-url" type="xsd:token" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+</xsd:schema>

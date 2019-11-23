@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <title>org.netbeans.api.editor.caret</title>
+  </head>
+  <body>
+
+  <p>
+  The Editor Caret API opens up the editor to give information about its carets
+  and to manipulate them.
+  </p>
+  
+  <h3>Key parts of the API</h3>
+  
+  <p>
+  The whole API is organized around the
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/api/editor/caret/EditorCaret.html">EditorCaret</a></code>
+  class, an implementation of the <code>javax.swing.text.Caret</code> managing
+  all the carets in a single document. Information about carets maintained by
+  <code>EditorCaret</code> is stored in the immutable class
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/api/editor/caret/CaretInfo.html">CaretInfo</a></code>.
+  Once a caret gets mutated its corresponding caret info becomes obsolete
+  and new caret info instance gets created lazily.
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/api/editor/caret/EditorCaretListener.html">EditorCaretListener</a></code>
+  can be registered to an <code>EditorCaret</code> to be informed about caret
+  addition/removal or movement with an
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/api/editor/caret/EditorCaretEvent.html">EditorCaretEvent</a></code>.
+  </p>
+  
+  <p>
+  The <code>EditorCaret</code> mutates its carets in a single transaction.
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/api/editor/caret/CaretMoveContext.html">CaretMoveContext</a></code>
+  allows clients implementing
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/caret/CaretMoveHandler.html">CaretMoveHandler</a></code>
+  to manipulate carets. The following code shows how all carets are moved to the
+  end of the word they are currently on.
+  
+  <pre><code>
+    editorCaret.moveCarets((CaretMoveContext context) -> {
+        for (CaretInfo ci : context.getOriginalCarets()) {
+            Position pos = target.getDocument().createPosition(Utilities.getWordEnd(target, ci.getDot()));
+            context.setDot(ci, pos);
+        }
+    });
+  </code>
+  </pre>
+  </p>
+
+  <h3>Locking and <code>Document</code> changes</h3>
+  
+  <p>
+  The basics of the locking and events model of Swing documents is
+  described in the javadoc of the
+  <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
+  class. Netbeans documents use the same patterns and so does the Caret API,
+  because of its tight relation to documents. The fundamentals of the Swing documents
+  locking model are that any changes to a document are done under the
+  document's write lock, the document's listeners are notified synchronously on the
+  mutating thread and have full read access to the document, but can't modify it.
+  </p>
+  
+  <ul>
+    <li>
+    Any calls from the infrastructure to <code>EditorCaret</code> to query or
+    mutate its carets, should be called with document's read-lock acquired which
+    will guarantee stability of <code>CaretInfo#getDot()</code> and
+    <code>CaretInfo#getMark()</code> and prevent caret merging as a possible
+    effect of document modifications.
+    </li>
+    <li>
+    When <code>EditorCaret</code> needs to notify its listeners that some
+    of its carets have changed, all the events have to be fired under the
+    layer's document's read lock. Obviously, the listeners are not allowed to
+    modify the document from the event notification methods.
+    </li>
+  </ul>
+  
+  <p>
+  The Caret API does not use any special threads and any processing it
+  does is always done on the caller's thread. This means that the above described
+  constraints hardly cause any limitation for practical use.
+  </p>
+  
+  <p>
+  The Caret API is generally thread-safe meaning that it can be used
+  simultaneously from multiple threads if not stated otherwise. This doesn't
+  change in any way the rule of acquiring a read lock before calling the API.
+  Swing documents generally allow access for multiple readers that can run
+  concurrently.
+  </p>
+  
+  <h3><a name="movement-origins">Reason of Caret Movement</a></h3>
+  <p>
+      It may be desirable (especially for <a href="@JDK@/javax/swing/text/NavigationListener.html">NavigationListeners</a>, but possibly for 
+      <a href="EditorCaretListener.html">EditorCaretListeners</a> too) to determine
+  what was the reason leading to caret movement. The caller of Caret API which intends to position the caret
+  may provide an optional <a href="MoveCaretsOrigin.html">MoveCaretsOrigin</a> instance to Caret API methods to indicate
+  type of action leading to the movement. 
+  This description is used to select <i>NavigationFilters</i> which receive and can modify the movement, and is available
+  to all invoked <i>NavigationFilters</i> or <i>EditorCaretListeners</i> contacted by the Caret API operation.
+  </p>
+  <p>
+  Only one action type is currently defined by the 
+  API - <a href="MoveCaretsOrigin.html#DIRECT_NAVIGATION">DIRECT_NAVIGATION</a>. This type identifies operations
+  actions, whose only task is to reposition the caret (i.e. left/right, page-up, document-begin) from actions,
+  which position caret as a part of larger task (i.e. search, goto type, ...).
+  </p>
+  
+  <h3><a name="navigation-filters">Navigation Filters</a></h3>
+  <p>
+  The Caret API implements and extends the concept of swing 
+  <a href="@JDK@/javax/swing/text/NavigationFilter.html">NavigationFilters</a>. The Filter
+  gets notified on <code>CaretInfo</code> movement; so if more Carets are present, 
+  a <code>NavigationFilter</code> will see all their moves. Navigation Filters are
+  called with a special instance of <a href="@JDK@/javax/swing/text/NavigationFilter.FilterBypass.html">
+  FilterBypass</a> extending <a href="../../../spi/editor/caret/NavigationFilterBypass.html">
+    NavigationFilterBypass</a>. The Filter <b>can downcast the FilterBypass to access extended information</b>
+  about the current caret's movement:
+  </p>
+   <div class="nonnormative">
+    <pre><code>
+    public void setDot(FilterBypass fb, int dot, Position.Bias bias) {
+      if (fb instanceof NavigationFilterBypass) {
+        NavigationFilterBypass nfb = (NavigationFilterBypass)fb;
+   
+        // get the Origin object created by the caret-moving operation, can query the details
+        MoveCaretsOrigin origin = nfb.getOrigin();
+   
+        // get the individual caret in multi-caret scenario
+        CaretInfo info = nfb.getCaretInfo();
+   
+        // get the whole EditorCaret
+        EditorCaret eCaret = nfb.getEditorCaret();
+      }
+    }
+    </code></pre>
+   </div>
+  <p>
+  Navigation filters can be also selectively registered for only certain type of actions described by
+  <a href="MoveCaretsOrigin.html">MoveCaretsOrigin</a> instance. 
+  </p>
+  <div class="nonnormative">
+    <pre><code>
+        EditorCaret eCaret = .... ; // obtain EditorCaret
+        eCaret.setNavigationFilter(
+          new NavigationFilter() {
+                 // navigation filter implementation, not important for the example
+          }, 
+          new MoveCaretsOrigin(MoveCaretsOrigin.DIRECT_NAVIGATION)
+        );
+    </code></pre>
+  </div>
+  <p>
+  Such filters are only called if the caller of Caret API provides a suitable <i>MoveCaretsOrigin</i> description of the move operatoion.
+  </p>
+  <div class="nonnormative">
+      <pre>
+          <code>
+        // Action perform method
+        editorCaret.moveCarets(new CaretMoveHandler() {
+             &#64;Override
+             public void moveCarets(CaretMoveContext context) {
+                 ...
+             }
+         }, new MoveCaretsOrigin(
+                 // The action is a raw movement command
+                 MoveCaretsOrigin.DIRECT_NAVIGATION, 
+                 // The approximate direction of the movement; can be 0.
+                 SwingConstants.NORTH)
+         );
+        </code>
+      </pre>
+  </div>
+  Swing NavigationFilters, specified by <a href="@JDK@/javax/swing/text/JTextComponent#setNavigationFilter(javax.swing.text.NavigationFilter)">TextComponent.setNavigationFilter()</a>
+  are called for all caret movements.
+  <p>
+  Abstract boilerplate for <code>NavigationFilters</code> is created, 
+  <a href="../../../spi/editor/caret/CascadingNavigationFilter.html">CascadingNavigationFilter</a>
+  which allows to chain individual filters. Implementors are encouraged to use it, or otherwise
+  pass the control to previously registered <code>NavigationFilter</code> in case the movement
+  event is not handled by the custom implementation.
+  <p/>
+  
+  <h3><a name="compatibilty">Backwards compatibility</a></h3>
+  <p>
+  As a technical limitation, <code>EditorCaret</code> has to implement <code>Caret</code>
+  to be able to work with Swings Text API. The <code>Caret</code> interface is not
+  aware of multiple carets and a call to <code>setDot(int)</code> will only retain
+  a single caret. For multiple carets a call to <code>moveDot(int)</code> will move the last
+  caret only (but it retains other existing carets).+
+  <br>
+  <code>editorTextComponent.getCaret()</code> will now always return <code>EditorCaret</code>
+  instance instead of the original caret implementation <code>org.netbeans.editor.BaseCaret</code>.
+  Since clients were expected to only rely on <code>javax.swing.text.Caret</code> returned type
+  (except internal code in editor modules) they should not be affected by the change
+  since <code>EditorCaret</code> implements <code>Caret</code> interface.
+  <br>
+  With official Caret API the clients can start to cast
+  <code>editorTextComponent.getCaret()</code> to <code>EditorCaret</code> type
+  and use its extended functionality.
+  </p>
+  
+  <h3><a name="usecases">Use cases</a></h3>
+  <p>
+  Use cases are shown in javadoc documentation of particular methods.
+  </p>
+  </body>
+</html>

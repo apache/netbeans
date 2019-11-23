@@ -1,0 +1,10 @@
+Code completion result for source line:
+new File("/").equals(new Date().a|)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     addShutdownHook(Closure)                   void
+METHOD     after(Date)                     [PUBLIC]   boolean
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object

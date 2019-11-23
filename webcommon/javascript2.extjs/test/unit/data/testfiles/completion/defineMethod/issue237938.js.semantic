@@ -1,0 +1,10 @@
+|>GLOBAL:Ext<|.define('|>CLASS,GLOBAL:My237938<|.|>CLASS:app<|.|>CLASS:Panel<|', {
+    |>METHOD:constructor<|: function(|>UNUSED:config<|) {
+    }
+});
+
+|>GLOBAL:Ext<|.define('|>GLOBAL:My237938<|.|>CLASS:app<|.|>CLASS:PanelPart2<|', {
+    |>FIELD:override<|: 'My237938.app.Panel',
+    |>METHOD:constructor<|: function(|>UNUSED:config<|) {
+    }
+});

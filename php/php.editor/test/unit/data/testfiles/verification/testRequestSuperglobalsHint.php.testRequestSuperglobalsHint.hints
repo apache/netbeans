@@ -1,0 +1,25 @@
+$foo->bar($_REQUEST);
+          ---------
+HINT:Do not Access Superglobal $_REQUEST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+echo $_REQUEST["foo"];
+     ---------
+HINT:Do not Access Superglobal $_REQUEST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    echo $_REQUEST["foo"];
+         ---------
+HINT:Do not Access Superglobal $_REQUEST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    ? $_REQUEST[""]
+      ---------
+HINT:Do not Access Superglobal $_REQUEST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).
+    : $_REQUEST[""];
+      ---------
+HINT:Do not Access Superglobal $_REQUEST Array Directly.
+
+Use some filtering functions instead (e.g. filter_input(), conditions with is_*() functions, etc.).

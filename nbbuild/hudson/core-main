@@ -1,0 +1,137 @@
+#!/bin/sh
+
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+set -x
+
+ANT_OPTS="$ANT_OPTS -Xmx1G"
+
+if [ ! -z $NB_PROXY_HOST ] && [ ! -z $NB_PROXY_PORT ]; then
+    ANT_OPTS="$ANT_OPTS -Dhttp.proxyHost=$NB_PROXY_HOST -Dhttp.proxyPort=$NB_PROXY_PORT"
+fi
+export ANT_OPTS
+
+ant build-nozip || exit
+ant commit-validation -Dcontinue.after.failing.tests=true || exit
+ant check-sigtests-release -Dfail.on.error=false || exit
+ant check-sigtests-version -Dsigtest.fail.on.error=true || exit
+ant -Dtest-unit-sys-prop.ignore.random.failures=true localtest || exit
+ant -Dtest-unit-sys-prop.ignore.random.failures=true -Dtest.type=test-unit -Dtest.modules=\
+ant.freeform,\
+ant.htmlui,\
+api.java,\
+api.java.classpath,\
+api.progress,\
+api.progress.nb,\
+api.templates,\
+api.visual,\
+apisupport.ant,\
+apisupport.harness,\
+apisupport.project,\
+apisupport.refactoring,\
+apisupport.wizards,\
+autoupdate.services,\
+autoupdate.ui,\
+core.execution,\
+core.ide,\
+core.kit,\
+core.multiview,\
+core.netigso,\
+core.osgi,\
+core.output2,\
+core.startup,\
+core.ui,\
+core.windows,\
+debugger.jpda.js,\
+editor.mimelookup,\
+editor.mimelookup.impl,\
+extexecution,\
+favorites,\
+hudson,\
+hudson.git,\
+hudson.maven,\
+hudson.mercurial,\
+hudson.subversion,\
+hudson.tasklist,\
+ide.branding,\
+java.api.common,\
+java.freeform,\
+java.j2seplatform,\
+java.j2seproject,\
+java.platform,\
+java.project,\
+javahelp,\
+keyring.impl,\
+masterfs,\
+maven,\
+maven.apisupport,\
+maven.embedder,\
+maven.hints,\
+maven.indexer,\
+maven.junit,\
+maven.model,\
+maven.osgi,\
+nbjunit,\
+nbbrwsr,\
+netbinox,\
+o.apache.tools.ant.module,\
+o.n.bootstrap,\
+o.n.core,\
+o.n.insane,\
+o.n.swing.tabcontrol,\
+openide.actions,\
+openide.awt,\
+openide.compat,\
+openide.dialogs,\
+openide.execution,\
+openide.explorer,\
+openide.filesystems,\
+openide.filesystems.compat8,\
+openide.filesystems.nb,\
+openide.loaders,\
+openide.modules,\
+openide.nodes,\
+openide.options,\
+openide.text,\
+openide.util,\
+openide.util.enumerations,\
+openide.util.lookup,\
+openide.util.ui,\
+openide.windows,\
+options.api,\
+options.keymap,\
+progress.ui,\
+project.ant,\
+project.libraries,\
+projectapi,\
+projectimport.eclipse.core,\
+projectui,\
+projectuiapi,\
+queries,\
+sendopts,\
+settings,\
+spi.navigator,\
+spi.quicksearch,\
+tasklist.todo,\
+tasklist.ui,\
+templates,\
+templatesui,\
+uihandler,\
+versioning,\
+versioning.masterfs test || exit
+ant build-test-dist || exit

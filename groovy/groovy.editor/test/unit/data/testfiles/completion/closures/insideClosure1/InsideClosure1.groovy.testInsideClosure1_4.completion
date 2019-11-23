@@ -1,0 +1,7 @@
+Code completion result for source line:
+[3,4,5].each {xu1,xu2,xu3 -> println xu|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   xu1                                        Object
+VARIABLE   xu2                                        Object
+VARIABLE   xu3                                        Object

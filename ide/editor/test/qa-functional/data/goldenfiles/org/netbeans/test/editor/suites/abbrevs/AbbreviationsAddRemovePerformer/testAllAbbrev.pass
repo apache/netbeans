@@ -1,0 +1,517 @@
+2al
+${baseType type="java.util.List" default="List" editable="false"} <${type default="String"}> ${var newVarName default="l"} = new ${listType type="java.util.ArrayList" default="ArrayList" editable=false} <${type}>(
+ ${arrays type="java.util.Arrays" default="Arrays" editable="false"}.asList(${arr array}));
+         ${cursor}
+ 
+2ar
+${clazz}[] ${var newVarName default="arr"} = (${clazz}[]) ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[${coll}.size()]);
+ 
+2do
+try {
+    ${dobType type="org.openide.loaders.DataObject" editable="false" default="DataObject"} ${dob newVarName default="dob"} = ${dobType}.find(${fo instanceof="org.openide.filesystems.FileObject" default="fo"});
+    ${cursor}
+} catch (${etype type="org.openide.loaders.DataObjectNotFoundException" default="DataObjectNotFoundException" editable="false"} ${exName newVarName default="ex" editable="false"}) {
+    ${exctype type="org.openide.util.Exceptions" editable="false" default=""}.printStackTrace(${exName});
+}
+2f
+${fileType type="java.io.File" default="File" editable="false"} ${file newVarName default="f"} = ${FileUtilType type="org.openide.filesystems.FileUtil" editable="false")}.toFile(${fo instanceof="org.openide.filesystems.FileObject" default="fo"});
+${cursor}
+2fo
+${fileType type="org.openide.filesystems.FileObject" default="FileObject" editable="false"} ${file newVarName default="f"} = ${FileUtilType type="org.openide.filesystems.FileUtil" editable="false")}.toFileObject(${FileUtilType}.normalizeFile(${f instanceof="java.io.File" default="f"}));
+${cursor}
+2l
+${ltype type="java.util.List" default="List" editable="false"}<${arrType type="java.lang.String" default="String"}> ${var newVarName default="l"} = ${arrays type="java.util.Arrays" default="Arrays" editable="false"}.asList(${arr array});
+${cursor}
+2s
+${baseType type="java.util.Set" default="Set" editable="false"} <${type default="String"}> ${var newVarName default="s"} = new ${listType type="java.util.HashSet" default="HashSet" editable=false} <${type}>(${arrays type="java.util.Arrays" default="Arrays" editable="false"}.asList(${arr array}));
+         ${cursor}
+En
+${no-indent}Enumeration
+Ex
+${no-indent}Exception
+Lka
+${coltype type="java.util.Collection" default="Collection" editable="false"} <? extends ${Type}> ${obj newVarName default="obj"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookupAll(${Type}.class);
+       ${cursor}
+    
+Lkp
+${Type} ${obj newVarName default="obj"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookup(${Type}.class);
+       ${cursor}
+    
+Lkr
+${coltype type="org.openide.util.Lookup.Result" default="Lookup.Result" editable="false"} <? extends ${Type}> ${obj newVarName default="res"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookupResult(${Type}.class);
+       ${cursor}
+    
+Ob
+${no-indent}Object
+Pf
+${no-format}public final 
+Pfm
+    public final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+Pm
+    public ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+Ps
+${no-format}public static 
+Psf
+${no-format}public static final 
+Psfb
+${no-format}public static final boolean 
+Psfi
+${no-format}public static final int 
+Psfm
+    public static final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+Psfs
+${no-format}public static final String 
+St
+${no-indent}String
+ab
+${no-indent}abstract 
+al
+${baseType type="java.util.List" default="List" editable="false"} <${type default="String"}> ${var newVarName default="l"} = new ${listType type="java.util.ArrayList" default="ArrayList" editable=false} <${type}>(${arg default="" instanceof="java.util.Collection"});
+         ${cursor}
+ 
+ap
+${sb instanceof="java.lang.StringBuilder" default="sb"}.append(${EXP instanceof="<any>" default=""exp""});
+${cursor}
+apo
+if (${sb instanceof="java.lang.StringBuilder" default="sb"}.length() > 0) {
+     ${sb}.append (',');
+ }
+ ${sb}.append ("${EXP instanceof="<any>" default="exp"}=");
+ ${sb}.append (${EXP});
+${cursor}
+as
+assert ${exp default="true" instanceof="boolean"};
+asort
+${baseType type="java.util.Arrays" default="Arrays" editable="false"}.sort (${arr array type="java.lang.reflect.Array"});
+     ${cursor}
+bcom
+${no-format}/*${selection}${cursor}*/
+bo
+${no-indent}boolean 
+br
+${no-indent}break;
+ca
+catch (${EXC instanceof="java.lang.Throwable" default="Exception"} ${NAME newVarName default="ex"}) {
+        ${cursor}
+    }
+cl
+${no-indent}class 
+cn
+${no-indent}continue
+cs
+case ${what completionInvoke}:
+            ${cursor}
+            break;
+
+csort
+${collsType type="java.util.Collections" default="Collections" editable="false"}.sort(${var instanceof="java.util.List"});
+         ${cursor}
+db
+${no-indent}double 
+df
+${no-indent}default:
+do
+do {
+            ${cursor}
+        } while (${expr instanceof="boolean" default="true"});
+    
+dowhile
+do { 
+   ${selection}${cursor}
+} while (${EXP instanceof="boolean" default="exp"});
+
+eq
+${no-indent}equals
+ex
+${no-indent}extends 
+f
+${no-indent}final 
+fa
+${no-indent}false
+fc
+final class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+fcom
+${no-format}//<editor-fold defaultstate="collapsed" desc="${comment}">
+${selection}${cursor}
+//</editor-fold>
+
+fi
+${no-indent}final 
+fl
+${no-indent}float 
+for
+for (int ${IDX newVarName default="i"} = 0; ${IDX} < ${MAX default="10"}; ${IDX}++) {
+    ${selection}${cursor}
+}
+
+forc
+for (${IT_TYPE rightSideType type="java.util.Iterator" default="Iterator" editable=false} ${IT newVarName default="it"} = ${COL instanceof="java.util.Collection" default="col"}.iterator(); ${IT}.hasNext();) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${IT}.next();
+   ${selection}${cursor}
+}
+
+fore
+for (${TYPE iterableElementType default="Object" editable=false} ${ELEM newVarName default="elem"} : ${ITER iterable default="col"}) {
+   ${selection}${cursor}
+}
+
+fori
+for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${ARR array default="arr"}.length; ${IDX}++) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${ARR}[${IDX}];
+   ${selection}${cursor}
+}
+
+forl
+for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${LIST instanceof="java.util.List" default="lst"}.size(); ${IDX}++) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${LIST}.get(${IDX});
+   ${selection}${cursor}
+}
+
+form
+for (${entryType iterableElementType default="Map.Entry<Object, Object>" editable=false} ${entry newVarName default="en"} : ${map instanceof="java.util.Map" default="m"}.entrySet()) {
+            ${KeyType rightSideType default="Object"} ${key newVarName default="key"} = ${entry}.getKey();
+            ${ValType rightSideType default="Object"} ${val newVarName default="val"} = ${entry}.getValue();
+            ${selection}${cursor}
+        }
+forst
+for (${STR_TOK type="java.util.StringTokenizer" default="StringTokenizer" editable=false} ${TOKENIZER newVarName} = new ${STR_TOK}(${STRING instanceof="java.lang.String"}); ${TOKENIZER}.hasMoreTokens();) {
+    String ${TOKEN default="token"} = ${TOKENIZER}.nextToken();
+    ${cursor}
+}
+
+forv
+for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${VECTOR instanceof="java.util.Vector" default="vct"}.size(); ${IDX}++) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${VECTOR}.elementAt(${IDX});
+   ${selection}${cursor}
+}
+
+fy
+finally {
+        ${cursor}
+    }
+iae
+throw new IllegalArgumentException("${arg}");
+ic
+class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+ie
+${no-indent}interface 
+if
+if (${EXP instanceof="boolean" default="true"}) {
+   ${selection}${cursor}
+}
+
+ife
+if (${EXP instanceof="boolean" default="true"}) {
+   ${selection}${cursor}
+} else {
+}
+
+ifelse
+if (${EXP instanceof="boolean" default="exp"}) {
+   ${selection}${cursor}
+} else {
+}
+
+iff
+if (${EXP instanceof="boolean" default="exp"}) {
+   ${selection}${cursor}
+}
+
+im
+${no-indent}implements 
+in
+${no-indent}interface 
+inst
+if (${EXP instanceof="java.lang.Object" default="exp"} instanceof ${TYPE default="Object"}) {
+   ${TYPE} ${VAR newVarName default="obj"} = (${TYPE})${EXP};
+   ${cursor}
+}
+
+iof
+${no-indent}instanceof 
+ir
+${no-indent}import 
+ise
+throw new IllegalStateException("${arg}");
+jaxbm
+try {            
+                javax.xml.bind.JAXBContext jaxbCtx= javax.xml.bind.JAXBContext.newInstance( ${OBJ2M instanceof="java.lang.Object" default="obj2BMarshalled"}.getClass().getPackage().getName());
+                javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                marshaller.marshal(${OBJ2M} , System.out);
+            } catch (javax.xml.bind.JAXBException ex) {
+                // XXXTODO Handle exception
+                java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
+        }
+jaxbu
+
+            try {
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(${UM_OBJ instanceof="java.lang.Object" default="umObj"}.getClass().getPackage().getName());
+                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
+                ${UM_OBJ} = ${TYPE_CAST cast default=""} unmarshaller.unmarshal(new java.io.File("File path")); //NOI18N
+            } catch (javax.xml.bind.JAXBException ex) {
+                // XXXTODO Handle exception
+                java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
+            }
+        
+le
+${no-indent}length
+lka
+${coltype type="java.util.Collection" default="Collection" editable="false"} <? extends ${Type}> ${all newVarName default="all"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookupAll(${Type}.class);
+       ${cursor}
+    
+lko
+${Type} ${obj newVarName default="obj"} = ${prov instanceof="org.openide.util.Lookup.Provider"}.getLookup().lookup(${Type}.class);
+       ${cursor}
+    
+lkp
+${Type} ${obj newVarName default="obj"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookup(${Type}.class);
+       ${cursor}
+    
+lkr
+${coltype type="org.openide.util.Lookup.Result" default="Result" editable="false"} <? extends ${Type}> ${res newVarName default="all"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookupResult(${Type}.class);
+       ${cursor}
+    
+ll
+${stype type="java.util.List" default="List" editable="false"}<${paramType default="String"}> ${var newVarName default="s"} = new ${listType type="java.util.LinkedList" editable="false"}<${paramType}>(${arg instanceof="java.util.Collection" default=""});
+    ${cursor}
+log
+${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message}");
+logb
+${loggerInst instanceof="java.util.logging.Logger" default="logger" editable="false"}.log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${bundle_key}");
+logbp
+${loggerInst instanceof="java.util.logging.Logger" default="logger" editable="false"}.log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${bundle_key}", ${args instanceof="java.lang.Object" default="args"});
+logbps
+${loggerInst instanceof="java.util.logging.Logger" default="logger" editable="false"}.log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${bundle_key}", new Object [] {${args default="null"}});
+loge
+${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message}", ${exc instanceof="java.lang.Throwable" default="ex"});
+logp
+${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message} {0}", ${param instanceof="java.lang.Object" default="arg"});
+logr
+private static final ${loggerType type="java.util.logging.Logger" default="Logger" editable="false"} logger = ${loggerType}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName());
+logrb
+private static final ${loggerType type="java.util.logging.Logger" default="Logger" editable="false"} logger = ${loggerType}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName(), ${classVar}.class.getPackage().getName() + "${bundleName default=".Log" editable="true"}");
+m
+    ${private} ${static} ${final} ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+map
+${map type="java.util.Map" default="Map" editable="false"}<${keytype default="String"},${valtype default="String"}> ${var newVarName default="m"} = new ${mtype type="java.util.HashMap" editable="false"}<${keytype},${valtype}>(${cursor});
+
+n
+${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});
+na
+${no-indent}native 
+nb
+${coltype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(${classVar editable="false" currClassName default="getClass()"}.class, "${KEY}")
+nbb
+${coltype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(${classVar editable="false" currClassName default="getClass()"}.class, "${KEY}", ${arg instanceof="java.lang.Object" default="arg1"})
+newo
+${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});
+npe
+throw new NullPointerException("${arg instanceof="java.lang.Object"}");
+pe
+${no-indent}protected 
+pf
+${no-format}private final 
+pfc
+private final class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+pfm
+    private final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+pm
+    private ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+pn
+${coltype type="org.openide.util.Parameters" default="Parameters" editable="false"}.notNull("${param instanceof="java.lang.Object"}", ${param});
+${cursor}
+pr
+${no-indent}private 
+prfm
+    protected final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+prm
+    protected ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+prsfm
+    protected static final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+ps
+${no-format}private static 
+psf
+${no-format}private static final 
+psfb
+${no-format}private static final boolean 
+psfc
+private static final class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+psfi
+${no-format}private static final int 
+psfm
+    private static final ${ret default="void"} ${mname default="method"}(${args default=""}) {
+        ${cursor}
+     }
+     
+psfs
+${no-format}private static final String 
+pst
+printStackTrace();
+psvm
+public static void main(String[] args) {
+   ${cursor}
+}
+
+pu
+${no-indent}public 
+pue
+public enum ${Type} {
+   ${cursor}
+}
+
+pvb
+${no-format}private volatile boolean 
+re
+${no-indent}return 
+rn
+${no-indent}return null;
+rp
+${rp type="org.openide.util.RequestProcessor" default="RequestProcessor" editable="false"}.getDefault().post(${toRun instanceof="java.lang.Runnable" default="new Runnable() {
+        public void run() {
+        }
+    }"});
+runn
+${RUNN_TYPE type="java.lang.Runnable" default="Runnable" editable=false} ${RUNN newVarName default="r"} = new ${RUNN_TYPE}() {
+   public void run() {
+     ${selection}${cursor}
+   }
+};
+
+sb
+${stype type="java.util.StringBuilder" default="StringBuilder" editable="false"} ${var newVarName default="sb"} = new ${stype}(${str instanceof="java.lang.String" default=""});
+    ${cursor}
+sc
+static class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+serr
+System.err.println("${cursor}");
+set
+${stype type="java.util.Set" default="Set" editable="false"}<${paramType default="String"}> ${var newVarName default="s"} = new ${setType type="java.util.HashSet" editable="false"}<${paramType}>();
+    ${cursor}
+sfc
+static final class ${Type} {
+        ${Type}() {
+            ${cursor}
+        }
+     }
+     
+sh
+${no-indent}short 
+sout
+System.out.println("${cursor}");
+soutv
+System.out.println("${EXP instanceof="<any>" default="exp"} = " + ${EXP});
+spl
+
+        for (String ${str newVarName default="s"} : ${string instanceof="java.lang.String"}.split("${expr default=","}")) {
+            ${cursor}
+        }
+     
+st
+${no-indent}static 
+stat
+${coltype type="org.openide.awt.StatusDisplayer" default="StatusDisplayer" editable="false"}.getDefault().setStatusText(${bundletype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(getClass(), "${KEY}"));
+${cursor}
+su
+${no-indent}super
+sw
+switch (${var instanceof="java.lang.Enum"}) {
+        case ${val completionInvoke}:
+            ${cursor}
+            break;
+        default:
+            throw new AssertionError();
+    }
+
+sy
+${no-indent}synchronized 
+tds
+Thread.dumpStack();
+th
+${no-indent}throws 
+tr
+${no-indent}transient 
+trycatch
+try {
+   ${selection}${cursor}
+} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {}" editable=false}
+
+tw
+throw ${exc instanceof="java.lang.Throwable" default="new IllegalStateException()"};
+vo
+${no-indent}volatile
+wh
+while (${expr instanceof="boolean" default="true"}) {
+        ${cursor}
+    }
+
+whileit
+while(${IT instanceof="java.util.Iterator" default="it"}.hasNext()) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${IT}.next();
+   ${selection}${cursor}
+}
+
+whilen
+while(${ENUM instanceof="java.util.Enumeration" default="en"}.hasMoreElements()) {
+   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${ENUM}.nextElement();
+   ${selection}${cursor}
+}
+
+whilexp
+while (${EXP instanceof="boolean" default="exp"}) { 
+   ${selection}${cursor}
+}
+

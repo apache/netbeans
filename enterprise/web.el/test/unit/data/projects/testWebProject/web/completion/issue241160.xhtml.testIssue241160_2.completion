@@ -1,0 +1,8 @@
+Code completion result for source line:
+#{cc.attrs.muj.subSequence(0, 1).|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     charAt(int index)               [PUBLIC]   char
+METHOD     length()                        [PUBLIC]   int
+METHOD     subSequence(int start,int end)  [PUBLIC]   CharSequence
+METHOD     toString()                      [PUBLIC]   String

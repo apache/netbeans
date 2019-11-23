@@ -1,0 +1,2 @@
+	this.|>MARK_OCCURRENCES:name<| = name;
+	return this.|>MARK_OCCURRENCES:nam^e<|; // .name gets suggested

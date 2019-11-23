@@ -1,0 +1,122 @@
+{
+    "packages": [
+        {
+            "name": "a/b",
+            "version": "1.13.1"
+        },
+        {
+            "name": 1,
+            "version": "1.13.1"
+        },
+        {
+            "name": 1.5,
+            "version": "1.13.1"
+        },
+        {
+            "name": null,
+            "version": "1.13.1"
+        },
+        {
+            "name": true,
+            "version": "1.13.1"
+        },
+        {
+            "name": {"myver": 123},
+            "version": "1.13.1"
+        },
+        {
+            "name": [1, 2],
+            "version": "1.13.1"
+        },
+        {
+            "name": "c/d",
+            "version": 1
+        },
+        {
+            "name": "e/f",
+            "version": 1.5
+        },
+        {
+            "name": "g/h",
+            "version": null
+        },
+        {
+            "name": "i/j",
+            "version": true
+        },
+        {
+            "name": "k/l",
+            "version": {"myver": 123}
+        },
+        {
+            "name": "m/n",
+            "version": [1, 2]
+        },
+        {
+            "name": "xyz/zyx"
+        },
+        {
+            "version": 147
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "aa/bb",
+            "version": "42"
+        },
+        {
+            "name": 1,
+            "version": "1.13.1"
+        },
+        {
+            "name": 1.5,
+            "version": "1.13.1"
+        },
+        {
+            "name": null,
+            "version": "1.13.1"
+        },
+        {
+            "name": true,
+            "version": "1.13.1"
+        },
+        {
+            "name": {"myver": 123},
+            "version": "1.13.1"
+        },
+        {
+            "name": [1, 2],
+            "version": "1.13.1"
+        },
+        {
+            "name": "cc/dd",
+            "version": 1
+        },
+        {
+            "name": "ee/ff",
+            "version": 1.5
+        },
+        {
+            "name": "gg/hh",
+            "version": null
+        },
+        {
+            "name": "ii/jj",
+            "version": true
+        },
+        {
+            "name": "kk/ll",
+            "version": {"myver": 123}
+        },
+        {
+            "name": "mm/nn",
+            "version": [1, 2]
+        },
+        {
+            "name": "xxyyzz/zzyyxx"
+        },
+        {
+            "version": 741
+        }
+    ]
+}

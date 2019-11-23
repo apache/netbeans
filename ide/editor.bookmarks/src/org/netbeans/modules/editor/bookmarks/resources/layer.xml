@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Actions">
+        <folder name="Edit">
+            <file name="bookmark-next.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.modules.editor.bookmarks.WrapperBookmarkAction$Next"/>
+            </file>
+            <file name="bookmark-previous.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.modules.editor.bookmarks.WrapperBookmarkAction$Previous"/>
+            </file>
+            <file name="bookmark-history-popup-next.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.modules.editor.bookmarks.WrapperBookmarkAction$PopupNext"/>
+            </file>
+            <file name="bookmark-history-popup-previous.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.modules.editor.bookmarks.WrapperBookmarkAction$PopupPrevious"/>
+            </file>
+            <file name="bookmark-toggle.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.lib.editor.bookmarks.actions.ToggleBookmarkAction"/>
+            </file>
+            <file name="clear-document-bookmarks.instance">
+                <attr name="instanceCreate" newvalue="org.netbeans.modules.editor.bookmarks.WrapperBookmarkAction$ClearDocumentBookmarks"/>
+            </file>
+            <file name="org-netbeans-modules-editor-bookmarks-ui-BookmarksViewOpenAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="delegate" methodvalue="org.netbeans.modules.editor.bookmarks.ui.BookmarksView.openAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/editor/bookmarks/resources/bookmark_16.png"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.editor.bookmarks.ui.Bundle#LBL_BookmarksAction"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="GoTo">
+            <file name="org-netbeans-editor-bookmarks-ToggleBookmark.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/bookmark-toggle.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
+            
+            <file name="bookmark-history-popup-next.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/bookmark-history-popup-next.instance"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            
+            <file name="bookmark-history-popup-previous.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/bookmark-history-popup-previous.instance"/>
+                <attr name="position" intvalue="2100"/>
+            </file>
+            
+            <file name="SeparatorAfterBookmarks.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2200"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <folder name="Tools">
+                <file name="org-netbeans-modules-editor-bookmarks-ui-BookmarksViewOpenAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-bookmarks-ui-BookmarksViewOpenAction.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Editors">
+        <folder name="Toolbars">
+            <folder name="Default">
+                <file name="bookmark-previous.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-previous.instance"/>
+                    <attr name="position" intvalue="11000"/>
+                </file>
+                <file name="bookmark-next.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-next.instance"/>
+                    <attr name="position" intvalue="12000"/>
+                </file>
+                <file name="bookmark-toggle.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-toggle.instance"/>
+                    <attr name="position" intvalue="13000"/>
+                </file>
+                <file name="Separator-after-bookmarks.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="14000"/>
+                </file>
+                </folder>
+        </folder>
+
+        <folder name="AnnotationTypes">
+            <file name="bookmark.xml" url="bookmark.xml"/>
+            <folder name="BookmarkActions">
+                <file name="bookmark-toggle.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-toggle.instance"/>
+                </file>
+                <file name="bookmark-next.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-next.instance"/>
+                </file>
+                <file name="bookmark-previous.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/bookmark-previous.instance"/>
+                </file>
+            </folder>
+        </folder>
+
+    </folder>
+
+    <folder name="ProjectXMLCatalog">
+        <folder name="editor-bookmarks">
+            <file name="1.xsd" url="editor-bookmarks-1.xsd"/>
+            <file name="2.xsd" url="editor-bookmarks-2.xsd"/>
+        </folder>
+    </folder>
+
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="bookmarks.settings" url="bookmarks.settings"/>
+        </folder>
+
+        <folder name="Modes">
+            <folder name="output">
+                <file name="bookmarks.wstcref" url="bookmarks.wstcref">
+                    <attr name="position" intvalue="850"/>
+                </file>
+            </folder>
+        </folder>
+        
+        <folder name="Groups">
+            <folder name="Editor">
+                <file name="bookmarks.wstcgrp" url="bookmarks.wstcgrp"/>
+            </folder>
+        </folder>
+
+    </folder>
+
+</filesystem>

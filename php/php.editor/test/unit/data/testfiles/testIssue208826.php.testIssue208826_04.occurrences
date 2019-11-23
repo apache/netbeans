@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:B^ag<| {}
+         * @param B\|>MARK_OCCURRENCES:Bag<| $param
+        function functionName1(B\|>MARK_OCCURRENCES:Bag<| $param) {

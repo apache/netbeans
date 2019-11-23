@@ -1,0 +1,5 @@
+Code completion result for source line:
+$("#text").ani|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     animate(properties, options, n  [PUBLIC]   jquery-api.xml

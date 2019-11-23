@@ -1,0 +1,31 @@
+FUNCTION staticMethods01 [ANONYMOUS: false, DECLARED: true - staticMethods01, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Ridic : FUNCTION Ridic [ANONYMOUS: false, DECLARED: true - Ridic, MODIFIERS: PUBLIC, CONSTRUCTOR]
+      # RETURN TYPES
+      Ridic, RESOLVED: true
+      # PARAMETERS
+      OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PARAMETER]
+      OBJECT surname [ANONYMOUS: false, DECLARED: true - surname, MODIFIERS: PUBLIC, PARAMETER]
+      # PROPERTIES
+      arguments  : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+      getFormula : FUNCTION getFormula [ANONYMOUS: false, DECLARED: true - getFormula, MODIFIERS: PUBLIC, STATIC, METHOD]
+                 # RETURN TYPES
+                 String, RESOLVED: true
+                 # PARAMETERS
+                 OBJECT type [ANONYMOUS: false, DECLARED: true - type, MODIFIERS: PUBLIC, PARAMETER]
+                 # PROPERTIES
+                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+      getName    : FUNCTION getName [ANONYMOUS: false, DECLARED: true - getName, MODIFIERS: PROTECTED, METHOD]
+                 # PROPERTIES
+                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+      name       : OBJECT name [ANONYMOUS: false, DECLARED: true - name, MODIFIERS: PUBLIC, PROPERTY]
+      prototype  : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                 # PROPERTIES
+                 getInfo : FUNCTION getInfo [ANONYMOUS: false, DECLARED: true - getInfo, MODIFIERS: PUBLIC, METHOD]
+                         # RETURN TYPES
+                         String, RESOLVED: true
+                         # PROPERTIES
+                         arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+      surname    : OBJECT surname [ANONYMOUS: false, DECLARED: true - surname, MODIFIERS: PUBLIC, PROPERTY]

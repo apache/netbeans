@@ -1,0 +1,31 @@
+"use strict";
+
+function |>METHOD:_getFileList<|(buildType, fileList, theme) {
+  |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION:result<| = [];
+  for (const file of fileList) {
+    if (file.buildType === buildType || !file.buildType) {
+      |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION:matches<| = [];
+      |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION:dest<|;
+      |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION:cwd<|;
+      for (|>CUSTOM2:let<| |>CLASS:src<| of file.src) {
+        const exclusion = src.indexOf('!') === 0;
+        |>LOCAL_VARIABLE:cwd<| = file.cwd;
+        |>LOCAL_VARIABLE:dest<| = file.dest;
+        |>LOCAL_VARIABLE:cwd<| = (_isFunction(file.cwd) ? |>LOCAL_VARIABLE:cwd<|(theme) : |>LOCAL_VARIABLE:cwd<|) || '';
+
+        if (exclusion) { src = src.slice(1); }
+
+        |>CUSTOM2:let<| |>LOCAL_VARIABLE_DECLARATION:match<| = |>GLOBAL:glob<|.sync(src, { |>FIELD:cwd<|: |>GLOBAL:util<|.destPath(|>LOCAL_VARIABLE:cwd<|) });
+        |>LOCAL_VARIABLE:match<| = _removeNonFile(|>LOCAL_VARIABLE:match<|, |>GLOBAL:util<|.destPath(|>LOCAL_VARIABLE:cwd<|));
+        if (exclusion) {
+          |>LOCAL_VARIABLE:matches<| = _difference(|>LOCAL_VARIABLE:matches<|, |>LOCAL_VARIABLE:match<|);
+        } else {
+          |>LOCAL_VARIABLE:matches<| = _union(|>LOCAL_VARIABLE:matches<|, |>LOCAL_VARIABLE:match<|);
+        }
+      }
+      const prefixedPaths = _addFileListPathPrefix(|>LOCAL_VARIABLE:matches<|, |>LOCAL_VARIABLE:dest<|, |>GLOBAL:util<|.destPath(|>LOCAL_VARIABLE:cwd<|));
+      |>LOCAL_VARIABLE:result<| = |>LOCAL_VARIABLE:result<|.concat(prefixedPaths);
+    }
+  }
+  return |>LOCAL_VARIABLE:result<|;
+} 

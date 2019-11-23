@@ -1,0 +1,25 @@
+    private $Boo_baz; //absolutely wrong
+            --------
+HINT:PSR-1 Violation:
+Property names SHOULD be declared in $StudlyCaps, $camelCase, or $under_score format (consistently in a scope).
+Previous property usage was in a different format, or this property name is absolutely wrong.
+    private $baz_bat; // ...under is wrong
+            --------
+HINT:PSR-1 Violation:
+Property names SHOULD be declared in $StudlyCaps, $camelCase, or $under_score format (consistently in a scope).
+Previous property usage was in a different format, or this property name is absolutely wrong.
+        $this->BarBaz;
+               ------
+HINT:PSR-1 Violation:
+Property names SHOULD be declared in $StudlyCaps, $camelCase, or $under_score format (consistently in a scope).
+Previous property usage was in a different format, or this property name is absolutely wrong.
+        $this->bar_baz;
+               -------
+HINT:PSR-1 Violation:
+Property names SHOULD be declared in $StudlyCaps, $camelCase, or $under_score format (consistently in a scope).
+Previous property usage was in a different format, or this property name is absolutely wrong.
+        $this->Bar_baz; // absolutely wrong
+               -------
+HINT:PSR-1 Violation:
+Property names SHOULD be declared in $StudlyCaps, $camelCase, or $under_score format (consistently in a scope).
+Previous property usage was in a different format, or this property name is absolutely wrong.

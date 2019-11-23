@@ -1,0 +1,15 @@
+HeapByteBuffer#50#java.nio
+HeapByteBufferR#50#java.nio
+HeapCharBuffer#50#java.nio
+HeapCharBufferR#50#java.nio
+HeapDoubleBuffer#50#java.nio
+HeapDoubleBufferR#50#java.nio
+HeapFloatBuffer#50#java.nio
+HeapFloatBufferR#50#java.nio
+HeapIntBuffer#50#java.nio
+HeapIntBufferR#50#java.nio
+HeapLongBuffer#50#java.nio
+HeapLongBufferR#50#java.nio
+HeapNode#70#com.sun.org.apache.xalan.internal.xsltc.dom.MultiValuedNodeHeapIterator
+HeapShortBuffer#50#java.nio
+HeapShortBufferR#50#java.nio

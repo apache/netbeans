@@ -1,0 +1,35 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# The format should handle comments
+# And also empty lines
+
+# and also comments at the end of line
+org.openide.util org.nb.util # first line comment
+
+# lines without comments
+org.netbeans.api.MyClass org.nb.api.MyClass
+
+# and those that use = instead of space
+org.openide.TheSame=org.openide.TheSame
+
+# and of course also innerclasses with $
+org.openide.util.UtilitiesTranslateTest$A=org.openide.util.UtilitiesTranslateTest$Ahoj
+
+# test to see that . is not treated as general character
+com.o=something
+

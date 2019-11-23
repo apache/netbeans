@@ -1,0 +1,246 @@
+<FunctionNode name='issue269061.js' kind='MODULE' start='0' end='541'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <ImportNode start='21' end='49'>
+    <ImportClauseNode start='28' end='38'>
+      <NamedImportsNode start='28' end='38'>
+        <ImportSpecifierNode start='29' end='37'>
+          <IdentNode start='29' end='37'>
+            <name>basename</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='39' end='49'>
+      <StringLiteralNode value='path' start='45' end='43'/>
+    </FromNode>
+  </ImportNode>
+  <ImportNode start='51' end='93'>
+    <ImportClauseNode start='58' end='84'>
+      <NamedImportsNode start='58' end='84'>
+        <ImportSpecifierNode start='59' end='83'>
+          <IdentNode start='59' end='71'>
+            <name>readFileSync</name>
+          </IdentNode>
+          <IdentNode start='75' end='83'>
+            <name>readFile</name>
+          </IdentNode>
+        </ImportSpecifierNode>
+      </NamedImportsNode>
+    </ImportClauseNode>
+    <FromNode start='85' end='93'>
+      <StringLiteralNode value='fs' start='91' end='89'/>
+    </FromNode>
+  </ImportNode>
+  <ImportNode start='95' end='135'>
+    <ImportClauseNode start='102' end='112'>
+      <NameSpaceImportNode start='102' end='112'>
+        <IdentNode start='107' end='112'>
+          <name>acorn</name>
+        </IdentNode>
+      </NameSpaceImportNode>
+    </ImportClauseNode>
+    <FromNode start='113' end='135'>
+      <StringLiteralNode value='../dist/acorn.js' start='119' end='117'/>
+    </FromNode>
+  </ImportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='541'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='help' start='231' end='541'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='240' end='244'>
+        <name>help</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='help' kind='NORMAL' start='231' end='541'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='245' end='251'>
+          <name>status</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='253' end='539'>
+          <isFunctionBody/>
+          <!-- Block Statements -->
+          <VarNode name='print' start='263' end='314'>
+            <hasInit/>
+            <isAssignment/>
+            <isBlockScoped/>
+            <isConst/>
+            <!-- VarNode Assignment Dest -->
+            <IdentNode start='263' end='268'>
+              <name>print</name>
+              <isDeclaredHere/>
+              <isInitializedHere/>
+            </IdentNode>
+            <!-- VarNode Init -->
+            <TernaryNode start='285' end='314'>
+              <BinaryNode type='EQ' start='272' end='283'>
+                <isComparison/>
+                <!-- BinaryNode lhs -->
+                <IdentNode start='272' end='278'>
+                  <name>status</name>
+                </IdentNode>
+                <!-- BinaryNode rhs -->
+                <NumberLiteralNode value='0' start='282' end='283'/>
+              </BinaryNode>
+              <JoinPredecessorExpression start='287' end='298'>
+                <AccessNode property='log' start='287' end='298'>
+                  <!-- AccessNode Base -->
+                  <IdentNode start='287' end='294'>
+                    <name>console</name>
+                  </IdentNode>
+                </AccessNode>
+              </JoinPredecessorExpression>
+              <JoinPredecessorExpression start='301' end='314'>
+                <AccessNode property='error' start='301' end='314'>
+                  <!-- AccessNode Base -->
+                  <IdentNode start='301' end='308'>
+                    <name>console</name>
+                  </IdentNode>
+                </AccessNode>
+              </JoinPredecessorExpression>
+            </TernaryNode>
+          </VarNode>
+          <ExpressionStatement start='317' end='392'>
+            <CallNode start='317' end='392'>
+              <!-- CallNode Arguments -->
+              <BinaryNode type='ADD' start='324' end='390'>
+                <!-- BinaryNode lhs -->
+                <BinaryNode type='ADD' start='324' end='360'>
+                  <!-- BinaryNode lhs -->
+                  <StringLiteralNode value='usage:' start='324' end='331'/>
+                  <!-- BinaryNode rhs -->
+                  <CallNode start='335' end='360'>
+                    <!-- CallNode Arguments -->
+                    <IndexNode start='344' end='359'>
+                      <isIndex/>
+                      <!-- IndexNode Base -->
+                      <AccessNode property='argv' start='344' end='356'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='344' end='351'>
+                          <name>process</name>
+                        </IdentNode>
+                      </AccessNode>
+                      <!-- IndexNode Index -->
+                      <NumberLiteralNode value='1' start='357' end='358'/>
+                    </IndexNode>
+                    <!-- CallNode Function -->
+                    <IdentNode start='335' end='343'>
+                      <name>basename</name>
+                    </IdentNode>
+                  </CallNode>
+                </BinaryNode>
+                <!-- BinaryNode rhs -->
+                <StringLiteralNode value='[--ecma3|--ecma5|--ecma6]' start='364' end='390'/>
+              </BinaryNode>
+              <!-- CallNode Function -->
+              <IdentNode start='317' end='322'>
+                <name>print</name>
+              </IdentNode>
+            </CallNode>
+          </ExpressionStatement>
+          <ExpressionStatement start='395' end='516'>
+            <CallNode start='395' end='516'>
+              <!-- CallNode Arguments -->
+              <StringLiteralNode value='[--tokenize] [--locations] [---allow-hash-bang] [--compact] [--silent] [--module] [--help] [--] [infile]' start='402' end='514'/>
+              <!-- CallNode Function -->
+              <IdentNode start='395' end='400'>
+                <name>print</name>
+              </IdentNode>
+            </CallNode>
+          </ExpressionStatement>
+          <ExpressionStatement start='519' end='539'>
+            <CallNode start='519' end='539'>
+              <!-- CallNode Arguments -->
+              <IdentNode start='532' end='538'>
+                <name>status</name>
+              </IdentNode>
+              <!-- CallNode Function -->
+              <AccessNode property='exit' start='519' end='531'>
+                <!-- AccessNode Base -->
+                <IdentNode start='519' end='526'>
+                  <name>process</name>
+                </IdentNode>
+              </AccessNode>
+            </CallNode>
+          </ExpressionStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+    <VarNode name='infile' start='142' end='148'>
+      <isBlockScoped/>
+      <isLet/>
+    </VarNode>
+    <VarNode name='forceFile' start='150' end='159'>
+      <isBlockScoped/>
+      <isLet/>
+    </VarNode>
+    <VarNode name='silent' start='161' end='175'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='161' end='167'>
+        <name>silent</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BooleanLiteralNode value='false' start='170' end='175'/>
+    </VarNode>
+    <VarNode name='compact' start='177' end='192'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='177' end='184'>
+        <name>compact</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BooleanLiteralNode value='false' start='187' end='192'/>
+    </VarNode>
+    <VarNode name='tokenize' start='194' end='210'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isLet/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='194' end='202'>
+        <name>tokenize</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BooleanLiteralNode value='false' start='205' end='210'/>
+    </VarNode>
+    <VarNode name='options' start='217' end='229'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='217' end='224'>
+        <name>options</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='227' end='229'>
+        <!-- ObjectNode Elements -->
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

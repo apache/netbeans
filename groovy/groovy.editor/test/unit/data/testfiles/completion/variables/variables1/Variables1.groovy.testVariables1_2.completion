@@ -1,0 +1,10 @@
+Code completion result for source line:
+it|om = "itom"
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Iterable                                   null
+CLASS      Iterator                                   null
+METHOD     iterator()                                 Iterator
+VARIABLE   item                                       List
+VARIABLE   ito                                        Object
+VARIABLE   itom                                       Object

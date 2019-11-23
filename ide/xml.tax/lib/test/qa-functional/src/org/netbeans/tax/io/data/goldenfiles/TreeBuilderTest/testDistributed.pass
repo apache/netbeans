@@ -1,0 +1,24 @@
+<!ELEMENT element ( #PCDATA )*>
+<!ENTITY % b SYSTEM "dir-b/level2.dtd">
+%b;
+
+<!---  Parameter Entity Reference: b  --->
+
+<!ELEMENT element-b ( #PCDATA )*>
+<!ENTITY % c SYSTEM "level3.dtd">
+%c;
+
+<!---  Parameter Entity Reference: c  --->
+
+<!ELEMENT element-c ( #PCDATA )*>
+
+<!---  End of External DTD  --->
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE element SYSTEM "dir/level1.dtd">
+
+<element>
+</element>
+
+

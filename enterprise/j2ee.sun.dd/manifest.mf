@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.j2ee.sun.dd/1
+OpenIDE-Module-Layer: org/netbeans/modules/j2ee/sun/dd/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/sun/dd/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+AutoUpdate-Show-In-Client: false
+

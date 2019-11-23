@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.examples.modules.lib
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/netbeans/examples/modules/lib/Bundle.properties
+

@@ -1,0 +1,12 @@
+.t.e.s.t. Test tokens
+TEXT            " This is a text\n Empty line follows - newline should be added\n\n Follows empty lineaTexts follows\n.\\.u.0061\n.\\.u.\nVirtual EOF follows"
+----- EOF -----
+
+<Unnamed test>
+TEXT            "Unnamed test"
+----- EOF -----
+
+.t.e.s.t. Test name not at the begining of test also works
+TEXT            "Test all except \\r and \\n\t\f\bEnd of test - does not need to be .e.o.f."
+----- EOF -----
+

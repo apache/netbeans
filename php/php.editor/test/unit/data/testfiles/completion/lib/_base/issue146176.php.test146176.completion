@@ -1,0 +1,3 @@
+Code completion result for source line:
+echo oddlyNamedMetho|d();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

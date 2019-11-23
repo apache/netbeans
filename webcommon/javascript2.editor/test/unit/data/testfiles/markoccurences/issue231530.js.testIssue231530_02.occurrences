@@ -1,0 +1,2 @@
+            |>MARK_OCCURRENCES:f2<|: function() {
+    expect(obj.|>MARK_OCCURRENCES:f^2<|()).toEqual('f1'); // here it works

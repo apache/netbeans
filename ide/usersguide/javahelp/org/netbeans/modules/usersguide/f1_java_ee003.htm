@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Enterprise Application Client Project Properties Dialog Box: Libraries</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.clientproject.ui.customizer.CustomizerLibraries" name="org.netbeans.modules.j2ee.clientproject.ui.customizer.CustomizerLibraries"></a></p>
+<div id="NBCSH4459"><!-- infolevel="all" infotype="General" --><a id="sthref631" name="sthref631"></a>
+<h1>Enterprise Application Client Project Properties Dialog Box: Libraries</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Libraries panel enables you to register libraries on a project's various classpaths as well as set the target Java platform against which all source files are compiled and run.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="20%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t3">Element</th>
+<th align="left" valign="bottom" id="r1c2-t3">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t3" headers="r1c1-t3">
+<p>Java Platform</p>
+</td>
+<td align="left" headers="r2c1-t3 r1c2-t3">You can use the Java Platform drop-down list to set the specific JDK installation that the IDE uses to compile and run your project. The IDE adds the selected platform's libraries to the classpath and uses the platform's executables (such as <code dir="ltr">javac</code> and <code dir="ltr">java</code>) to run and build the project. The default platform for all projects is the platform on which the IDE is running. To register additional platforms and attach Javadoc and source files to a platform click <b>Manage Platforms</b>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t3" headers="r1c1-t3">Libraries Folder</td>
+<td align="left" headers="r3c1-t3 r1c2-t3">To make it easier to share libraries among different users and projects, you can set a folder to hold those libraries (or references to those libraries). You can create a new folder or specify an existing folder that already contains copies of the libraries on which your project depends. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG455">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>To specify the folder, click <b>Browse</b>. If there is already a libraries folder, a file chooser opens. If there is not a libraries folder, the New Libraries wizard opens. In the New Libraries wizard, you set a libraries folder and then specify how to reference each library. The simplest case is to have the libraries copied to that folder. You can also refer to the libraries in their existing location (with a relative path or an absolute path). If you have specified an existing folder, you also have the option of using copies of libraries that are already in that folder instead of the copies that are contained in the IDE's Ant Library Manager</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can configure the following project classpaths:</p>
+<ul>
+<li>
+<p>Compilation classpath 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG686">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+<li>Runtime classpath</li>
+<li>JUnit test compilation classpath</li>
+<li>JUnit test runtime classpath</li>
+</ul>
+<p>Use the buttons on the right side of the panel to add, remove, and change the order of classpath elements. You can add any of the following:</p>
+<ul>
+<li><b>JAR file</b>. A Java archive file somewhere on your system.</li>
+<li><b>Library</b>. A collection of binary files, source files, and Javadoc files.</li>
+<li>
+<p><b>Project</b>. The build output, source files, and Javadoc files of another IDE project. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG390">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</li>
+</ul>
+<a id="NBCSH4461" name="NBCSH4461"></a>
+<p><b>Notes:</b></p>
+<ul>
+<li>If a JAR file with attached souce code and Javadoc documentation is registered with a project as a member of a Java Class Library, you can simply add the JAR file to the classpath and the IDE finds the Javadoc documentation and source code automatically. Adding a Java Class Library rather than a regular JAR file also makes it easier for other developers you share the project with to fix broken references to Javadoc documentation and source code.</li>
+<li>Adding a freeform project to the classpath of a standard project does nothing unless you also declare the free-form project's build outputs in the Output page of its Project Properties dialog box.</li>
+<li>By default, the project's compiled sources and everything on the compilation classpath are also on the runtime classpath.</li>
+<li>By default, the project's compiled test files and everything on the tests' compilation classpath are also on the test runtime classpath.</li>
+</ul>
+<a id="NBCSH4462" name="NBCSH4462"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2900">
+<param name="text" value="<html><u>&quot;About Developing Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2901">
+<param name="text" value="<html><u>&quot;Creating Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG451">
+<param name="text" value="<html><u>&quot;Sharing a Library with Other Users&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2115">
+<param name="text" value="<html><u>&quot;Working with Ant&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2103">
+<param name="text" value="<html><u>&quot;Working with Javadoc Documentation&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

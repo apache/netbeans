@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Remote Synchronization Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.connections.sync.SyncPanel" name="org.netbeans.modules.php.project.connections.sync.SyncPanel"></a></p>
+<div id="NBCSH3575"><!-- infolevel="all" infotype="General" --><a id="sthref484" name="sthref484"></a>
+<h1>Remote Synchronization Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Remote Synchronization dialog box enables you to specify the synchronization operations that the IDE performs when synchronizing the contents of a local folder with the contents of a folder on a remote server. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3011">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You open the dialog box by right-clicking the Source Files folder in the Projects window and choosing Synchronize in the popup menu.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t20">Element</th>
+<th align="left" valign="bottom" id="r1c2-t20">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t20" headers="r1c1-t20">
+<p>Show Planned Operations</p>
+</td>
+<td align="left" headers="r2c1-t20 r1c2-t20">Select the operations that you want the IDE to perform during the synchronization. The IDE can perform multiple operations when synchronizing files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Download</p>
+</td>
+<td align="left" headers="r3c1-t20 r1c2-t20">Download the remote version. Overwrite the local version if one exists.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Upload</p>
+</td>
+<td align="left" headers="r4c1-t20 r1c2-t20">Upload the local version to the server. Overwrite the remote version if one exists.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;No Operation</p>
+</td>
+<td align="left" headers="r5c1-t20 r1c2-t20">Do not synchronize the file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Delete</p>
+</td>
+<td align="left" headers="r6c1-t20 r1c2-t20">Delete both local and remote versions of the file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t20" headers="r1c1-t20">
+<p>Show Problems</p>
+</td>
+<td align="left" headers="r7c1-t20 r1c2-t20">Select the synchronization problems that the IDE displays.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Warning</p>
+</td>
+<td align="left" headers="r8c1-t20 r1c2-t20">Show warning icons. Warnings indicate problems that are not severe enough to prevent synchronization.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Error</p>
+</td>
+<td align="left" headers="r9c1-t20 r1c2-t20">Show error icons. Errors are problems severe enough to prevent synchronization.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;File Conflict</p>
+</td>
+<td align="left" headers="r10c1-t20 r1c2-t20">File Conflict icons indicate that both the local and the remote version of the file changed since the last synchronization.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;File vs. Directory Collision</p>
+</td>
+<td align="left" headers="r11c1-t20 r1c2-t20">The path to a local file is the path to a directory on the server, or the reverse. For example, there's a local file called /my/file but on the server /my/file/ is a directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Symbolic Link</p>
+</td>
+<td align="left" headers="r12c1-t20 r1c2-t20">File is only a symbolic link pointing to another file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t20" headers="r1c1-t20">
+<p>Check All</p>
+</td>
+<td align="left" headers="r13c1-t20 r1c2-t20">Click to show all planned operations.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t20" headers="r1c1-t20">
+<p>Uncheck All</p>
+</td>
+<td align="left" headers="r14c1-t20 r1c2-t20">Click Uncheck All to show no planned operations.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t20" headers="r1c1-t20">
+<p>Files Table</p>
+</td>
+<td align="left" headers="r15c1-t20 r1c2-t20">This table displays a list of operations that the IDE plans for files, on a per file basis. You can select individual files to modify the planned operation for that file. You can sort the list by clicking a column header.
+<p>Additional information appears at the bottom of the table for any rows you select. For example, if you select 4 rows, you see a summary of the operations and problems for those rows, such as "3 downloads, 0 uploads, 1 no-op, 0 deletions, 0 errors, 0 warnings." If you select a row and there is an error associated with the operation in that row, details about that error appear, such as "Error (FILE_NAME): Non-existing file cannot be updated."</p>
+<p>The table contains the following columns.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Problem icons</p>
+</td>
+<td align="left" headers="r16c1-t20 r1c2-t20">An icon appears if the planned operation has a problem of a type selected in the Show Problems section.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Remote Path</p>
+</td>
+<td align="left" headers="r17c1-t20 r1c2-t20">The path to the remote copy of the file from the project's root directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r18c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Planned Operations</p>
+</td>
+<td align="left" headers="r18c1-t20 r1c2-t20">The operation planned for the file, if the operation type is selected in the Show Planned Operations section.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r19c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Local Path</p>
+</td>
+<td align="left" headers="r19c1-t20 r1c2-t20">The path to the local copy of the file from the project's root directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r20c1-t20" headers="r1c1-t20">
+<p>Operations</p>
+</td>
+<td align="left" headers="r20c1-t20 r1c2-t20">Use the following buttons to specify the operation that is performed on the selected file or files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r21c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Diff</p>
+</td>
+<td align="left" headers="r21c1-t20 r1c2-t20">Review differences between remote and local file. The results of the diff are displayed in a new dialog box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r22c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;No operation</p>
+</td>
+<td align="left" headers="r22c1-t20 r1c2-t20">Change the planned operation to "no-op."</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r23c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Download</p>
+</td>
+<td align="left" headers="r23c1-t20 r1c2-t20">Change the planned operation to "Download remote version."</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r24c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Upload</p>
+</td>
+<td align="left" headers="r24c1-t20 r1c2-t20">Change the planned operation to "Upload local version."</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r25c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Delete</p>
+</td>
+<td align="left" headers="r25c1-t20 r1c2-t20">Change the planned operation to "Delete both local and remote versions.".</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r26c1-t20" headers="r1c1-t20">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Reset</p>
+</td>
+<td align="left" headers="r26c1-t20 r1c2-t20">Reset all changes to the operations.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r27c1-t20" headers="r1c1-t20">
+<p>Show Summary Before Start</p>
+</td>
+<td align="left" headers="r27c1-t20 r1c2-t20">Select this option to show a summary of synchronization operations before the synchronization starts.
+<p>Review the operations in the summary dialog. Click OK in the summary and the synchronization progress dialog opens.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r28c1-t20" headers="r1c1-t20">
+<p>Synchronize</p>
+</td>
+<td align="left" headers="r28c1-t20 r1c2-t20">Click to begin synchronization.
+<p>The button is disable if there are any unresolved errors. If Show Summary Before Start is selected, a summary of synchronization operations appears.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3603" name="NBCSH3603"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1534">
+<param name="text" value="<html><u>&quot;About Developing PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,8 @@
+<?php
+
+trait |>CLASS:TraitName<| {
+    /** @deprecated */
+    private function |>DEPRECATED,METHOD:bar3<|() {}
+}
+
+?>

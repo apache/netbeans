@@ -1,0 +1,4 @@
+Code completion result for source line:
+$v147730->fnc|_a147730();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     fnc_a147730()                   [PUBLIC]   a147730

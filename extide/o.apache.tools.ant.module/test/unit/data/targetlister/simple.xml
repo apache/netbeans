@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="simple" default="main" basedir=".">
+    <target name="main"/>
+    <target name="described" description="some desc"/>
+    <target name="undescribed"/>
+    <target name="-internal"/>
+    <target name="-internal-described" description="some desc"/>
+</project>

@@ -1,0 +1,22 @@
+package introduceConstant;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class ClassA {
+    List l = new LinkedList();
+    
+    String s = "text";
+    
+    public void method() {
+        String local = "text";
+    }
+    
+    public static int statMethod() {
+        int c = myField;
+        System.out.println(c);
+        return myField;
+    }
+    protected static final int myField = 3;
+}
+

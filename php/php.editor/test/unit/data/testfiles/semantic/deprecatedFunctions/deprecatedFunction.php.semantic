@@ -1,0 +1,11 @@
+<?php
+
+/**
+ *
+ * @deprecated
+ */
+function |>DEPRECATED:functionName<|($param) {
+
+}
+
+?>

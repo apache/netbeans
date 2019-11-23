@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.freemarker/1
+OpenIDE-Module-Provides: javax.script.ScriptEngine.freemarker, javax.script.ScriptEngine.FreeMarker
+OpenIDE-Module-Implementation-Version: 238
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/freemarker/Bundle.properties
+

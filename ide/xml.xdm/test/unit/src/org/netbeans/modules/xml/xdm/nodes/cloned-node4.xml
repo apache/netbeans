@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<r:ROOT xmlns:a1="namespaceA"  xmlns:r="namespaceROOT">
+        <A xmlns="namespaceA">
+            <B b1:attrB="value1" xmlns:b1="namespaceB"/>
+        </A>
+</r:ROOT>

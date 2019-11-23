@@ -1,0 +1,41 @@
+Calling GenBeans.doIt
+Bean Tree:
+top <top> : Top
+	cacheMapping <cache-mapping> : CacheMapping
+		| servletName <servlet-name> : String
+		| urlPattern <url-pattern> : String
+		| cacheHelperRef <cache-helper-ref> : String
+		| timeout <timeout> : String[0,1]
+		| httpMethod <http-method> : String[0,n]
+		| keyField <key-field> : boolean[0,n]
+		| 	[attr: name CDATA #REQUIRED ]
+		| 	[attr: scope CDATA request.parameter]
+		| 	EMPTY : String
+		| | a <a> : String
+		| | b <b> : String
+		| constraintField <constraint-field> : String[0,n]
+
+Compiling
+Finished compiling: 0
+out: TestOr - creating the DOM document
+out: TestOr - creating the bean graph
+out: TestOr - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <top>
+out: 	<cache-mapping>
+out: 		<servlet-name>Mary</servlet-name>
+out: 		<cache-helper-ref>sure</cache-helper-ref>
+out: 	</cache-mapping>
+out: </top>
+out: TestOr null servlet-name is Bob -> OK
+out: TestOr null url-pattern is null -> OK
+out: TestOr null url-pattern is /foo -> OK
+out: TestOr null servlet-name is null -> OK
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <top>
+out: 	<cache-mapping>
+out: 		<url-pattern>/foo</url-pattern>
+out: 		<timeout>100</timeout>
+out: 	</cache-mapping>
+out: </top>
+Finished running TestOr: 0

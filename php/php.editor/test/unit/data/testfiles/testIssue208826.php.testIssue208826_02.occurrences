@@ -1,0 +1,3 @@
+    class |>MARK_OCCURRENCES:Model<| {}
+         * @var \|>MARK_OCCURRENCES:Mo^del<|
+         * @return \|>MARK_OCCURRENCES:Model<|

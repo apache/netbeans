@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Bind Dialog Box: Advanced Tab</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="CHDGGFGD" name="CHDGGFGD"></a><a id="gui.binding-customizer.advanced" name="gui.binding-customizer.advanced"></a></p>
+<div id="NBCSH2252"><!-- infolevel="all" infotype="General" -->
+<h1>Bind Dialog Box: Advanced Tab</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to bind JavaBeans component (beans) properties with each other so that the bound property values are synchronized. For example, you could bind the <code dir="ltr">value</code> property of a JSlider component to the a <code dir="ltr">text</code> property of a JTextField component. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2651">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The property for which you open the Bind dialog box serves as the <i>target</i> of the binding. In the Bind dialog box, you specify the binding <i>source</i> and configure the binding.</p>
+<p>Use one of these methods to indicate the the <i>target</i> of the binding:</p>
+<ul>
+<li>Right-click a component in the GUI Builder and choose a property from the Bind submenu.</li>
+<li>Click the ellipsis (...) button for a property in the Binding category of the property sheet of a bean.</li>
+</ul>
+<p>The Binding tab contains a combination of the following fields:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t2">Element</th>
+<th align="left" valign="bottom" id="r1c2-t2">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t2" headers="r1c1-t2">
+<p>Binding Source</p>
+</td>
+<td align="left" headers="r2c1-t2 r1c2-t2">A drop-down list that contains a list of visual components and other beans that are available for binding to the property that was selected when you opened the dialog box. For a bean to be available in this list, it needs to be added to the form. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2589">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t2" headers="r1c1-t2">Binding Expression</td>
+<td align="left" headers="r3c1-t2 r1c2-t2">A combo box where you can select or type a property of the binding source to bind to the target property. This list might also contain other types of expressions which you can use in the binding. Some of the properties offered in this combo box are special synthetic properties that are added by the beans binding library to enable useful bindings that would not be possible with the base set of properties for some components. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2656">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+
+<p>The expressions in this dialog box use Expression Language syntax. Some bindings do not require a binding expression.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t2" headers="r1c1-t2">Display Expression</td>
+<td align="left" headers="r4c1-t2 r1c2-t2">(Only for elements property of JList components.) Similar to the Binding Expression field, this property enables you to determine what is displayed for the user in the JList. This field corresponds to the JListBinding.DetailBinding class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t2" headers="r1c1-t2">Import Data to Form</td>
+<td align="left" headers="r5c1-t2 r1c2-t2">(Only for elements property of JTable, JList, and JComboBox components,) Enables you to select columns from a database table to bind to the form. If there is no entity class in your project that represents the database table to which you are binding, the IDE will create such an entity class.
+<p><b>Note</b>: If the table to which you are binding has any foreign keys, those keys will not be taken into account in the generation of the entity classes. In such a case, it is better to use the New Entity Class Wizard to create the entity classes before importing the data to the form. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2778">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t2" headers="r1c1-t2">Available and Selected columns</td>
+<td align="left" headers="r6c1-t2 r1c2-t2">(Only for elements property of JTable components.) When you use the Import Data to Form button to select a database table, you can use the Available and Selected lists to move items into and out of the JTable. The Selected list shows everything that is displayed in the table. To add items to a list and remove items from a list select an item and click the &lt; and &gt; to move the item. Or, click the &lt;&lt; or &gt;&gt; buttons to remove or add all items.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>To rearrange the items in the Selected list, select an item and click the <b>Up</b> or <b>Down</b> button. The order in which items appear in the Selected list is the order in which the columns appear in your table. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2649">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<a id="NBCSH2254" name="NBCSH2254"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2649">
+<param name="text" value="<html><u>&quot;Working with Database Applications and Beans Binding&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2578">
+<param name="text" value="<html><u>&quot;Working with the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2667">
+<param name="text" value="<html><u>&quot;Configuring the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

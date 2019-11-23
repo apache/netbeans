@@ -1,0 +1,6 @@
+
+|>GLOBAL:console<|.log(0|>CUSTOM1:x<|abc.toFixed(3));
+|>GLOBAL:console<|.log(0|>CUSTOM1:b<|101010.toFixed(2));
+|>GLOBAL:console<|.log(0|>CUSTOM1:o<|676.toFixed(3));
+
+|>GLOBAL:console<|.log(|>GLOBAL:parseInt<|("111", 2).toFixed(2));

@@ -1,0 +1,9 @@
+[PLAIN_TEXT_DELIMITER(1):|][PLAIN_TEXT(45): Plain text can include <strong>html</strong>][EOL(1):\n]
+[TAG(1):p][EOL(1):\n]
+[WHITESPACE(2):  ][PLAIN_TEXT_DELIMITER(1):|][PLAIN_TEXT(34): It must always be on its own line][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][TEXT(46):| Plain text can include <strong>html</strong>][EOL(1):\n]
+[WHITESPACE(2):  ][EOL(1):\n]
+[TAG(1):p][PLAIN_TEXT_DELIMITER(1):.][WHITESPACE(1): ][EOL(1):\n]
+[PLAIN_TEXT(61):   hello this is plain text after tag
+    that has more lines]

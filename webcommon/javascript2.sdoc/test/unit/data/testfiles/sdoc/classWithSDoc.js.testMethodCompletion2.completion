@@ -1,0 +1,6 @@
+Code completion result for source line:
+* @me|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+OTHER      @memberOf {type}                           SDoc
+OTHER      @method                                    SDoc

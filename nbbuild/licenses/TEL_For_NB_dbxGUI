@@ -1,0 +1,328 @@
+Technology Evaluation License
+
+READ THE TERMS OF THIS TECHNOLOGY EVALUATION LICENSE INCLUDING EXHIBIT A
+("AGREEMENT") CAREFULLY BEFORE downloading technology or OPENING
+TECHNOLOGY MEDIA PACKAGE. BY OPENING TECHNOLOGY MEDIA PACKAGE, YOU AGREE
+TO THE TERMS OF THIS AGREEMENT. IF YOU ARE ACCESSING TECHNOLOGY
+ELECTRONICALLY, INDICATE YOUR ACCEPTANCE OF THESE TERMS BY SELECTING THE
+"ACCEPT" (OR EQUIVALENT) BUTTON AT THE END OF THIS AGREEMENT. IF YOU DO
+NOT AGREE TO ALL OF THE TERMS, PROMPTLY RETURN THE UNUSED TECHNOLOGY TO
+SUN OR, IF TECHNOLOGY IS ACCESSED ELECTRONICALLY, SELECT THE "DECLINE"
+(OR EQUIVALENT) BUTTON AT THE END OF THIS AGREEMENT.
+
+The Agreement is made between Sun Microsystems, Inc., a Delaware
+corporation with its address at
+
+4150 Network Circle, Santa Clara, CA 95054
+
+("Sun"), and the individual, corporation, partnership or other legal
+entity receiving the Technology ("Licensee").The parties agree as follows:
+
+I. EXHIBIT A:
+
+Effective Date: The date Licensee receives the Technology.
+
+Technology:  Sun Studio GUI Modules for dbx debugger.
+
+Version:  0.9.
+
+The Technology is Pre-Release Technology.
+Permitted Number of Copies: One (1).
+
+Evaluation Period:  One-hundred-twenty (120) days.
+
+Feedback Frequency:  Licensee will provide feedback to the individual or
+alias specified by Sun and at the frequency requested by Sun.
+
+II. Technology Evaluation License
+
+1 DEFINITIONS.
+1.1 "Binary Technology" means program code provided to Licensee by Sun
+in machine readable format.  Binary Technology includes available
+related documentation.
+1.2 "Confidential Information" means  (a) with respect to Licensee,
+information disclosed by Licensee to Sun about the performance or
+interoperability of Licensee's products with the Technology that, if
+written, is clearly identified in writing as confidential, and if
+oral, is identified as confidential at the time of disclosure and
+followed by a written summary  of the information within 30 days
+after disclosure, but in any case, excludes Feedback (collectively
+"Licensee Confidential Information"), and (b) with respect to Sun:
+(i) information that Sun discloses to Licensee related to the Technology;
+(ii) the Technology (including the capabilities, features and existence
+of the Technology); (iii) any Feedback; (iv) any notes, extracts,
+analyses, or materials prepared by Licensee which are copies of or
+derivative works of the Technology, or from which the capabilities,
+features or existence of the Technology can be derived; and
+(v) the terms of this Agreement (collectively "Sun Confidential Information").
+1.3 "Feedback" means all test results, error data, reports or other information
+or materials made or other information or materials made or provided to Sun by
+or on behalf of Licensee relating to the Technology, and all comments,
+suggestions, enhancements, and any other forms of feedback that Licensee
+may provide to Sun in the course of discussion, evaluation or exchange of
+Sun Confidential Information under this Agreement.
+1.4 "Intellectual Property Rights" means worldwide common law and statutory
+rights associated with: (i) patents and patent applications; (ii) works of
+authorship, including mask work rights, copyrights, and moral rights;
+(iii) protection of trade and industrial secrets and confidential information;
+(iv) other proprietary rights relating to intangible intellectual property
+(specifically excluding Sun Trademarks); and (v) divisions, continuations,
+renewals, reissuances, and extensions of the rights set forth above
+(as applicable).
+1.5 "Licensed Software" means software in binary or source code forms,
+including all machine readable materials, user manuals, programming guides
+and other documentation, as provided to Licensee by Sun under Exhibit A.
+1.6 "Licensors" means Sun licensors that have licensed third party code
+to Sun that is included in Technology.
+1.7 "Pre-Release Technology" means all technology designated as Pre-Release
+in Exhibit A.
+1.8 "Source Technology" means program code provided to Licensee by Sun in
+high-level computer language readable by humans skilled in the language.
+Source Technology includes available related documentation and tools,
+including comments, internal development tools and build environments.
+1.9 "Sun Confidential Information" means: (i) information that Sun discloses
+ to Licensee related to the Technology or marked as confidential and
+disclosed under this Agreement; (ii) the Technology (including the
+capabilities, features and existence of the Technology); (iii) any Feedback;
+(iv) any notes, extracts, analyses, or materials prepared by Licensee which
+are copies of or derivative works of the Technology, or from which the
+capabilities, features or existence of the Technology can be derived;
+and (v) the terms of this Agreement.
+1.10 "Sun Trademarks" means all names, marks, logos, designs, trade
+dress and other brand designations used by Sun.
+1.11 "Technology" means all technology described in Exhibit A and provided
+to Licensee by Sun under Agreement, including without limitation, Licensed
+Software, documentation, Updates, and test suites.
+1.12 "Updates" means subsequent releases, enhancements or error corrections
+for the Technology as Sun may provide to Licensee from time to time under this
+Agreement.
+
+2 LIMITED LICENSES.  Subject to and conditioned upon Licensee's compliance
+with the conditions and restrictions set forth in this Agreement, Sun grants
+to Licensee a personal, non-exclusive, non-transferable, royalty-free and
+limited license to view the Source Technology, if any, and to use other
+portions of the Technology (including Binary Technology) internally solely
+for the purpose of evaluation during the term of this Agreement.
+
+3 RESTRICTIONS.
+3.1 No license under this Agreement is granted to Licensee for any purpose
+not specifically set forth in Section 2 (Limited Licenses) of this Agreement.
+Except as otherwise provided by law, Licensee is not authorized to modify,
+make derivative works of, disclose, distribute, reverse engineer or
+disassemble the Technology,  decompile binary portions of the Technology,
+or otherwise attempt to derive source code from such portions, or transfer
+the Technology to any third party or use it in development activities.
+3.2 Licensee shall have no right to use the Technology for commercial uses
+or in a production environment.
+3.3 Licensee may copy and use the number of copies of Licensed Software as
+authorized in Exhibit A and make one (1) additional copy for backup purposes
+only, provided that Licensee reproduces all copyright and other notices
+appearing on or in the Licensed Software on any such copy.
+3.4 Except as expressly provided in Section 2 ("Limited Licenses") of this
+Agreement, no right, title, or interest in or to the Technology or any Sun
+Trademarks is granted under this Agreement. Sun retains all right, title
+and interest, including associated Intellectual Property Rights, in and to
+the Technology, any Sun Trademarks, and any modifications, improvements or
+enhancements to the Technology.
+3.5 If the Technology is delivered with embedded or bundled software that
+enables functionality of the Technology ("Embedded Technology"), then
+Licensee may use such Embedded Technology only in conjunction with the
+Technology and subject to applicable terms and conditions associated
+with such Embedded Technology.
+3.6 Portions of Licensed Software may be provided with notices and open
+source licenses from communities and third parties that govern the use
+of those portions, and any licenses granted hereunder do not alter any
+rights and obligations Licensee may have under such open source licenses,
+however, the disclaimer of warranty and limitation of liability provisions
+in this Agreement will apply to all Licensed Software.
+
+4 NO SUPPORT.
+Sun is under no obligation to support the Technology or to provide Licensee
+ with Updates unless otherwise agreed by an authorized representative of
+Sun in writing. If Sun, at its sole option, supplies Updates to Licensee,
+the Updates will be considered part of the Technology, and subject to
+the terms of this Agreement.
+
+5 LICENSEE DUTIES.
+5.1 Pre-Release Technology.  If the Technology provided is Pre-Release
+Technology as designated in Exhibit A, then Licensee agrees to evaluate
+and test the Technology. Licensee shall supply Sun with Feedback as
+reasonably requested by Sun, but no more frequently than weekly unless
+otherwise agreed by the parties in writing.  Feedback is the exclusive
+property of Sun. Licensee hereby agrees to and assigns all right, title
+and interest it may have in such Feedback, including, without limitation,
+modifications, improvements, and enhancements to the Technology, to Sun
+at no cost.
+5.2 Delivery of the Technology to Licensee will be at Licensee's cost
+unless otherwise specified by Sun, subject to availability as determined
+solely by Sun. Licensee assumes all risk of loss or damage upon shipment
+of the Technology by Sun.  Unless otherwise set forth in Exhibit A,
+Licensee  will be responsible for installing the Technology.
+
+6 TERM AND TERMINATION.
+6.1 This Agreement will commence on the Effective Date and will continue
+for the term set forth in Exhibit A (the "Evaluation Period"), unless
+terminated earlier in accordance with this Section 6.  If no Evaluation
+Period is specified in Exhibit A, then the Evaluation Period shall equal
+(i) ninety (90) days commencing on the Effective Date.
+6.2 Either party may terminate this Agreement without cause upon ten (10)
+days' written notice to the other party. In addition, Sun may terminate
+this Agreement immediately with written notice if (i) any Technology
+becomes, or in Sun's opinion is likely to become, the subject of a claim
+of infringement or misappropriation of any Intellectual Property Right;
+(ii) Licensee breaches any of its obligations under this Agreement;
+(iii) Licensee takes any action in derogation of Sun's rights to Sun
+Confidential Information; or (iv) Licensee infringes or challenges the
+validity of any Sun Intellectual Property Rights.
+6.3 Upon termination or expiration of this Agreement, Licensee will
+immediately cease using the corresponding Technology. Licensee will
+immediately destroy any and all Licensed Software and any copies of
+Licensed Software and provide Sun a written statement by Licensee's
+authorized representative certifying that Licensee has complied with
+these  obligations.
+6.4 Rights and obligations under this Agreement
+that by their nature should survive will remain in effect after
+termination or expiration of this Agreement.
+
+7 CONFIDENTIAL INFORMATION.
+7.1 Neither party may disclose or use the other party's Confidential
+Information except for the purposes specified in this Agreement. Each
+party will protect the confidentiality of the other party's Confidential
+Information to the same degree of care, but no less than reasonable care,
+as the party uses to protect its own confidential information. Each party's
+obligations regarding the other party's Confidential Information will
+expire five (5) years from the date of receipt of such Confidential
+Information, except for Sun source code which will be protected in
+perpetuity.  Licensee agrees and acknowledges that the Technology contains
+trade secrets of Sun.
+7.2 The receiving party will not be obligated to protect Confidential
+Information that the receiving party can clearly demonstrate in writing is:
+(i) through no act or failure to act on the part of the receiving party is
+known or becomes known to the general public; (ii) known to the receiving
+party without an obligation of confidentiality at the time of receiving the
+Confidential Information; (iii) rightfully furnished, after the Effective Date,
+to the receiving party by a third party without restriction on disclosure; or
+(iv) independently developed by the receiving party without any use of the
+other party's Confidential Information.
+7.3 The receiving party may disclose the other party's Confidential Information
+pursuant to statute, regulation, or the order of a court of competent
+jurisdiction, provided that the receiving party provides the other party with
+prior notice and cooperates with the other party in taking appropriate
+protective measures.
+7.4 The receiving party will restrict access to the other party's Confidential
+Information to those of the receiving party's employees or subcontractors
+who require access in order to perform their employment duties or to perform
+the party's contractual obligations under this Agreement, and who have agreed
+in writing to be bound by confidentiality obligations at least as protective
+as those set forth in this Agreement.
+
+8 DISCLAIMER OF WARRANTY.
+8.1 Licensee acknowledges that the Technology is not designed or intended for
+use in the design, construction, operation or maintenance of any nuclear facility.
+8.2 THE TECHNOLOGY AND CONFIDENTIAL INFORMATION ARE PROVIDED "AS IS" AND WITHOUT
+WARRANTY OF ANY KIND. ALL EXPRESS AND IMPLIED CONDITIONS, REPRESENTATIONS,
+AND WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF  MERCHANTABILITY, SATISFACTORY
+QUALITY, FITNESS FOR A PARTICULAR PURPOSE, OR ANY WARRANTY OF NON-INFRINGEMENT,
+ARE DISCLAIMED, TO THE FULLEST EXTENT PERMITTED BY LAW.
+
+9 LIMITATION OF LIABILITY.
+9.1 Licensee acknowledges that the Technology may be experimental. Licensee
+further acknowledges that the Technology may have defects or deficiencies that
+cannot or will not be corrected by Sun. Licensee will indemnify and hold Sun
+harmless from any claims based on Licensee's use of the Technology for any
+purpose, and from any claims that later Updates furnished to Licensee are
+incompatible with the Technology provided to Licensee under this Agreement.
+Neither Sun nor its Licensors are under any obligation to release a commercial
+version of the Technology.
+9.2 Licensee  acknowledges that  the Technology may not have been approved by
+ the United States Federal Communications Commission, any other governmental
+agency, or any test laboratory (for example without limitation, Underwriter's
+Laboratories, and TUV).
+9.3 NEITHER Sun nor any of its licensors will be liable for any indirect,
+punitive, special, incidental or consequential damages in connection with or
+arising out of this Agreement (including loss of business, revenue, profits,
+goodwill, use, data, electronically transmitted communications or other
+economic advantage), however they arise, whether for breach of contract,
+breach of warranty or in tort, including negligence, and even if that party
+has previously been advised of the possibility of such damages AND WHETHER
+OR NOT SUCH DAMAGES ARE FORESEEABLE.  In no event will Sun's aggregate
+liability to Licensee for all claims under this Agreement, whether in contract,
+tort (including negligence), or otherwise, exceed the amount paid by Licensee
+for the Technology under this Agreement.
+9.4 Liability for damages will be limited and excluded as set forth above even
+if any exclusive remedy provided in this  Agreement fails of its essential purpose.
+Some states do not allow the exclusion of incidental or consequential damages,
+so some of the terms above may not be applicable to you.
+
+10 U.S. GOVERNMENT RIGHTS.
+The Technology is a "commercial item," as that term is defined in 48 C.F.R.
+2.101 (Oct. 1995), and may consist of "commercial computer software" (as that
+term is defined at 48 C.F.R. � 252.227-7014(a)(1)) and "commercial computer s
+oftware documentation" as such terms are used in 48 C.F.R. 12.212 (Sept. 1995).
+Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4
+(June 1995), all U.S. Government End Users acquire Technology with only those
+rights set forth herein. This U.S. Government Rights clause is in lieu of,
+and supersedes, any other FAR, DFAR, or other clause or provision that
+addresses Government rights in computer software under this Agreement.
+
+11 GENERAL.
+11.1 All disputes will be governed by California law and controlling U.S.
+federal law.  The venue for litigation will be the appropriate courts located
+in Santa Clara County, California. The parties agree that the Federal District
+Court for the Northern District of California shall have exclusive jurisdiction
+over any dispute involving exclusively federal causes of action.  That court and
+the California state courts in Santa Clara County, California shall have exclusive
+jurisdiction over all other disputes. The parties hereby submit to the personal
+jurisdiction of those courts. Choice of law rules of any jurisdiction and the
+United Nations Convention on Contracts for the International Sale of Goods will
+not apply to the Agreement or any dispute arising out of or related to this
+Agreement.
+11.2 Licensee agrees that the Technology and technical data delivered under this
+Agreement are subject to U.S. export laws (including but not limited to the
+Export Administration Regulations ("EAR": 15  C.F.R. Parts 730-774)) and
+applicable trade laws of other countries.  Licensee agrees to strictly
+comply with all such laws and assumes responsibility to obtain licenses
+to export, re-export, or import as may be required. Unless authorized by
+United States export laws, Licensee agrees that (i)�no Technology or technical
+data or direct product therefrom is being or will be acquired for, shipment,
+transfer, or re-export, directly or indirectly, to: a) any country subject to
+U.S. Embargo or terrorist controls or b) a country and its nationals in Country
+Group D:1 as listed in Part 740 Supplement 1 of the EAR; (ii)  Licensee nor any
+party to whom Technology and technical data are transferred is not identified
+on any U.S. Government export exclusion lists; and (iii) Technology and
+technical data will not be used for nuclear, missile, chemical biological
+weaponry, or other weapons of mass destruction. These obligations shall
+survive expiration or termination of this Agreement.
+11.3 Any express waiver or failure to exercise promptly any right under this
+Agreement will not create a continuing waiver or any expectation on non-enforcement.
+To be enforceable, a waiver must be in writing and signed by an authorized
+representative of the waiving party.
+11.4 It is understood and agreed that, notwithstanding any other provision of
+this Agreement, Licensee's breach of Sections 2.0 (Limited Licenses),
+3.0 (Restrictions), 6.0 (Term and Termination), and/or 7.0 (Confidential
+Information) of this Agreement will cause Sun irreparable damage for which
+recovery of money damages would be inadequate, and that Sun will therefore
+be entitled to seek injunctive relief to protect Sun's rights under this
+Agreement, without posting bond or other security, in addition to any and
+all other remedies available under this Agreement, at law, and in equity.
+11.5 Neither party may assign or otherwise transfer any of its rights or
+obligations under this Agreement (whether by operation of law or otherwise),
+without the prior written consent of the other party, except that Sun may
+assign this Agreement to an affiliated company, or in the event of a merger,
+acquisition, combination or sale of substantially all of the assets of Sun
+or a Sun business unit, without such consent.
+11.6 If any term or provision of this Agreement is found to be invalid
+under any applicable statute or rule of law, such provision shall be
+enforced to the maximum extent permissible to effect the intent of the
+parties, and the remainder of this Agreement shall continue in full force
+and effect.
+11.7 No modification to this Agreement will be binding, unless in writing
+and manually signed by an authorized representative of each party.
+11.8 This Agreement, constitutes the parties' entire agreement relating
+to its subject matter. It cancels and supersedes all prior and contemporaneous
+oral and written communications, proposals, conditions, representations and
+warranties and prevails over any conflicting or additional terms contained in
+any quote, purchase order, acknowledgment, or other communication between the
+parties relating to its subject matter during its term, including but not
+limited to terms of any Binary Code Licenses, Supplemental Terms, or other
+standard licenses accompanying the Technology.

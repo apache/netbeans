@@ -1,0 +1,47 @@
+public class TestFile {
+    
+    /**
+     * Utility field used by event firing mechanism.
+     */
+    private javax.swing.event.EventListenerList listenerList =  null;
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Registers ActionListener to receive events.
+     * @param listener The listener to register.
+     */
+    public synchronized void addActionListener(java.awt.event.ActionListener listener) {
+        if (listenerList == null ) {
+            listenerList = new javax.swing.event.EventListenerList();
+        }
+        listenerList.add(java.awt.event.ActionListener.class, listener);
+    }
+    
+    /**
+     * Removes ActionListener from the list of listeners.
+     * @param listener The listener to remove.
+     */
+    public synchronized void removeActionListener(java.awt.event.ActionListener listener) {
+        listenerList.remove(java.awt.event.ActionListener.class, listener);
+    }
+    
+    /**
+     * Notifies all registered listeners about the event.
+     *
+     * @param event The event to be fired
+     */
+    private void fireActionListenerActionPerformed(java.awt.event.ActionEvent event) {
+        if (listenerList == null) return;
+        Object[] listeners = listenerList.getListenerList();
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==java.awt.event.ActionListener.class) {
+                ((java.awt.event.ActionListener)listeners[i+1]).actionPerformed(event);
+            }
+        }
+    }
+    
+}
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+<SOAP-ENV:Body>
+  <operation1Response>
+    <result>
+      <Elem1 xmlns="http://new.webservice.namespace">
+        <Field1_1>A Test string for operation1</Field1_1>
+        <Field1_2>1234</Field1_2>
+        <Field1_3>Operation 1 was invoked.</Field1_3>
+      </Elem1>
+    </result>
+  </operation1Response>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

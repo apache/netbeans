@@ -1,0 +1,4 @@
+            var |>MARK_OCCURRENCES:beasties<| = {};
+            |>MARK_OCCURRENCES:beasties<|.Animal = function() {};
+            |>MARK_OCCURRENCES:beasties<|.Animal.prototype.roar = function() {return 'rrrr';};
+            var animal = new |>MARK_OCCURRENCES:bea^sties<|.Animal();

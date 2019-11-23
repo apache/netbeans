@@ -1,0 +1,7 @@
+            if (test())
+                k = l;else if (test2()) {
+                m = 1
+                if (!n) {
+                    p = b;
+                }
+            }

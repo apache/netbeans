@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.OverlayLayout" type="layout" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/overlayLayout16.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/layered_pane_32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_javax-swing-OverlayLayout"
+               tooltip-key="HINT_javax-swing-OverlayLayout" />
+</palette_item>

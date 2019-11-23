@@ -1,0 +1,8 @@
+[[18,25]-Syntax error
+ unexpected:	variable '$second'
+ expected:	instanceof, as, ->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, ??] 18-25:Syntax error
+ unexpected:	variable '$second'
+ expected:	instanceof, as, ->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, ??
+[[25,26]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 25-26:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)

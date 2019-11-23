@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.javadoc/1
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Install: org/netbeans/modules/javadoc/JavadocModule.class
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javadoc/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/javadoc/resources/mf-layer.xml
+OpenIDE-Module-Requires: org.openide.modules.InstalledFileLocator
+AutoUpdate-Show-In-Client: false

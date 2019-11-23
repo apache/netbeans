@@ -1,0 +1,13 @@
+  --- !omap
++    - parent:
+|        id:         1
+|        parent_id:  NULL
+-        title:      Parent
++    - child:
+|        id:         2
+|        parent_id:  1
+-        title:      Child
+  
+  # See http://yaml.org/type/omap.html
+  
+  

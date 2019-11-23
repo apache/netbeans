@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<configuration xmlns='http://java.sun.com/xml/ns/jax-rpc/ri/config'>
+	<service name='NewWebService' targetNamespace='urn:NewWebService/wsdl' typeNamespace='urn:NewWebService/types' packageName='ws'>
+		<interface name='ws.NewWebServiceSEI' servantName='ws.NewWebServiceBean'>
+		</interface>
+	</service>
+</configuration>

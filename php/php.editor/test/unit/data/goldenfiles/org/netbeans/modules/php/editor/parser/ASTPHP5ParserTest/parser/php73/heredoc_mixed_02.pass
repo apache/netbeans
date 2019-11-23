@@ -1,0 +1,317 @@
+<testresult testFile='heredoc_mixed_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='820'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='820' end='821'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='821' end='830'>
+            <text>"Junichi"</text>
+        </token>
+        <token id='T_SEMICOLON' start='830' end='831'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='832' end='836'>
+            <text>$age</text>
+        </token>
+        <token id='T_EQUAL' start='836' end='837'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='837' end='840'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='840' end='841'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='842' end='846'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_HEREDOC' start='847' end='858'>
+            <text>&lt;&lt;&lt;HEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='858' end='864'>
+            <text>Name: </text>
+        </token>
+        <token id='T_VARIABLE' start='864' end='869'>
+            <text>$name</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='869' end='885'>
+            <text>&lt;br&gt;\nMy age is: </text>
+        </token>
+        <token id='T_VARIABLE' start='885' end='889'>
+            <text>$age</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='889' end='894'>
+            <text>&lt;br&gt;\n</text>
+        </token>
+        <token id='T_END_HEREDOC' start='894' end='901'>
+            <text>HEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='901' end='902'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='903' end='908'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='908' end='909'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='909' end='914'>
+            <text>"Jun"</text>
+        </token>
+        <token id='T_SEMICOLON' start='914' end='915'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1049' end='1051'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='1052' end='1053'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1054' end='1070'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1070' end='1133'>
+            <text>    This is another heredoc test.\n    With another line in it. </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1133' end='1134'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1134' end='1139'>
+            <text>$test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1139' end='1140'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1140' end='1141'>
+            <text> </text>
+        </token>
+        <token id='T_VARIABLE' start='1141' end='1146'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1146' end='1147'>
+            <text> </text>
+        </token>
+        <token id='T_DOLLAR_OPEN_CURLY_BRACES' start='1147' end='1149'>
+            <text>${</text>
+        </token>
+        <token id='T_STRING_VARNAME' start='1149' end='1153'>
+            <text>test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1153' end='1154'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1154' end='1180'>
+            <text> variable test.\n    test. </text>
+        </token>
+        <token id='T_VARIABLE' start='1180' end='1187'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1187' end='1189'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1189' end='1194'>
+            <text>field</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1194' end='1197'>
+            <text>\n\t\t</text>
+        </token>
+        <token id='T_END_HEREDOC' start='1197' end='1209'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='1209' end='1210'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1248' end='1250'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='1251' end='1252'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1253' end='1269'>
+            <text>&lt;&lt;&lt;ENDOFHEREDOC\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1269' end='1328'>
+            <text>\t\tThis is another heredoc test.\n\t\tWith another line in it. </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1328' end='1329'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1329' end='1334'>
+            <text>$test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1334' end='1335'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1335' end='1336'>
+            <text> </text>
+        </token>
+        <token id='T_VARIABLE' start='1336' end='1341'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1341' end='1342'>
+            <text> </text>
+        </token>
+        <token id='T_DOLLAR_OPEN_CURLY_BRACES' start='1342' end='1344'>
+            <text>${</text>
+        </token>
+        <token id='T_STRING_VARNAME' start='1344' end='1348'>
+            <text>test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1348' end='1349'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1349' end='1373'>
+            <text> variable test.\n\t\ttest. </text>
+        </token>
+        <token id='T_VARIABLE' start='1373' end='1380'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1380' end='1382'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1382' end='1387'>
+            <text>field</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1387' end='1392'>
+            <text>\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='1392' end='1404'>
+            <text>ENDOFHEREDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='1404' end='1405'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1406' end='1406'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1406'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='917' end='979' commentType='singleLine'/>
+            <Comment start='979' end='1049' commentType='singleLine'/>
+            <Comment start='1212' end='1248' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='917' end='979' commentType='singleLine'/>
+            <Comment start='979' end='1049' commentType='singleLine'/>
+            <Comment start='1212' end='1248' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='831'>
+                <Assignment start='815' end='830' operator='EQUAL'>
+                    <Variable start='815' end='820' isDollared='true'>
+                        <Identifier start='816' end='820' name='name'/>
+                    </Variable>
+                    <Scalar start='821' end='830' type='STRING' value='"Junichi"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='832' end='841'>
+                <Assignment start='832' end='840' operator='EQUAL'>
+                    <Variable start='832' end='836' isDollared='true'>
+                        <Identifier start='833' end='836' name='age'/>
+                    </Variable>
+                    <Scalar start='837' end='840' type='INT' value='100'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='842' end='902'>
+                <Quote start='847' end='901' type='HEREDOC'>
+                    <Expressions>
+                        <Scalar start='858' end='864' type='STRING' value='Name: '/>
+                        <Variable start='864' end='869' isDollared='true'>
+                            <Identifier start='865' end='869' name='name'/>
+                        </Variable>
+                        <Scalar start='869' end='885' type='STRING' value='&lt;br&gt;\nMy age is: '/>
+                        <Variable start='885' end='889' isDollared='true'>
+                            <Identifier start='886' end='889' name='age'/>
+                        </Variable>
+                        <Scalar start='889' end='894' type='STRING' value='&lt;br&gt;\n'/>
+                    </Expressions>
+                </Quote>
+            </EchoStatement>
+            <ExpressionStatement start='903' end='915'>
+                <Assignment start='903' end='914' operator='EQUAL'>
+                    <Variable start='903' end='908' isDollared='true'>
+                        <Identifier start='904' end='908' name='name'/>
+                    </Variable>
+                    <Scalar start='909' end='914' type='STRING' value='"Jun"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1049' end='1210'>
+                <Assignment start='1049' end='1209' operator='EQUAL'>
+                    <Variable start='1049' end='1051' isDollared='true'>
+                        <Identifier start='1050' end='1051' name='x'/>
+                    </Variable>
+                    <Quote start='1054' end='1209' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='1070' end='1133' type='STRING' value='    This is another heredoc test.\n    With another line in it. '/>
+                            <ReflectionVariable start='1133' end='1140'>
+                                <Variable start='1134' end='1139' isDollared='true'>
+                                    <Identifier start='1135' end='1139' name='test'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='1140' end='1141' type='STRING' value=' '/>
+                            <Variable start='1141' end='1146' isDollared='true'>
+                                <Identifier start='1142' end='1146' name='test'/>
+                            </Variable>
+                            <Scalar start='1146' end='1147' type='STRING' value=' '/>
+                            <ReflectionVariable start='1147' end='1154'>
+                                <Scalar start='1149' end='1153' type='STRING' value='test'/>
+                            </ReflectionVariable>
+                            <Scalar start='1154' end='1180' type='STRING' value=' variable test.\n    test. '/>
+                            <FieldAccess start='1180' end='1194'>
+                                <Variable start='1180' end='1187' isDollared='true'>
+                                    <Identifier start='1181' end='1187' name='object'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1189' end='1194' isDollared='false'>
+                                        <Identifier start='1189' end='1194' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Scalar start='1194' end='1197' type='STRING' value='\n\t\t'/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1248' end='1405'>
+                <Assignment start='1248' end='1404' operator='EQUAL'>
+                    <Variable start='1248' end='1250' isDollared='true'>
+                        <Identifier start='1249' end='1250' name='y'/>
+                    </Variable>
+                    <Quote start='1253' end='1404' type='HEREDOC'>
+                        <Expressions>
+                            <Scalar start='1269' end='1328' type='STRING' value='\t\tThis is another heredoc test.\n\t\tWith another line in it. '/>
+                            <ReflectionVariable start='1328' end='1335'>
+                                <Variable start='1329' end='1334' isDollared='true'>
+                                    <Identifier start='1330' end='1334' name='test'/>
+                                </Variable>
+                            </ReflectionVariable>
+                            <Scalar start='1335' end='1336' type='STRING' value=' '/>
+                            <Variable start='1336' end='1341' isDollared='true'>
+                                <Identifier start='1337' end='1341' name='test'/>
+                            </Variable>
+                            <Scalar start='1341' end='1342' type='STRING' value=' '/>
+                            <ReflectionVariable start='1342' end='1349'>
+                                <Scalar start='1344' end='1348' type='STRING' value='test'/>
+                            </ReflectionVariable>
+                            <Scalar start='1349' end='1373' type='STRING' value=' variable test.\n\t\ttest. '/>
+                            <FieldAccess start='1373' end='1387'>
+                                <Variable start='1373' end='1380' isDollared='true'>
+                                    <Identifier start='1374' end='1380' name='object'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1382' end='1387' isDollared='false'>
+                                        <Identifier start='1382' end='1387' name='field'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Scalar start='1387' end='1392' type='STRING' value='\n    '/>
+                        </Expressions>
+                    </Quote>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

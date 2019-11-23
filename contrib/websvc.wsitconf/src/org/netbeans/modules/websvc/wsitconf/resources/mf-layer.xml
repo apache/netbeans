@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+   <folder name="Templates">
+        <folder name="WebServices">
+            <!-- defined in websvc.core
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.websvc.wsitconf.wizard.Bundle"/>
+            -->
+            <file name="STSWizard.java">
+             <attr name="position" intvalue="680"/>
+             <attr name="template" boolvalue="true"/>
+             <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+             <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.websvc.wsitconf.wizard.STSWizard.create"/>
+             <attr name="templateCategory" stringvalue="web-services"/>
+             <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/websvc/wsitconf/resources/STSWizard.html"/>
+             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.websvc.wsitconf.wizard.Bundle"/>
+             <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/websvc/core/dev/resources/XMLServiceDataIcon.png"/> 
+            </file>
+            <file name="sts.wsdl" url="templates/sts.template">
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="sts_schema.xsd" url="templates/sts_schema.template">
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="Saml11hok.java" url="templates/Saml11HOKCallbackHandler.template">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+            <file name="Saml11sv.java" url="templates/Saml11SVCallbackHandler.template">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+            <file name="Saml20hok.java" url="templates/Saml20HOKCallbackHandler.template">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+            <file name="Saml20sv.java" url="templates/Saml20SVCallbackHandler.template">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+            <file name="DerivedKeyPasswordValidator.java" url="templates/DerivedKeyPasswordValidator.template">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+            </file>
+            <file name="client-keystore.jks" url="client-keystore.jks">
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="client-truststore.jks" url="client-truststore.jks">
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="server-keystore.jks" url="server-keystore.jks">
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="server-truststore.jks" url="server-truststore.jks">
+                <attr name="position" intvalue="0"/>
+            </file>
+        </folder>
+   </folder>
+</filesystem>

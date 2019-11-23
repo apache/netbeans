@@ -1,0 +1,7 @@
+package org.netbeans.test.codegen.imports157162.test;
+
+import org.netbeans.test.codegen.imports157162.foo.Bar;
+
+class Test extends Bar {
+    Protected test;
+}

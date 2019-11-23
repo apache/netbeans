@@ -1,0 +1,337 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><!-- -*- xhtml -*- -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>UI of Gestures Collector</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../prose.css"/>
+</head>
+<body>
+<h1>UI of Gestures Collector</h1>
+<dl>
+ <dt><em>Version:</em></dt>
+ <dd>$Date$</dd>
+ <dt><em>Author:</em></dt>
+ <dd>Jaroslav  Tulach</dd>
+ <dt><em>Abstract:</em></dt>
+ <dd>
+  <p>
+   Proposal of scenarios and UI to satisfy
+   <a href="@TOP@/architecture-summary.html#answer-arch-usecases">usecases</a>
+   for UI Gestures Collector.
+  </p>
+ </dd>
+</dl>
+
+<h1>Scenarios</h1>
+
+<h3>Scenario: We need returning users</h3>
+
+<p>
+    Important user actions are recorded and remember in the system
+    when the UI Gestures Collector is installed. In order for the gesture
+    collector to be useful, it is necessary to convince the user to
+    upload these information to our collecting server for processing.
+    As we need a wide range of submittions, it is important that the 
+    same user continous to submit these logs repeatedly.
+</p>
+
+<p>
+    It is important to find the <q>right moment</q> for offering the user to do
+    the upload. Current proposal counts with two options - when an exception
+    occurs, the user is offered to send feedback to the server, also there
+    is a UI button in the status bar that shall visually attract user attention
+    and encourage him to submit the data.
+</p>
+
+<p>
+    The range of "useful information" is wide and can be improved in future,
+    however for purposes of this document it is enough to think about it
+    just as an inteligent "Tip of the Day". Based on the submitted data and
+    possibly the previous UI logs already submitted to the server, it
+    is possible to select more appropriate "tip of the Day". In the simplest
+    scenario it is definitely possible to find out what project types the
+    user is using and not show tips about web projects, if it is writing just
+    plain Java applications.
+</p>
+
+<p>
+    By trading a useful information back for the user's submission of the UI Gestures
+    data, we establish an equal and benefitial relationship with them and 
+    encourage them to submit the data in future as well. It is believed
+    that mutually benefitial approach supports returning customers.
+</p>
+
+
+<h3>Scenario: We need confident users</h3>
+
+<p>
+    Not all people like to sign bianco checks. Many of them 
+    do not like to send information about themselves to someone
+    else. We need to gain a certain amount of trust and convince them that
+    sending data gathered by UI Gestures Collector is safe. Indeed one 
+    way to built the trust up is the trading of useful information back as 
+    described in previous chapter, however this starts to work only for subsequent
+    submission, still we need to convince the user that first submission is safe.
+</p>
+
+<p>
+    To do that the user will be given a chance to view and examine the content
+    of the data to be submitted. The main submit screen will have a button to
+    open a view of the logged data, the user will be able to browse thru them
+    and then submit or cancel the transfer. There will be two views - one 
+    human friendly - a list with records, icons, descriptions, etc.
+    Second raw data - some kind of not very human readable XML
+    in a text editor that represents the actual data to be sent to the logging
+    server.
+</p>
+
+<h3>Scenario: We need to not scare newcommers</h3>
+
+<p>
+    The submission dialog shall not open too "early". Instead it shall
+    wait for some time, to let the user try and see that the NetBeans
+    based product is worth to use and it is worth to contribute to the
+    project efforts.
+</p>
+
+<p>
+    That is why there should be a limit of actions that the user has to
+    perform before its attention is drawn to the process of submission.
+    That is why there will be a toolbar button counting the actually
+    performed user actions and if there will be more than 500 of actions
+    the button will start to visually indicate that it should be pressed.
+    If done, then the UI Gestures Collector dialog for submissions will
+    open.
+</p>
+
+<h3>Scenario: We need reliable submissions</h3>
+
+<p>
+    We are not interested in logs from people who just play with the system
+    (especially testers). We need real data and we need the data to be
+    of the same quality - e.g. contain similar amount of information.
+</p>
+
+<p>
+    This should be achieved the "action limit" of 500 described in previous
+    section. If the user is encouraged to submit the logs after 500 actions,
+    then most of the logs will contain data of the same size and as such
+    they will be of similar level of value for analysis.
+</p>
+
+<h3>Scenario: Easy bug reports</h3>
+
+<p>
+    Easy bug reporting is critical to improving quality of any product.
+    Many products include some "Dr." functionality that allows easy bug
+    submission in case of failure. That is why it is expected that
+    many users are going to see a failure as a natural moment for submitting
+    a feedback to netbeans.org project. 
+</p>
+
+<p>
+    The exception dialog will be enhanced to contain a submit button
+    and open the UI Gestures Collector dialog.
+</p>
+
+<h1>Ascii Art</h1>
+
+<h3>Submittion Button</h3>
+
+<p>
+    This button shall be placed in a status bar and shall encourage user to
+    click on it and upload data to the server:
+</p>
+
+<pre>
+/---\
+|   |
+\---/
+</pre>
+<p>
+    The button visually indicates the growing 
+    number of so far recorded events by being a "circle" with 
+    an "arc" of already recorded actions from the expected
+    maximum (currently 1000). 
+</p>
+
+<h3>Submittion Dialog</h3>
+
+<p>
+    This dialog appears when the user presses the button in status bar:
+</p>
+
+<pre>
++-------------------------------------------------------------------------------+
+| UI Gestures Collector                                                       X |
++-------------------------------------------------------------------------------+
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|         An <a href="http://logger.netbeans.org/nonav/welcome/index.html">HTML page</a> describing the purpose of UI Gestures Collector          |
+|      encourages to send the data, for the trade of nice statistics            |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|  [[_V_iew Data]]                             [[_S_ubmit Data]]   [[_C_ancel]] | 
++-------------------------------------------------------------------------------+
+</pre>
+
+
+<h3>Examination Dialog</h3>
+
+<p>
+    When the user chooses to see the data about the be transfered to the server,
+    then he will get following dialog. They are available in two forms, the 
+    raw one is just one huge XML document which precisely describes the bits
+    to be sent to the server. The Structured view splits the document to
+    individual records:
+</p>
+
+<pre>
++-------------------------------------------------------------------------------+
+| UI Gestures Collector                                                       X |
++-------------------------------------------------------------------------------+
+| Structured | Raw |                                                            |
+|-------------------------------------------------------------------------------|
+| list with records, first is the newest one                                    |
+| second is the second newest one                                               |
+| 3rd                                                                           |
+| 4th                                                                           |
+| 5th                                                                           |
+| 6th                                                                           |
+|-------------------------------------------------------------------------------|
+| The exact text of the select record to be sent to server. XML format.         |
+| &lt;record&gt;                                                                      |
+| &lt;message&gt;Invoking Build &lt;/message&gt;                                            |
+| &lt;/record&gt;                                                                     |  
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|-------------------------------------------------------------------------------|
+|  [[_H_ide Data]]                              [[_S_ubmit Data]] [[_C_ancel]]  | 
++-------------------------------------------------------------------------------+
+</pre>
+
+
+<h3>Error Dialog</h3>
+
+<p>
+    When an exception is rised, its behaviour remains the same as is usual
+    - e.g. in develpment builds to common "Unexpected Exception Dialog" is shown,
+    in releases a blinking icon at the lower right corner starts to blink and
+    when clicked the dialog is shown. However in contrast to previous versions,
+    there is a new button <q>_R_eview and Report Problem</q> in the dialog. When clicked it 
+    opens following dialog:
+</p>
+
+<pre>
++-------------------------------------------------------------------------------+
+| Report Problem                                                              X |
++-------------------------------------------------------------------------------+
+|  If you want to get informed about the state of this problem,                 |
+|  you need to be a registered user. If you're not registered,                  |
+|  you can <a href="http://www.netbeans.org/servlets/Join">register here</a>,                                                       |
+|  or you can send a report as a guest.                                         |
+|  Summary:  |_______________________________________________________________|  |
+|  Describe what you were doing when the exception occured:                     |
+|   _________________________________________________________________________   |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |                                                                         |  |
+|  |_________________________________________________________________________|  |
+|  ---------------------------------------------------------------------------  |
+|  Username: |____________________| (Your NetBeans.org username)                |
+|  Password: |____________________| Username or password is wrong               |
+|            [x]Send report as a guest                                          |
+|  The report contains UI gesture data collected prior to the exception.        |
+|  [[_V_iew Data]]                                    [[_S_end]]   [[_C_ancel]] | 
++-------------------------------------------------------------------------------+
+</pre>
+<p>
+ User can fill his user name. After that we could contact him for more information,
+ but this item is not needed, so he can check send report as a guest button.
+ Issues from not registered users won't be so usefull, but better then nothing.
+ Summary is going to be initially set to exception class and exception message, 
+ if there is some, but we are giving user a possibility to change this item. 
+ User can fill short description what has happen to him.
+ After pressing Next button password is checked and report is send directly for 
+ corect password. For wrong password "Username or password is wrong" message
+ is shown and dialog stays enabled.
+</p>
+<p>
+  After pressing <q>View Data</q> Examination Dialog appears, and <q>Hide data</q>
+  button is added.
+</p>
+<pre>
++-------------------------------------------------------------------------------+
+| Report Problem                                                              X |
++-------------------------------------------------------------------------------+
+| Structured | Raw |                                                            |
+|-------------------------------------------------------------------------------|
+| list with records, first is the newest one                                    |
+| second is the second newest one                                               |
+| 3rd                                                                           |
+| 4th                                                                           |
+| 5th                                                                           |
+| 6th                                                                           |
+|-------------------------------------------------------------------------------|
+| The exact text of the select record to be sent to server. XML format.         |
+| &lt;record&gt;                                                                      |
+| &lt;message&gt;Invoking Build &lt;/message&gt;                                            |
+| &lt;/record&gt;                                                                     |  
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|-------------------------------------------------------------------------------|
+|  [[_H_ide Data]]                              [[_S_ubmit Data]] [[_C_ancel]]  | 
++-------------------------------------------------------------------------------+
+</pre>
+<p>
+<q>Hide data</q> button moves the user back to Error dialog. He can fill 
+description and submit data there.
+</p>
+</body>
+    
+</html>

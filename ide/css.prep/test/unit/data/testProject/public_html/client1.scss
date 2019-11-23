@@ -1,0 +1,6 @@
+@import "lib1";
+
+.clz {
+    color: $global_var_lib1;
+    @include mixin1_lib1;
+}

@@ -1,0 +1,802 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_TRAIT trait
+token #3 WHITESPACE  
+token #4 PHP_STRING TraitExample
+token #5 WHITESPACE  
+token #6 PHP_CURLY_OPEN {
+token #7 WHITESPACE \n\n    
+token #8 PHP_PRIVATE private
+token #9 WHITESPACE  
+token #10 PHP_FUNCTION function
+token #11 WHITESPACE  
+token #12 PHP_STRING define
+token #13 PHP_TOKEN (
+token #14 PHP_TOKEN )
+token #15 WHITESPACE  
+token #16 PHP_CURLY_OPEN {
+token #17 PHP_CURLY_CLOSE }
+token #18 WHITESPACE \n    
+token #19 PHP_PRIVATE private
+token #20 WHITESPACE  
+token #21 PHP_FUNCTION function
+token #22 WHITESPACE  
+token #23 PHP_STRING callable
+token #24 PHP_TOKEN (
+token #25 PHP_TOKEN )
+token #26 WHITESPACE  
+token #27 PHP_CURLY_OPEN {
+token #28 PHP_CURLY_CLOSE }
+token #29 WHITESPACE \n    
+token #30 PHP_PRIVATE private
+token #31 WHITESPACE  
+token #32 PHP_FUNCTION function
+token #33 WHITESPACE  
+token #34 PHP_STRING trait
+token #35 PHP_TOKEN (
+token #36 PHP_TOKEN )
+token #37 WHITESPACE  
+token #38 PHP_CURLY_OPEN {
+token #39 PHP_CURLY_CLOSE }
+token #40 WHITESPACE \n    
+token #41 PHP_PRIVATE private
+token #42 WHITESPACE  
+token #43 PHP_FUNCTION function
+token #44 WHITESPACE  
+token #45 PHP_STRING extends
+token #46 PHP_TOKEN (
+token #47 PHP_TOKEN )
+token #48 WHITESPACE  
+token #49 PHP_CURLY_OPEN {
+token #50 PHP_CURLY_CLOSE }
+token #51 WHITESPACE \n    
+token #52 PHP_PRIVATE private
+token #53 WHITESPACE  
+token #54 PHP_FUNCTION function
+token #55 WHITESPACE  
+token #56 PHP_STRING implements
+token #57 PHP_TOKEN (
+token #58 PHP_TOKEN )
+token #59 WHITESPACE  
+token #60 PHP_CURLY_OPEN {
+token #61 PHP_CURLY_CLOSE }
+token #62 WHITESPACE \n    
+token #63 PHP_PRIVATE private
+token #64 WHITESPACE  
+token #65 PHP_FUNCTION function
+token #66 WHITESPACE  
+token #67 PHP_STRING static
+token #68 PHP_TOKEN (
+token #69 PHP_TOKEN )
+token #70 WHITESPACE  
+token #71 PHP_CURLY_OPEN {
+token #72 PHP_CURLY_CLOSE }
+token #73 WHITESPACE \n    
+token #74 PHP_PRIVATE private
+token #75 WHITESPACE  
+token #76 PHP_FUNCTION function
+token #77 WHITESPACE  
+token #78 PHP_STRING abstract
+token #79 PHP_TOKEN (
+token #80 PHP_TOKEN )
+token #81 WHITESPACE  
+token #82 PHP_CURLY_OPEN {
+token #83 PHP_CURLY_CLOSE }
+token #84 WHITESPACE \n    
+token #85 PHP_PRIVATE private
+token #86 WHITESPACE  
+token #87 PHP_FUNCTION function
+token #88 WHITESPACE  
+token #89 PHP_STRING final
+token #90 PHP_TOKEN (
+token #91 PHP_TOKEN )
+token #92 WHITESPACE  
+token #93 PHP_CURLY_OPEN {
+token #94 PHP_CURLY_CLOSE }
+token #95 WHITESPACE \n    
+token #96 PHP_PRIVATE private
+token #97 WHITESPACE  
+token #98 PHP_FUNCTION function
+token #99 WHITESPACE  
+token #100 PHP_STRING public
+token #101 PHP_TOKEN (
+token #102 PHP_TOKEN )
+token #103 WHITESPACE  
+token #104 PHP_CURLY_OPEN {
+token #105 PHP_CURLY_CLOSE }
+token #106 WHITESPACE \n    
+token #107 PHP_PRIVATE private
+token #108 WHITESPACE  
+token #109 PHP_FUNCTION function
+token #110 WHITESPACE  
+token #111 PHP_STRING protected
+token #112 PHP_TOKEN (
+token #113 PHP_TOKEN )
+token #114 WHITESPACE  
+token #115 PHP_CURLY_OPEN {
+token #116 PHP_CURLY_CLOSE }
+token #117 WHITESPACE \n    
+token #118 PHP_PRIVATE private
+token #119 WHITESPACE  
+token #120 PHP_FUNCTION function
+token #121 WHITESPACE  
+token #122 PHP_STRING private
+token #123 PHP_TOKEN (
+token #124 PHP_TOKEN )
+token #125 WHITESPACE  
+token #126 PHP_CURLY_OPEN {
+token #127 PHP_CURLY_CLOSE }
+token #128 WHITESPACE \n    
+token #129 PHP_PRIVATE private
+token #130 WHITESPACE  
+token #131 PHP_FUNCTION function
+token #132 WHITESPACE  
+token #133 PHP_STRING const
+token #134 PHP_TOKEN (
+token #135 PHP_TOKEN )
+token #136 WHITESPACE  
+token #137 PHP_CURLY_OPEN {
+token #138 PHP_CURLY_CLOSE }
+token #139 WHITESPACE \n    
+token #140 PHP_PRIVATE private
+token #141 WHITESPACE  
+token #142 PHP_FUNCTION function
+token #143 WHITESPACE  
+token #144 PHP_STRING enddeclare
+token #145 PHP_TOKEN (
+token #146 PHP_TOKEN )
+token #147 WHITESPACE  
+token #148 PHP_CURLY_OPEN {
+token #149 PHP_CURLY_CLOSE }
+token #150 WHITESPACE \n    
+token #151 PHP_PRIVATE private
+token #152 WHITESPACE  
+token #153 PHP_FUNCTION function
+token #154 WHITESPACE  
+token #155 PHP_STRING endfor
+token #156 PHP_TOKEN (
+token #157 PHP_TOKEN )
+token #158 WHITESPACE  
+token #159 PHP_CURLY_OPEN {
+token #160 PHP_CURLY_CLOSE }
+token #161 WHITESPACE \n    
+token #162 PHP_PRIVATE private
+token #163 WHITESPACE  
+token #164 PHP_FUNCTION function
+token #165 WHITESPACE  
+token #166 PHP_STRING endforeach
+token #167 PHP_TOKEN (
+token #168 PHP_TOKEN )
+token #169 WHITESPACE  
+token #170 PHP_CURLY_OPEN {
+token #171 PHP_CURLY_CLOSE }
+token #172 WHITESPACE \n    
+token #173 PHP_PRIVATE private
+token #174 WHITESPACE  
+token #175 PHP_FUNCTION function
+token #176 WHITESPACE  
+token #177 PHP_STRING endif
+token #178 PHP_TOKEN (
+token #179 PHP_TOKEN )
+token #180 WHITESPACE  
+token #181 PHP_CURLY_OPEN {
+token #182 PHP_CURLY_CLOSE }
+token #183 WHITESPACE \n    
+token #184 PHP_PRIVATE private
+token #185 WHITESPACE  
+token #186 PHP_FUNCTION function
+token #187 WHITESPACE  
+token #188 PHP_STRING endwhile
+token #189 PHP_TOKEN (
+token #190 PHP_TOKEN )
+token #191 WHITESPACE  
+token #192 PHP_CURLY_OPEN {
+token #193 PHP_CURLY_CLOSE }
+token #194 WHITESPACE \n    
+token #195 PHP_PRIVATE private
+token #196 WHITESPACE  
+token #197 PHP_FUNCTION function
+token #198 WHITESPACE  
+token #199 PHP_STRING and
+token #200 PHP_TOKEN (
+token #201 PHP_TOKEN )
+token #202 WHITESPACE  
+token #203 PHP_CURLY_OPEN {
+token #204 PHP_CURLY_CLOSE }
+token #205 WHITESPACE \n    
+token #206 PHP_PRIVATE private
+token #207 WHITESPACE  
+token #208 PHP_FUNCTION function
+token #209 WHITESPACE  
+token #210 PHP_STRING global
+token #211 PHP_TOKEN (
+token #212 PHP_TOKEN )
+token #213 WHITESPACE  
+token #214 PHP_CURLY_OPEN {
+token #215 PHP_CURLY_CLOSE }
+token #216 WHITESPACE \n    
+token #217 PHP_PRIVATE private
+token #218 WHITESPACE  
+token #219 PHP_FUNCTION function
+token #220 WHITESPACE  
+token #221 PHP_STRING goto
+token #222 PHP_TOKEN (
+token #223 PHP_TOKEN )
+token #224 WHITESPACE  
+token #225 PHP_CURLY_OPEN {
+token #226 PHP_CURLY_CLOSE }
+token #227 WHITESPACE \n    
+token #228 PHP_PRIVATE private
+token #229 WHITESPACE  
+token #230 PHP_FUNCTION function
+token #231 WHITESPACE  
+token #232 PHP_STRING instanceof
+token #233 PHP_TOKEN (
+token #234 PHP_TOKEN )
+token #235 WHITESPACE  
+token #236 PHP_CURLY_OPEN {
+token #237 PHP_CURLY_CLOSE }
+token #238 WHITESPACE \n    
+token #239 PHP_PRIVATE private
+token #240 WHITESPACE  
+token #241 PHP_FUNCTION function
+token #242 WHITESPACE  
+token #243 PHP_STRING insteadof
+token #244 PHP_TOKEN (
+token #245 PHP_TOKEN )
+token #246 WHITESPACE  
+token #247 PHP_CURLY_OPEN {
+token #248 PHP_CURLY_CLOSE }
+token #249 WHITESPACE \n    
+token #250 PHP_PRIVATE private
+token #251 WHITESPACE  
+token #252 PHP_FUNCTION function
+token #253 WHITESPACE  
+token #254 PHP_STRING interface
+token #255 PHP_TOKEN (
+token #256 PHP_TOKEN )
+token #257 WHITESPACE  
+token #258 PHP_CURLY_OPEN {
+token #259 PHP_CURLY_CLOSE }
+token #260 WHITESPACE \n    
+token #261 PHP_PRIVATE private
+token #262 WHITESPACE  
+token #263 PHP_FUNCTION function
+token #264 WHITESPACE  
+token #265 PHP_STRING namespace
+token #266 PHP_TOKEN (
+token #267 PHP_TOKEN )
+token #268 WHITESPACE  
+token #269 PHP_CURLY_OPEN {
+token #270 PHP_CURLY_CLOSE }
+token #271 WHITESPACE \n    
+token #272 PHP_PRIVATE private
+token #273 WHITESPACE  
+token #274 PHP_FUNCTION function
+token #275 WHITESPACE  
+token #276 PHP_STRING new
+token #277 PHP_TOKEN (
+token #278 PHP_TOKEN )
+token #279 WHITESPACE  
+token #280 PHP_CURLY_OPEN {
+token #281 PHP_CURLY_CLOSE }
+token #282 WHITESPACE \n    
+token #283 PHP_PRIVATE private
+token #284 WHITESPACE  
+token #285 PHP_FUNCTION function
+token #286 WHITESPACE  
+token #287 PHP_STRING or
+token #288 PHP_TOKEN (
+token #289 PHP_TOKEN )
+token #290 WHITESPACE  
+token #291 PHP_CURLY_OPEN {
+token #292 PHP_CURLY_CLOSE }
+token #293 WHITESPACE \n    
+token #294 PHP_PRIVATE private
+token #295 WHITESPACE  
+token #296 PHP_FUNCTION function
+token #297 WHITESPACE  
+token #298 PHP_STRING xor
+token #299 PHP_TOKEN (
+token #300 PHP_TOKEN )
+token #301 WHITESPACE  
+token #302 PHP_CURLY_OPEN {
+token #303 PHP_CURLY_CLOSE }
+token #304 WHITESPACE \n    
+token #305 PHP_PRIVATE private
+token #306 WHITESPACE  
+token #307 PHP_FUNCTION function
+token #308 WHITESPACE  
+token #309 PHP_STRING try
+token #310 PHP_TOKEN (
+token #311 PHP_TOKEN )
+token #312 WHITESPACE  
+token #313 PHP_CURLY_OPEN {
+token #314 PHP_CURLY_CLOSE }
+token #315 WHITESPACE \n    
+token #316 PHP_PRIVATE private
+token #317 WHITESPACE  
+token #318 PHP_FUNCTION function
+token #319 WHITESPACE  
+token #320 PHP_STRING use
+token #321 PHP_TOKEN (
+token #322 PHP_TOKEN )
+token #323 WHITESPACE  
+token #324 PHP_CURLY_OPEN {
+token #325 PHP_CURLY_CLOSE }
+token #326 WHITESPACE \n    
+token #327 PHP_PRIVATE private
+token #328 WHITESPACE  
+token #329 PHP_FUNCTION function
+token #330 WHITESPACE  
+token #331 PHP_STRING var
+token #332 PHP_TOKEN (
+token #333 PHP_TOKEN )
+token #334 WHITESPACE  
+token #335 PHP_CURLY_OPEN {
+token #336 PHP_CURLY_CLOSE }
+token #337 WHITESPACE \n    
+token #338 PHP_PRIVATE private
+token #339 WHITESPACE  
+token #340 PHP_FUNCTION function
+token #341 WHITESPACE  
+token #342 PHP_STRING exit
+token #343 PHP_TOKEN (
+token #344 PHP_TOKEN )
+token #345 WHITESPACE  
+token #346 PHP_CURLY_OPEN {
+token #347 PHP_CURLY_CLOSE }
+token #348 WHITESPACE \n    
+token #349 PHP_PRIVATE private
+token #350 WHITESPACE  
+token #351 PHP_FUNCTION function
+token #352 WHITESPACE  
+token #353 PHP_STRING list
+token #354 PHP_TOKEN (
+token #355 PHP_TOKEN )
+token #356 WHITESPACE  
+token #357 PHP_CURLY_OPEN {
+token #358 PHP_CURLY_CLOSE }
+token #359 WHITESPACE \n    
+token #360 PHP_PRIVATE private
+token #361 WHITESPACE  
+token #362 PHP_FUNCTION function
+token #363 WHITESPACE  
+token #364 PHP_STRING clone
+token #365 PHP_TOKEN (
+token #366 PHP_TOKEN )
+token #367 WHITESPACE  
+token #368 PHP_CURLY_OPEN {
+token #369 PHP_CURLY_CLOSE }
+token #370 WHITESPACE \n    
+token #371 PHP_PRIVATE private
+token #372 WHITESPACE  
+token #373 PHP_FUNCTION function
+token #374 WHITESPACE  
+token #375 PHP_STRING include
+token #376 PHP_TOKEN (
+token #377 PHP_TOKEN )
+token #378 WHITESPACE  
+token #379 PHP_CURLY_OPEN {
+token #380 PHP_CURLY_CLOSE }
+token #381 WHITESPACE \n    
+token #382 PHP_PRIVATE private
+token #383 WHITESPACE  
+token #384 PHP_FUNCTION function
+token #385 WHITESPACE  
+token #386 PHP_STRING include_once
+token #387 PHP_TOKEN (
+token #388 PHP_TOKEN )
+token #389 WHITESPACE  
+token #390 PHP_CURLY_OPEN {
+token #391 PHP_CURLY_CLOSE }
+token #392 WHITESPACE \n    
+token #393 PHP_PRIVATE private
+token #394 WHITESPACE  
+token #395 PHP_FUNCTION function
+token #396 WHITESPACE  
+token #397 PHP_STRING throw
+token #398 PHP_TOKEN (
+token #399 PHP_TOKEN )
+token #400 WHITESPACE  
+token #401 PHP_CURLY_OPEN {
+token #402 PHP_CURLY_CLOSE }
+token #403 WHITESPACE \n    
+token #404 PHP_PRIVATE private
+token #405 WHITESPACE  
+token #406 PHP_FUNCTION function
+token #407 WHITESPACE  
+token #408 PHP_STRING array
+token #409 PHP_TOKEN (
+token #410 PHP_TOKEN )
+token #411 WHITESPACE  
+token #412 PHP_CURLY_OPEN {
+token #413 PHP_CURLY_CLOSE }
+token #414 WHITESPACE \n    
+token #415 PHP_PRIVATE private
+token #416 WHITESPACE  
+token #417 PHP_FUNCTION function
+token #418 WHITESPACE  
+token #419 PHP_STRING print
+token #420 PHP_TOKEN (
+token #421 PHP_TOKEN )
+token #422 WHITESPACE  
+token #423 PHP_CURLY_OPEN {
+token #424 PHP_CURLY_CLOSE }
+token #425 WHITESPACE \n    
+token #426 PHP_PRIVATE private
+token #427 WHITESPACE  
+token #428 PHP_FUNCTION function
+token #429 WHITESPACE  
+token #430 PHP_STRING echo
+token #431 PHP_TOKEN (
+token #432 PHP_TOKEN )
+token #433 WHITESPACE  
+token #434 PHP_CURLY_OPEN {
+token #435 PHP_CURLY_CLOSE }
+token #436 WHITESPACE \n    
+token #437 PHP_PRIVATE private
+token #438 WHITESPACE  
+token #439 PHP_FUNCTION function
+token #440 WHITESPACE  
+token #441 PHP_STRING require
+token #442 PHP_TOKEN (
+token #443 PHP_TOKEN )
+token #444 WHITESPACE  
+token #445 PHP_CURLY_OPEN {
+token #446 PHP_CURLY_CLOSE }
+token #447 WHITESPACE \n    
+token #448 PHP_PRIVATE private
+token #449 WHITESPACE  
+token #450 PHP_FUNCTION function
+token #451 WHITESPACE  
+token #452 PHP_STRING require_once
+token #453 PHP_TOKEN (
+token #454 PHP_TOKEN )
+token #455 WHITESPACE  
+token #456 PHP_CURLY_OPEN {
+token #457 PHP_CURLY_CLOSE }
+token #458 WHITESPACE \n    
+token #459 PHP_PRIVATE private
+token #460 WHITESPACE  
+token #461 PHP_FUNCTION function
+token #462 WHITESPACE  
+token #463 PHP_STRING return
+token #464 PHP_TOKEN (
+token #465 PHP_TOKEN )
+token #466 WHITESPACE  
+token #467 PHP_CURLY_OPEN {
+token #468 PHP_CURLY_CLOSE }
+token #469 WHITESPACE \n    
+token #470 PHP_PRIVATE private
+token #471 WHITESPACE  
+token #472 PHP_FUNCTION function
+token #473 WHITESPACE  
+token #474 PHP_STRING else
+token #475 PHP_TOKEN (
+token #476 PHP_TOKEN )
+token #477 WHITESPACE  
+token #478 PHP_CURLY_OPEN {
+token #479 PHP_CURLY_CLOSE }
+token #480 WHITESPACE \n    
+token #481 PHP_PRIVATE private
+token #482 WHITESPACE  
+token #483 PHP_FUNCTION function
+token #484 WHITESPACE  
+token #485 PHP_STRING elseif
+token #486 PHP_TOKEN (
+token #487 PHP_TOKEN )
+token #488 WHITESPACE  
+token #489 PHP_CURLY_OPEN {
+token #490 PHP_CURLY_CLOSE }
+token #491 WHITESPACE \n    
+token #492 PHP_PRIVATE private
+token #493 WHITESPACE  
+token #494 PHP_FUNCTION function
+token #495 WHITESPACE  
+token #496 PHP_STRING default
+token #497 PHP_TOKEN (
+token #498 PHP_TOKEN )
+token #499 WHITESPACE  
+token #500 PHP_CURLY_OPEN {
+token #501 PHP_CURLY_CLOSE }
+token #502 WHITESPACE \n    
+token #503 PHP_PRIVATE private
+token #504 WHITESPACE  
+token #505 PHP_FUNCTION function
+token #506 WHITESPACE  
+token #507 PHP_STRING break
+token #508 PHP_TOKEN (
+token #509 PHP_TOKEN )
+token #510 WHITESPACE  
+token #511 PHP_CURLY_OPEN {
+token #512 PHP_CURLY_CLOSE }
+token #513 WHITESPACE \n    
+token #514 PHP_PRIVATE private
+token #515 WHITESPACE  
+token #516 PHP_FUNCTION function
+token #517 WHITESPACE  
+token #518 PHP_STRING continue
+token #519 PHP_TOKEN (
+token #520 PHP_TOKEN )
+token #521 WHITESPACE  
+token #522 PHP_CURLY_OPEN {
+token #523 PHP_CURLY_CLOSE }
+token #524 WHITESPACE \n    
+token #525 PHP_PRIVATE private
+token #526 WHITESPACE  
+token #527 PHP_FUNCTION function
+token #528 WHITESPACE  
+token #529 PHP_STRING switch
+token #530 PHP_TOKEN (
+token #531 PHP_TOKEN )
+token #532 WHITESPACE  
+token #533 PHP_CURLY_OPEN {
+token #534 PHP_CURLY_CLOSE }
+token #535 WHITESPACE \n    
+token #536 PHP_PRIVATE private
+token #537 WHITESPACE  
+token #538 PHP_FUNCTION function
+token #539 WHITESPACE  
+token #540 PHP_STRING yield
+token #541 PHP_TOKEN (
+token #542 PHP_TOKEN )
+token #543 WHITESPACE  
+token #544 PHP_CURLY_OPEN {
+token #545 PHP_CURLY_CLOSE }
+token #546 WHITESPACE \n    
+token #547 PHP_PRIVATE private
+token #548 WHITESPACE  
+token #549 PHP_FUNCTION function
+token #550 WHITESPACE  
+token #551 PHP_STRING function
+token #552 PHP_TOKEN (
+token #553 PHP_TOKEN )
+token #554 WHITESPACE  
+token #555 PHP_CURLY_OPEN {
+token #556 PHP_CURLY_CLOSE }
+token #557 WHITESPACE \n    
+token #558 PHP_PRIVATE private
+token #559 WHITESPACE  
+token #560 PHP_FUNCTION function
+token #561 WHITESPACE  
+token #562 PHP_STRING if
+token #563 PHP_TOKEN (
+token #564 PHP_TOKEN )
+token #565 WHITESPACE  
+token #566 PHP_CURLY_OPEN {
+token #567 PHP_CURLY_CLOSE }
+token #568 WHITESPACE \n    
+token #569 PHP_PRIVATE private
+token #570 WHITESPACE  
+token #571 PHP_FUNCTION function
+token #572 WHITESPACE  
+token #573 PHP_STRING endswitch
+token #574 PHP_TOKEN (
+token #575 PHP_TOKEN )
+token #576 WHITESPACE  
+token #577 PHP_CURLY_OPEN {
+token #578 PHP_CURLY_CLOSE }
+token #579 WHITESPACE \n    
+token #580 PHP_PRIVATE private
+token #581 WHITESPACE  
+token #582 PHP_FUNCTION function
+token #583 WHITESPACE  
+token #584 PHP_STRING finally
+token #585 PHP_TOKEN (
+token #586 PHP_TOKEN )
+token #587 WHITESPACE  
+token #588 PHP_CURLY_OPEN {
+token #589 PHP_CURLY_CLOSE }
+token #590 WHITESPACE \n    
+token #591 PHP_PRIVATE private
+token #592 WHITESPACE  
+token #593 PHP_FUNCTION function
+token #594 WHITESPACE  
+token #595 PHP_STRING for
+token #596 PHP_TOKEN (
+token #597 PHP_TOKEN )
+token #598 WHITESPACE  
+token #599 PHP_CURLY_OPEN {
+token #600 PHP_CURLY_CLOSE }
+token #601 WHITESPACE \n    
+token #602 PHP_PRIVATE private
+token #603 WHITESPACE  
+token #604 PHP_FUNCTION function
+token #605 WHITESPACE  
+token #606 PHP_STRING foreach
+token #607 PHP_TOKEN (
+token #608 PHP_TOKEN )
+token #609 WHITESPACE  
+token #610 PHP_CURLY_OPEN {
+token #611 PHP_CURLY_CLOSE }
+token #612 WHITESPACE \n    
+token #613 PHP_PRIVATE private
+token #614 WHITESPACE  
+token #615 PHP_FUNCTION function
+token #616 WHITESPACE  
+token #617 PHP_STRING declare
+token #618 PHP_TOKEN (
+token #619 PHP_TOKEN )
+token #620 WHITESPACE  
+token #621 PHP_CURLY_OPEN {
+token #622 PHP_CURLY_CLOSE }
+token #623 WHITESPACE \n    
+token #624 PHP_PRIVATE private
+token #625 WHITESPACE  
+token #626 PHP_FUNCTION function
+token #627 WHITESPACE  
+token #628 PHP_STRING case
+token #629 PHP_TOKEN (
+token #630 PHP_TOKEN )
+token #631 WHITESPACE  
+token #632 PHP_CURLY_OPEN {
+token #633 PHP_CURLY_CLOSE }
+token #634 WHITESPACE \n    
+token #635 PHP_PRIVATE private
+token #636 WHITESPACE  
+token #637 PHP_FUNCTION function
+token #638 WHITESPACE  
+token #639 PHP_STRING do
+token #640 PHP_TOKEN (
+token #641 PHP_TOKEN )
+token #642 WHITESPACE  
+token #643 PHP_CURLY_OPEN {
+token #644 PHP_CURLY_CLOSE }
+token #645 WHITESPACE \n    
+token #646 PHP_PRIVATE private
+token #647 WHITESPACE  
+token #648 PHP_FUNCTION function
+token #649 WHITESPACE  
+token #650 PHP_STRING while
+token #651 PHP_TOKEN (
+token #652 PHP_TOKEN )
+token #653 WHITESPACE  
+token #654 PHP_CURLY_OPEN {
+token #655 PHP_CURLY_CLOSE }
+token #656 WHITESPACE \n    
+token #657 PHP_PRIVATE private
+token #658 WHITESPACE  
+token #659 PHP_FUNCTION function
+token #660 WHITESPACE  
+token #661 PHP_STRING as
+token #662 PHP_TOKEN (
+token #663 PHP_TOKEN )
+token #664 WHITESPACE  
+token #665 PHP_CURLY_OPEN {
+token #666 PHP_CURLY_CLOSE }
+token #667 WHITESPACE \n    
+token #668 PHP_PRIVATE private
+token #669 WHITESPACE  
+token #670 PHP_FUNCTION function
+token #671 WHITESPACE  
+token #672 PHP_STRING catch
+token #673 PHP_TOKEN (
+token #674 PHP_TOKEN )
+token #675 WHITESPACE  
+token #676 PHP_CURLY_OPEN {
+token #677 PHP_CURLY_CLOSE }
+token #678 WHITESPACE \n    
+token #679 PHP_PRIVATE private
+token #680 WHITESPACE  
+token #681 PHP_FUNCTION function
+token #682 WHITESPACE  
+token #683 PHP_STRING die
+token #684 PHP_TOKEN (
+token #685 PHP_TOKEN )
+token #686 WHITESPACE  
+token #687 PHP_CURLY_OPEN {
+token #688 PHP_CURLY_CLOSE }
+token #689 WHITESPACE \n    
+token #690 PHP_PRIVATE private
+token #691 WHITESPACE  
+token #692 PHP_FUNCTION function
+token #693 WHITESPACE  
+token #694 PHP_STRING self
+token #695 PHP_TOKEN (
+token #696 PHP_TOKEN )
+token #697 WHITESPACE  
+token #698 PHP_CURLY_OPEN {
+token #699 PHP_CURLY_CLOSE }
+token #700 WHITESPACE \n    
+token #701 PHP_PRIVATE private
+token #702 WHITESPACE  
+token #703 PHP_FUNCTION function
+token #704 WHITESPACE  
+token #705 PHP_STRING parent
+token #706 PHP_TOKEN (
+token #707 PHP_TOKEN )
+token #708 WHITESPACE  
+token #709 PHP_CURLY_OPEN {
+token #710 PHP_CURLY_CLOSE }
+token #711 WHITESPACE \n    
+token #712 PHP_PRIVATE private
+token #713 WHITESPACE  
+token #714 PHP_FUNCTION function
+token #715 WHITESPACE  
+token #716 PHP_STRING __CLASS__
+token #717 PHP_TOKEN (
+token #718 PHP_TOKEN )
+token #719 WHITESPACE  
+token #720 PHP_CURLY_OPEN {
+token #721 PHP_CURLY_CLOSE }
+token #722 WHITESPACE \n    
+token #723 PHP_PRIVATE private
+token #724 WHITESPACE  
+token #725 PHP_FUNCTION function
+token #726 WHITESPACE  
+token #727 PHP_STRING __TRAIT__
+token #728 PHP_TOKEN (
+token #729 PHP_TOKEN )
+token #730 WHITESPACE  
+token #731 PHP_CURLY_OPEN {
+token #732 PHP_CURLY_CLOSE }
+token #733 WHITESPACE \n    
+token #734 PHP_PRIVATE private
+token #735 WHITESPACE  
+token #736 PHP_FUNCTION function
+token #737 WHITESPACE  
+token #738 PHP_STRING __FUNCTION__
+token #739 PHP_TOKEN (
+token #740 PHP_TOKEN )
+token #741 WHITESPACE  
+token #742 PHP_CURLY_OPEN {
+token #743 PHP_CURLY_CLOSE }
+token #744 WHITESPACE \n    
+token #745 PHP_PRIVATE private
+token #746 WHITESPACE  
+token #747 PHP_FUNCTION function
+token #748 WHITESPACE  
+token #749 PHP_STRING __METHOD__
+token #750 PHP_TOKEN (
+token #751 PHP_TOKEN )
+token #752 WHITESPACE  
+token #753 PHP_CURLY_OPEN {
+token #754 PHP_CURLY_CLOSE }
+token #755 WHITESPACE \n    
+token #756 PHP_PRIVATE private
+token #757 WHITESPACE  
+token #758 PHP_FUNCTION function
+token #759 WHITESPACE  
+token #760 PHP_STRING __LINE__
+token #761 PHP_TOKEN (
+token #762 PHP_TOKEN )
+token #763 WHITESPACE  
+token #764 PHP_CURLY_OPEN {
+token #765 PHP_CURLY_CLOSE }
+token #766 WHITESPACE \n    
+token #767 PHP_PRIVATE private
+token #768 WHITESPACE  
+token #769 PHP_FUNCTION function
+token #770 WHITESPACE  
+token #771 PHP_STRING __FILE__
+token #772 PHP_TOKEN (
+token #773 PHP_TOKEN )
+token #774 WHITESPACE  
+token #775 PHP_CURLY_OPEN {
+token #776 PHP_CURLY_CLOSE }
+token #777 WHITESPACE \n    
+token #778 PHP_PRIVATE private
+token #779 WHITESPACE  
+token #780 PHP_FUNCTION function
+token #781 WHITESPACE  
+token #782 PHP_STRING __DIR__
+token #783 PHP_TOKEN (
+token #784 PHP_TOKEN )
+token #785 WHITESPACE  
+token #786 PHP_CURLY_OPEN {
+token #787 PHP_CURLY_CLOSE }
+token #788 WHITESPACE \n    
+token #789 PHP_PRIVATE private
+token #790 WHITESPACE  
+token #791 PHP_FUNCTION function
+token #792 WHITESPACE  
+token #793 PHP_STRING __NAMESPACE__
+token #794 PHP_TOKEN (
+token #795 PHP_TOKEN )
+token #796 WHITESPACE  
+token #797 PHP_CURLY_OPEN {
+token #798 PHP_CURLY_CLOSE }
+token #799 WHITESPACE \n
+token #800 PHP_CURLY_CLOSE }
+token #801 WHITESPACE \n

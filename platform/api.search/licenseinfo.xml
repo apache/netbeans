@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/search/res/file_view.png</file>
+        <file>src/org/netbeans/modules/search/res/invalid.png</file>
+        <file>src/org/netbeans/modules/search/res/expandTree.png</file>
+        <file>src/org/netbeans/modules/search/res/refresh.png</file>
+        <file>src/org/netbeans/modules/search/res/collapseTree.png</file>
+        <file>src/org/netbeans/modules/search/res/next.png</file>
+        <file>src/org/netbeans/modules/search/res/show.gif</file>
+        <file>src/org/netbeans/modules/search/res/context.gif</file>
+        <file>src/org/netbeans/modules/search/res/context24.gif</file>
+        <file>src/org/netbeans/modules/search/res/textDetail.png</file>
+        <file>src/org/netbeans/modules/search/res/stop.png</file>
+        <file>src/org/netbeans/modules/search/res/error.gif</file>
+        <file>src/org/netbeans/modules/search/res/prev.png</file>
+        <file>src/org/netbeans/modules/search/res/info.png</file>
+        <file>src/org/netbeans/modules/search/res/find.gif</file>
+        <file>src/org/netbeans/modules/search/res/search32.gif</file>
+        <file>src/org/netbeans/modules/search/res/stop.gif</file>
+        <file>src/org/netbeans/modules/search/res/replaceChecked.gif</file>
+        <file>src/org/netbeans/modules/search/res/multi_selection.png</file>
+        <file>src/org/netbeans/modules/search/res/warning.gif</file>
+        <file>src/org/netbeans/modules/search/res/search.gif</file>
+        <file>src/org/netbeans/modules/search/res/logical_view.png</file>
+        <file>src/org/netbeans/modules/search/doc-files/manager-state-diagram.png</file>
+        <file>src/org/netbeans/modules/search/doc-files/results-class-diagram.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

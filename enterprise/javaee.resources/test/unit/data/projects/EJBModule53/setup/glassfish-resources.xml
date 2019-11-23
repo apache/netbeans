@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <admin-object-resource enabled="true" jndi-name="jms/nevimStaticQueue"  res-type="javax.jms.Queue"  res-adapter="jmsra">
+        <property name="Name" value="PhysicalQueue"/>
+    </admin-object-resource>
+    <connector-connection-pool name="jms/nevimStaticQueueFactoryPool"  connection-definition-name="javax.jms.QueueConnectionFactory"  resource-adapter-name="jmsra"/>
+    <connector-resource enabled="true" jndi-name="jms/nevimStaticQueueFactory" pool-name="jms/nevimStaticQueueFactoryPool"  />
+    <admin-object-resource enabled="true" jndi-name="jms/staticToic"  res-type="javax.jms.Topic"  res-adapter="jmsra">
+        <property name="Name" value="PhysicalTopic"/>
+    </admin-object-resource>
+    <connector-connection-pool name="jms/staticToicFactoryPool"  connection-definition-name="javax.jms.TopicConnectionFactory"  resource-adapter-name="jmsra"/>
+    <connector-resource enabled="true" jndi-name="jms/staticToicFactory" pool-name="jms/staticToicFactoryPool"  />
+    <admin-object-resource enabled="true" jndi-name="jms/statTOP"  res-type="javax.jms.Topic"  res-adapter="jmsra">
+        <property name="Name" value="PhysicalTopic"/>
+    </admin-object-resource>
+    <connector-connection-pool name="jms/statTOPFactoryPool"  connection-definition-name="javax.jms.TopicConnectionFactory"  resource-adapter-name="jmsra"/>
+    <connector-resource enabled="true" jndi-name="jms/statTOPFactory" pool-name="jms/statTOPFactoryPool"  />
+</resources>

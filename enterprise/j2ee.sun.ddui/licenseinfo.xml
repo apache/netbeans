@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/BoundAnnotation.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/BoundStandardDD.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/DDDataIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/DDInvalidIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/DDValidIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/EjbGroupIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/EjbJarRefIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/EntityBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ErrorBadge.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/MessageBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/MessageDestinationIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/MessageDestinationRefIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/MiscNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ReferencesIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ResourceEnvRefIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ResourceRefIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/SecurityRoleMappingIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ServiceRefIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/ServletIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/SessionBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/UnBoundDD.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/VirtualDD.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/error-glyph.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/ddloaders/resources/error-sg.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/config/ui/resources/ConfigFile.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/config/ui/resources/application.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/config/ui/resources/ejbmodule.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/config/ui/resources/webmodule.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/customizerHelp.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/errorGlyph.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/errorIcon.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/warningIcon.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/AppClientRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/AppClientRootIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/AppRootIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ConnectorRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ConnectorRootIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/EjbJarRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/EjbJarRootIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/EjbRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/EntityBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/MessageBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/MessageDestinationIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/MessageDestinationRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ResourceEnvRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ResourceRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/SecurityRoleMappingIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ServiceRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/ServletRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/SessionBean.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/SessionConfigurationIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/WebAppRefIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/WebAppRootIcon16.gif</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/WebServiceDescriptorIcon16.png</file>
+        <file>src/org/netbeans/modules/j2ee/sun/share/configbean/resources/WebServicesRootIcon16.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

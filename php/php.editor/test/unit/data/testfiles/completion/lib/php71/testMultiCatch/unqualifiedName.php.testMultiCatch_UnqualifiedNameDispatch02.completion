@@ -1,0 +1,5 @@
+Code completion result for source line:
+echo $e->|getTraceAsString(); // single
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     exception3()                    [PUBLIC]   \Test\Sub\ExceptionType3

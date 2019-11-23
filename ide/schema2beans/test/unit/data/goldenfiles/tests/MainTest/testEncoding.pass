@@ -1,0 +1,129 @@
+Calling GenBeans.doIt
+Bean Tree:
+forteddl <FORTEDDL> : Forteddl
+	phase <PHASE> : Phase[1,n]
+		[attr: OBJECTTYPE CDATA #REQUIRED ]
+		[attr: OBJECTNAME CDATA #REQUIRED ]
+		[attr: NUMBER CDATA #REQUIRED ]
+		(
+		  attribute <ATTRIBUTE> : Attribute
+		  	[attr: NAME CDATA #REQUIRED ]
+		  	(
+		  	  | array <ARRAY> : Array
+		  	  | 	(
+		  	  | 	  myobject <MYOBJECT> : Myobject
+		  	  | 	  	[attr: CLASS CDATA #REQUIRED ]
+		  	  | 	  	(
+		  	  | 	  	  attribute <ATTRIBUTE> : Attribute...
+		  	  | 	  	  	[attr: NAME CDATA #REQUIRED ]
+		  	  | 	  	)[1,n]
+		  	  | 	)[1,n]
+		  	  | myobject <MYOBJECT> : Myobject
+		  	  | 	[attr: CLASS CDATA #REQUIRED ]
+		  	  | 	(
+		  	  | 	  attribute <ATTRIBUTE> : Attribute...
+		  	  | 	  	[attr: NAME CDATA #REQUIRED ]
+		  	  | 	)[1,n]
+		  	  | true <TRUE> : boolean
+		  	  | 	EMPTY : String
+		  	  | false <FALSE> : boolean
+		  	  | 	EMPTY : String
+		  	  | nil <NIL> : boolean
+		  	  | 	EMPTY : String
+		  	)[0,n]
+		  annotation <ANNOTATION> : Annotation[0,n]
+		  	[attr: OBJECTTYPE CDATA #REQUIRED ]
+		  	[attr: NAME CDATA #REQUIRED ]
+		  	[attr: VIEW CDATA #IMPLIED ]
+		  	propertysheet <PROPERTYSHEET> : boolean[0,1]
+		  		[attr: CLASS CDATA #REQUIRED ]
+		  		[attr: TAB CDATA #REQUIRED ]
+		  		EMPTY : String
+		  	attribute <ATTRIBUTE> : Attribute[1,n]
+		  		[attr: NAME CDATA #REQUIRED ]
+		  		(
+		  		  | array <ARRAY> : Array
+		  		  | 	(
+		  		  | 	  myobject <MYOBJECT> : Myobject
+		  		  | 	  	[attr: CLASS CDATA #REQUIRED ]
+		  		  | 	  	(
+		  		  | 	  	  attribute <ATTRIBUTE> : Attribute...
+		  		  | 	  	  	[attr: NAME CDATA #REQUIRED ]
+		  		  | 	  	)[1,n]
+		  		  | 	)[1,n]
+		  		  | myobject <MYOBJECT> : Myobject
+		  		  | 	[attr: CLASS CDATA #REQUIRED ]
+		  		  | 	(
+		  		  | 	  attribute <ATTRIBUTE> : Attribute...
+		  		  | 	  	[attr: NAME CDATA #REQUIRED ]
+		  		  | 	)[1,n]
+		  		  | true <TRUE> : boolean
+		  		  | 	EMPTY : String
+		  		  | false <FALSE> : boolean
+		  		  | 	EMPTY : String
+		  		  | nil <NIL> : boolean
+		  		  | 	EMPTY : String
+		  		)[0,n]
+		)[0,n]
+
+Compiling
+Finished compiling: 0
+out: TestEncoding - creating the bean graph
+out: TestEncoding - bean graph created
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!-- ex1.xml                                                      -->
+out: <!-- This is a simple XML source file.  Object class metamethod   -->
+out: <!-- m3 includes 8-bit ASCII text, with a tilde-n and accent-e    -->
+out: <!-- characters embedded, to test the UTF8->native codeset        -->
+out: <!-- conversion feature of the SAX expat driver.  As long as this -->
+out: <!-- test is run under ISO-8859-1 localization, test output should-->
+out: <!-- be identical to test input, with one odd byte representing   -->
+out: <!-- each of these 8-bit characters.                              -->
+out: <!--                                                              -->
+out: <!-- The vi editor on Sun Solaris displays the two odd characters -->
+out: <!-- as \161 and \151.                                            -->
+out: <!--                                                              -->
+out: <!-- <!DOCTYPE FORTEDDL SYSTEM "TestEncoding.dtd" []> -->
+out: <FORTEDDL>
+out:   <PHASE NUMBER="1" OBJECTNAME="c1" OBJECTTYPE="MetaPlan.MetaClass">
+out:     <ATTRIBUTE NAME="Name">c1</ATTRIBUTE>
+out:     <ATTRIBUTE NAME="MethodArray">
+out:       <ARRAY>
+out:         <MYOBJECT CLASS="MetaMethod">
+out:           <ATTRIBUTE NAME="Name">m1</ATTRIBUTE>
+out:           <ATTRIBUTE NAME="Text">
+out: 	task.lgr.putline('this is m1');
+out: 	return;
+out: 					</ATTRIBUTE>
+out:         </MYOBJECT>
+out:         <MYOBJECT CLASS="MetaMethod">
+out:           <ATTRIBUTE NAME="Name">m2</ATTRIBUTE>
+out:           <ATTRIBUTE NAME="Text">
+out: 	                <?FORTE ThisIsAProcessingInstruction ?>
+out: 	task.lgr.putline('this is m2');
+out: 	return;
+out: 					</ATTRIBUTE>
+out:         </MYOBJECT>
+out:         <MYOBJECT CLASS="MetaMethod">
+out:           <ATTRIBUTE NAME="Name">m3</ATTRIBUTE>
+out:           <ATTRIBUTE NAME="8-bit ASCII text">
+out: 	task.lgr.putline('Yo amo habaÃ±ero chilÃ©s');
+out: 	return;
+out: 					</ATTRIBUTE>
+out:         </MYOBJECT>
+out:       </ARRAY>
+out:     </ATTRIBUTE>
+out:     <ANNOTATION NAME="cr1" OBJECTTYPE="CrossRefInfo">
+out:       <ATTRIBUTE NAME="InfoArray">
+out:         <ARRAY>
+out:           <MYOBJECT CLASS="infoItem">
+out:             <ATTRIBUTE NAME="Reference">putline</ATTRIBUTE>
+out:             <ATTRIBUTE NAME="Class">c1</ATTRIBUTE>
+out:             <ATTRIBUTE NAME="Method">m1</ATTRIBUTE>
+out:           </MYOBJECT>
+out:         </ARRAY>
+out:       </ATTRIBUTE>
+out:     </ANNOTATION>
+out:   </PHASE>
+out: </FORTEDDL>
+Finished running TestEncoding: 0

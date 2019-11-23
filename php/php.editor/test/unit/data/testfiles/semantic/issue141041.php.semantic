@@ -1,0 +1,25 @@
+<?php
+
+    class |>CLASS:TwitterWhatAreYouDoingServiceAuthenticatorProfile<| {
+
+        //Specify the usern here
+        private static $|>FIELD,STATIC:username<| = "";
+
+        //Specify the password here
+        private static $|>FIELD,STATIC:password<| = "";
+
+        public static function |>METHOD,STATIC:getUsername<|() {
+            return self::$|>FIELD,STATIC:username<|;
+        }
+
+        public static function |>METHOD,STATIC:getPassword<|() {
+            return self::$|>FIELD,STATIC:password<|;
+        }
+
+        public function |>METHOD:hello<|() {
+            return this;
+        }
+
+
+    }
+?>

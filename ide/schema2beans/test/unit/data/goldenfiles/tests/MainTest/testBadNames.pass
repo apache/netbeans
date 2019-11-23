@@ -1,0 +1,43 @@
+Calling GenBeans.doIt
+Bean Tree:
+badNames <bad-names> : BadNames
+	elT <elT> : ElT
+		[attr: class CDATA #REQUIRED  : java.lang.String]
+		[attr: package CDATA #IMPLIED  : java.lang.String]
+		property2 <property> : int
+
+Compiling
+Finished compiling: 0
+out: TestBadNames - creating the DOM document
+out: TestBadNames - creating the bean graph
+out: TestBadNames - bean graph created
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <bad-names>
+out:   <el class="c" package="p">
+out:     <property>-9</property>
+out:   </el>
+out: </bad-names>
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <bad-names>
+out:   <el class="c" package="p">
+out:     <property>-9</property>
+out:   </el>
+out: </bad-names>
+out: TestBadNames - BadNames
+out: 
+out:   ElT
+out:   	null
+out: TestBadNames - e=null
+out: TestBadNames - BadNames
+out: 
+out:   ElT
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <bad-names>
+out:   <el class="c" package="p">
+out:     <property>-9</property>
+out:   </el>
+out:   <elT class="other c" package="5">
+out:     <property>0</property>
+out:   </elT>
+out: </bad-names>
+Finished running TestBadNames: 0

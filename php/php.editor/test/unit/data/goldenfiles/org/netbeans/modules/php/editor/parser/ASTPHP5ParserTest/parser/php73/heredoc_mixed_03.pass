@@ -1,0 +1,149 @@
+<testresult testFile='heredoc_mixed_03.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='821'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='822' end='823'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='824' end='825'>
+            <text>[</text>
+        </token>
+        <token id='T_START_HEREDOC' start='825' end='833'>
+            <text>&lt;&lt;&lt; END\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='833' end='837'>
+            <text>    </text>
+        </token>
+        <token id='T_VARIABLE' start='837' end='842'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='842' end='854'>
+            <text>\n    spaces </text>
+        </token>
+        <token id='T_VARIABLE' start='854' end='859'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='859' end='866'>
+            <text>\n\ttabs </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='866' end='867'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='867' end='872'>
+            <text>$test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='872' end='873'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='873' end='902'>
+            <text>\n                spaces tabs </text>
+        </token>
+        <token id='T_DOLLAR_OPEN_CURLY_BRACES' start='902' end='904'>
+            <text>${</text>
+        </token>
+        <token id='T_STRING_VARNAME' start='904' end='908'>
+            <text>test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='908' end='909'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='909' end='910'>
+            <text>\n</text>
+        </token>
+        <token id='T_VARIABLE' start='910' end='915'>
+            <text>$test</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='915' end='956'>
+            <text>\n\t\t        tabs spaces\nnospaces test\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='956' end='959'>
+            <text>END</text>
+        </token>
+        <token id='T_COMMA' start='959' end='960'>
+            <text>,</text>
+        </token>
+        <token id='T_DOLLAR' start='961' end='962'>
+            <text>$</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='962' end='963'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='963' end='967'>
+            <text>test</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='967' end='968'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='968' end='969'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='969' end='970'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='971' end='971'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='970'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='970'>
+                <Assignment start='815' end='969' operator='EQUAL'>
+                    <Variable start='815' end='821' isDollared='true'>
+                        <Identifier start='816' end='821' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='824' end='969' type='NEW'>
+                        <ArrayElement start='825' end='959'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Quote start='825' end='959' type='HEREDOC'>
+                                    <Expressions>
+                                        <Scalar start='833' end='837' type='STRING' value='    '/>
+                                        <Variable start='837' end='842' isDollared='true'>
+                                            <Identifier start='838' end='842' name='test'/>
+                                        </Variable>
+                                        <Scalar start='842' end='854' type='STRING' value='\n    spaces '/>
+                                        <Variable start='854' end='859' isDollared='true'>
+                                            <Identifier start='855' end='859' name='test'/>
+                                        </Variable>
+                                        <Scalar start='859' end='866' type='STRING' value='\n\ttabs '/>
+                                        <ReflectionVariable start='866' end='873'>
+                                            <Variable start='867' end='872' isDollared='true'>
+                                                <Identifier start='868' end='872' name='test'/>
+                                            </Variable>
+                                        </ReflectionVariable>
+                                        <Scalar start='873' end='902' type='STRING' value='\n                spaces tabs '/>
+                                        <ReflectionVariable start='902' end='909'>
+                                            <Scalar start='904' end='908' type='STRING' value='test'/>
+                                        </ReflectionVariable>
+                                        <Scalar start='909' end='910' type='STRING' value='\n'/>
+                                        <Variable start='910' end='915' isDollared='true'>
+                                            <Identifier start='911' end='915' name='test'/>
+                                        </Variable>
+                                        <Scalar start='915' end='956' type='STRING' value='\n\t\t        tabs spaces\nnospaces test\n    '/>
+                                    </Expressions>
+                                </Quote>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='961' end='968'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ReflectionVariable start='961' end='968'>
+                                    <NamespaceName start='963' end='967' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='963' end='967' name='test'/>
+                                    </NamespaceName>
+                                </ReflectionVariable>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

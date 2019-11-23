@@ -1,0 +1,17 @@
+nbproject/
+nbproject/ant-deploy.xml
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+nbproject/project.properties
+nbproject/project.xml
+nbproject/private/
+nbproject/private/private.properties
+src/
+src/conf/
+src/conf/application-client.xml
+src/conf/MANIFEST.MF
+src/java/
+src/java/appclient7/
+src/java/appclient7/Main.java
+test/
+build.xml

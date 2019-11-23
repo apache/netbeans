@@ -1,0 +1,68 @@
+<testresult testFile='arrayDereferencing_05.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='18'>
+            <text>giveMeArray</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='18' end='19'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='19' end='20'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='20' end='21'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='21' end='27'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='27' end='28'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='28' end='29'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='29' end='30'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='31'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='33' end='36'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='36' end='36'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='35'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='31'>
+                <DereferencedArrayAccess start='7' end='30'>
+                    <ArrayDimension start='28' end='30'>
+                        <Index>
+                        </Index>
+                    </ArrayDimension>
+                    <DereferencedArrayAccess start='7' end='28'>
+                        <ArrayDimension start='20' end='28'>
+                            <Index>
+                                <Scalar start='21' end='27' type='STRING' value='"test"'/>
+                            </Index>
+                        </ArrayDimension>
+                        <FunctionInvocation start='7' end='20'>
+                            <FucntionName start='7' end='18'>
+                                <NamespaceName start='7' end='18' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='7' end='18' name='giveMeArray'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </DereferencedArrayAccess>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <EmptyStatement start='33' end='35'/>
+        </Statements>
+    </Program>
+</testresult>

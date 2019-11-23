@@ -1,0 +1,49 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package o.n.m.ws.qaf.rest.patterns;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+
+/**
+ * REST Web Service
+ *
+ * @author jskrivanek
+ */
+@Path("/CcCI1ContainerURI")
+public class CcCI1CClass {
+
+    @Context
+    private UriInfo context;
+
+    /**
+     * Creates a new instance of CcCI1CClass
+     */
+    public CcCI1CClass() {
+    }
+
+    /**
+     * Retrieves representation of an instance of o.n.m.ws.qaf.rest.patterns.CcCI1CClass
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Produces("application/json")
+    public String getJson() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Sub-resource locator method for {CcCI1URI}
+     */
+    @Path("{CcCI1URI}")
+    public CcCI1Cl getCcCI1Cl(@PathParam("CcCI1URI") String CcCI1URI) {
+        return CcCI1Cl.getInstance(CcCI1URI);
+    }
+}

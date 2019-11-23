@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Create Data Source Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.common.DatasourceCustomizer" name="org.netbeans.modules.j2ee.common.DatasourceCustomizer"></a></p>
+<div id="NBCSH4664"><!-- infolevel="all" infotype="General" --><a id="sthref672" name="sthref672"></a>
+<h1>Create Data Source Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>This dialog box enables you to create a data source (JDBC resource) which provides applications with a means of connecting to a database. To connect to a database, the JNDI name of the data source is used to locate the associated database. Typically, the administrator creates a data source for each database accessed by the applications deployed in a domain. (However, more than one data source can be created for a database.)</p>
+<p>To create a data source to use in your application, you need to supply the following:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t38">Element</th>
+<th align="left" valign="bottom" id="r1c2-t38">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t38" headers="r1c1-t38">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r2c1-t38 r1c2-t38">The JNDI name is the unique name for the data source. The JNDI name of the data source must also be registered on the target server.
+<p><b>Note</b>: Because the data source is a JDBC resource, the JNDI name is expected in the java:comp/env/jdbc subcontext. For example, for a database name MyDatabase, specify jdbc/MyDatabase as the JNDI name.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t38" headers="r1c1-t38">
+<p>Database Connection</p>
+</td>
+<td align="left" headers="r3c1-t38 r1c2-t38">Choose the database connection to your database from the drop-down menu. The data source refers to a specific database connection. The drop-down menu contains the database connections listed under the Databases node in the Services window. Choose <b>New Database Connection</b> to create a new database connection.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you create a new data source for your application, the data source description is added to <code dir="ltr">glassfish-resources.xml</code> under the Server Resources node of your project in the Projects window. If you are deploying to the GlassFish server, the data source is registered with the server upon deployment.</p>
+<a id="NBCSH4667" name="NBCSH4667"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1821">
+<param name="text" value="<html><u>&quot;Setting Up a Database Connection</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+"</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

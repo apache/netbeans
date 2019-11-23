@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns="http://xml.netbeans.org/examples/Employee"
+    targetNamespace="http://xml.netbeans.org/examples/Employee"
+    xmlns="http://xml.netbeans.org/examples/Employee"
+    elementFormDefault="qualified">
+
+	<xs:complexType name="ErrorsType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">A collection of errors that occurred during the processing of a message.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Error" type="ErrorType" maxOccurs="99"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Standard way to indicate that an error occurred during the processing of an OTA message</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="FreeTextType">
+				<xs:attribute name="Type" type="OTA_CodeType" use="required">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">The Error element MUST contain the Type attribute that uses a recommended set of values to indicate the error type. The validating XSD can expect to accept values that it has NOT been explicitly coded for and process them by using Type ="Unknown".  Refer to OTA Code List Error Warning Type (EWT).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attributeGroup ref="ErrorWarningAttributeGroup"/>
+				<xs:attribute name="NodeList" type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">An XPath expression that selects all the nodes whose data caused this error.  Further, this expression should have an 	additional contraint which contains the data of the node.  This will provide the offending data back to systems that cannot maintain the original message. </xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="FreeTextType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Textual information to provide descriptions and/or additional information.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attributeGroup ref="LanguageGroup"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:attributeGroup name="LanguageGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifies language.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Language" type="xs:language" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">Language identification.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>    
+	<xs:simpleType name="OTA_CodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used for codes in the OTA code tables. Possible values of this pattern are 1, 101, 101.EQP, or 101.EQP.X.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9A-Z]{1,3}(\.[A-Z]{3}(\.X){0,1}){0,1}"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:simpleType name="StringLength1to32">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used for Character Strings, length 1 to 32</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringLength1to64">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used for Character Strings, length 1 to 64</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="64"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringLength0to64">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used for Character Strings, length 0 to 64</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="64"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringLength1to16">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used for Character Strings, length 1 to 16</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:attributeGroup name="ErrorWarningAttributeGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Used to identify an application error by either text, code, or by an online description and also to give the status, tag, and/or identification of the record that may have caused the error.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ShortText" type="StringLength1to64" use="optional"/>
+		<xs:attribute name="Code" type="OTA_CodeType" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">If present, this refers to a table of coded values exchanged between applications to identify errors or warnings. Refer to OTA Code List Error Codes (ERR).</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DocURL" type="xs:anyURI" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">If present, this URL refers to an online description of the error that occurred.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Status" type="StringLength1to64" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">If present, recommended values are those enumerated in the OTA_ErrorRS, (NotProcessed | Incomplete | Complete | Unknown) however, the data type is designated as string data, recognizing that trading partners may identify additional status conditions not included in the enumeration.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Tag" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="RecordID" type="StringLength1to32" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>
+	
+	<xs:element name="OTA_TravelItineraryRS">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">This message is in response to a read RQ for a travel itinerary.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="Success" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="en">Request was successful.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Warnings" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="en">Warnings associated with a successful request/response.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TravelItinerary" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="en">Requested itinerary information.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:element name="Errors" type="ErrorsType">
+					<xs:annotation>
+						<xs:documentation xml:lang="en">Request was not successful - error information.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="CancellationStatus">
+            <xs:complexType>
+                <xs:all>
+                    <xs:element name="date" type="xs:date"/>
+                    <xs:element name="status" type="xs:NMTOKEN"/>
+                </xs:all>
+            </xs:complexType>
+	</xs:element>
+        
+	<xs:element name="CancellationStatus2" type="xs:string"/>
+              
+        <xs:element name="MyAddress" type="AddrType"/>
+        
+        <xs:complexType name="AddrType">
+           <xs:annotation>
+              <xs:documentation xml:lang="en">Street name; number on treet.
+              </xs:documentation>
+           </xs:annotation>
+           <xs:simpleContent>
+              <xs:extension base="StringLength0to64">
+                 <xs:attribute name="PO_Box" type="StringLength1to16">
+                    <xs:annotation>
+                       <xs:documentation xml:lang="en">Post Office Box number.
+                       </xs:documentation>
+                    </xs:annotation>
+                 </xs:attribute>
+              </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+        
+</xs:schema>
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:element name="new"></xsd:element>
+
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:po="http://www.example.com/PO1"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="unqualified"
+        attributeFormDefault="unqualified">
+
+</xsd:schema>

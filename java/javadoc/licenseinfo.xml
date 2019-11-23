@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/javadoc/resources/showSource.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/JavadocSettings32.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/list_html.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/annotation_type.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/JavaDoc.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/alphaSort.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/list_only.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/wait.png</file>
+        <file>src/org/netbeans/modules/javadoc/resources/error.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/typeSort.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/enum.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/exception.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/pending.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/notFound.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/JavadocSettings.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/searchDoc.gif</file>
+        <file>src/org/netbeans/modules/javadoc/resources/refSort.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/ok.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/protected.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/error.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/package.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/public.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/private.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/missing.gif</file>
+        <file>src/org/netbeans/modules/javadoc/comments/resources/missing.psd</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

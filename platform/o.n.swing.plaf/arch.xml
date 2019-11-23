@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.24"
+  author="tboudreau@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+    <answer id="arch-what">
+	The plaf library consists primarily of code that used to be in core.  What it does:
+        <ul>
+	<li>Installs a custom look and feel if a custom look and feel class is passed to it</li>
+        <li>Sets the correct fonts in the Swing UIDefaults if a custom fontsize is desired for the application's UI</li>
+        <li>Loads a UI theme if a URL for the theme file (no format changes since NetBeans 3.4) is passed to it</li>
+        <li>Installs custom UI keys and values used by other components of NetBeans, such as colors and UI delegate class names used by
+   	    other parts NetBeans.  Examples of these:
+             <ul>
+               <li>Tab control UI delegate class name, depending on the look and feel, for the window system</li>
+               <li>Definitions of colors which the tab control, property sheet and output window will use, if present in
+                   UIDefaults, to color themselves in accordance with the UI spec for them on a given look and feel</li>
+               <li>Custom border implementations NetBeans uses for scroll panes to reduce &quot;border-buildup&quot;</li>
+               <li>A custom implementation of ToolbarUI which NetBeans uses for its toolbars, and a custom UI for 
+                   toolbar buttons which sizes them correctly (GTK and Aqua only, currently)</li>
+               <li>Insets definition for the editor scrollbar, used to get the height of the upper and lower button of the scrollbar
+                   for purposes of the Error Stripe. The appropriate key value is "Nb.Editor.ErrorStripe.ScrollBar.Insets".
+               </li>
+             </ul>
+         </li>
+         <li>Compensate for missing elements on some (GTK) look and feels, which standard Swing code expects to be
+             present, i.e. UIManager.getColor (&quot;control&quot;), to enable older code to run unmodified on newer
+             look and feels.</li>
+         </ul>
+    
+
+    Its API consists of a single method, org.netbeans.swing.plaf.Startup.run (Class lookAndFeel, int fontSize, URL themeFile),
+    which should be called early in NetBeans startup sequence by core, to initialize UIDefaults values before any main window
+    GUI is constructed.  It provides a minimal SPI in the form of the abstract class LFCustoms, which an alternate look and
+    feel could use to provide lists of keys and values which should be installed into UIDefaults, via the mechanism documented
+    in the documentation for LFCustoms.
+
+        <api name="PlafAPI" type="export" category="friend" url="@TOP@/org/netbeans/swing/plaf/package-summary.html" group="java"/>
+    </answer>
+
+
+
+<!--
+        <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/i18n-branding.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+    <answer id="compat-i18n">
+        N/A - provides no user visible text.
+    </answer>
+
+
+
+<!--
+        <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+    <answer id="compat-standards">
+       N/A
+    </answer>
+
+
+
+<!--
+        <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+    <answer id="compat-version">
+        N/A; no persisted settings.
+    </answer>
+
+
+
+<!--
+        <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+    <answer id="dep-jre">
+        1.4
+    </answer>
+
+
+
+<!--
+        <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+    <answer id="dep-jrejdk">
+        JRE
+    </answer>
+
+
+
+<!--
+        <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name=&quot;identification&quot; type=&quot;import or export&quot; category=&quot;stable&quot; url=&quot;where is the description&quot; /></code>
+            </hint>
+        </question>
+-->
+    <answer id="dep-nb">
+        None, it is a standalone library that could be used in other
+        applications.
+    </answer>
+
+
+
+<!--
+        <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+    <answer id="dep-non-nb">
+        None.
+    </answer>
+
+
+
+<!--
+        <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+    <answer id="dep-platform">
+        Platform independent.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-jar">
+        Just a JAR.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+    <answer id="deploy-nbm">
+        Presumably yes.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+    <answer id="deploy-packages">
+        No.  There is one root package containing the API, and several per-look-and-feel packages
+        containing implementations of standard Swing UI delegates (such as a custom toolbar UI for
+        Aqua and GTK look and feels), and custom implementations of Border and such.  Swing's mechanism
+        for loading a UI delegate is by fetching the UI class name from UIDefaults and creating an 
+        instance of that class, so the UI delegates must be publicly accessible for Swing to be able
+        to load them.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-shared">
+        It is a library, not a module, because its code must run very early in the startup sequence,
+        before other GUI is constructed, so that all GUIs will have the correct colors, borders, UI
+        delegates, etc.  All of this was formerly done directly in core.
+    </answer>
+
+
+
+<!--
+        <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+    <answer id="exec-classloader">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+    <answer id="exec-component">
+        For testing purposes only, the system property &quot;nb.forceui&quot; can be used to
+        load NetBeans customizations for a different look and feel (such as loading the custom
+        Aqua UI delegates on Windows).  The only purpose for this flag is to enable 
+        development/bug fixing and minimal testing when a developer is working on a machine
+        that does not support the requested look and feel, and they want to be sure they
+        have not broken anything.
+    </answer>
+
+
+
+<!--
+        <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the &quot;contract&quot; as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+    <answer id="exec-privateaccess">
+        Swing will resolve and load UI classes which are added to UIDefaults, which are defined in
+        this library, when a component needs a UI delegate.
+    </answer>
+
+
+
+<!--
+        <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name=&quot;id&quot; category=&quot;private&quot; >
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property>            
+            </pre>
+            </hint>
+        </question>
+-->
+    <answer id="exec-property">
+        <api name="LookAndFeelClassName" category="devel" group="property" type="export">
+            The module initializes proper Look&amp;Feel. The decision is done
+            based on various inputs including what has been specified on command
+            line. To allow easier branding for those who build applications
+            on top of NetBeans, there is key <code>LookAndFeelClassName</code>
+            in <code>org.netbeans.swing.plaf.Bundle</code>
+            bundle which can be branded to actual name of the L&amp;F class.
+            The module will decide which sets of customizations to load based on
+            the chosen look and feel.
+        </api>
+
+        <api name="LookAndFeelCustomsClassName" category="devel" group="property" type="export">
+            The module adds some UIManager keys and values to provide e.g. special
+            border for main window toolbar or UI classes for tab control headers.
+            By default the proper subclass of LFCustoms is derived from current
+            Look and Feel name. Applications building on top of NetBeans can provide
+            their own look and feel customizations by branding <code>LookAndFeelCustomsClassName</code>
+            key in <code>org.netbeans.swing.plaf.Bundle</code>
+            bundle.
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+    <answer id="exec-reflection">
+        If org.openide.util.Utilities is not resolvable, it will use ImageIO.read() to
+        load images.
+    </answer>
+
+
+
+<!--
+        <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard?
+        </question>
+-->
+    <answer id="format-clipboard">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+        </question>
+-->
+    <answer id="format-dnd">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-types">
+            Which file formats (if any) does your code read or write on disk?
+        </question>
+-->
+    <answer id="format-types">
+        NetBeans theme support (formerly core.NbTheme) has been moved into this library,
+        so it will read Metal LF special theme files.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+    <answer id="lookup-lookup">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-register">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-remove">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+    <answer id="perf-exit">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+    <answer id="perf-huge_dialogs">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+    <answer id="perf-limit">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+    <answer id="perf-mem">
+        A marginal amount of memory for String, Border, Insets and Color objects added to UIDefaults.
+        For components which install a very large number of these, the keys and values are bootstrapped
+        into UIDefaults the first time the component's UI class is requested, by using a subclass
+        of UIDefaults.LazyValue
+    </answer>
+
+
+
+<!--
+        <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+    <answer id="perf-menus">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+    <answer id="perf-progress">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+    <answer id="perf-scale">
+        None.
+    </answer>
+
+
+
+<!--
+        <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+    <answer id="perf-startup">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+    <answer id="perf-wakeup">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+    <answer id="resources-file">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+    <answer id="resources-layer">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+    <answer id="resources-mask">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+    <answer id="resources-read">
+        No.
+    </answer>
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+    <answer id="exec-introspection">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+    <answer id="exec-process">
+        No.
+    </answer>
+
+
+<answer id="arch-overall">
+N/A
+</answer>
+
+<answer id="arch-quality">
+Some unit tests may be provided in the future; the per-look-and-feel classes are simply
+a mechanism to provide mainly a list of strings to put into UIDefaults - they could (and may be
+eventually) be replaced by XML theme files.
+</answer>
+
+<answer id="arch-time">
+NetBeans 4.0 feature freeze
+</answer>
+
+<answer id="arch-usecases">
+Used by NetBeans to customize the UI to conform to UI design specifications;  can be used by
+third parties who are employing parts of the NetBeans platform in their applications, such as
+the windowing system.
+</answer>
+
+
+<answer id="deploy-dependencies">
+Components such as the window system, which use values defined here, will behave in a reasonable
+way if those values are not defined.  However, it is preferable that they declare a runtime
+dependency on the plaf library.
+</answer>
+
+<answer id="exec-threading">
+First come first served - the single API method is meant to be called once (this is enforced) by
+an application on startup.  It does not matter on which thread; what is important is that the
+application do so before constructing its main GUI.
+</answer>
+
+<answer id="perf-spi">
+N/A
+</answer>
+
+
+<answer id="security-grant">
+No.
+</answer>
+
+
+<answer id="security-policy">
+No.
+</answer>
+
+</api-answers>

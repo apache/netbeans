@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="extide/o.apache.tools.ant.module" default="build" basedir=".">
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="build-init" depends="projectized.build-init">
+        <ant dir="external" target="unzip"/>
+        <property name="src-bridge.cp" value="${module.classpath}:${src-bridge.cp.extra}"/>
+    </target>
+
+    <target name="compile-bridge" depends="init,compile">
+        <mkdir dir="build/bridge-classes"/>
+        <depend srcdir="src-bridge" destdir="build/bridge-classes" cache="build/depcache-bridge">
+            <classpath>
+                <path path="${src-bridge.cp}"/>
+            </classpath>
+        </depend>
+        <javac srcdir="src-bridge" destdir="build/bridge-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.6" target="1.6" includeantruntime="false">
+            <classpath>
+                <path path="${src-bridge.cp}"/>
+            </classpath>
+            <compilerarg line="${javac.compilerargs}"/>
+        </javac>
+        <copy todir="build/bridge-classes">
+            <fileset dir="src-bridge" excludes="${jar-excludes}"/>
+        </copy>
+    </target>
+
+    <target name="jar-bridge" depends="compile-bridge">
+        <mkdir dir="${cluster}/ant/nblib"/>
+        <nb-ext-jar jarfile="${cluster}/ant/nblib/bridge.jar" compress="false">
+            <fileset dir="build/bridge-classes"/>
+        </nb-ext-jar>
+    </target>
+
+    <target name="netbeans-extra" depends="jar-bridge">
+        <mkdir dir="${cluster}/ant/lib"/>
+        <copy todir="${cluster}/ant/lib">
+            <fileset dir="external/lib"/>
+        </copy>
+        <unzip dest="${cluster}/ant">
+            <fileset dir="external">
+                <include name="ant-misc-*.zip"/>
+            </fileset>
+        </unzip>
+    </target>
+
+    <target name="test-build" depends="jar-bridge,projectized-common.test-build"/>
+
+    <target name="jnlp" depends="netbeans,-jnlp-init">
+        <property name="dir" location="${jnlp.dest.dir}/org-apache-tools-ant-module"/>
+        <mkdir dir="${dir}"/>
+        <copy todir="${dir}" flatten="true">
+            <fileset dir="${cluster}">
+                <include name="${module.jar}"/>
+                <include name="ant/patches/*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${dir}">
+            <fileset dir="${cluster}">
+                <include name="ant/lib/*.jar"/>
+            </fileset>
+            <mapper type="glob" from="ant${file.separator}lib${file.separator}*.jar" to="apache-*-1.10.4.jar"/>
+        </copy>
+        <copy file="${cluster}/ant/nblib/bridge.jar" tofile="${dir}/org-apache-tools-ant-module-bridge.jar"/>
+        <!-- XXX ought to only do this in case jnlp.sign.jars=true -->
+        <signjar alias="${jnlp.signjar.alias}" storepass="${jnlp.signjar.password}" keystore="${jnlp.signjar.keystore}">
+            <fileset dir="${dir}">
+                <include name="org-apache-tools-ant-module.jar"/>
+                <include name="org-apache-tools-ant-module-bridge.jar"/>
+                <include name="apache-ant*.jar"/>
+            </fileset>
+        </signjar>
+        <pathconvert property="ant-jar-resources" pathsep="'/&gt;&#10;    &lt;jar href='org-apache-tools-ant-module/">
+            <path>
+                <fileset dir="${dir}">
+                    <include name="apache-ant*.jar"/>
+                </fileset>
+            </path>
+            <mapper type="glob" from="${dir}${file.separator}*" to="*"/>
+        </pathconvert>
+        <echo file="${jnlp.dest.dir}/org-apache-tools-ant-module.jnlp"><![CDATA[<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN" "http://java.sun.com/dtd/JNLP-6.0.dtd">
+<jnlp spec='1.0+' codebase='${jnlp.codebase}'>
+  <information>
+   <title>Apache Ant Integration</title>
+   <vendor>NetBeans</vendor>
+   <description kind='one-line'>Bundles Apache Ant.</description>
+   <description kind='short'>This module bundles the Apache Ant build tool.</description>
+  </information>
+  <security><all-permissions/></security>
+  <resources>
+    <jar href='org-apache-tools-ant-module/org-apache-tools-ant-module.jar'/>
+    <jar href='org-apache-tools-ant-module/org-apache-tools-ant-module-bridge.jar'/>
+    <jar href='org-apache-tools-ant-module/${ant-jar-resources}'/>
+  </resources>
+  <component-desc/>
+</jnlp>
+            ]]>
+        </echo>
+    </target>
+
+    <!-- For use when making new releases: -->
+    <target name="release-helper" depends="clean" description="Help do some things useful when bundling a new Ant release.">
+        <ant dir="external" target="clean"/>
+        <condition property="all.defined">
+            <and>
+                <isset property="release.version"/>
+                <available file="${release.path}" type="dir"/>
+            </and>
+        </condition>
+        <fail unless="all.defined">
+            You need to set the following properties first:
+            release.version: version of Ant being bundled, e.g. "1.6"
+            release.path: full path to the Ant binary distribution, e.g. "/tmp/apache-ant-1.6.0"
+        </fail>
+        <property name="orig.manual" location="${release.path}/manual"/>
+        <echo>2.  Creating the Ant manual from ${orig.manual}...</echo>
+        <property name="online.manual" location="build/release-work/online-manual"/>
+        <delete dir="${online.manual}"/>
+        <mkdir dir="${online.manual}"/>
+        <copy todir="${online.manual}">
+            <fileset dir="${orig.manual}">
+                <!-- Included as a separate Javadoc mount: -->
+                <exclude name="api/"/>
+            </fileset>
+        </copy>
+        <property name="ant-docs" location="../o.apache.tools.ant.module.docs"/>
+        <property name="ant-docs.zip" location="${ant-docs}/external/ant-docs-${release.version}.zip"/>
+        <zip zipfile="${ant-docs.zip}" compress="true">
+            <fileset dir="${online.manual}"/>
+        </zip>
+        <property name="here" location="."/>
+        <property name="ant-libs.zip" location="external/ant-libs-${release.version}.zip"/>
+        <echo>3.  Creating ${ant-libs.zip}...</echo>
+        <zip zipfile="${ant-libs.zip}" compress="true">
+            <fileset dir="${release.path}/lib">
+                <include name="ant*.jar"/>
+            </fileset>
+        </zip>
+        <property name="ant-misc.zip" location="external/ant-misc-${release.version}.zip"/>
+        <echo>4.  Creating ${ant-misc.zip}...</echo>
+        <zip zipfile="${ant-misc.zip}" compress="true">
+            <fileset dir="${release.path}">
+                <include name="bin/"/>
+                <include name="etc/"/>
+            </fileset>
+        </zip>
+        <echo>Now some (currently) manual steps for you:
+5.  Mention that the Ant version is ${release.version} in all files in ${here}, e.g.:
+    - ${ant-docs}/antsrc/MakeManual.java
+    - ${ant-docs}/src/org/apache/tools/ant/module/docs/Bundle.properties
+    - ../java.helpset/javahelp/org/netbeans/modules/java/helpset/docs/ant/*.html
+    - nbproject/project.properties
+    - ${ant-docs}/nbproject/project.properties
+    - build.xml
+    - arch.xml
+    - external/build.xml
+    and rename external/ant-*-license.txt (and update the version numbers mentioned in it)
+    and fix external/binaries-list
+    (last two steps also in ${ant-docs}/external)
+6.  Run: ant -f ${ant-docs}/build.xml preview-javahelp
+    You can ignore links to api/org/apache/... which will be broken, as well as a few other things.
+    But for real problems in the HTML, commit fixes to docs/manual/ in the ant.apache.org SVN trunk.
+    Sanity-check the helpset and adjust ${ant-docs}/antsrc/MakeManual.java as needed.
+7.  Increase spec versions in nbproject/project.properties and ${ant-docs}/manifest.mf.
+8.  Test everything, including at least:
+    ant -f ${here}/build.xml -Dtest-unit-sys-prop.ignore.random.failures=true clean netbeans test-unit
+    ant -f ${ant-docs}/build.xml clean netbeans
+    ant -f ${here}/../java.project/build.xml -Dtest-unit-sys-prop.ignore.random.failures=true clean test-unit
+    ant -f ${here}/../java.j2seproject/build.xml -Dtest-unit-sys-prop.ignore.random.failures=true clean test-unit
+    ant -f ${here}/../build.xml commit-validation
+9.  Submit a patch for https://svn.apache.org/repos/asf/ant/core/branches/ANT_SITE/xdocs/external.xml
+    mentioning that the bundled version in NB is now ${release.version}.
+10. Edit these instructions in build.xml according to anything you had to do differently.
+
+After that you should be done!
+        </echo>
+    </target>
+
+</project>

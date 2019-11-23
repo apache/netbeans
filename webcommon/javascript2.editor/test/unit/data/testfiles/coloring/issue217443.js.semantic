@@ -1,0 +1,31 @@
+
+var |>GLOBAL:areas<| = [];
+var |>GLOBAL:languages<| = [];
+var |>GLOBAL:components<| = [];
+
+  
+function |>METHOD:countComponentTables<|() { 
+    |>GLOBAL:$<|(".sortable").each(function() { // each table
+        var |>LOCAL_VARIABLE_DECLARATION:index<| = 0;
+        var |>LOCAL_VARIABLE_DECLARATION:sums<| = new Array();
+        var |>LOCAL_VARIABLE_DECLARATION:id<| = |>GLOBAL:$<|(this).attr("id");
+        |>GLOBAL:$<|(this).find("thead th").each(function() {
+            |>LOCAL_VARIABLE:index<|++;
+            if (|>LOCAL_VARIABLE:index<| > 1 && (!|>GLOBAL:$<|(this).attr("id") || |>GLOBAL:$<|(this).attr("id").indexOf("dummy") > -1))
+                |>LOCAL_VARIABLE:sums<|.push(sumOfColumns(|>LOCAL_VARIABLE:id<|, |>LOCAL_VARIABLE:index<|, true));
+
+        });
+
+        var |>LOCAL_VARIABLE_DECLARATION:tfoot<| = "<tfoot><tr class=\"bug_total_row\"><td>Total</td>";
+        for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < |>LOCAL_VARIABLE:sums<|.length; |>LOCAL_VARIABLE:i<|++) {
+            |>LOCAL_VARIABLE:tfoot<| += "<td>" + |>LOCAL_VARIABLE:sums<|[|>LOCAL_VARIABLE:i<|] + "</td>";
+        }
+
+        |>GLOBAL:$<|(this).append(|>LOCAL_VARIABLE:tfoot<| + "</tr></tfoot>");
+
+
+    });
+
+
+}
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="csl_anttask" default="jars" basedir=".">
+  <import file="../../../nbbuild/default-properties.xml"/>
+
+  <target name="jars" depends="compile">
+    <mkdir dir="build"/>
+	<nb-ext-jar jarfile="build/cslanttask.jar"
+	  basedir="build/classes"
+	  compress="false">
+	</nb-ext-jar>
+  </target>
+
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" target="1.6" source="1.6" >
+	  <classpath>
+                <!-- cmdline Ant -->
+                <pathelement location="${ant.core.lib}"/>
+                <!-- Ant in NB -->
+                <!-- Note: in NB 4.0, ${ant.home}/lib/ant.jar will work as is -->
+                <pathelement path="${netbeans.library.path}"/>
+                <pathelement path="${ant.home}/lib/ant.jar"/>
+                <pathelement location="${nbantext.jar}"/>
+		<!--<pathelement location="${schema2beans.dir}/modules/org-netbeans-modules-schema2beans.jar" />-->
+		<!--<pathelement location="${nb_all}/schema2beans/dev/schema2beansdev.jar" />-->
+	  </classpath>
+	</javac>
+  </target>
+
+  <target name="clean">
+    <delete dir="build" quiet="true" />
+  </target>
+
+</project>

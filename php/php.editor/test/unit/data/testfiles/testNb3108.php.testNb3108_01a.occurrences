@@ -1,0 +1,2 @@
+    private $|>MARK_OCCURRENCES:pro^perty<| = [
+        $instance2 = new $this->|>MARK_OCCURRENCES:property<|[$this->getIndex()];

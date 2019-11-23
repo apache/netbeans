@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://stiperez:7070/axis/services/Sumador" 
+    xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+    xmlns:impl="http://stiperez:7070/axis/services/Sumador" 
+    xmlns:intf="http://stiperez:7070/axis/services/Sumador" 
+    xmlns:tns1="http://serv.wsutils.batz.com" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns="http://schemas.xmlsoap.org/wsdl/">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://serv.wsutils.batz.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <complexType name="Operacion">
+    <sequence>
+     <element name="actor" nillable="true" type="xsd:string"/>
+     <element name="numPri" type="xsd:int"/>
+     <element name="numSec" type="xsd:int"/>
+     <element name="result" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" 
+  targetNamespace="http://stiperez:7070/axis/services/Sumador" 
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns1="http://serv.wsutils.batz.com" >
+      
+   <import namespace="http://serv.wsutils.batz.com"/>
+   
+   <element name="od" type="impl:Operacion"/>
+   <element name="sumaReturn" type="tns1:Operacion"/>
+   
+   <complexType name="Operacion">
+    <sequence>
+     <element name="actor" nillable="true" type="xsd:string"/>
+     <element name="numPri" type="xsd:int"/>
+     <element name="numSec" type="xsd:int"/>
+     <element name="result" type="xsd:int"/>
+    </sequence>
+   </complexType>
+
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="sumaRequest">
+
+      <wsdl:part element="impl:od" name="od"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sumaResponse">
+
+      <wsdl:part element="impl:sumaReturn" name="sumaReturn"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="Sumador">
+
+      <wsdl:operation name="suma" parameterOrder="od">
+
+         <wsdl:input message="impl:sumaRequest" name="sumaRequest"/>
+
+         <wsdl:output message="impl:sumaResponse" name="sumaResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="SumadorSoapBinding" type="impl:Sumador">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="suma">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sumaRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sumaResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="SumadorService">
+
+      <wsdl:port binding="impl:SumadorSoapBinding" name="Sumador">
+
+         <wsdlsoap:address location="http://stiperez:7070/axis/services/Sumador"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

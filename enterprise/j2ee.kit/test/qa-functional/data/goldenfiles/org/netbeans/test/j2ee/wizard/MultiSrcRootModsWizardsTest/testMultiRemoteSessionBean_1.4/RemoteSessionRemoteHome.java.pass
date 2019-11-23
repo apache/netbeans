@@ -1,0 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package multi.ejbs.remote;
+
+import java.rmi.RemoteException;
+import javax.ejb.CreateException;
+import javax.ejb.EJBHome;
+
+/**
+ *
+ * @author jskrivanek
+ */
+public interface RemoteSessionRemoteHome extends EJBHome {
+    
+    multi.ejbs.remote.RemoteSessionRemote create() throws CreateException, RemoteException;
+
+}

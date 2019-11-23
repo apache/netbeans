@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.web.core.syntax/2
+OpenIDE-Module-Implementation-Version: 2
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/web/core/syntax/resources/layer.xml
+

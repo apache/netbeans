@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+
+<shape-document
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org diagram.xsd">
+
+    <container name="container1"></container>
+    
+</shape-document>

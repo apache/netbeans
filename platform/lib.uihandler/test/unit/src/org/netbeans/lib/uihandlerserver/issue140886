@@ -1,0 +1,15 @@
+<record>
+  <date>2008-07-19T21:32:52</date>
+  <millis>1216492372836</millis>
+  <logger>org.netbeans.ui.actions.editor</logger>
+  <level>FINE</level>
+  <thread>null</thread>
+  <message>UI_ACTION_EDITOR</message>
+  <key>UI_ACTION_EDITOR</key>
+  <catalog>&lt;null&gt;</catalog>
+  <param>java.awt.event.ActionEvent[ACTION_PERFORMED,cmd=^C,when=1216492372627,modifiers=Ctrl] on org.openide.text.QuietEditorPane[,0,0,845x251,layout=javax.swing.plaf.basic.BasicTextUI$UpdateHandler,alignmentX=0.0,alignmentY=0.0,border=javax.swing.plaf.basic.BasicBorders$MarginBorder@8969c3,flags=296,maximumSize=,minimumSize=,preferredSize=,caretColor=java.awt.Color[r=0,g=0,b=0],disabledTextColor=javax.swing.plaf.ColorUIResource[r=184,g=207,b=229],editable=true,margin=java.awt.Insets[top=0,left=0,bottom=0,right=0],selectedTextColor=sun.swing.PrintColorUIResource[r=51,g=51,b=51],selectionColor=javax.swing.plaf.ColorUIResource[r=184,g=207,b=229],kit=org.netbeans.modules.properties.syntax.PropertiesKit@db6d50,typeHandlers=]</param>
+  <param>java.awt.event.ActionEvent[ACTION_PERFORMED,cmd=^C,when=1216492372627,modifiers=Ctrl] on org.openide.text.QuietEditorPane[,0,0,845x251,layout=javax.swing.plaf.basic.BasicTextUI$UpdateHandler,alignmentX=0.0,alignmentY=0.0,border=javax.swing.plaf.basic.BasicBorders$MarginBorder@8969c3,flags=296,maximumSize=,minimumSize=,preferredSize=,caretColor=java.awt.Color[r=0,g=0,b=0],disabledTextColor=javax.swing.plaf.ColorUIResource[r=184,g=207,b=229],editable=true,margin=java.awt.Insets[top=0,left=0,bottom=0,right=0],selectedTextColor=sun.swing.PrintColorUIResource[r=51,g=51,b=51],selectionColor=javax.swing.plaf.ColorUIResource[r=184,g=207,b=229],kit=org.netbeans.modules.properties.syntax.PropertiesKit@db6d50,typeHandlers=]</param>
+  <param>org.netbeans.editor.BaseKit$CopyAction[copy-to-clipboard]</param>
+  <param>org.netbeans.editor.BaseKit$CopyAction@15a8ee2</param>
+  <param>copy-to-clipboard</param>
+</record>

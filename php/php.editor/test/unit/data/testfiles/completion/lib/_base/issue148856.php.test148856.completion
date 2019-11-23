@@ -1,0 +1,4 @@
+Code completion result for source line:
+test148856Func((1 + 1) * test148856Func(1))->|function_name();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     function_name()                 [PUBLIC]   Test148856Class

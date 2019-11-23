@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.mercurial
+OpenIDE-Module-Layer: org/netbeans/modules/mercurial/resources/hg-layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/mercurial/Bundle.properties
+OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help

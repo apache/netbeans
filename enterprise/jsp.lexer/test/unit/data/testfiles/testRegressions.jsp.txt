@@ -1,0 +1,3 @@
+.t.e.s.t. jsp end tag with a dot - issue #150183
+<jsp:directive.include file="../../test.css"></jsp:directive.include>
+.e.o.f.

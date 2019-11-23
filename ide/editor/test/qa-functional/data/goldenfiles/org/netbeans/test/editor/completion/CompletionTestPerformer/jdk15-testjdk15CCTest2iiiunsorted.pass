@@ -1,0 +1,4 @@
+public abstract void add(int index, String element)
+public abstract boolean add(String o)
+public abstract boolean addAll(int index, Collection<String> c)
+public abstract boolean addAll(Collection<String> c)

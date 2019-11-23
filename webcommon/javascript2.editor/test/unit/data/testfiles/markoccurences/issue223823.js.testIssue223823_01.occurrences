@@ -1,0 +1,2 @@
+var watch = function(scope, attr, name, |>MARK_OCCURRENCES:defau^ltVal<|) {
+        scope[name] = |>MARK_OCCURRENCES:defaultVal<|;

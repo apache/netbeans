@@ -1,0 +1,6 @@
+class |>MARK_OCCURRENCES:Point<| {
+     * @param {|>MARK_OCCURRENCES:Point<|} a 
+     * @param {|>MARK_OCCURRENCES:Point<|} b 
+const p1 = new |>MARK_OCCURRENCES:Po^int<|(5, 5);
+const p2 = new |>MARK_OCCURRENCES:Point<|(10, 10);
+console.log(|>MARK_OCCURRENCES:Point<|.distance(p1, p2)); 

@@ -1,0 +1,2 @@
+ * @param {|>MARK_OCCURRENCES:requ^estCallback<|} cb - The callback that handles the response.
+ * @callback |>MARK_OCCURRENCES:requestCallback<|

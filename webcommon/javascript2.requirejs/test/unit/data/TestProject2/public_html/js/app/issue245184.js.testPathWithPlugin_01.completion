@@ -1,0 +1,17 @@
+Code completion result for source line:
+'text!|app/issue245156',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       app                                        
+FILE       app                                        
+FILE       issue245156.js                             
+FILE       issue249282.js                             
+FILE       js                                         
+FILE       moduleApp1.js                              
+FILE       moduleLib1.js                              
+FILE       moduleLib2.js                              
+FILE       oj                                         
+FILE       ojs                                        
+FILE       piknic                                     
+FILE       proto                                      
+FILE       require.js                                 

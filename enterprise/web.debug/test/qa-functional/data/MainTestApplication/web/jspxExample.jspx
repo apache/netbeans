@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns:tags="urn:jsptagdir:/WEB-INF/tags"
+          version="2.0">
+
+    <!-- to change the content type or response encoding change the following line -->
+    <jsp:directive.page contentType="text/xml;charset=UTF-8"/>
+
+    <jsp:element name="books">
+        <jsp:attribute name="attr">value</jsp:attribute>
+        <tags:tagxExample title="Whom The Bells Tolls" author="Ernest Hamingway"/>
+    </jsp:element>
+
+</jsp:root>

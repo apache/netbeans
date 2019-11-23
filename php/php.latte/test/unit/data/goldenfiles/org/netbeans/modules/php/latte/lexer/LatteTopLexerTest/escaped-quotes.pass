@@ -1,0 +1,5 @@
+token #0 T_HTML [<a n:href=']
+token #1 T_LATTE [Presenter:foo "bar\'bar"]
+token #2 T_HTML ['>Test</a>\n<a n:href="]
+token #3 T_LATTE [Presenter:foo 'bar\"bar' => 12, 'id' => 5]
+token #4 T_HTML [">Test</a>]

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN" "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd">
+<glassfish-ejb-jar>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>TestingSessionBean</ejb-name>
+      <jndi-name>ejb/TestingSessionBean</jndi-name>
+      <resource-ref>
+        <res-ref-name>myTestingDatabase</res-ref-name>
+        <jndi-name>myTestingDatabase</jndi-name>
+      </resource-ref>
+    </ejb>
+    <ejb>
+      <ejb-name>TestingEntityBean</ejb-name>
+      <jndi-name>ejb/TestingEntityBean</jndi-name>
+    </ejb>
+    <ejb>
+      <ejb-name>TestingMessageBean</ejb-name>
+      <jndi-name>jms/TestingMessageBean</jndi-name>
+      <mdb-connection-factory>
+        <jndi-name>jms/TestingMessageBeanFactory</jndi-name>
+      </mdb-connection-factory>
+    </ejb>
+  </enterprise-beans>
+</glassfish-ejb-jar>

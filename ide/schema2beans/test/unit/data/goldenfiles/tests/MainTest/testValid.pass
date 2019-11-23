@@ -1,0 +1,321 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	[attr: instock ENUM ( yes no ) yes]
+	title <title> : String[0,1]
+		[attr: lang CDATA #FIXED en]
+	chapter <chapter> : Chapter[1,n]
+		[attr: length CDATA #IMPLIED ]
+		title <title> : String
+			[attr: lang CDATA #FIXED en]
+		summary <summary> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+		conclusion <conclusion> : String[0,1]
+		ending <ending> : String[0,1]
+	note <note> : Note[0,1]
+		| year <year> : String
+		| date <date> : String
+		copyright <copyright> : String
+	paperback <paperback> : boolean[0,1]
+		EMPTY : String
+	summary <summary> : String[0,1]
+	isbn <isbn> : String[0,1]
+	price <price> : String[0,1]
+
+Compiling
+Finished compiling: 0
+out: TestValid - creating the DOM document
+out: TestValid - Current XML document:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out: </book>
+out: TestValid - Should add paperback after chapter:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <paperback/>
+out: </book>
+out: TestValid - Should add summary after paperback:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out: </book>
+out: TestValid - Should add chapter before paperback
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out: </book>
+out: TestValid - Should add title as the first property of book:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out: </book>
+out: TestValid - Should add price as the last property of book:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <price>19.99</price>
+out: </book>
+out: TestValid - Should add isbn before the price:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <isbn>120394857</isbn>
+out:   <price>19.99</price>
+out: </book>
+out: TestValid - Should add ending at the end of the chapter:
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:     <ending>And this is how this chapter ends.</ending>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <isbn>120394857</isbn>
+out:   <price>19.99</price>
+out: </book>
+out: TestValid - Should add conclusion before the ending
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:     <conclusion>And this concludes this chapter.</conclusion>
+out:     <ending>And this is how this chapter ends.</ending>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <isbn>120394857</isbn>
+out:   <price>19.99</price>
+out: </book>
+out: TestValid - Should add Note with year before copyright
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:     <conclusion>And this concludes this chapter.</conclusion>
+out:     <ending>And this is how this chapter ends.</ending>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <note>
+out:     <year>2000</year>
+out:     <copyright>1997</copyright>
+out:   </note>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <isbn>120394857</isbn>
+out:   <price>19.99</price>
+out: </book>
+out: TestValid - Should set Note with date before copyright
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE book>
+out: <book instock="yes">
+out:   <title lang="en">Title of the book</title>
+out:   <chapter>
+out:     <title lang="en">The sand castle</title>
+out:     <paragraph> 
+out: Once upon a time, on a far sunny island, ... 
+out: </paragraph>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title1</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title2</title>
+out:     <conclusion>And this concludes this chapter.</conclusion>
+out:     <ending>And this is how this chapter ends.</ending>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title3</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title4</title>
+out:   </chapter>
+out:   <chapter>
+out:     <title lang="en">title5</title>
+out:   </chapter>
+out:   <note>
+out:     <date>2001</date>
+out:     <copyright>1996</copyright>
+out:   </note>
+out:   <paperback/>
+out:   <summary>Summary of the book</summary>
+out:   <isbn>120394857</isbn>
+out:   <price>19.99</price>
+out: </book>
+Finished running TestValid: 0

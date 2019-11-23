@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Encapsulate Fields Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.refactoring.java.ui.EncapsulateFieldUI" name="org.netbeans.modules.refactoring.java.ui.EncapsulateFieldUI"></a></p>
+<div id="NBCSH2896"><!-- infolevel="all" infotype="General" --><a id="sthref372" name="sthref372"></a>
+<h1>Encapsulate Fields Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to specify options for the <b>Encapsulate Fields</b> refactoring command. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG584">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="Descriptions of Encapsulate Fields command options." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="37%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t4">Element</th>
+<th align="left" valign="bottom" id="r1c2-t4">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t4" headers="r1c1-t4">
+<p>List of Fields to Encapsulate</p>
+</td>
+<td align="left" headers="r2c1-t4 r1c2-t4">Displays a list of fields in the class.
+<p>Select the checkbox for each field that you want to encapsulate.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t4" headers="r1c1-t4">
+<p>Insert Point</p>
+</td>
+<td align="left" headers="r3c1-t4 r1c2-t4">Displays a list containing the six possible points (<code dir="ltr">Default</code>, <code dir="ltr">First Method</code>, <code dir="ltr">Last Method</code>, <code dir="ltr">After About(JFrame Parent)</code>, <code dir="ltr">After initComponents() : void</code>, and <code dir="ltr">After closeButtonActionPerformed(java.awt.event.ActionEvent evt)</code>) for inserting a new accessor method.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t4" headers="r1c1-t4">
+<p>Sort by</p>
+</td>
+<td align="left" headers="r4c1-t4 r1c2-t4">Displays a list containing the three possible options (<code dir="ltr">Getter/Setter pairs</code>, <code dir="ltr">Getters then Setters</code>, and <code dir="ltr">Method names</code>).
+<p>Select the option that you want to be used for sorting the fields in the class.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t4" headers="r1c1-t4">
+<p>Javadoc</p>
+</td>
+<td align="left" headers="r5c1-t4 r1c2-t4">Displays a list containing the three possible options (<code dir="ltr">Copy from field</code>, <code dir="ltr">Create default comments</code>, and <code dir="ltr">None</code>).
+<p>Select the option that you want to be used for creating Javadoc</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t4" headers="r1c1-t4">
+<p>Fields' Visibility</p>
+</td>
+<td align="left" headers="r6c1-t4 r1c2-t4">Displays a list containing the four possible accessibility modifiers (<i>default</i>, <code dir="ltr">private</code>, <code dir="ltr">protected</code>, and <code dir="ltr">public</code>).
+<p>Select the accessibility modifier that you want the field or fields to have.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t4" headers="r1c1-t4">
+<p>Accessor's Visibility.</p>
+</td>
+<td align="left" headers="r7c1-t4 r1c2-t4">Drop-down list containing the four possible accessibility modifiers (<i>default</i>, <code dir="ltr">private</code>, <code dir="ltr">protected</code>, and <code dir="ltr">public</code>).
+<p>Select the accessibility modifier that you want the accessor (<code dir="ltr">getter</code> and <code dir="ltr">setter</code>) methods to have.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t4" headers="r1c1-t4">
+<p>Use Accessors Even When Field Is Accessible</p>
+</td>
+<td align="left" headers="r8c1-t4 r1c2-t4">Updates any direct references in your code to the field to use the accessor methods instead. If not selected, any direct references to the fields that you already have in your code are not replaced.
+<p>This option only has an impact if both of the following are true:</p>
+<ul>
+<li>You have direct references to the field in your code.</li>
+<li>You have set the field's accessor modifier so that the field is visible to the classes with these references.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t4" headers="r1c1-t4">
+<p>Generate Property Change Support</p>
+</td>
+<td align="left" headers="r9c1-t4 r1c2-t4">Generates the property change support code in addition to the field and methods for the property.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t4" headers="r1c1-t4">
+<p>Generate Vetoable change support</p>
+</td>
+<td align="left" headers="r10c1-t4 r1c2-t4">Generates the vetoable change listeners for specific properties.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2906" name="NBCSH2906"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG547">
+<param name="text" value="<html><u>&quot;Refactoring Java Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

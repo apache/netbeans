@@ -1,0 +1,20 @@
+protected native java.lang.Object clone() throws java.lang.CloneNotSupportedException
+protected void finalize() throws java.lang.Throwable
+public boolean equals(java.lang.Object obj)
+public boolean isAccessible()
+public final native java.lang.Class getClass()
+public final native void notify()
+public final native void notifyAll()
+public final native void wait(long timeout) throws java.lang.InterruptedException
+public final void wait() throws java.lang.InterruptedException
+public final void wait(long timeout, int nanos) throws java.lang.InterruptedException
+public int getModifiers()
+public java.lang.Class getDeclaringClass()
+public java.lang.Class[] getExceptionTypes()
+public java.lang.Class[] getParameterTypes()
+public java.lang.String getName()
+public java.lang.String toString()
+public native int hashCode()
+public native java.lang.Object newInstance(java.lang.Object[] initargs) throws java.lang.InstantiationException, java.lang.IllegalAccessException, java.lang.IllegalArgumentException, java.lang.reflect.InvocationTargetException
+public static void setAccessible(java.lang.reflect.AccessibleObject[] array, boolean flag) throws java.lang.SecurityException
+public void setAccessible(boolean flag) throws java.lang.SecurityException

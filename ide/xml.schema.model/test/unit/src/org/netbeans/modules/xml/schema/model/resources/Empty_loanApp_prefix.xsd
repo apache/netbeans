@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Empty.xsd
+    Created on : October 14, 2005, 11:14 PM
+    Author     : rico
+    Description:
+        Purpose of XML Schema document follows.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:fn="http://www.example.com/funtion"
+    elementFormDefault="qualified" 
+    xmlns="http://www.example.com/loanApplication"
+    targetNamespace="http://www.example.com/loanApplication"
+    attributeFormDefault="unqualified">
+</xs:schema>

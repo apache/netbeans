@@ -1,0 +1,3 @@
+        $anon = function($anonParam) {
+         ----
+HINT:Variable $anon seems to be unused in its scope

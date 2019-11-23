@@ -1,0 +1,120 @@
+/*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+body{
+    font-size: 12px;
+    background: rgb(214,217,223);
+}
+
+input[type=checkbox],
+input[type=radio]
+{
+    -webkit-appearance: none;
+    font-size: 12px;
+}
+
+input[type=radio],input[type=checkbox], button{
+    background: -webkit-linear-gradient(top, rgb(249, 249, 250) 0%, rgb(225, 228, 234) 78%);    border: solid 1px #7A8A99;
+}
+
+button{
+    border-style: solid;
+    border-color: #7A8A99;
+    border-top-width: 0.6px;
+    border-left-width: 0.6px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #333333;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+input[type=radio]:checked,input[type=checkbox]:checked{
+    background: -webkit-linear-gradient(top, rgb(236, 239, 243) 0%, rgb(172, 192, 210) 59%, rgb(180, 201, 220) 100%);
+}
+
+input[type=radio]:checked:hover,input[type=checkbox]:checked:hover{
+    background: -webkit-linear-gradient(top, rgb(237, 241, 244) 0%, rgb(182, 203, 222) 65%, rgb(196, 217, 236) 100%);}
+
+input[type=radio]:hover,input[type=checkbox]:hover, button:hover{
+    background: -webkit-linear-gradient(64deg, rgb(255, 255, 255) 0%, rgb(239, 240, 245) 96%);
+}
+
+input[type=radio]:active, input[type=radio]:focus,
+input[type=checkbox]:active, input[type=checkbox]:focus,
+
+button:active, button:focus{
+    background: -webkit-linear-gradient(top, rgb(203, 207, 214) 0%, rgb(164, 171, 185) 59%, rgb(223, 229, 244) 100%);
+    box-shadow: 0 0 0 2pt #73A4D1;
+}
+
+input[type=text]:focus,
+input[type=number]:focus
+{
+    box-shadow: 0 0 0 2pt #73A4D1;
+}
+
+input[type=text],
+input[type=number]
+{
+    border-radius: 0;
+    border-width: 1px;
+}
+
+input[type=radio]{
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+input[type=radio]:checked:after{
+    background: black;
+    content: " ";
+    margin: 3px;
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+
+
+input[type=checkbox]{
+    border-radius: 2px;;
+    width: 14px;
+    height: 14px;
+}
+
+input[type=checkbox]:checked:after {
+    display: inline-block;
+    content: " ";
+    margin: 2px;
+    margin-top: 0;
+    width: 10px;
+    height: 10px;
+    background: url('cb-nimbus.png') no-repeat;
+    background-size: 100%;
+    z-index: 10;
+}
+

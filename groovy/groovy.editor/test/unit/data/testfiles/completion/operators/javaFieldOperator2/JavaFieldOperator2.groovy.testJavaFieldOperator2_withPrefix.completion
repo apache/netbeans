@@ -1,0 +1,5 @@
+Code completion result for source line:
+new Foo().@t|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      test                                       int

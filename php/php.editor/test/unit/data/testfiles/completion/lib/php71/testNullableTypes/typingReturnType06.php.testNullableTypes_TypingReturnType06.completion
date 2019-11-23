@@ -1,0 +1,33 @@
+Code completion result for source line:
+function test(): ?|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    My                              [PUBLIC]   null
+CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType06.php
+------------------------------------
+PACKAGE    Sub                             [PUBLIC]   My
+CLASS      Foo                             [PUBLIC]   My\Sub
+CLASS      NullableType                    [PUBLIC]   My\Sub
+CLASS      NullableTypeInterface           [PUBLIC]   My\Sub
+CLASS      NullableTypes                   [PUBLIC]   typingParameterType05.php
+CLASS      NullableTypes                   [PUBLIC]   typingParameterType06.php
+CLASS      NullableTypes                   [PUBLIC]   typingParameterType07.php
+CLASS      NullableTypes                   [PUBLIC]   typingParameterType08.php
+CLASS      NullableTypes                   [PUBLIC]   typingReturnType09.php
+CLASS      NullableTypes                   [PUBLIC]   typingReturnType10.php
+CLASS      NullableTypes                   [PUBLIC]   typingReturnType11.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingParameterType09.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingParameterType10.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingParameterType11.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingParameterType12.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType05.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType07.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType08.php
+CLASS      NullableTypesInterface          [PUBLIC]   typingReturnType12.php
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

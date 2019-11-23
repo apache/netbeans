@@ -1,0 +1,4 @@
+<Unnamed test>
+TEXT            "!<tag:%x?y> foo", la=1, st=10
+----- EOF -----
+

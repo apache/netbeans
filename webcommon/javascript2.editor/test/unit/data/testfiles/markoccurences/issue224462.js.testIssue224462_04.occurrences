@@ -1,0 +1,4 @@
+    var |>MARK_OCCURRENCES:prom224462<| = 10;
+        formatter.println(|>MARK_OCCURRENCES:prom22^4462<|);
+        |>MARK_OCCURRENCES:prom224462<| = 20;
+        formatter.println(|>MARK_OCCURRENCES:prom224462<|);

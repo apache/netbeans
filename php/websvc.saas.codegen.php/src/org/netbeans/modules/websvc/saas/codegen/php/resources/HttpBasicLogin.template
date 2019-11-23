@@ -1,0 +1,26 @@
+<?php
+    session_start();
+    
+    define("ATTR_PREFIX", "__NAME__");
+
+    printf("<html>");
+    printf("<head>");
+    printf("<title>__NAME__</title>");
+    printf("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");
+    printf("</head>");
+    printf("<body>");
+    printf("<form method=\"post\" action=\"./".str_replace("Login", "Callback", ATTR_PREFIX).".php\">");
+    printf("<br><br><br>");
+    printf("<table cellspacing=0 cellpadding=0 width=320 align=\"center\">");
+    printf("<tr><td>Username:</td><td>");
+    printf("<tr><td><input name=\"username\" type=\"text\" width=10></td></tr>");
+    printf("<tr><td>Password: </td><td>");
+    printf("<tr><td><input name=\"password\" type=\"password\" width=10></td></tr>");
+    printf("<tr><td><input name=\"rUrl\" type=\"hidden\" width=10 value=\"".$_GET['rUrl']."\"></td></tr>");
+    printf("<tr><td colspan=2 align=\"center\"><input name=\"login\" type=\"submit\" value=\"Login!\"></td></tr>");
+    printf("</table>");
+    printf("</form>");
+    printf("</body>");
+    printf("</html>");
+?>
+

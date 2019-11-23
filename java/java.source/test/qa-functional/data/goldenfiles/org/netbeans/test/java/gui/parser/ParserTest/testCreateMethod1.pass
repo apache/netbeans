@@ -1,0 +1,21 @@
+Type Element: testCreateMethod 2332 2537
+public class testCreateMethod {
+    
+private int method(Object obj) { return 1; }
+    /** Creates a new instance of testCreateMethod */
+    public testCreateMethod() {
+    }
+    
+    
+    
+    
+    
+    
+}
+Executable Element: method 2369 2413
+private int method(Object obj) { return 1; }
+Variable Element: obj 2388 2398
+Object obj
+Executable Element: <init> 2472 2505
+public testCreateMethod() {
+    }

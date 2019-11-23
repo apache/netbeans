@@ -1,0 +1,10 @@
+|>METHOD:name<|: John Smith
+|>METHOD:age<|: 37
+|>METHOD:spouse<|:
+    |>METHOD:name<|: Jane Smith
+    |>METHOD:age<|: 25
+|>METHOD:children<|:
+    -   |>METHOD:name<|: Jimmy Smith
+        |>METHOD:age<|: 15
+    -   |>METHOD:name<|: Jenny Smith
+        |>METHOD:age<|: 12

@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Deployment Descriptor Visual Editor: Environment</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.j2ee.sun.ddloaders.multiview.jms.MessageDestinationRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.EjbRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.ResourceRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.ResourceRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.EnvironmentView" name="org.netbeans.modules.j2ee.sun.ddloaders.multiview.jms.MessageDestinationRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.EjbRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.ResourceRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.ResourceRefNode,org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.EnvironmentView"></a></p>
+<div id="NBCSH4771"><!-- infolevel="all" infotype="General" --><a id="sthref694" name="sthref694"></a>
+<h1>Deployment Descriptor Visual Editor: Environment</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The deployment descriptor visual editor lets you edit the platform-specific deployment descriptor for the GlassFish application server as defined in <code dir="ltr">glassfish-web.xml</code> or <code dir="ltr">glassfish-application-client.xml</code>.</p>
+<p>The deployment descriptor is found under the project's Configuration Files node in the Projects window and clicking the Environment tab in the visual editor</p>
+<p>If any configuration information for the project is not specified in this server-specific descriptor file, it defaults to a corresponding setting in the general descriptor file for the application, if an equivalency exists.</p>
+<p>The Environment tab contains the following sections for editing the deployment descriptor properties of reference elements. If no reference element exists, you can create new references elements to the descriptor file by selecting the section title and then clicking the button to add a new reference element. When you create a new reference element it is visible as a node under the section. The IDE generates a default reference name.</p>
+<p><b>EJB References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t57">Element</th>
+<th align="left" valign="bottom" id="r1c2-t57">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t57" headers="r1c1-t57">
+<p>EJB Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t57 r1c2-t57">Displays the EJB Reference name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t57" headers="r1c1-t57">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t57 r1c2-t57">Specifies the JNDI name for the EJB reference.
+<p>This field should not be empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Resource References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t58">Element</th>
+<th align="left" valign="bottom" id="r1c2-t58">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t58" headers="r1c1-t58">
+<p>Resource Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t58 r1c2-t58">Displays the Resource Reference name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t58" headers="r1c1-t58">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t58 r1c2-t58">Specifies the JNDI name for the Resource reference.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t58" headers="r1c1-t58">
+<p>Principal Name</p>
+</td>
+<td align="left" headers="r4c1-t58 r1c2-t58">Specifies the principal name for the Resource reference.
+<p>(Optional) If you enter a principal name, you must also provide a password.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t58" headers="r1c1-t58">
+<p>Principal Password</p>
+</td>
+<td align="left" headers="r5c1-t58 r1c2-t58">Specifies the Principal password.
+<p>Required if the Principal name is provided.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Resource Environment References</b></p>
+
+<table summary="Descriptions of name and location properties of new Java Project existing sources wizard." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="36%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t59">Element</th>
+<th align="left" valign="bottom" id="r1c2-t59">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t59" headers="r1c1-t59">
+<p>Resource Environment Reference Name</p>
+</td>
+<td align="left" headers="r2c1-t59 r1c2-t59">Displays the Resource Environment Reference name. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1715">
+<param name="text" value="<html><u></u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t59" headers="r1c1-t59">
+<p>JNDI Name</p>
+</td>
+<td align="left" headers="r3c1-t59 r1c2-t59">Specifies the JNDI name for the Resource Environment reference.
+<p>This field should not be empty.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4780" name="NBCSH4780"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2900">
+<param name="text" value="<html><u>&quot;About Developing Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2901">
+<param name="text" value="<html><u>&quot;Creating Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

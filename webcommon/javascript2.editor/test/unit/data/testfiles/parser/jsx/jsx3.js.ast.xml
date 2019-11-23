@@ -1,0 +1,150 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='659'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='659'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='login' start='0' end='659'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='14'>
+        <name>login</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='login' kind='NORMAL' start='0' end='659'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='15' end='22'>
+          <name>context</name>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='24' end='657'>
+          <isFunctionBody/>
+          <isTerminal/>
+          <!-- Block Statements -->
+          <ReturnNode start='28' end='657'>
+            <JsxElementNode name='div' start='41' end='652'>
+              <!-- JSX Element Attributes -->
+              <JsxAttributeNode name='className' start='46' end='64'>
+                <!-- JSX Attribute Value -->
+                <AccessNode property='root' start='57' end='63'>
+                  <!-- AccessNode Base -->
+                  <IdentNode start='57' end='58'>
+                    <name>s</name>
+                  </IdentNode>
+                </AccessNode>
+              </JsxAttributeNode>
+              <!-- JSX Element Children -->
+              <JsxElementNode name='div' start='72' end='641'>
+                <!-- JSX Element Attributes -->
+                <JsxAttributeNode name='className' start='77' end='100'>
+                  <!-- JSX Attribute Value -->
+                  <AccessNode property='container' start='88' end='99'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='88' end='89'>
+                      <name>s</name>
+                    </IdentNode>
+                  </AccessNode>
+                </JsxAttributeNode>
+                <!-- JSX Element Children -->
+                <JsxElementNode name='form' start='110' end='627'>
+                  <!-- JSX Element Attributes -->
+                  <JsxAttributeNode name='method' start='116' end='128'>
+                    <!-- JSX Attribute Value -->
+                    <StringLiteralNode value='post' start='124' end='123'/>
+                  </JsxAttributeNode>
+                  <!-- JSX Element Children -->
+                  <JsxElementNode name='div' start='141' end='610'>
+                    <!-- JSX Element Attributes -->
+                    <JsxAttributeNode name='className' start='146' end='169'>
+                      <!-- JSX Attribute Value -->
+                      <AccessNode property='formGroup' start='157' end='168'>
+                        <!-- AccessNode Base -->
+                        <IdentNode start='157' end='158'>
+                          <name>s</name>
+                        </IdentNode>
+                      </AccessNode>
+                    </JsxAttributeNode>
+                    <!-- JSX Element Children -->
+                    <JsxElementNode name='form' start='180' end='593'>
+                      <!-- JSX Element Attributes -->
+                      <JsxAttributeNode name='method' start='186' end='198'>
+                        <!-- JSX Attribute Value -->
+                        <StringLiteralNode value='post' start='194' end='193'/>
+                      </JsxAttributeNode>
+                      <!-- JSX Element Children -->
+                      <JsxElementNode name='div' start='212' end='576'>
+                        <!-- JSX Element Attributes -->
+                        <JsxAttributeNode name='className' start='217' end='240'>
+                          <!-- JSX Attribute Value -->
+                          <AccessNode property='formGroup' start='228' end='239'>
+                            <!-- AccessNode Base -->
+                            <IdentNode start='228' end='229'>
+                              <name>s</name>
+                            </IdentNode>
+                          </AccessNode>
+                        </JsxAttributeNode>
+                        <!-- JSX Element Children -->
+                        <JsxElementNode name='label' start='254' end='369'>
+                          <!-- JSX Element Attributes -->
+                          <JsxAttributeNode name='className' start='261' end='280'>
+                            <!-- JSX Attribute Value -->
+                            <AccessNode property='label' start='272' end='279'>
+                              <!-- AccessNode Base -->
+                              <IdentNode start='272' end='273'>
+                                <name>s</name>
+                              </IdentNode>
+                            </AccessNode>
+                          </JsxAttributeNode>
+                          <JsxAttributeNode name='htmlFor' start='281' end='305'>
+                            <!-- JSX Attribute Value -->
+                            <StringLiteralNode value='usernameOrEmail' start='290' end='289'/>
+                          </JsxAttributeNode>
+                          <!-- JSX Element Children -->
+                          <StringLiteralNode value='Username or email address:' start='322' end='307'/>
+                        </JsxElementNode>
+                        <JsxElementNode name='input' start='382' end='559'>
+                          <!-- JSX Element Attributes -->
+                          <JsxAttributeNode name='className' start='403' end='422'>
+                            <!-- JSX Attribute Value -->
+                            <AccessNode property='input' start='414' end='421'>
+                              <!-- AccessNode Base -->
+                              <IdentNode start='414' end='415'>
+                                <name>s</name>
+                              </IdentNode>
+                            </AccessNode>
+                          </JsxAttributeNode>
+                          <JsxAttributeNode name='id' start='437' end='456'>
+                            <!-- JSX Attribute Value -->
+                            <StringLiteralNode value='usernameOrEmail' start='441' end='440'/>
+                          </JsxAttributeNode>
+                          <JsxAttributeNode name='type' start='472' end='482'>
+                            <!-- JSX Attribute Value -->
+                            <StringLiteralNode value='text' start='478' end='477'/>
+                          </JsxAttributeNode>
+                          <JsxAttributeNode name='name' start='498' end='519'>
+                            <!-- JSX Attribute Value -->
+                            <StringLiteralNode value='usernameOrEmail' start='504' end='503'/>
+                          </JsxAttributeNode>
+                          <JsxAttributeNode name='autoFocus' start='535' end='544'>
+                          </JsxAttributeNode>
+                          <!-- JSX Element Children -->
+                        </JsxElementNode>
+                      </JsxElementNode>
+                    </JsxElementNode>
+                  </JsxElementNode>
+                </JsxElementNode>
+              </JsxElementNode>
+            </JsxElementNode>
+          </ReturnNode>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

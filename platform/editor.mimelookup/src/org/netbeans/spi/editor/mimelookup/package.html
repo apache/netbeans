@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<body>
+
+The SPI allows registering providers of mime type specific <code>Lookup</code>s.
+The <code>MimeDataProvider</code> interface can be used to implement such a
+provider and register it among the services in the default lookup. The editor/mimelookup
+module will consult all registered <code>MimeDataProvider</code>s when creating
+a <code>Lookup</code> for a specific <code>MimePath</code>.
+
+<a name="defaultMimeDataProvider"/><h3>Default MimeDataProvider</h3>
+
+<p>The module itself provides a default implementation of the <code>MimeDataProvider</code>,
+which creates <code>Lookup</code>s from the data registered in a hierachical
+structure of folders on the system filesystem.
+</p>
+
+<p>The hierarchy starts with the 'Editors' folder and then contains subfolders for
+each mime type that has some registered objects. Since each mime type is uniquely
+identified by its <code>MimePath</code> the string represantation of the <code>MimePath</code>
+can be used as a filesystem path to the folder holding objects registered for
+that mime type. For example the 'text/x-java' mime type embedded in the 'text/x-jsp'
+mime type is represented by the 'text/x-jsp/text/x-java' mime path and
+the objects/settings specific for this mime type can be registered in the
+'Editors/text/x-jsp/text/x-java' folder.
+
+<p>The empty <code>MimePath</code> refers to the 'Editors' folder iteslf.
+</p>
+
+<!-- 
+<p>While it is useful to be able to register objects independently for each mime
+type it seems logical to expect objects registered for the 'text/x-java' mime type
+to be visible for the 'text/x-jsp/text/x-java' mime type as well. Therefore the
+default <code>MimeDataProvider</code> chains the <code>Lookup</code> provided
+for a particular embedded mime type with the <code>Lookup</code> of the unembedded
+version of that mime type.
+</p>
+
+<p>As an example of this chaining you can think of the
+settings or services available for a plain java editor that will provide good defaults
+for the java scriplets embedded in a jsp page allowing the java scriplets editor
+to use those settings or override them with its own version.
+</p>
+-->
+
+<p>The <code>Lookup</code> provided for a mime path is in fact a chain of
+<code>Lookup</code>s for all mime paths that can be created from the original
+mime path by cutting off its mime type components from the end. So, for example
+the <code>Lookup</code> for the 'text/x-jsp/text/x-java' mime path is made up of
+three different <code>Lookup</code>s using the following folders:
+</p>
+
+<pre>
+    Editors/text/x-jsp/text/x-java
+    Editors/text/x-jsp
+    Editors
+</pre>
+
+<p>The default <code>MimeDataProvider</code> allows registering implementations of
+the <code>Class2LayerFolder</code> interface in order to supply additional
+information about the location of instances registered in the mime type folders.
+Each <code>Class2LayerFolder</code> implementation can specify that instances of
+a certain class will be registered in a special subfolder. The <code>Lookup</code>
+created by the default <code>MimeDataProvider</code> will then look into the
+subfolders rather than to the usual mime type folders when looking for instances
+of that class. An example can be instances of the <code>FoldManager</code> class
+that are registered in the <code>foldManager</code> subfolders. The <code>Lookup</code>s
+hierarchy in this case uses the folders below:
+</p>
+
+<pre>
+    Editors/text/x-jsp/text/x-java/foldManager
+    Editors/text/x-jsp/foldManager
+    Editors/foldManager
+</pre>
+
+<h3>Compound MIME types</h3>
+
+<p>The default <code>MimeDataProvider</code> supports compound mime types, which
+are the mime types that have two parts separated by a plus sign ('+'). The
+compound mime types are heavily used for describing different types of XML files.
+For example an Ant build script's mime type is text/x-ant+xml, which means that
+the file is an XML file, but not an ordinary XML file. It's a build script.
+</p>
+
+<p>From the editor's point of view a file with a compound mime type should offer
+the behavior of the default mime type (e.g. text/xml) plus special behaviors
+specific for its original mime type (e.g. text/x-ant+xml). Therefore a <code>Lookup</code>
+provided for a mime path that contains a compound mime type will collect settings
+and services from both the folders belonging to the compound mime type and
+the folders belonging to its default part. The example below shows the list of
+folders comprising a <code>Lookup</code> for the 'text/x-ant+xml/text/x-java'
+mime path.
+</p>
+
+<pre>
+    Editors/text/x-ant+xml/text/x-java
+    Editors/text/x-ant+xml
+    Editors/text/xml/text/x-java
+    Editors/text/xml
+    Editors
+</pre>
+
+<h3>Ordering and hiding files</h3>
+
+<p>When registering instances in the mime path folders it is possible to use
+<code>position</code> attributes to order the files the same way as you would do it in any other
+files in a module XML layer. The attributes however will be resolved after all
+the folders belonging to a mime path are merged. Therefore it is possible to
+use attributes that define position relatively to a file in a parent (embedding)
+mime type.
+</p>
+
+<pre>
+&lt;folder name="Editors"&gt;
+  &lt;folder name="Popup"&gt;
+    &lt;file name="org-openide-actions-CutAction.instance">&lt;attr name="position" intvalue="100"/>&lt;/file>
+    &lt;file name="org-openide-actions-CopyAction.instance">&lt;attr name="position" intvalue="200"/>&lt;/file>
+    &lt;file name="org-openide-actions-PasteAction.instance">&lt;attr name="position" intvalue="300"/>&lt;/file>
+  &lt;/folder&gt;
+  &lt;folder name="text"&gt;
+    &lt;folder name="x-java"&gt;
+      &lt;folder name="Popup">
+        &lt;file name="org-netbeans-modules-project-ui-RunSingle">&lt;attr name="position" intvalue="400"/>&lt;/file>
+      &lt;/folder&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+</pre>
+
+<p>It is also possible to influence the default inheritance of files from
+folders belonging to a parent (embedding) mime type and mask them out by defining
+a 'hidden file' in the child mime type folder. Hidden files are marked by
+a special attribute called <code>hidden</code> with a booleanValue equal to 'true'.
+The example below hides the editor's global CopyAction in documents with the
+'text/x-java' mime type.
+</p>
+
+<pre>
+&lt;folder name="Editors"&gt;
+  &lt;folder name="Popup"&gt;
+    &lt;file name="org-openide-actions-CutAction.instance" /&gt;
+    &lt;file name="org-openide-actions-CopyAction.instance" /&gt;
+    &lt;file name="org-openide-actions-PasteAction.instance" /&gt;
+  &lt;/folder&gt;
+  &lt;folder name="text"&gt;
+    &lt;folder name="x-java"&gt;
+      &lt;file name="org-openide-actions-CopyAction.instance" &gt;
+        &lt;attr name="hidden" booleanValue="true" /&gt;
+      &lt;/file&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+</pre>
+
+<p>Please note that appending '_hidden' to the name of the
+file does not work, because such a file is made hidden by the XML filesystem
+implementation when the module layer is loaded and therefore such a file is not visible
+to the merging mechanism implemented in the mimelookup module.
+</p>
+
+</body>
+</html>

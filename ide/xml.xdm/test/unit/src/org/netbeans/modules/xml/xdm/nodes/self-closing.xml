@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<company xmlns= "http://org.company/schemas/company.xsd" >
+    <employee ssn="xx-xx-xxxx" id="123"
+        address="16 Network Circle"
+        phone="123-456-7890"/>
+</company>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xml.netbeans.org/schema/TNSA"
+    xmlns:tns="http://xml.netbeans.org/schema/TNSA"
+    elementFormDefault="qualified" >
+    <xsd:element name="rootA1">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any minOccurs="0"/>
+                <xsd:element name="A11"/>
+                <xsd:element name="A12"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrA11" type="xsd:string"/>
+            <xsd:attribute name="attrA12" type="xsd:string"/>
+            <xsd:attribute name="attrA13" type="xsd:string"/>
+            <xsd:attribute name="attrA14" type="xsd:string"/>
+            <xsd:attribute name="attrA15" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="rootA2">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any minOccurs="0"/>
+                <xsd:element ref="tns:rootA3" minOccurs="1" />
+                <xsd:element name="A21"/>
+                <xsd:element name="A22"/>
+            </xsd:sequence>
+            <xsd:attribute name="attrA21" type="xsd:string"/>
+            <xsd:attribute name="attrA22" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="rootA3">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="A31" minOccurs="1">
+                    <xsd:complexType>
+                        <xsd:attribute name="attrA31" type="xsd:string"/>
+                        <xsd:attribute name="attrA32" type="xsd:string"/>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="A32" minOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="AType">
+        <xsd:sequence>
+            <xsd:element name="A1"/>
+            <xsd:element name="A2"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+</xsd:schema>

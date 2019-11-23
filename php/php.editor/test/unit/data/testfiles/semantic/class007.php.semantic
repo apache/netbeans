@@ -1,0 +1,36 @@
+<?php
+
+interface |>CLASS:Punchable<| {
+
+    public function |>METHOD:punch<|();
+
+    public function |>METHOD:isStanding<|();
+}
+
+class |>CLASS:Boxer<| implements Punchable {
+    private $|>FIELD:hitpoints<|;
+
+    public function |>METHOD:__construct<|() {
+        $this->|>FIELD:hitpoints<| = 10;
+    }
+
+    public function |>METHOD:punch<|() {
+        $this->|>FIELD:hitpoints<|--;
+    }
+
+    public function |>METHOD:isStanding<|() {
+        return $this->|>FIELD:hitpoints<|>0;
+    }
+}
+
+function fight(Punchable $p) {
+    while($p->|>CUSTOM1:isStanding<|()) {
+    	$p->|>CUSTOM1:punch<|();
+        echo "Hit!\n";
+    }
+    echo "Victory!";
+}
+
+fight(new Boxer());
+
+?>

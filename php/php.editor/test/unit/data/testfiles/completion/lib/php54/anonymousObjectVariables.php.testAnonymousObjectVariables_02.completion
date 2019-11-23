@@ -1,0 +1,5 @@
+Code completion result for source line:
+(new AnonymousObject(new Bar($baz, $bat)))->|baz();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     baz()                           [PUBLIC]   AnonymousObject
+VARIABLE   ? bar                           [PUBLIC]   AnonymousObject

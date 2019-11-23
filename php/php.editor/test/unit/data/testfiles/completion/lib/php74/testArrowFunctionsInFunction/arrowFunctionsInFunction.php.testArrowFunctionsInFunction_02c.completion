@@ -1,0 +1,4 @@
+Code completion result for source line:
+$fn = fn() => $af->getNumber() + $number + $gl|obalVariable;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $globalVariable             [PUBLIC]   arrowFunctionsInFunction.php

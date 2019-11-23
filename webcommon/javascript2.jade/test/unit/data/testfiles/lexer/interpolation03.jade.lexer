@@ -1,0 +1,3 @@
+[CODE_DELIMITER(1):-][WHITESPACE(1): ][JAVASCRIPT(83):var riskyBusiness = "<em>Some of the girls are wearing my mother's clothing.</em>";][EOL(1):\n]
+[CSS_CLASS(6):.quote][EOL(1):\n]
+[WHITESPACE(2):  ][TAG(1):p][WHITESPACE(1): ][TEXT(6):Joel: ][EXPRESSION_DELIMITER_OPEN(2):!{][JAVASCRIPT(13):riskyBusiness][EXPRESSION_DELIMITER_CLOSE(1):}]

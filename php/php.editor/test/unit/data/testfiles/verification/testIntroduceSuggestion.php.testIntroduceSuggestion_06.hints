@@ -1,0 +1,4 @@
+Omg::$stFld;^
+-----------
+HINT:Introduce Hint
+FIX:Create Field "$stFld" in Class "Omg" (testIntroduceSuggestion.php)

@@ -1,0 +1,4 @@
+{widget myComponent}
+ ------
+HINT:Deprecated Macro
+FIX:Replace with: control

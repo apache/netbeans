@@ -1,0 +1,9 @@
+Display text: public static $<b>stField</b>;
+File name: index.php
+Name: $stField
+Position: BEGIN: 71 END: 78
+
+Display text: Foo::$<b>stField</b>;
+File name: index.php
+Name: $stField
+Position: BEGIN: 194 END: 201

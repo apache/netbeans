@@ -1,0 +1,2 @@
+    } catch (|>MARK_OCCURRENCES:err<|) {
+        console.log(|>MARK_OCCURRENCES:er^r<|.stack);

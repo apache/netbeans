@@ -1,0 +1,7 @@
+Recognition of URIs inside regular text.
+For example the following URI http://www.google.com should be recognized
+as an extra http-uri token while the rest of the line is recognized
+as text token. Similarly ftp://ftp.redhat.com
+should have ftp-uri while other URIs should
+default to generic uri token identification
+such as myscheme://my-server.org

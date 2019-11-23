@@ -1,0 +1,30 @@
+Calling GenBeans.doIt
+Bean Tree:
+extensionSample <extensionSample> : ExtensionSample
+	name <name> : java.lang.String
+	configProperty <config-property> : ConfigPropertyType[1,n]
+		configPropertyName <config-property-name> : java.lang.String
+		configPropertyType <config-property-type> : java.lang.String
+	moreInfo <more-info> : MoreInfoType
+		configProperty <config-property> : ExpandedConfigPropertyType[1,n]
+			configPropertyName <config-property-name> : java.lang.String
+			configPropertyType <config-property-type> : java.lang.String
+			isRequired <is-required> : boolean
+
+Compiling
+Finished compiling: 0
+out: TestExtensionSample - creating the DOM document
+out: TestExtensionSample - creating the bean graph
+out: TestExtensionSample - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <extensionSample xmlns='http://anything.org/extension'>
+out: 	<name>Cobalt</name>
+out: 	<more-info>
+out: 		<config-property>
+out: 			<config-property-name>Blue</config-property-name>
+out: 			<config-property-type>color</config-property-type>
+out: 			<is-required>false</is-required>
+out: 		</config-property>
+out: 	</more-info>
+out: </extensionSample>
+Finished running TestExtensionSample: 0

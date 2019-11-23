@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+             xmlns:slnk="http://schemas.xmlsoap.org/ws/2002/07/service-link/" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+             name="GlobalAndLocalAttributesWsdl" 
+             targetNamespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl"
+             xmlns:tns="http://sun.com/bpel/GlobalAndLocalAttributesWsdl"
+             xmlns:ns1="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types1" 
+             xmlns:ns2="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types2"
+             xmlns:ns3="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types3" 
+             xmlns:ns4="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types4">		
+    <types>
+        <xsd:schema targetNamespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types1">
+            <xsd:import namespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types3"/>
+            <xsd:element name="person">
+                <xsd:complexType>
+                    <xsd:attribute name="fname" type="xsd:string"/>
+                    <xsd:attribute name="lname" type="xsd:string"/>
+                    <xsd:attribute name="age" type="xsd:int"/>
+                    <xsd:attribute ref="ns1:sex"/>
+                    <xsd:attribute ref="ns3:ssn"/>		   
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:attribute name="sex" type="xsd:string"/>
+        </xsd:schema>
+        <xsd:schema
+            targetNamespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types2">
+            <xsd:import
+                namespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types4"/>        
+            <xsd:element name="employee">
+                <xsd:complexType>
+                    <xsd:attribute name="firstname" type="xsd:string" />
+                    <xsd:attribute ref="ns2:lastname"/>
+                    <xsd:attribute name="age" type="xsd:int"/>
+                    <xsd:attribute name="sex" type="xsd:string"/>
+                    <xsd:attribute ref="ns4:socialSecurityNumber"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:attribute name="lastname" type="xsd:string"/>
+        </xsd:schema>
+        <xsd:schema
+            targetNamespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types3">
+            <xsd:attribute name="ssn" type="xsd:string"/>
+        </xsd:schema>        
+        <xsd:schema
+            targetNamespace="http://sun.com/bpel/GlobalAndLocalAttributesWsdl/types4">
+            <xsd:attribute name="socialSecurityNumber" type="xsd:string"/>
+        </xsd:schema>                
+    </types>
+    <message name="message1">
+        <part element="ns1:person" name="parameters"/>
+    </message>
+    <message name="message2">
+        <part element="ns2:employee" name="parameters"/>
+    </message>    
+    
+    <portType name="GlobalAndLocalAttributesPortType">
+        <operation name="operation1">
+            <input message="tns:message1"/>
+            <output message="tns:message2"/>
+        </operation>
+    </portType>
+    <binding name="GlobalAndLocalAttributesBinding"
+             type="tns:GlobalAndLocalAttributesPortType">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="operation1">
+            <soap:operation soapAction="operation1"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="GlobalAndLocalAttributesService">
+        <port binding="tns:GlobalAndLocalAttributesBinding"
+              name="GlobalAndLocalAttributesPort">
+            <soap:address
+                location="http://localhost:13011/service/GlobalAndLocalAttributes"/>
+        </port>
+    </service>
+    <plnk:partnerLinkType
+        xmlns:plnk="http://schemas.xmlsoap.org/ws/2004/03/partner-link/"
+        name="GlobalAndLocalAttributesPLT">
+        <plnk:role name="server" portType="tns:GlobalAndLocalAttributesPortType"/>
+    </plnk:partnerLinkType>
+</definitions>

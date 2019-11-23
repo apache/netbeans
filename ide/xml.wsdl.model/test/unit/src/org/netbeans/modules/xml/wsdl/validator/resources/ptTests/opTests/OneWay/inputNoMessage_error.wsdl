@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodOWOperation" targetNamespace="http://j2ee.netbeans.org/wsdl/goodOWOperation"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodOWOperation" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodOWOperationOperationRequest">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodOWOperationPortType">
+        <operation name="goodOWOperationOperation">
+            <input name="input1" />
+        </operation>
+    </portType>
+    <binding name="goodOWOperationBinding" type="tns:goodOWOperationPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="goodOWOperationOperation">
+            <soap:operation/>
+            <input name="input1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodOWOperation"/>
+            </input>
+        </operation>
+    </binding>
+    <service name="goodOWOperationService">
+        <port name="goodOWOperationPort" binding="tns:goodOWOperationBinding">
+            <soap:address location="http://localhost:18181/goodOWOperationService/goodOWOperationPort"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="goodOWOperationPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodOWOperationPortTypeRole" portType="tns:goodOWOperationPortType"/>
+    </plink:partnerLinkType>
+</definitions>

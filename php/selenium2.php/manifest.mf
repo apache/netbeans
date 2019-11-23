@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.selenium2.php
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/selenium2/php/Bundle.properties
+OpenIDE-Module-Provides: org.netbeans.modules.selenium2.php.Selenium2PhpSupportImpl
+OpenIDE-Module-Specification-Version: 1.7
+

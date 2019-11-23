@@ -1,0 +1,6 @@
+1..2
+not ok 1 - tests\units\netbeans\sample\Calculator::testDivide()
+#
+# /Users/jubianchi/NetBeansProjects/nb-atoum-blog/tests/units/netbeans/sample/Calculator.php
+ok 2
+# tests\units\netbeans\sample\Calculator::testAdd()

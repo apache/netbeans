@@ -1,0 +1,4 @@
+-- line comment
+/* block comment */
+update table t set t.str_column = 'ab', t.int_column = 0, 
+    t.float_column = 3.14, t.str_column2 = 'Unterminated string

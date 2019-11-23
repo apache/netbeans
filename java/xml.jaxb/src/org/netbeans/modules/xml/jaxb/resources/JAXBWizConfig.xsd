@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/JAXBWizConfig"
+            xmlns:tns="http://xml.netbeans.org/schema/JAXBWizConfig"
+            elementFormDefault="qualified">
+                
+    <xsd:element name="schemas">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:schema" maxOccurs="unbounded" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="destdir" type="xsd:string"/>
+            <xsd:attribute name="projectName" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="schema">
+        <xsd:annotation>
+            <xsd:documentation>
+                Earlier "Schema" current "Binding" is set/group of Schema files.
+                Compiled using XJC together as unit.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:sequence>
+                <xsd:element ref="tns:xjc-options" minOccurs="0"/>
+                <xsd:element ref="tns:schema-sources" minOccurs="0"/>
+                <xsd:element ref="tns:bindings" minOccurs="0"/>
+                <xsd:element ref="tns:catalog" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:attribute name="type" type="xsd:string"/>
+            <xsd:attribute name="package" type="xsd:string"/>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="xjc-options">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:xjc-option" maxOccurs="unbounded" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="xjc-option">
+        <xsd:complexType>
+            <xsd:sequence/>
+            <xsd:attribute name="name" type="xsd:string"/>
+            <xsd:attribute name="value" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="schema-sources">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:schema-source" maxOccurs="unbounded" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="schema-source">
+        <xsd:complexType>
+            <xsd:sequence/>
+            <xsd:attribute name="location" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>location is relative to Project Root. origLocation is either local file path or URL</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="origLocation" type="xsd:string"/>
+            <xsd:attribute name="origLocationType" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="bindings">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:binding" maxOccurs="unbounded" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="binding">
+        <xsd:complexType>
+            <xsd:sequence/>
+            <xsd:attribute name="origLocation" type="xsd:string"/>
+            <xsd:attribute name="location" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="catalog">
+        <xsd:complexType>
+            <xsd:sequence/>
+            <xsd:attribute name="location" type="xsd:string"/>
+            <xsd:attribute name="origLocation" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

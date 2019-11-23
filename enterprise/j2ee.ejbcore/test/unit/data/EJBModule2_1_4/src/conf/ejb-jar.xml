@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+    <display-name>EJBModule2_1_4</display-name>
+    <enterprise-beans>
+        <session>
+            <display-name>StatelessLRSB2</display-name>
+            <ejb-name>StatelessLRBean2</ejb-name>
+            <home>statelesslr.StatelessLRRemoteHome2</home>
+            <remote>statelesslr.StatelessLRRemote2</remote>
+            <local-home>statelesslr.StatelessLRLocalHome2</local-home>
+            <local>statelesslr.StatelessLRLocal2</local>
+            <ejb-class>statelesslr.StatelessLRBean2</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+        </enterprise-beans>
+    <assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>StatelessLRBean2</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+        </assembly-descriptor>
+    </ejb-jar>

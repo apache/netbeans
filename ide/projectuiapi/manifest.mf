@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.projectuiapi/1
+OpenIDE-Module-Install: org/netbeans/modules/project/uiapi/ProjectUiapiModule.class
+OpenIDE-Module-Implementation-Version: 8
+OpenIDE-Module-Localizing-Bundle: org/netbeans/spi/project/ui/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/project/uiapi/layer.xml
+OpenIDE-Module-Recommends: org.netbeans.modules.project.uiapi.ActionsFactory,
+    org.netbeans.modules.project.uiapi.ProjectChooserFactory

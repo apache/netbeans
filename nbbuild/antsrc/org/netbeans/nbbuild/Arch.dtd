@@ -1,0 +1,102 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+Public ID: "-//NetBeans//DTD Arch Answers//EN"
+Describes format of NetBeans Architecture Answers file
+-->
+
+<!ENTITY % xhtml PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+<!ENTITY % xhtml PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "../../../../external/xhtml1-dtds/xhtml1-strict.dtd">
+<!ENTITY % xhtml PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "Arch-fake-xhtml.dtd">
+-->
+
+<!-- overriding values of misc.inline to our special tags that
+     can occur in HTML
+-->
+<!ENTITY % special "br | span | bdo | object | img | map | api | usecase | defaultanswer ">
+<!-- Now include normal XHTML DTD: -->
+%xhtml;
+
+<!-- stability categories -->
+<!ENTITY % category "(official|stable|devel|third|standard|friend|private|deprecated)">
+
+<!--
+Document element.
+-->
+<!ELEMENT api-answers (api-questions, answer*) >
+<!ATTLIST api-answers
+          question-version CDATA #REQUIRED
+          module CDATA #IMPLIED
+          author CDATA #REQUIRED
+>
+
+<!-- XXX switch to using e.g. %Block; rather than %Flow; perhaps? -->
+
+<!--
+HTML contents of the document, with substitutions.
+-->
+<!ELEMENT answer %Flow; >
+<!ATTLIST answer
+          id ID #REQUIRED
+>
+
+<!ELEMENT defaultanswer EMPTY >
+<!ATTLIST defaultanswer
+          generate (here|none) 'here' 
+>
+
+<!ELEMENT api %Flow; >
+<!ATTLIST api
+          group (preferences|java|lookup|property|systemproperty|branding|dtd|layer|java.io.File|javax.swing.UIManager|jmi|org.apache.tools.ant.Task|cli|logger) #REQUIRED
+          name NMTOKEN #REQUIRED
+          type (import|export) #REQUIRED
+          category %category; #REQUIRED
+          url CDATA #IMPLIED
+>
+
+<!ELEMENT usecase %Flow; >
+<!ATTLIST usecase
+          id NMTOKEN #REQUIRED
+          name CDATA #REQUIRED
+>
+
+<!-- now the content of included questions file -->
+
+<!ELEMENT api-questions ( category )* >
+<!ATTLIST api-questions
+          version CDATA #REQUIRED
+>
+
+<!ELEMENT category ( question )* >
+<!ATTLIST category
+          name CDATA #REQUIRED
+          id NMTOKEN #REQUIRED
+>
+
+<!ELEMENT question (#PCDATA | %inline; | hint)* >
+<!ATTLIST question
+          id NMTOKEN #REQUIRED
+          when (init|impl|final) 'init'
+>
+
+<!ELEMENT hint %Flow; >

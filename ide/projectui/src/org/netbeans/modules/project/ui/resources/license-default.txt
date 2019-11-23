@@ -1,0 +1,9 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}To change this license header, choose License Headers in Project Properties.
+${licensePrefix}To change this template file, choose Tools | Templates
+${licensePrefix}and open the template in the editor.
+<#if licenseLast??>
+${licenseLast}
+</#if>

@@ -1,0 +1,4 @@
+    this.myEvent = new MyApi.Event(|>MARK_OCCURRENCES:myEv^entArgs<|);
+    this.|>MARK_OCCURRENCES:myEventArgs<| = |>MARK_OCCURRENCES:myEventArgs<|; // <- here
+    function |>MARK_OCCURRENCES:myEventArgs<|(iArg) {
+    |>MARK_OCCURRENCES:myEventArgs<|(this.iArg);

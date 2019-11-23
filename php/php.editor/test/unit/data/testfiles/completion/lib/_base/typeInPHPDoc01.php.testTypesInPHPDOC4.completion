@@ -1,0 +1,5 @@
+Code completion result for source line:
+* @return PhpDoc01News|PhpDoc01|   text|@ text
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      PhpDoc01Magazine                [PUBLIC]   typeInPHPDoc01.php
+CLASS      PhpDoc01News                    [PUBLIC]   typeInPHPDoc01.php

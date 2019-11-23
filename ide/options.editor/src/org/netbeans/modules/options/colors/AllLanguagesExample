@@ -1,0 +1,8 @@
+/** 
+ * Comment. 
+ */
+public class JavaExample {
+    
+    String identifier = "String " + '-' + 1.2;
+
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : testNewDTD.dtd
+    Created.*
+    Author.*
+    Description:
+        Purpose of the document follows.
+
+    TODO define vocabulary identification data
+    PUBLIC ID  : -//vendor//vocabulary//EN
+    SYSTEM ID  : http://server/path/testNewDTD.dtd
+-->
+
+<!-- TODO define your own vocabulary/syntax. Example follows:  -->
+<!ELEMENT root ANY>
+<!ATTLIST root version CDATA #REQUIRED>
+
+

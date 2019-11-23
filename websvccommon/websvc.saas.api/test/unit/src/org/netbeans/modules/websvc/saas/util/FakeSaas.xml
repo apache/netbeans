@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<saas-services xmlns="http://xml.netbeans.org/websvc/saas/services/1.0"
+               xmlns:tns="http://xml.netbeans.org/websvc/saas/services/1.0/fakesaas"
+               xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'               
+               xsi:schemaLocation='http://xml.netbeans.org/websvc/saas/services/1.0 
+                    ../../../../../../../../../../websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/SaasServices.xsd' 
+               type="http://research.sun.com/wadl/2006/10"
+               api-doc="http://www.fakesaas.com/howto/api/APIOverview.html"
+               url="org/netbeans/modules/websvc/saas/services/zillow/resources/FakeSaasWadl.xml">
+    <display-name>Fake Saas Service</display-name>
+    <saas-metadata>
+        <localizing-bundle>org.netbeans.modules.websvc.saas.services.fakesaas.Bundle</localizing-bundle>
+        <group name="FakeSaas">
+            <group name="Videos"></group>
+        </group>
+        <authentication>
+            <api-key id="zws-id"/>
+        </authentication>
+    </saas-metadata>
+</saas-services>

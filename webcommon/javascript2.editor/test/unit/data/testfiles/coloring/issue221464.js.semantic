@@ -1,0 +1,3 @@
+function |>METHOD:my_func<|(my_param) {
+    var |>CLASS,UNUSED:my_object<| = {|>FIELD:my_prop<|: my_param};
+}

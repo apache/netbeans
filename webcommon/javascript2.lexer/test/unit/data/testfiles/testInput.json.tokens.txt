@@ -1,0 +1,101 @@
+<Unnamed test>
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+STRING          ""menu"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""id"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+NUMBER          "2e10", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""value"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""File"", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""x"", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+NUMBER          "1.5", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""y"", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+NUMBER          "2.5e-5", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""q"", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+NUMBER          "-7", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+STRING          ""popup"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+WHITESPACE      "\n    ", la=1, st=-1
+STRING          ""menuitem"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+BRACKET_LEFT_BRACKET  "[", la=1, st=-1
+STRING          """", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n      ", la=1, st=-1
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+STRING          ""value"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""New"", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""onclick"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""CreateNewDoc()"", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n      ", la=1, st=-1
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+STRING          ""value"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""Open"", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""onclick"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""OpenDoc()"", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      "\n      ", la=1, st=-1
+BRACKET_LEFT_CURLY  "{", la=1, st=-1
+STRING          ""value"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""Close"", la=1, st=-1
+OPERATOR_COMMA  ",", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""onclick"", la=1, st=-1
+OPERATOR_COLON  ":", la=1, st=-1
+WHITESPACE      " ", la=1, st=-1
+STRING          ""CloseDoc()"", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+WHITESPACE      "\n    ", la=1, st=-1
+BRACKET_RIGHT_BRACKET  "]", la=1, st=-1
+WHITESPACE      "\n  ", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+WHITESPACE      "\n", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+BRACKET_RIGHT_CURLY  "}", la=1, st=-1
+----- EOF -----
+

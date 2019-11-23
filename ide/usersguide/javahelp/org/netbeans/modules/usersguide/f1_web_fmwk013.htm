@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Add Action Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.struts.dialogs.AddActionPanel" name="org.netbeans.modules.web.struts.dialogs.AddActionPanel"></a></p>
+<div id="NBCSH4217"><!-- infolevel="all" infotype="General" --><a id="sthref561" name="sthref561"></a>
+<h1>Add Action Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to register an action in the <code dir="ltr">struts-config.xml</code> file. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1189">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>A Struts action responds to a request. Writing an action means subclassing one of the Action classes and then overriding the class's execute method.</p>
+<p>In the <b>Add Action</b> dialog box, you set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t12">Element</th>
+<th align="left" valign="bottom" id="r1c2-t12">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t12" headers="r1c1-t12">
+<p>Action Class</p>
+</td>
+<td align="left" headers="r2c1-t12 r1c2-t12">Specifies the fully qualified Java class name of the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t12" headers="r1c1-t12">
+<p>Action Path</p>
+</td>
+<td align="left" headers="r3c1-t12 r1c2-t12">Specifies the application context-relative path to the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t12" headers="r1c1-t12">
+<p>Use ActionForm Bean</p>
+</td>
+<td align="left" headers="r4c1-t12 r1c2-t12">Specifies whether an actionform bean should be used or not. If you select this checkbox, the following fields are enabled.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;ActionForm Bean Name</p>
+</td>
+<td align="left" headers="r5c1-t12 r1c2-t12">Specifies the name of the actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Input Resource</p>
+</td>
+<td align="left" headers="r6c1-t12 r1c2-t12">Specifies the path to the JSP page that handles the actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Input Action</p>
+</td>
+<td align="left" headers="r7c1-t12 r1c2-t12">Specifies the action that handles the actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Scope</p>
+</td>
+<td align="left" headers="r8c1-t12 r1c2-t12">Specifies the scope of the action. By default, the action is set to Session scope.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Attribute</p>
+</td>
+<td align="left" headers="r9c1-t12 r1c2-t12">Specifies an attribute that causes the actionform bean to be mapped into scope. When an actionform bean is mapped into scope, the action can access the actionform bean's values and display them in a JSP page.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t12" headers="r1c1-t12">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Validate Form Bean</p>
+</td>
+<td align="left" headers="r10c1-t12 r1c2-t12">Specifies that the validate method of the action associated with this actionform bean should be called.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t12" headers="r1c1-t12">
+<p>Parameter</p>
+</td>
+<td align="left" headers="r11c1-t12 r1c2-t12">Specifies general-purpose attribute often used by "standard" actions to pass a required property.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> If you want to change a registered action, you can do so by manually editing the XML tags in the <code dir="ltr">struts-config.xml</code> file.</p>
+<a id="NBCSH4228" name="NBCSH4228"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>&quot;Working with the Struts Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1140">
+<param name="text" value="<html><u>&quot;About Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

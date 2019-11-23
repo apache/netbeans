@@ -1,0 +1,204 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        javax.servlet.*
+        javax.servlet.http.*
+        javax.servlet.jsp.*
+      dependants:
+        /body.jsp
+      taglibsMap:
+      prefixMapper:
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html;charset=UTF-8
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : true
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="text/html;charset=UTF-8"
+/>
+<jsp:text
+  jsp:id="2"
+>
+<![CDATA[
+
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="3"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="4"
+>
+<![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="5"
+>
+<![CDATA[
+<html>
+    ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="6"
+>
+<![CDATA[
+<head>
+        ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="7"
+>
+<![CDATA[
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="8"
+>
+<![CDATA[
+<title>JSP Page]]>
+</jsp:text>
+<jsp:text
+  jsp:id="9"
+>
+<![CDATA[
+</title>
+    ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="10"
+>
+<![CDATA[
+</head>
+    ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="11"
+>
+<![CDATA[
+<body>
+        ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="12"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="13"
+>
+<![CDATA[
+<b> Hello ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="14"
+>
+<![CDATA[
+</b>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="15"
+>
+<![CDATA[
+
+    ]]>
+</jsp:text>
+<jsp:text
+  jsp:id="16"
+>
+<![CDATA[
+</body>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="17"
+>
+<![CDATA[
+</html>
+]]>
+</jsp:text>
+</jsp:root>
+
+ ---- NODES
+
+Node [/include.jsp(1,5), Comment] <%-- 
+    Document   : include
+    Created on : Aug 21, 2007, 11:00:11 AM
+    Author     : petr
+--%>
+Node [/include.jsp(5,4), TemplateText] 
+
+
+Node [/include.jsp(7,0), PageDirective] <%@ page contentType="text/html" pageEncoding="UTF-8"%>
+Node [/include.jsp(7,54), TemplateText] 
+
+Node [/include.jsp(8,0), TemplateText] <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+
+Node [/include.jsp(11,0), TemplateText] <html>
+    
+Node [/include.jsp(12,4), TemplateText] <head>
+        
+Node [/include.jsp(13,8), TemplateText] <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+Node [/include.jsp(14,8), TemplateText] <title>JSP Page
+Node [/include.jsp(14,23), TemplateText] </title>
+    
+Node [/include.jsp(15,4), TemplateText] </head>
+    
+Node [/include.jsp(16,4), TemplateText] <body>
+        
+Node [/include.jsp(17,8), IncludeDirective] <%@ include file="body.jsp"%>  
+Node [/body.jsp(1,1), TemplateText]   
+  
+Node [/body.jsp(2,0), TemplateText]   <b> Hello   
+Node [/body.jsp(2,10), TemplateText]   </b>
+
+Node [/include.jsp(17,38), TemplateText] 
+    
+Node [/include.jsp(18,4), TemplateText] </body>
+
+Node [/include.jsp(19,0), TemplateText] </html>
+

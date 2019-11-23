@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+  <apidefs>
+    <apidef name="exec-property">System Properties Friend API</apidef>
+    <apidef name="bridge">Startup Bridge Friend API</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+      <change id="splash.screen.version.option">
+          <summary>
+              An optional version string can be added to the splash screen.
+          </summary>
+          <version major="1" minor="61"/>
+          <date day="11" month="5" year="2019"/>
+          <author login="ebakke"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  Branding bundles may now include the SplashVersionTextBounds,
+                  SplashVersionTextFontSize, SplashVersionTextFontType,
+                  SplashVersionTextColor, and SplashVersionTextHorizontalAlignment
+                  properties in order to display the application's product version
+                  and build number in the startup splash screen.
+              </p>
+          </description>
+      </change>
+      <change id="core.base.split">
+          <api name="bridge"/>
+          <summary>
+              Classes related to preferences and layered filesystems split into a
+              separate module.
+          </summary>
+          <version major="1" minor="60"/>
+          <date day="25" month="2" year="2015"/>
+          <author login="sdedic"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  Layered filesystem impl and preferences was split off to core.startup.base module.
+                  A SPI was created in core.startup.base and implemented in core.startup for actual
+                  FileSystem creation.
+              </p>
+          </description>
+          <class name="LayerFactory" package="org.netbeans.core.startup.base" link="no"/>
+
+          <class name="ArchiveURLMapper" package="org.netbeans.core.startup.layers" link="no"/>
+          <class name="LocalFileSystemEx" package="org.netbeans.core.startup.layers" link="no"/>
+          <class name="ModuleLayeredFileSystem" package="org.netbeans.core.startup.layers" link="no"/>
+          <class name="NbinstURLMapper" package="org.netbeans.core.startup.layers" link="no"/>
+          <class name="NbinstURLStreamHandler" package="org.netbeans.core.startup.layers" link="no"/>
+          <class name="SystemFileSystem" package="org.netbeans.core.startup.layers" link="no"/>
+          
+      </change>
+     <change id="control.all.resources.dat">
+        <api name="exec-property"/>
+        <summary>Control generation of all-resources.dat</summary>
+        <version major="1" minor="50"/>
+        <date day="31" month="5" year="2013"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Use <a href="architecture-summary.html#systemproperty-org.netbeans.core.update.all.resources">
+            org.netbeans.core.update.all.resources</a> to control how
+            <code>all-resources.dat</code> cache is being generated.
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="Main"/>
+        <issue number="224479"/>
+    </change>
+     <change id="module-system-check">
+        <api name="bridge"/>
+        <summary>Main.getModuleSystem(false)</summary>
+        <version major="1" minor="47"/>
+        <date day="10" month="1" year="2013"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Method <code>getModuleSystem(false)</code> to get existing module
+            system without initializing it.
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="Main"/>
+        <issue number="224479"/>
+    </change>
+     <change id="async-shutdown">
+        <api name="bridge"/>
+        <summary>Asynchronous shutdown</summary>
+        <version major="1" minor="45"/>
+        <date day="12" month="11" year="2012"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Method <code>shutDownAsync</code> to allow asynchronous tasks to
+            accessp EDT. Also in <code>ModuleInstaller</code> and 
+            <code>ModuleManager</code>. Also adding method <code>markForRestart</code>
+            into <code>ModuleSystem</code>.
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="ModuleSystem"/>
+    </change>
+     <change id="get-default-automatic-dependencies">
+        <api name="bridge"/>
+        <summary>getDefault</summary>
+        <version major="1" minor="39"/>
+        <date day="13" month="4" year="2012"/>
+        <author login="jrechtacek"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Returns instance of AutomaticDependencies based on default
+            list of transformations.
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="AutomaticDependencies"/>
+    </change>
+     <change id="is.au.visible">
+        <api name="bridge"/>
+        <summary>isShowInAutoUpdateClient</summary>
+        <version major="1" minor="38"/>
+        <date day="21" month="3" year="2012"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            Method to allow ergonomics and autoupdate to check if a module
+            is visible in the autoupdate client.
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="ModuleSystem"/>
+    </change>
+     <change id="netbeans.productversion">
+        <api name="exec-property"/>
+        <summary>netbeans.productversion property</summary>
+        <version major="1" minor="35"/>
+        <date day="2" month="9" year="2011"/>
+        <author login="anebuzelsky"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            New property 
+            <a href="architecture-summary.html#systemproperty-netbeans.productversion">netbeans.productversion</a> 
+            is available.
+        </p>
+        </description>
+    </change>
+     <change id="netbeans.bootdelegation">
+        <api name="exec-property"/>
+        <summary>netbeans.bootdelegation property</summary>
+        <version major="1" minor="26"/>
+        <date day="17" month="10" year="2010"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" />
+        <description>
+        <p>
+            New property 
+            <a href="architecture-summary.html#systemproperty-netbeans.bootdelegation">netbeans.bootdelegation</a> 
+            is available.
+        </p>
+        </description>
+    </change>
+     <change id="no-env-properties">
+        <api name="exec-property"/>
+        <summary>Environment variables are no longer accessible through system properties</summary>
+        <version major="1" minor="8"/>
+        <date day="20" month="12" year="2006"/>
+        <author login="rkubacki"/>
+        <compatibility addition="no" binary="incompatible" semantic="incompatible" />
+        <description>
+        <p>
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="Main" />
+    </change>
+     <change id="less-reflection">
+        <api name="bridge"/>
+        <summary>Adding new methods into CoreBridge</summary>
+        <version major="1" minor="7"/>
+        <date day="15" month="2" year="2005"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="incompatible" semantic="compatible" />
+        <description>
+        <p>
+        </p>
+        </description>
+        <class package="org.netbeans.core.startup" name="CoreBridge" />
+    </change>
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+    <head>
+      <title>Change History for the Friend Core APIs</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>
+This document lists changes made to the API between core/startup and core
+modules. It is a friend API so it does not need to be developed compatibly,
+and indeed it is not. 
+</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.core.startup"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

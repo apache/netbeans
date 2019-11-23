@@ -1,0 +1,7 @@
+<?php
+
+if (           !$dbTable instanceof Zend_Db_Table_Abstract ) {
+    throw new Exception( 'Invalid table data gateway provided' );
+}
+
+?>

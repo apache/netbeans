@@ -1,0 +1,2 @@
+9:35-9:36:error:local variable y is accessed from within inner class; needs to be declared final
+10:35-10:36:error:local variable t is accessed from within inner class; needs to be declared final

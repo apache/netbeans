@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:cl^ass<| = 'StdClass';
+$obj = new $|>MARK_OCCURRENCES:class<|();

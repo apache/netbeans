@@ -1,0 +1,88 @@
+package encapsulateField;
+
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeSupport;
+
+public class Class_A_W {
+    public static final String PROP_FIELD2 = "PROP_FIELD2";
+
+    private int     field1;
+    private String  field2 = "1234";
+    private boolean field3;
+    private ClassA  field4 = new ClassA(1234);
+    private final transient PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    private final transient VetoableChangeSupport vetoableChangeSupport = new java.beans.VetoableChangeSupport(this);
+
+    public void m1(int field1) {
+        this.field1 = 5;
+
+    }
+
+    public Class_A_W(int f) {
+        this.field1 = f;
+    }
+
+    public boolean isField3() {
+        return field3;
+    }
+
+    public void setField3(boolean field3) {
+        this.field3 = field3;
+    }
+
+    public String getField2() {
+        return field2;
+    }
+
+    public void setField2(String field2) throws PropertyVetoException {
+        java.lang.String oldField2 = this.field2;
+        vetoableChangeSupport.fireVetoableChange(PROP_FIELD2, oldField2, field2);
+        this.field2 = field2;
+        propertyChangeSupport.firePropertyChange(PROP_FIELD2, oldField2, field2);
+    }
+
+    class ClassA {
+
+        protected int val = 5;
+
+        public ClassA(int val) {
+            this.val = val;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public void setVal(int val) {
+            this.val = val;
+        }
+    }
+
+    class ClassB extends ClassA {
+
+        public ClassB(int val) {
+            super(val);
+        }
+
+        public void m1() {
+            val = 10;
+            field1 = (int) Math.asin((double) field1) + Integer.valueOf(getField2()) + Boolean.compare(isField3(), true) + field4.getVal();
+        }
+    }
+
+    public void m2() {
+    }
+
+    class ClassC extends ClassB {
+
+        public ClassC(int val) {
+            super(val);
+        }
+
+        public void m1() {
+            val = 10;
+        }
+    }
+}
+

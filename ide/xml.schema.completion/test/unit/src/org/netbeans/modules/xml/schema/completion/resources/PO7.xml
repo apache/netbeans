@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<po:purchaseOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:po="http://xml.netbeans.org/schema/PO"
+  xsi:schemaLocation="http://xml.netbeans.org/schema/PO PO.xsd">
+  <po:billTo>
+    <po:name>Samaresh</
+  </po:billTo>
+</po:purchaseOrder>

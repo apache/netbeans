@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="SimpleForm" minHeight="90.0" minWidth="220.0" prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml">
+  <children>
+    <CheckBox id="OptOutCheckBox" text="Keep Me Informed" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="5.0" />
+    <Button id="SubmitButton" text="Submit" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+    <AnchorPane id="ValuePane" minHeight="127.0" minWidth="330.0" prefHeight="127.0" prefWidth="330.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="5.0">
+      <children>
+        <TextField id="NameTextField" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+        <TextField id="newTextField" layoutX="1.0" layoutY="72.0" minHeight="21.310546875" minWidth="321.0" prefHeight="21.310546875" prefWidth="321.0" promptText="asdf" text="Ahoj" fx:id="newTextField">
+          <effect>
+            <MotionBlur radius="5.0"
+          </effect>
+        </TextField>
+        <TextField id="EmailTextField" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
+      </children>
+    </AnchorPane>
+    </somebogus>
+    <AnchorPane id="LabelPane" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="8.0">
+      <children2>
+        <Label id="NameLabel" text="Name:" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <Label id="EmailLabel" text="Email:" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="34.0" />
+      </children>
+    </AnchorPane>
+    <Label id="Label" layoutX="5.0" layoutY="77.0" text="Label" />
+  </children>
+</AnchorPane>

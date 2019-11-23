@@ -1,0 +1,8 @@
+if (|>GLOBAL:t1<|==undefined)
+{
+alert("t1 is undefined");
+}
+if (|>GLOBAL:t2<|===undefined)
+{
+alert("t2 is undefined");
+}

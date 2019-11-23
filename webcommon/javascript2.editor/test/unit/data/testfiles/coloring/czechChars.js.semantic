@@ -1,0 +1,30 @@
+jQuery(function($){
+    $.timepicker.regional["|>CLASS:cs<|"] = {
+        |>FIELD:closeText<|: 'Zavřít',
+        |>FIELD:prevText<|: '&#x3c;Dříve',
+        |>FIELD:nextText<|: 'Později&#x3e;',
+        |>FIELD:currentText<|: 'Nyní',
+        |>FIELD:hourText<|:"Hodiny",
+        |>FIELD:minuteText<|:"Minuty",
+        |>FIELD:secondText<|:"Vteřiny",
+        |>FIELD:monthNames<|: ['leden','únor','březen','duben','květen','červen',
+            'červenec','srpen','září','říjen','listopad','prosinec'],
+        |>FIELD:monthNamesShort<|: ['led','úno','bře','dub','kvě','čer',
+            'čvc','srp','zář','říj','lis','pro'],
+        |>FIELD:dayNames<|: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
+        |>FIELD:dayNamesShort<|: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+        |>FIELD:dayNamesMin<|: ['ne','po','út','st','čt','pá','so'],
+        |>FIELD:weekHeader<|: 'Týd',
+        |>FIELD:dateFormat<|: 'dd.mm.yy',
+        |>FIELD:firstDay<|: 1,
+        |>FIELD:isRTL<|: false,
+        |>FIELD:showMonthAfterYear<|: false,
+        |>FIELD:yearSuffix<|: ''};
+    $.timepicker.setDefaults($.timepicker.regional['|>CLASS:cs<|']);
+    
+    var |>CLASS:test<| = {}
+    test["|>FIELD:myProperty<|"] = 20;
+    test.|>FIELD:anotherProperty<| = test.|>FIELD:myProperty<|;
+});
+
+

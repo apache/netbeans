@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns="http://xml.netbeans.org/examples/targetNS"
+    targetNamespace="http://xml.netbeans.org/examples/testList"
+    xmlns="http://xml.netbeans.org/examples/targetNS"
+    elementFormDefault="qualified">
+
+    <!--   
+    <xsd:element name="address-book" type="ns:AddressBookType">
+    <xsd:unique name="item-name-uniqueness">
+    <xsd:selector xpath="ns:item"/>
+    <xsd:field    xpath="ns:name"/>
+    </xsd:unique>
+    </xsd:element>
+
+    <xsd:complexType name="AddressBookType">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    <xsd:element name="item" type="ns:ItemType"/>
+    </xsd:choice>
+    </xsd:complexType>
+     
+    <xsd:complexType name="ItemType">
+    <xsd:sequence>
+    <xsd:element name="name"    type="xsd:string"/>
+    <xsd:element name="email"   type="xsd:string" minOccurs="0"/>
+    <xsd:element name="mobile" minOccurs="0">
+    <xsd:simpleType>
+    <xsd:restriction base="xsd:string">
+    <xsd:pattern value="\d{3}-\d{6}"/>
+    </xsd:restriction>
+    </xsd:simpleType>
+    </xsd:element>
+    </xsd:sequence>
+    </xsd:complexType>
+    -->
+    <xs:simpleType name='myList1'>
+        <xs:list itemType='xs:integer'/>
+    </xs:simpleType>
+    
+    <xs:simpleType name='myList2'>
+        <xs:list itemType='zero-to-ten'/>
+    </xs:simpleType>
+
+    <xs:simpleType name='myList3'>
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minExclusive value="0"/>
+                    <xs:maxExclusive value="10"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
+    </xs:simpleType>
+
+    <xs:simpleType name='zero-to-ten'>
+        <xs:list>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minExclusive value="0"/>
+                    <xs:maxExclusive value="10"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:list>
+    </xs:simpleType>
+</xsd:schema>

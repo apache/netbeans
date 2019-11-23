@@ -1,0 +1,2 @@
+function UnusedParameter(|>MARK_OCCURRENCES:ctl<|)
+	var type = |>MARK_OCCURRENCES:ct^l<|.options.selectedIndex,

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: prov_foo_bar
+OpenIDE-Module-Provides: foo, bar
+OpenIDE-Module-Name: Provides foo & bar

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://foo.com/xml/group-unbounded"
+        targetNamespace="http://foo.com/xml/group-unbounded"
+        elementFormDefault="unqualified"
+        attributeFormDefault="unqualified"
+        version="1.0">
+
+    <xsd:annotation>
+        <xsd:documentation>
+	  This is a test.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="group-unbounded" form="qualified">
+        <xsd:annotation>
+            <xsd:documentation>
+            A group-unbounded is a sequence of definitions, which can be of three kinds:
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:complexType>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:choice>
+                    <xsd:element name="object" type="tns:objectType"/>
+                    <xsd:element name="iobject" type="tns:iobjectType"/>
+                    <xsd:element name="property" type="tns:propertyType"/>
+                </xsd:choice>
+            </xsd:sequence>
+            <xsd:attribute name="version" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="objectType">
+        <xsd:annotation>
+            <xsd:documentation>
+            Object definition. Contains a unique id as well as a type name for the object.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType  name="iobjectType">
+        <xsd:annotation>
+            <xsd:documentation>
+            Immediate object definition. In addition to id and type, it contains a value.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType  name="propertyType">
+        <xsd:annotation>
+            <xsd:documentation>
+            Property definition. It says that the "subject" (identified by id) has a property
+            called "name" with the object of id "value" as its value.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="subject" type="xsd:string" use="required"/>
+        <xsd:attribute name="value" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+</xsd:schema>

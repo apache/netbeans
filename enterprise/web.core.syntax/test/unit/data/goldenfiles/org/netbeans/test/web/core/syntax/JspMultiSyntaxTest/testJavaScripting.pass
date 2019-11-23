@@ -1,0 +1,47 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [1, 4]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [5, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<%!' [6, 3]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+' ' [9, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+'int' [10, 3]; int; 68; keywords; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+' ' [13, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+'a' [14, 1]; identifier; 6; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+' ' [15, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+'=' [16, 1]; eq; 17; operators; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+' ' [17, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+'1' [18, 1]; int-literal; 11; numeric-literals; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+';' [19, 1]; semicolon; 51; operators; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+' ' [20, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaDeclarationTokenContext, JspMultiTokenContext
+'%>' [21, 2]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+'<NL><NL>' [23, 2]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [25, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'br' [26, 2]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [28, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [29, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<%=' [30, 3]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+'"hello"' [33, 7]; string-literal; 10; -; JavaTokenContext, JspJavaFakeTokenContext$JavaExpressionTokenContext, JspMultiTokenContext
+'%>' [40, 2]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+'<NL>' [42, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [43, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'br' [44, 2]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [46, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [47, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<%' [48, 2]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+' ' [50, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+'String' [51, 6]; identifier; 6; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+' ' [57, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+'s' [58, 1]; identifier; 6; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+' ' [59, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+'=' [60, 1]; eq; 17; operators; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+' ' [61, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+'"world"' [62, 7]; string-literal; 10; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+';' [69, 1]; semicolon; 51; operators; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+' ' [70, 1]; whitespace; 5; -; JavaTokenContext, JspJavaFakeTokenContext$JavaScriptletTokenContext, JspMultiTokenContext
+'%>' [71, 2]; scriptlet-delimiter; 5; -; JspTagTokenContext, JspMultiTokenContext
+'<NL>' [73, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [74, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [76, 4]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [80, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext

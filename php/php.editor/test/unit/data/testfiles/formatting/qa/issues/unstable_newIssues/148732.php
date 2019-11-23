@@ -1,0 +1,1 @@
+<? class a{function aa(){return;}} ?>

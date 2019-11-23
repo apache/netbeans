@@ -1,0 +1,20 @@
+[TAG(1):p][WHITESPACE(1): ][TEXT(8)://- test][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][EOL(1):\n]
+[WHITESPACE(4):    ][UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(42):
+     comment
+     second line of coment
+
+][TAG(3):tag][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][EOL(1):\n]
+[WHITESPACE(4):    ][UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(41):
+     comment
+     second line of coment
+][TAG(3):tag][EOL(1):\n]
+[EOL(1):\n]
+[TAG(1):p][EOL(1):\n]
+[WHITESPACE(4):    ][UNBUFFERED_COMMENT_DELIMITER(3)://-][UNBUFFERED_COMMENT(41):
+     comment
+     second line of coment
+][TAG(3):tag]

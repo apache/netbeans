@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.nbjavac.api
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/nbjavac/api/Bundle.properties
+OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Hide-Classpath-Packages: com.sun.javadoc.**, com.sun.source.**, javax.annotation.processing.**, javax.lang.model.**, javax.tools.**, com.sun.tools.javac.**
+OpenIDE-Module-Fragment-Host: org.netbeans.libs.javacapi

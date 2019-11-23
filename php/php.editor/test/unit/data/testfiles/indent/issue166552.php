@@ -1,0 +1,15 @@
+<?php
+class JobeetJobForm extends BaseJobeetJobForm {
+    public function configure() {
+        unset(
+            $this['created_at'], $this['updated_at'],
+            $this['expires_at'], $this['is_activated']
+        );
+        $this->validatorSchema['email'] = new sfValidatorAnd(array(
+            $this->validatorSchema['email'],
+            new sfValidatorEmail(),
+        ));^
+    }
+}
+
+?>

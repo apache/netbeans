@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:mylibrary="http://java.sun.com/jsf/composite/mylibrary">
+    <h:body>
+        <h:dataTable value="#{ProductMB.all}" var="prop">
+            <h:column>
+                <h:outputText value="#{prop.id}"/>
+            </h:column>
+            <h:column>
+                <mylibrary:newjsf who="#{prop.name}"/>
+            </h:column>
+            <h:column>
+                <h:form value="#{prop.name}"      var="inner">
+                    <h:commandLink action="#{ProductMB.delete}" value="Delete">
+                        <f:param name="id" value="#{prop.id}"/>
+                    </h:commandLink>
+                    <h:commandButton value="Edit" action="#{ProductMB.selectItem}">
+                        <f:param name="id" value="#{prop.id}"/>
+                    </h:commandButton>
+                </h:form>
+            </h:column>
+        </h:dataTable>
+        <h:form value="#{ProductMB.id}" var="formVar">
+            <h:panelGrid columns="3">
+                Name
+                <h:inputText value="#{ProductMB.name}"/>
+            </h:panelGrid>
+            <h:commandButton value="Insert New" action="#{ProductMB.save}"/>
+            <h:commandButton value="Clear" action="#{ProductMB.clear}"/>
+        </h:form>
+    </h:body>
+</html>
+

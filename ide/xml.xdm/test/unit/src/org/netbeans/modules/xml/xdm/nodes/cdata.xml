@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <script>
+	<cdata>
+<![CDATA[ function match(a,b) if (a > 0 && b < 7) <a/> ]]> </cdata>
+<!-- I am a comment -->
+<multi-line-comment>
+    <!-- line 1
+line 2
+line 3
+-->
+</multi-line-comment>
+<multi-line-cdata>
+    <![CDATA[
+<!--line1-->
+<!--line2-->
+]]>
+</multi-line-cdata>
+</script>

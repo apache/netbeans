@@ -1,0 +1,4 @@
+Code completion result for source line:
+$article->| //array type hint
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     functionName($param)            [PUBLIC]   Article

@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>web.xml Visual Editor: Web Application Listeners</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="dd_multiview_overview_listenersNode" name="dd_multiview_overview_listenersNode"></a></p>
+<div id="NBCSH3779"><!-- infolevel="all" infotype="General" --><a id="sthref513" name="sthref513"></a>
+<h1>web.xml Visual Editor: Web Application Listeners</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use the Web Application Listeners section of the <code dir="ltr">web.xml</code> Visual Editor to add, remove, and view the deployment information of your web application's listeners. Web application listeners give you more control over interactions with the <code dir="ltr">ServletContext</code> and <code dir="ltr">HttpSession</code> objects and let you efficiently manage the resources used by a web application. Web application listeners are classes that implement one or more of the servlet event listener interfaces. Application events notify web application listeners when servlet contexts and sessions are initialized and destroyed, as well as when attributes are added or removed from a context or session. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>To deploy a web application listener, you must register it in the <code dir="ltr">web.xml</code> file. When you do this, you provide information needed by the server to deploy the web application listener. You tell the server which class should be loaded when a web application listener is called.</p>
+<p>Before you can register a web application listener in the <code dir="ltr">web.xml</code> file, you must create it in the New File wizard or import it from your existing sources. You can use the Name and Location panel of the New File wizard to register a web application listener. If you have not done so, or if you want to modify a registered web application listener's deployment information, use the Web Application Listeners section of the <code dir="ltr">web.xml</code> Visual Editor.</p>
+<p>In the Visual Editor, click <b>General</b> at the top of the editor to open the General section, then click the Web Application Listeners header to open the Web Application Listeners section.</p>
+<p>Click <b>Add</b> to define the listener element with the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t5">Element</th>
+<th align="left" valign="bottom" id="r1c2-t5">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t5" headers="r1c1-t5">
+<p>Listener Class</p>
+</td>
+<td align="left" headers="r2c1-t5 r1c2-t5">Specifies the listener's class, such as <code dir="ltr">MonitorMyCompanyName</code>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t5" headers="r1c1-t5">
+<p>Description</p>
+</td>
+<td align="left" headers="r3c1-t5 r1c2-t5">Specifies a description, such as <code dir="ltr">Monitor the servlet context for changes to the context parameter that defines the company name</code>. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1114">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3782" name="NBCSH3782"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1107">
+<param name="text" value="<html><u>&quot;Using Web Application Listeners&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

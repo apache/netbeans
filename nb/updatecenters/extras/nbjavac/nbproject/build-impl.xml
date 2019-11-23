@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+*** GENERATED FROM project.xml - DO NOT EDIT  ***
+***         EDIT ../build.xml INSTEAD         ***
+-->
+<project name="org.netbeans.modules.nbjavac-impl" basedir="..">
+    <property file="nbproject/private/suite-private.properties"/>
+    <property file="nbproject/suite.properties"/>
+    <fail unless="suite.dir">You must set 'suite.dir' to point to your containing module suite</fail>
+    <property file="${suite.dir}/nbproject/private/platform-private.properties"/>
+    <property file="${suite.dir}/nbproject/platform.properties"/>
+    <macrodef name="property" uri="http://www.netbeans.org/ns/nb-module-project/2">
+        <attribute name="name"/>
+        <attribute name="value"/>
+        <sequential>
+            <property name="@{name}" value="${@{value}}"/>
+        </sequential>
+    </macrodef>
+    <property file="${user.properties.file}"/>
+    <nbmproject2:property name="harness.dir" value="nbplatform.${nbplatform.active}.harness.dir" xmlns:nbmproject2="http://www.netbeans.org/ns/nb-module-project/2"/>
+    <nbmproject2:property name="netbeans.dest.dir" value="nbplatform.${nbplatform.active}.netbeans.dest.dir" xmlns:nbmproject2="http://www.netbeans.org/ns/nb-module-project/2"/>
+    <fail message="You must define 'nbplatform.${nbplatform.active}.harness.dir'">
+        <condition>
+            <not>
+                <available file="${harness.dir}" type="dir"/>
+            </not>
+        </condition>
+    </fail>
+    <import file="${harness.dir}/build.xml"/>
+</project>

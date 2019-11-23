@@ -1,0 +1,4 @@
+Code completion result for source line:
+$anon->|testAnon();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testAnon()                      [PUBLIC]   {}

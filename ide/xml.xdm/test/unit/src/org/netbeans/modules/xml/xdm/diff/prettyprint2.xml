@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<prettyprint>
+	<simpleContent name="test1">A new text node</simpleContent>
+	<addOnlyChild name="test2">
+		<c name="c1"/>
+	</addOnlyChild>
+	<cutPastePretty name="test7">
+                <xs:annotation>
+                        <xs:documentation>A loan application xml schema</xs:documentation>
+                </xs:annotation>
+		<a name="a1"/>
+		<b name="b1"/>
+		<c name="c1"/>
+	</cutPastePretty>        
+	<addNthChildReplacePretty name="test3">
+		<a name="a1"/>
+		<b name="b1"/>
+		<c name="c1"/>
+	</addNthChildReplacePretty>
+	<addNthChildAddPrettyBefore name="test4">
+		<a name="a1"/>
+		<b name="b1"/>
+		<c name="c1"/>
+	</addNthChildAddPrettyBefore>
+	<addNthChildAddPrettyAfter name="test5">
+		<a name="a1"/>
+		<b name="b1"/>
+		<c name="c1"/>
+	</addNthChildAddPrettyAfter>
+	<prettyPrintRecursive name="test6">
+		<a name="a1">
+			<a1_1>
+				<a1_2>
+					<a1_3/>
+				</a1_2>
+			</a1_1>
+		</a>
+		
+		<b name="b1">
+			<b1_1>
+				b1_1
+			</b1_1>
+			<b2_1>
+				b1_1
+			</b2_1>
+			<b3_1>
+				<b3_2>
+					<a3_3/>
+				</b3_2>
+			</b3_1>			
+		</b>
+		
+		<c name="c1">A new text node<c1_1/>here</c>
+	</prettyPrintRecursive>	
+</prettyprint>

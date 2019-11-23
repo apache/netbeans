@@ -1,0 +1,12 @@
+root:ROOT(0-97)
+   <ul>(0-4/96)[RR];S:root
+      <li>(9-13/18)[RO];S:root,ul
+      <li>(18-22/27)[RO];S:root,ul,li
+      </li>(22-27)[RO];S:root,ul,li
+      <li>(32-36/81)[RO];S:root,ul
+         <ol>(45-49/76)[RR]missing_required_end_tag ;S:root,ul,li
+            <li>(62-66/71)[RO];S:root,ul,li,ol
+            </li>(66-71)[RO];S:root,ul,li,ol,li
+      </li>(76-81)[RO];S:root,ul,li,ol
+      <li>(86-90/91)[RO];S:root,ul
+   </ul>(91-96)[RR!];S:root,ul,li

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="imported" default="irrelevant" basedir=".">
+    <target name="subtarget">
+        <echo>subtarget run</echo>
+        <!-- See AntLoggerTest.testLocationOfImportedTasks for explanation: -->
+        <whichresource class="java.lang.Object" property="irrelevant"/>
+    </target>
+</project>

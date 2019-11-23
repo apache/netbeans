@@ -1,0 +1,24 @@
+<?php
+
+new class {
+    private $|>FIELD:usedField<|;
+    private $|>FIELD,UNUSED:unusedField<|;
+    private static $|>FIELD,STATIC:usedStaticField<|;
+    private static $|>FIELD,STATIC,UNUSED:unusedStaticField<|;
+
+
+    public function |>METHOD:publicMethod<|() {
+        $this->|>FIELD:usedField<| = 10;
+        self::$|>FIELD,STATIC:usedStaticField<| = 20;
+        $this->|>CUSTOM1:usedPrivateMethod<|();
+        self::|>CUSTOM1,STATIC:usedStaticPrivateMethod<|();
+    }
+    private function |>METHOD:usedPrivateMethod<|() {
+    }
+    private function |>METHOD,UNUSED:unusedPrivateMethod<|() {
+    }
+    private static function |>METHOD,STATIC:usedStaticPrivateMethod<|() {
+    }
+    private static function |>METHOD,STATIC,UNUSED:unusedStaticPrivateMethod<|() {
+    }
+};

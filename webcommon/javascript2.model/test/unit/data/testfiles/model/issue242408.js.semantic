@@ -1,0 +1,17 @@
+function |>METHOD:test<|(|>UNUSED:name<|) {
+    |>GLOBAL:window<|.console.log(1);
+}
+
+var |>GLOBAL:foo<| = {};
+|>GLOBAL:foo<|.|>METHOD:bar<| = test;
+|>GLOBAL:foo<|.bar();
+
+
+function |>METHOD:Cube<|() {
+}
+
+Cube.prototype.|>METHOD:foo<| = test;
+
+
+var |>GLOBAL:cube<| = new Cube();
+|>GLOBAL:cube<|.foo();

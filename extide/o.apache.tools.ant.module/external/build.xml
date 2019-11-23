@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="o.apache.tools.ant.module/external" default="unzip" basedir=".">
+    <target name="unzip">
+        <mkdir dir="lib"/>
+        <copy todir="lib">
+            <fileset dir=".">
+                <include name="ant-antlr-1.10.4.jar" />
+                <include name="ant-apache-bcel-1.10.4.jar" />
+                <include name="ant-apache-bsf-1.10.4.jar" />
+                <include name="ant-apache-log4j-1.10.4.jar" />
+                <include name="ant-apache-oro-1.10.4.jar" />
+                <include name="ant-apache-regexp-1.10.4.jar" />
+                <include name="ant-apache-resolver-1.10.4.jar" />
+                <include name="ant-apache-xalan2-1.10.4.jar" />
+                <include name="ant-commons-logging-1.10.4.jar" />
+                <include name="ant-commons-net-1.10.4.jar" />
+                <include name="ant-jai-1.10.4.jar" />
+                <include name="ant-javamail-1.10.4.jar" />
+                <include name="ant-jdepend-1.10.4.jar" />
+                <include name="ant-jmf-1.10.4.jar" />
+                <include name="ant-jsch-1.10.4.jar" />
+                <include name="ant-junit-1.10.4.jar" />
+                <include name="ant-junit4-1.10.4.jar" />
+                <include name="ant-launcher-1.10.4.jar" />
+                <include name="ant-netrexx-1.10.4.jar" />
+                <include name="ant-swing-1.10.4.jar" />
+                <include name="ant-testutil-1.10.4.jar" />
+                <include name="ant-xz-1.10.4.jar" />
+                <include name="ant-1.10.4.jar" />
+            </fileset>
+            <globmapper from="*-1.10.4.jar" to="*.jar"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="lib"/>
+    </target>
+</project>

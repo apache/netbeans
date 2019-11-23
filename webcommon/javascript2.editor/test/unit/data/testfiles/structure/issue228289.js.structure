@@ -1,0 +1,4 @@
+MyObject:CONSTRUCTOR:[PUBLIC]:ESCAPED{MyObject}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MyObject</font>:
+  _privateMethodB:METHOD:[PRIVATE]:ESCAPED{_privateMethodB}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Brouka</font>:
+  _privateProp:VARIABLE:[PRIVATE]:ESCAPED{_privateProp}:
+  publicMethodA:METHOD:[PROTECTED]:ESCAPED{publicMethodA}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

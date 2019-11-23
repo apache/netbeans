@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Keymaps">
+        <folder name="NetBeans">
+            <file name="DS-U.shadow">
+                <attr name="originalFile" stringvalue="Actions/UnitTests/org-netbeans-modules-gsf-testrunner-TestCreatorAction.instance"/>
+            </file>
+            <file name="OS-B.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-spring-beans-jumpto-type-GoToBean.instance"/>
+            </file>
+        </folder>
+        <folder name="NetBeans55">
+            <file name="DS-J.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-i18n-InsertI18nStringAction.instance"/>
+            </file>
+            <file name="DS-U.shadow">
+                <attr name="originalFile" stringvalue="Actions/UnitTests/org-netbeans-modules-gsf-testrunner-TestCreatorAction.instance"/>
+            </file>
+        </folder>
+        <folder name="Idea">
+            <file name="A-F8.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-EvaluateAction.instance"/>
+            </file>
+            <file name="C-F12.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowMembersAction.instance"/>
+            </file>
+            <file name="C-F6.shadow">
+                <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-java-api-ui-ChangeParametersAction.instance"/>
+            </file>
+            <file name="C-H.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowHierarchyAction.instance"/>
+            </file>
+            <file name="CA-F8.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
+            </file>
+            <file name="CA-N.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-spring-beans-jumpto-type-GoToBean.instance"/>
+            </file>
+            <file name="CS-H.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowHierarchyAtCaretAction.instance"/>
+            </file>
+            <file name="D-8.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-SetCurrentThreadFromHistoryAction.instance"/>
+            </file>
+            <file name="S-F1.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-javadoc-search-SearchDocAction.instance"/>
+            </file>
+            <file name="SO-9.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/Debug/org-netbeans-modules-debugger-ui-actions-DebuggingViewAction.instance"/>
+            </file>
+        </folder>
+        <folder name="Eclipse">
+            <file name="D-O.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowMembersAction.instance"/>
+            </file>
+            <file name="D-T.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-java-navigation-actions-ShowHierarchyAtCaretAction.instance"/>
+            </file>
+        </folder>
+        <folder name="Emacs">
+            <file name="DS-J.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-i18n-InsertI18nStringAction.instance"/>
+            </file>
+            <file name="DS-U.shadow">
+                <attr name="originalFile" stringvalue="Actions/UnitTests/org-netbeans-modules-gsf-testrunner-TestCreatorAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

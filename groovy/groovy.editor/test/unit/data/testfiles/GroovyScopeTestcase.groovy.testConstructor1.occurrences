@@ -1,0 +1,6 @@
+new |>MARK_OCCURRENCES:TestCase<|().method1()
+new |>MARK_OCCURRENCES:Tes^tCase<|().method1(1)
+TestCase c = new |>MARK_OCCURRENCES:TestCase<|()
+    |>MARK_OCCURRENCES:TestCase<|() {
+        new |>MARK_OCCURRENCES:TestCase<|()
+        new |>MARK_OCCURRENCES:TestCase<|()

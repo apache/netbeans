@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ASCII"?>
+<jsflibreg:JSFLibraryRegistry xmlns:jsflibreg="http://www.eclipse.org/webtools/jsf/schema/jsflibraryregistry.xsd" DefaultImplementationID="my-jsf">
+  <JSFLibraries Name="my-jsf" JSFVersion="v1_2" Deployed="false" Implementation="true">
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/commons-beanutils.jar" RelativeDestLocation="WEB-INF/lib"/>
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/commons-collections.jar" RelativeDestLocation="WEB-INF/lib"/>
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/commons-digester.jar" RelativeDestLocation="WEB-INF/lib"/>
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/commons-logging.jar" RelativeDestLocation="WEB-INF/lib"/>
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/jsf-api.jar" RelativeDestLocation="WEB-INF/lib"/>
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/netbeans-6.1/enterprise6/modules/ext/jsf-1_2/jsf-impl.jar" RelativeDestLocation="WEB-INF/lib"/>
+  </JSFLibraries>
+  <JSFLibraries Name="jsf-lib2" JSFVersion="v1_2" Deployed="false" Implementation="true">
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/.m2/repository/smth/smth.jar" RelativeDestLocation="WEB-INF/lib"/>
+  </JSFLibraries>
+  <JSFLibraries Name="test" JSFVersion="v1_1" Deployed="false">
+    <ArchiveFiles RelativeToWorkspace="false" SourceLocation="/home/david/.m2/repository/smth/smthB.jar" RelativeDestLocation="WEB-INF/lib"/>
+  </JSFLibraries>
+  <JSFLibraries Name="last-one" Deployed="false" Implementation="true">
+    <ArchiveFiles SourceLocation="smth/smthC.jar" RelativeDestLocation="WEB-INF/lib"/>
+  </JSFLibraries>
+</jsflibreg:JSFLibraryRegistry>

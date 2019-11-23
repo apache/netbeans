@@ -1,0 +1,6 @@
+Profiling               > Profiler                 R
+                          Live Results             L
+                          Threads                  T
+                          VM Telemetry             V
+                          VM Telemetry Overview    O
+                          Profiling Points         P

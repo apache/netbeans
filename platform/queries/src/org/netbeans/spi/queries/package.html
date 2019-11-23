@@ -1,0 +1,54 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+
+Permits query implementations to be registered.
+
+<p>A query is implemented by creating an instance of its implementation
+interface and registering it to default lookup. Queriers should normally not
+need to see these interfaces directly since there is a matching utility class
+which aggregates and prioritizes the results automatically. The utility class in
+the API can also insulate clients from changes in the SPI.</p>
+
+<p>It is expected that only a small number of implementations of a given query
+interface are actually registered at once, so the critical path for answering it
+should be relatively short. Where a large number of modules are
+able to supply information for a query following a common structure, and it is
+possible to quickly determine which one would know the answer, a multiplexing
+implementation of the query interface may be registered which can reroute
+requests directly to a proper implementation of some secondary interface (again
+registered in default lookup). This technique permits the SPI to be very
+flexible while keeping a typical API method call fast. For an example, note that
+only one instance of
+<a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectFactory.html"><code>ProjectFactory</code></a>
+is
+necessary to support all Ant-based projects: each project type is defined using
+an
+<a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntBasedProjectType.html"><code>AntBasedProjectType</code></a>,
+and the
+singleton multiplexer delegates appropriately based on the project type ID found
+in <code>nbproject/project.xml</code> in the project directory. Therefore adding
+a new Ant-based project type should not increase the time required to recognize a
+particular Ant-based project on disk.</p>
+
+</body>
+</html>

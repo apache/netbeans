@@ -1,0 +1,126 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.76 [en] (Windows NT 5.0; U) [Netscape]">
+  <title>package</title>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+</head>
+<body style="color: rgb(0, 0, 0);" link="#0000ee" alink="#0000ee"
+ vlink="#551a8b">
+JPDA Debugger SPIs defines support for Smart Stepping, Variables Filtering
+and filtering of all Debugger Views.
+
+<br>
+<h3><a name="Smart_Stepping_Support"></a>Smart Stepping Support</h3>
+<h4><span style="font-weight: bold;">Interfaces involved:</span></h4>
+<ul>
+  <li>{@link org.netbeans.api.debugger.jpda.SmartSteppingFilter} :
+Defines list of class exclusion filters to be used to filter stepping
+in debugged session.</li>
+  <li>{@link org.netbeans.spi.debugger.jpda.SmartSteppingCallback} :
+Listens on stepping engine and defines classes / places the debugger
+can stop in. </li>
+  <li>{@link org.netbeans.api.debugger.jpda.JPDAThread} : Represents
+context for SmartSteppingCallback (class name, method name, line
+number, ...).</li>
+</ul>
+<h4><span style="font-weight: bold;">Functionality supported:</span></h4>
+<div style="margin-left: 40px;">Set of SmartSteppingCallback installed
+to JPDA Debugger defines scope for Step Into / Over / Out Actions. When
+user press some Step action, debugging is resumed. And when debugger
+stops on some new place (defined by class name and line number) set of
+SSListeners is asked if debugging should stop on this place or not (see
+{@link org.netbeans.spi.debugger.jpda.SmartSteppingCallback#stopHere}
+method). But this step-by-step method is slow. That is why the second,
+more powerfull method is here. SSListener can define some set of class
+exclusion patterns (like java.*, com.abba.Loader, ...). This set of
+exclusion patterns managed by {@link
+org.netbeans.api.debugger.jpda.SmartSteppingFilter} class defines scope
+for Step Actions in more powerfull way.<br>
+<br>
+JPDA Debugger installs one default SmartSteppingCallback. It excludes
+all sourceless classes (packages). So, if user does not have mounted
+sources for Java default libraries, this SSListener adds patterns like:
+java.*, javax.* and com.sun.*. <br>
+</div>
+<h4>How to implement some new Smart Stepping Listener:</h4>
+<div style="margin-left: 40px;">Lets say we have some xxx module which
+generates some code to standard Java classes. The generated code is
+always in some methods, which name is prefixed with "xxx" like:<br>
+<pre style="background-color: rgb(255, 255, 102);">class MyClass {<br>    private void xxxBigBusinessMethod () {<br>        // generated code is here!<br>    }<br>&nbsp;<br>    public void userMethod () {<br>        // user code is here...<br>    }<br>}<br></pre>
+</div>
+<div style="margin-left: 40px;">And we would like to change standard
+JPDA debugger to not stop in generated methods. <br>
+In this case we should implement {@link
+org.netbeans.spi.debugger.jpda.SmartSteppingCallback}:<br>
+<pre style="background-color: rgb(255, 255, 102);">public class SmartSteppingCallbackImpl extends SmartSteppingCallback {<br>    <br>    public void initFilter (SmartSteppingFilter f) {}<br>    <br>    public boolean stopHere (ContextProvider lookupProvider, JPDAThread thread, SmartSteppingFilter f) {<br>        String methodName = thread.getMethodName ();<br>        return !methodName.startsWith ("xxx");  // if method starts with "xxx" DO NOT stop there!<br>    }<br>}<br></pre>
+To register this implementation, add following annotation before the class declaration:
+<pre style="background-color: rgb(255, 255, 102);">@SmartSteppingCallback.Registration(path="netbeans-JPDASession")</pre>
+Or register the full implementation class name (packagename.SmartSteppingCallbackImpl) into the file named:<br>
+<pre style="background-color: rgb(255, 255, 102);">META-INF\debugger\netbeans-JPDASession\org.netbeans.spi.debugger.jpda.SmartSteppingCallback</pre>
+</div>
+<h3><a name="Variables_Filtering_Support"></a>Variables Filtering
+Support</h3>
+<br>
+<h3><a name="Filtering_of_Debugger_Views"></a>Filtering of Debugger
+Views</h3>
+<ul>
+</ul>
+<div style="margin-left: 40px;">Content of all Debugger Views (like
+Breakpoints View, Threads View, ...) can be changed by
+viewmodel.*Filters. Folowing example shows how to filter Callstack
+View. We would hide all frames associated with some "java.*" packages.
+Some dummy node will be displayed in the place of this frames.<br>
+<h4>Step 1.</h4>
+<div style="margin-left: 40px;">We should implement {@link
+org.netbeans.spi.viewmodel.TreeModelFilter} first:<br>
+<pre style="background-color: rgb(255, 255, 102);">public class CallStackFilter implements TreeModelFilter {<br>    <br>    public Object[] getChildren (TreeModel original, Object parent, int from, int to) {<br>        Object[] originalCh = original.getChildren (parent, from, to);<br>        int i, k = originalCh.length;<br>        ArrayList newCh = new ArrayList ();<br>        boolean in = false;<br>        for (i = 0; i &lt; k; i++) {<br>            if (! (originalCh [i] instanceof CallStackFrame)) {<br>                newCh.add (originalCh [i]);<br>
+                continue;<br>            }<br>            CallStackFrame f = (CallStackFrame) originalCh [i];<br>            String className = f.getClassName ();<br>            if (className.startsWith ("java")) {<br>                if (!in) {<br>                    newCh.add (new JavaxSwing ());<br>                    in = true;<br>                }<br>            } else {<br>                in = false;<br>                newCh.add (f);<br>            }<br>        }<br>        return newCh.toArray ();<br>    }<br>    <br>    public Object getRoot (TreeModel original) {<br>        return original.getRoot ();<br>    }<br>    <br>    public boolean isLeaf (TreeModel original, Object node) <br>    throws UnknownTypeException {<br>        if (node instanceof JavaxSwing) return true;<br>        return original.isLeaf (node);<br>    }<br>    <br>    private static class JavaFrames {}<br>}<br></pre>
+And register it in file:<br>
+<pre style="background-color: rgb(255, 255, 102);">Meta-inf\debugger\netbeans-JPDASession\CallStackView\org.netbeans.spi.viewmodel.TreeModelFilter</pre>
+As you can see on the picture this Filter replaces some original frames
+by some dummy node.<br>
+<img
+ src="doc-files/CallStackViewFilterring2.JPG"
+ alt="Callstack Filtering 2" width="559" height="285">
+</div>
+ 
+<h4>Step 2.</h4>
+</div>
+<div style="margin-left: 80px;">We should provide NodeModel (at least)
+for our new node type (JavaFrames) now.<br>
+<pre style="background-color: rgb(255, 255, 102);">public class CallStackFilter implements NodeModel {
+<br><br>  &nbsp; public String getDisplayName (Object node) throws UnknownTypeException {<br>        if (node instanceof JavaFrames)<br>            return "Java Callstack Frames";<br>        throw new UnknownTypeException (node);<br>    }<br>    <br>    public String getIconBase (Object node) throws UnknownTypeException {<br>        if (node instanceof JavaFrames)<br>            return "org/netbeans/examples/debugger/jpda/callstackviewfilterring/NonCurrentFrame";<br>        throw new UnknownTypeException (node);<br>    }<br>    <br>    public String getShortDescription (Object node) throws UnknownTypeException {<br>        if (node instanceof JavaFrames)<br>            return "Unimportant hidden callstack frames";<br>        throw new UnknownTypeException (node);<br>    }<br>}<br></pre>
+And registration:<br>
+<pre style="background-color: rgb(255, 255, 102);">Meta-inf\debugger\netbeans-JPDASession\CallStackView\org.netbeans.spi.viewmodel.TreeModelFilter</pre>
+<img
+ src="doc-files/CallStackViewFilterring3.JPG" title=""
+ alt="Callstack View Filtering 3" style="width: 322px; height: 285px;">
+<br>
+<br>
+<pre style="background-color: rgb(255, 255, 102);"></pre>
+</div>
+</body>
+</html>

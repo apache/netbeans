@@ -1,0 +1,6 @@
+Code completion result for source line:
+getBook()->|author;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     createBook($title)              [STATIC]   Book
+VARIABLE   Author author                   [PUBLIC]   Book
+VARIABLE   string title                    [PUBLIC]   Book

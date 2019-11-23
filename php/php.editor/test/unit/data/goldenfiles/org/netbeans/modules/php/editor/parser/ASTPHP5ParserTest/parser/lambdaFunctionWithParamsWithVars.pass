@@ -1,0 +1,112 @@
+<testresult testFile='lambdaFunctionWithParamsWithVars.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='13'>
+            <text>$lambda</text>
+        </token>
+        <token id='T_EQUAL' start='14' end='15'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='16' end='24'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='25' end='26'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='26' end='33'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='33' end='34'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='35' end='42'>
+            <text>$param2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='42' end='43'>
+            <text>)</text>
+        </token>
+        <token id='T_USE' start='44' end='47'>
+            <text>use</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='48' end='49'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='49' end='54'>
+            <text>$var1</text>
+        </token>
+        <token id='T_COMMA' start='54' end='55'>
+            <text>,</text>
+        </token>
+        <token id='T_REFERENCE' start='56' end='57'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='57' end='62'>
+            <text>$var2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='62' end='63'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='64' end='65'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='66' end='67'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='67' end='68'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='69' end='72'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='72' end='72'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='71'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='68'>
+                <Assignment start='6' end='67' operator='EQUAL'>
+                    <Variable start='6' end='13' isDollared='true'>
+                        <Identifier start='7' end='13' name='lambda'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='16' end='67' isReference='false'>
+                        <FormalParameter start='26' end='33' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='26' end='33' isDollared='true'>
+                                    <Identifier start='27' end='33' name='param1'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <FormalParameter start='35' end='42' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='35' end='42' isDollared='true'>
+                                    <Identifier start='36' end='42' name='param2'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Variable start='49' end='54' isDollared='true'>
+                            <Identifier start='50' end='54' name='var1'/>
+                        </Variable>
+                        <Reference start='56' end='62'>
+                            <Variable start='57' end='62' isDollared='true'>
+                                <Identifier start='58' end='62' name='var2'/>
+                            </Variable>
+                        </Reference>
+                        <Block start='64' end='67' isCurly='true'>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <EmptyStatement start='69' end='71'/>
+        </Statements>
+    </Program>
+</testresult>

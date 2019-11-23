@@ -1,0 +1,2 @@
+token #0 T_HTML [<div>\n    <span>This is text with curly brackets {]
+token #1 T_HTML [}</span>\n</div>]

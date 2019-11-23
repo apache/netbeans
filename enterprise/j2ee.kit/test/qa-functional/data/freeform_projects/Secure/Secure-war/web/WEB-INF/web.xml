@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <servlet>
+    <servlet-name>AccountState</servlet-name>
+    <servlet-class>web.AccountState</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AccountState</servlet-name>
+    <url-pattern>/AccountState</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            index.jsp
+        </welcome-file>
+  </welcome-file-list>
+    <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Bank-security</web-resource-name>
+      <description>Acount information</description>
+      <url-pattern>/AccountState</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>USERS</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <login-config>
+     <auth-method>BASIC</auth-method>
+  </login-config>
+  <security-role>
+   <description>Bank's users</description>
+    <role-name>USERS</role-name>
+  </security-role>
+  <ejb-local-ref>
+    <ejb-ref-name>ejb/AccountStateBean</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <local-home>ejb.AccountStateLocalHome</local-home>
+    <local>ejb.AccountStateLocal</local>
+    <ejb-link>Secure-EJBModule.jar#AccountStateBean</ejb-link>
+  </ejb-local-ref>
+</web-app>

@@ -1,0 +1,6 @@
+        |>MARK_OCCURRENCES:city<|: "some town",
+            return "Address: " + this.street + ", " + this.|>MARK_OCCURRENCES:city<| + ", " + this.zip; 
+    address.|>MARK_OCCURRENCES:city<| = "Pribram";
+        console.log(|>MARK_OCCURRENCES:city<|);
+        |>MARK_OCCURRENCES:city<| = "Podlesi";
+console.log(martin.address.|>MARK_OCCURRENCES:cit^y<|);

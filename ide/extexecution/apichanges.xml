@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="extexecution_api">External Execution API</apidef>
+        <apidef name="extexecution_api_input">External Execution Input API</apidef>
+        <apidef name="extexecution_api_print">External Execution Input Printing API</apidef>
+        <apidef name="extexecution_api_startup">External Execution Startup Arguments API</apidef>
+        <apidef name="extexecution_spi">External Execution SPI</apidef>
+        <apidef name="extexecution_spi_destroy">External Execution Process Destroy SPI</apidef>
+        <apidef name="extexecution_spi_open">External Execution Open Handler SPI</apidef>
+        <apidef name="extexecution_spi_startup">External Execution Startup Arguments SPI</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+
+        <change>
+            <api name="extexecution_api"/>
+            <summary>Rerun action callback</summary>
+            <version major="1" minor="46"/>
+            <date day="18" month="5" year="2015"/>
+            <author login="phejl"/>
+            <compatibility addition="yes"/>
+            <description>
+                Allows the user of the API to register a callback to be invoked
+                on rerun action.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+            <issue number="252283"/>
+        </change>
+        <change>
+            <summary>API split and deprecation</summary>
+            <version major="1" minor="44"/>
+            <date day="1" month="6" year="2014"/>
+            <author login="phejl"/>
+            <compatibility addition="yes"/>
+            <description>
+                Splitting the API deprecating major parts.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExternalProcessSupport"/>
+            <class package="org.netbeans.api.extexecution" name="ProcessBuilder"/>
+            <class package="org.netbeans.api.extexecution.print" name="InputProcessors"/>
+            <class package="org.netbeans.api.extexecution.print" name="LineProcessors"/>
+            <class package="org.netbeans.spi.extexecution" name="ProcessBuilderImplementation"/>
+            <package name="org.netbeans.api.extexecution.input"/>
+            <package name="org.netbeans.spi.extexecution"/>
+            <package name="org.netbeans.spi.extexecution.destroy"/>
+            <issue number="244308"/>
+        </change>
+        <change>
+            <api name="extexecution_spi"/>
+            <summary>Advice to throw UserQuestionException</summary>
+            <version major="1" minor="35"/>
+            <date day="21" month="9" year="2012"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                Providers of <code>ProcessBuilderImplementation</code> are
+                advised to throw <code>UserQuestionException</code> in case
+                they need some interaction with user.
+            </description>
+            <class package="org.netbeans.spi.extexecution" name="ProcessBuilderImplementation"/>
+            <class package="org.netbeans.api.extexecution" name="ProcessBuilder"/>
+            <issue number="217874"/>
+        </change>
+        <change>
+            <api name="extexecution_spi_open"/>
+            <summary>SPI to allow to split the API and implementation</summary>
+            <version major="1" minor="33"/>
+            <date day="31" month="8" year="2012"/>
+            <author login="phejl"/>
+            <compatibility addition="yes"/>
+            <description>
+                This API/SPI allow splitting the extexecution to real API
+                and implementation classes.
+            </description>
+            <class package="org.netbeans.spi.extexecution.open" name="OptionOpenHandler"/>
+            <class package="org.netbeans.spi.extexecution.open" name="FileOpenHandler"/>
+            <class package="org.netbeans.spi.extexecution.open" name="HttpOpenHandler"/>
+            <issue number="216882"/>
+        </change>
+        <change>
+            <api name="extexecution_api_startup"/>
+            <summary>SPI to allow extending process startup</summary>
+            <version major="1" minor="30"/>
+            <date day="7" month="2" year="2012"/>
+            <author login="phejl"/>
+            <compatibility addition="yes"/>
+            <description>
+                This API/SPI allow third party plugins (such as JRebel) to
+                register extenders of process startup. The interested clients
+                such as projects or servers may optionaly query such
+                extenders and pass additional arguments to the process.
+            </description>
+            <class package="org.netbeans.api.extexecution.startup" name="StartupExtender"/>
+            <class package="org.netbeans.spi.extexecution.startup" name="StartupExtenderImplementation"/>
+            <issue number="206196"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>New API method to open IO tab on error</summary>
+            <version major="1" minor="29"/>
+            <date day="20" month="12" year="2011"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added configuration method to ExecutionDescriptor to allow
+                opening of output tab on nonzero exit code.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+            <issue number="206254"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>New API/SPI to abstract process builder</summary>
+            <version major="1" minor="28"/>
+            <date day="21" month="11" year="2011"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                New API/SPI classes to allow different implementations
+                of process builders.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ProcessBuilder"/>
+            <class package="org.netbeans.spi.extexecution" name="ProcessBuilderFactory"/>
+            <class package="org.netbeans.spi.extexecution" name="ProcessBuilderImplementation"/>
+            <issue number="205104"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>New API method to avoid reset of custom IO</summary>
+            <version major="1" minor="20"/>
+            <date day="17" month="2" year="2010"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added configuration method to ExecutionDescriptor to make
+                reset of IO optional for custom IO.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+            <issue number="180459"/>
+        </change>
+        <change>
+            <api name="extexecution_spi_destroy"/>
+            <summary>New SPI for improved external process termination</summary>
+            <version major="1" minor="16"/>
+            <date day="1" month="7" year="2009"/>
+            <author login="mkleint"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added API/SPI support to kill the whole process tree on
+                Process.destroy().
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExternalProcessSupport"/>
+            <class package="org.netbeans.spi.extexecution.destroy" name="ProcessDestroyPerformer"/>
+            <issue number="138116"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>Configurable charset for process streams</summary>
+            <version major="1" minor="14"/>
+            <date day="7" month="4" year="2008"/>
+            <author login="phejl"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added charset() method to ExecutionDescriptor to configure
+                the charset used to decode process streams.
+            </description>
+            <class package="org.netbeans.api.extexecution" name="ExecutionDescriptor"/>
+            <issue number="161607"/>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>Published as a stable API</summary>
+            <version major="1" minor="13"/>
+            <date day="20" month="11" year="2008"/>
+            <author login="phejl"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="incompatible"/>
+            <description>
+                Published as a stable API. Refactored to API packages.
+            </description>
+        </change>
+        <change>
+            <api name="extexecution_api"/>
+            <summary>Initial version released</summary>
+            <version major="1" minor="6"/>
+            <date day="1" month="7" year="2008"/>
+            <author login="phejl"/>
+            <compatibility addition="yes"/>
+            <description>
+                First initial release of the External Execution API.
+            </description>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the External Execution API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the External Execution API.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/>
+      
+      <standard-changelists module-code-name="org.netbeans.modules.extexecution"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

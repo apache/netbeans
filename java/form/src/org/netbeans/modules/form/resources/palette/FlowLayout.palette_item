@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="java.awt.FlowLayout" type="layout" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/flowLayout.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/flowLayout32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_java-awt-FlowLayout"
+               tooltip-key="HINT_java-awt-FlowLayout" />
+</palette_item>

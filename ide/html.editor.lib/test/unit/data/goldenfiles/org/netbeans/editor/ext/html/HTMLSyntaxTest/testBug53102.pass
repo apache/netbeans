@@ -1,0 +1,14 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HTMLTokenContext
+'html' [1, 4]; open-tag; 4; tag; HTMLTokenContext
+'>' [5, 1]; tag-close-symbol; 15; tag; HTMLTokenContext
+'<NL>' [6, 1]; text; 1; -; HTMLTokenContext
+'<' [7, 1]; tag-open-symbol; 14; tag; HTMLTokenContext
+'head' [8, 4]; open-tag; 4; tag; HTMLTokenContext
+' ' [12, 1]; ws; 2; -; HTMLTokenContext
+'/>' [13, 2]; tag-close-symbol; 15; tag; HTMLTokenContext
+'<NL>' [15, 1]; text; 1; -; HTMLTokenContext
+'<' [16, 1]; tag-open-symbol; 14; tag; HTMLTokenContext
+'he' [17, 2]; open-tag; 4; tag; HTMLTokenContext

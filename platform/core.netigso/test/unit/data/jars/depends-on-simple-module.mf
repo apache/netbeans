@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.bar/1
+OpenIDE-Module-Name: Depends on foo test module
+OpenIDE-Module-Module-Dependencies: org.foo/1
+

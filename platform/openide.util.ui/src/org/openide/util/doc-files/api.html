@@ -1,0 +1,1212 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Utility Classes</title>
+<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
+</head>
+<body>
+
+<p class="overviewlink"><a href="@TOP@overview-summary.html">Overview</a></p>
+
+<h1>Utility Classes</h1>
+
+Not all of the classes in this package are of interest for all module
+writers, but some of them may or even are as they are used through out
+our sources.
+
+<h2>Package <a href="../package-summary.html"><code>org.openide.util</code></a></h2>
+
+<ol>
+    <li><a href="@org-openide-util-lookup@/org/openide/util/Lookup.html">Lookup</a> and its associated
+    <a href="@org-openide-util-lookup@/org/openide/util/lookup/package-summary.html">support package</a> as that
+    is the <em>adaptable</em> interface that objects can provide if
+    they wish to offer dynamic capabilities.
+    </li>
+
+    <li><a href="@org-openide-util@/org/openide/util/NbBundle.html">NbBundle</a> as our specialized support
+    for localization and replacement to
+    <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>.
+    </li>
+    
+    <li><a href="@org-openide-util@/org/openide/util/Task.html"><code>Task</code></a> and especially 
+    <a href="@org-openide-util@/org/openide/util/RequestProcessor.html"><code>RequestProcessor</code></a> which
+    is our way to manage pools of thread workers and execute asynchronous
+    computations.
+    </li>
+    
+    <li>
+    <a href="../HelpCtx.html"><code>HelpCtx</code></a> to specify help ids for
+    various UI components
+    </li>
+
+    <li>
+    <a href="../Utilities.html"><code>Utilities</code></a> which contain
+    a lot of methods of possible interest. For example
+    <a href="../Utilities.html#actionsGlobalContext--"><code>actionsGlobalContext</code></a>,
+    <a href="../Utilities.html#loadImage-java.lang.String-"><code>loadImage</code></a>,
+    <a href="../Utilities.html#mergeImages-java.awt.Image-java.awt.Image-int-int-"><code>mergeImage</code></a>,
+    <a href="../Utilities.html#topologicalSort-java.util.Collection-java.util.Map-"><code>topologicalSort</code></a>,
+    <a href="../Utilities.html#activeReferenceQueue--"><code>activeReferenceQueue</code></a>,
+    <a href="../Utilities.html#translate-java.lang.String-"><code>translate</code></a>.
+    </li>
+
+    <li>
+    <a href="@org-openide-util@/org/openide/util/Enumerations.html"><code>Enumerations</code></a> provide
+    enhacened support for manipulation with 
+    <a href="@JDK@/java/util/Enumeration.html">Enumeration</a>s and especially
+    their on-demand generation.
+    </li>
+</ol>
+
+<!--
+<li><a href="../io/package-summary.html"><code>org.openide.util.io</code></a>:
+
+a few extensions to the Java I/O system.
+
+<li><a href="../../xml/package-summary.html"><code>org.openide.xml</code></a>:
+
+general XML parsing, entity registration, and so on.
+-->
+
+<h2>Services Registration and Lookup API</h2>
+
+
+<p>For lookup, this centers around
+
+<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html"><code>Lookup</code></a>
+
+and helper implementations in
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/package-summary.html"><code>org.openide.util.lookup</code></a>.
+
+
+
+<h3>Contents</h3>
+
+<ul>
+
+<li><a href="#lookup">Lookup</a>
+<ul>
+<li><a href="#instances">Working with Instances</a>
+<li><a href="#instance-folders">Folders of Instances</a>
+<li><a href="#service-lookup">Lookup and Service Installation</a>
+<li><a href="#lookup-ids">Persisting Lookup Information</a>
+<li><a href="#lookup-impl">Creating Lookups</a>
+<li><a href="#settings">Settings</a>
+<li><a href="#lookup-ui">UI for Services</a>
+</ul>
+
+</ul>
+
+
+<h2><a name="lookup">Lookup</a></h2>
+
+<div class="nonnormative">
+
+The whole NetBeans platform is moving toward 
+installation of services via XML layer or (via the <code>@ServiceProvider</code> annotation on classes) <code>META-INF/services</code>.
+Layer-based installation is more flexible in many ways. 
+
+<p>The need for having a standard interface to access such
+registrations 
+gave rise to the <em>lookup</em> system first
+introduced in NetBeans 3.2 and expanded upon for NetBeans 3.3. The
+center of this API from the client perspective is very simple - you
+can look up a class, and get an instance of that class (or a
+collection of them). The service provider side of it is more complex
+but useful lookup implementations are already provided in the 
+core system; for common cases you can register an object into lookup just by
+adding one simple file to an XML layer or <code>META-INF/services/classname</code>
+in your module JAR file.
+
+<p>This section of the Services API will first discuss what
+<em>instances</em> are and how to create them from files, as this is
+the core concept for service providers. It will discuss how you can
+manually retrieve sets of instances as a client, which is not used
+very frequently in new code but helps to understand what lookup is
+doing behind the scenes. Then lookup itself is discussed, and how the
+standard instance lookup works and how it relates to JDK's 
+<a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
+standard for service provider registration</a>. 
+Lookup templates, which separate the
+provision of instances from the provision of categories, will be
+explained. 
+
+</div>
+
+<h3><a name="instances">Working with Instances</a></h3>
+
+Central to the management of services and many other aspects of
+NetBeans' configuration is the notion of
+<em>instances</em>. An instance is just any Java object, generally
+of a particular type appropriate to its use, which is provided from
+some object (generally, a data object) using
+
+<code>InstanceCookie</code>.
+
+As an example, menu items may be added by inserting data objects
+that provide this cookie into the proper folder, and having the
+instance be a system action (or other things). Or an XML DTD may be
+registered by placing an object with an instance of
+<code>org.xml.sax.EntityResolver</code> in the proper folder.
+
+<p>Where do these instances come from? Technically, it is up to you
+to decide how to provide <code>InstanceCookie</code>; you could if
+really necessary create your own data loader that provides it
+according to some unusual scheme, and add files recognized by that
+loader to the right folder. Practically, the APIs provide
+implementations of this cookie sufficient for normal purposes.
+
+<p>The most common way to provide an instance is using
+
+<code>InstanceDataObject</code>.
+
+This is a type of data object whose sole purpose is to provide the
+instance cookie. It typically does so based on a class name you
+supply. There are several styles of instance file; all are empty (i.e.
+the file contents are of zero length, and just the file name and
+attributes matter). There are then other ways of providing instances
+which rely on the file contents. Here are the methods of providing
+instances defined in the APIs:
+
+<dl>
+
+<dt><em>Default instance - <code>InstanceDataObject</code></em>
+
+<dd><p>If there is a file with the extension <samp>*.instance</samp>, then its
+name (minus extension) will be converted to a class name by replacing dashes
+with dots; and a fresh instance of that class will be created and used as the
+instance. For example, <samp>com-mycom-mymodule-MyAction.instance</samp>
+produces an instance of the class <code>com.mycom.mymodule.MyAction</code>.</p>
+
+<p>Since reflection is used to create the new instance, just as in the
+realm of JavaBeans, the class must be loadable from your module or
+otherwise from within NetBeans (technically, via the classloader found
+by querying Lookup for <code>ClassLoader</code>);
+public; and have a public no-argument constructor.
+(Or be a
+
+<a href="../SharedClassObject.html"><code>SharedClassObject</code></a>.)
+
+This form is often
+used for <em>singleton</em> classes such as system actions: there is
+no need to specify any parameters to the constructor, any instance
+will suffice.</p>
+
+
+<dt><em>Default instance with separate class - <code>InstanceDataObject</code></em>
+
+<dd><p>Rather than shoving the class name into
+the file name, you can name the file more normally and specify the
+class with a file attribute. Then the class name is specified as
+a string-valued attribute on the instance named
+<code>instanceClass</code>. For example, a keyboard shortcut
+could be registered as follows in an XML layer:</p>
+
+<pre>
+&lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="constant">"C-F6.instance"</span>&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceClass"</span> <span class="variable-name">stringvalue</span>=<span class="constant">"com.mycom.mymodule.MyAction"</span>/&gt;
+&lt;/<span class="function-name">file</span>&gt;
+</pre>
+
+<p>In addition to <code>instanceClass</code> you may specify an
+additional attribute <code>instanceOf</code> giving the name of a
+superclass (or implemented interface) of the instance class. In fact
+it may be a comma-separated list of superclasses and interfaces. While
+its purpose is explained more fully
+
+<a href="#instance-folders">below</a>,
+
+essentially it lets you give the system a hint as to what this
+instance is for before your instance class is even loaded into the VM.
+For example:</p>
+
+<pre>
+&lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="constant">"com-me-some-service.instance"</span>&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceClass"</span> <span class="variable-name">stringvalue</span>=<span class="constant">"com.me.FactoryForEverything"</span>/&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceOf"</span>
+     <span class="variable-name">stringvalue</span>=<span class="constant">"org.xml.sax.EntityResolver,org.openide.cookies.ExecCookie"</span>/&gt;
+&lt;/<span class="function-name">file</span>&gt;
+</pre>
+
+<dt><a name="ido-methodvalue"></a><em>Non-default instance - <code>InstanceDataObject</code></em>
+
+<dd><p>A powerful way of providing instances is to use the expressiveness
+of the XML layer syntax to handle the instance creation. In this case
+the file attribute <code>instanceCreate</code> can be defined and the
+attribute value becomes the instance. Typically the attribute value
+would be specified using the <code>methodvalue</code> syntax of
+layers. For example:</p>
+
+<pre>
+&lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="constant">"com-me-some-service.instance"</span>&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceClass"</span> <span class="variable-name">stringvalue</span>=<span class="constant">"com.me.FactoryForEverything"</span>/&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceCreate"</span> <span class="variable-name">methodvalue</span>=<span class="constant">"com.me.FactoryForEverything.configure"</span>/&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"myParam"</span> <span class="variable-name">urlvalue</span>=<span class="constant">"nbres:/com/me/config-1.properties"</span>/&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="constant">"instanceOf"</span>
+     <span class="variable-name">stringvalue</span>=<span class="constant">"org.xml.sax.EntityResolver,org.openide.cookies.ExecCookie"</span>/&gt;
+&lt;/<span class="function-name">file</span>&gt;
+</pre>
+
+<p>According to the general system for
+
+<code>XMLFileSystem</code>,
+
+you now need a method <code>configure</code> in
+<code>FactoryForEverything</code> which must be static; the method
+need not be public (if you do not want other Java code to see it). It
+may take a file object as argument if you wish - this will be the
+instance file; typically you use this to pass extra configuration from
+the layer, useful if you want to create multiple instances with the
+same creation method. The argument may also be a map. So for example you might implement such a method
+like this:</p>
+
+<pre>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">FactoryForEverything</span> <span class="keyword">extends</span> <span class="type">SomeBaseFactory</span>
+        <span class="keyword">implements</span> <span class="type">EntityResolver</span>, <span class="type">ExecCookie</span> {
+    <span class="keyword">public</span> <span class="type">FactoryForEverything</span>(<span class="type">Map</span> <span class="variable-name">props</span>) {
+        <span class="comment">// ...
+</span>    }
+    <span class="comment">// ...
+</span>    <span class="comment">// Called directly from XML layer. Pass URL to
+</span>    <span class="comment">// properties file from attr 'myParam'.
+</span>    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Object</span> <span class="function-name">configure</span>(<span class="type">Map&lt;String,?&gt;</span> <span class="variable-name">inst</span>) <span class="keyword">throws</span> <span class="type">IOException</span> {
+        <span class="type">URL</span> <span class="variable-name">u</span> = (<span class="type">URL</span>)inst.get(<span class="string">"myParam"</span>);
+        <span class="type">Properties</span> <span class="variable-name">p</span> = <span class="keyword">new</span> <span class="type">Properties</span>();
+        p.load(u.openStream());
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">FactoryForEverything</span>(p);
+    }
+}
+</pre>
+
+<dt><em>Serialized beans</em>
+
+<dd><p>A simple way to provide an instance is to serialize it as a
+JavaBean, into a file with the extension <samp>*.ser</samp>. This is
+not very useful from a layer, because you should avoid putting
+binary data into a layer, but may be useful in some circumstances.</p>
+
+<dt><a name="xml-instances"><em>XML-based instances</em></a></dt>
+
+<dd><p><a href="@org-openide-util@/org/openide/xml/EntityCatalog.html"><code>EntityCatalog</code></a></p></dd>
+</dl>
+
+
+<div class="nonnormative">
+
+<p>Again, modules may also have additional ways of providing instances
+from files. For example, currently the <code>utilities</code> module
+enables any URL file (<samp>*.url</samp>) to be used directly in a
+menu, as the URL file provides an instance of
+<code>Presenter.Menu</code>.</p>
+
+<p>As an interactive demonstration of these things, first go into
+<b>Filesystem&nbsp;Settings</b> and make the system filesystem (first in
+the list) visible; then explore its contents in <b>Filesystems</b>,
+going into some subdirectory of <samp>Menu</samp>. Note the various
+actions and menu separators; these are all by default instance data
+objects.
+You may find some of these on disk in your installation directory
+under <samp>system/</samp> if you have customized them, but by default
+they live in memory only.
+You may copy-and-paste these instances from one place to another;
+create new ones on disk and watch them be recognized and inserted
+into the menus after a few seconds; and you may also choose
+Customize Bean (which really customizes the provided instance) on
+(say) a toolbar separator (under <code>Toolbars</code>) to change
+the separator size, and serialize the result to a new
+<code>*.ser</code> file which should then create a toolbar
+separator.
+
+</div>
+
+<h3><a name="instance-folders">Folders of Instances</a></h3>
+
+
+<h4><a name="instancecookie-of"><code>InstanceCookie.Of</code> and lazy class loading</a></h4>
+
+Now it is time to mention the purpose of
+<code>InstanceCookie.Of</code>. Suppose that there are two generic
+interfaces under consideration: e.g. <code>javax.swing.Action</code>
+and <code>org.xml.sax.EntityResolver</code>. For each interface, there
+is code to find registered instances, all under the
+<samp>Services/</samp> folder. Furthermore, using either of these
+interfaces is relatively rare, and might not happen at all during a
+NetBeans session; and the implementations of the instances are complicated
+and involve a lot of code, so it is undesirable (for performance
+reasons) to load these implementations unless and until they are
+really needed. If you write the layers simply like this:
+
+<pre>
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Hidden"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-me-MyAction.instance"</span>/&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-me-MyResolver.instance"</span>/&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+
+everything will work, <em>but</em> this is inefficient. Consider some
+piece of code asking for all actions. The search through the services
+folder for actions would ask each of these files if it provides an
+instance cookie assignable to <code>javax.swing.Action</code>. For
+<samp>com-me-MyAction.instance</samp>, this will load the class
+<code>com.me.MyAction</code>, determine that it implements
+<code>Action</code>, and thus create a <code>MyAction</code> instance
+and return it; so far so good. But when
+<samp>com-me-MyResolver.instance</samp> is encountered, it will again
+load <code>com.me.MyResolver</code>, only to find that this does not
+implement <code>Action</code> and skip the instance. The behavior is
+correct, but now the <code>MyResolver</code> class has been loaded
+into the VM even though no one will ever use it (unless a resolver
+search is made). This will degrade startup time and memory usage (and
+thus performance).
+
+<p>So the better solution is to mark each file in advance, saying what
+interfaces it is intended to provide in its instance:
+
+<pre>
+&lt;<span class="function-name">filesystem</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Hidden"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-me-MyAction.instance"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"instanceOf"</span> <span class="variable-name">stringvalue</span>=<span class="string">"javax.swing.Action"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"com-me-MyResolver.instance"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"instanceOf"</span> <span class="variable-name">stringvalue</span>=<span class="string">"org.xml.sax.EntityResolver"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">filesystem</span>&gt;
+</pre>
+
+<p>
+Now the folder instance processor for <code>Action</code> will pass
+over <samp>com-me-MyResolver.instance</samp> without needing to load
+<code>com.me.MyResolver</code>, since it sees that its interfaces are
+declared, and <code>Action</code> is not among them. Of course, the
+interface classes - <code>Action</code> and
+<code>EntityResolver</code> - need to be loaded right away, but they
+were probably already loaded anyway, so this is acceptable.
+</p>
+
+<p><strong>Caution:</strong> if you do supply an
+<code>instanceOf</code> attribute, but it does <em>not</em> list all
+of the implemented interfaces and superclasses of the actual
+implementation class (including that implementation class itself,
+which is not implied), a lookup query on one of the missing
+superclasses <em>may or may not</em> succeed. So you should include in
+<code>instanceOf</code> any superclasses and interfaces that you think
+someone might use in a lookup query, possibly including the actual
+implementation class.</p>
+
+<h3><a name="service-lookup">Lookup and Service Installation</a></h3>
+
+The client side of the lookup system centers around one class,
+
+<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html"><code>Lookup</code></a>.
+
+In the simplest usage, all that is needed is to get some single
+instance of a given class (or subclass). For example, if some kind of
+service has been defined as an interface or abstract class, and you
+wish to find the implementation of it, you
+may simply use:
+
+<pre>
+<span class="type">MyService</span> <span class="variable-name">impl</span> = (<span class="type">MyService</span>)Lookup.getDefault().<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(MyService.<span class="keyword">class</span>);
+<span class="keyword">if</span> (impl == <span class="constant">null</span>) <span class="comment">/* nothing registered */</span> ...
+impl.useIt();
+</pre>
+
+Such implementation has to be registered by some module to the system. 
+Either via layer as described above or as a JDK's
+<a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
+service provider</a>. If some module wants to register for example 
+<span class="type">org.me.MyService</span> it shall provide file name
+<span class="function-name">META-INF/services/org.me.MyService</span> in its own JAR
+with single line containing name of the implementation class (for example
+<span class="type">org.you.MyServiceImpl</span>).
+This is normally done more easily by using the <code>@ServiceProvider</code> annotation in <code>MyService.java</code>.
+The lookup infrastructure
+will then load the implementation class and call its default constructor 
+to answer the query in the above example.
+<P>
+
+<div class="nonnormative">
+    The Lookup supports two small extensions to the 
+    <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">JDK's
+    standard</a>. It allows a module to remove class registered by
+    another one. That is why it is possible to write a module that
+    disables the <span class="type">org.you.MyServiceImpl</span> implementation
+    and provides its own. This the expected content of its 
+    <span class="function-name">META-INF/services/org.me.MyService</span> file:
+    <PRE>
+  # remove the other implementation (by prefixing the line with <em>#-</EM>)
+  #-<span class="type">org.you.MyServiceImpl</span>
+
+  # provide my own
+  org.alien.MyServiceAlienImpl
+    </PRE>
+    The reason why the removal line starts with <em>#-</em> is to keep
+    compatibility with JDK's implementation. The <em>#</em> means comment
+    and thus JDK will not interpret the line and will not get confused by
+    the <em>-</em> before class name.
+    
+    <p>Second extension allows ordering of items. The class implementing
+    the interface can be followed by advisory position attribute. If
+    multiple implementations are defined in one file then each can be
+    followed by its own positioning attribute. When querying
+    on an interface, items with a smaller position are guaranteed 
+    to be returned before items with a larger position. Items with no defined 
+    position are returned last. Example of content of 
+    <span class="function-name">META-INF/services/org.me.MyService</span>
+    file could be:
+    <pre>
+  <span class="type">org.you.MyServiceImpl</span>
+  #position=20
+  <span class="type">org.you.MyMoreImportantServiceImpl</span>
+  #position=10
+    </pre>
+    The <span class="function-name">MyMoreImportantServiceImpl</span>
+    will be returned in lookup before the 
+    <span class="function-name">MyServiceImpl</span>.
+    It is recommended to pick up larger numbers so that there is
+    gap for other modules if they need to get in front of your item. And, 
+    again, to keep compatibility the position attribute must starts with
+    comment delimiter.
+<p>Both extensions are supported by <code>@ServiceProvider</code>.</p>
+</DIV>
+
+<P>
+If more than one implementation has been registered, the "first" will
+be returned. For example, if the implementations were present in the
+<samp>Services</samp> folder as <samp>*.instance</samp> files, then
+folder order would control this.
+
+<p>As mentioned above, the NetBeans default lookup searches in the
+<samp>Services</samp> folder and its subfolders for instances whose
+class matches the requested class. Technically, it looks for data
+objects with <code>InstanceCookie.Of</code> claiming to match the
+requested superclass, or plain <code>InstanceCookie</code> whose
+<code>instanceClass</code> is assignable to it.
+
+<p>Note that you may use this method to find singleton instances of
+subclasses of
+
+<a href="../SharedClassObject.html"><code>SharedClassObject</code></a>
+
+that have been registered in lookup (as is normally the case for
+
+system options).
+
+However for this purpose it is simpler to use the static finder method
+
+<a href="../SharedClassObject.html#findObject-java.lang.Class-boolean-"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
+
+which is guaranteed to find the singleton whether it was registered in
+lookup or not (if necessary it will first
+
+<a href="#settings">initialize</a>
+
+the object according to saved state).
+
+<p>In many situations it is normal for there to be more than one
+registered implementation of a service. In such a case you use a more
+general method:
+
+<pre>
+<span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Template.html">Lookup.Template</a></span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(MyService.<span class="keyword">class</span>);
+<span class="keyword">final</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Result.html">Lookup.Result</a></span> <span class="variable-name">result</span> = Lookup.getDefault().lookup(templ);
+<span class="type">Collection</span> <span class="variable-name">impls</span> = result.allInstances(); <span class="comment">// Collection&lt;MyService&gt;
+// use Java Collections API to get iterator, ...
+// Pay attention to subsequent changes in the result.
+</span>result.addLookupListener(<span class="keyword">new</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/LookupListener.html">LookupListener</a></span>() {
+    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">resultChanged</span>(<span class="type">LookupEvent</span> <span class="variable-name">ev</span>) {
+        <span class="comment">// Now it is different.
+</span>        <span class="type">Collection</span> <span class="variable-name">impls2</span> = result.allInstances();
+        <span class="comment">// use the new list of instances...
+</span>    }
+});
+</pre>
+
+Here you receive a collection of all instances matching your query,
+again in the order found if this matters. You can also listen to
+changes in the list (additions, deletions, and reorderings). It is
+fine to keep a <code>Lookup.Result</code> for a long period of time as
+it may implement its own caching scheme and only really compute the
+instances when <code>allInstances</code> is called; in fact it may be
+more efficient to keep a result, and listen for changes in it, than to
+repeatedly call <code>lookup</code> and create fresh result objects.
+
+<p>When a lookup query is finished - for example when
+<code>Lookup.Result.allInstances()</code> returns some
+<code>Collection</code> of instances - it is guaranteed that all
+objects registered in the same thread prior to the call to
+<code>lookup()</code> or prior to some change notification on the
+<code>Lookup.Result</code>, will be returned. Specifically, lookup
+instances registered via module layer will be available by the time
+<code>ModuleInstall.restored()</code> (or <code>.installed()</code>)
+is called. There are two situations in which lookup results may be
+incomplete: when you are currently inside the dynamic scope of some
+method providing a lookup instance itself; and when you are
+dynamically inside a <code>DataLoader</code> method involved in
+recognizing data objects.
+
+<h3><a name="lookup-ids">Persisting Lookup Information</a></h3>
+
+In some circumstances it is necessary to not only find registered
+objects, but to select some of them and make this selection
+persistent. For example, some setting may have as its value a choice
+among available services matching some interface; the value needs to
+be persisted, but it is the identity of the choice, rather than the
+full state of the instance itself, which must be stored.
+
+<p>In such cases it is possible to use code like this:
+
+<pre>
+<span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(MyService.<span class="keyword">class</span>);
+<span class="type">Lookup.Result</span> <span class="variable-name">result</span> = Lookup.getDefault().lookup(templ);
+<span class="type">Iterator</span> <span class="variable-name">it</span> = result.allItems().iterator();
+<span class="keyword">while</span> (it.hasNext()) {
+    <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Item.html">Lookup.Item</a></span> <span class="variable-name">item</span> = (<span class="type">Lookup.Item</span>)it.next();
+    <span class="type">String</span> <span class="variable-name">displayName</span> = item.getDisplayName();
+    <span class="keyword">if</span> (<span class="comment">/* user accepts displayName as the right one */</span>) {
+        <span class="type">MyService</span> <span class="variable-name">instance</span> = (<span class="type">MyService</span>)item.getInstance();
+        <span class="comment">// use instance for now, and ...
+</span>        <span class="type">String</span> <span class="variable-name">id</span> = item.getId();
+        someSettings.setChosenService(id);
+        <span class="keyword">break</span>;
+    }
+}
+<span class="comment">// later...
+</span><span class="type">String</span> <span class="variable-name">storedID</span> = someSettings.getChosenService();
+<span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type"><a href="@org-openide-util-lookup@/org/openide/util/Lookup.Template.html#Template-java.lang.Class-java.lang.String-java.lang.Object-">Lookup.Template</a></span>(MyService.<span class="keyword">class</span>, storedID, <span class="constant">null</span>);
+<span class="type">Iterator</span> <span class="variable-name">it</span> = Lookup.getDefault().lookup(templ).allInstances().iterator();
+<span class="keyword">if</span> (! it.hasNext()) <span class="comment">/* failed to find it... */</span>
+<span class="type">MyService</span> <span class="variable-name">instance</span> = (<span class="type">MyService</span>)it.next();
+<span class="comment">// use instance again
+</span></pre>
+
+The ID permits you to track which instance from all those available in
+the lookup result was last selected by the user, and find the "same"
+instance later, perhaps after a restart of NetBeans. The exact form of
+the ID is the private knowledge of the implementor of the lookup, but
+typically if the instance has been provided via layer the ID will
+mention the name of the file from which it was derived.
+
+<h3><a name="lookup-impl">Creating Lookups</a></h3>
+
+There are a number of reasons to create your own lookup
+implementation. For one thing, the lookup system which scans the
+<samp>Services/</samp> folder will recognize instances of subclasses
+of <code>Lookup</code> specially by <em>proxying</em> to them. This
+can be very powerful because you may register just one layer file
+which points to your custom lookup, which in turn may provide an
+unlimited number of actual instances/items for queries (and compute
+them in a manner other than registration by files). Another reason is
+to associate a context with a data object using
+
+<code>Environment.Provider</code>;
+
+for example the data object might be an XML file and this provider
+might be registered with the file by means of the public ID of the
+doctype (informally, the DTD). Here the provider has an associated
+lookup which can serve requests for cookies and such things.
+See more information about <a href="#xml-instances">associating lookups
+with XML files</a>.
+
+<p>The simplest way to create a fresh lookup is to base it on other
+existing ones.
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/ProxyLookup.html"><code>ProxyLookup</code></a>
+
+accepts a list of other lookup implementations (in the constructor and
+also changeable later). The results it provides are constructed by
+merging together the results of the delegate lookups.
+
+<p>
+<a name="folderlookup"></a>
+
+If you want to use the common mechanism of finding instances in
+folders (or subfolders) and serving these as the results,
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath(String)</a>
+
+makes this possible: you need only provide a name of a folder to look in, and
+use
+
+<code>Lookups.forPath(theFolderName)</code>
+
+to retrieve a lookup implementation which will scan this folder and
+its subfolders for data objects with <code>InstanceCookie</code>
+matching the lookup template. Furthermore, any instance cookies whose
+instance class is assignable to <code>Lookup</code> will be treated
+specially: they will be proxied to, so these sub-lookups may provide
+additional instances if they match the lookup template. In order to
+get the full functionality associated with such a lookup it is wise
+to request presence of <code>org.netbeans.modules.settings > 1.13</code>
+as that is the module that does most of the work behind <code>Lookups.forPath</code>.
+To register <code>javax.xml.parsers.DocumentBuilderFactory</code> into
+<code>Lookups.forName("my/xml/app/data")</code> add the above described dependency
+and put following code in your layer file:
+<pre>
+&lt;folder name="my"&gt;
+  &lt;folder name="xml"&gt;
+    &lt;folder name="app"&gt;
+      &lt;folder name="data"&gt;
+        &lt;file name="ThisIsMyRegistration.instance&gt;
+          &lt;attr name="instanceCreate" newvalue="pkg.ClassNameOfYourImpl"/&gt;
+        &lt;/file&gt;
+      &lt;/folder&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+</pre>
+
+<p>
+In fact the <code>Lookups.forPath</code> can be used in completely 
+standalone mode. This is not very recommended in the NetBeans IDE, but 
+can be found pretty useful when using this library in standalone applications:
+<code>Lookups.forPath(path)</code> scans all instances registered in the 
+<a href="#service-lookup">META-INF/services style</a> just it uses
+<code>META-INF/namedservices/path</code> prefix instead.
+(<code>@ServiceProvider</code> supports this mode.)
+As a result to
+perform a successfull search for all <code>javax.xml.parsers.DocumentBuilderFactory</code> 
+inside <code>Lookups.forName("my/xml/app/data")</code> one can register the
+implementation into <code>META-INF/namedservices/my/xml/app/data/javax.xml.parsers.DocumentBuilderFactory</code>.
+</p>
+
+<p>The most powerful way to provide a lookup is to directly define
+what instances and items it should provide, by subclassing. For this,
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/AbstractLookup.html"><code>AbstractLookup</code></a>
+
+is recommended as it is easiest to use.
+
+<p>The simplest way to use <code>AbstractLookup</code> is to use its
+public constructor (in which case you need not subclass it). Here you
+provide an
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/AbstractLookup.Content.html"><code>AbstractLookup.Content</code></a>
+
+object which you have created and hold on to privately, and which
+keeps track of instances and permits them to be registered and
+deregistered. Often
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.html"><code>InstanceContent</code></a>
+
+is used as the content implementation. To add something to the lookup,
+simply use
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.html#add-java.lang.Object-"><code>add(Object)</code></a>
+
+(and <code>remove(Object)</code> for the reverse). These may be called
+at any time and will update the set of registered instances (firing
+result changes as needed).
+
+<p>In case it is expensive to actually compute the object in the
+lookup, but there is some cheap "key" which can easily generate it,
+you may instead register the key by passing in an
+
+<a href="@org-openide-util-lookup@/org/openide/util/lookup/InstanceContent.Convertor.html"><code>InstanceContent.Convertor</code></a>.
+
+This convertor translates the key to the real instance that the lookup
+client sees, if and when needed. For example, if you have a long list
+of class names and wish to register default instances of each class,
+you might actually register the class name as the key, and supply a
+convertor which really loads the class and instantiates it. This makes
+it easy to set up the lookup, but nothing is really loaded until
+someone asks for it.
+
+<h3><a name="settings">Settings</a></h3>
+
+<em>Settings</em> require special support in the lookup system: these
+are objects (perhaps singletons but not necessarily) which should be
+made available to lookup, yet whose content can be changed and stored
+to disk (typically as a result of user interaction with the GUI).
+<samp>*.instance</samp> files and similar constructions are fine for
+registering fixed objects from layer - "fixed" in the sense that while
+the user might copy, delete, move, or reorder them, the actual object
+they provide is statically determined and does not generally have a
+means of being modified. In contrast, settings have nontrivial
+content. A typical setting is a system options,
+simply a singleton bean with a set of properties and a structured GUI
+presentation driven by <code>BeanInfo</code>.
+
+<p>In order to save such settings, an XML file is normally used, and
+the APIs provide a convenient
+
+<a href="http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">DTD</a>
+
+for settings which can be represented as a single bean. In typical
+usage, the module layer declares an initial settings file which
+instructs lookup to create a <em>default instance</em> of the settings
+class. This might look like the following:
+
+<pre>
+&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">settings</span> <span class="keyword">PUBLIC</span> <span class="string">"-//NetBeans//DTD Session settings 1.0//EN"</span> <span class="string">"http://www.netbeans.org/dtds/sessionsettings-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">settings</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span>&gt;
+    &lt;<span class="function-name">module</span> <span class="variable-name">name</span>=<span class="string">"com.foo/1"</span> <span class="variable-name">spec</span>=<span class="string">"1.0"</span>/&gt;
+    &lt;<span class="function-name">instanceof</span> <span class="variable-name">class</span>=<span class="string">"org.openide.options.SystemOption"</span>/&gt;
+    &lt;<span class="function-name">instanceof</span> <span class="variable-name">class</span>=<span class="string">"com.foo.MyOption"</span>/&gt;
+    &lt;<span class="function-name">instance</span> <span class="variable-name">class</span>=<span class="string">"com.foo.MyOption"</span>/&gt;
+&lt;/<span class="function-name">settings</span>&gt;
+</pre>
+
+Such a file might be placed in
+<samp>Services/com-foo-my-settings.xml</samp> (the exact name inside
+the <samp>Services</samp> folder is not important but ought to be
+globally unique to avoid conflicts with other modules). It provides
+an <code>InstanceCookie</code> with the settings object as instance.
+
+<p>The interesting parts of this file are:
+
+<ul>
+
+<li>The <samp>&lt;instance/&gt;</samp> element which declares that the
+actual object will be a default instance of the class
+<samp>com.foo.MyOption</samp>, i.e. created via default public
+constructor.
+
+<li>Various <samp>&lt;instanceof/&gt;</samp> elements which specify
+what lookup templates will find this instance. Giving these elements
+permits the system to defer creating the setting instance until it is
+actually requested (that is, using
+
+<a href="#instancecookie-of"><code>InstanceCookie.Of</code></a>).
+
+It is only necessary to indicate superclasses and interfaces that you
+actually expect someone to look up when searching for this setting,
+but be careful that you know what these might be. The actual class
+of the instance itself should be listed as well.
+
+<li>An optional but recommended <samp>&lt;module/&gt;</samp> element
+that declares which module provides this setting. You give the full
+code name (including a slash followed by the major release version, if applicable)
+of the module and its specification version. The purpose of
+this element becomes apparent if the user ever customizes the setting
+file, thus writing the changes to disk (for example in the
+<samp>system/Services/</samp> folder), and then uninstalls the module:
+keeping the name of the declaring module in the file ensures that with
+the module uninstalled, the system will quietly ignore the stale
+setting rather than trying to blithely load the settings class and
+failing with a <code>ClassNotFoundException</code>. If the module is
+subsequently reinstalled, the setting will automatically become active
+again (regain its <code>InstanceCookie</code>). Similarly, settings will
+not be loaded if they were written by a newer version of the module than
+the one currently installed - module-supplied settings should be readable
+by newer versions of the module, but generally not older ones.
+
+</ul>
+
+<p>There are actually three ways that the instance may be declared:</p>
+
+<ol>
+
+<li><p>Using <samp>&lt;instance/&gt;</samp> as above to generate a
+default instance. This is most common.</p>
+
+<li><p>You may pass an additional attribute <code>method</code>
+indicating a static method to call to produce
+the instance, rather than using a default constructor.
+The method may either be a simple name, in which case it is assumed
+to be a method in the class given by <code>class</code>, or you
+may give a full class name followed by a dot and method name to invoke
+a static method from some other class.
+The method may
+optionally take a <code>FileObject</code> argument which will be the
+settings file itself. This is analogous to the mechanism used for
+creating complex <samp>*.instance</samp> files. For example:</p>
+
+<pre>
+&lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"some-difficult-to-make-instance.settings"</span>&gt;
+    &lt;![<span class="keyword">CDATA</span>[&lt;?<span class="keyword">xml</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span> <span class="variable-name">encoding</span>=<span class="string">"UTF-8"</span>?&gt;
+&lt;!<span class="keyword">DOCTYPE</span> <span class="type">settings</span> <span class="keyword">PUBLIC</span>
+          <span class="string">"-//NetBeans//DTD Session settings 1.0//EN"</span>
+          <span class="string">"http://www.netbeans.org/dtds/sessionsettings-1_0.dtd"</span>&gt;
+&lt;<span class="function-name">settings</span> <span class="variable-name">version</span>=<span class="string">"1.0"</span>&gt;
+    &lt;<span class="function-name">module</span> <span class="variable-name">name</span>=<span class="string">"my.module/1"</span> <span class="variable-name">spec</span>=<span class="string">"1.0"</span>/&gt;
+    &lt;<span class="function-name">instanceof</span> <span class="variable-name">class</span>=<span class="string">"javax.swing.Action"</span>/&gt;
+    &lt;<span class="function-name">instanceof</span> <span class="variable-name">class</span>=<span class="string">"my.module.MyAction"</span>/&gt;
+    &lt;<span class="function-name">instance</span> <span class="variable-name">class</span>=<span class="string">"my.module.MyAction"</span> <span class="variable-name">method</span>=<span class="string">"createAction"</span>/&gt;
+&lt;/<span class="function-name">settings</span>&gt;
+]]&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"param"</span> <span class="variable-name">stringvalue</span>=<span class="string">"someval"</span>/&gt;
+&lt;/<span class="function-name">file</span>&gt;
+</pre>
+
+<pre>
+<span class="keyword">package</span> <span class="constant">my</span>.<span class="constant">module</span>;
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">MyAction</span> <span class="keyword">extends</span> <span class="type">javax.swing.AbstractAction</span> {
+    <span class="keyword">public</span> <span class="type">MyAction</span>(<span class="type">String</span> <span class="variable-name">name</span>) {<span class="comment">/* ... */</span>}
+    <span class="comment">// ...
+</span>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">MyAction</span> <span class="function-name">createAction</span>(<span class="type">FileObject</span> <span class="variable-name">fo</span>) {
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">MyAction</span>((<span class="type">String</span>)fo.getAttribute(<span class="string">"param"</span>));
+    }
+}
+</pre>
+
+<p>This will result in an instance of <code>MyAction</code> being
+created with name <samp>someval</samp>.</p>
+
+<li><p>You may use the <samp>&lt;serialdata&gt;</samp> element. Its
+textual contents are a hexadecimal dump (whitespace ignored) of the
+raw serialized bytes of an object to serve as the instance. Naturally
+this is the least preferred mechanism as it is not human-readable.</p>
+
+</ol>
+
+<p class="nonnormative">(You can configure your persistance style by using
+<a href="@org-netbeans-modules-settings@/org/netbeans/api/settings/ConvertAsProperties.html">@ConvertAsProperties</a> or
+<a href="@org-netbeans-modules-settings@/org/netbeans/api/settings/ConvertAsJavaBean.html">@ConvertAsJavaBean</a>
+instead).</p>
+
+<p>A client can find the current setting in a couple of ways:
+
+<ul>
+
+<li>In the common case of <code>SystemOption</code>, you may simply
+call
+
+<a href="../SharedClassObject.html#findObject-java.lang.Class-boolean-"><code>SharedClassObject.findObject(Class,&nbsp;true)</code></a>
+
+which will either provide a previously initialized singleton, or find
+the setting in lookup if possible and read any customized state before
+returning it. You may then use property change listeners as needed to
+listen for changes.
+
+<li>Just ask the system lookup for the settings class (or a relevant
+superclass). This can be used to retrieve non-singleton settings; use
+the lookup result to track changes in the list of setting instances,
+and some ad-hoc method to track runtime changes in individual
+instances.
+
+</ul>
+
+<p>How does the customization of setting instances work? After finding a
+setting instance via this DTD, the system will automatically look for
+a beans-style event set of type <code>PropertyChangeListener</code>,
+and add its own listener. If the bean changes state (either
+programmatically or as a result of user manipulation), the property
+change will cause the new state to be written out to the original XML
+file, keeping the same name. (Normally this would mean the XML would
+be written to disk in the user directory.)</p>
+
+<p class="nonnormative">(Historically the state of an object is simply
+    serialized into
+the XML file using <samp>&lt;serialdata&gt;</samp>, meaning the class
+must be <code>Serializable</code>, but you can choose different form
+of persistance by using
+<a href="@org-netbeans-modules-settings@/org/netbeans/api/settings/ConvertAsProperties.html">@ConvertAsProperties</a> or
+<a href="@org-netbeans-modules-settings@/org/netbeans/api/settings/ConvertAsJavaBean.html">@ConvertAsJavaBean</a>
+instead).</p>
+
+<p>Conversely, changes to the setting file on disk should trigger a
+reload of the state and modification of the in-memory bean (or
+creation of a new instance cookie with a new bean).</p>
+
+<h3><a name="lookup-ui">UI for Services</a></h3>
+
+<p>There are several things you can do to not only have services and
+lookup function programmatically but also look good and behave nicely
+within the user's view of configuration options and settings.</p>
+
+<h4><a name="service-templates">Service Templates</a></h4>
+
+<p>For many kinds of services, especially <code>ServiceType</code>s
+but also others, it is necessary to permit the user to create new
+instances of the service. Generally two criteria should be met for
+such services:</p>
+
+<ol>
+
+<li>The service is not a singleton, so it is meaningful to have more
+than one instance.
+
+<li>The service has some user-configurable properties, so it is useful
+to have more than one instance.
+
+</ol>
+
+<p>Creation of new service instances may be supported simply by
+producing a template residing beneath
+<samp>Templates/Services/</samp>. If the service normally resides in a
+subfolder of services, for example <samp>Services/Executor/</samp>,
+then the template should correspondingly be placed in
+<samp>Templates/Services/Executor/</samp>.</p>
+
+<div class="nonnormative">
+
+<p>The template should work like regular source code templates do: a
+file giving the initial structure of the service (typically a
+<samp>*.settings</samp> file), with the file attribute
+<code>template</code> set to <samp>true</samp>, and optionally a
+<code>templateWizardDescription</code> and
+<code>templateWizardURL</code>. For example:</p>
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Templates"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Executor"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"my-module-executor.settings"</span> <span class="variable-name">url</span>=<span class="string">"executor.settings"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"template"</span> <span class="variable-name">boolvalue</span>=<span class="string">"true"</span>/&gt;
+                <span class="comment">&lt;!-- SystemFileSystem.localizedName and SystemFileSystem.icon as usual --&gt;</span>
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+<p>If the user selects <b>New&nbsp;From&nbsp;Template</b> on the
+corresponding options folder, the template will be available.</p>
+
+</div>
+
+<!-- XXX is the file attribute 'simple'=false supported? Yarda says it was a hack only -->
+
+<h4><a name="service-mirroring">Services display area and mirroring</a></h4>
+
+<p>In addition to providing services, it is desirable to display them
+to the user as well. This is done, as is customary in other aspects of
+NetBeans configuration, by displaying customized variants of the data
+nodes coming from the system filesystem. The root folder for
+displaying options is called <samp>UI/Services/</samp>. Its subfolders
+govern the display of the options available in the system.</p>
+
+<p>As a rule, it is undesirable to place any actual settings in this
+folder (nor would they be recognized by the default lookup anyway).
+That is because the organization of this folder is driven by UI needs,
+without regards to API maintenance or compatibility of persisted user
+settings. So this folder solely <em>mirrors</em> configuration
+available elsewhere. You may freely reorganize the mirror according to
+current UI needs: existing modules plugging into services areas will
+continue to work unmodified, and existing user customizations stored
+to disk will continue to apply, since both of these act on the
+original files (which should <em>not</em> be moved frivolously).</p>
+
+<div class="nonnormative">
+
+<p>While technically you could place anything you wish in the UI
+folder, in practice a few types of things are used:</p>
+
+<ul>
+
+<li><p>Symbolic links to settings files displayed elsewhere. In
+NetBeans' old-style options, these will appear as the real setting. For example:</p>
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"UI"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Editing"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"my-module-config.shadow"</span>&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFile"</span> <span class="variable-name">stringvalue</span>=<span class="string">"Services/my-module-Config.settings"</span>/&gt;
+                &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFileSystem"</span> <span class="variable-name">stringvalue</span>=<span class="string">"SystemFileSystem"</span>/&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+<!-- XXX this info should be in a normative section -->
+<p>The attribute "originalFileSystem" can be omitted. In this case the search for the
+linked file will be done on the Filesystem on which the link resides, which
+is wanted for the usages on SystemFileSystem. The link file should have zero length.<BR>
+Note that any localized display name
+and icon should be set on the original settings file; they will be
+picked up automatically by the shadow.</p>
+
+The older style of linking using the CDATA section is still supported:
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"UI"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Editing"</span>&gt;
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"my-module-config.shadow"</span>&gt;
+                &lt;![<span class="keyword">CDATA</span>[Services/my-module-Config.settings
+SystemFileSystem
+]]&gt;
+            &lt;/<span class="function-name">file</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+<p>Here the shadow file consists of two lines, the first being the
+path to the real settings, the second always being
+<samp>SystemFileSystem</samp>. 
+
+<li><p>Links to other kinds of files, such as folders, whether part of
+the services lookup area or not. For example:</p>
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"UI"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"IDEConfiguration"</span>&gt;
+            &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"LookAndFeel"</span>&gt;
+                &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"my-module-stuff.shadow"</span>&gt;
+                    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"originalFile"</span> <span class="variable-name">stringvalue</span>=<span class="string">"Stuff"</span>/&gt;
+                &lt;/<span class="function-name">file</span>&gt;
+            &lt;/<span class="function-name">folder</span>&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Stuff"</span>&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.localizingBundle"</span> <span class="variable-name">stringvalue</span>=<span class="string">"my.module.Bundle"</span>/&gt;
+    &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"SystemFileSystem.icon"</span> <span class="variable-name">urlvalue</span>=<span class="string">"nbresloc:/my/module/stuff.gif"</span>/&gt;
+    <span class="comment">&lt;!-- perhaps some files to display here, perhaps not --&gt;</span>
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+<p>This defines a folder <samp>Stuff</samp> in the system filesystem
+which may be used for some kind of special configuration, and displays
+it in options.</p>
+
+<li><p>Specialized nodes. In some cases you do not wish to display a
+particular folder but want to have complete control over the literal
+display of the option. In such a case you need only include a
+<samp>*.instance</samp> file with an instance of the node (or its
+handle, if you prefer), as the node delegate of this object will be (a
+clone of) the node you provide. For example:</p>
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"UI"</span>&gt;
+    &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Services"</span>&gt;
+        &lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"Building"</span>&gt;
+            <span class="comment">&lt;!-- Some subclass of org.openide.nodes.Node: --&gt;</span>
+            &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"my-module-ConfigurationNode.instance"</span>/&gt;
+        &lt;/<span class="function-name">folder</span>&gt;
+    &lt;/<span class="function-name">folder</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+</ul>
+
+</div>
+
+<p>No particular substructure of <samp>UI/Services/</samp> is defined
+by the APIs. For optimal UI integration you may wish to examine the
+categories used by other modules and try to reuse an existing category
+appropriate to your needs.</p>
+
+<p>In some cases it is necessary to <em>hide</em> a service file, or a
+whole folder of services. While you can place files into
+<samp>Services/</samp> and simply not make any corresponding mirror in
+<samp>UI/Services/</samp>, you may wish to create services or
+subfolders inside existing displayable folders (for purposes of
+lookup, generally) yet not have them be visible in the UI. In this
+case you should mark the file or subfolder with the file attribute
+<code>hidden</code> (set to boolean <samp>true</samp>).</p>
+
+<h4><a name="services-proped">Property editor for services</a></h4>
+
+<p>If you wish to permit the user to select a service as part of the
+Property Sheet (from a node property, or as a
+<code>PropertyPanel</code>, providing general GUI embeddability), this
+is supported. You should use the property editor assigned to
+<code>java.lang.Object</code> (<em>not</em> your desired service
+interface). Various hints defined in the Explorer API
+permit you to control the result.</p>
+
+<div class="nonnormative">
+
+<p>As an example, here is a node property permitting you to ask the
+user to select a value of type <code>my.module.Thing</code>, being
+some interface or abstract superclass, where some instances are
+registered to lookup, conventionally in the
+<samp>Services/Things/</samp> folder which the module has provided:</p>
+
+<pre>
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="type">ThingProperty</span> <span class="keyword">extends</span> <span class="type">PropertySupport.ReadWrite</span> {
+    <span class="keyword">protected</span> <span class="type">ThingProperty</span>(<span class="type">String</span> <span class="variable-name">name</span>, <span class="type">String</span> <span class="variable-name">displayName</span>, <span class="type">String</span> <span class="variable-name">shortDescription</span>) <span class="keyword">throws</span> <span class="type">IOException</span> {
+        <span class="keyword">super</span>(name, Object.<span class="keyword">class</span>, displayName, shortDescription);
+        setValue(<span class="string">"superClass"</span>, Thing.<span class="keyword">class</span>); <span class="comment">// NOI18N
+</span>        setValue(<span class="string">"nullValue"</span>, NbBundle.getMessage(ThingProperty.<span class="keyword">class</span>, <span class="string">"LBL_no_thing"</span>)); <span class="comment">// NOI18N
+</span>        <span class="type">DataFolder</span> <span class="variable-name">thingsFolder</span> = DataFolder.create(
+            DataFolder.findFolder(Repository.getDefault().getDefaultFileSystem().getRoot()),
+            <span class="string">"Services/Things"</span> <span class="comment">// NOI18N
+</span>        );
+        setValue(<span class="string">"node"</span>, thingsFolder.getNodeDelegate()); <span class="comment">// NOI18N
+</span>    }
+    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">Object</span> <span class="function-name">getValue</span>() {
+        <span class="keyword">return</span> getThing();
+    }
+    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">void</span> <span class="function-name">setValue</span>(<span class="type">Object</span> <span class="variable-name">o</span>) {
+        <span class="keyword">if</span> (o != <span class="constant">null</span>) {
+            <span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(Thing.<span class="keyword">class</span>, o, <span class="constant">null</span>);
+            <span class="type">Iterator</span> <span class="variable-name">it</span> = Lookup.getDefault().lookup(templ).allItems().iterator();
+            <span class="keyword">if</span> (it.hasNext()) {
+                setThingID(((<span class="type">Lookup.Item</span>)it.next()).getId());
+            } <span class="keyword">else</span> {
+                <span class="comment">// Thing was registered but is not persistable.
+</span>                setThingID(<span class="constant">null</span>);
+            }
+        } <span class="keyword">else</span> {
+            setThingID(<span class="constant">null</span>);
+        }
+    }
+    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="function-name">supportsDefaultValue</span>() {
+        <span class="keyword">return</span> <span class="constant">true</span>;
+    }
+    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">void</span> <span class="function-name">restoreDefaultValue</span>() {
+        setValue(<span class="constant">null</span>);
+    }
+    <span class="comment">// May be used by code wishing to get the actual Thing (or null):
+</span>    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">Thing</span> <span class="function-name">getThing</span>() {
+        <span class="type">String</span> <span class="variable-name">id</span> = getThingID();
+        <span class="keyword">if</span> (id != <span class="constant">null</span>) {
+            <span class="type">Lookup.Template</span> <span class="variable-name">templ</span> = <span class="keyword">new</span> <span class="type">Lookup.Template</span>(Thing.<span class="keyword">class</span>, <span class="constant">null</span>, id);
+            <span class="type">Iterator</span> <span class="variable-name">it</span> = Lookup.getDefault().lookup(templ).allInstances().iterator();
+            <span class="keyword">if</span> (it.hasNext()) {
+                <span class="keyword">return</span> (<span class="type">Thing</span>)it.next();
+            } <span class="keyword">else</span> {
+                <span class="comment">// Invalid ID.
+</span>                <span class="keyword">return</span> <span class="constant">null</span>;
+            }
+        } <span class="keyword">else</span> {
+            <span class="keyword">return</span> <span class="constant">null</span>;
+        }
+    }
+    <span class="comment">// Subclasses implement to actually read/write Thing persistent IDs (or null):
+</span>    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="type">String</span> <span class="function-name">getThingID</span>();
+    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="type">void</span> <span class="function-name">setThingID</span>(<span class="type">String</span> <span class="variable-name">id</span>);
+}
+</pre>
+
+<p>A property extending this class would in the current UI display a
+pull-down list of all <code>Thing</code> implementations available in
+lookup; the custom property editor dialog would display the
+<samp>Things</samp> folder with anything contained inside it for the
+user to select from, provided it in fact had an instance assignable to
+<code>Thing</code>. The special null value is explicitly permitted
+here and would be displayed with the label given in the bundle.</p>
+
+</div>
+
+
+<hr>@FOOTER@
+</body>
+</html>

@@ -1,0 +1,4 @@
+Code completion result for source line:
+(new Omg\AliasedClassName())->|objFoo();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     objFoo()                        [PUBLIC]   \Foo\Bar\AliasedClassName

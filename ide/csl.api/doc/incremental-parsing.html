@@ -1,0 +1,458 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+    <body>
+        <h2>GSF Incremental Updating</h2>
+        <h3>Introduction</h3>
+        <p>
+          GSF supports incremental updating. As the name implies, this means that
+          there is support to do cheaper incremental updates to data, insead
+          of computing everything from scratch, when something changes in the editor.
+          This shows up in several places:
+
+          <ul>
+            <li>
+              <b>Parsing</b>. Your parser is told that edits are confined to
+              a certain region in the document. If you know that this is inside
+              a single method function, you can simply parse <i>just that function</i>
+              again, do some surgery on your abstract syntax tree, and you're done.
+              This makes parsing faster.
+              <br/><br/>
+            </li>
+            <li>
+              <b>Embedding</b>. Suppose the user is editing JavaScript in a
+              <code>&lt;script&gt;</code> block in an HTML file. The virtual
+              source provider for CSS knows that this doesn't affect CSS. Therefore,
+              several optimizations are possible:
+              <ul>
+                <li>
+                  It doesn't have to regenerate the CSS virtual source, it can use
+                  the existing one, and therefore
+                </li>
+                <li>
+                  The CSS virtual source doesn't have to be parsed again. In fact,
+                  it doesn't even have to have the parse tree offsets updated, since
+                  parse tree offsets apply to the virtual source only, and the
+                  position mapping is maintained by the virtual source which updated
+                  the position mappings while checking the embedded scenario.
+                </li>
+                <li>
+                  Features downstream, like semantic highlighting, can tell that
+                  the parsing result for CSS was not updated, so it can more cheaply
+                  update itself, just reusing the most recent highlighting result
+                  from CSS and just updating the offsets.
+                </li>
+              </ul>
+              <br/><br/>
+            </li>
+
+            <li>
+              <b>GSF Features</b>. When features are aware of incremental support, they
+              can do less work. As described above, in the embedding scenario,
+              the GSF feature implementations can tell when a whole language is
+              skipped because its virtual source wasn't affected. Thus, the navigator,
+              semantic highglighting etc. only have to do work based on which languages
+              were involved in the edits.
+              <br/><br/>
+              Note however that this isn't limited to the embedding scenarios.
+              An incremental update aware parser can mark a parser result as
+              unchanged. For example, if the user edited whitespace (outside of a string)
+              or a comment, the abstract syntax tree is unaffected, and if the
+              parser communicates this by marking the parser result unchanged, then
+              GSF features like navigation won't have to do any work.
+              <br/><br/>
+            </li>
+
+            <li>
+              <b>Faster Implementations</b>. Usually an incremental parse won't be
+              semantically identical to the previous parser result. Yes, you parsed
+              a single function again, but the user probably typed something such
+              that the method body is now slightly different. However, the fact
+              that just the method has changed is something you can use to your advantage
+              when implementing the various GSF feature callbacks. For example,
+              in semantic highlighting, you only have to re-analyze the updated
+              method (unless there are language specific or feature specific reasons
+              you have to analyze more than just the method).
+              <br/><br/>
+            </li>
+          </ul>
+        </p>
+        <h3>Support</h3>
+        <p>
+          If you tell the infrastructure that you support incremental updating,
+          GSF will keep some extra data around. First, it will keep your most recent
+          parser result (and for embedded files, you more recent virtual source translation).
+          Second, it will keep track of all the edits that have occurred since the
+          last parser request.
+        </p>
+        <p>
+          When it's time to parse your file again, your incremental parser will
+          be handed the edit history, and your previous parser result, and you
+          can create a new parser result by analyzing your previous result and the
+          edit deltas.
+        </p>
+        <h3>Edit History</h3>
+        <p>
+          The most important concept for incremental updating is the
+          <a href="org/netbeans/modules/gsf/api/EditHistory.html">EditHistory</a> object.
+          GSF provides you with an <code>EditHistory</code> object when
+          you are asked to parse (for incremental parsers) or when you are
+          asked to generate a virtual source (for incremental embedding models).
+          The <code>EditHistory</code> object provides information about
+          all the edits that have occurred since your last parse job.
+          Along with the <code>EditHistory</code> object, you are passed your
+          most recent result, such that you can base your incremental computations
+          on it.
+        </p>
+        <p>
+        The EditHistory tracks edits accurately, so you can use the
+        <code>convertOldToNew()</code> method to translate a pre-edits offsets
+        to a post-edits offsets.  However, the EditHistory maintains a
+        more interesting concept: the <b>affected region</b>.  The affected
+        region is roughly the start and end offsets in the original document
+        and the corresponding start and end offsets in the edited document.
+        You can think of the affected region as the "damaged region".
+        Everything before and after the affected region was unchanged.
+        The following key attributes are provided by EditHistory:
+        <ol>
+        <li> The start offset</li>
+        <li> The original size</li>
+        <li> The new size</li>
+        </ol>
+        These three parameters indicate that in the old document, the text between
+        <code>offset</code> and <code>offset+originalSize</code> has been modified,
+        and after the edits, this region corresponds to
+        <code>offset</code> to <code>offset+editedSize</code>. Put another way,
+        all document positions below <code>offset</code> are unaffected by the edits,
+        and all document positions above <code>offset+originalSize</code> are uniformly
+        shifted up by a delta of <code>editedSize-originalSize</code> (which can be negative,
+        when more text was deleted than added).
+        </p>
+        <p>
+          Here's how this works. First, let's suppose we insert some text:
+          <br/>
+          <img src="history1.png" />
+          <br/>
+          <br/>
+          Here, we've inserted <code>XY</code> between the characters <code>F</code>
+          and <code>G</code>.  Here, the <code>offset</code> where the differences
+          begin is 6. In the old document, the differences also end at offset 6,
+          whereas in the edited document, the differences end at 8.
+          Therefore, our <code>offset</code> is 6, the <code>originalSize</code> is 0,
+          the <code>editedSize</code> is 2, and therefore the <code>delta</code> is +2.
+        </p>
+        <p>
+          Here's a more complicated example, where we've performed multiple edits.
+          The affected region is going to be the extent surrounding all edits
+          from the edits to the lowest offset in the document, to the edits at the
+          highest offset in the document:
+          <br/>
+          <img src="history2.png" />
+          <br/>
+          <br/>
+          Here's we've deleted one character from two different locations in
+          the document - <code>D</code> and <code>H</code>. The blue regions
+          show the old region and the new corresponding region. Yes, some
+          of the contents within the old region are still there in the new region,
+          but the <b>key</b> point is that <b>before</b> the affected offset,
+          both documents are identical, and similarly, after the end of the
+          affected regions, both documents are identical. Typically, when
+          a user is editing, the changes will be local to a small region
+          (such as a function body), and an incremental parser can decide
+          that the entire affected region is in an incrementally parseable block.
+          It can also use the block delta to adjust offsets - add the delta
+          to all offsets outside the old region block.
+        </p>
+        <h3>Incremental Parsing</h3>
+        <p>
+          To implement incremental parsing, rather than extending the plain
+          <a href="org/netbeans/modules/gsf/api/Parser.html">Parser</a>
+          interface, implement the
+          <a href="org/netbeans/modules/gsf/api/IncrementalParser.html">IncrementalParser</a>
+          interface instead.
+          GSF will store the most recent parser result, and track editing history,
+          for source files that are parsed by an incremental parser.
+          The first time the file is opened, no previous parser result is available,
+          so the plain parsing method will be called. However, for subsequent edits,
+          the incremental parser will be called instead. If it fails, the regular
+          parse method will be called instead.
+        </p>
+        <p>
+          Your incremental parser will typically perform the following steps:
+          <ul>
+            <li>
+              Look up the <code>EditHistory</code>'s offset.
+            </li>
+            <li>
+              First, look in the token hierarchy and see if the edits are confined
+              to whitespace or comments only, or other lexical regions that won't
+              affect the parse tree. If so, just return the previous parse result,
+              or a clone of it, and mark its <code>setUpdateState</code>
+              with <code>ParserResult.UpdateState.NO_SEMANTIC_CHANGE</code>
+              and you're done.
+            </li>
+            <li>
+              Look in the previous parsing result's abstract syntax tree
+              for the node surrounding the given offset.  For example, in JavaScript,
+              we want to incrementally compile function bodies, so we look for
+              the function node surrounding the offset. If there is no such
+              function node, we're editing outside of functions and incremental
+              parsing isn't available, so we just exit. (Normal parsing will be
+              invoked by the infrastructure instead.)
+            </li>
+            <li>
+              Look at the <code>EditHistory</code> and make sure the entire
+              affected region (<code>history.getStart()</code> and <code>history.getOldEnd</code>)
+              is completely inside the function body. If not, we've edited outside
+              of just a single function, so just exit.
+            </li>
+            <li>
+              We now know the function to be incrementally edited. We can also compute
+              its <b>NEW</b> dimensions; it starts at the same offset as before,
+              and it ends at <code>history.convertOldToNew(oldFunctionEnd)</code>.
+              That's right, the end of the function is outside the edited region,
+              so (as described in the EditHistory section above) we just have to take
+              the old offset and shift it by <code>history.getSizeDelta()</code>.
+            </li>
+            <li>
+              With the new function offsets, we just look up the source code, via
+              <code>document.getText(offset, newEnd-offset)</code>.
+            </li>
+            <li>
+              We parse the new function body. This might require to run the parser
+              in a special mode. For JavaScript, I modified the parser to have a special
+              method which lets me parse function bodies and return a function node.
+            </li>
+            <li>
+              Next we need to adjust all the source offsets in the AST. The offset
+              in the input we passed to the parser was 0, but this function is really
+              at <code>oldFunctionStart</code>, so add <code>oldFunctionStart</code>
+              to all AST node start and end offsets to shift the AST nodes to their
+              correct place in the edited buffer.
+            </li>
+            <li>
+              Similarly, adjust the error offsets of any parser errors that were
+              registered during parsing of the method body.
+            </li>
+            <li>
+              Next, we need to remove the old function from the abstract syntax tree.
+            </li>
+            <li>
+              Next, we need to update the offsets for all the AST nodes. None of the
+              nodes should be in the actual edited area (which was all inside the
+              now recompiled function). Thus, we just have to iterate over the nodes
+              and adjust the offsets; all offsets less than <code>history.getStart()</code>
+              can be left alone, and all offsets greater than or equal to
+              <code>history.getOldEnd()</code> should be incremented by
+              <code>history.getSizeDelta()</code>. There are methods on the <code>EditHistory</code>
+              object to do this.
+            </li>
+            <li>
+              Next, we insert our own function node into the AST in the exact same place
+              the previous function node was sitting.
+            </li>
+            <li>
+              Next, we filter through all the error messages in the previous parser
+              result. Any errors that were in the old function (NOTE - in the whole old function
+              range, not just in the <code>EditHistory</code> affected region since
+              we recompiled the entire function, not just the affected region) should
+              be removed, and all other errors passed on. Finally, add in our new
+              error messages from the compiled method.
+            </li>
+            <li>
+              Finally, we create a new <code>ParserResult</code> instance, initialize
+              it with our AST, our updated error list, and set its <code>setUpdateState</code>
+              to <code>ParserResult.UpdateState.UPDATED</code>. We also store in our
+              own ParserResult, references to the old and new function nodes we replaced.
+              This will be used by feature implementations like our <code>SemanticAnalyzer</code>
+              to perform incremental semantic analysis by only looking at the given
+              function node subtree.
+            </li>
+          </ul>
+        </p>
+        Note that the JavaScript module already performs incremental parsing, so
+        you can look at its implementation for inspiration.
+
+
+        <h3>Incremental Updating</h3>
+        <p>
+        The previous section described how to perform incremental parsing. From the
+        checklist you can see that implementing incremental parsing isn't nontrivial.
+        It may be even more difficult in cases where you don't own the parser yourself.
+        For example, for Ruby, Python and Groovy the parser will probably be
+        JRuby, Jython, and Groovyc respectively, so parsing method bodies for example
+        will require support in the corresponding projects.
+      </p>
+      <p>
+      That doesn't mean incremental updating isn't possible. Parsing itself will have
+      to process the full AST, but you can still analyze the edited region and
+      reduce the amount of work.
+    </p>
+    <p>
+      As before, you should implement the
+          <a href="org/netbeans/modules/gsf/api/IncrementalParser.html">IncrementalParser</a>
+          interface, such that GSF will pass your previous parser result and the <code>EditHistory</code>
+          to you. Then, you parse the request - and unfortunately, you'll be parsing the entire
+          document.
+    </p>
+    <p>
+      However, you should now use the <code>EditHistory</code> along with the previous
+      <code>ParserResult</code> to see whether the changes were local to a single block
+      such as a method. If they were, you can also compute exactly which method was just
+      updated, by looking up the corresponding offset in the <code>EditHistory</code>
+      and looking in your new parser result.
+    </p>
+    <p>
+    Now you know that only a single method in your new parser result is actually "new".
+    In your downstream feature implementations, such as the semantic analyzer,
+    you can use this information to combine your previous result (which you stashed
+    on your previous parser result), with local computations based only on the changed
+    method.
+        </p>
+        <p>
+          Therefore, you can drive the often more expensive computations (type analysis,
+          semantic analysis, navigator/outline computations, etc) to do simple, incremental
+          updates, even if the parse tree itself was fully regenerated by a non-incremental
+          parser!
+        </p>
+
+        <h3>Incremental Embedding Models</h3>
+        <p>
+          GSF supports embedding through "embedding models", which produce a "virtual source",
+          one for each targeted parser language in an embedded language. For example,
+          in an RHTML file, there is a virtual source generated for JavaScript (which gives
+          a JavaScript view of the file, typically concatenating the various
+          <code>&lt;script&gt;</code> blocks and a few other things), as well as one for
+          CSS, and one for Ruby.
+        </p>
+        <p>
+          Each virtual source translator takes the original source language and computes
+          a virtual source.  With the incremental update support, a virtual source
+          translator can tell the infrastructure that it supports incremental updates.
+          First, instead of implementing the
+          <a href="org/netbeans/modules/gsf/api/EmbeddingModel.html">EmbeddingModel</a>
+          interface as before, implement
+          <a href="org/netbeans/modules/gsf/api/InrementalEmbeddingModel.html">IncrementalEmbeddingModel</a>.
+        </p>
+        <p>
+          Once you do that, GSF will cache your virtual source for you, and when it's time
+          to update the virtual source parse trees, it will call your incremental
+          embedding model and pass it your previous virtual source and an
+          <code>EditHistory</code> object. You can use the <code>EditHistory</code> to
+          determine if the edits affects your virtual source.
+          For example, for <code>JavaScript</code>, if you've edited something inside
+          the <code>&lt;style&gt;</code> element (CSS code), the edit can't possibly affect
+          the JavaScript virtual source. Therefore, the virtual source doesn't change,
+          and therefore the previous JavaScript parse tree for the virtual source doesn't
+          have to be reparsed - it doesn't even have to be updated for new AST offsets,
+          since the AST itself hasn't changed. However, the embedding model itself
+          is responsible for mapping AST offsets to source document offsets.
+          Therefore, the incremental embedding model needs to go through its
+          position mapping tables and update them. Again, this typically just means
+          shifting positions above the affected region up by the edit history's
+          size delta.
+        </p>
+        <p>
+          If this succeeds, your embedding model can just return
+          <code>IncrementalEmbeddingModel.UpdateState.COMPLETED</code>. This tells the
+          infrastructure that the embedding model was updated, and there is nothing else
+          to do - it doesn't have to parse the result of the virtual source!
+        </p>
+        <p>
+            But what if the user edited something in an edit region that affects the
+            virtual source? In that case, it can simply return
+          <code>IncrementalEmbeddingModel.UpdateState.FAILED</code>. This tells the
+          infrastructure that an incremental update cannot be completed, and GSF
+          will perform a new (non-incremental) virtual source translation, and
+          parse the result.
+        </p>
+        <p>
+          Finally, if you're somewhere in between - you updated the virtual source
+          such that it now reflects the recent edits, but the model changed such that
+          it must be reparsed, return
+          <code>IncrementalEmbeddingModel.UpdateState.UPDATED</code>. This tells the
+          infrastructure that the virtual source is up to date and that a parse
+          result should be computed for it.
+        </p>
+        <p>
+          Here's a complete example of how this works for an embedding model; this is the CSS embedding
+          model's incremental update:
+          <pre>
+    IncrementalEmbeddingModel.UpdateState incrementalUpdate(EditHistory history) {
+        // Clear cache
+        // prevLexOffset = prevAstOffset = 0;
+        prevLexOffset = history.convertOldToNew(prevLexOffset);
+
+        int offset = history.getStart();
+        int limit = history.getOldEnd();
+        int delta = history.getSizeDelta();
+
+        boolean codeOverlaps = false;
+        for (CodeBlockData codeBlock : codeBlocks) {
+            // Block not affected by move
+            if (codeBlock.sourceEnd <= offset) {
+                continue;
+            }
+            if (codeBlock.sourceStart >= limit) {
+                codeBlock.sourceStart += delta;
+                codeBlock.sourceEnd += delta;
+                continue;
+            }
+            if (codeBlock.sourceStart <= offset && codeBlock.sourceEnd >= limit) {
+                codeBlock.sourceEnd += delta;
+                codeOverlaps = true;
+                continue;
+            }
+            return IncrementalEmbeddingModel.UpdateState.FAILED;
+        }
+
+        return codeOverlaps ? IncrementalEmbeddingModel.UpdateState.UPDATED : IncrementalEmbeddingModel.UpdateState.COMPLETED;
+    }
+          </pre>
+        </p>
+
+
+        <h3>Incremental Feature Updates</h3>
+        <p>
+          <code>ParserResult</code> stores an <code>UpdateState</code> enum value
+          indicating what kind of update was performed. For example, if it is
+          <code>NO_SEMANTIC_CHANGE</code> we know that in this parser result,
+          nothing in the AST changed (though offsets may have changed).
+          This lets the infrastructure know that it can take certain shortcuts.
+          For example, semantic highlighting won't recompute the data, it will just
+          update its own offsets based on the edit history.
+        </p>
+        <p>
+          Not all GSF feature implementations are using the incremental data yet;
+          this will change as soon as possible...
+        </p>
+        <p>
+          You should use the same approach for feature implementations in your language
+          plugin. Start with the most expensive computations (for example, type
+          analysis), and use the "what changed" data (either the <code>EditHistory</code>,
+          or specific parse tree nodes derived from the <code>EditHistory</code>)
+          to just filter your previously computed result.
+        </p>
+
+        <br/>
+        <span style="color: #cccccc">Tor Norbye &lt;tor@netbeans.org&gt;</span>
+    </body>
+</html>

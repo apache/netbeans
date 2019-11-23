@@ -1,0 +1,49 @@
+<?php
+class |>CLASS:test<| {
+  protected $|>FIELD:x<|;
+
+  static private $|>FIELD,STATIC:test<| = NULL;
+  static private $|>FIELD,STATIC:cnt<| = 0;
+
+  static function |>METHOD,STATIC:factory<|($x) {
+    if (test::$|>FIELD,STATIC:test<|) {
+      return test::$|>FIELD,STATIC:test<|;
+    } else {
+      test::$|>FIELD,STATIC:test<| = new test($x);
+      return test::$|>FIELD,STATIC:test<|;
+    }
+  }
+
+  protected function |>METHOD:__construct<|($x) {
+    test::$|>FIELD,STATIC:cnt<|++;
+    $this->|>FIELD:x<| = $x;
+  }
+
+  static function |>METHOD,STATIC:destroy<|() {
+    test::$|>FIELD,STATIC:test<| = NULL;
+  }
+
+  protected function |>METHOD:__destruct<|() {
+  	test::$|>FIELD,STATIC:cnt<|--;
+  }
+
+  public function |>METHOD:get<|() {
+    return $this->|>FIELD:x<|;
+  }
+
+  static public function |>METHOD,STATIC:getX<|() {
+    if (test::$|>FIELD,STATIC:test<|) {
+      return test::$|>FIELD,STATIC:test<|->|>FIELD:x<|;
+    } else {
+      return NULL;
+    }
+  }
+
+  static public function |>METHOD,STATIC:count<|() {
+    return test::$|>FIELD,STATIC:cnt<|;
+  }
+}
+
+test::|>CUSTOM1,STATIC:getX<|();
+
+?>

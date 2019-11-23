@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xml.netbeans.org/schema/MySchema"
+    xmlns:tns="http://xml.netbeans.org/schema/MySchema"
+    elementFormDefault="qualified">
+    <xsd:complexType name="newComplexType">
+        <xsd:sequence>
+            <xsd:element name="newElement">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="newElement"/>
+                        <xsd:element name="newElement1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="newElement" type="tns:newComplexType"></xsd:element>
+</xsd:schema>

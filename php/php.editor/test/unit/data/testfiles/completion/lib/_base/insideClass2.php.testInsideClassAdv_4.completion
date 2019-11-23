@@ -1,0 +1,5 @@
+Code completion result for source line:
+$aVar->|meth_a();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     meth_a()                        [PUBLIC]   cls_A
+METHOD     meth_aa()                       [PUBLIC]   cls_A

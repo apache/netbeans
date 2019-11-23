@@ -1,0 +1,5 @@
+Code completion result for source line:
+$c->|; // CC shows foo() and bar()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     bar()                           [PUBLIC]   Child
+METHOD     foo()                           [PUBLIC]   Parent7

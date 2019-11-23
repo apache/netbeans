@@ -1,0 +1,46 @@
+62 74
+    bold true
+    default identifier
+    display name Public Element
+    name mod-public
+93 104
+    default field
+    display name Unused Element
+    foreground java.awt.Color[r=0,g=153,b=0]
+    name mod-unused
+    tooltip org.netbeans.modules.java.editor.semantic.UnusedTooltipResolver
+    unused-browseable true
+    wave underline color java.awt.Color[r=153,g=153,b=153]
+121 132
+    default field
+    display name Static Element
+    foreground java.awt.Color[r=0,g=153,b=0]
+    italic true
+    name mod-static
+156 168
+    bold true
+    default method
+    display name Unused Element
+    name mod-unused
+    tooltip org.netbeans.modules.java.editor.semantic.UnusedTooltipResolver
+    unused-browseable true
+    wave underline color java.awt.Color[r=153,g=153,b=153]
+185 199
+    default identifier
+    display name Unused Element
+    name mod-unused
+    tooltip org.netbeans.modules.java.editor.semantic.UnusedTooltipResolver
+    unused-browseable true
+    wave underline color java.awt.Color[r=153,g=153,b=153]
+232 244
+    bold true
+    default method
+    display name Static Element
+    italic true
+    name mod-static
+257 268
+    default field
+    display name Static Element
+    foreground java.awt.Color[r=0,g=153,b=0]
+    italic true
+    name mod-static

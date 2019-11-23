@@ -1,0 +1,15 @@
+diff --git a/NewClass.java b/NewClassCopy.java
+similarity index 89%
+copy from NewClass.java
+copy to NewClassCopy.java
+index 3f1dbc2..1f53e8d 100644
+--- a/NewClass.java
++++ b/NewClassCopy.java
+@@ -9,6 +9,6 @@
+  *
+  * @author ondra
+  */
+-public class NewClass {
++public class NewClassCopy {
+     
+ }

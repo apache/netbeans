@@ -1,0 +1,103 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>ExtKit Design View</TITLE>
+  </HEAD>
+<BODY>
+
+<h2>Completion Design View</H2>
+
+<p>Status: designing...
+
+<h3>Entry Point Handlers</H3>
+
+<p>User types a character ("UT") :position, character
+<pre>
+UT -> AWT/Swing -> kit.ExtDefaultKeyAction
+  lockDocument
+  detachCompletionDocumentHandler
+  detachCompletionCaretHandler
+  updateDocument
+  switch lexsupport.codeCompletion
+    cc.autoShow
+    cc.refresh
+    cc.hide
+  attachCompletionCaretHandler
+  attachCompletionDocumentHandler
+  unlockDocument
+</pre>
+
+<p>User moves caret ("UM") (navigation keys or mouse click) :position
+<pre>
+UM -> AWT/Swing -> cc.CaretListener
+  cc.cancel()
+</pre>
+
+<p>User invokes code assistent ("UC") :position
+<pre>
+UC -> AWT/Swing -> kit.AssistantAction
+  cc.show
+</pre>
+
+<p>User invokes kill assistant action
+<pre>
+UC -> AWT/Swing -> kit.AssistantAction
+  cc.hide
+</PRE>
+
+<p>User invokes select assistant action
+<pre>
+UC -> AWT/Swing -> kit.AssistantAction
+  cc.hide
+  cc.perform  ??? [order is pending]
+</PRE>
+
+<p>Module modifies document ("MM") :documentEvent
+  <pre>
+MM -> unknown thread -> cc.DocumentListener
+  cc.refresh
+</pre>
+
+
+<h3>Completion API</H3>
+
+<pre>
++ Completion:
+  + autoShow(position, character) instruct completion to open sometimes
+  + show(position, character) instruct completion to open in limited time
+  + refresh(position, character) if open then update content
+  + refresh(documentEvent) if open then update content
+  + hide() hide view
+</pre>
+
+<pre>
++ CompletionEnvironment implements DocumentListener, CaretListener
+  disableDocumentListener
+  enableDocumentListener
+  disableCaretListener
+  enableCaretListener
+</pre>
+
+</BODY>
+</HTML>

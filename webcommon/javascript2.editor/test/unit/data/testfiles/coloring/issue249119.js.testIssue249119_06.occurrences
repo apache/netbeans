@@ -1,0 +1,2 @@
+    var  |>MARK_OCCURRENCES:a^2<| = param.a || 1;  // usage is correctly detected
+        console.log(|>MARK_OCCURRENCES:a2<|);

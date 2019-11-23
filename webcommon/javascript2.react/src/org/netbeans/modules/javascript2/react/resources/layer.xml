@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="reactjs.jsx" url="nbresloc:/org/netbeans/modules/javascript2/react/resources/jsxtemplate.jsx">
+                <attr name="position" intvalue="401"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.react.resources.Bundle"/>
+                <attr name="templateCategory" stringvalue="simple-files"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javascript2/react/resources/reactjs.html"/>
+                <attr name="requireProject" boolvalue="false"/>
+            </file>
+        </folder>
+        <folder name="ClientSide">
+            <file name="reactjs.jsx" url="nbresloc:/org/netbeans/modules/javascript2/react/resources/jsxtemplate.jsx">
+                <attr name="position" intvalue="401"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javascript2.react.resources.Bundle"/>
+                <attr name="templateCategory" stringvalue="html5"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javascript2/react/resources/reactjs.html"/>
+                <attr name="requireProject" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

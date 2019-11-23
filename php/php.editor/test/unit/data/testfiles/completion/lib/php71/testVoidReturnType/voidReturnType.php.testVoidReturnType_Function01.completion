@@ -1,0 +1,15 @@
+Code completion result for source line:
+function voidReturnType(): |void { // func
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      TestClass                       [PUBLIC]   voidReturnType.php
+CLASS      TestInterface                   [PUBLIC]   voidReturnType.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null
+KEYWORD    void                                       null

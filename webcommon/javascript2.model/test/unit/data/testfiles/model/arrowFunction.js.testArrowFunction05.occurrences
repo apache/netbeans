@@ -1,0 +1,2 @@
+var ^|>MARK_OCCURRENCES:x<| = 10;
+|>MARK_OCCURRENCES:x<| + 5;

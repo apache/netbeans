@@ -1,0 +1,36 @@
+public class TestFile {
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Getter for property first.
+     * @return Value of property first.
+     */
+    public int getFirst() {
+    }
+    
+    /**
+     * Setter for property second.
+     * @param second New value of property second.
+     */
+    public void setSecond(double second) {
+    }
+    
+    /**
+     * Getter for property third.
+     * @return Value of property third.
+     */
+    public long getThird() {
+    }
+    
+    /**
+     * Setter for property third.
+     * @param third New value of property third.
+     */
+    public void setThird(long third) {
+    }
+    
+}
+

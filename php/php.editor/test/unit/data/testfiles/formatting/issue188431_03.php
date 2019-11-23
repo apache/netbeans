@@ -1,0 +1,139 @@
+<?php
+
+    include_once("swiz/classes/class.G_DbList.php");
+
+//**********************************************************************************
+//**            G_ToOrderDbList
+//**********************************************************************************
+
+    class G_ToOrderDbList extends G_DbList {
+
+        var $yes_no = array(
+            'Y' => "ano",
+            'N' => "ne",
+            '1' => "ano",
+            '0' => "ne",
+        );
+        var $types = null;
+
+        function &G_ToOrderDbList($name, &$object) {
+            $this->columns = array(
+                'id' => "ID",
+                'type' => "Typ",
+                'name' => "Název",
+                'catalog_number' => "Katalogové číslo",
+                'maker' => "Výrobce",
+                'image' => "Obrázek",
+                'price' => "Cena doporučená",
+                'in_stock' => "Skladem",
+                'in_stock_required' => "Skladem požadováno",
+                'active' => "Aktivní",
+            );
+
+            $this->selectors = array(
+                'edit' => "UPRAVIT",
+            );
+
+            $this->parameters['limit'] = CONST_LIST_LIMIT;
+            $this->parameters['sort_mode'] = "single";
+            $this->parameters['htmlescape'] = false;
+            $this->parameters['explode_selectors'] = array("delete", "add");
+
+            $this->sort = array(
+                'in_stock' => "ASC",
+            );
+
+            parent::G_DbList($name, $object);
+
+            $this->types = ProductTitles::Types();
+        }
+
+        function onNeedSql() {
+            $sql = "
+                SELECT
+                    p.`id`,
+                    p.`type`,
+                    p.`name`,
+                    p.`catalog_number`,
+                    m.`name` AS maker,
+                    p.`image`,
+                    p.`price`,
+                    p.`in_stock`,
+                    p.`in_stock_required`,
+                    p.`inserted`,
+                    p.`active`
+                FROM `product` AS p
+                LEFT JOIN `maker` AS m
+                    ON p.`id_maker` = m.`id`
+                LEFT JOIN `category` AS c
+                    ON p.`id_category` = c.`id`
+                WHERE
+                    p.`deleted` IS NULL
+                    AND
+                    c.`deleted` IS NULL
+                    AND
+                    m.`deleted` IS NULL
+                    AND
+                    p.`in_stock` < p.`in_stock_required`
+            ";
+
+            return $sql;
+        }
+
+        function onManageSelectors(&$selectors, $params) {
+            if ($params['key'] == "header") {
+                unset($selectors['edit']);
+            }
+        }
+
+        function onEachSelector(&$selector_keys, &$disabled, $row) {
+            switch ($selector_keys['_SELECTOR']) {
+                case "edit":
+                    $selector_keys['_LINK'] = $this->BuildLink(array(
+                        $this->page_key => "admin/home",
+                        'menusheets'    => "admin/products",
+                        'productdblist[selector][edit]' => $row['id'],
+                        '_explode' => "*",
+                    ));
+                    break;
+            }
+        }
+
+        function onEachRow(&$row) {
+            $row['type'] = $this->types[$row['type']];
+            $row['active'] = $this->yes_no[$row['active']];
+            $row['price'] = ProjectLib::PriceFormat($row['price']);
+            $row['image'] = $this->GetImgTag($row['image'], $row['id']);
+            $row['maker'] = $row['maker'] ? $row['maker'] : "n/a";
+        }
+
+        function onNavigator($page, $count_page) {
+            if ($page == 1) {
+                $this->parser->AddIf("no_first");
+                $this->parser->AddIf("no_prev");
+            }
+            if ($page == $count_page) {
+                $this->parser->AddIf("no_next");
+                $this->parser->AddIf("no_last");
+            }
+        }
+
+        function GetImgTag($name, $id) {
+            if (file_exists(CONST_PRODUCT_IMG_DIR.$name)) {
+                $img = '<a href="'.CONST_PRODUCT_IMG_DIR.$name.'" target="_blank"><img src="'.CONST_PRODUCT_IMG_SMALL_DIR.$id.'.jpg" border="0" width="'.CONST_PRODUCT_IMG_SMALL_WIDTH.'"></a>';
+            } else {
+                $img = "n/a";
+            }
+
+            return $img;
+        }
+
+    }
+
+//**********************************************************************************
+//**            instances
+//**********************************************************************************
+
+    new G_ToOrderDbList("toorderdblist", $this);
+
+?>

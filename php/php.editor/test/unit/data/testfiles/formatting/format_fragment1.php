@@ -1,0 +1,8 @@
+<?php
+        class class_name {
+    /*FORMAT_START*/
+    function __construct() {
+    echo 1;
+    }/*FORMAT_END*/
+}
+?>

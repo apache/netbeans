@@ -1,0 +1,388 @@
+<testresult testFile='nullableTypes_03.php'>
+    <scanner>
+        <token id='T_CLASS' start='7' end='12'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='13' end='26'>
+            <text>NullableTypes</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='27' end='28'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='34' end='40'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='41' end='49'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='50' end='61'>
+            <text>returnType1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='61' end='62'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='62' end='63'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='63' end='64'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='65' end='66'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='66' end='72'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='73' end='74'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='79' end='80'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='86' end='92'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='93' end='101'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='102' end='113'>
+            <text>returnType2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='113' end='114'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='114' end='115'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='115' end='116'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='117' end='118'>
+            <text>?</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='118' end='119'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='119' end='122'>
+            <text>Foo</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='122' end='123'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='123' end='126'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='127' end='128'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='133' end='134'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='140' end='146'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='147' end='155'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='156' end='170'>
+            <text>parameterType1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='170' end='171'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='171' end='172'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='172' end='175'>
+            <text>Foo</text>
+        </token>
+        <token id='T_VARIABLE' start='176' end='180'>
+            <text>$foo</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='180' end='181'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='182' end='183'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='189' end='190'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='196' end='202'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='203' end='211'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='212' end='226'>
+            <text>parameterType2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='226' end='227'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='227' end='228'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='228' end='231'>
+            <text>Foo</text>
+        </token>
+        <token id='T_VARIABLE' start='232' end='236'>
+            <text>$foo</text>
+        </token>
+        <token id='T_COMMA' start='236' end='237'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='238' end='244'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='245' end='249'>
+            <text>$bar</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='249' end='250'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='251' end='252'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='258' end='259'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='265' end='271'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='272' end='280'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='281' end='284'>
+            <text>all</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='284' end='285'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='285' end='286'>
+            <text>?</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='286' end='287'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='287' end='290'>
+            <text>Foo</text>
+        </token>
+        <token id='T_VARIABLE' start='291' end='295'>
+            <text>$foo</text>
+        </token>
+        <token id='T_COMMA' start='295' end='296'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='297' end='303'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='304' end='308'>
+            <text>$bar</text>
+        </token>
+        <token id='T_COMMA' start='308' end='309'>
+            <text>,</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='310' end='311'>
+            <text>?</text>
+        </token>
+        <token id='T_CALLABLE' start='311' end='319'>
+            <text>callable</text>
+        </token>
+        <token id='T_VARIABLE' start='320' end='324'>
+            <text>$baz</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='324' end='325'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='325' end='326'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='327' end='328'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='328' end='334'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='335' end='336'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='342' end='343'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='345' end='346'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='347' end='347'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='347'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='7' end='346' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='13' end='26' name='NullableTypes'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='27' end='346' isCurly='true'>
+                    <MethodDeclaration start='34' end='80' modifiers='public'>
+                        <FunctionDeclaration start='41' end='80' isReference='false'>
+                            <Identifier start='50' end='61' name='returnType1'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NullableType start='65' end='72'>
+                                <NamespaceName start='66' end='72' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='66' end='72' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                            <Block start='73' end='80' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='86' end='134' modifiers='public'>
+                        <FunctionDeclaration start='93' end='134' isReference='false'>
+                            <Identifier start='102' end='113' name='returnType2'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NullableType start='117' end='126'>
+                                <NamespaceName start='118' end='126' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='119' end='122' name='Foo'/>
+                                    <Identifier start='123' end='126' name='Bar'/>
+                                </NamespaceName>
+                            </NullableType>
+                            <Block start='127' end='134' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='140' end='190' modifiers='public'>
+                        <FunctionDeclaration start='147' end='190' isReference='false'>
+                            <Identifier start='156' end='170' name='parameterType1'/>
+                            <FormalParameters>
+                                <FormalParameter start='171' end='180' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='171' end='175'>
+                                            <NamespaceName start='172' end='175' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='172' end='175' name='Foo'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='176' end='180' isDollared='true'>
+                                            <Identifier start='177' end='180' name='foo'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='182' end='190' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='196' end='259' modifiers='public'>
+                        <FunctionDeclaration start='203' end='259' isReference='false'>
+                            <Identifier start='212' end='226' name='parameterType2'/>
+                            <FormalParameters>
+                                <FormalParameter start='227' end='236' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='227' end='231'>
+                                            <NamespaceName start='228' end='231' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='228' end='231' name='Foo'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='232' end='236' isDollared='true'>
+                                            <Identifier start='233' end='236' name='foo'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='238' end='249' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='238' end='244' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='238' end='244' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='245' end='249' isDollared='true'>
+                                            <Identifier start='246' end='249' name='bar'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='251' end='259' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='265' end='343' modifiers='public'>
+                        <FunctionDeclaration start='272' end='343' isReference='false'>
+                            <Identifier start='281' end='284' name='all'/>
+                            <FormalParameters>
+                                <FormalParameter start='285' end='295' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='285' end='290'>
+                                            <NamespaceName start='286' end='290' isCurrent='false' isGlobal='true'>
+                                                <Identifier start='287' end='290' name='Foo'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='291' end='295' isDollared='true'>
+                                            <Identifier start='292' end='295' name='foo'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='297' end='308' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='297' end='303' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='297' end='303' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='304' end='308' isDollared='true'>
+                                            <Identifier start='305' end='308' name='bar'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='310' end='324' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='310' end='319'>
+                                            <Identifier start='311' end='319' name='callable'/>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='320' end='324' isDollared='true'>
+                                            <Identifier start='321' end='324' name='baz'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NullableType start='327' end='334'>
+                                <NamespaceName start='328' end='334' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='328' end='334' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                            <Block start='335' end='343' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,7 @@
+diff --git a/file b/file
+index ce01362..ee73c61 100644
+--- a/file
++++ b/file
+@@ -1 +1 @@
+-hello
++modification

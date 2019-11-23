@@ -1,0 +1,135 @@
+<HTML><!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<STYLE TYPE="text/css">
+			BODY  {
+  				font-family: Verdana, sans-serif, helvetica, arial;
+  				font-size: 13px;
+  				background-color: #FFFFFF;
+			}
+			TD	{
+  				font-family: Verdana, sans-serif, helvetica, arial;
+  				font-size: 13px;
+			}
+
+			TH	{
+				font-family: helvetica, arial, sans-serif;
+				font-size: 12pt;
+			}
+    		.error {
+	    		font-weight:bold; background:#EEEEE0; color:purple;
+	    		}
+	    	.fail {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}
+	    	.unexpected-pass {
+			    font-weight:bold; background:#EEEEE0; color:#FFB200;
+    		}
+    		.unknown {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}
+	    	.expected-fail {
+			    font-weight:bold; background:#EEEEE0; color:brown;
+    		}
+    		.pass {
+		    	background:#EEEEE0;
+	    	}
+    		.error-matrix {
+	    		font-weight:bold; background:#e0a8e0; color:purple;
+	    		}
+	    	.fail-matrix {
+			    font-weight:bold; background:#ffa0a0; color:red;
+    		}
+	    	.unexpected-pass-matrix {
+			    font-weight:bold; background:#FFF0B3; color:#FFB200;
+    		}
+    		.unknown-matrix {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}    		
+	    	.expected-fail-matrix {
+			    font-weight:bold; background:#F0D48A; color:brown;
+    		}
+    		.pass-matrix {
+		    	background:#EEEEE0;
+	    	}
+	    		    	
+	    	.header {
+		    	background:#A6CAF0;
+	    	}
+	    	
+	    	A:link {
+  				color: #001692;
+			}
+
+			A:visited {
+  				color: #001692;
+			}
+
+			A:hover {
+  				color: red;
+			}
+
+			.default  {
+				font-family: Verdana, sans-serif, helvetica, arial;
+				font-size: 13px;
+			}
+
+			H1 {font-size: 18pt; font-weight : bold; color: #CC3333;}
+			H2 {font-size: 14pt; font-weight: bold; color: #CC3333; }
+			H3 {font-size: 10pt; font-weight: bold; color: #CC3333; }
+			H4,H5,H6 {font-size: 10pt; font-weight: normal; color: #CC3333; }
+
+			.h1 {font-size: 18pt; font-weight : bold; color: #CC3333;}
+			.h2 {font-size: 14pt; font-weight: bold; color: #CC3333; }
+			.h3 {font-size: 10pt; font-weight: bold; color: #CC3333; }
+			.h4 {font-size: 10pt; font-weight: normal; color: #CC3333; }
+	    	
+	    	UL	{
+				list-style-type: circle;
+			}
+			
+
+			PRE,SAMP,CODE,TT {
+  				font-family: Courier New, Monospaced;
+  			}			
+	    	
+		</STYLE>
+<TITLE>OpenForm test - screenshots</TITLE>
+</HEAD>
+<BODY>
+    
+<TABLE width="98%" cellspacing="2" cellpadding="5" border="0">
+<TR>
+<TD ALIGN="LEFT"><H1>OpenForm test - screenshots</H1></TD><TD ALIGN="RIGHT"><A HREF="javascript:history.go(-1)">&lt;- Back</A></TD>
+</TR>
+</TABLE>
+
+<PUT CONTENT HERE>
+
+<TABLE width="98%" cellspacing="2" cellpadding="5" border="0">
+<TR>
+<TD ALIGN="RIGHT"><A HREF="javascript:history.go(-1)">&lt;- Back</A></TD>
+</TR>
+</TABLE>
+
+</BODY>
+</HTML>

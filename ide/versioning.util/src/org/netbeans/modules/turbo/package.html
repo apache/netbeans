@@ -1,0 +1,67 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<body>
+
+
+Entity attributes management framework.
+
+<h2>Pluggable Entity Attributes package</h2>
+
+The package supports entity attributes management. Attributes
+can be provided by plugged in providers, The implementation
+caches providers results.
+
+<h3>Clients Interface</h3>
+
+Clients should start at {@link Turbo} class.
+It allows to query for attribute values,
+to determine their readiness, to write
+them down and supports listening on attribute
+changes.
+
+<h3>Providers Interface</h3>
+
+Attribute providers should start at {@link FileAttributeProvider}
+implement it and register it using system filesystem at
+<code>Services/FileAttributeProviders/Default</code>.
+
+<h3>Consistency Note</h3>
+
+It may happen that value changes at providers level, however
+unnoticed by clients because the value is cached at memory
+layer and framework does not check providers in such case.
+<p>
+It may happen only if provider does not have exclusive control
+over stored data (e.g. CVS/Entries based provider and extenally
+executed cvs).
+<p>
+Solution is that this risk is documented at attribute definition
+contract and client of such contract provides to user explicit action
+that synchronizes states. Contract should define <code>null</code>
+value for invalidation purposes.
+
+<h3>Attribute Definition</h3>
+
+Both providers and clients must understand
+attribute definiton they are using. The attribute
+definitions are not covered by this package.
+
+</body>

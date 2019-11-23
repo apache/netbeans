@@ -1,0 +1,35 @@
+Code completion result for source line:
+Heig|ht: 5'11'' (180 cm)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    !                                          Non-specific tag
+KEYWORD    !!foo                                      Secondary
+KEYWORD    !!map                                      { Hash table, dictionary, mapping }
+KEYWORD    !!omap                                     [ one: 1, two: 2 ]
+KEYWORD    !!seq                                      { List, array, tuple, vector, sequence }
+KEYWORD    !!set                                      { cherries, plums, apples }
+KEYWORD    !!str                                      Unicode string
+KEYWORD    !<foo>                                     Verbatim tag (always means "foo").
+KEYWORD    !foo                                       Primary
+KEYWORD    !h!foo                                     Requires "%TAG !h! <prefix>"
+KEYWORD    "                                          Surround in-line escaped scalar
+KEYWORD    #                                          Throwaway comment indicator.
+KEYWORD    %                                          Directive indicator.
+KEYWORD    &                                          Anchor property.
+KEYWORD    '                                          Surround in-line unescaped scalar
+KEYWORD    *                                          Alias indicator.
+KEYWORD    +                                          Keep chomp modifier ('|+' or '>+').
+KEYWORD    ,                                          Separate in-line branch entries.
+KEYWORD    -                                          Strip chomp modifier ('|-' or '>-').
+KEYWORD    -                                          Nested series entry indicator.
+KEYWORD    ---                                        Document header.
+KEYWORD    ...                                        Document terminator.
+KEYWORD    :                                          Value indicator.
+KEYWORD    <<                                         Merge keys from another mapping.
+KEYWORD    =                                          Default "value" mapping key.
+KEYWORD    >                                          Folded scalar indicator.
+KEYWORD    ?                                          Key indicator.
+KEYWORD    []                                         Surround in-line series branch.
+KEYWORD    `@                                         Both reserved for future use.
+KEYWORD    {}                                         Surround in-line keyed branch.
+KEYWORD    |                                          Block scalar indicator.

@@ -1,0 +1,75 @@
+public class TestFile {
+    
+    /**
+     * Holds value of property nonIndexProperty.
+     */
+    private MyType nonIndexProperty;
+    
+    /**
+     * Utility field used by bound properties.
+     */
+    private java.beans.PropertyChangeSupport propertyChangeSupport =  new java.beans.PropertyChangeSupport(this);
+    
+    /**
+     * Utility field used by constrained properties.
+     */
+    private java.beans.VetoableChangeSupport vetoableChangeSupport =  new java.beans.VetoableChangeSupport(this);
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Adds a PropertyChangeListener to the listener list.
+     * @param l The listener to add.
+     */
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+        propertyChangeSupport.addPropertyChangeListener(l);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener from the listener list.
+     * @param l The listener to remove.
+     */
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+        propertyChangeSupport.removePropertyChangeListener(l);
+    }
+    
+    /**
+     * Adds a VetoableChangeListener to the listener list.
+     * @param l The listener to add.
+     */
+    public void addVetoableChangeListener(java.beans.VetoableChangeListener l) {
+        vetoableChangeSupport.addVetoableChangeListener(l);
+    }
+    
+    /**
+     * Removes a VetoableChangeListener from the listener list.
+     * @param l The listener to remove.
+     */
+    public void removeVetoableChangeListener(java.beans.VetoableChangeListener l) {
+        vetoableChangeSupport.removeVetoableChangeListener(l);
+    }
+    
+    /**
+     * Getter for property nonIndexProperty.
+     * @return Value of property nonIndexProperty.
+     */
+    public MyType getNonIndexProperty() {
+    }
+    
+    /**
+     * Setter for property nonIndexProperty.
+     * @param nonIndexProperty New value of property nonIndexProperty.
+     *
+     * @throws PropertyVetoException if some vetoable listeners reject the new value
+     */
+    public void setNonIndexProperty(MyType nonIndexProperty) throws java.beans.PropertyVetoException {
+        MyType oldNonIndexProperty = this.nonIndexProperty;
+        vetoableChangeSupport.fireVetoableChange("nonIndexProperty", oldNonIndexProperty, nonIndexProperty);
+        this.nonIndexProperty = nonIndexProperty;
+        propertyChangeSupport.firePropertyChange("nonIndexProperty", oldNonIndexProperty, nonIndexProperty);
+    }
+    
+}
+

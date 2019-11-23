@@ -1,0 +1,112 @@
+<testresult testFile='uniformVariableSyntax_06.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='11'>
+            <text>$foo</text>
+        </token>
+        <token id='T_OPEN_RECT' start='11' end='12'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='12' end='17'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='17' end='18'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='18' end='20'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='20' end='23'>
+            <text>baz</text>
+        </token>
+        <token id='T_OPEN_RECT' start='23' end='24'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='24' end='25'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='25' end='26'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='26' end='28'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='28' end='31'>
+            <text>oof</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='31' end='32'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='32' end='33'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='33' end='35'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='35' end='38'>
+            <text>MAX</text>
+        </token>
+        <token id='T_SEMICOLON' start='38' end='39'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='40' end='40'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='40'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='39'>
+                <StaticConstantAccess start='7' end='38'>
+                    <MethodInvocation start='7' end='33'>
+                        <FieldAccess start='7' end='26'>
+                            <ArrayAccess start='7' end='18' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='11' end='18'>
+                                    <Index>
+                                        <Scalar start='12' end='17' type='STRING' value='&apos;bar&apos;'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <Variable start='7' end='11' isDollared='true'>
+                                        <Identifier start='8' end='11' name='foo'/>
+                                    </Variable>
+                                </Name>
+                            </ArrayAccess>
+                            <Field>
+                                <ArrayAccess start='20' end='26' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='23' end='26'>
+                                        <Index>
+                                            <Scalar start='24' end='25' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='20' end='23' isDollared='false'>
+                                            <Identifier start='20' end='23' name='baz'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Field>
+                        </FieldAccess>
+                        <Method>
+                            <FunctionInvocation start='28' end='33'>
+                                <FucntionName start='28' end='31'>
+                                    <Variable start='28' end='31' isDollared='false'>
+                                        <Identifier start='28' end='31' name='oof'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                    <Constant>
+                        <Identifier start='35' end='38' name='MAX'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='35' end='38' name='MAX'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,93 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    Document   : constraints.dtd
+    Author     : Rajeshwar Patil
+    Description:
+        XML DTD for for constraints xml.
+        constraints.xml is used to specify provide information of the
+        Constraints to the Validation framework.
+-->
+
+
+<!--
+This is the root element.
+-->
+<!ELEMENT constraints (check-info*)>
+
+
+<!--
+This represents an information, about a particular Constraint.
+Provides information of a Constraint represented by corresponding
+<check> element in validation.xml.
+Sub element <name> is used to link this element with the
+corresponding <check> element in validation.xml.
+-->
+<!ELEMENT check-info (name, classname, arguments?)>
+
+
+<!--
+This element represents information of a Constraint class arguments.
+Number of sub elements, <argument> should match with the number
+of <parameter> sub elements, of corresponding <arguments> element
+in validation.xml
+-->
+<!ELEMENT arguments (argument+)>
+
+
+<!--
+This element represents information of a single Constraint class
+argument.
+Sub elements <name> should match with the <name> sub element of
+corresponding <parameter> element in constraints.xml
+-->
+<!ELEMENT argument (name, type?)>
+
+
+<!--
+Used in two elements <check-info> and <argument>
+In <check-info>, it represents a Constraint name and is the linking
+element between <check> element in validation.xml and <check-info>
+element in constraints.xml.
+In <argument>, it represents argument name and is the linking element
+between <parameter> element in validation.xml and <argument> element
+in constraints.xml.
+-->
+<!ELEMENT name (#PCDATA)>
+
+
+<!--
+This element represents Constraint class name.
+Constraint class should provide the constructor with no arguments.
+Constraint class should also provide the set* methods for all the
+required arguments.
+Constraint class is always created using default constructor and
+then the arguments are set using set* methods.
+-->
+<!ELEMENT classname (#PCDATA)>
+
+
+<!--
+This element represents the type of an argument.
+If not specified, it defaults to java.lang.String
+-->
+<!ELEMENT type (#PCDATA)>

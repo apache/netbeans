@@ -1,0 +1,198 @@
+###### Licensed to the Apache Software Foundation (ASF) under one
+###### or more contributor license agreements.  See the NOTICE file
+###### distributed with this work for additional information
+###### regarding copyright ownership.  The ASF licenses this file
+###### to you under the Apache License, Version 2.0 (the
+###### "License"); you may not use this file except in compliance
+###### with the License.  You may obtain a copy of the License at
+###### 
+######   http://www.apache.org/licenses/LICENSE-2.0
+###### 
+###### Unless required by applicable law or agreed to in writing,
+###### software distributed under the License is distributed on an
+###### "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+###### KIND, either express or implied.  See the License for the
+###### specific language governing permissions and limitations
+###### under the License.
+
+###### BEGIN OF EXCLUSIONS (Do not remove this marker!)
+###### build artifacts 
+**/build/**
+licenses/**
+nbbuild/licenses/**
+nbbuild/netbeans/**
+nbbuild/testuserdir/**
+nbbuild/user.build.properties
+###### generated build artefact
+nbbuild/gitinfo.properties
+nbbuild/netbeansrelease.properties
+
+###### user-specific files  
+**/nbproject/private/**
+
+###### no degree of creativity: https://www.apache.org/legal/src-headers.html#faq-exceptions
+**/*.exists
+**/*.palette_item
+**/*.url
+**/src/META-INF/**
+**/.dep.inc
+**/Makefile-vc
+**/Makefile-vc-wo-crt
+**/package-list
+java/java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample
+platform/lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
+maven.indexer/external/NOTICE-patched-indexer-core-6.0.0
+nbbuild/hudson/.hgmail-profiler
+nbbuild/l10n.patterns
+platform/o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt
+platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt
+platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/problem100320.txt
+platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/problem249414.txt
+platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-1.txt
+platform/openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-2.txt
+ide/options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample
+ide/options.editor/src/org/netbeans/modules/options/colors/HighlightingExample
+ide/options.editor/src/org/netbeans/modules/options/indentation/indentationExample
+platform/templates/src/org/netbeans/modules/templates/resources/userprop.txt
+### limited degreed of creativity
+## the files do not reach a level of creativity 
+java/maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configuration*.dtd
+
+###### test data: https://www.apache.org/legal/src-headers.html#faq-exceptions 
+platform/api.search/test/unit/src/org/netbeans/modules/search/data/**
+platform/api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml
+platform/autoupdate.services/test/unit/**/data/**
+java/debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt
+ide/diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt
+ide/diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**
+ide/editor/test/qa-functional/src/org/netbeans/test/editor/suites/keybindings/actions.txt
+ide/editor/test/unit/src/org/netbeans/modules/editor/resources/testAnnotation*.xml
+ide/editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt
+ide/editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**
+ide/extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*
+ide/html/test/unit/src/org/netbeans/modules/html/data/**
+ide/hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file
+ide/ide.kit/test/qa-functional/**/*.txt
+###   module-info.bin (compiled Java class)
+java/java.j2seproject/copylibstask/test/org/netbeans/modules/java/j2seproject/moduletask/resources/module-info.bin
+ide/lexer/demo/src/org/netbeans/modules/lexer/demo/**/*.txt
+platform/lib.uihandler/test/unit/src/**
+platform/o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**
+platform/openide.nodes/test/unit/src/org/openide/nodes/data/**
+ide/projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt
+platform/queries/test/unit/src/org/netbeans/api/queries/data/*
+ide/utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*
+websvccommon/websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl
+websvccommon/websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml
+ide/xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**
+ide/xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd
+ide/xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml
+ide/xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**
+ide/xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/**/*.xsd
+ide/xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.xml
+ide/xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.zip
+ide/xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/dummyProject/nbproject/private/tmpfile
+ide/xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**
+ide/xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.dtd
+ide/xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.txt
+ide/xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.xml
+ide/xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.wsdl
+ide/xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xml
+ide/xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xsd
+ide/xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel
+ide/xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl
+ide/xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml
+ide/xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd
+ide/xml/test/unit/src/org/netbeans/modules/xml/resources/*
+ide/xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*
+
+###### template file
+apisupport/apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt
+apisupport/apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml
+java/dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*
+ide/editor/demosrc/base/org/netbeans/editor/example/res/template.html_
+ide/editor/demosrc/base/org/netbeans/editor/example/res/template.java_
+ide/editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties
+java/form/src/org/netbeans/modules/form/resources/templates/**
+java/java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template
+java/java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml
+java/java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template
+java/java.source/src/org/netbeans/modules/**/*.template
+groovy/gradle/src/org/netbeans/modules/gradle/newproject/*.template
+### user templates for mercurial commits, etc.
+ide/mercurial/src/org/netbeans/modules/mercurial/util/log*
+ide/properties/src/org/netbeans/modules/properties/sample.properties.template
+java/selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template
+java/testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
+
+###### do not natively support comments 
+**/*.mf
+**/*.MF
+**/*.nib
+**/*.oql
+**/*.ser
+nb/ide.launcher/macosx/NetBeansLauncher/ReadMe.rtf
+harness/jellytools.platform/src/org/netbeans/jellytools/version_info
+
+######  generated test files 
+**/*.pass
+**/*.pass2
+**/*.pbxproj
+
+###### would cause tests to fail: https://www.apache.org/legal/src-headers.html#faq-exceptions
+**/*.ref
+**/*.sln
+**/*.user
+**/*.vcproj
+**/test/unit/data/**
+**/test/qa-functional/data/**
+platform/openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt
+platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource
+
+######  external dependencies licences and notices 
+**/external/*-license.txt
+**/external/*-notice.txt
+
+###### generated
+### signatures for past versions 
+**/nbproject/*.sig
+### generated, no degree of creativity 
+**/nbproject/build-impl.xml
+**/nbproject/genfiles.properties
+**/nbproject/groovy-build.xml
+**/nbproject/jfx-impl.xml
+nbi/engine/nbproject/profiler-build-impl.xml
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*
+websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*
+### generated ANTLR
+java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens
+
+###### license files 
+apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
+### companion files for CDDL licensed binaries
+profiler/lib.profiler/release/lib/deployed/**/*.map
+### A prefix that is added to license file
+nbbuild/license-dialog-stub.txt
+nbbuild/notice-stub.txt
+nbbuild/standard-nbm-license.txt
+ide/projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt
+ide/projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt
+
+###### IDE, licences would be visible inside IDE
+java/beans/src/org/netbeans/modules/beans/resources/templates/*.template
+ide/css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template
+ide/css.editor/src/org/netbeans/modules/css/resources/CssExample
+ide/db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample
+ide/editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample
+javafx/javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
+java/jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
+java/junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
+ide/languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff
+ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml
+ide/languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml
+java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template
+ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
+ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
+ide/properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample

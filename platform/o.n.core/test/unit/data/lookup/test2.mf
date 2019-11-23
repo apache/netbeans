@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: test2
+OpenIDE-Module-Layer: test2/layer-with-settings.xml
+OpenIDE-Module-Name: IDOM test2
+

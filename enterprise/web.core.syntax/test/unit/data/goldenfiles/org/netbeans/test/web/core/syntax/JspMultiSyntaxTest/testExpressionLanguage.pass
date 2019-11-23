@@ -1,0 +1,46 @@
+'token image' [offset, length]; tokenID name; tokenID id; token category name; <list of token context names>
+--------------------
+
+'<' [0, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [1, 4]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [5, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'${' [6, 2]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'pageContext' [8, 11]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'.' [19, 1]; dot; 25; operators; ELTokenContext, JspMultiTokenContext
+'request' [20, 7]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'.' [27, 1]; dot; 25; operators; ELTokenContext, JspMultiTokenContext
+'contextPath' [28, 11]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'}' [39, 1]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'<NL>' [40, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [41, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'br' [42, 2]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [44, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'${' [45, 2]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'pageContext' [47, 11]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'.' [58, 1]; dot; 25; operators; ELTokenContext, JspMultiTokenContext
+'request' [59, 7]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'.' [66, 1]; dot; 25; operators; ELTokenContext, JspMultiTokenContext
+'contextPath' [67, 11]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'}' [78, 1]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'<NL> ' [79, 2]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'${' [81, 2]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'header' [83, 6]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'[' [89, 1]; lbracket; 33; operators; ELTokenContext, JspMultiTokenContext
+'"host"' [90, 6]; string; 8; -; ELTokenContext, JspMultiTokenContext
+']' [96, 1]; rbracket; 34; operators; ELTokenContext, JspMultiTokenContext
+'}' [97, 1]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+' ' [98, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'<' [99, 1]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'br' [100, 2]; open-tag; 4; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [102, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext
+'<NL>' [103, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'${' [104, 2]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'requestScope' [106, 12]; identifier; 10; -; ELTokenContext, JspMultiTokenContext
+'[' [118, 1]; lbracket; 33; operators; ELTokenContext, JspMultiTokenContext
+''javax.servlet.forward.servlet_path'' [119, 36]; string; 8; -; ELTokenContext, JspMultiTokenContext
+']' [155, 1]; rbracket; 34; operators; ELTokenContext, JspMultiTokenContext
+'}' [156, 1]; el-delimiter; 7; -; ELTokenContext, JspMultiTokenContext
+'<NL>' [157, 1]; text; 1; -; HtmlTokenContext, JspMultiTokenContext
+'</' [158, 2]; tag-open-symbol; 14; tag; HtmlTokenContext, JspMultiTokenContext
+'html' [160, 4]; close-tag; 5; tag; HtmlTokenContext, JspMultiTokenContext
+'>' [164, 1]; tag-close-symbol; 15; tag; HtmlTokenContext, JspMultiTokenContext

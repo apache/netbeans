@@ -1,0 +1,87 @@
+<#--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+/*
+* ${project_name} stub
+*/
+
+function ${project_name}() {}
+
+function ${project_name}(uri_) {
+    this.uri = uri_;
+}
+
+${project_name}.prototype = {
+
+   uri : '${base_url}',
+
+   resources : new Array(),
+   
+   initialized : false,
+
+   getUri : function() {
+      return this.uri;
+   },
+
+   getResources : function() {
+      if(!this.initialized)
+          this.init();
+      return this.resources;
+   },
+
+   init : function() {
+      ${project_init_body}
+      this.initialized = true;
+   },
+
+   flush : function(resources_) {
+      for(j=0;j<resources_.length;j++) {
+        var r = resources_[j];
+        r.flush();
+      }
+   },
+   
+   getProxy : function() {
+       return rjsSupport.getHttpProxy();
+   },
+   
+   setProxy : function(proxy_) {
+       rjsSupport.setHttpProxy(proxy_);
+   },
+
+   toString : function() {
+      var s = '';
+      for(j=0;j<this.resources.length;j++) {
+        var c = this.resources[j];
+        if(j<this.resources.length-1)
+            s = s + '{"@uri":"'+c.getUri()+'"},';
+        else
+            s = s + '{"@uri":"'+c.getUri()+'"}';
+      }
+      var myObj = 
+         '{"resources":'+
+         '{'+
+         s+
+         '}'+
+      '}';
+      return myObj;
+   }
+
+}

@@ -1,0 +1,5 @@
+Code completion result for source line:
+'app/module|App1',
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FILE       moduleApp1.js                              

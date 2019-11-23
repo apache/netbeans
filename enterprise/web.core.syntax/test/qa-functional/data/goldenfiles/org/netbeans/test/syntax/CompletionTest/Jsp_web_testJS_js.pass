@@ -1,0 +1,264 @@
+[c|, keyword const, const, 93]
+keyword case
+keyword catch
+keyword char
+keyword class
+keyword const
+keyword continue
+End cursor position = 99
+[v|, keyword var, var, 122]
+keyword var
+keyword void
+keyword volatile
+End cursor position = 126
+[S|, JS Core String, String, 157]
+DOM0 Screen
+DOM0 Select
+JS Core String
+DOM2 StyleSheet
+DOM2 StyleSheetList
+DOM0 Submit
+JS Core SyntaxError
+End cursor position = 164
+[my|, testJS.js myfunction, myfunction, 203]
+testJS.js myvariable
+EE: cannot find completion item: testJS.js myfunction
+EE: unexpected CC result:
+< my
+> myfunction
+End cursor position = 206
+[my|, testJS.js myvariable, myvariable, 249]
+testJS.js myvariable
+End cursor position = 260
+[|, JS Core RangeError, RangeError, 292]
+testJS.js myvariable
+DOM2 AbstractView
+DOM0 Anchor
+DOM0 Applet
+DOM0 Area
+JS Core Array
+DOM1,DOM2 Attr
+JS Core Boolean
+DOM0 Button
+DOM1,DOM2 CDATASection
+DOM2 CSS2Properties
+DOM2 CSSCharsetRule
+DOM2 CSSFontFaceRule
+DOM2 CSSImportRule
+DOM2 CSSMediaRule
+DOM2 CSSPageRule
+DOM2 CSSPrimitiveValue
+DOM2 CSSRule
+DOM2 CSSRuleList
+DOM2 CSSStyleDeclaration
+DOM2 CSSStyleRule
+DOM2 CSSStyleSheet
+DOM2 CSSUnknownRule
+DOM2 CSSValue
+DOM2 CSSValueList
+DOM1,DOM2 CharacterData
+DOM0 Checkbox
+DOM1,DOM2 Comment
+DOM2 Counter
+DOM1,DOM2 DOMImplementation
+DOM2 DOMImplementationCSS
+JS Core Date
+DOM0,DOM1,DOM2 Document
+DOM2 DocumentCSS
+DOM2 DocumentEvent
+DOM1,DOM2 DocumentFragment
+DOM2 DocumentStyle
+DOM2 DocumentTraversal
+DOM1,DOM2 DocumentType
+DOM2 DocumentView
+DOM1,DOM2 Element
+DOM2 ElementCSSInlineStyle
+DOM1,DOM2 Entity
+DOM1,DOM2 EntityReference
+JS Core Error
+JS Core EvalError
+DOM0,DOM2 Event
+DOM2 EventCapturer
+DOM2 EventListener
+DOM2 EventTarget
+DOM0 FileUpload
+DOM0 Form
+JS Core Function
+DOM1 HTMLAnchorElement
+DOM1 HTMLAppletElement
+DOM1 HTMLAreaElement
+DOM1 HTMLBRElement
+DOM1 HTMLBaseElement
+DOM1 HTMLBaseFontElement
+DOM1 HTMLBlockquoteElement
+DOM1 HTMLBodyElement
+DOM1 HTMLButtonElement
+DOM1 HTMLCollection
+DOM1 HTMLDListElement
+DOM1 HTMLDirectoryElement
+DOM1 HTMLDivElement
+DOM1 HTMLDocument
+DOM0,DOM1 HTMLElement
+DOM1 HTMLFieldSetElement
+DOM1 HTMLFontElement
+DOM1 HTMLFormElement
+DOM1 HTMLFrameElement
+DOM1 HTMLFrameSetElement
+DOM1 HTMLHRElement
+DOM1 HTMLHeadElement
+DOM1 HTMLHeadingElement
+DOM1 HTMLHtmlElement
+DOM1 HTMLIFrameElement
+DOM1 HTMLImageElement
+DOM1 HTMLInputElement
+DOM1 HTMLIsIndexElement
+DOM1 HTMLLIElement
+DOM1 HTMLLabelElement
+DOM1 HTMLLegendElement
+DOM1 HTMLLinkElement
+DOM1 HTMLMapElement
+DOM1 HTMLMenuElement
+DOM1 HTMLMetaElement
+DOM1 HTMLModElement
+DOM1 HTMLOListElement
+DOM1 HTMLObjectElement
+DOM1 HTMLOptGroupElement
+DOM1 HTMLOptionElement
+DOM1 HTMLParagraphElement
+DOM1 HTMLParamElement
+DOM1 HTMLPreElement
+DOM1 HTMLQuoteElement
+DOM1 HTMLScriptElement
+DOM1 HTMLSelectElement
+DOM1 HTMLStyleElement
+DOM1 HTMLTableCaptionElement
+DOM1 HTMLTableCellElement
+DOM1 HTMLTableColElement
+DOM1 HTMLTableElement
+DOM1 HTMLTableRowElement
+DOM1 HTMLTableSectionElement
+DOM1 HTMLTextAreaElement
+DOM1 HTMLTitleElement
+DOM1 HTMLUListElement
+DOM0 Hidden
+DOM0 History
+DOM0 Image
+JS Core Infinity
+DOM0 Input
+DOM0 Link
+DOM2 LinkStyle
+DOM0 Location
+JS Core Math
+DOM2 MediaList
+DOM0 MimeType
+DOM2 MouseEvent
+DOM2 MutationEvent
+JS Core NaN
+DOM1,DOM2 NamedNodeMap
+DOM0 Navigator
+DOM1,DOM2 Node
+DOM2 NodeFilter
+DOM2 NodeIterator
+DOM1,DOM2 NodeList
+DOM1,DOM2 Notation
+JS Core Number
+JS Core Object
+DOM0 Option
+DOM0 Password
+DOM0 Plugin
+DOM1,DOM2 ProcessingInstruction
+DOM2 RGBColor
+DOM0 Radio
+JS Core RangeError
+DOM2 Rect
+JS Core ReferenceError
+JS Core RegExp
+DOM0 Reset
+DOM0 Screen
+DOM0 Select
+JS Core String
+DOM2 StyleSheet
+DOM2 StyleSheetList
+DOM0 Submit
+JS Core SyntaxError
+DOM0,DOM1,DOM2 Text
+DOM0 Textarea
+DOM2 TreeWalker
+JS Core TypeError
+DOM2 UIEvent
+JS Core URIError
+DOM2 ViewCSS
+DOM0 Window
+keyword abstract
+JS Core arguments[]
+keyword boolean
+keyword break
+keyword byte
+keyword case
+keyword catch
+keyword char
+keyword class
+keyword const
+keyword continue
+keyword debugger
+JS Core decodeURI()
+JS Core decodeURIComponent()
+keyword default
+keyword delete
+keyword do
+keyword double
+keyword else
+JS Core encodeURI()
+JS Core encodeURIComponent()
+keyword enum
+JS Core escape()
+JS Core eval()
+keyword export
+keyword extends
+keyword false
+keyword final
+keyword finally
+keyword float
+keyword for
+keyword function
+keyword goto
+keyword if
+keyword implements
+keyword import
+keyword in
+keyword instanceof
+keyword int
+keyword interface
+JS Core isFinite()
+JS Core isNaN()
+keyword long
+keyword native
+keyword new
+keyword null
+keyword package
+JS Core parseFloat()
+JS Core parseInt()
+keyword private
+keyword protected
+keyword public
+keyword return
+keyword short
+keyword static
+keyword super
+keyword switch
+keyword synchronized
+keyword this
+keyword throw
+keyword throws
+keyword transient
+keyword true
+keyword try
+keyword typeof
+JS Core undefined
+JS Core unescape()
+keyword var
+keyword void
+keyword volatile
+keyword while
+keyword with
+End cursor position = 303

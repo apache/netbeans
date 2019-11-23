@@ -1,0 +1,11 @@
+--- goldenFile1
++++ goldenFile2
+@@ -1,7 +1,7 @@
+ one
+ two
+ three
+-for
++four
+ five
+ six
+ seven

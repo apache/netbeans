@@ -1,0 +1,17 @@
+<?php
+
+class Test {
+    function __construct() {
+
+    }
+
+    function method1($param) {
+
+    }
+
+}
+
+function functionName($param) {
+    
+}
+?>

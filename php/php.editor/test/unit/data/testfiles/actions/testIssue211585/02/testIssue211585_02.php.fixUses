@@ -1,0 +1,20 @@
+<?php
+
+namespace Foo\Bar;
+class ClassName {}
+
+namespace Fom\Bom;
+class ClassName {}
+
+namespace Baz\Bat;
+class ClassName {}
+
+namespace Omg;
+
+use \Baz\Bat\ClassName as BBC;
+use \Fom\Bom\ClassName;
+
+$a = new BBC();//HERE
+$b = new BBC();
+$b = new ClassName();
+?>

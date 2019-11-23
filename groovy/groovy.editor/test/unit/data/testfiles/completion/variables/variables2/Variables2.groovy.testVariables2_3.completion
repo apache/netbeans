@@ -1,0 +1,6 @@
+Code completion result for source line:
+par|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      ParameterArray                             null
+VARIABLE   param                                      Properties

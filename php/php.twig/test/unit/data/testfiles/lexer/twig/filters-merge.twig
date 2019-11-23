@@ -1,0 +1,4 @@
+{{ items|merge({'bar': 'foo'})|join }}
+{{ items|merge({'bar': 'foo'})|keys|join }}
+{{ {'bar': 'foo'}|merge(items)|join }}
+{{ {'bar': 'foo'}|merge(items)|keys|join }}

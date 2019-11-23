@@ -1,0 +1,59 @@
+<testresult testFile='arrayDereferencing_03.php'>
+    <scanner>
+        <token id='T_ECHO' start='7' end='11'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='12' end='15'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='15' end='16'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='16' end='17'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='17' end='18'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='18' end='19'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='19' end='20'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='20' end='21'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='23' end='26'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='26' end='26'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='25'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='7' end='21'>
+                <DereferencedArrayAccess start='12' end='20'>
+                    <ArrayDimension start='17' end='20'>
+                        <Index>
+                            <Scalar start='18' end='19' type='INT' value='2'/>
+                        </Index>
+                    </ArrayDimension>
+                    <FunctionInvocation start='12' end='17'>
+                        <FucntionName start='12' end='15'>
+                            <NamespaceName start='12' end='15' isCurrent='false' isGlobal='false'>
+                                <Identifier start='12' end='15' name='foo'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </DereferencedArrayAccess>
+            </EchoStatement>
+            <EmptyStatement start='23' end='25'/>
+        </Statements>
+    </Program>
+</testresult>

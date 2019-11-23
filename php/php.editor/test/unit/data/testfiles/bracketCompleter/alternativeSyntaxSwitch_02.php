@@ -1,0 +1,5 @@
+<?php
+switch ($variable):^
+endswitch;
+
+?>

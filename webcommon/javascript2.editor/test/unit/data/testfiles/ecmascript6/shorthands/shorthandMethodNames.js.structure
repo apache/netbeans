@@ -1,0 +1,7 @@
+property:VARIABLE:[PUBLIC]:ESCAPED{property}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}value</font>:
+o:CLASS:[PUBLIC]:ESCAPED{o}:
+  generator:METHOD:[PUBLIC]:ESCAPED{generator}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Generator</font>:
+  get property:METHOD:[PUBLIC]:ESCAPED{get property}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }NumberESCAPED{|}value</font>:
+  method:METHOD:[PUBLIC]:ESCAPED{method}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+  property:FIELD:[PUBLIC]:ESCAPED{property}<font color="#999999">ESCAPED{ : }Number</font>:
+  set property:METHOD:[PUBLIC]:ESCAPED{set property}ESCAPED{(}ESCAPED{value}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

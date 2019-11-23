@@ -1,0 +1,85 @@
+<testresult testFile='uniformVariableSyntax_16.php'>
+    <scanner>
+        <token id='T_STRING' start='7' end='10'>
+            <text>Foo</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='10' end='12'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='12' end='16'>
+            <text>$bar</text>
+        </token>
+        <token id='T_OPEN_RECT' start='16' end='17'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='17' end='22'>
+            <text>&apos;baz&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='22' end='23'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='23' end='24'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='24' end='25'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='25' end='26'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='27' end='27'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='27'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='26'>
+                <StaticMethodInvocation start='7' end='25'>
+                    <NamespaceName start='7' end='10' isCurrent='false' isGlobal='false'>
+                        <Identifier start='7' end='10' name='Foo'/>
+                    </NamespaceName>
+                    <Member>
+                        <FunctionInvocation start='12' end='25'>
+                            <FucntionName start='12' end='23'>
+                                <ArrayAccess start='12' end='23' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='16' end='23'>
+                                        <Index>
+                                            <Scalar start='17' end='22' type='STRING' value='&apos;baz&apos;'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='12' end='16' isDollared='true'>
+                                            <Identifier start='13' end='16' name='bar'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='12' end='25'>
+                        <FucntionName start='12' end='23'>
+                            <ArrayAccess start='12' end='23' type='VARIABLE_ARRAY' isDollared='false'>
+                                <ArrayDimension start='16' end='23'>
+                                    <Index>
+                                        <Scalar start='17' end='22' type='STRING' value='&apos;baz&apos;'/>
+                                    </Index>
+                                </ArrayDimension>
+                                <Name>
+                                    <Variable start='12' end='16' isDollared='true'>
+                                        <Identifier start='13' end='16' name='bar'/>
+                                    </Variable>
+                                </Name>
+                            </ArrayAccess>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

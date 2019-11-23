@@ -1,0 +1,2 @@
+    this.|>MARK_OCCURRENCES:width<| = width;
+console.log(p.|>MARK_OCCURRENCES:wid^th<|);

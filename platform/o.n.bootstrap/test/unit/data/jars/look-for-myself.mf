@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: lookformyself
+
+Name: lookformyself/Loder.class
+OpenIDE-Module-Class: Action
+

@@ -1,0 +1,119 @@
+<testresult testFile='yieldFrom_04.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='7' end='15'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='16' end='19'>
+            <text>g22</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='19' end='20'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='20' end='21'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='22' end='23'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='26' end='31'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='32' end='33'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='33' end='34'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='37' end='46'>
+            <text>$g1result</text>
+        </token>
+        <token id='T_EQUAL' start='47' end='48'>
+            <text>=</text>
+        </token>
+        <token id='T_YIELD_FROM' start='49' end='59'>
+            <text>yield from</text>
+        </token>
+        <token id='T_STRING' start='60' end='63'>
+            <text>g11</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='63' end='64'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='64' end='65'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='65' end='66'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='69' end='74'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='75' end='76'>
+            <text>4</text>
+        </token>
+        <token id='T_SEMICOLON' start='76' end='77'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='80' end='86'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='87' end='96'>
+            <text>$g1result</text>
+        </token>
+        <token id='T_SEMICOLON' start='96' end='97'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='98' end='99'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='100' end='100'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='100'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='7' end='99' isReference='false'>
+                <Identifier start='16' end='19' name='g22'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Block start='22' end='99' isCurly='true'>
+                    <ExpressionStatement start='26' end='34'>
+                        <YieldExpression start='26' end='33'>
+                            <Scalar start='32' end='33' type='INT' value='1'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='37' end='66'>
+                        <Assignment start='37' end='65' operator='EQUAL'>
+                            <Variable start='37' end='46' isDollared='true'>
+                                <Identifier start='38' end='46' name='g1result'/>
+                            </Variable>
+                            <YieldFromExpression start='49' end='65'>
+                                <FunctionInvocation start='60' end='65'>
+                                    <FucntionName start='60' end='63'>
+                                        <NamespaceName start='60' end='63' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='60' end='63' name='g11'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </YieldFromExpression>
+                        </Assignment>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='69' end='77'>
+                        <YieldExpression start='69' end='76'>
+                            <Scalar start='75' end='76' type='INT' value='4'/>
+                        </YieldExpression>
+                    </ExpressionStatement>
+                    <ReturnStatement start='80' end='97'>
+                        <Variable start='87' end='96' isDollared='true'>
+                            <Identifier start='88' end='96' name='g1result'/>
+                        </Variable>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

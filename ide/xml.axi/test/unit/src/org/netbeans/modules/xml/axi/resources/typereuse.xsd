@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:po="http://www.example.com/PO1"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+    <element name="test">
+        <complexType>
+            <sequence>
+                <element name="street" type="po:nameType"/>
+                <element name="city" type="po:nameType"/>
+                <element name="state" type="po:nameType"/>                
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="nameType">
+        <sequence>
+            <element name="name" type="string"/>
+        </sequence>
+    </complexType>
+</schema>

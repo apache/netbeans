@@ -1,0 +1,328 @@
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!--
+    DTD for the Validator Rules Configuration File, Version 1.1.3
+
+    To allow for XML validation of your rules configuration
+    file, include the following DOCTYPE element at the beginning (after
+    the "xml" declaration):
+
+    <!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+     "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+    $Id: validator_1_1_3.dtd 478334 2006-11-22 21:31:54Z niallp $
+-->
+
+
+
+<!--
+     The "form-validation" element is the root of the configuration file
+     hierarchy, and contains nested elements for all of the other
+     configuration settings.
+-->
+<!ELEMENT form-validation (global*, formset*)>
+
+
+<!--
+    The elements defined here are all global and must be nested within a
+    "global" element.
+-->
+<!ELEMENT global (validator*, constant*)>
+
+
+<!--
+     The "validator" element defines what validator objects can be used with
+     the fields referenced by the formset elements.
+     elements:
+       validator         Defines a new validatior
+       javascript        The javascript source code for client side validation.
+     attributes:
+         name            The name of this validation
+         classname       The java class name that handles server side validation
+         method          The java method that handles server side validation
+         methodParams    The java class types passed to the serverside method
+         msg             a generic message key to use when this validator fails.
+                         It can be overridden by the 'msg' element for a specific field.
+         depends         The comma-delimited list of validator that are called before this validator.
+                         For this validation to succeed, all the listed validators must succeed.
+         jsFunctionName  The name of the javascript function which returns all fields of a certain type.
+         jsFunction      The name of the javascript function which is passed the form for validation.
+
+-->
+<!ELEMENT validator (javascript?)>
+<!ATTLIST validator name CDATA #REQUIRED>
+<!ATTLIST validator classname CDATA #REQUIRED>
+<!ATTLIST validator method CDATA #REQUIRED>
+<!ATTLIST validator methodParams CDATA #REQUIRED>
+<!ATTLIST validator msg CDATA #REQUIRED>
+<!ATTLIST validator depends CDATA #IMPLIED>
+<!ATTLIST validator jsFunctionName CDATA #IMPLIED>
+<!ATTLIST validator jsFunction CDATA #IMPLIED>
+
+
+<!--
+     The "javascript" element defines a JavaScript that can be used to perform
+     client-side validators.
+-->
+<!ELEMENT javascript (#PCDATA)>
+
+
+<!--
+     The "constant" element defines a static value that can be used as
+     replacement parameters within "field" elements. The "constant-name" and
+     "constant-value" elements define the constant's reference id and replacement
+     value.
+-->
+<!ELEMENT constant (constant-name, constant-value)>
+<!ELEMENT constant-name  (#PCDATA)>
+<!ELEMENT constant-value (#PCDATA)>
+
+
+<!--
+      The "formset" element defines a set of forms for a locale. Formsets for
+      specific locales can override only those fields that change. The
+      localization is properly scoped, so that a formset can override just the
+      language, or just the country, or both.
+-->
+<!ELEMENT formset (constant*, form+)>
+<!ATTLIST formset language CDATA #IMPLIED>
+<!ATTLIST formset country CDATA #IMPLIED>
+<!ATTLIST formset variant CDATA #IMPLIED>
+
+
+<!--
+     The "form" element defines a set of fields to be validated. The name
+     corresponds to the identifier the application assigns to the form. 
+-->
+<!ELEMENT form (field+)>
+<!ATTLIST form name CDATA #REQUIRED>
+
+
+<!--
+     The "field" element defines the properties to be validated. In a
+     web application, a field would also correspond to a control on
+     a HTML form. To validate the properties, the validator works through
+     a JavaBean representation. The field element accepts these 
+     attributes:
+
+     property        The property on the JavaBean corresponding to this
+                     field element.
+
+     depends         The comma-delimited list of validators to apply against
+                     this field. For the field to succeed, all the
+                     validators must succeed.
+
+     page            The JavaBean corresponding to this form may include
+                     a page property. Only fields with a "page" attribute
+                     value that is equal to or less than the page property
+                     on the form JavaBean are processed. This is useful when
+                     using a "wizard" approach to completing a large form,
+                     to ensure that a page is not skipped.
+                     [0]
+
+     indexedListProperty
+                     The "indexedListProperty" is the method name that will
+                     return an array or a Collection used to retrieve the
+                     list and then loop through the list performing the
+                     validations for this field.
+
+-->
+<!ELEMENT field (msg|arg|arg0|arg1|arg2|arg3|var)*>
+<!ATTLIST field property CDATA #REQUIRED>
+<!ATTLIST field depends CDATA #IMPLIED>
+<!ATTLIST field page CDATA #IMPLIED>
+<!ATTLIST field indexedListProperty CDATA #IMPLIED>
+
+
+<!--
+     The "msg" element defines a custom message key to use when one of the
+     validators for this field fails. Each validator has a default message
+     property that is used when a corresponding field msg is not specified.
+     Each validator applied to a field may have its own msg element.
+     The msg element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+      
+      bundle     The resource bundle name that the key should be resolved in.
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+-->
+<!ELEMENT msg EMPTY>
+<!ATTLIST msg key CDATA #REQUIRED>
+<!ATTLIST msg name CDATA #REQUIRED>
+<!ATTLIST msg bundle CDATA #IMPLIED>
+<!ATTLIST msg resource CDATA #IMPLIED>
+
+
+
+<!--
+     The "arg" element defines a replacement value to use with the
+     message template for this validator or this field.
+     The arg element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+      			  If not supplied, this argument will be used in the given 
+      			  position for every validator.
+      			  
+      bundle     The resource bundle name that the key should be resolved in.      			  
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+
+      position    The position of this replacement parameter in the message.
+      			  For example, position="0" will set the first argument.
+      			  [0]
+-->
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg key CDATA #REQUIRED>
+<!ATTLIST arg bundle CDATA #IMPLIED>
+<!ATTLIST arg name CDATA #IMPLIED>
+<!ATTLIST arg resource CDATA #IMPLIED>
+<!ATTLIST arg position CDATA #IMPLIED>
+
+
+
+<!--
+
+		DEPRECATED Use <arg position="0"/> instead.
+
+     The "arg0" element defines the first replacement value to use with the
+     message template for this validator or this field.
+     The arg0 element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+-->
+<!ELEMENT arg0 EMPTY>
+<!ATTLIST arg0 name CDATA #IMPLIED>
+<!ATTLIST arg0 key CDATA #IMPLIED>
+<!ATTLIST arg0 resource CDATA #IMPLIED>
+
+
+<!--
+
+		DEPRECATED Use <arg position="1"/> instead.
+
+     The "arg1" element defines the second replacement value to use with the
+     message template for this validator or this field.
+     The arg1 element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+-->
+<!ELEMENT arg1 EMPTY>
+<!ATTLIST arg1 name CDATA #IMPLIED>
+<!ATTLIST arg1 key CDATA #IMPLIED>
+<!ATTLIST arg1 resource CDATA #IMPLIED>
+
+
+<!--
+
+		DEPRECATED Use <arg position="2"/> instead.
+
+     The "arg2" element defines the third replacement value to use with the
+     message template for this validator or this field.
+     The arg2 element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+-->
+<!ELEMENT arg2 EMPTY>
+<!ATTLIST arg2 name CDATA #IMPLIED>
+<!ATTLIST arg2 key CDATA #IMPLIED>
+<!ATTLIST arg2 resource CDATA #IMPLIED>
+
+
+<!--
+
+		DEPRECATED Use <arg position="3"/> instead.
+
+     The "arg3" element defines the fourth replacement value to use with the
+     message template for this validator or this field.
+     The arg0 element accepts these attributes.
+
+      name        The name of the validator corresponding to this msg.
+
+      key         The key that will return the message template from a
+                  resource bundle.
+
+      resource    If set to "false", the key is taken to be a literal
+                  value rather than a bundle key.
+                  [true]
+-->
+<!ELEMENT arg3 EMPTY>
+<!ATTLIST arg3 name CDATA #IMPLIED>
+<!ATTLIST arg3 key CDATA #IMPLIED>
+<!ATTLIST arg3 resource CDATA #IMPLIED>
+
+
+<!--
+     The "var" element can set parameters that a field may need to pass to
+     one of its validators, such as the minimum and maximum values in a
+     range validation. These parameters may also be referenced by one of the
+     arg? elements using a shell syntax: ${var:var-name}.
+-->
+<!ELEMENT var (var-name, var-value, var-jstype?)>
+
+
+
+<!--
+     The name of the var parameter to provide to a field's validators.
+-->
+<!ELEMENT var-name  (#PCDATA)>
+
+
+
+<!--
+     The value of the var parameter to provide to a field's validators.
+-->
+<!ELEMENT var-value (#PCDATA)>
+
+<!--
+     The java script type, Possible Values [int| string | regexp] 
+
+-->
+<!ELEMENT var-jstype (#PCDATA)>
+

@@ -1,0 +1,18 @@
+    const CLASS_FOO = "FOO2";
+          ---------
+HINT:Constant "CLASS_FOO" has already been declared
+    const CLASS_FOO = "FOO3";
+          ---------
+HINT:Constant "CLASS_FOO" has already been declared
+    const ABST_CLASS_BAR = 'BAR2';
+          --------------
+HINT:Constant "ABST_CLASS_BAR" has already been declared
+    const ABST_CLASS_BAR = 'BAR3';
+          --------------
+HINT:Constant "ABST_CLASS_BAR" has already been declared
+    const abst_class_bar = 'bar2';
+          --------------
+HINT:Constant "abst_class_bar" has already been declared
+    const INTERFACE_BAZ = 'BAZ2';
+          -------------
+HINT:Constant "INTERFACE_BAZ" has already been declared

@@ -1,0 +1,5 @@
+Code completion result for source line:
+$object->get|Bar($culture);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getBar($culture = null)         [PUBLIC]   MethodExample
+METHOD     getBar()                        [PUBLIC]   MethodExample

@@ -1,0 +1,5 @@
+Code completion result for source line:
+{/c|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     /cache                                     End Macro
+METHOD     /capture                                   End Macro

@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<HTML>
+
+<HEAD>
+<TITLE>HOW TO: Declarative MIME Type Resolvers</TITLE>
+<LINK REL="Stylesheet" HREF="../../../../prose.css" TYPE="text/css">
+</HEAD>
+
+<BODY>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/org/openide/filesystems/doc-files/api.html">Back to Filesystems API</a></p>
+
+<H1>HOW TO: Declarative MIME Type Resolvers</H1>
+
+<!--
+<B>Updated:</B> <I>20th Aug 2001</I><BR>
+<B>Editor:</B> <I><A HREF="mailto:pkuzel@sun.com?subject=HOW-TO:%20MIME%20resolvers%20comment">Petr Kuzel</A>, NetBeans</I><BR>
+<B>Contributors:</B> <I>Jesse Glick and Jaroslav Tulach</I><BR>
+
+<HR>
+-->
+
+<H2>Overview</H2>
+
+<p>A MIME type resolver's responsibility is to return <em>on
+request</em> a given
+
+<a href="../FileObject.html"><code>FileObject</code></a>'s
+
+MIME content type.</p>
+
+<p>A MIME type resolver can be any object implementing
+
+<a href="../MIMEResolver.html"><code>MIMEResolver</code></a>.
+
+All MIME resolvers in the system are consulted; they are found by
+searching in
+
+<a href="@org-openide-util@/org/openide/util/doc-files/api.html#lookup">lookup</a>
+
+and conventionally should be registered in the folder
+<samp>Services/MIMEResolver/</samp> in a module's layer.</p>
+
+<p>A MIME resolver would typically try to guess MIME type from
+characteristics of the file such as extension or first few lines of
+content. In the case that there is a MIME resolver recognizing Ant
+project files and another recognizing EJB deployment descriptors, then
+files with the <samp>*.xml</samp> extension would be parsed twice, at
+least for their root element.</p>
+
+<h3>Problems</h3>
+
+<ul>
+
+<li>This introduces a performance problem as the number of MIME type
+resolvers grows. The MIME resolver manager may cache literal file
+headers for speed, but invoking an XML parser (for example) still
+incurs a penalty.</li>
+
+<li>It is also error-prone to write such a resolver.</li>
+
+</ul>
+
+<H2>Declarative MIME Type Resolvers</H2>
+
+<p>To solve both of the above problems a developer should use a
+declarative MIME type resolver. The semantics of the MIME resolution
+may be specified in a simple manner and an implementation is available
+that will interpret the declaration as efficiently as possible.</p>
+
+<p>The semantics is described in an XML document following
+a documented DTD. The
+
+<a href="resolverDocumentation.html">DTD documentation</a>
+
+provides details of the permitted syntax.
+
+<H2>How to Create a Resolver XML File</H2>
+
+<p>Create a valid XML document according to the MIME resolver DTD
+grammar and place it in a lookup-registration area (such as
+<samp>Services/MIMEResolver/</samp>).</p>
+
+<p>A simple example follows which might be used to recognize Ant
+project files.</p>
+
+<p>General resolver description file
+<samp>org/nb/modules/ant/mime-resolver.xml</samp>:</p>
+
+<pre>
+&lt;?<font class="keyword">xml</font> <font class="variable-name">version</font>=<font class="string">"1.0"</font> <font class="variable-name">encoding</font>=<font class="string">"UTF-8"</font>?&gt;
+&lt;!<font class="keyword">DOCTYPE</font> <font class="type">MIME-resolver</font> <font class="keyword">PUBLIC</font>
+          <font class="string">"-//NetBeans//DTD MIME Resolver 1.0//EN"</font> 
+          <font class="string">"http://www.netbeans.org/dtds/mime-resolver-1_0.dtd"</font>&gt;
+&lt;<font class="function-name">MIME-resolver</font>&gt;
+    <font class="comment">&lt;!-- Skip anything marked as definitely not ours. --&gt;</font>
+    &lt;<font class="function-name">file</font>&gt;
+        &lt;<font class="function-name">fattr</font> <font class="variable-name">name</font>=<font class="string">"known-ant-project-file"</font> <font class="variable-name">text</font>=<font class="string">"false"</font>/&gt;
+        &lt;<font class="function-name">exit</font>/&gt;
+    &lt;/<font class="function-name">file</font>&gt;
+    <font class="comment">&lt;!-- Accept immediately anything known as definitely ours. --&gt;</font>
+    &lt;<font class="function-name">file</font>&gt;
+        &lt;<font class="function-name">fattr</font> <font class="variable-name">name</font>=<font class="string">"known-ant-project-file"</font> <font class="variable-name">text</font>=<font class="string">"true"</font>/&gt;
+        &lt;<font class="function-name">resolver</font> <font class="variable-name">mime</font>=<font class="string">"text/x-ant+xml"</font>/&gt;
+    &lt;/<font class="function-name">file</font>&gt;
+    <font class="comment">&lt;!-- For other XML, look for &lt;project default="..."/&gt; --&gt;</font>
+    &lt;<font class="function-name">file</font>&gt;
+        &lt;<font class="function-name">ext</font> <font class="variable-name">name</font>=<font class="string">"xml"</font>/&gt;
+        &lt;<font class="function-name">resolver</font> <font class="variable-name">mime</font>=<font class="string">"text/x-ant+xml"</font>&gt;
+            &lt;<font class="function-name">xml-rule</font>&gt;
+                &lt;<font class="function-name">element</font> <font class="variable-name">name</font>=<font class="string">"project"</font>&gt;
+                    &lt;<font class="function-name">attr</font> <font class="variable-name">name</font>=<font class="string">"default"</font>/&gt;
+                &lt;/<font class="function-name">element</font>&gt;
+            &lt;/<font class="function-name">xml-rule</font>&gt;
+        &lt;/<font class="function-name">resolver</font>&gt;
+    &lt;/<font class="function-name">file</font>&gt;
+&lt;/<font class="function-name">MIME-resolver</font>&gt;
+</pre>
+
+<p>First, the DOCTYPE ensures that the XML file will be recognized as
+a resolver (by its public ID). The first <code>&lt;file/&gt;</code>
+block is a negative template - if it matches the resolver terminates
+and returns <code>null</code> (meaning it made no decision about the
+file). The second block automatically returns the Ant MIME type (here
+an XML subtype) for files tagged as being definitely Ant scripts
+(regardless of content and extension). The last block matches any XML
+file (that is, <samp>*.xml</samp>) whose root element is
+<code>&lt;project/&gt;</code> and contains at least the attribute
+<code>default</code> (value unspecified).</p>
+
+
+<p>Register this file using <a href="@TOP@/org/openide/filesystems/MIMEResolver.Registration.html">@MIMEResolver.Registration</a>
+annotation. It allows to specify nice display name and position among other resolvers in the <code>Services/MIMEResolver</code>
+folder.
+
+<p>
+    Note that an <a href="http://deadlock.netbeans.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers.txt">open position</a>
+    in the system filesystem should be specified.
+    Smaller positions mean the resolver runs earlier, which is appropriate for
+    commonly used file types, or resolvers which logically must take precedence
+    over more generic resolvers.
+</p>
+
+<h2>Links</h2>
+<a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023: XML Media Types</a>
+
+<hr>@FOOTER@
+
+</BODY>
+</HTML>

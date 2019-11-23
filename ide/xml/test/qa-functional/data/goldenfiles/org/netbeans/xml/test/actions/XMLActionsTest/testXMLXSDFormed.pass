@@ -1,0 +1,42 @@
+XML checking started.
+
+Checking filename
+XML checking finished.
+
+
+XML validation started.
+
+Checking filename
+cvc-elt.1: Cannot find the declaration of element 'shiporders'. [2] 
+XML validation finished.
+
+
+XML checking started.
+
+Checking filename
+The element type "stitle" must be terminated by the matching end-tag "</stitle>". [12] 
+XML checking finished.
+
+
+XML checking started.
+
+Checking filename
+XML checking finished.
+
+
+XML validation started.
+
+Checking filename
+Referenced entity at "filename
+cvc-pattern-valid: Value '1188923' is not facet-valid with respect to pattern '[0-9]{6}' for type 'orderidtype'. [3] 
+cvc-attribute.3: The value '1188923' of attribute 'orderid' on element 'shiporder' is not valid with respect to its type, 'orderidtype'. [3] 
+XML validation finished.
+
+
+XML validation started.
+
+Checking filename
+Referenced entity at "filename
+XML validation finished.
+
+

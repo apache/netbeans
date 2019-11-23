@@ -1,0 +1,2 @@
+                    <li style="cursor: pointer" onclick="|>MARK_OCCURRENCES:ope^rator<|.removeMe(this);">Remove me (breakpoint on node removal + breakpoint on nonDOM line)</li>
+                      var |>MARK_OCCURRENCES:operator<| = new DOMMaster();

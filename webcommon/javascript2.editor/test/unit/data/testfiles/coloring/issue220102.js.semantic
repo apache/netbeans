@@ -1,0 +1,9 @@
+function |>METHOD:test<|(data, |>UNUSED:status<|) {
+    |>GLOBAL:window<|.SYNERGY.|>CLASS:session<| = {
+        |>FIELD:isLoggedIn<|: true,
+        |>FIELD:username<|: data.username,
+        |>FIELD:role<|: data.role,
+        |>FIELD:created<|: data.created
+    }
+
+}

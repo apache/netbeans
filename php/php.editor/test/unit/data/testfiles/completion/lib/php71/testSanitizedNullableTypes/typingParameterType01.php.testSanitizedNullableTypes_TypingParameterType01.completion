@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function mytest(?ASaniti|);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ASanitizing                     [PUBLIC]   typingParameterType01.php

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="__NS_LOCATION__/jsf/facelets"
+      xmlns:h="__NS_LOCATION__/jsf/html">
+    
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="__DEFAULT_CSS_PATH__"/>
+        <h:outputStylesheet name="__LAYOUT_CSS_PATH__"/>
+        <title>Facelets Template</title>
+    </h:head>
+    
+    <h:body>
+        <table cellspacing="10px">
+            <tr>
+                <td id="top">
+                    <ui:insert name="top">Top</ui:insert>
+                </td>
+            </tr>
+            <tr>
+                <td id="content">
+                    <ui:insert name="content">Content</ui:insert>
+                </td>
+            </tr>
+        </table>
+    </h:body>
+    
+</html>

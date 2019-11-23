@@ -1,0 +1,43 @@
+<Program start='0' end='74'>
+    <Comments>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='7' end='61' modifier='NONE'>
+            <ClassName>
+                <Identifier start='13' end='20' name='Person2'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='21' end='61' isCurly='true'>
+                <FieldsDeclaration start='27' end='36' modifier='public'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='31' end='35' isDollared='true'>
+                            <Identifier start='32' end='35' name='age'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+                <FieldsDeclaration start='41' end='51' modifier='public'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='45' end='50' isDollared='true'>
+                            <Identifier start='46' end='50' name='name'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+            </Block>
+        </ClassDeclaration>
+        <EchoStatement start='63' end='71'>
+            <Scalar start='68' end='70' type='STRING' value='""'/>
+        </EchoStatement>
+        <EmptyStatement start='72' end='74'/>
+    </Statements>
+</Program>

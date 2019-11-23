@@ -1,0 +1,14 @@
+var |>METHOD:f1<| = |>METHOD:f2<| = function () {
+    |>GLOBAL:console<|.log("run f1");
+}     
+   
+f1();
+f2();  
+
+var |>METHOD:f3<|, |>METHOD:f4<|, |>METHOD:f5<| = f3 = f4 = function (){
+    |>GLOBAL:console<|.log("run f3");
+};
+
+f3();
+f4();
+f5();

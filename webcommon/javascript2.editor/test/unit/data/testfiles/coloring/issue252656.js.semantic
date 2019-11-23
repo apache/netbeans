@@ -1,0 +1,14 @@
+function |>METHOD:initGa<|() {
+    var |>LOCAL_VARIABLE_DECLARATION:ugaVarName<| = "ga";
+    var |>METHOD:uga<| = |>GLOBAL:window<|[|>LOCAL_VARIABLE:ugaVarName<|];
+
+    if( !uga ) {
+        uga = function() {
+            uga.|>FIELD:q<|.push(arguments);
+        };
+        
+        uga.|>FIELD:q<| = []; // <-- here: The global variable "uga" is not declared.
+        |>GLOBAL:window<|[|>LOCAL_VARIABLE:ugaVarName<|] = uga;
+    }       
+}
+     

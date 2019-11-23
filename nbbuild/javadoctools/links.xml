@@ -1,0 +1,238 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+   this file lists all currently known modules that produce
+   javadoc. If there is new javadoc being build for certain
+   module, the nbbuild/javadoctools/template.xml adds new
+   entry at the end of this file, it is then on the author
+   to decide whether such change shall be commited to the repository
+   or not
+-->
+<link href="${javadoc.docs.org-openide-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util"/>
+<link href="${javadoc.docs.org-netbeans-modules-nbjunit}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-nbjunit"/>
+<link href="${javadoc.docs.org-openide-actions}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-actions"/>
+<link href="${javadoc.docs.org-openide-options}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-options"/>
+<link href="${javadoc.docs.org-openide-compat}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-compat"/>
+<link href="${javadoc.docs.org-openide-awt}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-awt"/>
+<link href="${javadoc.docs.org-openide-dialogs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-dialogs"/>
+<link href="${javadoc.docs.org-openide-nodes}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-nodes"/>
+<link href="${javadoc.docs.org-openide-explorer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-explorer"/>
+<link href="${javadoc.docs.org-openide-modules}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-modules"/>
+<link href="${javadoc.docs.org-openide-text}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-text"/>
+<link href="${javadoc.docs.org-openide-windows}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-windows"/>
+<link href="${javadoc.docs.org-openide-loaders}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-loaders"/>
+<link href="${javadoc.docs.org-openide-io}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-io"/>
+<link href="${javadoc.docs.org-openide-execution}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-execution"/>
+<link href="${javadoc.docs.org-openidex-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openidex-util"/>
+<link href="${javadoc.docs.org-apache-tools-ant-module}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-apache-tools-ant-module"/>
+<link href="${javadoc.docs.org-netbeans-modules-javahelp}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-javahelp"/>
+<link href="${javadoc.docs.org-netbeans-modules-settings}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-settings"/>
+<link href="${javadoc.docs.org-netbeans-core-multiview}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-multiview"/>
+<link href="${javadoc.docs.org-netbeans-modules-diff}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-diff"/>
+<link href="${javadoc.docs.org-openide-src}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-src"/>
+<link href="${javadoc.docs.org-netbeans-modules-queries}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-queries"/>
+<link href="${javadoc.docs.org-netbeans-modules-projectapi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-projectapi"/>
+<link href="${javadoc.docs.org-netbeans-modules-projectuiapi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-projectuiapi"/>
+<link href="${javadoc.docs.org-netbeans-modules-project-libraries}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-libraries"/>
+<link href="${javadoc.docs.org-netbeans-api-debugger}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-debugger"/>
+<link href="${javadoc.docs.org-netbeans-spi-viewmodel}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-viewmodel"/>
+<link href="${javadoc.docs.org-netbeans-spi-debugger-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-debugger-ui"/>
+<link href="${javadoc.docs.org-netbeans-api-debugger-jpda}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-debugger-jpda"/>
+<link href="${javadoc.docs.org-netbeans-modules-project-ant}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-ant"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2eeserver}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2eeserver"/>
+<link href="${javadoc.docs.org-netbeans-api-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-java"/>
+<link href="${javadoc.docs.org-netbeans-modules-javacore}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-javacore"/>
+<link href="${javadoc.docs.org-netbeans-jmi-javamodel}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-jmi-javamodel"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-platform}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-platform"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-project}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-project"/>
+<link href="${javadoc.docs.org-netbeans-modules-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-lexer"/>
+<link href="${javadoc.docs.org-netbeans-modules-refactoring}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-refactoring"/>
+<link href="${javadoc.docs.org-netbeans-modules-vcscore}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-vcscore"/>
+<link href="${javadoc.docs.org-netbeans-api-xml}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-xml"/>
+<link href="${javadoc.docs.org-netbeans-api-web-dd}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-web-dd"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-dd}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-api-ejbmodule}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-api-ejbmodule"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-common"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-dd-webservice}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-dd-webservice"/>
+<link href="${javadoc.docs.org-netbeans-modules-websvc-websvcapi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-websvc-websvcapi"/>
+<link href="${javadoc.docs.org-netbeans-modules-websvc-registry}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-websvc-registry"/>
+<link href="${javadoc.docs.org-netbeans-modules-websvc-core}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-websvc-core"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-fold}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-fold"/>
+<link href="${javadoc.docs.org-netbeans-modules-classfile}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-classfile"/>
+<link href="${javadoc.docs.org-netbeans-modules-registry}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-registry"/>
+<link href="${javadoc.docs.org-netbeans-core-registry}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-registry"/>
+<link href="${javadoc.docs.org-netbeans-modules-convertor}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-convertor"/>
+<link href="${javadoc.docs.org-netbeans-modules-masterfs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-masterfs"/>
+<link href="${javadoc.docs.org-netbeans-modules-looks}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-looks"/>
+<link href="${javadoc.docs.org-netbeans-lib-terminalemulator}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-lib-terminalemulator"/>
+<link href="${javadoc.docs.org-netbeans-swing-tabcontrol}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-swing-tabcontrol"/>
+<link href="${javadoc.docs.org-netbeans-swing-plaf}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-swing-plaf"/>
+<link href="${javadoc.docs.org-netbeans-modules-autoupdate}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-autoupdate"/>
+<link href="${javadoc.docs.org-netbeans-api-mdr}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-mdr"/>
+<link href="${javadoc.docs.org-netbeans-api-progress}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-progress"/>
+<link href="${javadoc.docs.org-openide-filesystems}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-filesystems"/>
+<link href="${javadoc.docs.org-openide-util-enumerations}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util-enumerations"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-completion}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-completion"/>
+<link href="${javadoc.docs.org-netbeans-modules-adaptable}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-adaptable"/>
+<link href="${javadoc.docs.org-netbeans-spi-navigator}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-navigator"/>
+<link href="${javadoc.docs.org-netbeans-spi-palette}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-palette"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-hints}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-hints"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-mimelookup}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-mimelookup"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-util"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-lib}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-lib"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-ejbjarproject}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-ejbjarproject"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-ejbcore}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-ejbcore"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-errorstripe-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-errorstripe-api"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-settings}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-settings"/>
+<link href="${javadoc.docs.org-netbeans-modules-db}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-db"/>
+<link href="${javadoc.docs.org-netbeans-modules-options-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-options-api"/>
+<link href="${javadoc.docs.org-netbeans-api-web-webmodule}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-web-webmodule"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-codetemplates}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-codetemplates"/>
+<link href="${javadoc.docs.org-netbeans-modules-sendopts}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-sendopts"/>
+<link href="${javadoc.docs.org-netbeans-modules-nbjunit-ide}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-nbjunit-ide"/>
+<link href="${javadoc.docs.org-netbeans-libs-javacapi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-libs-javacapi"/>
+<link href="${javadoc.docs.org-netbeans-jackpot}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-jackpot"/>
+<link href="${javadoc.docs.org-netbeans-modules-indexedannotations}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-indexedannotations"/>
+<link href="${javadoc.docs.org-netbeans-modules-junit}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-junit"/>
+<link href="${javadoc.docs.org-netbeans-api-actions-support}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-actions-support"/>
+<link href="http://download.oracle.com/javase/6/docs/jdk/api/javac/tree" offline="true" packagelistloc="./tree-api"/>
+<link href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="./javac-api"/>
+<link href="http://bits.netbeans.org/html+java/1.2.3" offline="true" packagelistloc="./html+java"/>
+<link href="${javadoc.docs.org-netbeans-modules-uihandler}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-uihandler"/>
+<link href="${javadoc.docs.org-netbeans-lib-uihandler}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-lib-uihandler"/>
+<link href="${javadoc.docs.org-netbeans-modules-j2ee-metadata}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-metadata"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-lib2}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-lib2"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-j2seproject}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-java-j2seproject"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-source}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-source"/>
+<link href="${javadoc.docs.org-netbeans-api-visual}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-visual"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-settings-storage}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-settings-storage"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-guards}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-guards"/>
+<link href="${javadoc.docs.org-netbeans-modules-kenai}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-kenai"/>
+<link href="${javadoc.docs.org-netbeans-modules-autoupdate-services}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-autoupdate-services"/>
+<link href="${javadoc.docs.org-netbeans-modules-refactoring-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-refactoring-api"/>
+<link href="${javadoc.docs.org-netbeans-core-startup}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-startup"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-xdm}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-xdm"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-xam}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-xam"/>
+<link href="${javadoc.docs.org-netbeans-insane}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-insane"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-bracesmatching}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-bracesmatching"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-indent}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-indent"/>
+<link href="${javadoc.docs.org-netbeans-spi-tasklist}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-tasklist"/>
+<link href="${javadoc.docs.org-netbeans-modules-projectui}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-projectui"/>
+<link href="${javadoc.docs.org-netbeans-modules-refactoring-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-refactoring-java"/>
+<link href="${javadoc.docs.org-netbeans-bootstrap}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-bootstrap"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-retriever}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-retriever"/>
+<link href="${javadoc.docs.org-netbeans-modules-server}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-server"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-api-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-api-common"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-sourceui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-sourceui"/>
+<link href="${javadoc.docs.org-netbeans-modules-parsing-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-parsing-api"/>
+<link href="${javadoc.docs.org-netbeans-api-java-classpath}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-java-classpath"/>
+<link href="${javadoc.docs.org-netbeans-modules-extexecution}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-extexecution"/>
+<link href="${javadoc.docs.org-netbeans-modules-print}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-print"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-core}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-xml-core"/>
+<link href="${javadoc.docs.org-netbeans-spi-quicksearch}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-quicksearch"/>
+<link href="${javadoc.docs.org-netbeans-modules-websvc-wsstackapi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-websvc-wsstackapi"/>
+<link href="${javadoc.docs.org-netbeans-swing-outline}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-swing-outline"/>
+<link href="${javadoc.docs.org-netbeans-modules-maven}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-maven"/>
+<link href="${javadoc.docs.org-netbeans-modules-maven-indexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-maven-indexer"/>
+<link href="${javadoc.docs.org-netbeans-modules-maven-embedder}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-maven-embedder"/>
+<link href="${javadoc.docs.org-netbeans-spi-actions}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-actions"/>
+<link href="${javadoc.docs.org-netbeans-modules-spi-actions}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-spi-actions"/>
+<link href="${javadoc.docs.org-netbeans-modules-extexecution}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-extexecution"/>
+<link href="${javadoc.docs.org-netbeans-modules-gsf-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gsf-api"/>
+<link href="${javadoc.docs.org-netbeans-modules-mobility-project}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-mobility-project"/>
+<link href="${javadoc.docs.org-netbeans-api-annotations-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-annotations-common"/>
+<link href="${javadoc.docs.org-netbeans-modules-kenai-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-kenai-ui"/>
+<link href="${javadoc.docs.org-netbeans-spi-editor-hints}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-editor-hints"/>
+<link href="${javadoc.docs.org-netbeans-core-ide}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-ide"/>
+<link href="${javadoc.docs.org-netbeans-modules-jellytools-cnd}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jellytools-cnd"/>
+<link href="${javadoc.docs.org-netbeans-modules-jellytools-enterprise}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jellytools-enterprise"/>
+<link href="${javadoc.docs.org-netbeans-modules-jellytools-ide}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jellytools-ide"/>
+<link href="${javadoc.docs.org-netbeans-modules-jellytools-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jellytools-java"/>
+<link href="${javadoc.docs.org-netbeans-modules-jellytools-platform}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jellytools-platform"/>
+<link href="${javadoc.docs.org-netbeans-modules-javacard-spi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-javacard-spi"/>
+<link href="${javadoc.docs.org-netbeans-modules-keyring}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-keyring"/>
+<link href="${javadoc.docs.org-netbeans-modules-schema2beans}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-schema2beans"/>
+<link href="${javadoc.docs.org-openide-util-lookup}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util-lookup"/>
+<link href="${javadoc.docs.org-netbeans-modules-terminal}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-terminal"/>
+<link href="${javadoc.docs.org-netbeans-modules-dlight-nativeexecution}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-dlight-nativeexecution"/>
+<link href="${javadoc.docs.org-netbeans-core-netigso}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-netigso"/>
+<link href="${javadoc.docs.org-netbeans-modules-parsing-lucene}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-parsing-lucene"/>
+<link href="${javadoc.docs.org-netbeans-modules-autoupdate-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-autoupdate-ui"/>
+<link href="${javadoc.docs.org-netbeans-modules-php-project}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-php-project"/>
+<link href="${javadoc.docs.org-netbeans-api-progress-transactional}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-progress-transactional"/>
+<link href="${javadoc.docs.org-netbeans-core}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core"/>
+<link href="${javadoc.docs.org-netbeans-modules-versioning}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-versioning"/>
+<link href="${javadoc.docs.org-netbeans-spi-java-hints}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-java-hints"/>
+<link href="${javadoc.docs.org-netbeans-modules-versioning-core}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-versioning-core"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-hints-declarative-test}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-hints-declarative-test"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-hints-legacy-spi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-hints-legacy-spi"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-hints-providers-spi}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-hints-providers-spi"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-hints-test}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-hints-test"/>
+<link href="${javadoc.docs.org-netbeans-libs-git}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-libs-git"/>
+<link href="${javadoc.docs.org-netbeans-modules-sampler}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-sampler"/>
+<link href="${javadoc.docs.org-netbeans-api-search}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-search"/>
+<link href="${javadoc.docs.org-netbeans-modules-code-analysis}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-code-analysis"/>
+<link href="${javadoc.docs.org-netbeans-modules-glassfish-cloud}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-glassfish-cloud"/>
+<link href="${javadoc.docs.org-netbeans-spi-editor-hints-projects}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-spi-editor-hints-projects"/>
+<link href="${javadoc.docs.org-netbeans-modules-glassfish-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-glassfish-common"/>
+<link href="${javadoc.docs.org-netbeans-modules-javaee-project}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-javaee-project"/>
+<link href="${javadoc.docs.org-netbeans-modules-maven-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-modules-maven-util"/>
+<link href="${javadoc.docs.org-netbeans-modules-bugtracking}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-bugtracking"/>
+<link href="${javadoc.docs.org-netbeans-core-multitabs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-core-multitabs"/>
+<link href="${javadoc.docs.org-openide-util-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util-ui"/>
+<link href="${javadoc.docs.org-netbeans-api-maven}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-maven"/>
+<link href="${javadoc.docs.org-openide-filesystems-compat8}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-filesystems-compat8"/>
+<link href="${javadoc.docs.org-netbeans-modules-parsing-indexing}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-parsing-indexing"/>
+<link href="${javadoc.docs.org-netbeans-modules-extexecution-base}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-extexecution-base"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-platform-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-platform-ui"/>
+<link href="${javadoc.docs.org-netbeans-modules-projectuiapi-base}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-projectuiapi-base"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-document}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-document"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-source-base}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-source-base"/>
+<link href="${javadoc.docs.org-netbeans-modules-project-ant-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-ant-ui"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-project-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-project-ui"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-catalog-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-catalog-ui"/>
+<link href="${javadoc.docs.org-netbeans-api-progress-nb}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-progress-nb"/>
+<link href="${javadoc.docs.org-netbeans-modules-editor-indent-support}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-editor-indent-support"/>
+<link href="${javadoc.docs.org-netbeans-modules-masterfs-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-masterfs-ui"/>
+<link href="${javadoc.docs.org-netbeans-modules-parsing-nb}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-parsing-nb"/>
+<link href="${javadoc.docs.org-netbeans-modules-project-libraries-ui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-libraries-ui"/>
+<link href="${javadoc.docs.org-openide-filesystems-nb}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-filesystems-nb"/>
+<link href="${javadoc.docs.org-netbeans-api-intent}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-api-intent"/>
+<link href="${javadoc.docs.org-netbeans-api-templates}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-templates"/>
+<link href="${javadoc.docs.org-netbeans-api-io}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-api-io"/>
+<link href="${javadoc.docs.org-netbeans-api-htmlui}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-htmlui"/>
+<link href="${javadoc.docs.org-netbeans-api-knockout}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-knockout"/>
+<link href="${javadoc.docs.org-netbeans-lib-v8debug}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-lib-v8debug"/>
+<link href="${javadoc.docs.org-netbeans-modules-docker-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-docker-api"/>
+<link href="${javadoc.docs.org-netbeans-modules-csl-types}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-csl-types"/>
+<link href="${javadoc.docs.org-netbeans-modules-csl-api}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-csl-api"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-text}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-text"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-lexer"/>
+<link href="${javadoc.docs.org-netbeans-modules-xml-text}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-text"/>
+<link href="${javadoc.docs.org-netbeans-core-network}" offline="true" packagelistloc="${netbeans.javadoc.dir}\org-netbeans-core-network"/>
+<link href="${javadoc.docs.org-netbeans-api-scripting}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-scripting"/>
+<link href="${javadoc.docs.org-netbeans-libs-graalsdk}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-libs-graalsdk"/>
+<link href="${javadoc.docs.org-netbeans-modules-gradle}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle"/>
+<link href="${javadoc.docs.org-netbeans-modules-gradle-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle-java"/>
+<link href="${javadoc.docs.org-netbeans-modules-textmate-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-textmate-lexer"/>
+<link href="https://www.graalvm.org/truffle/javadoc/" offline="true" packagelistloc="./truffle"/>

@@ -1,0 +1,11 @@
+[TAG_AND_KEYWORD]ul
+  li [NONE]Item A
+[TAG_AND_KEYWORD]  li [NONE]Item B
+[TAG_AND_KEYWORD]  li [NONE]Item C
+[TAG_AND_KEYWORD]
+img
+
+a:[NONE] [TAG]img
+[TAG_AND_KEYWORD]
+foo/[NONE]
+[TAG_AND_KEYWORD]foo([ATTRIBUTE]bar='baz')[NONE]/

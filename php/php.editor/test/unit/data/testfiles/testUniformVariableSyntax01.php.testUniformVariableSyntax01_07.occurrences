@@ -1,0 +1,3 @@
+    public static function |>MARK_OCCURRENCES:myStatic2<|() { // UVS1
+UVS3::myStatic3()::myStatic2()::myStatic1()::|>MARK_OCCURRENCES:mySt^atic2<|();
+UVS3::myStatic3()->myStatic2()::myStatic1()->|>MARK_OCCURRENCES:myStatic2<|();

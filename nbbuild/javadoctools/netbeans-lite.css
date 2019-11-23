@@ -1,0 +1,112 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+/* --- IMPORT FOR JAVADOC -- */
+/* this part of css is automaticaly exported to file nb_special.css
+if you need make some changes please edit into netbeans.css*/
+
+/* TABLE STYLES */
+
+
+.tablebg	{
+	background-color: #ff9d42;
+	}
+
+.tablehbg	{
+	background-color: #ff9d42;
+	}
+
+.tablecbg	{
+	background-color: #fed78c;
+	}
+
+
+.tablerbg	{
+	background-color: #ffe8bc;
+	}
+
+.tabler	{
+	background-color: #FFFFFF;
+	}
+
+.tablersh	{
+	background-color: rgb(240,240,240);
+	}
+
+.tablecfont	{
+  font-weight: bold;
+	color: #000000;
+	}
+
+.tablehfont	{
+  font-weight: bold;
+	color: #000000;
+	}
+
+/* END TABLES */
+
+.titlec	{
+  font-weight: bold;
+	color: #ee6d06;
+	}
+
+.titlectable	{
+  font-weight: bold;
+	color: #000000;
+        line-height: 20px;
+	}
+
+
+
+.constant {
+  color: #b03060;
+  }
+
+.keyword {
+  color: #0000ff;
+  }
+
+.function-name {
+  color: #0000ff;
+  }
+
+.comment {
+  color: #666666;
+  font-style: italic;
+  }
+
+.string {
+  color: #b03060;
+  }
+
+.variable-name {
+  color: #006400;
+  }
+
+.type {
+  color: #00008b;
+  }
+
+.extra-java-font-lock-number {
+  color: #b03060;
+  }
+
+.builtin {
+  color: #0000ff;
+  }
+

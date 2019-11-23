@@ -1,0 +1,6 @@
+Code completion result for source line:
+utils.util|Method1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     utilMethod1(): undefined        [PUBLIC]   utils.js
+METHOD     utilMethod2(): undefined        [PUBLIC]   utils.js

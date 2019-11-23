@@ -1,0 +1,22 @@
+FUNCTION issue231530 [ANONYMOUS: false, DECLARED: true - issue231530, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+issue231530pdel : FUNCTION issue231530pdel [ANONYMOUS: true, DECLARED: true - issue231530pdel, MODIFIERS: PUBLIC, FUNCTION]
+                # RETURN TYPES
+                issue231530pdel.issue231530Anonym$0, RESOLVED: true
+                # PROPERTIES
+                arguments           : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                issue231530Anonym$0 : OBJECT issue231530Anonym$0 [ANONYMOUS: true, DECLARED: true, MODIFIERS: PRIVATE, ANONYMOUS_OBJECT]
+                                    # PROPERTIES
+                                    f1 : FUNCTION f1 [ANONYMOUS: false, DECLARED: true - f1, MODIFIERS: PUBLIC, METHOD]
+                                       # RETURN TYPES
+                                       String, RESOLVED: true
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                    f2 : FUNCTION f2 [ANONYMOUS: false, DECLARED: true - f2, MODIFIERS: PUBLIC, METHOD]
+                                       # RETURN TYPES
+                                       String, RESOLVED: true
+                                       # PROPERTIES
+                                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+pdel            : OBJECT pdel [ANONYMOUS: false, DECLARED: true - pdel, MODIFIERS: PUBLIC, VARIABLE]

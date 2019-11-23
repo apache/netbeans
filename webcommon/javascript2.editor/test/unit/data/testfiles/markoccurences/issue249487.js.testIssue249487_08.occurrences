@@ -1,0 +1,2 @@
+    function myEventArgs(|>MARK_OCCURRENCES:iAr^g<|) {
+        this.iArg = |>MARK_OCCURRENCES:iArg<|;

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="TestRunner" default="all-master-check" basedir=".">
+
+    <property name="script.version" value="1.0.7 modified"/>
+    <property name="btd.repo.dir" value="${ide.repo.dir}"/>
+    <property environment="env"/>
+
+   <!-- Properties for internal purpose-->
+    <property name="ide.dest.dir" value="zip"/>
+    <property name="ide.dest.file" value="ide.zip"/>
+    <property name="btd.dest.dir" value="${ide.dest.dir}"/>
+    <property name="btd.dest.file" value="btd.zip"/>
+    <property name="results.dir" value="results"/>
+    <property name="results.file.unit" value="results-unit.zip"/>
+    <property name="results.file.functional" value="results-functional.zip"/>
+    <property name="netbeans.dir" value="netbeans"/>
+    <property name="testdistribution.dir" value="testdistribution"/>
+
+    <property name="installer.dir" value="installer"/>
+    <property name="installer.target.dir" value="netbeans"/>
+    <property name="installer.target.dir.glassfish" value="glassfish"/>
+
+
+<!--installer -->
+    <target name="install-ide-perform">
+      <chmod file="${basedir}/${installer.dir}/${installer.basename}${installer.suffix}" perm="+x"/>
+      <echo message="Running IDE installation"/>
+      <exec executable="${basedir}/${installer.dir}/${installer.basename}${installer.suffix}">
+        <arg value="--silent"/>
+        <arg value="-J-Dnb-base.installation.location=${installer.target.dir}"/>
+        <arg value="-J-Dglassfish.installation.location=${installer.target.dir.glassfish}"/>
+      </exec>
+    </target>
+
+
+    <target name="uninstall-ide" if="installer">
+      <echo message="Running IDE uninstallation"/>
+      <exec executable="${basedir}/${installer.target.dir}/uninstall.exe" osfamily="windows" >
+        <arg value="--silent"/>
+      </exec>
+      <exec executable="${basedir}/${installer.target.dir.glassfish}/uninstall.sh" osfamily="unix">
+        <arg value="--silent"/>
+      </exec>
+      <echo message="Running Glassfish uninstallation"/>
+      <exec executable="${basedir}/${installer.target.dir}/uninstall.sh" osfamily="unix">
+        <arg value="--silent"/>
+      </exec>
+      <exec executable="${basedir}/${installer.target.dir.glassfish}/uninstall.exe" osfamily="windows">
+        <arg value="--silent"/>
+      </exec>
+    </target>
+
+
+
+    <target name="install-ide" depends="determinate-os" if="installer">
+        <mkdir dir="${installer.dir}"/>
+        <antcall target="install-ide-win"/>
+        <antcall target="install-ide-unix"/>
+        <antcall target="install-ide-sol-sparc"/>
+        <antcall target="install-ide-sol-intel"/>
+        <antcall target="install-ide-mac"/>
+    </target>
+
+    <target name="download-installer">
+       <get src="${installer.location}${installer.basename}${installer.suffix}"
+            dest="${installer.dir}/${installer.basename}${installer.suffix}"/>
+    </target>
+
+    <target name="install-ide-win" if="win">
+        <echo message="Detected platform: Windows"/>
+        <property name="installer.suffix" value="-windows.exe" />
+        <antcall target="download-installer"/>
+        <antcall target="install-ide-perform"/>
+    </target>
+
+    <target name="install-ide-unix" if="linux">
+        <echo message="Detected platform: Linux"/>
+        <property name="installer.suffix" value="-linux.sh"/>
+        <antcall target="download-installer"/>
+        <antcall target="install-ide-perform"/>
+    </target>
+
+    <target name="install-ide-sol-sparc" if="sol.sparc">
+        <echo message="Detected platform: Solaris/Sparc"/>
+        <property name="installer.suffix" value="-solaris-sparc.sh"/>
+        <antcall target="download-installer"/>
+        <antcall target="install-ide-perform"/>
+    </target>
+    <target name="install-ide-sol-intel" if="sol.intel">
+        <echo message="Detected platform: Solaris/x86"/>
+        <property name="installer.suffix" value="-solaris-x86.sh"/>
+        <antcall target="download-installer"/>
+        <antcall target="install-ide-perform"/>
+    </target>
+    <target name="install-ide-mac" if="mac">
+        <echo message="Detected platform: Mac"/>
+        <fail message="Installer is not supported on Mac OS."/>
+    </target>
+
+
+ <target name="determinate-os">
+        <condition property="sol.sparc">
+            <os name="SunOS" arch="sparc"/>
+        </condition>
+        <condition property="sol.intel">
+            <os name="SunOS" arch="x86"/>
+        </condition>
+        <condition property="win">
+            <os family="windows"/>
+        </condition>
+        <condition property="linux">
+            <and>
+                <os family="unix"/>
+                <not><os family="mac"/></not>
+                <not><os name="SunOS"/></not>
+            </and>
+        </condition>
+    <condition property="mac">
+        <os family="mac"/>
+    </condition>
+    <condition property="unix">
+        <os family="unix"/>
+    </condition>
+</target>
+<!--end of installer -->
+
+    <target name="master-check" unless="is.master">
+        <antcall target="all"/>
+    </target>
+
+   <target name="master-results-hack" if="is.master">
+        <mkdir dir="testdistribution/unit/junit-results"/>
+        <mkdir dir="testdistribution/unit/results"/>
+        <mkdir dir="testdistribution/qa-functional/results/foo"/>
+        <copyfile forceoverwrite="true" src="/space/hudson/foo.xml" dest="testdistribution/unit/junit-results/foo.xml"/>
+        <copyfile forceoverwrite="true" src="/space/hudson/foo.xml" dest="testdistribution/unit/results/foo.xml"/>
+        <copyfile forceoverwrite="true" src="/space/hudson/foo.xml" dest="testdistribution/qa-functional/results/foo.xml"/>
+   </target>
+
+    <target name="all-master-check">
+        <available file="/space/hudsonserver/master" property="is.master"/>
+        <antcall target="master-results-hack"/>
+        <antcall target="master-check"/>
+    </target>
+
+    <!-- removed not need depends -->
+    <target name="all" depends="clean,init,download-btd,unzip-btd,run-tests,move-results,clean-bits">
+        <echo message="Script version: ${script.version}"/>
+    </target>
+
+    <target name="clean" description="Removes everything from basedir (even dir whee are zip files stored).">
+        <delete dir="${netbeans.dir}"/>
+        <delete dir="${results.dir}"/>
+        <delete dir="${testdistribution.dir}"/>
+        <delete dir="${installer.dir}"/>
+        <delete dir="${ide.dest.dir}"/>
+    </target>
+
+    <target name="clean-bits" description="Removes only bits from workspace. Results and buildscript are beeing kept.">
+        <delete dir="${netbeans.dir}"/>
+        <delete dir="${installer.dir}"/>
+        <delete dir="${ide.dest.dir}"/>
+        <delete includeEmptyDirs="true">
+            <fileset dir="${testdistribution.dir}">
+                <include name="**/*"/>
+                <exclude name="unit/results/"/>
+                <exclude name="unit/work/"/>
+                <exclude name="qa-functional/results/"/>
+                <exclude name="qa-functional/work/"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="download-ide" unless="build.ide.exist">
+        <mkdir dir="${ide.dest.dir}"/>
+        <get src="${ide.repo.dir}${ide.repo.file}"
+            dest="${ide.dest.dir}/${buildnumber}-${ide.dest.file}"/>
+    </target>
+
+    <target name="download-btd" unless="build.btd.exist">
+        <mkdir dir="${btd.dest.dir}"/>
+        <get src="${btd.repo.dir}${btd.repo.file}"
+            dest="${btd.dest.dir}/${buildnumber}-${btd.dest.file}"/>
+    </target>
+
+    <target name="unzip-ide" unless="installer">
+        <antcall target="download-ide"/>
+        <unzip src="${ide.dest.dir}/${buildnumber}-${ide.dest.file}" dest="${basedir}"/>
+    </target>
+
+    <target name="unzip-btd" depends="download-btd">
+        <unzip src="${btd.dest.dir}/${buildnumber}-${btd.dest.file}" dest="${testdistribution.dir}"/>
+    </target>
+
+    <target name="init" depends="init-unix, init-win">
+        <condition property="testtype.unit">
+            <equals arg1="${test.types}" arg2="unit"/>
+        </condition>
+        <condition property="testtype.functional">
+            <equals arg1="${test.types}" arg2="qa-functional"/>
+        </condition>
+        <available file="${ide.dest.dir}/${buildnumber}-${ide.dest.file}" property="build.ide.exist"/>
+        <available file="${btd.dest.dir}/${buildnumber}-${btd.dest.file}" property="build.btd.exist"/>
+    </target>
+
+     <target name="init-unix" depends="determinate-os, load-hudson-properties" if="unix">
+        <property name="asadmin.app" location="${glassfish.home}/bin/asadmin"/>
+        <property name="tomcat.shutdown.app" location="${tomcat.home}/bin/shutdown.sh"/>
+        <property name="derby.shutdown.app" location="${java.home}/../db/bin/stopNetworkServer"/>
+    </target>
+   
+    <target name="init-win" depends="determinate-os, load-hudson-properties" if="win">
+        <property name="asadmin.app" location="${glassfish.home}/bin/asadmin.bat"/>
+        <property name="tomcat.shutdown.app" location="${tomcat.home}/bin/shutdown.bat"/>
+        <property name="derby.shutdown.app" location="${java.home}/../db/bin/stopNetworkServer.bat"/>
+    </target>
+
+    <target name="run-tests" depends="init, list-active-jvms">
+        <echo taskname="run-tests">----------- BTD START -----------</echo>
+        <echo message="Found ${local.properties.file} - ${hudson.properties.exist}"/>
+        <subant target="" buildpath="${testdistribution.dir}">
+            <property name="netbeans.dest.dir" value="${basedir}/${netbeans.dir}"/>
+            <property name="test.disable.fails" value="true"/>
+            <property name="hudson.jobname" value="${env.JOB_NAME}"/>
+            <property name="hudson.buildnumber" value="${env.BUILD_NUMBER}"/>
+            <property file="${local.properties.file}"/>
+        </subant>
+        <echo taskname="run-tests">----------- BTD END -----------</echo>
+        <antcall target="clean-glassfish"/>
+        <antcall target="clean-tomcat"/>
+    </target>
+
+    <property name="local.properties.file" value="${user.home}/hudson.properties"/>
+    <condition property="hudson.properties.exist">
+        <available file="${local.properties.file}" type="file"/>
+    </condition>
+    
+    <target name="load-hudson-properties" if="hudson.properties.exist">
+        <!-- Load ~/hudson.properties and strip 'test-sys-prop.' prefix -->
+        <loadproperties srcfile="${local.properties.file}">
+            <filterchain>
+                <tokenfilter>
+                    <replacestring from="test-sys-prop." to=""/>
+                </tokenfilter>
+            </filterchain>
+        </loadproperties>
+        <condition property="glassfish.exists">
+            <available file="${glassfish.home}" type="dir"/>
+        </condition>
+        <condition property="tomcat.exists">
+            <available file="${tomcat.home}" type="dir"/>
+        </condition>
+    </target>
+
+    <target name="clean-glassfish" if="glassfish.exists" depends="init">
+        
+        <exec executable="${asadmin.app}">
+            <arg line="stop-domain domain1"/>
+        </exec>
+        <exec executable="${asadmin.app}">
+            <arg line="delete-domain domain1"/>
+        </exec>
+        <exec executable="${derby.shutdown.app}" failifexecutionfails="false">
+            <env key="DERBY_HOME" path="${java.home}/../db"/>
+        </exec>
+        <exec executable="${asadmin.app}">
+            <arg line="stop-database --dbhost 127.0.0.1"/>
+        </exec>
+        <antcall target="create-glassfish-domain"/>
+    </target>
+    
+    <target name="create-glassfish-domain" depends="init">
+        <property name="admin.port" value="4848"/>
+        <property name="instance.port" value="8080"/>
+        <property name="admin.user" value="admin"/>
+        <property name="orb.port" value="3700"/>
+        <property name="imq.port" value="7676"/>
+        <property name="https.port" value="8181"/>
+        <property name="domain.name" value="domain1"/>
+        <property name="adminpassfile" value="${basedir}/passfile"/>
+        <property name="admin.password" value="adminadmin"/>
+
+        <echo file="${adminpassfile}" append="false">AS_ADMIN_ADMINPASSWORD=${admin.password}</echo>
+        <exec executable="${asadmin.app}" failonerror="true">
+            <arg line="create-domain" />
+            <arg line="--adminport ${admin.port}" />
+            <arg line="--instanceport ${instance.port}" />
+            <arg line="--user ${admin.user}" />
+            <arg line="--passwordfile &quot;${adminpassfile}&quot;" />
+            <arg line="--domainproperties orb.listener.port=${orb.port}:jms.port=${imq.port}:http.ssl.port=${https.port}" />
+            <arg line="--savelogin" />
+            <arg line="${domain.name}" />
+        </exec>
+        <delete file="${adminpassfile}" />
+    </target>
+
+    <target name="clean-tomcat" if="tomcat.exists" depends="init">
+        <!-- stop Tomcat -->
+        <exec executable="${tomcat.shutdown.app}" failifexecutionfails="false"/>
+        <!-- list deployed applications -->
+        <exec executable="ls" osfamily="unix">
+            <arg line="-l ${tomcat.home}/webapps"/>
+        </exec>
+        <exec executable="dir" osfamily="windows">
+            <arg line="${tomcat.home}/webapps"/>
+        </exec>
+    </target>
+
+    <target name="list-active-jvms">
+        <!-- list running JVMs -->
+        <exec executable="jps" failifexecutionfails="false">
+            <arg line=" -l -m"/>
+        </exec>
+    </target>
+
+    <target name="move-results" depends="init">
+        <delete dir="${results.dir}"/>
+        <mkdir dir="${results.dir}"/>
+        <exec executable="hostname" outputproperty="host.name"/>
+        <property name="results.string" value="xtr-netbeans_Dev-${buildnumber}-${host.name}-${java.version}-${buildnumber}"/>
+        <antcall target="move-results-unit"/>
+        <antcall target="move-results-functional"/>
+    </target>
+
+    <target name="move-results-unit"  unless="testtype.functional">
+        <zip destfile="${results.dir}/${results.string}-${results.file.unit}"
+        basedir="${testdistribution.dir}/unit/results"/>
+    </target>
+
+    <target name="move-results-functional"  unless="testtype.unit">
+        <zip destfile="${results.dir}/${results.string}-${results.file.functional}"
+        basedir="${testdistribution.dir}/qa-functional/results"/>
+    </target>
+</project>

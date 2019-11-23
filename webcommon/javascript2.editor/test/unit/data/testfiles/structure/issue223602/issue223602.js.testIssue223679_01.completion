@@ -1,0 +1,7 @@
+Code completion result for source line:
+p223602|_3.big();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   p223602_1: Test223602           [PUBLIC]   issue223602.js
+VARIABLE   p223602_2: String               [PUBLIC]   issue223602.js
+VARIABLE   p223602_3: String               [PUBLIC]   issue223602.js

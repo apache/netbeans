@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<fontscolors>
+    <fontcolor name="other-operator" default="operator"/>
+    <fontcolor name="other-error" default="error"/>
+    <fontcolor name="other-identifier" default="identifier"/>
+    <fontcolor name="other-comment" default="comment"/>
+    <fontcolor name="other-line-comment" default="comment"/>
+    <fontcolor name="other-comment-keyword" default="comment" foreColor="orange"/>
+    <fontcolor name="other-number" default="number"/>
+    <fontcolor name="other-text" default="default"/>
+    <fontcolor name="other-keyword" default="keyword"/>
+    <fontcolor name="other-string" default="string"/>
+    <fontcolor name="other-char" default="char"/>
+    <fontcolor name="other-whitespace" default="whitespace"/>
+    
+    <fontcolor name="other-element" default="keyword"/>
+    <fontcolor name="other-attribute-name" default="identifier"/>
+    <fontcolor name="other-attribute-value" default="string"/>
+
+    <fontcolor name="other-php-operator" default="operator" bgColor="eeeeee"/>
+    <fontcolor name="other-php-identifier" default="identifier" bgColor="eeeeee"/>
+    <fontcolor name="other-php-comment" default="comment" bgColor="eeeeee"/>
+    <fontcolor name="other-php-line-comment" default="comment" bgColor="eeeeee"/>
+    <fontcolor name="other-php-number" default="number" bgColor="eeeeee"/>
+    <fontcolor name="other-php-keyword" default="keyword" bgColor="eeeeee"/>
+    <fontcolor name="other-php-string" default="string" bgColor="eeeeee"/>
+    <fontcolor name="other-php-char" default="char" bgColor="eeeeee"/>
+    <fontcolor name="other-php-whitespace" default="whitespace" bgColor="eeeeee"/>
+</fontscolors>

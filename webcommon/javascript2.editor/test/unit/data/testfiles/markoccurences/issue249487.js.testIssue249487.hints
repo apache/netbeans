@@ -1,0 +1,4 @@
+    this.myEvent = new MyApi.Event(myEventArgs);
+                       -----
+HINT:The global variable "MyApi" is not declared.
+FIX:Generate JsHint global directive for variable MyApi

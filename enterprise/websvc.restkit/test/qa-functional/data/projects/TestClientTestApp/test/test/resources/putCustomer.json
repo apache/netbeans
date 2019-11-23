@@ -1,0 +1,15 @@
+{"@uri":"http://localhost:8080/CustomerDB/resources/customers/1010/",
+    "addressline1":"16 Network Circle",
+    "addressline2":"Building 15",
+    "city":"Menlo Park",
+    "creditLimit":"0",
+    "customerId":"1010",
+    "discountCode":{
+        "@uri":"http://localhost:8080/CustomerDB/resources/discountCodes/H/"
+    },
+    "email":"dev@nb.org",
+    "fax":"305-777-4635",
+    "name":"NetBeansDev",
+    "phone":"305-777-4632",
+    "state":"CA",
+    "zip":"33015"}

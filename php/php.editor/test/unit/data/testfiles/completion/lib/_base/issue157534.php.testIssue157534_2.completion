@@ -1,0 +1,4 @@
+Code completion result for source line:
+$v157534->add|157534($a, $b);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     add157534(&$a, &$b)             [PUBLIC]   SuperClass157534

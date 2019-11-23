@@ -1,0 +1,11 @@
+Code completion result for source line:
+formatter.println("color: " + object.|getColor());
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getColor()                      [PROTECTE  typeInferenceNew.js
+METHOD     getMaker()                      [PROTECTE  typeInferenceNew.js
+FIELD      color                           [PUBLIC]   typeInferenceNew.js
+FIELD      country                         [PUBLIC]   typeInferenceNew.js
+FIELD      maker                           [PUBLIC]   typeInferenceNew.js
+FIELD      street                          [PUBLIC]   typeInferenceNew.js
+FIELD      town                            [PUBLIC]   typeInferenceNew.js

@@ -1,0 +1,4 @@
+Code completion result for source line:
+return $t|his->prop2 + $this->prop3 + $this->func1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    {} $this->                                 null

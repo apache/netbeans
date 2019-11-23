@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary indentification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/newGeneratedDTD.dtd
+
+--><!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE shiporders SYSTEM "newGeneratedDTD.dtd">
+
+    <shiporders>
+    ...
+    </shiporders>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT shiporders (shiporder)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT shiporder (item|shipto|orderperson)*>
+<!ATTLIST shiporder
+    orderid CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT orderperson (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT shipto (country|city|address|name)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT name (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT address (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT city (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT country (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT item (price|quantity|note|title)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT title (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT note (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT quantity (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT price (#PCDATA)>
+

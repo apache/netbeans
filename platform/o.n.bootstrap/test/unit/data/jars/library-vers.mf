@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Specification-Title: pkg.subpkg
+Implementation-Title: The Subpackage
+Specification-Version: 2.3
+Implementation-Version: yesterday's build
+

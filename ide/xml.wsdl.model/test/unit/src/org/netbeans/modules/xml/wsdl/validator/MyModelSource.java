@@ -1,0 +1,56 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.xml.wsdl.validator;
+
+import java.io.File;
+import java.net.URI;
+import org.netbeans.modules.xml.xam.ModelSource;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
+
+/**
+ *
+ * @author radval
+ */
+class MyModelSource extends ModelSource {
+
+         private URI mURI;
+
+         public MyModelSource(Lookup lookup, boolean editable, URI uri){
+            super(lookup, editable);
+            this.mURI = uri;
+        }
+
+        public Lookup getLookup(){
+            Lookup l1 = super.getLookup();
+            InstanceContent ic = new InstanceContent();
+            ic.add(new File(mURI));
+            Lookup l2 = new AbstractLookup(ic);
+
+
+
+            ProxyLookup pl = new ProxyLookup(new Lookup[] {l1, l2});
+
+            return pl;
+
+        }
+     }

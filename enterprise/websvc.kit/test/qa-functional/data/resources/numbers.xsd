@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://websvc.netbeans.org/qatests/ws/removeNumbers"
+            xmlns:tns="http://websvc.netbeans.org/qatests/ws/removeNumbers"
+            elementFormDefault="qualified">
+    <xsd:complexType name="removeNumbersResponse">
+        <xsd:sequence>
+            <xsd:element name="return" type="xsd:int" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="removeNumbersResponse" type="tns:removeNumbersResponse" />
+    
+    <xsd:complexType name="removeNumbers">
+        <xsd:sequence>
+            <xsd:element name="arg0" type="xsd:int" />
+            <xsd:element name="arg1" type="xsd:int" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="removeNumbers" type="tns:removeNumbers" />
+    
+    <xsd:element name="removeNumbersFault" type="tns:removeNumbersFault" />
+    <xsd:complexType name="removeNumbersFault">
+        <xsd:sequence>
+            <xsd:element name="faultInfo" type="xsd:string" />
+            <xsd:element name="message" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.j2eeserver/4
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/j2ee/deployment/impl/layer.xml
+OpenIDE-Module-Install: org/netbeans/modules/j2ee/deployment/impl/Install.class
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/deployment/impl/Bundle.properties
+OpenIDE-Module-Package-Dependencies: java.lang.instrument[ClassDefinition]

@@ -1,0 +1,4 @@
+MyLib:CLASS:[PUBLIC]:ESCAPED{MyLib}:
+  MyLib:CONSTRUCTOR:[PRIVATE]:ESCAPED{MyLib}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }MyLib.MyLib</font>:
+    fn1:METHOD:[PRIVATE]:ESCAPED{fn1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+    fn2:METHOD:[PRIVATE]:ESCAPED{fn2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:

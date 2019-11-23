@@ -1,0 +1,17 @@
+com
+java
+javax
+org
+protected native java.lang.Object clone() throws java.lang.CloneNotSupportedException
+protected void finalize() throws java.lang.Throwable
+public boolean equals(java.lang.Object obj)
+public final native java.lang.Class getClass()
+public final native void notify()
+public final native void notifyAll()
+public final native void wait(long timeout) throws java.lang.InterruptedException
+public final void wait() throws java.lang.InterruptedException
+public final void wait(long timeout, int nanos) throws java.lang.InterruptedException
+public java.lang.String toString()
+public native int hashCode()
+sun
+sunw

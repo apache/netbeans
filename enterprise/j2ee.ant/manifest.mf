@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.j2ee.ant
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/j2ee/ant/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

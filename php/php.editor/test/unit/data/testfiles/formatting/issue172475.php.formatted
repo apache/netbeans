@@ -1,0 +1,16 @@
+<?php
+
+if ($cond) {
+  echo 1;
+} elseif (true) {
+  echo 1;
+} else {
+  echo 1;
+}
+
+try {
+  echo 1;
+} catch (Exception $exc) {
+  echo $exc->getTraceAsString();
+}
+?>

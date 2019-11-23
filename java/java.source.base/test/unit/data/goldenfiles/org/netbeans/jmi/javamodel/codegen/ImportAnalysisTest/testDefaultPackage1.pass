@@ -1,0 +1,8 @@
+
+
+public class ImportAnalysisDefaultPackage1 {
+    
+    public ImportAnalysisDefaultPackage1() {        ImportAnalysisDefaultPackage2 s;
+
+    }
+}

@@ -1,0 +1,13 @@
+common:
+	includes:
+		- config.child.ini
+
+	parameters:
+		scalar: 1
+		list: [1, 2]
+		force!: [1, 2]
+
+
+production < common:
+	includes:
+		- config.child.php

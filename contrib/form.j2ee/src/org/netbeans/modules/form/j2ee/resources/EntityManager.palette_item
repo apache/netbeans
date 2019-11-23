@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.persistence.EntityManager" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/EntityManager.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/j2ee/resources/EntityManager32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.j2ee.resources.Bundle"
+               display-name-key="NAME_javax-persistence-EntityManager"
+               tooltip-key="HINT_javax-persistence-EntityManager" />
+  <classpath>
+      <resource type="library" name="eclipselink" />
+  </classpath>
+</palette_item>

@@ -1,0 +1,151 @@
+<testresult testFile='nowdoc_mixed_02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='820'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='820' end='821'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='821' end='830'>
+            <text>"Junichi"</text>
+        </token>
+        <token id='T_SEMICOLON' start='830' end='831'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='832' end='836'>
+            <text>$age</text>
+        </token>
+        <token id='T_EQUAL' start='836' end='837'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='837' end='840'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='840' end='841'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='842' end='846'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_NOWDOC' start='847' end='859'>
+            <text>&lt;&lt;&lt;&apos;NOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='859' end='895'>
+            <text>Name: $name&lt;br&gt;\nMy age is: $age&lt;br&gt;\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='895' end='901'>
+            <text>NOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='901' end='902'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='903' end='908'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='908' end='909'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='909' end='914'>
+            <text>"Jun"</text>
+        </token>
+        <token id='T_SEMICOLON' start='914' end='915'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1049' end='1051'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='1052' end='1053'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1054' end='1071'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1071' end='1195'>
+            <text>    This is another nowdoc test.\n    With another line in it. {$test} $test ${test} variable test.\n    test. $object-&gt;field\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1195' end='1208'>
+            <text>\t\tENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='1208' end='1209'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1247' end='1249'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='1250' end='1251'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1252' end='1269'>
+            <text>&lt;&lt;&lt;&apos;ENDOFNOWDOC&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1269' end='1387'>
+            <text>\t\tThis is another nowdoc test.\n\t\tWith another line in it. {$test} $test ${test} variable test.\n\t\ttest. $object-&gt;field\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1387' end='1402'>
+            <text>    ENDOFNOWDOC</text>
+        </token>
+        <token id='T_SEMICOLON' start='1402' end='1403'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1404' end='1404'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1404'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='917' end='979' commentType='singleLine'/>
+            <Comment start='979' end='1049' commentType='singleLine'/>
+            <Comment start='1211' end='1247' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='917' end='979' commentType='singleLine'/>
+            <Comment start='979' end='1049' commentType='singleLine'/>
+            <Comment start='1211' end='1247' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='831'>
+                <Assignment start='815' end='830' operator='EQUAL'>
+                    <Variable start='815' end='820' isDollared='true'>
+                        <Identifier start='816' end='820' name='name'/>
+                    </Variable>
+                    <Scalar start='821' end='830' type='STRING' value='"Junichi"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='832' end='841'>
+                <Assignment start='832' end='840' operator='EQUAL'>
+                    <Variable start='832' end='836' isDollared='true'>
+                        <Identifier start='833' end='836' name='age'/>
+                    </Variable>
+                    <Scalar start='837' end='840' type='INT' value='100'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='842' end='902'>
+                <Scalar start='847' end='901' type='STRING' value='Name: $name&lt;br&gt;\nMy age is: $age&lt;br&gt;\n'/>
+            </EchoStatement>
+            <ExpressionStatement start='903' end='915'>
+                <Assignment start='903' end='914' operator='EQUAL'>
+                    <Variable start='903' end='908' isDollared='true'>
+                        <Identifier start='904' end='908' name='name'/>
+                    </Variable>
+                    <Scalar start='909' end='914' type='STRING' value='"Jun"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1049' end='1209'>
+                <Assignment start='1049' end='1208' operator='EQUAL'>
+                    <Variable start='1049' end='1051' isDollared='true'>
+                        <Identifier start='1050' end='1051' name='x'/>
+                    </Variable>
+                    <Scalar start='1054' end='1208' type='STRING' value='    This is another nowdoc test.\n    With another line in it. {$test} $test ${test} variable test.\n    test. $object-&gt;field\n'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1247' end='1403'>
+                <Assignment start='1247' end='1402' operator='EQUAL'>
+                    <Variable start='1247' end='1249' isDollared='true'>
+                        <Identifier start='1248' end='1249' name='y'/>
+                    </Variable>
+                    <Scalar start='1252' end='1402' type='STRING' value='\t\tThis is another nowdoc test.\n\t\tWith another line in it. {$test} $test ${test} variable test.\n\t\ttest. $object-&gt;field\n'/>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

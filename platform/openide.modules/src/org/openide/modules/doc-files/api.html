@@ -1,0 +1,1334 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<title>Modules API</title>
+<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+</head>
+<body>
+
+<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+
+<h1>Javadoc</h1>
+
+You may want to look at the
+
+Javadoc,
+
+particularly that for the
+
+<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+
+class. Other classes in the package are generally not useful to module
+authors.
+
+<h1>Contents</h1>
+
+<ul>
+
+<li> <a href="#what-are">What Are Modules?</a>
+<ul>
+<li> <a href="#rel-std">Related standards</a>
+</ul>
+
+<li> <a href="#how-to">How to Create a New Module</a>
+<ul>
+<li> <a href="#how-jar">Build a JAR</a>
+<li> <a href="#how-manifest">Writing the manifest</a>
+<li> <a href="#how-main">Using a custom module class</a>
+<ul>
+<li> <a href="#installation-clean">"Installation-clean" modules</a>
+</ul>
+<li> <a href="#how-layer">Using an installation layer</a>
+<li> <a href="#how-vers">Using versioning</a>
+<li> <a href="#how-os-specific">Writing an OS dependent module</a>
+<li> <a href="#how-i18n-branding">Localization and branding support</a>
+</ul>
+
+<li> <a href="#std-sec">Standard Module Sections</a>
+
+<li> <a href="#deploy">Deployment of Modules</a>
+<ul>
+<li> <a href="#enablement">Enablement</a>
+<li> <a href="#related-files">Related Files</a>
+<li> <a href="#deprecation">Deprecation</a>
+<li> <a href="#refactoring">Refactoring</a>
+<li> <a href="#order">Module install order</a>
+<li> <a href="#listing">List of all modules</a>
+<li> <a href="#security">Security</a>
+<li> <a href="#jni">JNI</a>
+</ul>
+
+</ul>
+
+
+<h1>Modules API</h1>
+
+<div class="nonnormative">
+
+<h2><a name="what-are">What are Modules?</a></h2>
+
+<em>Modules</em> permit NetBeans to be extended
+dynamically. All of the NetBeans APIs are designed to be used for purposes
+of implementing modules. Modules may range in complexity from a single
+Java class, properly packaged, to do something elementary such as add
+a menu item to the Edit menu to display the contents of the clipboard;
+to a full-scale integration of a major external application, such as a
+Java profiling suite.
+
+<p>All modules are distributed and installed as JAR files. The basic
+format should be rather familiar; classes constituting the module are
+<a href="#how-jar">archived in the JAR</a>, and special entries in the
+<a href="#how-manifest">manifest file</a> are recognized.
+
+<h3><a name="rel-std">Related Standards</a></h3>
+
+To the greatest extent possible, NetBeans has designed the module
+system to reuse standard technologies when they are sufficient, and to
+follow the style of others when not.
+
+<p>The basic idea for the format of modules is taken from the
+
+<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/extensions/index.html">Java Extension Mechanism</a>.
+
+The basic ideas behind the
+
+<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/versioning/index.html">Package Versioning Specification</a>
+
+is used to <a href="#how-vers">handle dependencies</a> both between
+modules and of modules to the system.
+
+<p>All modules have some set of basic properties that indicate which
+types of features they provide, which Java classes implement these
+features, and what special option settings should be used when
+installing these features. Some of this information is
+listed in the
+
+<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/jar/manifest.html">manifest file</a>
+
+using the customary format, and NetBeans-specific attributes. The
+
+<a href="http://java.sun.com/beans/glasgow/jaf.html">Java Activation Framework</a>,
+
+as well as JDK-internal features such as support for executable JAR
+files, was used as a model for how to specify the useful contents of a
+JAR in a data-driven fashion: many modules will need no special
+installation code other than attributes in the manifest, and an XML layer
+giving additional more specific deployment information.
+
+</div>
+
+<h2><a name="how-to">How to Create a New Module</a></h2>
+
+<p>For basic cases, you should need to do very little to create a module
+besides writing the basic source code.</p>
+
+<h3><a name="how-jar">Build a JAR</a></h3>
+
+<p>All module implementation classes must reside in a JAR file. If you
+want to split up a large application into several pieces, perhaps
+so as to make independent upgrades possible, you should do so by
+creating multiple modules and relating them using <a
+href="#how-vers">versioning</a>.</p>
+
+<h3><a name="how-manifest">Writing the manifest</a></h3>
+
+A module is recognized as such by NetBeans, by virtue of its having
+a special magic tag in the global section of the manifest:
+<code>OpenIDE-Module</code>. Its value should be an arbitrary
+identifier (with a format similar to that of a Java package name)
+identifying the module for purposes of upgrades and
+dependencies. You are encouraged (but not required) to use as this
+tag the name of a Java package containing the principal classes for
+the module; this ensures that there will not be conflicts between
+modules produced by different developers or institutions, provided
+that you follow the JavaSoft recommendations on naming packages
+according to an Internet domain name you control. See the section
+on <a href="#how-vers">versioning</a> for details on what this tag
+is used for.
+
+<p>There are a few other global tags which are optional but encouraged:
+
+<dl>
+
+<dt><code>OpenIDE-Module-Name</code>
+
+<dd>Gives a human-presentable display name for the module. The name
+may be localized by adding additional tags for each locale,
+e.g. <code>OpenIDE-Module-Name_fr</code>.
+
+<dt><code>OpenIDE-Module-Short-Description</code>
+
+<dd>A short description of what the module does (about one sentence, like
+a tool tip). May be localized as for the display name.
+
+<dt><code>OpenIDE-Module-Long-Description</code>
+
+<dd>A longer description of what the module does (roughly
+paragraph-length). May be localized as for the display name.
+
+<dt><code>OpenIDE-Module-Display-Category</code>
+
+<dd>A phrase giving a category for the module. Modules with the same category may
+be visually grouped together in various parts of the UI.
+May be localized as for the display name.
+
+<dt><code>OpenIDE-Module-Install</code>
+
+<dd>The name of a <a href="#how-main">custom module class</a>.
+
+<dt><code>OpenIDE-Module-Layer</code>
+
+<dd>The name of an <a href="#how-layer">installation layer</a>.
+
+<dt>Various versioning- and dependency-specific tags
+
+<dd>Please see the section on <a href="#how-vers">versioning</a>
+for details on these.
+
+<dt><code>OpenIDE-Module-Module-Dependency-Message</code> and
+    <code>OpenIDE-Module-Package-Dependency-Message</code>
+
+<dd>Localizable pleasant messages to display to a user in case
+a module or package dependency fails. In some cases it may be
+quite normal for a dependency to fail and it is desirable to
+provide a specific and helpful message to the user explaining
+where to get the required dependency or why the module depending
+on it is not needed by this user. May be localized as for the
+display name. <em>Since 1.26</em>
+
+<dt><code>OpenIDE-Module-Requires-Message</code>
+
+<dd>As above, localizable pleasant message to display when a required
+token is not found. <em>Since 2.3</em>
+
+</dl>
+
+The presentation-oriented tags (display name and category, short and
+long description) may be in HTML if you prefer; this should be done in
+the standard Swing fashion, by beginning the text with the magic
+string <SAMP>&lt;html&gt;</SAMP>.
+
+<p><em>Since 1.24:</em>
+A more flexible way to provide human-readable information is to declare
+the attribute <code>OpenIDE-Module-Localizing-Bundle</code>. Its value should
+be the resource path to the (base locale of) a bundle file providing localizable
+attributes for the module (display name, category, short and long description).
+The bundle file may have localized variants as usual, and the keys should be the
+same as the desired manifest attribute names, e.g. <code>OpenIDE-Module-Name</code>.
+If it is necessary to localize an attribute from a section (currently only filesystem
+sections with their <code>Display-Name</code> attribute), you may again place these
+in the bundle, where the key will be prefixed by the section name and a slash, e.g.
+<samp>org/foo/MyFileSystem.class/Display-Name</samp>.
+
+<p>All other tags are bound to a particular <a href="#std-sec">module
+section</a>. Naturally you may use other standard manifest attributes.</p>
+
+<div class="nonnormative">
+
+<p>In summary, here is an example manifest file that could be included
+with the JAR tool's <code>-m</code> option:
+
+<pre>
+Manifest-Version: 1.0
+OpenIDE-Module: com.modulemakers.clip_disp/2
+OpenIDE-Module-Specification-Version: 2.0.1
+OpenIDE-Module-Implementation-Version: 2.0-beta-rewrite
+OpenIDE-Module-Build-Version: 2003-12-31 00:23 cron@buildhost.mycorp.com
+OpenIDE-Module-Name: Clipboard Displayer
+OpenIDE-Module-Name_cs: Prohlizec schranky
+OpenIDE-Module-Install: com/modulemakers/clip_disp/Installer.class
+OpenIDE-Module-Layer: com/modulemakers/clip_disp/Layer.xml
+X-Comment-1: I am a comment (just a deliberately meaningless
+X-Comment-2: header) - "Sealed" is a standard manifest attribute.
+Sealed: true
+
+Name: com/modulemakers/clip_disp/DisplayClipboardAction.class
+OpenIDE-Module-Class: Action
+
+</pre>
+
+Module authors are strongly encouraged to use the
+module development support in the NetBeans IDE
+which among other advantages, provides interactive parsing of
+manifests that can help the beginning API developer immediately see
+how NetBeans will parse his manifest, including possible parse errors.
+
+<p>If you have troubles with a manifest, check to make sure you have
+the suggested extra blank line at the end. Some JDKs may have trouble
+parsing it otherwise.
+
+</div>
+
+<h3><a name="how-main">Using a custom module class</a></h3>
+
+With the <code>OpenIDE-Module-Install</code> attribute, you may specify
+a custom class which will handle any complex aspects of the module's
+installation (or uninstallation). This class is only necessary to
+write if the <a href="#std-sec">standard module sections</a> and
+<a href="#how-layer">layers</a> do not
+cover everything you need to do. Even if you do write such a class,
+standard sections and layers may still be used for any part of the module's
+integration which is conventional - the main class need
+only handle the exceptional parts.
+
+<p>To use a main install class, just extend the
+
+<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+
+base class. Your class must be able to be
+
+<a href="@JDK@/java/beans/Beans.html#instantiate-java.lang.ClassLoader-java.lang.String-">instantiated as a JavaBean</a>.
+
+There are several methods which you may override, and may do anything
+which is required to make the module cleanly enter and exit NetBeans.</p>
+
+<div class="nonnormative">
+
+<p>For example:
+
+<pre>
+package com.modulemakers.clip_disp;
+import org.openide.modules.ModuleInstall;
+import org.openide.filesystems.FileUtil;
+import java.net.*;
+
+public class ModuleHandler extends <a href="../ModuleInstall.html">ModuleInstall</a> {
+  public void <a href="../ModuleInstall.html#installed--">installed</a>() {
+    // This module has been installed for the first time! Notify authors.
+    HttpURLConnection conn = (HttpURLConnection)
+      (new URL ("http://www.modulemakers.com/clip_disp/installed.cgi").openConnection ());
+    conn.getResponseCode ();
+    conn.disconnect ();
+    // Handle setup within this session too:
+    restored ();
+  }
+
+  // Nothing special required here.
+  // public void <a href="../ModuleInstall.html#restored--">restored</a>() {
+  // }
+
+  // Do not need to do anything special on uninstall.
+  // Tools action will be removed automatically.
+  // public void <a href="../ModuleInstall.html#uninstalled--">uninstalled</a>() {
+  // }
+
+  public boolean <a href="../ModuleInstall.html#closing--">closing</a>() {
+    // Ask the user to save any open, modified clipboard contents.
+    // If the user selects "Cancel" on one of these dialogs, don't exit yet!
+    return DisplayClipboardAction.askAboutExiting ();
+  }
+}
+</pre>
+
+</div>
+
+<p>The <code>installed</code> handler may do more or less what it
+wishes - it will be called in a running NetBeans instance. The same applies to
+<code>uninstalled</code> and <code>closing</code>. However,
+<code>restored</code> is more delicate in that it may be called
+during earlier phases of NetBeans initialization. Therefore, it should
+not use presentation-oriented features of NetBeans, such as the
+Explorer or Window System APIs. However, the other APIs are
+acceptable to use in <code>restored</code>, including
+<code>DialogDisplayer</code>.
+
+<p>The
+
+<a href="../ModuleInstall.html#updated-int-java.lang.String-"><code>ModuleInstall.updated(...)</code></a>
+
+method will be called just once when
+a module is updated to a new version - when the new version is loaded
+into NetBeans for the first time (in a new session), the method is called
+and the previous version number is accessible. Neither <code>installed</code>
+nor <code>uninstalled</code> will be (automatically) called in this case.
+It is a module author's responsibility to make sure that new versions of a
+module are capable of "cleaning up" obsoleted installations created by older
+versions, as far back as a user is likely to be directly upgrading.
+
+<p>In some cases, a module relies on some external resource to be present
+in order for it to be used. For example, an external application may need
+to be installed in order for it to do anything. Or it may require a valid
+license key. In such cases, the
+
+<a href="../ModuleInstall.html#validate--"><code>ModuleInstall.validate()</code></a>
+
+method may be overridden to check for this external resource and throw
+a (preferably politely localized) <code>IllegalStateException</code>
+if something is wrong. Throwing this exception will cancel the module installation
+(or restoration) cleanly. Note that such an installer should not expect
+anything related to the module to already be loaded when this method is
+called, as it may be done when deciding whether to even begin loading.</p>
+
+<div class="nonnormative">
+
+<h4><a name="installation-clean">"Installation-clean" modules</a></h4>
+
+Since NetBeans can better manage modules when their resources are
+declared to exist, rather than procedurally installed, it is desirable
+to use declarative APIs whenever possible. Consider the following
+definition of an "installation-clean module":
+
+<ol>
+
+<li>Either the module has no specified <code>ModuleInstall</code>; or
+
+<li>It does have a <code>ModuleInstall</code> but this installer:
+
+<ol>
+
+<li>Does nothing of consequence during initialization of the
+<code>ModuleInstall</code> object (static or instance fields with
+initializers or initializer blocks or the <code>initialize</code>
+method).
+
+<li>Does not override <code>installed</code> nor <code>updated</code>
+(these will then just call <code>restored</code>).
+
+<li>May override <code>uninstalled</code> but only to undo the effects
+of <code>restored</code> or other changes made by the module
+while running. May override <code>closing</code> and/or
+<code>close</code> but only to undo the effects of changes made by the
+module while running.
+
+<li>May override <code>restored</code> and/or <code>validate</code>.
+
+</ol>
+
+</ol>
+
+<p>Additionally it is recommended not to use <code>restored</code> to
+add an object to the running NetBeans instance where use of the module layer would
+suffice, nor to modify persistent state in <code>restored</code> or
+<code>validate</code> that might affect a future call to the same
+method. When possible it is best not to have a
+<code>ModuleInstall</code> at all.
+
+<p>Furthermore, the following practices should be avoided wherever
+possible in order to simplify installation of the module from Auto
+Update and via "ad-hoc" addition of the module JAR by a user (note
+that mentioning options here does <em>not</em> imply that they are
+officially supported by the APIs or even unofficially possible at any
+particular time):
+
+<ol>
+
+<li>Including any libraries in the <samp>lib/ext/</samp> directory, as
+these cannot be added to or reloaded while NetBeans is running.
+
+<li>Using the <samp>docs/</samp> directory as a place to store module
+JavaHelp rather than inside the JAR. (<code>@HelpSetRegistration</code>
+makes this obsolete anyway.)
+
+<li>Using <code>Class-Path</code> from within the module JAR or its
+extensions to point to resources which are not in or below the
+directory containing the referring JAR (i.e. inclusion of
+<samp>../</samp> or absolute paths).
+
+<li>Including any files in the NetBeans installation other than the module
+JAR in the <samp>modules/</samp> directory and any extensions declared
+directly or indirectly via <code>Class-Path</code> beneath the
+<samp>modules/</samp> directory (for example in
+<samp>modules/ext/</samp>) and any locale variants of the above JARs;
+except insofar as the presence of such files does not in and of itself
+change the functionality of NetBeans and is not required for the module
+to operate (for example mounts of documentation ZIPs declared in the
+layer); even then this is discouraged if there is an alternative as it
+complicates ad-hoc module installation though Auto Update may be fine.
+
+</ol>
+
+</div>
+
+<h3><a name="how-layer">Using an installation layer</a></h3>
+
+<p>You may specify the global tag
+<code>OpenIDE-Module-Layer</code> in addition to or instead of a
+module main class; as a rule, use a layer for a particular task in
+preference to a module installer, if you can. The tag value should
+point to an XML file inside the module which is in the format
+understood by <code>XMLFileSystem</code>.
+
+Its contents specify some files that the module will add to the
+
+<a href="@org-openide-filesystems@/org/openide/filesystems/Repository.html#getDefaultFileSystem--">system filesystem</a>
+
+controlling much of NetBeans' configuration. This filesystem is composed of many read-only XML layer filesystems
+as well as a writable layer corresponding to the <code>config</code> subdirectory of the user directory.</p>
+
+<p>For many APIs, there is no need to write a layer explicitly; layer-generating
+"registration" annotations do everything you need.</p>
+
+<p>The XML format is relatively simple. There is an
+
+<a href="http://www.netbeans.org/dtds/filesystem-1_1.dtd">online DTD</a>
+
+for it, but descriptively: the document element is
+<samp>&lt;filesystem&gt;</samp> and corresponds to the root folder;
+subfolders are represented with the <samp>&lt;folder&gt;</samp>
+element; and files within folders with the <samp>&lt;file&gt;</samp>
+element. Files and folders must have names, with the <samp>name</samp>
+attribute. Files need not specify contents, in which case they will be
+zero-length; or they may specify contents loaded from some other
+resource (<samp>url</samp> attribute, treated as relative to the base
+URL of the document itself); or for small textual contents, the
+contents may be included inline inside the element, typically using
+the <code>CDATA</code> syntax, though this usage is deprecated.
+Attributes may be specified on folders
+or files as empty <samp>&lt;attr&gt;</samp> elements; the name must be
+supplied, and the value in one of several formats: primitive types,
+strings, URLs, arbitrary serialized objects in hexadecimal, or
+computed on the fly by calling the default constructor of some class,
+or a static method (the method may be passed the file object in
+question and/or the attribute name, if you wish).</p>
+
+<div class="nonnormative">
+
+<p>The primary advantage of using layers is that they are declarative
+rather than procedural, so you can install many kinds of extensions to
+NetBeans' behavior without any Java code, only XML. A related
+advantage is that unlike <code>ModuleInstall</code>, there is no need
+for multiple kinds of logic for module installation, restoration,
+uninstallation, and upgrading; the "files" added by the layer are not
+stored to disk and are loaded by NetBeans in every session from the
+XML, so when the module is uninstalled or upgraded its associated
+files are correctly removed or changed, respectively, without any
+extra work. (If the user customizes the files, however, their
+customizations <em>are</em> stored to disk, and thus form a permanent
+"patch" against the baseline configuration provided by the module.)
+Not all parts of NetBeans' configuration can be customized using files on
+the system filesystem and thus by layers, but many things can.</p>
+
+<p>Some common things that layers tend to be used for:</p>
+
+<ol>
+
+<li>Install
+
+<a href="@org-openide-actions@/org/openide/actions/doc-files/api.html#adv-install">actions</a>
+
+into NetBeans' global menus, toolbars, or keymap.</li>
+
+<li>Create templates in the folder <samp>Templates/</samp>.</li>
+
+<li>Other things such as bookmarks, Component Palette beans, Welcome
+panel buttons, and so on - according to the
+structure
+of the system filesystem.</li>
+
+<li>Most generally, to install arbitrary
+<a href="@org-openide-util@/org/openide/util/doc-files/api.html#instance-folders">services</a>
+into the system.</li>
+
+</ol>
+
+</div>
+
+
+<p>By default files listed in XML layers are not ordered in any
+particular way, just as files found on disk would not have a
+particular order. For purposes of some kinds of installation, it is
+desirable to order data objects in data folders in a particular way -
+for example, menus are
+
+<a href="@org-openide-actions@/org/openide/actions/doc-files/api.html#install-menu">built from their menu items</a>
+
+in the order the instance-bearing data objects occur in the data
+folder. The call
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html#setOrder-org.openide.loaders.DataObject:A-"><code>DataFolder.setOrder(DataObject[])</code></a>
+
+suffices to arbitrarily change folder order, but usually it is
+desirable to create the proper order declaratively in the XML. For
+this reason, <code>DataFolder</code> understands special attributes
+(set on the files in the folder) which order the objects in the folder.
+Specifically: if there are data objects A and B in the folder,
+represented by
+
+<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--">primary files</a>
+
+<samp>afile</samp> and <samp>bfile</samp>,
+and <samp>afile</samp> has an attribute named <code>position</code> whose numeric value is less
+than the corresponding attribute on <samp>bfile</samp>, then the folder will attempt to
+place A before B in its ordering. For example, the XML:
+
+<pre>
+&lt;<span class="function-name">folder</span> <span class="variable-name">name</span>=<span class="string">"SomeFolder"</span>&gt;
+    &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"first.txt"</span> <span class="variable-name">url</span>=<span class="string">"first.txt"</span>&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"position"</span> <span class="variable-name">intvalue</span>=<span class="string">"100"</span>/&gt;
+    &lt;/<span class="function-name">file</span>&gt;
+    &lt;<span class="function-name">file</span> <span class="variable-name">name</span>=<span class="string">"second.txt"</span> <span class="variable-name">url</span>=<span class="string">"second.txt"</span>&gt;
+        &lt;<span class="function-name">attr</span> <span class="variable-name">name</span>=<span class="string">"position"</span> <span class="variable-name">intvalue</span>=<span class="string">"200"</span>/&gt;
+    &lt;/<span class="function-name">file</span>&gt;
+&lt;/<span class="function-name">folder</span>&gt;
+</pre>
+
+will cause NetBeans to try to keep <samp>first.txt</samp> before
+<samp>second.txt</samp>. Things to remember:
+
+<ol>
+
+<li>If the user reorders the folder manually or
+<code>DataFolder.setOrder(DataObject[])</code> is called, the explicit
+order overrides the existing positions. Subsequently added
+constraints might have an effect, however.
+
+<li>Only the names of <em>primary</em> files from data objects have
+any bearing on the ordering.
+
+</ol>
+
+<p>There is also an older, now-deprecated system based on relative ordering attributes.</p>
+
+<p>More details are available in <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getOrder-java.util.Collection-boolean-"><code>FileUtil.getOrder</code></a>.</p>
+
+<p>The resource path pointing to the layer is automatically localized
+by NetBeans every time the module is installed or restored; if there
+are locale-specific variants, they are <em>merged</em> with the main
+layer. More-specific variants can simply add files to the set
+installed by the module; however they take precedence over the
+less-specific variants, and thus can replace files, or even remove
+(suppress) them, using <samp>*_hidden</samp> masks as used by
+
+<a href="@org-openide-filesystems@/org/openide/filesystems/MultiFileSystem.html"><code>MultiFileSystem</code></a>.
+
+In fact, if module A depends on module B, then A's layer(s) will take
+precedence over B's layers, and it may replace or remove files
+installed by B. In the same way, any module may replace or remove
+files installed by the core.
+
+<h4>Display-oriented file attributes</h4>
+
+<p>NetBeans recognizes several special file attributes, typically set in layers, which can control UI.
+For example, the labels of menus created from folders beneath <samp>Menu/</samp>
+are derived from the "localized display name" of the layer folder, when defined.
+See <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#getDecorator--"><code>FileSystem.getDecorator()</code></a> 
+(formerly <code>getStatus()</code>)for details.</p>
+
+<h4>Reverting user's modifications</h4>
+
+<p>When a user makes any changes in the installation layer - usually through
+the user interface by changing the default values for some application options
+or any other customizations - it may be desirable to revert these changes back
+to their defaults as defined in XML layers. There changes are stored in user's 
+working dir.</p>
+<p>Since version 7.2 the <code>FileObject</code> supports a new attribute 
+<code>"removeWritable"</code> returning an instance of
+<code>Callable</code> which removes the local writable version of the
+given <code>FileObject</code> thus reverting the folder or file to
+its initial state as defined in XML layers. Please note that is <strong>*not*</strong>
+possible to reset <code>FileObject</code>'s attributes.
+</p>
+
+<h3><a name="how-vers">Using versioning</a></h3>
+
+Module <em>versioning</em> provides a way for modules to specify
+which module they are (i.e. that one JAR is an upgrade from
+another); which version they are; whether they have introduced
+incompatible API changes since a previous version; and
+(importantly) whether they depend on other modules or system
+features, and if so how. While very simple modules may not require
+special versioning support, this system should be used for any
+module published on a general release schedule, or which it is
+expected other modules may want to make use of.
+
+<p>Modules can do three things with versioning:
+
+<ol>
+
+<li>Specify what they are. This is done by the special
+<code>OpenIDE-Module</code> tag, whose value should be a unique
+(programmatic) identifier for the module, as mentioned above. Not
+be confused with the display name, which is free-form and may be
+changed at will, this code name should not be changed
+arbitrarily - pick a name and stick with it throughout module
+releases.
+
+<li>Specify which version they are. In line with the Java
+Versioning Specification, modules can indicate two pieces of
+version information about themselves using the
+<code>OpenIDE-Module-Specification-Version</code> and the
+<code>OpenIDE-Module-Implementation-Version</code> tags.
+Modules are also permitted to use <code>OpenIDE-Module-Build-Version</code> to
+give information about when or by whom they were physically built, in case there
+is more specialized semantics given to the implementation version.
+
+<li>Specify which features they depend on. Again, this is done
+using the Versioning Specification - modules can request general or
+specific versions of other modules
+(<code>OpenIDE-Module-Module-Dependencies</code>), Java packages
+(<code>OpenIDE-Module-Package-Dependencies</code>), or Java itself
+(<code>OpenIDE-Module-Java-Dependencies</code>).
+
+<p>The tags
+<code>OpenIDE-Module-Provides</code> and <code>OpenIDE-Module-Requires</code>
+can also be used to specify dependencies between modules without naming
+the exact module to depend on. A module may <em>provide</em> one or more
+<em>tokens</em>. These are strings of conventional meaning, in the format of a Java
+package or class name - perhaps taken to be the name of a class which will
+be supplied to the lookup system, though there could be other meanings. A module
+may also <em>require</em> one or more tokens. A module which requires some tokens
+may only be enabled by the system if for each such token, there is at least one other
+module which provides that token and is already enabled. 
+
+<a name="7.1"></a>
+Since version 7.1 there is also support for <code>OpenIDE-Module-Needs</code>
+which is a weaker version of requires as it does not impose any restriction on
+the ordering of module. The <code>OpenIDE-Module-Needs</code> is useful for
+modules that define some API and require an implementation of it. Just 
+specify the <q>need</q> for an implementation and make other modules depend
+on your module and <code>OpenIDE-Module-Provides</code> the implementation token.
+Moreover there is also <code>OpenIDE-Module-Recommends</code> which is even
+weaker version as it creates a conditional dependency - e.g. enables the module
+providing the token only if it is available, however if it is not, no dependency
+is broken.
+</ol>
+
+At the heart of all these tags are the conventions used in the 
+
+<a href="http://java.sun.com/javase/6/docs/technotes/guides/versioning/">Package Versioning Specification</a>.
+
+While this documentation should be referred
+to for the full details and justification of this system, the basic
+idea is that features (modules) have two significant version identifiers: a
+<em>specification</em> version, in Dewey-decimal format
+(e.g. <code>1.2.1</code>), and an <em>implementation</em> version,
+which is some free-form text. Specification versions may be
+incremented to indicate compatible API extensions, in which case
+the check to make sure that the feature requested is available may
+be done using a (lexicographical) compare on the Dewey-decimal
+numbers (e.g. <code>1.0</code> &lt; <code>1.0.1</code> &lt;
+<code>1.1</code>). Implementation versions may be requested
+according to an exact match only. Thus, specification versions are
+generally used when you depend on some general and specified
+behavior of another feature; implementation versions are used to
+tie builds of different features together closely, as when you
+maintain and release all the features yourself, and wish to
+distribute them in a well-tested unit.
+
+<p>(You may also specify a <em>build version</em> in your manifest,
+typically giving a date. This is used only for diagnostic purposes and
+is otherwise ignored by the module infrastructure.)</p>
+
+<p>So, modules may specify either or both kinds of versions in
+their manifest, and correspondingly request such versions from
+other modules. (You may have at most one dependency between any single pair of modules, however.)
+The Versioning Specification provides similar
+numbering for (some, but not all) Java packages, as well as the
+core Java Platform APIs and Virtual Machine Specification.
+NetBeans also has such versions which may be used to request a
+general level of Open API support (using specification versions) or
+a particular NetBeans build (using implementation versions).
+
+<p>Since the Versioning Specification does not address incompatible
+changes (those which would break existing code), but these are in
+practice <em>occasionally</em> necessary (however painful),
+modules may provide a separate integral number
+giving the <em>incompatible release version</em>. You may only
+request a particular release version, not subsequent ones, and you
+<em>must</em> specify the release version if there is one
+when giving <em>any module dependency</em>. It only differs
+from a complete change of the feature in that the module installer
+tool may prompt the user to make a "major upgrade" if a new release
+version of a module is available.
+
+<p><em>Since 2.3</em> a module dependency may also use a <em>range</em>
+of release versions. The syntax is that in place of a single major release
+version, you give a minimum then maximum version separated by dashes:
+
+<pre>
+OpenIDE-Module-Module-Dependencies: base.module/1-2 > 1.0
+</pre>
+
+<p>where the base module might either have the minimum major release
+version (and the given specification version or later, if that is also
+requested), or other major release versions up to the maximum (in
+which case the specification version is irrelevant). You may not ask
+for an implementation version with this syntax.
+
+<p>To use all of these tags once you understand them is not too
+hard. First of all, feature names: a module is named according to
+the <code>OpenIDE-Module</code> tag, which should look like a Java
+package name, but may be followed by a slash and release number
+(e.g. <code>com.mycom.mymodule/3</code>);
+Java packages are just named by the package name; the Java Platform
+APIs are named by <code>Java</code>; and the Java Virtual Machine
+by <code>VM</code>.
+
+<p>Now, a module may list its own specification and/or
+implementation versions using the tags above. To specify a
+dependency on other features, it may use some or all of the four
+dependency tags. The value of each will be a comma-separated list
+of dependencies of that general type, each of which can be of the
+form:
+
+<dl>
+
+<dd><b>FEATURENAME</b>
+
+<dt>Just requests that the feature be present, not any particular
+version. Useful for modules and Java packages (usually, Java
+standard extensions) that need to be installed, but that is all.
+This style is also used for requiring tokens, which cannot have versions.
+
+<dd><b>FEATURENAME</b> <code>&gt;</code> <b>SPECVERSION</b>
+
+<dt>Requests that the feature be present, that it state a
+specification version, and that this version be greater than <strong>or
+equal to</strong> the requested version. Note that you may not request
+an exact specification version. This is the preferred form for module
+dependencies.
+
+<p>Remember, if requesting a dependency on a module which has a
+release number, you <em>must</em> give that release number as part of
+the feature name, whether or not you also ask for a specification
+version.
+
+<dd><b>FEATURENAME</b> <code>=</code> <b>IMPLVERSION</b>
+
+<dt>Requests that the feature be present, that it state an
+<em>implementation</em> version, and that this version exactly match the
+requested one. Note that you may not request a comparison on implementation
+versions, as they are generally non-numeric and not comparable.
+
+</dl>
+
+<div class="nonnormative">
+
+<p>In summary, here is an (unlikely) example that specifies and
+requests all sorts of versions:</p>
+
+<pre>
+OpenIDE-Module: com.mycom.mymodule/1
+OpenIDE-Module-Specification-Version: 1.0.1
+OpenIDE-Module-Implementation-Version: 1.0-release-g
+OpenIDE-Module-Module-Dependencies:
+ com.mycom.mysistermodule/1 = 1.0-release-g,
+ com.othercom.anothermodule > 2.1,
+ org.netbeans.modules.applet/1 > 1.0
+OpenIDE-Module-Package-Dependencies: javax.television > 0.9
+OpenIDE-Module-Java-Dependencies: Java = 1.2.1b4, VM > 1.0
+OpenIDE-Module-Provides: javax.television.TunerProvider, javax.television.RemoteControl
+OpenIDE-Module-Requires: org.netbeans.javahelp.api.Help
+</pre>
+
+</div>
+
+<p>There is further special treatment for handling of package
+dependencies for several reasons:
+
+<ol>
+
+  <li>In practice, the Java Versioning Specification is not all that
+      widely followed, and many needed extensions will not list this
+      information in their manifest.
+
+  <li>Class loaders only define packages when the first class from that
+      package is actually loaded. This makes it more difficult to verify
+      whether a package is really there or not.
+
+  <li>The standard manifest attribute <code>Class-Path</code> must be
+      recognized and used; typically this attribute is used to actually add
+      extensions to the module classloader, while the Modules API attributes
+      are used to ensure that specific versions are available.
+
+</ol>
+
+<p>You may specify a sample class name in square brackets immediately
+after the package name (or indeed instead of it). Giving a class name
+together with a package name requests that NetBeans first try to load
+that class (it must be able to, so choose a class in the extension you
+know will be there); then the versioning information is checked. (If
+the sample class is simply in the desired package, you may omit the
+package qualification as a shortcut.) This
+addresses the second problem. Giving just a class name in square
+brackets with no preceding package name indicates that NetBeans should
+only ensure that the named class is loadable, bypassing the Versioning
+specification mechanisms. This addresses the first problem.</p>
+
+<div class="nonnormative">
+
+<p>Here then is a sample manifest which depends on an extension called
+again <code>javax.television</code>, where it is known that a class
+<code>javax.television.TunerProvider</code> is part of the package.
+The extension is stored in <samp>modules/ext/television.jar</samp>
+relative to the cluster directory:
+
+<pre>
+OpenIDE-Module: com.mycom.mymodule/1
+OpenIDE-Module-Package-Dependencies: javax.television[TunerProvider] > 0.9
+Class-Path: ext/television.jar
+</pre>
+
+<p>Where can you get the version information to depend upon?
+
+<ol>
+
+<li>For installed modules, this information is listed in the
+module's node in the Modules area under Session Settings.
+This includes information about provided tokens.
+
+<li>For packages, use the Java
+
+<a href="@JDK@/java/lang/Package.html"><code>Package</code></a>
+
+class, or examine the manifest of the JAR you depend upon.
+
+<li>For the Java platform, use the system properties
+<code>java.specification.version</code> and
+<code>java.version</code>; for the VM,
+<code>java.vm.specification.version</code> and
+<code>java.vm.version</code>.
+
+<li>For NetBeans, this information is printed to the console during
+start-up, and also appears in <code>var/log/messages.log</code>.
+
+</ol>
+
+</div>
+
+<p><em>Important!</em> If your module has compile-time references
+to classes in another module, you <em>must</em> specify a
+direct dependency on that module using <code>OpenIDE-Module-Module-Dependencies</code>.
+This ensures that the modules will be
+installed in the correct order; otherwise a
+<code>NoClassDefFoundError</code> or similar problem could result.
+
+<p><em>Since 2.19</em> modules which provide Java-level APIs can
+specify that only certain packages in the module form part of the
+public API and should be accessible to other modules depending on
+that module. The tag <code>OpenIDE-Module-Public-Packages</code>
+is optional; if not present, <em>all</em> packages are considered
+fair game. If present, it gives a list of package names to export
+to other modules, for example:</p>
+<pre>
+OpenIDE-Module-Public-Packages: org.netbeans.api.foo.*
+</pre>
+<p>indicates that only classes (and resources) in the package
+<code>org.netbeans.api.foo</code> should be available to client
+modules. Attempts to use classes from other packages will fail,
+for example with a <code>NoClassDefFoundError</code>.</p>
+
+<p>More than one package can be given; separate them with
+commas or spaces. A package name may end in <samp>.**</samp> rather
+than <samp>.*</samp> to indicate that any subpackages are also exported,
+rather than just the package itself. The special value <samp>-</samp>
+(a single dash) indicates that <em>no</em> packages are to be exported.
+(The module might still provide a non-Java-level API, for example by
+defining and handling a custom XML DTD.)
+"Private" classes and resources
+may still be accessed using reflection from the system classloader,
+just not from a module classloader.</p>
+
+<a name="friend"></a>
+<p>Additionally, sometimes a module with an API in public packages wishes to
+provide access only to certain "friend" modules. This is
+possible if the module declares public packages together with a list
+of code base names of "friend" modules that can access them:</p>
+<pre>
+OpenIDE-Module-Friends: org.foo, org.boo
+</pre>
+<p>Only enumerated modules can access the public packages;
+access from others is forbidden.</p>
+
+<p>Additionally, sometimes a module wishes to get unrestricted access
+to non-public packages of an API module. This is discouraged, but
+possible if such module declares a <em>direct</em> dependency on the
+API module using an implementation version dependency - this kind of
+dependency indicates that the client module is prepared to track every
+idiosyncrasy of the API module, and knows how to safely use undocumented
+classes, as if both modules formed part of the same code base.</p>
+
+<p class="nonnormative">Confused by all these restrictions on classloading? See the
+
+<a href="classpath.html">Class Path</a>
+
+document which gives a fuller, more informal explanation.</p>
+
+<h3><a name="how-os-specific">Writing an OS dependent module</a></h3>
+
+<em>Since 4.44</em> a module can request to be enabled only on certain class
+of an operating system 
+(see issue <a href="http://www.netbeans.org/issues/show_bug.cgi?id=46833">46833</a>).
+This is done by requesting a special token to be present and the system makes sure that
+these tokens are enabled only when <em>NetBeans</em> run on requested class of OS.
+<p>
+The tokens supported in version 4.44 are:
+<pre>
+OpenIDE-Module-Requires: org.openide.modules.os.Windows
+OpenIDE-Module-Requires: org.openide.modules.os.Unix
+OpenIDE-Module-Requires: org.openide.modules.os.MacOSX
+</pre>
+In version 6.3 additional tokens have been added:
+<pre>
+OpenIDE-Module-Requires: org.openide.modules.os.OS2
+OpenIDE-Module-Requires: org.openide.modules.os.PlainUnix    
+</pre>
+Version 7.3 further added:
+<pre>
+OpenIDE-Module-Requires: org.openide.modules.os.Linux
+OpenIDE-Module-Requires: org.openide.modules.os.Solaris
+</pre>
+
+<p class="nonnormative">
+Please note, that Mac OS X is in fact also Unix, so requesting Unix also
+enables your module on Mac OS X. If you want <q>all unix types but Mac OS X</q>
+you want to request PlainUnix token.
+</p>
+
+<p class="nonnormative">
+So if one wants a module to be automatically enabled on Mac OS X and silently 
+disabled on other platforms the best way is to create an eager module which 
+requests the <code>MacOSX</code> token and the module system takes care of 
+enabling it only on Mac OS X (as is the case of the NetBeans
+applemenu module).
+</p>
+
+<h3><a name="how-i18n-branding">Localization and branding support</a></h3>
+
+<p>
+    Existing <a href="i18n-branding.html">Internationalization, Localization, and Branding</a>
+    documentation describes how IDE and platform is localized and general principles are 
+    valid for all modules.
+</p>
+
+
+<h2><a name="std-sec">Standard Module Sections</a></h2>
+
+<p>Formerly some items in NetBeans were installed via JAR manifest sections using
+the <code>OpenIDE-Module-Class</code> attribute. All such registrations are now
+deprecated, generally replaced with layer-based registrations.</p>
+
+<h2><a name="deploy">Deployment of Modules</a></h2>
+
+<p>This section describes how a module may be deployed to a user's NetBeans instance.</p>
+
+<h3><a name="enablement">Enablement</a></h3>
+
+<p>
+    The standard module system permits modules to be in several states, controlled
+    by <a href="#listing">external configuration</a>:
+</p>
+
+<ul>
+    <li>Unknown. Either the module is not present at all, or the JAR is present
+        but its config file is missing or masked.
+    <li>Disabled (regular). The module is present and known but not loaded.
+    <li>Enabled (regular). The module is present and loaded.
+    <li>Autoload. The module will be enabled if and only if some regular enabled
+        module requires it as a dependency (perhaps indirectly).
+    <li>Eager. The module will be enabled if and only if all of its dependencies
+        can be satisfied without enabling any additional regular modules.
+</ul>
+
+<div class="nonnormative">
+    <p>
+        Regular modules are used when their functionality is somehow visible just by
+        virtue of being enabled - typically because they make layer registrations.
+        Since this functionality might or might not be wanted it is important for the
+        user or deployer to retain control over the enablement status.
+    </p>
+    <p>
+        Autoload modules are used for libraries. If there is no "client" of the
+        library, there is no purpose in loading its JAR at all. Only when some
+        regular module requires it (directly, via tokens, etc.) will it be loaded.
+    </p>
+    <p>
+        Eager modules are often used for "bridges" between otherwise independent
+        pieces of functionality, represented as regular modules. If both of those
+        modules are enabled, the eager bridge will be as well, integrating them
+        using some optional service. They may also be used as add-ons to regular
+        modules distributed via other channels; or as platform-specific modules
+        that will be enabled only according to <a href="#how-os-specific">operating
+        system tokens</a>.
+    </p>
+    <p>
+        Note that these enablement states are not intrinsic to the module, which
+        is why they are not specified in the JAR; they are part of its deployment.
+        Another module system might not make any use of such distinctions. In
+        particular, modules deployed via JNLP or OSGi are simply enabled by virtue
+        of being included in the deployment set, or at the mercy of the container.
+    </p>
+</div>
+
+<h3><a name="related-files">Related Files</a></h3>
+
+<p>Sometimes a module may need to bundle other files besides the
+module JAR alongside it. No concrete mechanism for doing so is
+specified in the Modules API. However, if there is such a mechanism,
+then it is possible for the module to find these other files.
+
+<a href="../InstalledFileLocator.html"><code>InstalledFileLocator</code></a>
+
+permits such packaging mechanisms to let modules find their associated
+files, as of 3.21.</p>
+
+<p class="nonnormative">In the current implementation, modules may be
+bundled with other files using
+
+<a href="http://autoupdate.netbeans.org/nbm/nbm_package.html#structure">NBM files</a>
+
+as provided by Auto Update, and the NetBeans build process premerges
+modules in the selected module config into one large installation
+directory, accessible via several system properties. Correspondingly,
+the default locator finds files in this structure. The installation
+structure might however change in the future, so
+<code>InstalledFileLocator</code> is the only safe way to find such
+bundled resources.</p>
+
+<h3><a name="deprecation">Deprecation</a></h3>
+
+<p>Sometimes you may have an API module which you wish to deprecate in its
+entirely - it is only available for purposes of backwards compatibility.
+Normally such modules are autoloads. To ensure that remaining clients of the
+module are properly warned of its status, you may specify the
+manifest attribute <code>OpenIDE-Module-Deprecated</code> with the value <code>true</code>.
+Generally you should also supply a message using the localized manifest attribute
+<code>OpenIDE-Module-Deprecation-Message</code>.
+This
+message may be displayed somehow if a non-deprecated module depending on your
+deprecated module is enabled.</p>
+
+<h3><a name="refactoring">Refactoring</a></h3>
+
+<p>Sometimes as the developer of an API module, you may wish to make
+major changes in how your APIs are laid out physically in modules.
+Most commonly, you determine that it would be desirable to split one
+big API module into several smaller pieces. However you wish to retain
+compatibility for existing client modules, so that if they used your
+old monolithic module, they will now automatically get access to the
+newer, smaller pieces.</p>
+
+<p>This is straightforward: create an XML file according to the DTD
+
+<a href="http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd"><code>-//NetBeans//DTD&nbsp;Module&nbsp;Automatic&nbsp;Dependencies&nbsp;1.0//EN</code></a>
+
+and
+
+<a href="#related-files">install it</a>
+
+in the system filesystem under <samp>ModuleAutoDeps/</samp>
+(<samp>system/ModuleAutoDeps/*.xml</samp>). Note that it will probably
+<em>not</em> work to do this using an XML layer since the information
+must be available before any module is even loaded.</p>
+
+<p><em>As of 3.33</em></p>
+
+<h3><a name="order">Module install order</a></h3>
+
+It may be possible for multiple modules to be installed at once, or
+for a module to specify a dependency which is not satisfied. How
+does NetBeans handle such cases?
+
+<p>First of all, when NetBeans starts up, all previously-installed
+modules are restored, calling the <code>restored</code> methods on
+their install classes if present. (Sections are installed before
+this method is called.) If multiple modules are being restored
+(which is normally the case), NetBeans installs them in an
+arbitrary order. However, if some of them specify
+dependencies on other modules, the order may be adjusted so as to
+make sure that the one specifying the dependency is installed after
+the one it depends on.
+
+<p>Now, when NetBeans is running, modules may be installed into it,
+possibly a cluster of them at once. In such a case, NetBeans first
+checks to make sure that all the prospective modules satisfy their
+dependencies, either on system or Java features; already-installed
+modules; or other modules in the prospective cluster. If any
+modules fail their dependencies (or had syntactical errors in their
+manifest files, etc.), they are removed from the list and the user
+is given an explanation of what is missing. The remainder are then
+ordered according to dependencies as above, and then installed in
+that order.
+
+<p><em>Caution:</em> it is forbidden to install modules which have
+cyclic dependencies on one another, as NetBeans would be unable to
+determine which order to install them in! In fact, it will signal
+an error and not install such modules. Generally such a situation
+means that you should "factor out" the common required
+functionality into a new module which the original ones will then
+specify legal dependencies on.
+
+<h3><a name="listing">List of all modules</a></h3>
+
+Though a module should not generally need to know or care what other
+modules are installed - anything it needs should be a dependency, and
+anything which can use it, it should not know about - in a few cases it
+is desirable to obtain the list of all modules in the system. This can
+be easily accomplished as follows:
+
+<pre>
+Collection&lt;ModuleInfo&gt; modules = Lookup.getDefault().lookupAll(<a href="../ModuleInfo.html">ModuleInfo</a>.class);
+</pre>
+
+The resulting <code>ModuleInfo</code> objects give basic information
+about known modules (both enabled and disabled), such as their names
+and versioning information, and current enablement status. This API is
+strictly read-only and informational.
+
+<p>A limited ability to modify the installation status of modules is
+provided by the APIs as of version 1.31. In the folder
+<samp>Modules/</samp> on the system filesystem, there will be XML
+files corresponding to all known modules. In each case the name of the
+XML file is derived from the code name base of the module with
+<samp>.</samp> replaced by <samp>-</samp>, and followed by
+<samp>.xml</samp>; for example,
+<samp>org-netbeans-modules-properties.xml</samp>. The contents of the
+XML file are given by a fixed
+
+<a href="http://www.netbeans.org/dtds/module-status-1_0.dtd">DTD</a>.
+
+<p>For purposes of the API, only parts of these files are defined. The
+root element must be <code>&lt;module&gt;</code> and its
+<code>name</code> attribute must be the code name base of the module.
+Inside the root element are various <code>&lt;param&gt;</code>
+elements, each with a name and some textual contents. The APIs define
+only one parameter, <code>enabled</code>, which if present must be
+either <code>true</code> or <code>false</code>.
+
+<p class="nonnormative">
+    <a href="#enablement">Autoload</a> (and eager) modules do not use the
+    <code>enabled</code> parameter, since their enablement status can never be
+    specified directly. Rather, they are marked with a parameter named
+    <code>autoload</code> (resp. <code>eager</code>) with the value
+    <code>true</code>.
+</p>
+
+<p>The APIs do not currently permit arbitrary changes to these files.
+Specifically, addition or deletion of these files, or modification of
+other files that may be in the same folder, is not permitted.
+Modification of these files is permitted in only one way: if a module
+XML file already contains the parameter <code>enabled</code>, you may
+rewrite the file to be identical except with the opposite value of
+this parameter. The module system will then make a best effort to
+enable or disable the module accordingly (subject to dependencies and
+other constraints).
+
+<p class="nonnormative">Doing this is not recommended except in unusual circumstances, and
+is intended primarily for session support to be able to enable and
+disable modules via layer. If your module just needs to prevent itself
+from being turned on under some circumstances (for example if it is
+missing a valid license key), simply use
+<code>ModuleInstall.validate</code>.</p>
+
+<p>When rewriting the module XML be sure to use
+
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#runAtomicAction-org.openide.filesystems.FileSystem.AtomicAction-"><code>FileSystem.runAtomic(FileSystem.AtomicAction)</code></a>
+
+to wrap the reading of the old XML and the writing of the new, to
+prevent file changes from being fired halfway through.</p>
+
+<p class="nonnormative">
+    Like any file in the system filesystem, these configuration files are loaded
+    from the <code>config/</code> subdirectory of all registered clusters including
+    the user directory plus XML layers. Normally a module's config file is simply
+    <a href="#related-files">bundled</a> with its installation and that is what
+    is used; user-initiated changes are stored in the user directory. But clusters
+    can also override configuration from other clusters, for example. And the
+    presence of a <code>Modules/*.xml_hidden</code> mask file will suppress
+    knowledge of the <em>existence</em> of a module from the system (not just
+    disable it).
+</p>
+
+<div class="nonnormative">
+
+<h3><a name="security">Security</a></h3>
+
+In the current API there is no particular provision for security in
+modules: all modules are assumed to be trusted, and have access to
+all NetBeans' features (including the abilities of the Java VM
+running as an application) if they require them. So, users should
+not install arbitrary modules from potentially dangerous
+sources. Given the density of callbacks and the fine-grained object
+model of the APIs, providing a thread-based security model for API
+code is not feasible.
+
+<p>Code which creates new classloaders and loads other code indirectly
+should, however, be aware that the created classloaders are generally
+subject to regular security restrictions, unless code is loaded from
+within the NetBeans installation, or certain forms of <code>NbClassLoader</code>
+are used. When in doubt, explicitly define the protection domains for
+classloaders you create.
+
+<p>NetBeans <em>currently</em> loads each module in its own classloader,
+which means illegal dependencies between modules will result in errors.
+
+<p>The Update Center supports certificate-based signing of
+downloaded modules, so that the user can be sure that the contents
+have not been tampered with or accidentally corrupted since their
+creation.
+
+</div>
+
+<h3><a name="jni">JNI</a></h3>
+
+<p>It is possible to run modules making use of JNI native implementations inside
+NetBeans. You may place the native libraries (DLL or shared-object) beneath
+a <samp>modules/lib</samp> directory (i.e. a subdirectory <samp>lib/</samp>
+beneath the directory where the module JAR resides). If your native library file
+names for different architectures or operating systems clash, you may create
+subdirectories under <samp>modules/lib</samp> for each supported platform and
+nested subdirectories for each supported operating system. The directory names
+must match <code>System.getProperty("os.arch")</code> and
+<code>System.getProperty("os.name").toLowerCase(Locale.ENGLISH)</code> respectively.
+The <code>System.loadLibrary</code> call originating from the module code
+will try to locate the library file in the following order of directories:</p><ul>
+    <li><samp>modules/lib/</samp></li>
+    <li><samp>modules/lib/&lt;arch&gt;/</samp></li>
+    <li><samp>modules/lib/&lt;arch&gt;/&lt;os&gt;/</samp></li>
+</ul>
+<p>so you may place e.g. 64-bit Linux version of a <samp>foo</samp> library in a file
+<samp>modules/lib/amd64/linux/libfoo.so</samp>.
+The module may distinguish additional library variants itself or even override
+the platform selection logic by naming the library <em>file</em> appropriately
+and calling System.loadLibrary with such a name. Use of JNI is of course not
+recommended and should be restricted to cases where it is unavoidable.</p>
+
+<p>Example of usage with a fully specified library name: if on Linux a module located in <samp>/home/app/cluster/modules/something.jar</samp> calls
+<samp>System.loadLibrary("stuff-linux-i386-gnome")</samp>, the library should be in
+<samp>/home/app/cluster/modules/lib/libstuff-linux-i386-gnome.so</samp>. On 64bit Windows, if
+<samp>C:\app\cluster\modules\something.jar</samp> calls <samp>System.loadLibrary("stuff")</samp>, the library
+should be in <samp>C:\app\cluster\modules\lib\amd64\stuff.dll</samp>. (Remember that Java has platform-specific
+prefixes and suffixes it adds to plain library names before trying to find it on disk.)</p>
+
+<p>If a native library refers to <em>other</em> native libraries, they
+are likely to be found using the normal search path for the platform.
+This may mean that if you have several libraries used in a module, you
+must either put all but the directly referenced one in the system's
+global library search path, or merge them all together.</p>
+
+<p><strong>Warning:</strong> since the JVM cannot load the same native
+library twice even in different classloaders, a module making use of
+this feature cannot be enabled more than once in a single VM session.
+JARs loaded from the classpath (application classloader) are never
+reloaded, so it may be possible to include the native-dependent
+classes in such a JAR and make use of it from a module JAR.</p>
+
+<p class="nonnormative">NetBeans currently includes a <a
+href="https://github.com/twall/jna">JNA</a> wrapper module which can also be used
+for native access. As of this writing, however, this module exports only a
+friend API, so it is not available for use from arbitrary modules.<p>
+
+<hr>@FOOTER@
+
+</body>
+</html>

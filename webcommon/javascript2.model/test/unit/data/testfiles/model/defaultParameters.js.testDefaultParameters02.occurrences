@@ -1,0 +1,3 @@
+function singularAutoPlural(singular, ^|>MARK_OCCURRENCES:plural<| = singular+"s", 
+                            rallyingCry = |>MARK_OCCURRENCES:plural<| + " ATTACK!!!") {
+  return [singular, |>MARK_OCCURRENCES:plural<|, rallyingCry ]; 

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <element name="bad-names">
+	<complexType>
+	  <sequence>
+		<element name="el" ref="elT"/>
+	  </sequence>
+	</complexType>
+  </element>
+  <element name="elT">
+	<complexType>
+	  <sequence>
+		<element name="property" type="xsd:int"/>
+	  </sequence>
+	  <attribute name="class" type="xsd:string" use="required"/>
+	  <attribute name="package" type="xsd:string"/>
+	</complexType>
+  </element>
+</schema>

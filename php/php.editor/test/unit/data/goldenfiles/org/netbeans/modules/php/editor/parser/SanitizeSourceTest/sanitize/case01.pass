@@ -1,0 +1,103 @@
+<Program start='0' end='286'>
+    <Comments>
+        <Comment start='196' end='206' commentType='multiLine'/>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='6' end='286' modifier='NONE'>
+            <ClassName>
+                <Identifier start='12' end='28' name='blog_Application'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+                <NamespaceName start='40' end='51' isCurrent='false' isGlobal='false'>
+                    <Identifier start='40' end='51' name='Application'/>
+                </NamespaceName>
+            </Interfaces>
+            <Block start='52' end='286' isCurly='true'>
+                <ClassConstantDeclaration start='56' end='84' modifier='public'>
+                    <Names>
+                        <Identifier start='62' end='74' name='VARNAME_VIEW'/>
+                    </Names>
+                    <Initializers>
+                        <Scalar start='77' end='83' type='STRING' value='&apos;view&apos;'/>
+                    </Initializers>
+                </ClassConstantDeclaration>
+                <ClassConstantDeclaration start='87' end='113' modifier='public'>
+                    <Names>
+                        <Identifier start='93' end='104' name='VARNAME_ADD'/>
+                    </Names>
+                    <Initializers>
+                        <Scalar start='107' end='112' type='STRING' value='&apos;add&apos;'/>
+                    </Initializers>
+                </ClassConstantDeclaration>
+                <FieldsDeclaration start='116' end='132' modifier='protected'>
+                    <FieldType>
+                    </FieldType>
+                    <VariableNames>
+                        <Variable start='126' end='131' isDollared='true'>
+                            <Identifier start='127' end='131' name='test'/>
+                        </Variable>
+                    </VariableNames>
+                    <InitialValues>
+                    </InitialValues>
+                </FieldsDeclaration>
+                <MethodDeclaration start='136' end='284' modifiers='public'>
+                    <FunctionDeclaration start='143' end='284' isReference='false'>
+                        <Identifier start='152' end='159' name='process'/>
+                        <FormalParameters>
+                            <FormalParameter start='160' end='165' isMandatory='true' isVariadic='false'>
+                                <ParametrType>
+                                </ParametrType>
+                                <ParametrName>
+                                    <Variable start='160' end='165' isDollared='true'>
+                                        <Identifier start='161' end='165' name='path'/>
+                                    </Variable>
+                                </ParametrName>
+                                <DefaultValue>
+                                </DefaultValue>
+                            </FormalParameter>
+                        </FormalParameters>
+                        <Block start='167' end='284' isCurly='true'>
+                            <SwitchStatement start='173' end='280'>
+                                <Variable start='181' end='186' isDollared='true'>
+                                    <Identifier start='182' end='186' name='path'/>
+                                </Variable>
+                                <Block start='188' end='280' isCurly='true'>
+                                    <SwitchCase start='206' end='230' default='false'>
+                                        <StaticConstantAccess start='211' end='229'>
+                                            <NamespaceName start='211' end='215' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='211' end='215' name='self'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='224' end='229' name='break'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='224' end='229' name='break'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </SwitchCase>
+                                    <SwitchCase start='237' end='274' default='false'>
+                                        <StaticConstantAccess start='242' end='259'>
+                                            <NamespaceName start='242' end='246' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='242' end='246' name='self'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='248' end='259' name='VARNAME_ADD'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='248' end='259' name='VARNAME_ADD'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                        <BreakStatement start='268' end='274'>
+                                        </BreakStatement>
+                                    </SwitchCase>
+                                </Block>
+                            </SwitchStatement>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+    </Statements>
+</Program>

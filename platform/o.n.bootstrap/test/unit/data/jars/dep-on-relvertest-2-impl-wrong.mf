@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: deponrelvertest2implwrong
+OpenIDE-Module-Module-Dependencies: relvertest/2 = testing
+

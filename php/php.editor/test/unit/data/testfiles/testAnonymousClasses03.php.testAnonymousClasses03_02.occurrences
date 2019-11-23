@@ -1,0 +1,2 @@
+    private $|>MARK_OCCURRENCES:pr^op<| = 1;
+        return new class($this->|>MARK_OCCURRENCES:prop<|) extends Outer {

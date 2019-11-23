@@ -1,0 +1,4 @@
+static function setFoo($$foo) {
+self::$$foo = $foo;
+}
+

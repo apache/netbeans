@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodBasicWSDL" targetNamespace="http://j2ee.netbeans.org/wsdl/goodBasicWSDL"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodBasicWSDL" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodBasicWSDLOperationRequest">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <message name="goodBasicWSDLOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodBasicWSDLPortType">
+        <operation name="goodBasicWSDLOperation">
+            <input name="input1" message="tns:goodBasicWSDLOperationRequest"/>
+            <output name="output1" message="tns:goodBasicWSDLOperationReply"/>
+        </operation>
+        <operation name="goodSRFOperationOperation">
+            <input name="input2" message="tns:goodBasicWSDLOperationRequest"/>
+            <output name="output2" message="tns:goodBasicWSDLOperationReply"/>
+            <fault name="nonunique" message="tns:goodBasicWSDLOperationReply"/>
+            <fault name="nonunique" message="tns:goodBasicWSDLOperationReply"/>
+        </operation>
+        <operation name="goodRROperationOperation">
+            <input name="input3" message="tns:goodBasicWSDLOperationRequest"/>
+            <output name="output3" message="tns:goodBasicWSDLOperationReply"/>
+        </operation>
+       <operation name="goodRRFOperationOperation">
+            <input name="input4" message="tns:goodBasicWSDLOperationRequest"/>
+            <output name="output4" message="tns:goodBasicWSDLOperationReply"/>
+            <fault name="nonunique" message="tns:goodBasicWSDLOperationReply"/>
+        </operation>
+        <operation name="goodOWOperationOperation">
+            <input name="input5" message="tns:goodBasicWSDLOperationRequest"/>
+        </operation>
+        <operation name="goodNOperationOperation">
+            <output name="output6" message="tns:goodBasicWSDLOperationReply"/>
+        </operation>
+   </portType>
+</definitions>

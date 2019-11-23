@@ -1,0 +1,45 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+all: nbexec64.dll nbexec64.exe nbexec.dll nbexec.exe
+
+clean:
+	rm -f *.res *.exe *.dll
+
+nbexec64.res: nbexec.rc
+	x86_64-w64-mingw32-windres -onbexec64.res -Ocoff nbexec.rc
+
+nbexec64.dll: include/jni.h include/jni_types.h jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec64.res
+	x86_64-w64-mingw32-gcc -s -shared -m64 -o nbexec64.dll -I include jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec64.res -Wl,--no-insert-timestamp -static -lstdc++ -static-libstdc++ -static-libgcc
+
+nbexec_exe64.res: nbexec_exe.rc nbexec.exe.manifest
+	x86_64-w64-mingw32-windres -onbexec_exe64.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
+
+nbexec64.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res
+	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp -mwindows nbexecexe.cpp utilsfuncs.cpp nbexec_exe64.res -onbexec64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+
+nbexec.res: nbexec.rc
+	i686-w64-mingw32-windres -onbexec.res -Ocoff nbexec.rc
+
+nbexec.dll: include/jni.h include/jni_types.h jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec.res
+	i686-w64-mingw32-gcc -s -shared -o nbexec.dll -I include jvmlauncher.cpp nbexec.cpp platformlauncher.cpp utilsfuncs.cpp nbexec.res -static -Wl,--no-insert-timestamp -lstdc++ -static-libstdc++ -static-libgcc
+
+nbexec_exe.res: nbexec_exe.rc nbexec.exe.manifest
+	i686-w64-mingw32-windres -onbexec_exe.res -Ocoff -DMANIFEST_FILE=nbexec.exe.manifest nbexec_exe.rc
+
+nbexec.exe: nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res
+	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -Wl,--no-insert-timestamp -mwindows nbexecexe.cpp utilsfuncs.cpp nbexec_exe.res -onbexec.exe -static -lstdc++ -static-libstdc++ -static-libgcc

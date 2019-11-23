@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<coverage generated="1427797168">
+  <project timestamp="1427797168">
+    <metrics packages="0" files="2" loc="144" ncloc="56" classes="2" methods="10" coveredmethods="4" statements="7" coveredstatements="6" elements="17" coveredelements="10" conditionals="0" coveredconditionals="0"/>
+    <file name="%WORKDIR%/testdata/Calculator.php">
+      <metrics loc="72" ncloc="28" classes="1" methods="5" coveredmethods="4" statements="7" coveredstatements="6" elements="12" coveredelements="10" conditionals="0" coveredconditionals="0"/>
+      <class name="Calculator">
+        <metrics methods="5" coveredmethods="4" statements="7" coveredstatements="6" conditionals="0" coveredconditionals="0" elements="12" coveredelements="10"/>
+      </class>
+      <line num="47" type="stmt" count="1"/>
+      <line num="50" type="stmt" count="1"/>
+      <line num="54" type="stmt" count="1"/>
+      <line num="58" type="stmt" count="1"/>
+      <line num="62" type="stmt" count="1"/>
+      <line num="63" type="stmt" count="1"/>
+      <line num="65" type="stmt" count="1"/>
+      <line num="69" type="stmt" count="0"/>
+      <line num="73" type="stmt" count="1"/>
+    </file>
+    <file name="%WORKDIR%/testdata/Calculator2.php">
+      <metrics loc="72" ncloc="28" classes="1" methods="5" coveredmethods="0" statements="0" coveredstatements="0" elements="5" coveredelements="0" conditionals="0" coveredconditionals="0"/>
+      <class name="Calculator2">
+        <metrics methods="5" coveredmethods="0" statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" elements="5" coveredelements="0"/>
+      </class>
+    </file>
+  </project>
+</coverage>

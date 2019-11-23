@@ -1,0 +1,7 @@
+public static final Class class
+public static final InnerEnum A
+public static final InnerEnum B
+public static final InnerEnum C
+public static Object valueOf(Class<Object> enumType, String name)
+public static InnerEnum valueOf(String name)
+public static InnerEnum[] values()

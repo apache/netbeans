@@ -1,0 +1,2 @@
+$|>MARK_OCCURRENCES:fu^nc<| = 'someFunc';
+$|>MARK_OCCURRENCES:func<|();

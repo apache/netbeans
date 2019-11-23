@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>NetBeans Build System</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+            <name>NetBeans Build System</name>
+            <properties>
+                <property name="nb_all">${basedir}/..</property>
+                <property-file>user.build.properties</property-file>
+                <property-file>site.build.properties</property-file>
+                <property-file>${user.home}/.nbbuild.properties</property-file>
+                <property name="nb.build.dir">${nb_all}/nbbuild/build</property>
+                <property name="nbantext.jar">${nb.build.dir}/nbantext.jar</property>
+                <property name="nbjdk.home">${java.home}/..</property>
+                <property name="nbjdk.bootclasspath">${nbjdk.home}/jre/lib/rt.jar:${nbjdk.home}/Classes/classes.jar</property>
+                <property-file>build.properties</property-file>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>Ant Tasks</label>
+                    <type>java</type>
+                    <location>antsrc</location>
+                </source-folder>
+                <source-folder>
+                    <label>Tests for Ant Tasks</label>
+                    <type>java</type>
+                    <location>test/unit/src</location>
+                </source-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>bootstrap</target>
+                </action>
+                <action name="rebuild">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localclean</target>
+                    <target>bootstrap</target>
+                </action>
+                <action name="clean">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localclean</target>
+                </action>
+                <action name="test">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localtest</target>
+                </action>
+                <action name="test.single">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localtest-single</target>
+                    <context>
+                        <property>test.class</property>
+                        <folder>test/unit/src</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="debug.test.single">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localtest-single-nb-debug</target>
+                    <context>
+                        <property>test.class</property>
+                        <folder>test/unit/src</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="run.single.method">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localtest-single</target>
+                    <context>
+                        <property>test.class</property>
+                        <folder>test/unit/src</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="debug.single.method">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>localtest-single-nb-debug</target>
+                    <context>
+                        <property>test.class</property>
+                        <folder>test/unit/src</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="run">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>tryme</target>
+                </action>
+                <action name="debug">
+                    <script>nbproject/nbjdk.xml</script>
+                    <target>tryme-debug</target>
+                </action>
+            </ide-actions>
+            <export>
+                <type>folder</type>
+                <location>${nb.build.dir}/antclasses</location>
+                <build-target>bootstrap</build-target>
+            </export>
+            <export>
+                <type>jar</type>
+                <location>${nbantext.jar}</location>
+                <build-target>bootstrap</build-target>
+            </export>
+            <export>
+                <type>folder</type>
+                <location>${nb.build.dir}/test/unit/classes</location>
+                <build-target>bootstrap</build-target>
+            </export>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>Ant Tasks</label>
+                        <location>antsrc</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Tests for Ant Tasks</label>
+                        <location>test/unit/src</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                    <source-file>
+                        <location>user.build.properties</location>
+                    </source-file>
+                    <source-file>
+                        <location>site.build.properties</location>
+                    </source-file>
+                    <source-file>
+                        <location>${user.home}/.nbbuild.properties</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="test"/>
+                    <ide-action name="javadoc"/>
+                    <separator/>
+                    <separator/>
+                    <ide-action name="run"/>
+                    <ide-action name="debug"/>
+                    <action>
+                        <label>Clean User Directory</label>
+                        <target>testuserdir-delete</target>
+                    </action>
+                    <action>
+                        <label>Build IDE (no ZIP file)</label>
+                        <target>build-nozip</target>
+                    </action>
+                    <action>
+                        <label>Clean Everything</label>
+                        <target>clean</target>
+                    </action>
+                    <action>
+                        <label>Run Commit Validation</label>
+                        <target>commit-validation</target>
+                    </action>
+                    <action>
+                        <label>apisupport</label>
+                        <target>-Dname=apisupport rebuild-cluster</target>
+                    </action>
+                </context-menu>
+            </view>
+            <subprojects/>
+            <project-license>apache20-asf</project-license>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/4">
+            <compilation-unit>
+                <package-root>antsrc</package-root>
+                <classpath mode="compile">${ant.core.lib}:${nb_all}/platform/javahelp/external/jhall-2.0_05.jar</classpath>
+                <classpath mode="boot">${nbjdk.bootclasspath}</classpath>
+                <built-to>${nb.build.dir}/antclasses</built-to>
+                <built-to>${nbantext.jar}</built-to>
+                <source-level>1.8</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>test/unit/src</package-root>
+                <unit-tests/>
+                <classpath mode="compile">${test.unit.cp}</classpath>
+                <classpath mode="boot">${nbjdk.bootclasspath}</classpath>
+                <built-to>${nb.build.dir}/test/unit/classes</built-to>
+                <source-level>1.8</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

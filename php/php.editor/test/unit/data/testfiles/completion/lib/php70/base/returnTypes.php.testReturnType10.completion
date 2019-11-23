@@ -1,0 +1,5 @@
+Code completion result for source line:
+function &bar(): \My\Firm\|Comment {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Comment                         [PUBLIC]   My\Firm
+CLASS      CommentsIterator                [PUBLIC]   My\Firm

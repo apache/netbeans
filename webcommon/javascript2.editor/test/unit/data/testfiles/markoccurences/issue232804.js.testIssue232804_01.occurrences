@@ -1,0 +1,2 @@
+var |>MARK_OCCURRENCES:testWith02<| = {
+with (|>MARK_OCCURRENCES:tes^tWith02<|) {

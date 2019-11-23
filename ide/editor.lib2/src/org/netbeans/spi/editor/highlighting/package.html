@@ -1,0 +1,516 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <title>org.netbeans.spi.editor.lib2.highlighting</title>
+  </head>
+  <body>
+
+  <p>
+  The Highlighting SPI is a new way of influencing how text in an editor component
+  is rendered. The editor framework in Netbeans is an extension of the Swing Text SPI
+  framework and as such it uses things like <code>Element</code>s and <code>View</code>s
+  to render a <code>Document</code> on a screen.
+  </p>
+
+  <p>
+  Since the editor framework is primarily designed to support various different
+  types of files in the IDE it has to give module a chance to participate in documents
+  rendering. Modules providing support for different languages usually need to influence
+  colors and fonts of different parts of a source file depending on what code it
+  contains (i.e. syntax coloring) or what other information the module needs presenting
+  to a user (e.g. text annotations, hyperlinking, etc.). This all and more can
+  be achieved by using the Highlighting SPI.
+  </p>
+
+
+  <h3>Key parts of the SPI</h3>
+  
+  <p>
+  The very basic idea behind the SPI is to render a document as a sandwich of
+  independent layers, which will say what colors and font should be used for rendering
+  particular parts of the document. These parts of the document together with their
+  <i>rendering attributes</i> (i.e. colors or font) are called <i>highlighted areas</i>
+  or <i>highlights</i>. Each layer can provide as many non-overlapping highlights
+  as it likes and each module can provide as many layers as it needs. The implementation
+  behind the SPI will collect all layers registered for a particular document type
+  (i.e. mime type), ask each of them for its highlights, merge those highlights
+  together and finally send them to the draw engine, which will render the document.
+  </p>
+  
+  <p>
+  The whole SPI is organized around the
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayer.html">HighlightsLayer</a></code>
+  class, which is the ultimate thing that modules need to implement in order to provide
+  a list of highlights for a document. The <code>HighlightsLayer</code>s are created
+  by <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html">HighlightsLayerFactory</a></code>,
+  which should be registered in <code>MimeLookup</code> under the mime-type of a document
+  that the layer should be used for. All layers registered for one type of a document
+  are ordedred according to the
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>
+  they provide. Besides of <code>ZOrder</code> the layers provide additional information
+  about nature of highlights they maintain.
+  </p>
+
+  <p>
+  The <code>HighlightsLayer</code> class implements
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsContainer.html">HighlightsContainer</a></code>
+  interface, which is the fundamental part of the SPI.
+  The <code>HighlightsContainer</code> interface allows to get a list of highlighs
+  and to listen on changes in highlights that it contains.
+  Besides of <code>HighlightsLayer</code> there are two other implementations of
+  this interface and they are
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/OffsetsBag.html">OffsetsBag</a></code>
+  and
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/PositionsBag.html">PositionsBag</a></code>.
+  Both <code>OffsetsBag</code> and <code>PositionsBag</code> classes allow adding
+  and removing highlights dynamically. The highlights can be added either one-by-one
+  or in chunks; each change is reported to listeners.
+  </p>
+  
+  
+  <h3>HighlightsLayer registration</h3>
+  
+  <p>
+  The registration of <code>HighlightsLayer</code>s has to be done through an
+  instance of the <code>HighlightsLayerFactory</code> class. The factory should
+  be registered in <code>MimeLookup</code> under the mime-type of documents, which
+  the <code>HighlightsLayer</code> should be used for. For example, if a module
+  wants to provide <code>HighlightsLayer</code> for <code>text/x-something</code> documents
+  it should implement its own <code>HighlightsLayerFactory</code> (e.g.
+  <code>org.some.module.HLFactory</code> class) and register it in <code>MimeLookup</code>
+  using its XML layer as it is shown on the example below.
+  </p>
+  
+  <pre>
+&lt;folder name="Editors"&gt;
+  &lt;folder name="text"&gt;
+    &lt;folder name="x-something"&gt;
+        &lt;file name="org-some-module-HLFactory.instance" /&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+  </pre>
+
+  <p>
+  The <code>HLFactory</code> class will simply return a new instance of
+  the module's implementation of the <code>HighlightsLayer</code> class from its
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html#createLayers-org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context-">createLayers</a></code>
+  method. The parameter of the <code>createLayers</code> method provides access to
+  a <code>JTextComponent</code> and its <code>Document</code>, which the layer
+  is being created for. The method can create and return multiple <code>HighlightsLayer</code>s.
+  </p>
+
+  
+  <h3>HighlightsLayer lifecycle</h3>
+  
+  <p>The lifecycle of <code>HighlightsLayer</code>s is tied to the lifecycle of
+  <code>Document</code>. The infrastructure creates new instances of layers by calling
+  registered <code>HighlightsLayerFactory</code> objects every time it needs to
+  visualize a new <code>Document</code>. The layers created for one <code>Document</code>
+  are not cached or resused in any way. This means that the layers themselvs do not have to take
+  care about a potential change of a <code>Document</code> instance in
+  <code>JTextComponent</code>. The infrastructre will always create a new set of
+  layers if the <code>Document</code> instance changes. Therefore the layers can
+  simply hold their instance of <code>JTextComponent</code> and/or <code>Document</code>
+  and treat them as invariants.
+  </p>
+  
+  
+  <h3>Locking and <code>Document</code> changes</h3>
+  
+  <p>
+  The basics of the locking and events model of Swing documents is
+  described in the javadoc of the
+  <a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
+  class. Netbeans documents use the same patterns and so does the Highlighting SPI,
+  because of its tight relation to documents. The fundamentals of the Swing documents
+  locking model are that any changes to a document are done under the
+  document's write lock, the document's listeners are notified synchronously on the
+  mutating thread and have full read access to the document, but can't modify it.
+  </p>
+
+  <p>
+  The main functionality of the Highlighting SPI is to maintain highlights
+  of certain areas of a document. These highlights are specified as a triple of
+  starting offset, ending offset and a set of attributes. The offsets are usually passed
+  in and out accross the SPI boundaries in form of <code>int</code>s and even though
+  some implementations (e.g. <code>PositionsBag</code>) use
+  <code><a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/Position.html">Position</a></code>s
+  the esential rule is that any calls in and out from the SPI have to be made
+  under the document's read lock. Let's have a look on a few examples demonstrating
+  what this means.
+  </p>
+  
+  <ul>
+    <li>
+    Any calls from the infrastructure to <code>HighlightsLayer.getHighlights()</code>
+    have to be carried on under the read lock of the document, which the <code>HighlightsLayer</code>
+    was created for.
+    </li>
+    <li>
+    When <code>HighlightsLayer</code> needs to notify its listeneres that some
+    of its highlights have changed all the events have to be fired under the
+    layer's document's read lock. Obviously, the listeners are not allowed to
+    modify the document from the event notification methods.
+    </li>
+    <li>
+    Any calls to <code>OffsetsBag</code> or <code>PositionsBag</code> that modify
+    their content have to be done under the read lock of the document, which the bag
+    was created for. Both bags makes all the
+    changes synchronously on the caller's thread and this even includes firing
+    notification events. Therefore all events fired from <code>OffsetsBag</code>
+    or <code>PositionsBag</code>
+    will be fired under the document's read lock if the mutating thread holds the
+    read lock.
+    </li>
+  </ul>
+  
+  <p>
+  The Highlighting SPI does not use any special threads and any processing it
+  does is always done on the caller's thread. This means that the above described
+  constraints hardly cause any limitation for practical use. The majority of
+  things happening around a document are done from within
+  <code><a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/event/DocumentListener.html">DocumentListener</a></code>s,
+  which hold the document's read lock anyway.
+  </p>
+  
+  <p>
+  The Highlighting SPI is generally thread-safe meaning that any implementation
+  behind the SPI can be used simultaneously from multiple threads if not stated
+  otherwise. This doesn't change in any way the rule of acquiring a read lock
+  before calling the SPI. Swing documents generally allow access for multiple
+  readers that can run concurrently.
+  </p>
+  
+  
+  <h3>Z-order</h3>
+  <p>
+  Since there can be multiple layers suplying highlights for one document and the
+  highlights can generally overlap it is important to sort the layers according
+  to their Z-order. For this purpose each layer has to supply an appropriate
+  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>.
+  </p>
+  
+  <p>
+  <code>ZOrder</code> maintains a position of a layer
+  relatively to other layers as a simple integer number. The higher the number
+  the higher (more visible) the layer is in the z-order hierarchy.
+  Instances of the <code>ZOrder</code> class are immutable making it
+  impossible to dynamically change a position of a layer in the z-order stack
+  created for a document. 
+  </p>
+  
+  <p>
+  The <code>ZOrder</code> class contains several predefined constants,
+  which can be used as well-known positions. These constants are called z-order
+  racks and are meant to be used as a starting point for positioning a layer. An
+  exact z-order can then be specified by choosing an integer position of the layer
+  within a rack. The racks are listed below in their respective z-order. 
+  </p>
+  
+  <ul>
+      <li><code>TOP_RACK</code> - the top most rack</li>
+      <li>
+        <code>SHOW_OFF_RACK</code> - layers providing short-lived highlights that
+        can temporarily override highlights from other layers. An example can be
+        text selection or text search layers.
+      </li>
+      <li><code>DEFAULT_RACK</code> - the rack for general layers</li>
+      <li><code>CARET_RACK</code> - layers that highlight a caret</li>
+      <li>
+        <code>SYNTAX_RACK</code> - layers providing syntax or semantic
+        highlighting of text</li>
+      <li><code>BOTOM_RACK</code> - the bottom rack</li>
+  </ul>
+  
+ <!--
+    - different types of layers - block highlights vs. text highlights, highlights altering metrics
+  -->
+
+  
+  <h3>Using <code>AttributeSet</code></h3>
+  <p>
+  The Highlighting SPI uses <code>javax.swing.text.AttributeSet</code> to define
+  attributes for particular highlights. These attributes can be anything,
+  which the editor's drawing engine understands and can render. Usually the
+  attribute names are constants from <code>javax.swing.StyleConstants</code> or
+  <code>org.netbeans.api.editor.settings.EditorStyleConstants</code>. The values
+  depend on the meaning of each particular attribute, but they usually are instances
+  of <code>java.awt.Color</code>, <code>java.lang.Integer</code>, <code>Boolean.TRUE</code>
+  or <code>Boolean.FALSE</code> and similar.
+  </p>
+
+  <p>
+  Since there can be more highlighting layers participating on one document and
+  they can provide highlights that overlap the infrastructure will merge attributes
+  from all <code>AttributeSet</code>s provided for areas with overlapping highlights.
+  The merging is done in the order defined by <code>ZOrder</code>s of the participating
+  layers, which means that if two layers provide an attribute with the same name
+  then the merged <code>AttributeSet</code> will contain the attribute from the
+  layer, which is placed higher in the z-order hierarchy.
+  </p>
+  
+  <p>
+  There are two important rules for using <code>AttributeSet</code>s, which should
+  be carefully followed by all highlighting layer implementations. Violating these
+  rules may potentialy break the rendering of a document or may cause performance
+  problems.
+  </p>
+  
+  <ul>
+      <li><b>Immutability</b> - All instances of <code>AttributeSet</code>s should
+      always be treated as immutable objects. Once you create an <code>AttibuteSet</code>
+      and use it for a highlight you should not modify it. Your modification is
+      most likely to be ignored or can have unpredictable results.
+      </li>
+      <li><b>One instance only</b> - There can be thousands of highlights supplied
+      by layers for one document and a lot of them will be the same (e.g. all
+      keywords in a java document are highlighted with the same color and font).
+      It would be unreasonable to create a new <code>AttributeSet</code> for
+      each of those highlights when all of them would in fact be the same. Instead
+      you should always create one instance of <code>AttributeSet</code> and share
+      it among all highlights that render the same text category (e.g. token or
+      token category, etc.).
+      </li>
+  </ul>
+  
+  <p>
+  The <code>AttributeSet</code>s used for highlighting are often created by calling
+  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/FontColorSettings.html">FontColorSettings</a></code>
+  and it is a responsibility of this class to prevent excesive creation of
+  <code>AttributeSet</code>s it provides. However, if your highlighting layer creates
+  its own <code>AttributeSet</code>s they should always be cached and reused. You can
+  use methods from the
+  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/AttributesUtilities.html">AttributesUtilities</a></code>
+  class for creating immutable <code>AttributeSet</code>s.
+  </p>
+  
+  
+  <h3><a name="usecases">Use cases</a></h3>
+  
+  <h4>Use case 1. - Caret selection</h4>
+
+  <p>
+  The Netbeans editor as any other modern editor allows selecting blocks of text
+  and highlighting them to a user for easier identification. We call this functionality
+  caret selection services and it includes things as simple as marking a block of text
+  that the user selected for copy/paste operation or highlighting a line where
+  the caret is placed to more complex ones such as highlighting occurences of a text
+  that the user search for using the 'Find dialog', etc.
+  </p>
+  
+  <p>
+  This functionality usually only needs to create one highlight and update it
+  depending on the caret movements/selection notified from <code>JTextComponent</code>.
+  The more complex cases may need to create several highlights (e.g. to show the
+  text being searched for). Generally, the highlights are created independently on the
+  text changes in the document itself (e.g. the caret move or searching for a text).
+  However, they have to survive editing the document (e.g. the highlighted occurences
+  of the searched text have to remain highlighted when other parts of the document
+  are edited).
+  </p>
+  
+  <p>
+  The caret selection highlights are generally short-lived and have higher importance
+  than other highlights (e.g. syntax or semantic coloring). They usually change
+  the background color to highlight the selection, but also retain as much of
+  a visual appearance of the highlighted text as possible.
+  </p>
+  
+  <h4>Use case 2. - Syntax highlighting</h4>
+  
+  <p>
+  This type of a document coloring shows 'words' or characters in different colors
+  to indicate their meaning in the structure of the text document. This is very
+  popular with highly structured documents such as source code files, scripts, 
+  SGML-like documents, etc. It's usually not used for plain text documents containing
+  text in a human language.
+  </p>
+  
+  <p>
+  Syntax highlighting in Netbeans editor is based on a lexical analysis done by
+  lexer plug-ins registered for various types of documents. The lexers are written
+  using the APIs provided by the <a href="http://lexer.netbeans.org">Lexer module</a>.
+  During the lexical analysis text gets split into tokens of different types and
+  categories. Each token type or category can have defined its own coloring information
+  such as font and foreground and background colors, etc. Tokens know their position
+  in text (i.e. offset and length), which information can then be used for creating
+  highlights.
+  </p>
+  
+  <p>
+  Decoupling the lexers
+  and making them pluggable lets the syntax highlighting be very flexible. A single
+  layer based on the Lexer API can colorify all sorts of documents providing that
+  there is a lexer registered for each type of a document.
+  </p>
+  
+  <p>
+  Generally a syntax analysis is very fast and syntax highlighting immediately
+  reflects changes done in text. The syntax highlighting layer is usually at
+  the bottom of the hierarchy of highlighting layers.
+  </p>
+  
+  <h4>Use case 3. - Semantic highlighting</h4>
+  
+  <p>
+  In fact semantic coloring regardless of the language it is provided for is
+  very similar to syntax coloring. Words or groups of characters are highlighted
+  depending on their meaning in the text. The difference is in the amount of
+  information that is needed to make this type of coloring meaningful. While with
+  syntax coloring all the information needed is in the text itself in semantic
+  coloring parts of text can be colored depending on information found in a
+  completely different document (e.g. in another source file, library, project, etc.).
+  </p>
+  
+  <p>
+  Semantic highlighting is highly dependent on the type of a document and therefore
+  is usually provided on case-by-case basis and only for the most important types
+  of documents (i.e. those most frequenty used such as java files in Netbeans). Also,
+  semantic coloring is generally not very fast, because of the amount of information
+  that is sometimes needed to gather before a document can be colored. Therefore,
+  while all the effort is made to make semantic coloring reflect text changes as
+  soon as possible, it is generally done asynchronously outside of the documents
+  event model and highlights are created as soon as they are available. The tokens
+  created during the semantic analysis always contain token's position within
+  the text in some form (i.e. either offset or <code>Position</code>). If <code>Position</code>s
+  are available they should be accepted and re-used by the Highlighting SPI.
+  </p>
+  
+  <h4>Use case 4. - Embedded languages</h4>
+
+  <p>
+  An embedded language is a language of a part of a document that is different
+  than the main language of the document. An example can be a java scriplet in
+  a JSP page or JavaScript in an HTML document. The main language of a JSP page
+  is 'text/x-jsp' and the emebedded language in the case of a java scriplet is
+  'text/x-java'. For the HTML document the main language is 'text/html' and if
+  a JavaScript part is included in the document the 'text/x-javascript' is the
+  embedded language.
+  </p>
+  
+  <p>
+  The language embedding is supported by Lexer API and therefore there is no
+  problem with supporting it for syntax coloring. For semantic coloring all the
+  work lies on the highlighting layers providing semantic coloring support for
+  a particular language. These layers have to be prepared to provide highlights
+  for parts of a document, which does not contain text in the language they support,
+  but which contains some embedded parts in that language. The Highlighting
+  infrastructure will scan the document for all languages it contains and then
+  it will create appropriate highlighting layers. The layers can be added dynamically
+  as user inserts parts of text in a new language. The layers, however, may not be
+  removed immediately when the last part of text in a language they suppor is removed.
+  Therefore the layers should be prepared to provide no highlights if there is
+  no text they recognize.
+  </p>
+  
+  <h4><a name="usecase5">Use case 5. - Filtering layers used for JTextComponent</a></h4>
+  
+  <p>
+  In certain situations <code>JTextComponent</code> or <code>JEditorPane</code>
+  are used for other purposes than editing. For example debugger may want to show
+  <code>JEditorPane</code> for adding a new watch, where a user could write a piece
+  of java code that should evaluated. This pane should use basically the same layers
+  so that the entered code looks like properly colored and formatted java code.
+  However, it is not desirable to use exactly the same layers as for an ordinary
+  java editor, because some highlightings have a little value in this context or
+  could even be disturbing. There is no point in highlighting the row with the caret,
+  because watches are essentially one-line expressions. There is also a little point
+  in showing text-search related highlights, because hardly anybody will use text
+  search in these simple expressions anyway. On the other hand it makes sense to
+  highlight selected text if user selects some.
+  </p>
+  
+  <p>
+  There can be a whole range of usecases where modules need to show an editor
+  pane, but do not want to use a particular set of highlighting layers, which are
+  registered for the mime type of text that the module is trying to display and
+  which would normally be used for an ordinary editor pane. These usecases are
+  very specific for each module and its way of implementing some features.
+  </p>
+  
+  <p>
+  The editor insfrastructure supports this usecase through allowing modules to
+  set special properties on the editor pane that they want to use for displaying text.
+  The properties are called <code>HighlightsLayerIncludes</code> and <code>HighlightsLayerExcludes</code>.
+  The value of those properties can be <code>String</code> or <code>String []</code>
+  of regular expressions that will be used for finding the matching layers by evaluating
+  each regular expression against the layer's type id. The exact interpretation of those
+  two properties is described below.
+  </p>
+  
+  <ul>
+      <li>
+      <code>HighlightsLayerIncludes</code> - Defines the set of layers that
+      <b>will</b> be used for rendering text in an editor pane that defines this property.
+      Every layer, which type Id matches at least one of the regular expressions
+      defined by this property, will be <b>included</b> for rendering. The default value 
+      is <code>null</code>, which means that all registered layers will be used.
+      </li>
+      <li>
+      <code>HighlightsLayerExcludes</code> - Defines the set of layers that
+      <b>will not</b> be used for rendering. Every layer, which type Id matches
+      at least one of the regular expressions defined by this property, will be
+      <b>excluded</b> from rendering. The default value is <code>null</code>,
+      which means that no layer will be excluded.
+      </li>
+  </ul>
+  
+  <p>
+  The filters defined by those two properties are used in the same order as they
+  were listed above. That is the includes are used first and whatever layers they
+  includ are then filtered by the excludes filter. The result is then used for
+  rendering text in an editor component, which defined those properties.
+  </p>
+  
+  <p>
+  The example below shows how to disable the caret row highlighting layer
+  on <code>JEditorPane</code>.
+  </p>
+  
+  <pre>
+  JEditorPane pane = new JEditorPane();
+  pane.putClientProperty(
+    "HighlightsLayerExcludes", 
+    "^org\\.netbeans\\.modules\\.editor\\.lib2\\.highlighting\\.CaretRowHighlighting$"
+  );
+  </pre>
+  
+  
+  <h4>Other usecases</h4>
+  
+  <p>
+  The main usecases described above are certainly not the only usecases of the
+  Highlighting SPI. In general the SPI can be used for binding any type of
+  information to parts of text in a document. While this information should have
+  limited size to keep a good performance of Netbeans editor it can be pretty much
+  anything. Information provided in highlights is currently used only by the editor's
+  drawing engine, which provides a limited set of features useful mostly for
+  rendering text. Some other uses could be for example text annotations, hyperlinking,
+  showing icons in text, etc.
+  </p>
+  
+  </body>
+</html>

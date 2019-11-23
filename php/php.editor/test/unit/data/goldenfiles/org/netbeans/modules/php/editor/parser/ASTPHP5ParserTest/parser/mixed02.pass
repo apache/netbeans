@@ -1,0 +1,81 @@
+<testresult testFile='mixed02.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='41' end='47'>
+            <text>$hello</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='47' end='49'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='49' end='56'>
+            <text>getCity</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='56' end='57'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='57' end='58'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='58' end='59'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='60' end='63'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='63' end='63'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='62'>
+        <Comments>
+            <PHPVarComment start='6' end='40'>
+                <Variable>
+                    <PHPDocVarTypeTag start='9' end='37' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='14' end='20' value='$hello'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='21' end='27' value='person' isArray='false'/>
+                            <PHPDocTypeNode start='28' end='32' value='null' isArray='false'/>
+                            <PHPDocTypeNode start='33' end='37' value='user' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+            <PHPVarComment start='6' end='40'>
+                <Variable>
+                    <PHPDocVarTypeTag start='9' end='37' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='14' end='20' value='$hello'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='21' end='27' value='person' isArray='false'/>
+                            <PHPDocTypeNode start='28' end='32' value='null' isArray='false'/>
+                            <PHPDocTypeNode start='33' end='37' value='user' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='41' end='59'>
+                <MethodInvocation start='41' end='58'>
+                    <Variable start='41' end='47' isDollared='true'>
+                        <Identifier start='42' end='47' name='hello'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='49' end='58'>
+                            <FucntionName start='49' end='56'>
+                                <Variable start='49' end='56' isDollared='false'>
+                                    <Identifier start='49' end='56' name='getCity'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <EmptyStatement start='60' end='62'/>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,5 @@
+token #0 T_HTML --TEST--\nbraces variable replacement test (heredoc)\n--FILE--\n
+token #1 T_PHP_OPEN_DELIMITER <?php
+token #2 T_PHP \n\nrequire_once 'nowdoc.inc';\n\nprint <<<ENDOFHEREDOC\nThis is heredoc test #{$a}.\n\nENDOFHEREDOC;\n\n$x = <<<ENDOFHEREDOC\nThis is heredoc test #{$b}.\n\nENDOFHEREDOC;\n\nprint "{$x}";\n\n
+token #3 T_PHP_CLOSE_DELIMITER ?>
+token #4 T_HTML \n--EXPECT--\nThis is heredoc test #1.\nThis is heredoc test #2.\n

@@ -1,0 +1,57 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>_pluginName</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="../css/warning.css">
+        <script type="text/javascript" src="../i18n/i18n.js"></script>
+        <script type="text/javascript" src="../i18n/warning.js"></script>
+        <script type="text/javascript" src="../js/warning.js"></script>
+    </head>
+    <body>
+
+        <img id="mainIco" src="../img/warnings/icon.png" width="50" height="41" alt="" />
+
+        <!-- disconnected debugger -->
+        <div id="disconnectedDebugger" class="topLevel">
+            <h1 class="i18n">_Warning_DisconnectedDebuggerTitle</h1>
+            <p class="i18n perex">_Warning_DisconnectedDebuggerPerex</p>
+            <p class="i18n body">_Warning_DisconnectedDebuggerBody</p>
+            <img src="../img/warnings/disconnectedDebugger.png" width="370" height="82" alt="" />
+        </div>
+
+        <!-- too small window -->
+        <div id="windowTooSmall" class="topLevel">
+            <h1 class="i18n">_Warning_WindowTooSmallTitle</h1>
+            <p class="i18n perex">_Warning_WindowTooSmallPerex</p>
+        </div>
+
+        <div id="buttons">
+            <div id="doNotShowAgain">
+                <input type="checkbox" id="doNotShowAgainCheck"><label for="doNotShowAgainCheck" id="doNotShowAgainLabel">_Warning_DoNotShowMeThisAgain</label>
+            </div>
+            <button id="okButton">_OK</button>
+        </div>
+
+    </body>
+</html>

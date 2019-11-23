@@ -1,0 +1,99 @@
+package encapsulateField;
+
+public class Class_A_L {
+
+    private int     field1;
+    
+    /**
+     * abcd 1234
+     * efgh 5678
+     */
+    private String  field2 = "1234";
+    private boolean field3;
+    private ClassA  field4 = new ClassA(1234);
+
+    public void m1(int field1) {
+        this.setField1(5);
+
+    }
+
+    public Class_A_L(int f) {
+        this.field1 = f;
+    }
+
+    public boolean isField3() {
+        return field3;
+    }
+
+    public void setField3(boolean field3) {
+        this.field3 = field3;
+    }
+
+    public int getField1() {
+        return field1;
+    }
+
+    public void setField1(int field1) {
+        this.field1 = field1;
+    }
+
+    public String getField2() {
+        return field2;
+    }
+
+    public void setField2(String field2) {
+        this.field2 = field2;
+    }
+
+    public ClassA getField4() {
+        return field4;
+    }
+
+    public void setField4(ClassA field4) {
+        this.field4 = field4;
+    }
+
+    class ClassA {
+
+        protected int val = 5;
+
+        public ClassA(int val) {
+            this.val = val;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public void setVal(int val) {
+            this.val = val;
+        }
+    }
+
+    class ClassB extends ClassA {
+
+        public ClassB(int val) {
+            super(val);
+        }
+
+        public void m1() {
+            val = 10;
+            setField1((int) Math.asin((double) getField1()) + Integer.valueOf(getField2()) + Boolean.compare(isField3(), true) + getField4().getVal());
+        }
+    }
+
+    public void m2() {
+    }
+
+    class ClassC extends ClassB {
+
+        public ClassC(int val) {
+            super(val);
+        }
+
+        public void m1() {
+            val = 10;
+        }
+    }
+}
+

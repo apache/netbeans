@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="contrib/libs.oracle.jsparser">
+    <description>Builds, tests, and runs the project org.netbeans.libs.nashorn</description>
+    <property name="build.dir" location="build"/>
+    
+    <!-- Hardcode the target cluster -->
+    <property name="cluster.dir" value="webcommon"/>
+    
+    <!-- 
+        Divert the output to this module's build dir, so it will not appear
+        in the distribution accidentally. Name the directory the same as the
+        intended taret cluster to satisfy ergonomic test checks
+    -->
+    <property name="cluster" value="${build.dir}/webcommon"/>
+    
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <!--
+        Masks out the standard procedure, which includes NetBeans distribution
+        license file, disclaimer and notice
+    -->
+    <target name="-create-license.file" depends="init">
+        <mkdir dir="${build.dir}/nbm-extras/META-INF"/>
+        <zipfileset id="extra.nbm.files" dir="${build.dir}/nbm-extras/" />
+    </target>
+    
+    <target name="clean" depends="projectized.clean">
+        <delete dir="nbms"/>
+    </target>
+    <!--
+        Supplemental target, generates UC for the module -->
+    <target name="uc" depends="nbm">
+      <taskdef name="makeupdatedesc" classname="org.netbeans.nbbuild.MakeUpdateDesc"
+               classpath="${nbantext.jar}"/>
+      <mkdir dir="nbms"/>
+      <property name="use.license.url.in.catalog" value="true"/>
+      <makeupdatedesc desc="nbms/catalog.xml" distbase="." uselicenseurl="${use.license.url.in.catalog}">
+          <fileset dir="build">
+              <include name="*.nbm"/>
+              <include name="*.jar"/>
+          </fileset>
+      </makeupdatedesc>
+      <copy todir="nbms">
+          <fileset dir="build">
+              <include name="*.nbm"/>
+              <include name="*.jar"/>
+          </fileset>
+      </copy>
+    </target>
+</project>

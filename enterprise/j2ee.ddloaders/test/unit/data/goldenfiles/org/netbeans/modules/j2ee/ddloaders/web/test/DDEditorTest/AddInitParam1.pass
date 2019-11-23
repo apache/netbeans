@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <context-param>
+    <param-name>car</param-name>
+    <param-value>Volvo</param-value>
+  </context-param>
+  <context-param>
+    <param-name>color</param-name>
+    <param-value>Blue</param-value>
+  </context-param>
+  <listener>
+    <description>ServletContextListener</description>
+    <listener-class>abc.NewServletListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>NewServlet</servlet-name>
+    <servlet-class>abc.NewServlet</servlet-class>
+    <init-param>
+      <param-name>Name</param-name>
+      <param-value>Value</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewServlet</servlet-name>
+    <url-pattern>/NewServlet</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            index.jsp
+        </welcome-file>
+  </welcome-file-list>
+</web-app>

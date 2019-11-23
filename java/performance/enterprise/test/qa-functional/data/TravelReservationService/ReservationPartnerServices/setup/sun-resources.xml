@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN" "http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd">
+<resources>
+  <admin-object-resource enabled="true" jndi-name="jms/ReservationCallbackProviderBean" object-type="user" res-adapter="jmsra" res-type="javax.jms.Queue">
+    <description/>
+    <property name="Name" value="ReservationCallbackProviderBean"/>
+  </admin-object-resource>
+  <connector-resource enabled="true" jndi-name="jms/ReservationCallbackProviderDestinationFactory" object-type="user" pool-name="jms/ReservationCallbackProviderDestinationFactory">
+    <description/>
+  </connector-resource>
+  <connector-connection-pool associate-with-thread="false" connection-creation-retry-attempts="0" connection-creation-retry-interval-in-seconds="10" connection-definition-name="javax.jms.QueueConnectionFactory" connection-leak-reclaim="false" connection-leak-timeout-in-seconds="0" fail-all-connections="false" idle-timeout-in-seconds="300" is-connection-validation-required="false" lazy-connection-association="false" lazy-connection-enlistment="false" match-connections="true" max-connection-usage-count="0" max-pool-size="32" max-wait-time-in-millis="60000" name="jms/ReservationCallbackProviderDestinationFactory" pool-resize-quantity="2" resource-adapter-name="jmsra" steady-pool-size="8" validate-atmost-once-period-in-seconds="0"/>
+</resources>

@@ -1,0 +1,31 @@
+var |>GLOBAL:ondra<| = {
+    |>FIELD:name<|: "ondra",
+    |>CLASS:address<|: { // in ondra
+        |>FIELD:city<|: "chrudim",
+        |>FIELD:state<|: "CR"
+    },
+    |>CLASS:house<| :{
+      |>CLASS:address<|: { // in house
+          |>FIELD:street<|: "Piseckeho"
+      },
+      |>FIELD:number<|: 30
+    }
+};
+
+ 
+with (|>GLOBAL:ondra<|) {
+    |>GLOBAL:console<|.log(address);
+    with (address) {
+        |>GLOBAL:console<|.log(|>FIELD:state<|);
+    }
+    with (house) {
+        with(|>GLOBAL:ondra<|) { // second
+            with(address) { // from ondra
+                |>GLOBAL:console<|.log(|>FIELD:state<|);
+            } 
+        }
+        with(address){ // from house
+            |>GLOBAL:console<|.log(|>FIELD:street<|);
+        }
+    }
+}

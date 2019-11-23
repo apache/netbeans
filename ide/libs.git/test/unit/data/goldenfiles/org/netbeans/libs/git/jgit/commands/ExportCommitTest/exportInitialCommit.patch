@@ -1,0 +1,13 @@
+From {0} Mon Sep 17 00:00:00 2001
+From: {1}
+Date: {2}
+
+initial commit
+
+diff --git a/file b/file
+new file mode 100644
+index 0000000..b1b7161
+--- /dev/null
++++ b/file
+@@ -0,0 +1 @@
++init

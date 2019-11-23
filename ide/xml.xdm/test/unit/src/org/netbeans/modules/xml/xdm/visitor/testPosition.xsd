@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : newXMLSchema.xsd
+    Created on : February 6, 2006, 4:33 PM
+    Author     : Owner
+    Description:
+        Purpose of XML Schema document follows.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/examples/targetNS"
+            xmlns:tns="http://xml.netbeans.org/examples/targetNS"
+            xmlns="http://xml.netbeans.org/examples/targetNS"
+            elementFormDefault="qualified">
+
+
+    <xsd:complexType name="ce"></xsd:complexType>
+    <!--&lt;&amp;--><xsd:element name="ge">
+	<xsd:complexType>
+	    <xsd:sequence></xsd:sequence>
+	</xsd:complexType>
+    </xsd:element>
+</xsd:schema>

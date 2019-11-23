@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Add Forward/Include Action Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.struts.dialogs.AddFIActionPanel" name="org.netbeans.modules.web.struts.dialogs.AddFIActionPanel"></a></p>
+<div id="NBCSH4263"><!-- infolevel="all" infotype="General" --><a id="sthref566" name="sthref566"></a>
+<h1>Add Forward/Include Action Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to register an action forward or an action include in the <code dir="ltr">struts-config.xml</code> file. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1189">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>A Struts action responds to a request. Writing an action means subclassing one of the Action classes and then overriding the class's execute method. Use the New Struts Action wizard for this purpose. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>In some exceptional scenarios, you do not need an action to execute, but you <i>do</i> want to redirect to a new JSP page. In these exceptional scenarios, you have two options:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t17">Option</th>
+<th align="left" valign="bottom" id="r1c2-t17">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t17" headers="r1c1-t17">
+<p>Forward Action</p>
+</td>
+<td align="left" headers="r2c1-t17 r1c2-t17">Specifies a bridge from the JSP page to another JSP page or an action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t17" headers="r1c1-t17">
+<p>Include Action</p>
+</td>
+<td align="left" headers="r3c1-t17 r1c2-t17">Specifies the same as a forwardaction, except that the JSP page or action is going to be included by another JSP page or action.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> When you use the <b>Add Forward/Include Action</b> dialog box, the forward or include is an attribute, rather than an element. The attribute makes the mapping functionally equivalent to the element, however, the tag is shorter.</p>
+<p>In the <b>Add Forward/Include Action</b> dialog box, you set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t18">Element</th>
+<th align="left" valign="bottom" id="r1c2-t18">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t18" headers="r1c1-t18">
+<p>Action Path</p>
+</td>
+<td align="left" headers="r2c1-t18 r1c2-t18">Specifies the application context-relative path to the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t18" headers="r1c1-t18">
+<p>Action Type</p>
+</td>
+<td align="left" headers="r3c1-t18 r1c2-t18">Sets the type of action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Forward Action</p>
+</td>
+<td align="left" headers="r4c1-t18 r1c2-t18">Specifies a bridge from the JSP page to another JSP page or an action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Include Action</p>
+</td>
+<td align="left" headers="r5c1-t18 r1c2-t18">Specifies the same as a forwardaction, except that the JSP page or action is going to be included by another JSP page or action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t18" headers="r1c1-t18">
+<p>Call</p>
+</td>
+<td align="left" headers="r6c1-t18 r1c2-t18">Sets the call made.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Resource File</p>
+</td>
+<td align="left" headers="r7c1-t18 r1c2-t18">Specifies the path to the JSP page that handles the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Action</p>
+</td>
+<td align="left" headers="r8c1-t18 r1c2-t18">Specifies the action that handles the forwardaction or includeaction.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p><b>Note:</b> If you want to change a registered forwardaction or includeaction, you can do so by manually editing the XML tags in the <code dir="ltr">struts-config.xml</code> file.</p>
+<a id="NBCSH4273" name="NBCSH4273"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>&quot;Working with the Struts Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1140">
+<param name="text" value="<html><u>&quot;About Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

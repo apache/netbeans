@@ -1,0 +1,44 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.test.utilities.actions;
+
+import org.netbeans.jellytools.Bundle;
+import org.netbeans.jellytools.actions.Action;
+
+/**
+ * Action displaying Search Results output window
+ * @author Max Sauer
+ */
+public class SearchResultsViewAction extends Action {
+    
+    private static final String menu =
+            Bundle.getStringTrimmed("org.netbeans.core.Bundle",
+            "Menu/Window") +
+            "|" +
+            Bundle.getStringTrimmed("org.netbeans.modules.search.Bundle",
+            "TEXT_ACTION_SEARCH_RESULTS"); //NOI18N
+    
+    
+    /** Creates a new instance of ResultWindowViewAction */
+    public SearchResultsViewAction() {
+        super(menu, null, "org.netbeans.search.ResultViewOpenAction"); //NOI18N
+    }
+    
+    
+}

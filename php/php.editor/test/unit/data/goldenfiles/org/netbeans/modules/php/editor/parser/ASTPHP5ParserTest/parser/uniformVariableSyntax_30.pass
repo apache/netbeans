@@ -1,0 +1,162 @@
+<testresult testFile='uniformVariableSyntax_30.php'>
+    <scanner>
+        <token id='T_ECHO' start='7' end='11'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='12' end='20'>
+            <text>&apos;strlen&apos;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='20' end='21'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='21' end='34'>
+            <text>&apos;scalar call&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='34' end='35'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='36' end='37'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='38' end='45'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='45' end='46'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='47' end='57'>
+            <text>$something</text>
+        </token>
+        <token id='T_EQUAL' start='58' end='59'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='60' end='71'>
+            <text>&apos;something&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='71' end='72'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='73' end='77'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='78' end='86'>
+            <text>&apos;strlen&apos;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='86' end='87'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='87' end='97'>
+            <text>$something</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='97' end='98'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='99' end='100'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='101' end='108'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='108' end='109'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='110' end='114'>
+            <text>echo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='115' end='116'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='116' end='124'>
+            <text>"strlen"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='124' end='125'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='125' end='126'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='126' end='136'>
+            <text>$something</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='136' end='137'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='138' end='139'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='140' end='147'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='147' end='148'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='149' end='149'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='149'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <EchoStatement start='7' end='46'>
+                <InfixExpression start='12' end='45' operator='CONCAT'>
+                    <FunctionInvocation start='12' end='35'>
+                        <FucntionName start='12' end='20'>
+                            <Scalar start='12' end='20' type='STRING' value='&apos;strlen&apos;'/>
+                        </FucntionName>
+                        <Parameters>
+                            <Scalar start='21' end='34' type='STRING' value='&apos;scalar call&apos;'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                    <NamespaceName start='38' end='45' isCurrent='false' isGlobal='false'>
+                        <Identifier start='38' end='45' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+            <ExpressionStatement start='47' end='72'>
+                <Assignment start='47' end='71' operator='EQUAL'>
+                    <Variable start='47' end='57' isDollared='true'>
+                        <Identifier start='48' end='57' name='something'/>
+                    </Variable>
+                    <Scalar start='60' end='71' type='STRING' value='&apos;something&apos;'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='73' end='109'>
+                <InfixExpression start='78' end='108' operator='CONCAT'>
+                    <FunctionInvocation start='78' end='98'>
+                        <FucntionName start='78' end='86'>
+                            <Scalar start='78' end='86' type='STRING' value='&apos;strlen&apos;'/>
+                        </FucntionName>
+                        <Parameters>
+                            <Variable start='87' end='97' isDollared='true'>
+                                <Identifier start='88' end='97' name='something'/>
+                            </Variable>
+                        </Parameters>
+                    </FunctionInvocation>
+                    <NamespaceName start='101' end='108' isCurrent='false' isGlobal='false'>
+                        <Identifier start='101' end='108' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+            <EchoStatement start='110' end='148'>
+                <InfixExpression start='115' end='147' operator='CONCAT'>
+                    <FunctionInvocation start='115' end='137'>
+                        <FucntionName start='115' end='125'>
+                            <ParenthesisExpression start='115' end='125'>
+                                <Scalar start='116' end='124' type='STRING' value='"strlen"'/>
+                            </ParenthesisExpression>
+                        </FucntionName>
+                        <Parameters>
+                            <Variable start='126' end='136' isDollared='true'>
+                                <Identifier start='127' end='136' name='something'/>
+                            </Variable>
+                        </Parameters>
+                    </FunctionInvocation>
+                    <NamespaceName start='140' end='147' isCurrent='false' isGlobal='false'>
+                        <Identifier start='140' end='147' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

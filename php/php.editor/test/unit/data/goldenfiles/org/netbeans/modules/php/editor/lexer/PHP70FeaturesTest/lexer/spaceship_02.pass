@@ -1,0 +1,25 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_FUNCTION function
+token #3 WHITESPACE  
+token #4 PHP_STRING order_func
+token #5 PHP_TOKEN (
+token #6 PHP_VARIABLE $a
+token #7 PHP_TOKEN ,
+token #8 WHITESPACE  
+token #9 PHP_VARIABLE $b
+token #10 PHP_TOKEN )
+token #11 WHITESPACE  
+token #12 PHP_CURLY_OPEN {
+token #13 WHITESPACE \n    
+token #14 PHP_RETURN return
+token #15 WHITESPACE  
+token #16 PHP_VARIABLE $a
+token #17 WHITESPACE  
+token #18 PHP_OPERATOR <=>
+token #19 WHITESPACE  
+token #20 PHP_VARIABLE $b
+token #21 PHP_SEMICOLON ;
+token #22 WHITESPACE \n
+token #23 PHP_CURLY_CLOSE }
+token #24 WHITESPACE \n

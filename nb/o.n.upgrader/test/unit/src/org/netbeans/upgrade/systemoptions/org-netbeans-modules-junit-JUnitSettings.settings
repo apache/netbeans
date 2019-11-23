@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.junit/2" spec="2.21.0.2"/>
+    <instanceof class="java.io.Externalizable"/>
+    <instanceof class="java.io.Serializable"/>
+    <instanceof class="java.lang.Object"/>
+    <instanceof class="org.netbeans.modules.junit.JUnitSettings"/>
+    <instanceof class="org.openide.options.SystemOption"/>
+    <instanceof class="org.openide.util.HelpCtx$Provider"/>
+    <instanceof class="org.openide.util.SharedClassObject"/>
+    <serialdata class="org.netbeans.modules.junit.JUnitSettings">
+        ACED00057372002F6F72672E6F70656E6964652E7574696C2E536861726564436C6173734F626A6563742457726974655265
+        706C616365126D9FDFDCC10F580300024C0005636C617A7A7400114C6A6176612F6C616E672F436C6173733B4C00046E616D
+        657400124C6A6176612F6C616E672F537472696E673B7870767200286F72672E6E65746265616E732E6D6F64756C65732E6A
+        756E69742E4A556E697453657474696E6773052C4218B444DFAC0C0000787200206F72672E6F70656E6964652E6F7074696F
+        6E732E53797374656D4F7074696F6E07C081EB6EBC33D60C0000787200226F72672E6F70656E6964652E7574696C2E536861
+        726564436C6173734F626A6563743ED64D168B4A70DB0C000078707400286F72672E6E65746265616E732E6D6F64756C6573
+        2E6A756E69742E4A556E697453657474696E6773737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802
+        000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B020000787000000029740000
+        737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C756578700171007E000E7100
+        7E000E71007E000E71007E000E71007E000E71007E000E7371007E000D0071007E000E71007E000F71007E000F7400256A75
+        6E69742E7465787475692E5465737452756E6E65722E72756E2873756974652829293B740009526F6F74537569746571007E
+        000E71007E000E78
+    </serialdata>
+</settings>

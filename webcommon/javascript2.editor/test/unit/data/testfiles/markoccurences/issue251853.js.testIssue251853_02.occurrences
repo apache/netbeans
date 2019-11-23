@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:MyLib<| = new function MyLib() {};
+|>MARK_OCCURRENCES:MyLib<|.ObjB = function (arg) {
+|>MARK_OCCURRENCES:MyLib<|.objB = function () {
+    return new |>MARK_OCCURRENCES:My^Lib<|.ObjB(); 

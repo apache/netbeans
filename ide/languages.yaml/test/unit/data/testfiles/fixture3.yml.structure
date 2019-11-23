@@ -1,0 +1,10 @@
+DEFAULTS:ATTRIBUTE:[]:DEFAULTS:
+  created_on:ATTRIBUTE:[]:created_on:
+first:ATTRIBUTE:[]:first:
+  <<:ATTRIBUTE:[]:&lt;&lt;:
+    created_on:ATTRIBUTE:[]:created_on:
+  name:ATTRIBUTE:[]:name:
+second:ATTRIBUTE:[]:second:
+  <<:ATTRIBUTE:[]:&lt;&lt;:
+    created_on:ATTRIBUTE:[]:created_on:
+  name:ATTRIBUTE:[]:name:

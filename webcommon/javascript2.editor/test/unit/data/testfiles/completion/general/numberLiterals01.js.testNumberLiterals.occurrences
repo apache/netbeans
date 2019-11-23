@@ -1,0 +1,3 @@
+console.log(0xabc.|>MARK_OCCURRENCES:toFixed<|(3));
+console.log(0b101010.|>MARK_OCCURRENCES:toFixed<|(2));
+console.log(0o676.|>MARK_OCCURRENCES:toF^ixed<|(3));

@@ -1,0 +1,44 @@
+<testresult testFile='useGlobal.php'>
+    <scanner>
+        <token id='T_USE' start='6' end='9'>
+            <text>use</text>
+        </token>
+        <token id='T_NS_SEPARATOR' start='10' end='11'>
+            <text>\</text>
+        </token>
+        <token id='T_STRING' start='11' end='12'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='12' end='13'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='14' end='16'>
+            <text>?&gt;</text>
+        </token>
+        <token id='T_INLINE_HTML' start='16' end='18'>
+            <text> \n</text>
+        </token>
+        <token id='EOF' start='18' end='18'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='17'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <UseStatement start='6' end='13' type='TYPE'>
+                <SingleUseStatementPart start='10' end='12'>
+                    <Name>
+                        <NamespaceName start='10' end='12' isCurrent='false' isGlobal='true'>
+                            <Identifier start='11' end='12' name='A'/>
+                        </NamespaceName>
+                    </Name>
+                    <Alias>
+                    </Alias>
+                </SingleUseStatementPart>
+            </UseStatement>
+            <EmptyStatement start='14' end='16'/>
+            <InLineHtml start='16' end='17'/>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,222 @@
+Code completion result for source line:
+echo "class property: |$this->name\n";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    ANS                             [PUBLIC]   null
+PACKAGE    CNS                             [PUBLIC]   null
+CLASS      Book                            [PUBLIC]   issue153707.php
+METHOD     getName()                       [PUBLIC]   Book
+METHOD     setName($name)                  [PUBLIC]   Book
+VARIABLE   ? $name                         [PUBLIC]   issue153707.php
+VARIABLE   ? name                          [PUBLIC]   Book
+CONSTANT   TEST 'Simon'                    [PUBLIC]   Book
+KEYWORD    Book $this->                               null
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+PACKAGE    BNS                             [PUBLIC]   ANS
+PACKAGE    NNS                             [PUBLIC]   CNS
+CLASS      A                               [PUBLIC]   classConstructorOptionalParam.php
+CLASS      A135618                         [PUBLIC]   issue135618.php
+CLASS      Author                          [PUBLIC]   mixedtypes.php
+CLASS      Author_1                        [PUBLIC]   mixedtypes_1.php
+CLASS      B135618                         [PUBLIC]   issue135618.php
+CLASS      Basic142234                     [PUBLIC]   issue142234.php
+CLASS      Book                            [PUBLIC]   issue197453.php
+CLASS      Book                            [PUBLIC]   mixedtypes.php
+CLASS      Book_1                          [PUBLIC]   mixedtypes_1.php
+CLASS      ChildClass                      [PUBLIC]   class_member_visibility.php
+CLASS      ChildInterface                  [PUBLIC]   interfaces.php
+CLASS      ClassName                       [PUBLIC]   issue194300.php
+CLASS      Cls136188                       [PUBLIC]   issue136188.php
+CLASS      Cls149519                       [PUBLIC]   issue149519.php
+CLASS      Cls2DeclarationTest             [PUBLIC]   clsDeclaration.php
+CLASS      Cls2DeclarationTest             [PUBLIC]   clsDeclaration02.php
+CLASS      Cls3DeclartionTest              [PUBLIC]   clsDeclaration02.php
+CLASS      ClsBaseDeclarationTest          [PUBLIC]   clsDeclaration.php
+CLASS      ClsDeclarationTest              [PUBLIC]   clsDeclaration.php
+CLASS      ClsDeclarationTest              [PUBLIC]   clsDeclaration02.php
+CLASS      ClsFromFactory                  [PUBLIC]   issue144830.php
+CLASS      ClsFromFactory                  [PUBLIC]   issue144840_01.php
+CLASS      ForClsCtxCodeCompletion         [PUBLIC]   insideClass3.php
+CLASS      Hello146648                     [PUBLIC]   issue146648.php
+CLASS      I146187ChildClass               [PUBLIC]   issue146187.php
+CLASS      I146187ChildClass               [PUBLIC]   issue146187.php
+CLASS      I146187Parent1                  [PUBLIC]   issue146187.php
+CLASS      I146187Parent2                  [PUBLIC]   issue146187.php
+CLASS      InsideClass                     [PUBLIC]   insideClass.php
+CLASS      Magazine                        [PUBLIC]   mixedtypes.php
+CLASS      Magazine_1                      [PUBLIC]   mixedtypes_1.php
+CLASS      MagicMethods                    [PUBLIC]   issue196714.php
+CLASS      MyAbstractClass                 [PUBLIC,   issue200795.php
+CLASS      MyIface                         [PUBLIC]   insideInterface.php
+CLASS      MyNonAbstractClass              [PUBLIC]   issue200795.php
+CLASS      MySecondIface                   [PUBLIC]   insideInterface.php
+CLASS      MyTextException                 [PUBLIC]   catchinstanceof.php
+CLASS      NewClass                        [PUBLIC]   issue171232_01.php
+CLASS      NewClass                        [PUBLIC]   issue171232_02.php
+CLASS      ParentClass                     [PUBLIC]   class_member_visibility.php
+CLASS      ParentInterface                 [PUBLIC]   interfaces.php
+CLASS      Person148213                    [PUBLIC]   issue148213.php
+CLASS      PhpDoc01Magazine                [PUBLIC]   typeInPHPDoc01.php
+CLASS      PhpDoc01News                    [PUBLIC]   typeInPHPDoc01.php
+CLASS      SmartCompletion                 [PUBLIC]   issue201032.php
+CLASS      SubClass157534                  [PUBLIC]   issue157534.php
+CLASS      SuperClass157534                [PUBLIC]   issue157534.php
+CLASS      System147427                    [PUBLIC]   issue147427.php
+CLASS      Test                            [PUBLIC]   issue142024.php
+CLASS      Test141999                      [PUBLIC]   issue141999.php
+CLASS      Test142234                      [PUBLIC]   issue142234.php
+CLASS      Test144409                      [PUBLIC]   issue144409.php
+CLASS      Test145692                      [PUBLIC]   issue145692.php
+CLASS      Test147179                      [PUBLIC]   issue147179.php
+CLASS      Test147883A                     [PUBLIC]   issue147883.php
+CLASS      Test147883B                     [PUBLIC]   issue147883.php
+CLASS      Test148219                      [PUBLIC]   issue148219.php
+CLASS      Test148856Class                 [PUBLIC]   issue148856.php
+CLASS      Test154055                      [PUBLIC]   issue154055.php
+CLASS      TestCCOnMethods                 [PUBLIC]   test_cc_on_methods.php
+CLASS      TestCCOnMethodsParentClass      [PUBLIC]   test_cc_on_methods.php
+CLASS      TestClass                       [PUBLIC]   function_return_type.php
+CLASS      TestIssue145206                 [PUBLIC]   issue145206.php
+CLASS      TestIssue146176                 [PUBLIC]   issue146176.php
+CLASS      TestOptionalArgsClass           [PUBLIC]   optional_args.php
+CLASS      TypesinPHPDoc                   [PUBLIC]   types_in_phpdoc.php
+CLASS      User                            [PUBLIC]   issue142051.php
+CLASS      User147427                      [PUBLIC]   issue147427.php
+CLASS      VarAdvancedTest                 [PUBLIC]   varAssignment2.php
+CLASS      VarTypeCommentTest              [PUBLIC]   varTypeComment.php
+CLASS      a                               [PUBLIC]   issue137033.php
+CLASS      a                               [PUBLIC]   issue137033.php
+CLASS      blog_Application147191          [PUBLIC]   issue147191.php
+CLASS      cls142091                       [PUBLIC]   issue142091.php
+CLASS      cls147575                       [PUBLIC]   issue147575.php
+CLASS      clsAVarAssignment               [PUBLIC]   varAssignment.php
+CLASS      clsBVarAssignment               [PUBLIC]   varAssignment.php
+CLASS      clsCVarAssignment               [PUBLIC]   varAssignment.php
+CLASS      cls_A                           [PUBLIC]   insideClass2.php
+CLASS      cls_B                           [PUBLIC]   insideClass2.php
+CLASS      iface142091                     [PUBLIC]   issue142091.php
+CLASS      issue1480109                    [PUBLIC]   issue148109.php
+CLASS      pupil140784                     [PUBLIC]   issue140784.php
+CLASS      sfWidgetFormSchema              [PUBLIC]   issue197571.php
+CLASS      teacher140784                   [PUBLIC]   issue140784.php
+CLASS      test                            [PUBLIC]   issue194300.php
+METHOD     bar($x = -5)                    [PUBLIC]   issue200178.php
+METHOD     bar($x = -5, $y = 3)            [PUBLIC]   issue200178.php
+METHOD     bar()                           [PUBLIC]   issue141999.php
+METHOD     bar()                           [PUBLIC]   issue200178.php
+METHOD     bar(Test &$t)                   [PUBLIC]   issue142024.php
+METHOD     f1(&$request1)                  [PUBLIC]   issue136092.php
+METHOD     f2(&$request2)                  [PUBLIC]   issue136092.php
+METHOD     fc142091(cls142091 $p)          [PUBLIC]   issue142091.php
+METHOD     fi142091(iface142091 $p)        [PUBLIC]   issue142091.php
+METHOD     fn1(clsAVarAssignment $aParam)  [PUBLIC]   varAssignment.php
+METHOD     fn2(clsAVarAssignment $cParam)  [PUBLIC]   varAssignment.php
+METHOD     fn3(clsAVarAssignment &$aParam  [PUBLIC]   varAssignment.php
+METHOD     fn4(clsAVarAssignment &$cParam  [PUBLIC]   varAssignment.php
+METHOD     fncCreateA()                    [PUBLIC]   varAssignment.php
+METHOD     fncCreateC()                    [PUBLIC]   varAssignment.php
+METHOD     fnc_b()                         [PUBLIC]   insideClass2.php
+METHOD     foo($func_arg)                  [PUBLIC]   var_scope.php
+METHOD     foo($x = -5)                    [PUBLIC]   issue200178.php
+METHOD     foo()                           [PUBLIC]   issue200178.php
+METHOD     foo_TestCCOnMethods()           [PUBLIC]   test_cc_on_methods.php
+METHOD     functionName($param)            [PUBLIC]   issue202281.php
+METHOD     getBook()                       [PUBLIC]   mixedtypes.php
+METHOD     getBook()                       [PUBLIC]   mixedtypes_1.php
+METHOD     getBookMagazine()               [PUBLIC]   mixedtypes.php
+METHOD     getBookMagazine()               [PUBLIC]   mixedtypes_1.php
+METHOD     issue157534(&$var)              [PUBLIC]   issue157534.php
+METHOD     mytest()                        [PUBLIC]   varAssignment.php
+METHOD     printMyName()                   [PUBLIC]   varTypeComment.php
+METHOD     test()                          [PUBLIC]   typeInPHPDoc01.php
+METHOD     test142919(FooType1 $param1, $  [PUBLIC]   issue142919.php
+METHOD     test144409Func()                [PUBLIC]   issue144409.php
+METHOD     test145138_inner($param2)       [PUBLIC]   issue145138.php
+METHOD     test145138_outer($param1)       [PUBLIC]   issue145138.php
+METHOD     test148856Func($a)              [PUBLIC]   issue148856.php
+METHOD     testClassReturningFunction()    [PUBLIC]   function_return_type.php
+METHOD     testFunc(ChildInterface $arg)   [PUBLIC]   interfaces.php
+METHOD     testOptionalArgsFunc($a)        [PUBLIC]   optional_args.php
+METHOD     testOptionalArgsFunc($a, $b =   [PUBLIC]   optional_args.php
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+CONSTANT   aaa 1                           [PUBLIC]   issue137033.php
+KEYWORD    abstract                                   null
+KEYWORD    and                                        null
+KEYWORD    array                                      null
+KEYWORD    as                                         null
+KEYWORD    break                                      null
+KEYWORD    case                                       null
+KEYWORD    catch                                      null
+KEYWORD    class                                      null
+KEYWORD    clone                                      null
+KEYWORD    const                                      null
+KEYWORD    continue                                   null
+KEYWORD    declare                                    null
+KEYWORD    default                                    null
+KEYWORD    die()                                      Language Construct
+KEYWORD    do                                         null
+KEYWORD    echo '';                                   Language Construct
+KEYWORD    else                                       null
+KEYWORD    elseif                                     null
+KEYWORD    empty()                                    Language Construct
+KEYWORD    enddeclare                                 null
+KEYWORD    endfor                                     null
+KEYWORD    endforeach                                 null
+KEYWORD    endif                                      null
+KEYWORD    endswitch                                  null
+KEYWORD    endwhile                                   null
+KEYWORD    eval()                                     Language Construct
+KEYWORD    exit()                                     Language Construct
+KEYWORD    extends                                    null
+KEYWORD    final                                      null
+KEYWORD    finally                                    null
+KEYWORD    fn                                         null
+KEYWORD    for                                        null
+KEYWORD    foreach                                    null
+KEYWORD    function                                   null
+KEYWORD    global                                     null
+KEYWORD    goto                                       null
+KEYWORD    if                                         null
+KEYWORD    implements                                 null
+KEYWORD    include '';                                Language Construct
+KEYWORD    include_once '';                           Language Construct
+KEYWORD    instanceof                                 null
+KEYWORD    interface                                  null
+KEYWORD    isset()                                    Language Construct
+KEYWORD    list()                                     Language Construct
+KEYWORD    namespace                                  null
+KEYWORD    new                                        null
+KEYWORD    or                                         null
+KEYWORD    print '';                                  Language Construct
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    require '';                                Language Construct
+KEYWORD    require_once '';                           Language Construct
+KEYWORD    return ;                                   Language Construct
+KEYWORD    static                                     null
+KEYWORD    switch                                     null
+KEYWORD    throw                                      null
+KEYWORD    try                                        null
+KEYWORD    unset()                                    Language Construct
+KEYWORD    use                                        null
+KEYWORD    var                                        null
+KEYWORD    while                                      null
+KEYWORD    xor                                        null
+KEYWORD    yield                                      null
+KEYWORD    yield from                                 null

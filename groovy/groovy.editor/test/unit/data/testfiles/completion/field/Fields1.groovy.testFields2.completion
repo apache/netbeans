@@ -1,0 +1,5 @@
+Code completion result for source line:
+println "Hi: $ad|"
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      ada                             [PRIVATE]  String

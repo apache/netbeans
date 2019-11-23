@@ -1,0 +1,48 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+Support for creating projects involving Java sources.
+
+<p>
+Besides the visible Javadoc, this module permits a project to add implementations
+of {@link org.netbeans.spi.java.classpath.ClassPathProvider}
+and/or {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation}
+and/or {@link org.netbeans.spi.java.queries.SourceLevelQueryImplementation}
+and/or {@link org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation}
+and/or {@link org.netbeans.spi.java.queries.AccessibilityQueryImplementation}
+and/or {@link org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation}
+and/or {@link org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation}
+into the project lookup (rather than global lookup).
+The implementations will be consulted only in the case the relevant file
+belongs to that project (according to {@link org.netbeans.api.project.FileOwnerQuery}).
+This helps avoid the need to consult irrelevant query implementations.
+</p>
+
+<p>
+<a href="apichanges.html">API Changes</a>
+</p>
+<p>
+<a href="architecture-summary.html">Architecture Summary</a>
+</p>
+
+</body>
+</html>

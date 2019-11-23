@@ -1,0 +1,7 @@
+Code completion result for source line:
+$cParam5->|aCreateA();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     aCreateA()                      [PUBLIC]   clsAVarAssignment
+METHOD     aCreateC()                      [PUBLIC]   clsAVarAssignment
+METHOD     aStaticCreateA()                [STATIC]   clsAVarAssignment
+METHOD     aStaticCreateC()                [STATIC]   clsAVarAssignment

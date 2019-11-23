@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->|testFnc();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testFnc()                       [PUBLIC]   Cls149519
+METHOD     testStaticFnc()                 [STATIC]   Cls149519

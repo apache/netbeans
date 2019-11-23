@@ -1,0 +1,5 @@
+Code completion result for source line:
+formatter.println(Carrot.isVegi|table());
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     isVegitable(): Boolean          [PUBLIC]   simpleObject.js

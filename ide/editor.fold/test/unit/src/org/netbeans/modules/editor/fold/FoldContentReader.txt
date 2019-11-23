@@ -1,0 +1,31 @@
+A/**
+ * 
+ * @see No Comment at all
+ */
+
+B/**
+ * First line alone
+ * Next line
+ */
+
+C/**
+ * First line end. Next content
+ */
+
+D<tag>
+
+E<tag-with-attributes attr1="">
+
+F<self-closing-tag/>
+
+G<tag-with-newline
+>
+
+H/**
+ *                             
+ * Empty line left out
+ */
+
+I/** One liner without dot*/
+
+J/** One liner with dot. bleh */

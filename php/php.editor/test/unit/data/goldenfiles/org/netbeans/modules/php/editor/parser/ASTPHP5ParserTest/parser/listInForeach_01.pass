@@ -1,0 +1,237 @@
+<testresult testFile='listInForeach_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='6' end='12'>
+            <text>$array</text>
+        </token>
+        <token id='T_EQUAL' start='13' end='14'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='15' end='16'>
+            <text>[</text>
+        </token>
+        <token id='T_OPEN_RECT' start='21' end='22'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='22' end='23'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='23' end='24'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='25' end='26'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='26' end='27'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='27' end='28'>
+            <text>,</text>
+        </token>
+        <token id='T_OPEN_RECT' start='33' end='34'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='34' end='35'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='35' end='36'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='37' end='38'>
+            <text>4</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='38' end='39'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='39' end='40'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='41' end='42'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='42' end='43'>
+            <text>;</text>
+        </token>
+        <token id='T_FOREACH' start='45' end='52'>
+            <text>foreach</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='53' end='54'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='54' end='60'>
+            <text>$array</text>
+        </token>
+        <token id='T_AS' start='61' end='63'>
+            <text>as</text>
+        </token>
+        <token id='T_LIST' start='64' end='68'>
+            <text>list</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='68' end='69'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='69' end='71'>
+            <text>$a</text>
+        </token>
+        <token id='T_COMMA' start='71' end='72'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='73' end='75'>
+            <text>$b</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='75' end='76'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='76' end='77'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='78' end='79'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='84' end='88'>
+            <text>echo</text>
+        </token>
+        <token id='T_QUATE' start='89' end='90'>
+            <text>"</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='90' end='93'>
+            <text>A: </text>
+        </token>
+        <token id='T_VARIABLE' start='93' end='95'>
+            <text>$a</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='95' end='100'>
+            <text>; B: </text>
+        </token>
+        <token id='T_VARIABLE' start='100' end='102'>
+            <text>$b</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='102' end='104'>
+            <text>\n</text>
+        </token>
+        <token id='T_QUATE' start='104' end='105'>
+            <text>"</text>
+        </token>
+        <token id='T_SEMICOLON' start='105' end='106'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='107' end='108'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='109' end='112'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='112' end='112'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='111'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='6' end='43'>
+                <Assignment start='6' end='42' operator='EQUAL'>
+                    <Variable start='6' end='12' isDollared='true'>
+                        <Identifier start='7' end='12' name='array'/>
+                    </Variable>
+                    <ArrayCreation start='15' end='42' type='NEW'>
+                        <ArrayElement start='21' end='27'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='21' end='27' type='NEW'>
+                                    <ArrayElement start='22' end='23'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='22' end='23' type='INT' value='1'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='25' end='26'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='25' end='26' type='INT' value='2'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='33' end='39'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <ArrayCreation start='33' end='39' type='NEW'>
+                                    <ArrayElement start='34' end='35'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='34' end='35' type='INT' value='3'/>
+                                        </Value>
+                                    </ArrayElement>
+                                    <ArrayElement start='37' end='38'>
+                                        <Key>
+                                        </Key>
+                                        <Value>
+                                            <Scalar start='37' end='38' type='INT' value='4'/>
+                                        </Value>
+                                    </ArrayElement>
+                                </ArrayCreation>
+                            </Value>
+                        </ArrayElement>
+                    </ArrayCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ForEachStatement start='45' end='108'>
+                <Key>
+                </Key>
+                <Expression>
+                    <Variable start='54' end='60' isDollared='true'>
+                        <Identifier start='55' end='60' name='array'/>
+                    </Variable>
+                </Expression>
+                <Statement>
+                    <Block start='78' end='108' isCurly='true'>
+                        <EchoStatement start='84' end='106'>
+                            <Quote start='89' end='105' type='QUOTE'>
+                                <Expressions>
+                                    <Scalar start='90' end='93' type='STRING' value='A: '/>
+                                    <Variable start='93' end='95' isDollared='true'>
+                                        <Identifier start='94' end='95' name='a'/>
+                                    </Variable>
+                                    <Scalar start='95' end='100' type='STRING' value='; B: '/>
+                                    <Variable start='100' end='102' isDollared='true'>
+                                        <Identifier start='101' end='102' name='b'/>
+                                    </Variable>
+                                    <Scalar start='102' end='104' type='STRING' value='\n'/>
+                                </Expressions>
+                            </Quote>
+                        </EchoStatement>
+                    </Block>
+                </Statement>
+                <Value>
+                    <ListVariable start='64' end='76' type='OLD'>
+                        <ArrayElement start='69' end='71'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='69' end='71' isDollared='true'>
+                                    <Identifier start='70' end='71' name='a'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                        <ArrayElement start='73' end='75'>
+                            <Key>
+                            </Key>
+                            <Value>
+                                <Variable start='73' end='75' isDollared='true'>
+                                    <Identifier start='74' end='75' name='b'/>
+                                </Variable>
+                            </Value>
+                        </ArrayElement>
+                    </ListVariable>
+                </Value>
+            </ForEachStatement>
+            <EmptyStatement start='109' end='111'/>
+        </Statements>
+    </Program>
+</testresult>

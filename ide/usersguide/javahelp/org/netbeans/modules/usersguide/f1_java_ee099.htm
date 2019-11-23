@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Web Service Attributes Editor: Quality of Service: Security</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.websvc.wsitconf.ui.client.nodes.CallbackClientNode" name="org.netbeans.modules.websvc.wsitconf.ui.client.nodes.CallbackClientNode"></a></p>
+<div id="NBCSH4969"><!-- infolevel="all" infotype="General" --><a id="sthref728" name="sthref728"></a>
+<h1>Web Service Attributes Editor: Quality of Service: Security</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>In the Security section of the WSIT configuration editor, you may configure a user name and password for some of the security mechanisms. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2878">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t98">Element</th>
+<th align="left" valign="bottom" id="r1c2-t98">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t98" headers="r1c1-t98">
+<p>Use development defaults</p>
+</td>
+<td align="left" headers="r2c1-t98 r1c2-t98">Fast Infoset is a more efficient alternative to XML. If the service is configured to allow Fast Infoset, select this option to use Fast Infoset for faster parsing, faster serializing, and smaller document sizes when compared with equivalent XML documents.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t98" headers="r1c1-t98">Authentication Credentials</td>
+<td align="left" headers="r3c1-t98 r1c2-t98">If selected, the client runtime checks to see if the service supports TCP, and, if so, the client uses TCP transport automatically for service-client communication. TCP provides better performance when sending smaller messages. The performance enhancement is visible mostly in smaller messages because the overhead of sending messages over the HTTP protocol is eliminated. If the service does not support TCP, or if this option is not selected for the client, HTTP is used for transport.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;Static</td>
+<td align="left" headers="r4c1-t98 r1c2-t98"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Username</td>
+<td align="left" headers="r5c1-t98 r1c2-t98"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Password</td>
+<td align="left" headers="r6c1-t98 r1c2-t98">Enter the name of an authorized user and the password for this user. This option is best used only in the development environment. When the Default Username and Default Password are specified, the username and password are stored in the wsit-client.xml file in clear text, which presents a security risk. Do not use this option for production.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;Dynamic</td>
+<td align="left" headers="r7c1-t98 r1c2-t98"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username Callback Handler</td>
+<td align="left" headers="r8c1-t98 r1c2-t98"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password Callback Handler</td>
+<td align="left" headers="r9c1-t98 r1c2-t98">If you create JSR-109-compliant web services and web service clients that run under an Application Server container (JSR-109 deployment), the container handles the callbacks and you do not need to configure Callback Handlers of your own. If you are using another container, select the Browse button to select the class implementing the <code dir="ltr">javax.security.auth.callback.CallbackHandler</code> interface.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t98" headers="r1c1-t98">&nbsp;&nbsp;&nbsp;&nbsp;SAML Callback Handler</td>
+<td align="left" headers="r10c1-t98 r1c2-t98">To use a SAML Callback Handler, you need to create one, as there is no default.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4971" name="NBCSH4971"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1842">
+<param name="text" value="<html><u>&quot;Developing and Securing Web Services&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

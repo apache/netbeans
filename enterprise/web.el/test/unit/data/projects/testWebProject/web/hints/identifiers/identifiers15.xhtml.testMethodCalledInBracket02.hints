@@ -1,0 +1,2 @@
+#{bean["getMyFake"]()}      ---------------
+HINT:Unknown method "getMyFake"

@@ -1,0 +1,42 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<body>
+    <p>
+        API for read-only access XML structure using DOM-like interface. Implemented over XML lexer,
+        so the structure can be obtained even on malformed, unfinished or errneous documents.
+        The caller may obtain a SyntaxElement corresponding to a given textual position in the XML document.
+        The SyntaxElement can be used to both read contents (attributes, tag name, ...) of the document,
+        or navigate to sibling, predecessor, parent or child Elements. SyntaxElement can be converted to 
+        DOM Node; DOM Nodes obtained originally as a result of SyntaxElement conversion can be converted
+        back to SyntaxElements so the caller can retrieve their position within the document.
+    </p>
+    <p>
+        It is advisable to perform searches or navigation through the document under a document read (write)
+        lock. Implementations in this package read-lock the document internally, but generally no lock is
+        preserved across method calls.
+    </p>
+    <p>
+        The design / structure of the API is intentionally almost the same as with the obsoleted api located in
+        <code>org.netbeans.modules.xml.text.syntax.dom</code> package to make the existing code migration easier.
+    </p>
+</body>
+</html>

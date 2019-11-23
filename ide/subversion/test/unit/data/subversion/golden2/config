@@ -1,0 +1,10 @@
+[auth]
+store-auth-creds = no
+
+[tunnels]
+
+[helpers]
+editor-cmd = editor
+diff-cmd = diff_program
+diff3-cmd = diff3_program
+diff3-has-program-arg = false

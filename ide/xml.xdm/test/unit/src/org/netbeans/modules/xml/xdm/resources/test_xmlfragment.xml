@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<test xmlns="http://www.test.com/TestModel"
+      xmlns:t2="http://www.test2.com/TestModel"
+>
+    <a index='1'>CharDataString</a><a index='2'/>
+    <b index='1'> 
+        <b index='1' value="c"/>
+        
+        <!-- /> -->
+        <!-- /> -->
+    </b>
+    <c index='1'></c>
+    <c index='2'/>
+    <![CDATA[>>>>>]]>
+</test  >

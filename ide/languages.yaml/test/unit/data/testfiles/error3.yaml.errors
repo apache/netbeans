@@ -1,0 +1,1 @@
+31-31:While scanning a block mapping we had this expected <block end>, but found org.jvyamlb.tokens.PositionedBlockMappingStartToken

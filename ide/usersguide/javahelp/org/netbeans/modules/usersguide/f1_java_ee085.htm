@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Add Server Instance Wizard: Tomcat Installation and Login Details</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="tomcat_addinstall" name="tomcat_addinstall"></a></p>
+<div id="NBCSH4906"><!-- infolevel="all" infotype="General" --><a id="sthref714" name="sthref714"></a>
+<h1>Add Server Instance Wizard: Tomcat Installation and Login Details</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Tomcat Installation and Login Details panel of the Add Server Instance wizard enables you to register an instance of the Apache Tomcat web server with the IDE.</p>
+<p>Use this page to specify the details of the web server.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t84">Element</th>
+<th align="left" valign="bottom" id="r1c2-t84">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t84" headers="r1c1-t84">
+<p>Server Location</p>
+</td>
+<td align="left" headers="r2c1-t84 r1c2-t84">Specifies the Tomcat installation directory (Catalina Home) on your local system. Note that the IDE verifies that you have specified a valid Tomcat installation directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t84" headers="r1c1-t84">Use Private Configuration Folder (Catalina Base)</td>
+<td align="left" headers="r3c1-t84 r1c2-t84">Specifies that you expect to use Tomcat in a multi-user configuration. When you select this option, you can set the Catalina Base directory.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t84" headers="r1c1-t84">&nbsp;&nbsp;&nbsp;&nbsp;Catalina Base</td>
+<td align="left" headers="r4c1-t84 r1c2-t84">Specifies the Tomcat base directory.
+<p>Typically, a base directory is placed under a user's directory. If you associate a base directory with the server, the base directory must have the following subdirectories.</p>
+<ul>
+<li><code dir="ltr">conf</code>. Directory for server configuration files. This directory must have a server.xml file.</li>
+<li><code dir="ltr">logs</code>. Directory for log and output files</li>
+<li><code dir="ltr">webapps</code>. Directory for automatically loaded web applications</li>
+<li><code dir="ltr">work</code>. Temporary working directory for web applications</li>
+</ul>
+<p>If the base directory is empty, the IDE creates the subdirectories by copying them from Tomcat's home directory.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t84" headers="r1c1-t84">
+<p>Username</p>
+</td>
+<td align="left" headers="r5c1-t84 r1c2-t84">Type the username for the server instance.
+<p>The user must be a Tomcat user who has a manager role.</p>
+<p>If the username does not exist, you can select the box to create it.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t84" headers="r1c1-t84">
+<p>Password</p>
+</td>
+<td align="left" headers="r6c1-t84 r1c2-t84">Type the password for the server instance.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4910" name="NBCSH4910"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1681">
+<param name="text" value="<html><u>&quot;Working with Glassfish Application Servers&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

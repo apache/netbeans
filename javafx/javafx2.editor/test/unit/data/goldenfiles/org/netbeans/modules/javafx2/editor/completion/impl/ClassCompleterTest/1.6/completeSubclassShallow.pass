@@ -1,0 +1,6 @@
+simple-class[javafx.scene.transform.Affine]
+simple-class[javafx.scene.transform.Rotate]
+simple-class[javafx.scene.transform.Scale]
+simple-class[javafx.scene.transform.Shear]
+simple-class[javafx.scene.transform.Transform]
+simple-class[javafx.scene.transform.Translate]

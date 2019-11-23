@@ -1,0 +1,12 @@
+    if( a = b) {
+        -----
+HINT:Expected a conditional expression and instead saw an assignment.
+    while (a = b) {
+           -----
+HINT:Expected a conditional expression and instead saw an assignment.
+    for (var i = a; a = b; a++) {
+                    -----
+HINT:Expected a conditional expression and instead saw an assignment.
+    } while (a = 20);
+             ------
+HINT:Expected a conditional expression and instead saw an assignment.

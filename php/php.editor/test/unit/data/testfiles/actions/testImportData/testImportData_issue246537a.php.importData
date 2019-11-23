@@ -1,0 +1,13 @@
+Caret position: 68
+Should show uses panel: true
+Defaults:
+ \Two\MyTrait
+
+Names:
+ MyTrait
+
+Variants:
+ \One\MyTrait
+ \Two\MyTrait
+ Don't use type.
+

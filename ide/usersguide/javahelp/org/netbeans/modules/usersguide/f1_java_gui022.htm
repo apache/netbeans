@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Java FX Project Properties: Run</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javafx2.project.ui.JFXRunPanel" name="org.netbeans.modules.javafx2.project.ui.JFXRunPanel"></a></p>
+<div id="NBCSH2386"><!-- infolevel="all" infotype="General" --><a id="sthref325" name="sthref325"></a>
+<h1>Java FX Project Properties: Run</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Run panel lets you configure options for running your project.</p>
+<p>You can create several configurations and set the application class, application parameters, working directory for program execution, and VM options for each configuration. When running the application, you can easily switch the configuration in the drop-down list on the editor toolbar. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG399">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="34%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t18">Element</th>
+<th align="left" valign="bottom" id="r1c2-t18">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t18" headers="r1c1-t18">
+<p>Configuration</p>
+</td>
+<td align="left" headers="r2c1-t18 r1c2-t18">Create a new runtime configuration by clicking <b>New</b>. A dialog opens. Type or paste the new configuration's name in the Configuration Name field and click <b>OK</b>. You return to Project Properties: Run and the new configuration's name is in the Configuration field.
+<p>After a new configuration is created, it becomes available in the configuration drop-down list on the editor toolbar and you can switch configurations while running your project. Configurations are saved in the <code dir="ltr">&lt;configuration_name&gt;.properties</code> file in the <code dir="ltr">nbproject/configs</code> directory of your project.</p>
+<p>You can set the following options for a configuration:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Application Class</p>
+</td>
+<td align="left" headers="r3c1-t18 r1c2-t18">Specify the application class for the application. The Browse button only shows classes in the project's source folders. If you want to specify a class in one of the JAR files on the project's classpath, type the fully qualified class name in this field.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Parameters</p>
+</td>
+<td align="left" headers="r4c1-t18 r1c2-t18">Specify arguments passed on the command line, unnamed parameters specified in a JNLP file, and &lt;name,value&gt; pairs specified in a JNLP file for a browser-embedded or Web Start application.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;VM Options</p>
+</td>
+<td align="left" headers="r5c1-t18 r1c2-t18">Specify Java virtual machine options (separated with a space). The IDE uses these options for running the application class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Use Preloader: (Requires existing Preloader project.)</p>
+</td>
+<td align="left" headers="r6c1-t18 r1c2-t18">Ssearch your local file system for a Java FX Preloader project. When you select a preloader project, the Use Preloader box is activated and the path to the project appears in the field. If the project has more than one preloader class, you can choose between preloader classes in the Preloader Class drop-down box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t18" headers="r1c1-t18">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Run: Standalone/As Web Start/In Browser</p>
+</td>
+<td align="left" headers="r7c1-t18 r1c2-t18">Select how to run the application. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG403">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t18" headers="r1c1-t18">
+<p>Changing existing configurations</p>
+</td>
+<td align="left" headers="r8c1-t18 r1c2-t18">Change the configuration currently selected in the Configuration field. All changes you make to the default configuration, other than to the Run options, propagate to all other configurations automatically.
+<p>Any changes you make to a configuration other than the default configuration apply only to that non-default configuration.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2394" name="NBCSH2394"></a>
+<p><b>Standalone Application Settings</b></p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Working Directory</p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">Specify a working directory.
+<p>In some cases, you might need to specify a separate working directory that will be used during application execution. If no value is specified, the project directory is used by default as a working directory.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2396" name="NBCSH2396"></a>
+<p><b>Web Start and Browser Application Settings</b></p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t20">Element</th>
+<th align="left" valign="bottom" id="r1c2-t20">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t20" headers="r1c1-t20">
+<p>Width/Height</p>
+</td>
+<td align="left" headers="r2c1-t20 r1c2-t20">Enter preferred dimensions of the application scene.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t20" headers="r1c1-t20">
+<p>Web page</p>
+</td>
+<td align="left" headers="r3c1-t20 r1c2-t20">Enter a path to your own prepared HTML page, which may contain predefined special replacement tags.
+<p>This HTML page is processed at the time of deployment and is copied to the <code dir="ltr">/dist</code> sub-directory. If you leave this field blank, the IDE generates a default web page.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t20" headers="r1c1-t20">
+<p>Web Browser</p>
+</td>
+<td align="left" headers="r4c1-t20 r1c2-t20">Select the web browser in which the IDE opens the application. Click Manage to open the IDE Options, where you can define additional browsers.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2400" name="NBCSH2400"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

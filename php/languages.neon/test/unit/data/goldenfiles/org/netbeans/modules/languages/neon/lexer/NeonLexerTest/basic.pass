@@ -1,0 +1,114 @@
+token #0 NEON_BLOCK common
+token #1 NEON_INTERPUNCTION :
+token #2 NEON_WHITESPACE \n
+token #3 NEON_WHITESPACE \t
+token #4 NEON_BLOCK parameters
+token #5 NEON_INTERPUNCTION :
+token #6 NEON_WHITESPACE \n
+token #7 NEON_WHITESPACE \t\t
+token #8 NEON_VALUED_BLOCK zone
+token #9 NEON_INTERPUNCTION :
+token #10 NEON_WHITESPACE  
+token #11 NEON_STRING "Europe/Prague"
+token #12 NEON_WHITESPACE \n
+token #13 NEON_WHITESPACE \t\t
+token #14 NEON_VALUED_BLOCK foo
+token #15 NEON_INTERPUNCTION :
+token #16 NEON_WHITESPACE  
+token #17 NEON_VARIABLE %bar%
+token #18 NEON_WHITESPACE  
+token #19 NEON_LITERAL world
+token #20 NEON_WHITESPACE \n
+token #21 NEON_WHITESPACE \t\t
+token #22 NEON_VALUED_BLOCK foo3
+token #23 NEON_INTERPUNCTION :
+token #24 NEON_WHITESPACE  
+token #25 NEON_LITERAL overwritten
+token #26 NEON_WHITESPACE \n
+token #27 NEON_WHITESPACE \t\t
+token #28 NEON_VALUED_BLOCK bar
+token #29 NEON_INTERPUNCTION :
+token #30 NEON_WHITESPACE  
+token #31 NEON_LITERAL hello
+token #32 NEON_WHITESPACE \n
+token #33 NEON_WHITESPACE \n
+token #34 NEON_WHITESPACE \t
+token #35 NEON_BLOCK constants
+token #36 NEON_INTERPUNCTION :
+token #37 NEON_WHITESPACE \n
+token #38 NEON_WHITESPACE \t\t
+token #39 NEON_VALUED_BLOCK BAR
+token #40 NEON_INTERPUNCTION :
+token #41 NEON_WHITESPACE  
+token #42 NEON_VARIABLE %foo%
+token #43 NEON_WHITESPACE \n
+token #44 NEON_WHITESPACE \n
+token #45 NEON_WHITESPACE \t
+token #46 NEON_BLOCK php
+token #47 NEON_INTERPUNCTION :
+token #48 NEON_WHITESPACE \n
+token #49 NEON_WHITESPACE \t\t
+token #50 NEON_VALUED_BLOCK date.timezone
+token #51 NEON_INTERPUNCTION :
+token #52 NEON_WHITESPACE  
+token #53 NEON_VARIABLE %zone%
+token #54 NEON_WHITESPACE \n
+token #55 NEON_WHITESPACE \n
+token #56 NEON_WHITESPACE \n
+token #57 NEON_COMMENT # Production site configuration data
+token #58 NEON_WHITESPACE \n
+token #59 NEON_BLOCK production
+token #60 NEON_WHITESPACE  
+token #61 NEON_INTERPUNCTION <
+token #62 NEON_WHITESPACE  
+token #63 NEON_BLOCK common
+token #64 NEON_INTERPUNCTION :
+token #65 NEON_WHITESPACE \n
+token #66 NEON_WHITESPACE \t
+token #67 NEON_BLOCK database
+token #68 NEON_INTERPUNCTION :
+token #69 NEON_WHITESPACE \n
+token #70 NEON_WHITESPACE \t\t
+token #71 NEON_VALUED_BLOCK dsn
+token #72 NEON_INTERPUNCTION :
+token #73 NEON_WHITESPACE  
+token #74 NEON_STRING "sqlite2::memory:"
+token #75 NEON_WHITESPACE \n
+token #76 NEON_WHITESPACE \t\t
+token #77 NEON_VALUED_BLOCK user
+token #78 NEON_INTERPUNCTION :
+token #79 NEON_WHITESPACE  
+token #80 NEON_LITERAL dbuser
+token #81 NEON_WHITESPACE \n
+token #82 NEON_WHITESPACE \t\t
+token #83 NEON_VALUED_BLOCK password
+token #84 NEON_INTERPUNCTION :
+token #85 NEON_WHITESPACE  
+token #86 NEON_LITERAL secret
+token #87 NEON_WHITESPACE \n
+token #88 NEON_WHITESPACE \n
+token #89 NEON_COMMENT # Staging site configuration data
+token #90 NEON_WHITESPACE \n
+token #91 NEON_BLOCK development
+token #92 NEON_WHITESPACE  
+token #93 NEON_INTERPUNCTION <
+token #94 NEON_WHITESPACE  
+token #95 NEON_BLOCK common
+token #96 NEON_INTERPUNCTION :
+token #97 NEON_WHITESPACE \n
+token #98 NEON_WHITESPACE \t
+token #99 NEON_BLOCK database
+token #100 NEON_INTERPUNCTION :
+token #101 NEON_WHITESPACE \n
+token #102 NEON_WHITESPACE \t\t
+token #103 NEON_VALUED_BLOCK user
+token #104 NEON_INTERPUNCTION :
+token #105 NEON_WHITESPACE  
+token #106 NEON_LITERAL dev_user
+token #107 NEON_WHITESPACE \n
+token #108 NEON_WHITESPACE \t\t
+token #109 NEON_VALUED_BLOCK password
+token #110 NEON_INTERPUNCTION :
+token #111 NEON_WHITESPACE  
+token #112 NEON_LITERAL dev_secret
+token #113 NEON_WHITESPACE \n

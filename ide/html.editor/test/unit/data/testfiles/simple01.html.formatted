@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <title></title>
+        <meta
+            http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            Q:lang(en){ 
+                /*
+                        my own
+                      comment
+                    describing this CSS rule
+                */
+                background: black;
+                color: green;
+            }
+        </style>
+        <style type="text/css">
+            .error {color:red;}
+        </style>
+    </head>
+    <body>
+        <div/>
+        TODO write content
+        <UL>
+            <LI>
+                <P>Unordered
+                    <i>
+                        inform
+                        <a href="adasd">
+                            ati
+                        </a>
+                        on
+                    </i>
+            <LI>Ordered information.
+            <LI>Definitions.
+        </UL>
+
+        <p>sdfsdf <i>dsfsdf</i>
+
+        <table><tr><td>
+                    asdasd
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    asdasd</td></tr>
+            asdasd
+        </table>
+
+
+
+        <table>
+            <tr>
+                <td>
+                    TEXT TEXT TEXT
+                <td>
+                    TEXT TEXT TEXT
+                <td>
+                </td>
+            <tr>
+        </table>
+
+        <div>
+            sdfsdfsdf
+            <!--
+               Formatting within HTML comment should be preserved
+                 * like this bullet point
+                 * but the whole block should be moved according to surrounding content
+                    * second
+            -->
+        </div>
+        <!--
+           One more comment
+             test  -->
+
+        <pre>Some
+preformatted text not to be
+
+  touched.
+        </pre>
+    </body>
+</html>

@@ -1,0 +1,8 @@
+myModule:VARIABLE:[PUBLIC]:ESCAPED{myModule}:
+  address:CLASS:[PUBLIC]:ESCAPED{address}:
+    street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+    town:FIELD:[PUBLIC]:ESCAPED{town}<font color="#999999">ESCAPED{ : }String</font>:
+    zip:FIELD:[PUBLIC]:ESCAPED{zip}<font color="#999999">ESCAPED{ : }String</font>:
+  bar:FIELD:[PUBLIC]:ESCAPED{bar}:
+  foo:METHOD:[PUBLIC]:ESCAPED{foo}:
+yourModule:VARIABLE:[PUBLIC]:ESCAPED{yourModule}:

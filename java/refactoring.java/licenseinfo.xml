@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/refactoring/java/resources/filterHideFields.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/filter.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_write.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_readwrite.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/warning_16.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_source.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/all_projects.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/who_calls.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/down.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/callhierarchy.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/sortAlpha.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/binary_badge.gif</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/up.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_import.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/recursion_badge.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_test.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/filterHideInherited.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/clazz.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/who_is_called.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/newFile.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/sortPosition.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/filterHideNonPublic.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_binary.gif</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/filterHideStatic.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_comment.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/found_item_read.png</file>
+        <file>src/org/netbeans/modules/refactoring/java/resources/cancel.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

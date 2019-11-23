@@ -1,0 +1,130 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" attributes="0">
+              <EmptySpace min="$pref" pref="18" max="$pref" attributes="12"/>
+              <Group type="parallel" groupAlignment="trailing" attributes="16">
+                  <Component id="jTabbedPane1" min="$pref" pref="183" max="$pref" attributes="0"/>
+                  <Group type="parallel" alignment="trailing" groupAlignment="leading" max="$pref" attributes="0">
+                      <Component id="jToolBar1" alignment="leading" min="$pref" pref="100" max="$pref" attributes="0"/>
+                      <Component id="jSplitPane1" alignment="leading" max="Short.MAX_VALUE" attributes="1"/>
+                  </Group>
+                  <Component id="jDesktopPane1" max="Short.MAX_VALUE" attributes="1"/>
+              </Group>
+              <EmptySpace type="separate" max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="leading" attributes="16">
+                  <Component id="textArea1" alignment="leading" pref="188" max="Short.MAX_VALUE" attributes="0"/>
+                  <Group type="sequential" attributes="0">
+                      <Component id="jScrollPane1" min="$pref" pref="168" max="$pref" attributes="0"/>
+                      <EmptySpace pref="20" max="Short.MAX_VALUE" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <Group type="parallel" groupAlignment="leading" max="$pref" attributes="16">
+                  <Group type="sequential" attributes="0">
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jTabbedPane1" min="$pref" pref="144" max="$pref" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" attributes="1">
+                      <EmptySpace min="$pref" pref="20" max="$pref" attributes="0"/>
+                      <Component id="jScrollPane1" min="0" pref="0" max="Short.MAX_VALUE" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Component id="jSplitPane1" min="$pref" pref="0" max="$pref" attributes="17"/>
+              <EmptySpace type="separate" max="$pref" attributes="16"/>
+              <Component id="jToolBar1" min="$pref" pref="25" max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="leading" attributes="16">
+                  <Group type="sequential" attributes="0">
+                      <EmptySpace min="$pref" pref="94" max="$pref" attributes="0"/>
+                      <Component id="textArea1" min="$pref" pref="136" max="$pref" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" alignment="leading" attributes="0">
+                      <EmptySpace type="unrelated" max="$pref" attributes="0"/>
+                      <Component id="jDesktopPane1" min="$pref" pref="310" max="$pref" attributes="1"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="111" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jFrame1">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="400" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="300" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jInternalFrame2">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="104" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="93" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jInternalFrame3">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="104" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="93" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jPanel1">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="178" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="116" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jPanel2">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="178" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="116" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jPanel3">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="0" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="0" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

@@ -1,0 +1,5 @@
+MyContext:CLASS:[PUBLIC]:ESCAPED{MyContext}:
+  Address:CLASS:[PUBLIC]:ESCAPED{Address}:
+    city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+    street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+    zip:FIELD:[PUBLIC]:ESCAPED{zip}<font color="#999999">ESCAPED{ : }Number</font>:

@@ -1,0 +1,1 @@
+<html><%! boolean b = true|false; %></ht

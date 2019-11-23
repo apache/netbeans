@@ -1,0 +1,6 @@
+Code completion result for source line:
+Test.modules.moduleA.n|ame;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      name: String                    [PUBLIC]   issue232570.js
+FIELD      note: String                    [PUBLIC]   issue232570.js

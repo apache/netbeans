@@ -1,0 +1,16 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+package ${package};
+
+import javax.ejb.EJBLocalObject;
+
+/**
+ *
+ * @author ${user}
+ */
+public interface ${name} extends EJBLocalObject {
+    
+}

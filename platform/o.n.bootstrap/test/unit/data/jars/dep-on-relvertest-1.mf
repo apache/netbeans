@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module: deponrelvertest1
+OpenIDE-Module-Module-Dependencies: relvertest/1

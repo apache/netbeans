@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<filesystem>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="ServerManagerAction3.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-server-ui-manager-ServerManagerAction.instance"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="CloudManagerAction3.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-server-ui-manager-CloudManagerAction.instance"/>
+                <attr name="position" intvalue="810"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Actions">
+        <folder name="System">
+            <file name="org-netbeans-modules-server-ui-node-AddServerInstanceAction.instance">
+                <attr name="delegate" newvalue="org.netbeans.modules.server.ui.node.AddServerInstanceAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.server.ui.node.Bundle#LBL_Add_Server_Instance"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+            <file name="org-netbeans-modules-server-ui-node-AddCloudInstanceAction.instance">
+                <attr name="delegate" newvalue="org.netbeans.modules.server.ui.node.AddCloudInstanceAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.server.ui.node.Bundle#LBL_Add_Cloud_Instance"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+        </folder>
+        <folder name="Tools">
+            <file name="org-netbeans-modules-server-ui-manager-ServerManagerAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.server.resources.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.server.ui.manager.ServerManagerAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.server.ui.manager.Bundle#CTL_ServerManager"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+            <file name="org-netbeans-modules-server-ui-manager-CloudManagerAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.server.resources.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.server.ui.manager.CloudManagerAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.server.ui.manager.Bundle#CTL_CloudManager"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Servers">
+        <folder name="Actions">
+            <file name="org-netbeans-modules-server-ui-node-AddServerInstanceAction.shadow">
+                <attr name="position" intvalue="100"/>
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-server-ui-node-AddServerInstanceAction.instance"/>
+            </file>
+            <file name="JSeparator1.instance">
+                <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="500"/>
+            </file>
+        </folder>
+    </folder>
+    
+    <folder name="Cloud">
+        <folder name="Actions">
+            <file name="org-netbeans-modules-server-ui-node-AddCloudInstanceAction.shadow">
+                <attr name="position" intvalue="123"/>
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-server-ui-node-AddCloudInstanceAction.instance"/>
+            </file>
+            <file name="JSeparator1.instance">
+                <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="505"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

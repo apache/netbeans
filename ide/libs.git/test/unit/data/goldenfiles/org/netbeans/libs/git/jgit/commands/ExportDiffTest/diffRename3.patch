@@ -1,0 +1,10 @@
+diff --git a/file b/renamed
+similarity index 63%
+rename from file
+rename to renamed
+index 12af585..7b34a30 100644
+--- a/file
++++ b/renamed
+@@ -1 +1,2 @@
+ hey, i will be renamed
++and now i am

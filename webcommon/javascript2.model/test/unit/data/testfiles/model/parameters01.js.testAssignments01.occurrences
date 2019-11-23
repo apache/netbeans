@@ -1,0 +1,4 @@
+var |>MARK_OCCURRENCES:he^ad<| = "head";
+|>MARK_OCCURRENCES:head<| = body;
+body = |>MARK_OCCURRENCES:head<|;
+var text = |>MARK_OCCURRENCES:head<| + body;

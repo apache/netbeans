@@ -1,0 +1,153 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<HTML>
+<body>
+
+<h1>XML Generators Package</h1>
+
+<p><b>Maintainer</b>: Petr Kuzel and Libor Kramolis
+<p><b>Updated on</b>: 11th Jun 2001
+<p>
+
+<h2>Introduction</h2>
+Generators in this package eliminates writing complex but routine code.
+
+<hr>
+
+<h2>To do</h2>
+<pre>
+What about sample implementation generate attributes switch
+</pre>
+
+<a name="req"><h2>Requirements</h2></a>
+Provide Java and XML code generators:
+<ol>
+<li>Java code generator creating SAX parser of documents following given DTD.
+<li>Java code generator creating DOM scanner (a visitor) of DOM following given DTD.
+<li>DTD generator guessing it from an XML document.
+<li>All Java generators produces a JAXP compliant code to achieve parser neutrality.
+</ol>
+
+<hr>
+
+<a name='user-view'><h2>User's View</h2></a>
+
+<h2>SAX Document Handler Wizard</h2>
+
+This wizard is useful for generating <b>XML content parsers</b>. As typical example
+can be taken a configuration file or incoming XML message. The wizard generates
+callback interface that a user implements. Implementing this interface is
+believed to be simpler and more versionable that implementing pure SAX intefaces directly.
+The higher level generated handler interface is well defined, type safe and
+is compatible for compatible DTDs.
+The concept also saves the user from writing complex dispatch code.
+
+<p>
+The generated code depends on DTD availability and therefore does not support namespaces.
+
+<p>
+<b>Term</b>: Parslet stay for a set of data convertors.
+
+<h3>Input</h3>
+<ul>
+<li><b>DTD</b> representing static vocabulary to be recognized
+<li><b>DTD mapping</b> allowing to define mapping between the vocabulary and a code. 
+Mapping key is and element name.
+<li><b>JAXP version</b> - version of JAXP to be used in generated methods
+<li><b>SAX version</b> - version of SAX parser to be used (depends on JAXP version)
+<li><b>Output file names</b> where generated code will be placed. There are 1-2 interfaces, 
+1 recognizer file and empty implementations files.
+</ul>
+
+<!--
+All input parameters are encapsulated into one model bean named <tt>SAXGeneratorModel</tt>.
+-->
+A user will customize all above using several steps wizard. The logical steps are provided bellow.
+
+<h4>DTD to Method Mapping Step</h4>
+Four types of element declarations are recognized:
+<ul>
+<li><b>Data element</b> representing (#PCDATA). It represents a data holder. 
+<li><b>Empty element</b> representing EMPTY. It represents a data holder.
+<li><b>Mixed element</b> representing mixed content. It represents a data holder or a container or both.
+<li><b>Container element</b> allowing just another elements. It represents a container.
+</ul>
+
+<p>A data holder can be mapped into a handling method taking actual data and meta-data where
+the actual data can be a result of parsing by a parslet.
+It can be also ignored.
+
+<p>A container can be mapped into delimiter methods taking meta-data.
+It can be also ignored.
+
+<p>The generator detects all DTD declarations and fills a mapping table.
+<p>It maps data holders into <tt>handle_<i>elementname</i>(Object data, Attributes meta)</tt>
+event methods using no parslet. 
+<p>It maps containers into <tt>start_<i>elementname</i>(Attributes meta)</tt> and
+<tt>end_<i>elementname</i>(Attributes meta)</tt>.
+
+<h4>Data Holders to Parslet Mapping Step</h4>
+It could constitute next optional step, possibly let a user
+disable the parslet support at all (e.g. for Schema compatible parsers in future).
+
+A parslet accepts names on Java method names that will perform the conversion.
+Derending on return type the generator tries to guess an implementation.
+Every parslet is generated as <tt>returnTYpe parsetMethodName(String data) throws SAXException</tt>
+method.
+
+<h4>Versions Step</h4>
+JAXP and SAX versions compatibility is stated in following matrix.
+<table border="1">
+<tr><td>SAX\JAXP</td><td>1.0</td><td>1.1</td></tr>
+<tr><td>1.0</td><td>OK</td><td>OK</td></tr>
+<tr><td>2.0</td><td>not possible</td><td>OK</td></tr>
+</table>
+
+<h4>Output Destination Step</h4>
+Generated files are placed into current package. Suggested file names
+can be modified by a user. Generator left intact users implemetation files
+if they exist. It replaces content of generated files leaving a backup copy
+of originals.
+
+<h3>Output</h3>
+A code generated according the input. Files to be implemented are opened in editor.
+<p>
+Generator generates output files overwriting files that are not supposed to be 
+modified by user. Anyway it keep a backup copy of rewritten files. 
+Files to be automatically overwritten are parser, handler interface and parslet interface,
+these content is driven by the DTD file.
+
+<h3>Wizard Reentrance</h3>
+
+Generator stores last customization done by user to a well known file. 
+The file name is derived from DTD file name. On subsequent start is tries to locate 
+this file and reuse it as much as possible (it depends on level od DTD changes). 
+This mechanism also allows a user to design mappings by creating the settings file by hand. 
+It is an XML document following "-//XML Module//DTD SAX Bindings 1.0//EN" DTD. On other hand by 
+deleting this file user can simply remove wrong settings and let the generator generate defaults.
+
+
+<h2>DOM Scanner</h2>
+It generates a DOM implematation independent visitor  (a pattern) of passed DTD.
+
+</body>
+</HTML>

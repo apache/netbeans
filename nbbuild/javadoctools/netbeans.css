@@ -1,0 +1,679 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+/*
+==========================================================
+CSS for NetBeans web site
+Reeport problems to marek.vinar@sun.com
+==========================================================
+
+==========================================================
+COLORS (bgcolor / font-color)
+- Box header, Table name header,bolder: #ff9742 / #ffffff
+- Box body - dark  : #fed78c / #000000
+           - light : #ffe8bc / #000000
+- Table name of col. - dark  : #ff9742 / #ffffff
+                     - light : #fed78c / #bf6212
+                             : #ffe8bc / #000000
+- Table row - dark  : #ffe8bc / #000000
+            - light : #ffffff / #000000
+- h1,.h1 : #ff9742 / #080c77
+- h2-h4,.h2-.h4,titlec : ? / #bf6212
+- .code : #ffe8bc / ?
+
+FONT supported sizes: 130%, 125%, 110%, 100%, 85%, 10pt, 75%, 60% (default is 10pt)
+SUPPORTED FONTS : Verdana, sans-serif, helvetica, arial
+=============================================================
+*/
+
+body	{
+	font-family: Verdana, sans-serif, helvetica, arial;
+	font-size: 12px;
+	background-color: #FFFFFF;
+	}
+
+td	{
+	font-family: Verdana, sans-serif, helvetica, arial;
+	font-size: 12px;
+	}
+
+.default  {
+	font-family: Verdana, sans-serif, helvetica, arial;
+	}
+
+h1 {font-size: 17px; font-weight : bold; color: #080c77; line-height: 35px; border-right-color: #ffffff; border-left-color: #ffffff; border-bottom-color: #ff9843; border-top-color: #ff9843; border-width: 1px; border-style: solid;}
+h2 {font-size: 15px; font-weight: bold; color: #ee6d06; }
+h3 {font-size: 13px; font-weight: bold; color: #ee6d06; }
+h4 {font-size: 12px; font-weight: normal; color: #ee6d06; }
+h5,h6 {font-size: 11px; font-weight: normal; color: #ee6d06; }
+
+.h1 {font-size: 17px; font-weight : bold; color: #ee6d06;}
+.h2 {font-size: 15px; font-weight: bold; color: #ee6d06; }
+.h3 {font-size: 13px; font-weight: bold; color: #ee6d06; }
+.h4 {font-size: 12px; font-weight: normal; color: #ee6d06; }
+
+.smalltextbase {
+	font-family: Verdana, sans-serif, helvetica, arial;
+	font-size: 10px;
+	line-height: 1.2em;
+	}
+
+.smalltext {
+	font-size: 10px;
+	line-height: 1.2em;
+	}
+
+.tmtext {
+	font-size: 10px;
+	line-height: 1.2em;
+	}
+
+a:link, a:visited {
+  color: #0E0E76;
+  font-weight : bold;
+  text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+  color: #080c77;
+  font-weight : bold;
+  text-decoration : underline;
+}
+
+/* Interesting Trick : add envelope icon in front of mailto links
+a[href^="mailto:"]:before { content: "\2709    " } */
+
+/* NAVIGATION TOP */
+
+.topmenucur {
+  			font-family: Verdana, sans-serif, helvetica, arial;
+			color: #000000;
+			font-size: 12px;
+			font-weight : bold;
+			text-decoration : none;
+			}
+
+.bgtopmenucur {
+                       background-color: #fbf3e1;
+              		}
+
+.topmenu    {
+  			font-family: Verdana, sans-serif, helvetica, arial;
+			color: #ffffff;
+			font-size: 12px;
+			font-weight : bold;
+			text-decoration : none;
+			}
+.bgtopmenu {
+                       background-color: #000069;
+              		}
+.tops       {
+			font-family: Verdana, sans-serif, helvetica, arial;
+			color: #000000;
+			font-size: 11px;
+			text-decoration : none;
+	    		}
+a.tops       {
+			color: #000000;
+	    		}
+.niceborder  {
+			background-color: #f8a765;
+             		}
+
+
+/*LEFT Navigation*/
+
+.leftmenucur	{
+  font-family: Verdana, sans-serif, helvetica, arial;
+  font-size: 10px;
+  line-height: 1.8em;
+  background-color: #f6dcac;
+  }
+
+.leftmenu	{
+  font-family: Verdana, sans-serif, helvetica, arial;
+  font-size: 10px;
+  line-height: 1.8em;
+  color: #000000;
+  background-color: #f6dcac;
+  }
+
+a.leftmenu	{
+  font-family: Verdana, sans-serif, helvetica, arial;
+  font-weight: bold;
+  color: #000000;
+  line-height: 1.8em;
+  background-color: #f6dcac;
+  }
+
+.bgleftmenuhead {
+  background-color: #e9924c;
+  }
+
+
+.leftmenusplit {
+ background-color: #fff3d6;
+  }
+
+.leftmenustin {
+ background-color: #a0a0a0;
+  }
+/*PLAGIN PAGE*/
+
+.plagin 	{
+	background-image: url(http://testwww2.netbeans.org/images/general/plagin.gif);
+        background-repeat: no-repeat;
+	font-size: 10px;
+	line-height: 1.2em;
+        font-weight : bold;
+        color: #080c77;
+
+		}
+
+.plaginon 	{
+	background-image: url(http://testwww2.netbeans.org/images/general/plagin_on.gif);
+        background-repeat: no-repeat;
+	font-size: 10px;
+	line-height: 1.2em;
+        font-weight : bold;
+        color: #ffffff;
+
+		}
+
+
+pre,samp,code,tt {
+  font-family: "Courier New", monospace;
+}
+
+
+/* show some code*/
+.codes	{
+	background-color: #f0f0f0
+	}
+.textbox {
+  font-family: Courier New, Monospaced;
+  }
+
+dt {font-weight: bold}
+dd {margin-left: 1.5em}
+
+/* --- IMPORT FOR JAVADOC -- */
+/* this part of css is automaticaly exported to file nb_special.css
+if you need make some changes please edit into netbeans.css*/
+
+/* TABLE STYLES */
+
+
+.tablebg	{
+	background-color: #ff9d42;
+	}
+
+.tablehbg	{
+	background-color: #ff9d42;
+	}
+
+.tablecbg	{
+	background-color: #fed78c;
+	}
+
+
+.tablerbg	{
+	background-color: #ffe8bc;
+	}
+
+.tabler	{
+	background-color: #FFFFFF;
+	}
+
+.tablersh	{
+	background-color: rgb(240,240,240);
+	}
+
+.tablecfont	{
+  font-weight: bold;
+	color: #000000;
+	}
+
+.tablehfont	{
+  font-weight: bold;
+	color: #000000;
+	}
+
+/* END TABLES */
+
+.titlec	{
+  font-weight: bold;
+	color: #ee6d06;
+	}
+
+.titlectable	{
+  font-weight: bold;
+	color: #000000;
+        line-height: 20px;
+	}
+
+
+
+.constant {
+  color: #b03060;
+  }
+
+.keyword {
+  color: #0000ff;
+  }
+
+.function-name {
+  color: #0000ff;
+  }
+
+.comment {
+  color: #666666;
+  font-style: italic;
+  }
+
+.string {
+  color: #b03060;
+  }
+
+.variable-name {
+  color: #006400;
+  }
+
+.type {
+  color: #00008b;
+  }
+
+.extra-java-font-lock-number {
+  color: #b03060;
+  }
+
+.builtin {
+  color: #0000ff;
+  }
+
+/* --- END IMPORT FOR JAVADOC -- */
+
+/* Collab css*/
+
+leftnav1, .Footer, .footer1    {
+    font-size:    12px;
+    }
+
+.ProjectNameHeader, .Warning, .ProjectHeader    {
+    font-size:    12px;
+    }
+.Crumbing, .HeaderText    {
+    text-transform:    uppercase;
+    }
+A.Crumbing:hover, A.FooterNav:active, A.FooterNav:hover, A.FooterTextLink  {
+    text-decoration:    underline;
+    }
+.PlainText {
+	color : #000;
+	}
+
+	.PlainTextBold {
+	font-weight : bold;
+	color : #000;
+}
+	.Copy {
+	font-size : 12px;
+	color : #000;
+}
+	.StatText {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.StatHeader {
+	font-weight : bold;
+	color : #fff;
+	font-size : 12px;
+}
+	.DevHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.DevName {
+	font-weight : bold;
+	color : #666;
+	font-size : 12px;
+}
+	.Header {
+	color : #000;
+	font-size : 100%;
+	font-weight : bold;
+}
+	.ProjectNameHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.TableData {
+	color : #aa0000;
+	font-size : 12px;
+}
+	.NewsDate {
+	font-weight : bold;
+	color : #550000;
+	font-size : 12px;
+}
+	.Download {
+	font-weight : bold;
+	font-size : 12px;
+}
+	.StartCopy {
+	color : #000;
+	font-size : 12px;
+}
+	.Welcome {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.ProjectCategory {
+	font-weight : bold;
+	color : #aa7700;
+	font-size : 12px;
+}
+	.ResourcesHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.ProjectName {
+	font-size : 12px;
+}
+	.ProjectName2 {
+	font-weight : bold;
+	color : #ffff00;
+	font-size : 12px;
+}
+	.ResourceName {
+	color : #000;
+	font-size : 12px;
+}
+	.InputHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.InputHeaderReversed {
+	font-weight : bold;
+	color : #fff;
+	font-size : 12px;
+}
+	.ProjectHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.NewsHeader {
+	font-weight : bold;
+	color : #aaaa00;
+	font-size : 12px;
+}
+	.NewsDateTable {
+	color : #000;
+	font-size : 12px;
+	font-weight : bold;
+}
+	.SiteHeader {
+	font-weight : bold;
+	color : #555500;
+	font-size : 12px;
+}
+	.ProjectDownloadHeader {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.Asterisk {
+	font-weight : bold;
+	color : #000;
+	font-size : 12px;
+}
+	.HelpText {
+	color : #000;
+}
+	.LeftNav {
+	color : #fff;
+}
+	.HelpTextHeader {
+	font-weight : bold;
+	color : #000;
+}
+	.HelpTextBold {
+	font-weight : bold;
+	color : #000;
+}
+	.SmallHeader {
+	font-weight : bold;
+	color : #00aa00;
+}
+	.ProjectNav {
+	color : #000;
+}
+	.Footer {
+	color : #000;
+}
+	.StatHeader {
+	font-weight : bold;
+	color : #fff;
+}
+	.Warning {
+	font-weight : bold;
+	color : #ff0000;
+	color : #000;
+	font-family : courier, monospace;
+}
+	.TypewriterBold {
+	font-weight : bold;
+	color : #000;
+	font-family : courier, monospace;
+}
+	.footer1 {
+	font-family : verdana;
+	color : #fff;
+}
+	a.footer1:link {
+	font-family : verdana;
+	color : #fff;
+}
+	a.footer1:active {
+	font-family : verdana;
+	color : #fff;
+}
+	a.footer1:hover {
+	font-family : verdana;
+	color : #fff;
+}
+	a.footer1:visited {
+	font-family : verdana;
+	color : #fff;
+}
+	.leftnav1 {
+	font-family : verdana;
+	color : #000;
+}
+	a.leftnav1:link {
+	font-family : verdana;
+	color : #000;
+}
+	a.leftnav1:active {
+	font-family : verdana;
+	color : #000;
+}
+	a.leftnav1:hover {
+	font-family : verdana;
+	color : #000;
+}
+	a.leftnav1:visited {
+	font-family : verdana;
+	color : #000;
+}
+	.FooterNav {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterNav:link {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterNav:visited {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterNav:active {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	A.FooterNav:hover {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	.FooterTextLink {
+	font-weight : normal;
+	color : #fff;
+}
+	A.FooterTextLink:link {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterTextLink:visited {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterTextLink:active {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	A.FooterTextLink:hover {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	.HeaderText {
+	font-weight : bold;
+	color : #3399ff;
+	text-transform : uppercase;
+}
+	.Crumbing {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+	text-transform : uppercase;
+}
+	A.Crumbing:link {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+}
+	A.Crumbing:visited {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+}
+	A.FooterNav:active {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	A.FooterNav:hover {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	.FooterTextLink {
+	font-weight : normal;
+	color : #fff;
+}
+	A.FooterTextLink:link {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterTextLink:visited {
+	font-weight : bold;
+	color : #fff;
+}
+	A.FooterTextLink:active {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	A.FooterTextLink:hover {
+	font-weight : bold;
+	color : #fff;
+	text-decoration : underline;
+}
+	.HeaderText {
+	font-weight : bold;
+	color : #3399ff;
+	text-transform : uppercase;
+}
+	.Crumbing {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+	text-transform : uppercase;
+}
+	A.Crumbing:link {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+}
+	A.Crumbing:visited {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+}
+	A.Crumbing:active {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+}
+	A.Crumbing:hover {
+	font-weight : bold;
+	font-style : italic;
+	color : #fff;
+	text-decoration : underline;
+}
+	.SideText {
+	font-weight : normal;
+	color : #fff;
+}
+	.BodyText {
+	font-weight : normal;
+	color : #99ccff;
+}
+
+	.navtablebg {
+	background-color : #669;
+}
+	.navtablecbg {
+	background-color : #cc9;
+}
+	.navtablecfont {
+	font-weight : bold;
+	color : #000000;
+}
+

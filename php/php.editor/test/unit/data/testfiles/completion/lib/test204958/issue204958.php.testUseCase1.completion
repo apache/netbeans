@@ -1,0 +1,16 @@
+Code completion result for source line:
+if ($obj instanceof |I
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ExMyException1                  [PUBLIC]   issue204958.php
+CLASS      Exception1                      [PUBLIC]   issue204958.php
+CLASS      InstanceOfBar                   [PUBLIC]   issue204958.php
+CLASS      InstanceOfFoo                   [PUBLIC]   issue204958.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    object                                     null
+KEYWORD    string                                     null

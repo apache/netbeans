@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Integration suite" tests="107" assertions="631" failures="1" errors="0" time="4.000870">
+    <testsuite name="integration_integration" tests="107" assertions="631" failures="1" errors="0" time="4.000870">
+      <testsuite name="integration_REST_C_CustomersTest" file="/home/developer/www/portal-system/source/application/tests/integration/REST/C/CustomersTest.php" fullPackage="integration.REST.C" tests="8" assertions="63" failures="1" errors="0" time="0.235987">
+        <testcase name="testCheckNewRecord" class="integration_REST_C_CustomersTest" file="/home/developer/www/portal-system/source/application/tests/integration/REST/C/CustomersTest.php" line="73" assertions="6" time="0.030728">
+          <failure type="PHPUnit_Framework_ExpectationFailedException">testCheckNewRecord(integration_REST_C_CustomersTest)
+cId
+Failed asserting that two strings are equal.
+expected string &lt;123 456 789&gt;
+difference      &lt;xxxxxxxxxxx?&gt;
+got string      &lt;A123 456 789&gt;
+
+</failure>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

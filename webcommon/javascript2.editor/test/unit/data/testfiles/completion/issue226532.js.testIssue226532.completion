@@ -1,0 +1,8 @@
+Code completion result for source line:
+that.|ppp();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     fail(): undefined               [PROTECTE  issue226532.js
+METHOD     ok(): undefined                 [PROTECTE  issue226532.js
+METHOD     ppp()                           [PUBLIC]   issue226532.js
+FIELD      run: Number                     [PUBLIC]   issue226532.js

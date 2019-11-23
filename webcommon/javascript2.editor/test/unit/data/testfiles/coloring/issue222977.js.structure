@@ -1,0 +1,6 @@
+gid:VARIABLE:[PUBLIC]:ESCAPED{gid}<font color="#999999">ESCAPED{ : }String</font>:
+aaa:VARIABLE:[PUBLIC]:ESCAPED{aaa}<font color="#999999">ESCAPED{ : }String</font>:
+aaa_01:VARIABLE:[PUBLIC]:ESCAPED{aaa_01}<font color="#999999">ESCAPED{ : }String</font>:
+aaa_02:VARIABLE:[PUBLIC]:ESCAPED{aaa_02}<font color="#999999">ESCAPED{ : }Date</font>:
+aaa_03:VARIABLE:[PUBLIC]:ESCAPED{aaa_03}<font color="#999999">ESCAPED{ : }String</font>:
+myTestFunctin:METHOD:[PUBLIC]:ESCAPED{myTestFunctin}ESCAPED{(}<font color="#999999">ESCAPED{type}ESCAPED{ }</font>ESCAPED{param}ESCAPED{)}<font color="#999999">ESCAPED{ : }Date</font>:

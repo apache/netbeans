@@ -1,0 +1,4 @@
+instruction[fx:include]
+simple-class[javafx.scene.control.TextArea]
+simple-class[javafx.scene.control.TextField]
+simple-class[javafx.scene.text.Text]

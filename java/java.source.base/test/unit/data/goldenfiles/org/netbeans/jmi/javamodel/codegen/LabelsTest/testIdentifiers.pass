@@ -1,0 +1,57 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org0.netbeans0.test0.codegen0.labels0;
+
+/**
+ *
+ * @author Pavel Flaska
+ */
+public class SetLabelTestClass0 {
+
+    public <init>0() {
+        super0();
+    }
+
+    int number0 = 25;
+
+    /** Creates a new instance of Pepik */
+    public <AnyType0> void breakWithLabel0() {
+        Alois0: {
+            System0.err0.println0("Tady je Lojzovo.");
+
+            Marenka0: {
+                System0.err0.println0("Marenka bydli na Lojzove.");
+                if (number0 > 10) {
+                    break Marenka0;
+                } else {
+                    break Alois0;
+                }
+            }
+        }
+        Frantisek0: for (int i0 = 0; i0 < 10; i0++) {
+            if (number0 == 0) {
+                continue Frantisek0;
+            }
+            number0++;
+        }
+        java0.util0.List0<AnyType0> l0;
+        java0.util0.List0<String0> ls0;
+    }
+    
+}

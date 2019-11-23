@@ -1,0 +1,2 @@
+        [1,2,3].each { |>MARK_OCCURRENCES:va^lue<| ->
+            println |>MARK_OCCURRENCES:value<|+" "+(|>MARK_OCCURRENCES:value<|*|>MARK_OCCURRENCES:value<|)

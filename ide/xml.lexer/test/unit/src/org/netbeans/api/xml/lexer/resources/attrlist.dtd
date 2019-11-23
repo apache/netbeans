@@ -1,0 +1,10 @@
+<!ATTLIST Image 
+  src       ENTITY      #REQUIRED                               descr     CDATA       #IMPLIED
+  visible   CDATA       #FIXED      "true"                      format    (jpg | gif) #IMPLIED
+  os        (unix | os2)             "unix"                     entity    ENTITY      #IMPLIED
+  entities  ENTITIES    #IMPLIED                                id        ID          #IMPLIED
+  idref     IDREF       #IMPLIED                                idrefs    IDREFS      #IMPLIED
+  nmtoken   NMTOKEN     #IMPLIED                                nmtokens  NMTOKENS    #IMPLIED
+  notation  NOTATION    (pdf|dvi) #IMPLIED >
+<!ATTLIST %entity;>
+<!ATTLIST name %parsedEntity;>

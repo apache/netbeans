@@ -1,0 +1,48 @@
+@import "folder/partial.less";
+
+div{
+    //cc;5;c;color,caption-side;0
+    
+}
+
+//cc;9; ;div,body;0
+ 
+a{
+//cc;12;color: ;red,green,blue;0
+    
+}
+
+@nice-blue: #5B83AD;
+@light-blue: (@nice-blue + #111);
+#header { 
+//cc;19;color:@;light-blue,nice-blue;0
+
+}
+
+.mixinA (@c){
+  border-top: dotted 1px black;
+}
+.mixinB {
+  border-top: dotted 1px black;
+}
+#menu a {
+  color: #111;
+  //cc;31;.;mixinA,mixinB,partial,part;0
+  
+}
+@oops:1;
+.mixin(@oops2) {
+//cc;36;color: @o;oops,oops2;0
+
+    
+}
+
+.o(@a){
+//cc;42; ;div,color;0
+
+}
+
+//cc;46;@import ;cc.less,folder;0
+
+//cc;48;@import "";cc.less,folder;1
+

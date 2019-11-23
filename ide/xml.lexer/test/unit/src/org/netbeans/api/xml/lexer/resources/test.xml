@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<company name="Sun Microsystems Inc.">
+    <employee ssn="xxx-xx-xxxx" id="123"
+        address="16 Network Circle"
+        phone="123-456-7890" >Vidhya Narayanan
+    </employee>
+    <!--
+    This is a block comment
+    -->
+    <employee/>
+</company>

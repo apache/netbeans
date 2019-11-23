@@ -1,0 +1,77 @@
+------------------------------------------------------------
+The files are available in source code form under the Eclipse Public License at:
+http://wiki.netbeans.org/DevFaqEpl3rdPartySources
+
+All past Contributors to the code disclaim all warranties and conditions,
+express and implied, including warranties or conditions of title and non-infringement,
+and implied warranties or conditions of merchantability and fitness for a particular
+purpose.  In addition, such Contributors are not liable for any damages, including
+direct, indirect, special, incidental and consequential damages, such as lost profits.  
+
+Any provisions of the Oracle license agreement that differ from the
+Eclipse Public License are offered by Oracle alone and not by any other party.
+------------------------------------------------------------
+
+
+The Eclipse Foundation makes available all content in this plug-in ("Content").
+Unless otherwise indicated below, the Content is provided to you under the
+terms and conditions of the Eclipse Public License Version 1.0 ("EPL"). A copy
+of the EPL is available at http://www.eclipse.org/legal/epl-v10.html. For
+purposes of the EPL, "Program" will mean the Content.
+
+If you did not receive this Content directly from the Eclipse Foundation, the
+Content is being redistributed by another party ("Redistributor") and different
+terms and conditions may apply to your use of any object code in the Content.
+Check the Redistributor's license that was provided with the Content. If no
+such license exists, contact the Redistributor. Unless otherwise indicated
+below, the terms and conditions of the EPL still apply to any source code in
+the Content and such source code may be obtained at http://www.eclipse.org.
+
+Third Party Content
+
+The Content includes items that have been sourced from third parties as set out
+below. If you did not receive this Content directly from the Eclipse
+Foundation, the following is provided for informational purposes only, and you
+should look to the Redistributor's license for terms and conditions of use.
+
+OSGi Materials
+
+All files in the following sub-directories (and their sub-directories):
+
+  • org/osgi
+
+and the following files (which may not be present in all cases):
+
+  • osgi/ee.foundation.jar
+  • osgi/ee.minimum.jar
+  • osgi/osgi.jar
+
+shall be defined as the "OSGi Materials." The OSGi Materials are:
+
+    Copyright (c) 2000, 2006
+
+    OSGi Alliance Bishop Ranch 6
+    2400 Camino Ramon, Suite 375
+    San Ramon, CA 94583 USA
+
+    All Rights Reserved.
+
+The OSGi Materials are provided to you under the terms and conditions of the
+Apache License, Version 2.0. A copy of the license is contained in the file
+LICENSE-2.0.txt and is also available at http://www.apache.org/licenses/
+LICENSE-2.0.html.
+
+Implementation of certain elements of the OSGi Materials may be subject to
+third party intellectual property rights, including without limitation, patent
+rights (such a third party may or may not be a member of the OSGi Alliance).
+The OSGi Alliance and its members are not responsible and shall not be held
+responsible in any manner for identifying or failing to identify any or all
+such third party intellectual property rights.
+
+OSGi™ is a trademark, registered trademark, or service mark of The OSGi
+Alliance in the US and other countries. Java is a trademark, registered
+trademark, or service mark of Sun Microsystems, Inc. in the US and other
+countries. All other trademarks, registered trademarks, or service marks used
+in the Content are the property of their respective owners and are hereby
+recognized.
+

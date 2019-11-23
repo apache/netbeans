@@ -1,0 +1,73 @@
+FUNCTION semiTypes [ANONYMOUS: false, DECLARED: true - semiTypes, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+semiTypesL#1 : FUNCTION semiTypesL#1 [ANONYMOUS: true, DECLARED: true - semiTypesL#1, MODIFIERS: PUBLIC, FUNCTION]
+             # RETURN TYPES
+             undefined, RESOLVED: true
+             # PROPERTIES
+             MyObject  : OBJECT MyObject [ANONYMOUS: false, DECLARED: true - MyObject, MODIFIERS: PRIVATE, OBJECT_LITERAL]
+                       # PROPERTIES
+                       method01   : FUNCTION method01 [ANONYMOUS: false, DECLARED: true - method01, MODIFIERS: PUBLIC, METHOD]
+                                  # RETURN TYPES
+                                  Number, RESOLVED: true
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       method02   : FUNCTION method02 [ANONYMOUS: false, DECLARED: true - method02, MODIFIERS: PUBLIC, METHOD]
+                                  # RETURN TYPES
+                                  String, RESOLVED: true
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       property01 : OBJECT property01 [ANONYMOUS: false, DECLARED: true - property01, MODIFIERS: PUBLIC, PROPERTY]
+                       property02 : OBJECT property02 [ANONYMOUS: false, DECLARED: true - property02, MODIFIERS: PUBLIC, PROPERTY]
+             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             getInfo   : FUNCTION getInfo [ANONYMOUS: false, DECLARED: true - getInfo, MODIFIERS: PRIVATE, METHOD]
+                       # RETURN TYPES
+                       String, RESOLVED: true
+                       # PROPERTIES
+                       arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       fontcolor : FUNCTION fontcolor [ANONYMOUS: false, DECLARED: false - fontcolor, MODIFIERS: PUBLIC, METHOD]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                 small     : FUNCTION small [ANONYMOUS: false, DECLARED: false - small, MODIFIERS: PUBLIC, METHOD]
+                                           # PROPERTIES
+                                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                           fontsize  : FUNCTION fontsize [ANONYMOUS: false, DECLARED: false - fontsize, MODIFIERS: PUBLIC, METHOD]
+                                                     # PROPERTIES
+                                                     arguments   : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                                     toPrecision : FUNCTION toPrecision [ANONYMOUS: false, DECLARED: false - toPrecision, MODIFIERS: PUBLIC, METHOD]
+                                                                 # PARAMETERS
+                                                                 OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                                                 # PROPERTIES
+                                                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                       fontsize  : FUNCTION fontsize [ANONYMOUS: false, DECLARED: false - fontsize, MODIFIERS: PUBLIC, METHOD]
+                                 # PROPERTIES
+                                 arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             prom01    : OBJECT prom01 [ANONYMOUS: false, DECLARED: true - prom01, MODIFIERS: PRIVATE, VARIABLE]
+                       # PROPERTIES
+                       fontsize : FUNCTION fontsize [ANONYMOUS: false, DECLARED: false - fontsize, MODIFIERS: PUBLIC, METHOD]
+                                # PROPERTIES
+                                arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             prom02    : OBJECT prom02 [ANONYMOUS: false, DECLARED: true - prom02, MODIFIERS: PRIVATE, VARIABLE]
+             prom03    : OBJECT prom03 [ANONYMOUS: false, DECLARED: true - prom03, MODIFIERS: PRIVATE, VARIABLE]
+             prom04    : OBJECT prom04 [ANONYMOUS: false, DECLARED: true - prom04, MODIFIERS: PRIVATE, VARIABLE]
+             prom05    : OBJECT prom05 [ANONYMOUS: false, DECLARED: true - prom05, MODIFIERS: PRIVATE, VARIABLE]
+             prom06    : OBJECT prom06 [ANONYMOUS: false, DECLARED: true - prom06, MODIFIERS: PRIVATE, VARIABLE]
+             prom07    : OBJECT prom07 [ANONYMOUS: false, DECLARED: true - prom07, MODIFIERS: PRIVATE, VARIABLE]
+             prom08    : OBJECT prom08 [ANONYMOUS: false, DECLARED: true - prom08, MODIFIERS: PRIVATE, VARIABLE]
+                       # PROPERTIES
+                       toLocaleString : FUNCTION toLocaleString [ANONYMOUS: false, DECLARED: false - toLocaleString, MODIFIERS: PUBLIC, METHOD]
+                                      # PROPERTIES
+                                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             prom09    : OBJECT prom09 [ANONYMOUS: false, DECLARED: true - prom09, MODIFIERS: PRIVATE, VARIABLE]
+             prom10    : OBJECT prom10 [ANONYMOUS: false, DECLARED: true - prom10, MODIFIERS: PRIVATE, VARIABLE]
+             prom11    : OBJECT prom11 [ANONYMOUS: false, DECLARED: true - prom11, MODIFIERS: PRIVATE, VARIABLE]
+                       # PROPERTIES
+                       property01 : OBJECT property01 [ANONYMOUS: false, DECLARED: false - property01, MODIFIERS: PUBLIC, OBJECT]
+                                  # PROPERTIES
+                                  isFrozen : FUNCTION isFrozen [ANONYMOUS: false, DECLARED: false - isFrozen, MODIFIERS: PUBLIC, METHOD]
+                                           # PARAMETERS
+                                           OBJECT param [ANONYMOUS: false, DECLARED: true - param, MODIFIERS: PUBLIC, PARAMETER]
+                                           # PROPERTIES
+                                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+             prom12    : OBJECT prom12 [ANONYMOUS: false, DECLARED: true - prom12, MODIFIERS: PRIVATE, VARIABLE]

@@ -1,0 +1,3 @@
+Code completion result for source line:
+public function invalidInParameter(vo|id $void): void; // interface
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

@@ -1,0 +1,5 @@
+[tunnels]
+ssh = ssh -l pvcs 
+
+[auth]
+store-auth-creds = no

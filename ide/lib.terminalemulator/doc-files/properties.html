@@ -1,0 +1,476 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<head>
+<LINK REL="Stylesheet" HREF="../../../../../prose.css" TYPE="text/css">
+</head>
+<body>
+	<h1>Current properties for Term</h1>
+
+	<pre>
+	X exists
+	* doesn't exist but should
+	</pre>
+
+
+	<h2>// Inherited from Component:</h2>
+
+	<table border>
+	<tr>
+		<td><b>Property</b></td>
+		<td><b>Type</b></td>
+		<td><b>get</b></td>
+		<td><b>is&nbsp;</b></td>
+		<td><b>set</b></td>
+		<td><b>bound</b></td>
+		<td><b>Default Value</b></td>
+	</tr>
+	<tr>
+		<td>foreground</td>
+		<td>Color</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>yes</td>
+		<td><i>inherited</i></td>
+	</tr>
+	<tr>
+		<td>background</td>
+		<td>Color</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>yes</td>
+		<td><i>inherited</i></td>
+	</tr>
+	</table>
+
+	<h2>// Overrides Jcomponent:</h2>
+
+	<table border>
+	<tr>
+		<td><b>Property</b></td>
+		<td><b>Type</b></td>
+		<td><b>get</b></td>
+		<td><b>is&nbsp;</b></td>
+		<td><b>set</b></td>
+		<td><b>bound</b></td>
+		<td><b>Default Value</b></td>
+	</tr>
+	<tr>
+		<td>font <a href="#footnote_a">(a)</a></td>
+		<td>Font</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>yes</td>
+		<td>"Monospaced" PLAIN 12</td>
+	</tr>
+
+	</table>
+
+	<h2>// Term: </h2>
+
+	<table border>
+	<tr>
+		<td><b>Property</b></td>
+		<td><b>Type</b></td>
+		<td><b>get</b></td>
+		<td><b>is&nbsp;</b></td>
+		<td><b>set</b></td>
+		<td><b>bound</b></td>
+		<td><b>Default Value</b></td>
+	</tr>
+	<tr>
+		<td>rows</td>
+		<td>int</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>25</td>
+	</tr>
+	<tr>
+		<td>columns</td>
+		<td>int</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>80</td>
+	</tr>
+	<tr>
+		<td>sizeRounded</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>screen</td>
+		<td>JComponent</td>
+		<td>X</td>
+		<td>-</td>
+		<td>-</td>
+		<td>-</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>cursorCol</td>
+		<td>int</td>
+		<td>X</td>
+		<td>-</td>
+		<td>*</td>
+		<td>-</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>cursorRow</td>
+		<td>int</td>
+		<td>X</td>
+		<td>-</td>
+		<td>*</td>
+		<td>-</td>
+		<td>1</td>
+	</tr>
+	<tr>
+		<td>cursorCoord</td>
+		<td>Coord</td>
+		<td>X</td>
+		<td>-</td>
+		<td>*</td>
+		<td>-</td>
+		<td>(1, 0)</td>
+	</tr>
+	<tr>
+		<td>cursorVisible</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>attribute</td>
+		<td>int</td>
+		<td>*</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>0</td>
+	</tr>
+
+	<tr>
+		<td>emulation</td>
+		<td>String</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>"ansi"</td>
+	</tr>
+	<tr>
+		<td>Interp</td>
+		<td>Interp</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>InterpANSI</td>
+	</tr>
+
+	<tr>
+		<td>tabSize</td>
+		<td>int</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>8</td>
+	</tr>
+
+	<tr>
+		<td>glyphCellSize</td>
+		<td>Dimension</td>
+		<td>X</td>
+		<td>-</td>
+		<td>-</td>
+		<td>-</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>glyphGutterWidth</td>
+		<td>int</td>
+		<td>*</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>glyphImage</td>
+		<td>Image[]</td>
+		<td>-</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>null</td>
+	</tr>
+
+	// L&F
+	<tr>
+		<td>clickToType</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>selectionXOR</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>false</td>
+	</tr>
+	<tr>
+		<td>autoCopy</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>scrollOnInput</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>scrollOnOutput</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>trackCursor</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>true</td>
+	</tr>
+	<tr>
+		<td>readOnly</td>
+		<td>boolean</td>
+		<td>-</td>
+		<td>X</td>
+		<td>X</td>
+		<td>-</td>
+		<td>false</td>
+	</tr>
+
+	<tr>
+		<td>keyStrokeSet</td>
+		<td>HashSet</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td>null</td>
+	</tr>
+	<tr>
+		<td>highlightColor</td>
+		<td>Color</td>
+		<td>X</td>
+		<td>-</td>
+		<td>X</td>
+		<td>-</td>
+		<td><i>usual swing color</i> SHOULD rename to selectionColor?</td>
+	</tr>
+	<tr>
+		<td>selectedText</td>
+		<td>String</td>
+		<td>X</td>
+		<td>-</td>
+		<td>-</td>
+		<td>-</td>
+		<td>&nbsp;</td>
+
+	</tr>
+	<tr>
+		<td>selectionExtent</td>
+	<td>Extent</td>
+	<td>X</td>
+	<td>-</td>
+	<td>X</td>
+	<td>yes</td>
+	<td>null</td>
+</tr>
+
+<tr>
+	<td>activeColor</td>
+	<td>Color</td>
+	<td>X</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>Color.lightGray</td>
+</tr>
+<tr>
+	<td>customColor</td>
+	<td>Color[]</td>
+	<td>-</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>black</td>
+</tr>
+<tr>
+	<td>reverseVideo</td>
+	<td>boolean</td>
+	<td>-</td>
+	<td>X</td>
+	<td>X</td>
+	<td>-</td>
+	<td>false</td>
+</tr>
+
+<tr>
+	<td>historySize <a href="#footnote_b">(b)</a></td>
+	<td>int</td>
+	<td>X</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>20</td>
+</tr>
+<tr>
+	<td>anchorEnabled</td>
+	<td>boolean</td>
+	<td>-</td>
+	<td>X</td>
+	<td>X</td>
+	<td>-</td>
+	<td>false</td>
+</tr>
+
+<tr>
+	<td>wordDelineator</td>
+	<td>WordDelineator</td>
+	<td>X</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>refreshEnabled</td>
+	<td>boolean</td>
+	<td>-</td>
+	<td>X</td>
+	<td>X</td>
+	<td>-</td>
+	<td>true</td>
+</tr>
+
+<tr>
+	<td>debugFlags</td>
+	<td>int</td>
+	<td>-</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>0</td>
+</tr>
+</table>
+
+<h2>// Missing:</h2>
+
+<table border>
+<tr>
+	<td><b>Property</b></td>
+	<td><b>Type</b></td>
+	<td><b>get</b></td>
+	<td><b>is&nbsp;</b></td>
+	<td><b>set</b></td>
+	<td><b>bound</b></td>
+	<td><b>Default Value</b></td>
+</tr>
+<tr>
+	<td>Scrolling</td>
+	<td>boolean</td>
+	<td>-</td>
+	<td>X</td>
+	<td>X</td>
+	<td>-</td>
+	<td>true</td>
+</tr>
+<tr>
+	<td>scrollBarSide</td>
+	<td>LEFT/RIGHT</td>
+	<td>X</td>
+	<td>-</td>
+	<td>X</td>
+	<td>-</td>
+	<td>RIGHT</td>
+</tr>
+<tr>
+	<td>allowProportionalFont</td>
+	<td>boolean</td>
+	<td>-</td>
+	<td>X</td>
+	<td>X</td>
+	<td>-</td>
+	<td>false</td>
+</tr>
+</table>
+
+<hr>
+
+<a name="footnote_a">
+(a)
+Fonts are always forced to be "Monospaced".
+
+<br>
+<a name="footnote_b">
+(b)
+History refers to the number of lines kept that have scrolled _above_
+the view. It does not include the visible lines.
+
+</body>
+</html>

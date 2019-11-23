@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.0//EN"
+                             "http://www.netbeans.org/dtds/EditorFontsColors-1_0.dtd">
+
+<fontscolors>
+    <fontcolor syntaxName="dtd-error" foreColor="#FF0000">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-string" foreColor="#99006B">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-ref" foreColor="#0000FF">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-target" foreColor="#B20000">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-comment" foreColor="#808080">
+        <font name="Monospaced" style="italic" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-plain" foreColor="#000000">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="default" foreColor="#000000" bgColor="#FFFFFF">
+        <font name="Monospaced" size="12" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-symbol" foreColor="#000000">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="dtd-keyword" foreColor="#00007C">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+</fontscolors>

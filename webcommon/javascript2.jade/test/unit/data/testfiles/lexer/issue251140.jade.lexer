@@ -1,0 +1,6 @@
+[DOCTYPE(7):doctype][WHITESPACE(1): ][DOCTYPE_TEMPLATE(4):html][EOL(1):\n]
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_INCLUDE(7):include][FILE_PATH(7): header][EOL(1):\n]
+[WHITESPACE(4):    ][TAG(4):body][EOL(1):\n]
+[WHITESPACE(4):    ][KEYWORD_BLOCK(5):block][WHITESPACE(1): ][BLOCK_NAME(7):content][TEXT(1): ][EOL(1):\n]
+[WHITESPACE(3):   ]

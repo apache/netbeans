@@ -1,0 +1,5 @@
+obj:CLASS:[PUBLIC]:ESCAPED{obj}:
+  2:FIELD:[PUBLIC]:ESCAPED{2}<font color="#999999">ESCAPED{ : }Number</font>:
+  doSomething:METHOD:[PUBLIC]:ESCAPED{doSomething}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  metho:METHOD:[PUBLIC]:ESCAPED{metho}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  x:FIELD:[PUBLIC]:ESCAPED{x}<font color="#999999">ESCAPED{ : }Number</font>:

@@ -1,0 +1,10 @@
+Code completion result for source line:
+groovy.time.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      BaseDuration                               null
+CLASS      DatumDependentDuration                     null
+CLASS      Duration                                   null
+CLASS      TimeCategory                               null
+CLASS      TimeDatumDependentDuration                 null
+CLASS      TimeDuration                               null

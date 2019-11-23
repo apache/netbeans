@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<!--
+    IMPORTANT:  To handle Apple-specific keybindings, some of the keybindings
+    added here are modified in NetBeans-keybindings-mac.xml.
+-->
+
+<bindings>
+    <bind actionName="abbrev-expand" key="S-SPACE"/>
+    <bind actionName="adjust-caret-bottom" key="OS-END"/>
+    <bind actionName="adjust-caret-center" key="OS-INSERT"/>
+    <bind actionName="adjust-caret-top" key="OS-HOME"/>
+<!--    <bind actionName="adjust-window-bottom" key="O-U$B"/> -->
+<!--    <bind actionName="adjust-window-center" key="O-U$M"/> -->
+<!--    <bind actionName="adjust-window-top" key="O-U$T"/> -->
+    <bind actionName="all-completion-show" key="DO-SPACE"/>
+    <bind actionName="all-completion-show" key="DO-BACK_SLASH"/>
+    <bind actionName="annotations-cycling" key="OS-C"/>
+    <bind actionName="caret-backward" key="LEFT"/>
+    <bind actionName="caret-backward" key="KP_LEFT"/>
+    <bind actionName="caret-begin" key="D-HOME"/>
+    <bind actionName="caret-begin-line" key="HOME"/>
+    <bind actionName="caret-down" key="DOWN"/>
+    <bind actionName="caret-down" key="KP_DOWN"/>
+    <bind actionName="caret-end" key="D-END"/>
+    <bind actionName="caret-end-line" key="END"/>
+    <!-- <bind actionName="caret-end-word" key="O-U$E"/> -->
+    <bind actionName="caret-forward" key="KP_RIGHT"/>
+    <bind actionName="caret-forward" key="RIGHT"/>
+    <bind actionName="caret-next-word" key="D-RIGHT"/>
+    <bind actionName="caret-next-word" key="D-KP_RIGHT"/>
+    <bind actionName="caret-previous-word" key="D-LEFT"/>
+    <bind actionName="caret-previous-word" key="D-KP_LEFT"/>
+    <bind actionName="caret-up" key="KP_UP"/>
+    <bind actionName="caret-up" key="UP"/>
+    <bind actionName="collapse-all-folds" key="DS-MINUS"/>
+    <bind actionName="collapse-fold" key="D-MINUS"/>
+    <bind actionName="collapse-fold-tree" key="D-DIVIDE"/>
+    <bind actionName="collapse-all-folds" key="DS-SUBTRACT"/>
+    <bind actionName="collapse-fold" key="D-SUBTRACT"/>
+    <bind actionName="completion-show" key="D-SPACE"/>
+    <bind actionName="completion-show" key="D-BACK_SLASH"/>
+    <bind actionName="copy-to-clipboard" key="COPY"/>
+    <bind actionName="copy-to-clipboard" key="D-C"/>
+    <bind actionName="copy-to-clipboard" key="D-INSERT"/>
+    <bind actionName="cut-to-clipboard" key="D-X"/>
+    <bind actionName="cut-to-clipboard" key="CUT"/>
+    <bind actionName="cut-to-clipboard" key="S-DELETE"/>
+    <bind actionName="delete-next" key="DELETE"/>
+    <bind actionName="delete-previous" key="S-BACK_SPACE"/>
+    <bind actionName="delete-previous" key="BACK_SPACE"/>
+    <bind actionName="documentation-show" key="DS-SPACE"/>
+    <bind actionName="documentation-show" key="DS-BACK_SLASH"/>
+    <bind actionName="expand-all-folds" key="DS-ADD"/>
+    <bind actionName="expand-all-folds" key="DS-EQUALS"/>
+    <bind actionName="expand-all-folds" key="DS-PLUS"/>
+    <bind actionName="expand-fold-tree" key="D-MULTIPLY"/>
+    <bind actionName="expand-fold-tree" key="DO-PLUS"/>
+    <bind actionName="expand-fold" key="D-ADD"/>
+    <bind actionName="expand-fold" key="D-EQUALS"/>
+    <bind actionName="expand-fold" key="D-PLUS"/>
+    <bind actionName="find-next" key="F3"/>
+    <bind actionName="find-previous" key="S-F3"/>
+    <bind actionName="find-selection" key="D-F3"/>
+    <bind actionName="generate-code" key="O-INSERT"/>
+    <bind actionName="remove-surrounding-code" key="O-BACK_SPACE"/>
+    <bind actionName="in-place-refactoring" key="D-R"/>
+    <bind actionName="find" key="FIND"/>
+    <bind actionName="find" key="D-F"/>
+    <bind actionName="format" key="OS-F"/>
+    <bind actionName="goto" key="D-G"/>
+    <bind actionName="goto-declaration" key="D-B"/>
+    <bind actionName="insert-break" key="ENTER"/>
+    <bind actionName="insert-tab" key="TAB"/>
+    <bind actionName="jump-list-last-edit" key="D-Q"/>
+    <bind actionName="jump-list-next" key="O-RIGHT"/>
+    <bind actionName="jump-list-next" key="O-KP_RIGHT"/>
+    <bind actionName="jump-list-prev" key="O-LEFT"/>
+    <bind actionName="jump-list-prev" key="O-KP_LEFT"/>
+    <bind actionName="page-down" key="PAGE_DOWN"/>
+    <bind actionName="page-up" key="PAGE_UP"/>
+    <bind actionName="paste-formated" key="DS-V"/>
+    <bind actionName="paste-from-clipboard" key="PASTE"/>
+    <bind actionName="paste-from-clipboard" key="D-V"/>
+    <bind actionName="paste-from-clipboard" key="S-INSERT"/>
+    <bind actionName="clipboard-history" key="DS-D"/>
+    <bind actionName="clipboard-lines" key="DS-L"/>
+    <bind actionName="add-caret-up" key="OS-OPEN_BRACKET"/>
+    <bind actionName="add-caret-down" key="OS-CLOSE_BRACKET"/>
+    <bind actionName="remove-last-caret" key="OS-J"/>
+    <bind actionName="addCaretSelectNext" key="D-J"/>
+    <bind actionName="addCaretSelectAll" key="DSO-J"/>
+    <bind actionName="redo" key="D-Y"/>
+    <bind actionName="redo" key="DS-Z"/>
+    <bind actionName="remove-line" key="D-E"/>
+    <!-- <bind actionName="remove-line-begin" key="D-U"/> -->
+    <bind actionName="remove-tab" key="S-TAB"/>
+    <bind actionName="move-selection-else-line-up" key="OS-UP"/>
+    <bind actionName="move-selection-else-line-up" key="OS-KP_UP"/>
+    <bind actionName="move-selection-else-line-down" key="OS-DOWN"/>
+    <bind actionName="move-selection-else-line-down" key="OS-KP_DOWN"/>
+    <bind actionName="move-code-element-up" key="OS-PAGE_UP"/>
+    <bind actionName="move-code-element-down" key="OS-PAGE_DOWN"/>
+    <bind actionName="copy-selection-else-line-up" key="DS-UP"/>
+    <bind actionName="copy-selection-else-line-up" key="DS-KP_UP"/>
+    <bind actionName="copy-selection-else-line-down" key="DS-DOWN"/>
+    <bind actionName="copy-selection-else-line-down" key="DS-KP_DOWN"/>
+    <!-- #47709 <bind actionName="remove-word" key="D-W"/> -->
+    <bind actionName="remove-word-next" key="D-DELETE"/>
+    <bind actionName="remove-word-previous" key="D-BACK_SPACE"/>
+    <bind actionName="replace" key="D-H"/>
+    <bind actionName="scroll-down" key="D-UP"/>
+    <bind actionName="scroll-down" key="D-KP_UP"/>
+    <bind actionName="scroll-up" key="D-DOWN"/>
+    <bind actionName="scroll-up" key="D-KP_DOWN"/>
+    <bind actionName="select-all" key="D-A"/>
+    <bind actionName="select-element-next" key="OS-PERIOD"/>
+    <bind actionName="select-element-previous" key="OS-COMMA"/>
+    <bind actionName="select-identifier" key="D-L"/>
+    <bind actionName="selection-backward" key="S-LEFT"/>
+    <bind actionName="selection-backward" key="S-KP_LEFT"/>
+    <bind actionName="selection-begin" key="DS-HOME"/>
+    <bind actionName="selection-begin-line" key="S-HOME"/>
+    <bind actionName="selection-down" key="S-DOWN"/>
+    <bind actionName="selection-down" key="S-KP_DOWN"/>
+    <bind actionName="selection-end" key="DS-END"/>
+    <bind actionName="selection-end-line" key="S-END"/>
+    <bind actionName="selection-forward" key="S-RIGHT"/>
+    <bind actionName="selection-forward" key="S-KP_RIGHT"/>
+    <bind actionName="selection-next-word" key="DS-RIGHT"/>
+    <bind actionName="selection-next-word" key="DS-KP_RIGHT"/>
+    <bind actionName="selection-page-down" key="S-PAGE_DOWN"/>
+    <bind actionName="selection-page-up" key="S-PAGE_UP"/>
+    <bind actionName="selection-previous-word" key="DS-LEFT"/>
+    <bind actionName="selection-previous-word" key="DS-KP_LEFT"/>
+    <bind actionName="selection-up" key="S-UP"/>
+    <bind actionName="selection-up" key="S-KP_UP"/>
+    <bind actionName="shift-line-left" key="OS-LEFT"/>
+    <bind actionName="shift-line-left" key="OS-KP_LEFT"/>
+    <bind actionName="shift-line-right" key="OS-RIGHT"/>
+    <bind actionName="shift-line-right" key="OS-KP_RIGHT"/>
+    <bind actionName="show-popup-menu" key="S-F10"/>
+    <bind actionName="split-line" key="D-ENTER"/>
+    <!-- <bind actionName="start-macro-recording" key="D-J$S"/> -->
+    <bind actionName="start-new-line" key="S-ENTER"/>
+    <!-- <bind actionName="stop-macro-recording" key="D-J$E"/> -->
+    <bind actionName="switch-case" key="D-U$S"/>
+    <bind actionName="to-lower-case" key="D-U$L"/>
+    <bind actionName="to-upper-case" key="D-U$U"/>
+    <bind actionName="toggle-comment" key="D-SLASH"/>
+    <bind actionName="toggle-comment" key="DS-C"/>
+    <bind actionName="toggle-highlight-search" key="OS-H"/>
+    <bind actionName="toggle-rectangular-selection" key="DS-R"/>
+    <bind actionName="toggle-typing-mode" key="INSERT"/>
+    <bind actionName="tooltip-show" key="D-P"/>
+    <bind actionName="transpose-letters" key="D-T"/>
+    <bind actionName="undo" key="UNDO"/>
+    <bind actionName="undo" key="D-Z"/>
+    <bind actionName="word-match-next" key="DS-K"/>
+    <bind actionName="word-match-prev" key="D-K"/>
+    <bind actionName="zoom-text-in" key="O-MOUSE_WHEEL_UP"/>
+    <bind actionName="zoom-text-out" key="O-MOUSE_WHEEL_DOWN"/>
+
+    <bind actionName="prev-marked-occurrence" key="O-UP"/>
+    <bind actionName="next-marked-occurrence" key="O-DOWN"/>
+</bindings>

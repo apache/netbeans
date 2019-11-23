@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="14" assertions="20" failures="1" errors="0" time="0.047050">
+    <testsuite name="E2_ConfigTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/E2_ConfigTest.php" fullPackage="E2" tests="7" assertions="10" failures="0" errors="0" time="0.018351">
+      <testsuite name="E2_ConfigTest::testConstructException" tests="3" assertions="3" failures="0" errors="0" time="0.006588">
+        <testcase name="testConstructException with data set #0" assertions="1" time="0.002597"/>
+        <testcase name="testConstructException with data set #1" assertions="1" time="0.002009"/>
+        <testcase name="testConstructException with data set #2" assertions="1" time="0.001982"/>
+      </testsuite>
+      <testcase name="test__get" class="E2_ConfigTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/E2_ConfigTest.php" line="60" assertions="1" time="0.001928"/>
+      <testcase name="testGetArray" class="E2_ConfigTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/E2_ConfigTest.php" line="64" assertions="1" time="0.005588"/>
+      <testcase name="testGetRecursiveArray" class="E2_ConfigTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/E2_ConfigTest.php" line="68" assertions="1" time="0.002157"/>
+      <testcase name="testIterator" class="E2_ConfigTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/E2_ConfigTest.php" line="72" assertions="4" time="0.002090"/>
+    </testsuite>
+    <testsuite name="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" fullPackage="E2.Config" tests="6" assertions="9" failures="0" errors="0" time="0.015031">
+      <testcase name="testConstructorException" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="43" assertions="1" time="0.002617"/>
+      <testcase name="testSeializeConfig" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="47" assertions="1" time="0.003390"/>
+      <testcase name="testSeializeConfigEmptyArray" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="54" assertions="1" time="0.002164"/>
+      <testcase name="testGetConfigInstance" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="59" assertions="3" time="0.002456"/>
+      <testcase name="testGetConfig" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="71" assertions="2" time="0.002344"/>
+      <testcase name="testGetConfigExce" class="E2_Config_IniTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Config/E2_Config_IniTest.php" line="83" assertions="1" time="0.002060"/>
+    </testsuite>
+    <testsuite name="E2_Crypt_EncryptTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Crypt/E2_Crypt_McryptTest.php" fullPackage="E2.Crypt" tests="1" assertions="1" failures="1" errors="0" time="0.013668">
+      <testcase name="testDecryption" class="E2_Crypt_EncryptTest" file="/home/gapon/tmp/buga/SvnIPMCore/ipmcore/tests/ipmcore/lib/e2/E2/Crypt/E2_Crypt_McryptTest.php" line="16" assertions="1" time="0.013668">
+        <failure type="PHPUnit_Framework_ExpectationFailedException">testDecryption(E2_Crypt_EncryptTest)
+Failed asserting that two strings are equal.
+expected string &lt;qwe.qwe.123[]&gt;
+difference      &lt;             ???&gt;
+got string      &lt;qwe.qwe.123[]</failure>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>

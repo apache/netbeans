@@ -1,0 +1,5 @@
+Code completion result for source line:
+Identifier4 i|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   identifier4                                null

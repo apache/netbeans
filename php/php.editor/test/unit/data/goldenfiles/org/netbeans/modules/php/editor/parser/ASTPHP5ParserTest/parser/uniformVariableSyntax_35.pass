@@ -1,0 +1,2123 @@
+<testresult testFile='uniformVariableSyntax_35.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='12'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='12' end='14'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='14' end='23'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='23' end='25'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='25' end='30'>
+            <text>field</text>
+        </token>
+        <token id='T_SEMICOLON' start='30' end='31'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='32' end='37'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='37' end='39'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='39' end='48'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='48' end='50'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='50' end='55'>
+            <text>field</text>
+        </token>
+        <token id='T_OPEN_RECT' start='55' end='56'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='56' end='62'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='62' end='63'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='63' end='64'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='65' end='70'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='70' end='72'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='72' end='81'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='81' end='83'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='83' end='88'>
+            <text>field</text>
+        </token>
+        <token id='T_OPEN_RECT' start='88' end='89'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='89' end='95'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='95' end='96'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='96' end='97'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='97' end='98'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='98' end='99'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='99' end='100'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='101' end='106'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='106' end='108'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='108' end='117'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='117' end='119'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='119' end='125'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='125' end='126'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='126' end='127'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='127' end='128'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='129' end='134'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='134' end='136'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='136' end='145'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='145' end='147'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='147' end='153'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='153' end='154'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='154' end='155'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='155' end='156'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='156' end='157'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='157' end='158'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='158' end='159'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='160' end='165'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='165' end='167'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='167' end='176'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='176' end='178'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='178' end='184'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='184' end='185'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='185' end='186'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='186' end='187'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='187' end='188'>
+            <text>1</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='188' end='189'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='189' end='190'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='192' end='193'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='193' end='197'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='197' end='198'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='198' end='199'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='199' end='200'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='200' end='202'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='202' end='211'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='211' end='213'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='213' end='218'>
+            <text>field</text>
+        </token>
+        <token id='T_SEMICOLON' start='218' end='219'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='220' end='221'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='221' end='226'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='226' end='227'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='227' end='229'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='229' end='238'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='238' end='240'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='240' end='245'>
+            <text>field</text>
+        </token>
+        <token id='T_OPEN_RECT' start='245' end='246'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='246' end='252'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='252' end='253'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='253' end='254'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='255' end='256'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='256' end='261'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='261' end='262'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='262' end='264'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='264' end='273'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='273' end='275'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='275' end='280'>
+            <text>field</text>
+        </token>
+        <token id='T_OPEN_RECT' start='280' end='281'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='281' end='287'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='287' end='288'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='288' end='289'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='289' end='290'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='290' end='291'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='291' end='292'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='293' end='294'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='294' end='299'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='299' end='301'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='301' end='310'>
+            <text>$instance</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='310' end='311'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='311' end='313'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='313' end='319'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='319' end='320'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='320' end='321'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='321' end='322'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='323' end='324'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='324' end='329'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='329' end='330'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='330' end='332'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='332' end='341'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='341' end='343'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='343' end='349'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='349' end='350'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='350' end='351'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='351' end='352'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='352' end='353'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='353' end='354'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='354' end='355'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='356' end='357'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='357' end='362'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='362' end='363'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='363' end='365'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='365' end='374'>
+            <text>$instance</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='374' end='376'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='376' end='382'>
+            <text>method</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='382' end='383'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='383' end='384'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='384' end='385'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='385' end='386'>
+            <text>1</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='386' end='387'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='387' end='388'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='390' end='395'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='395' end='397'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='397' end='406'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='406' end='408'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='408' end='416'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='416' end='417'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='418' end='422'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='422' end='423'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='423' end='424'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='424' end='426'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='426' end='435'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='435' end='437'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='437' end='445'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_OPEN_RECT' start='445' end='446'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='446' end='452'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='452' end='453'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='453' end='454'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='455' end='460'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='460' end='462'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='462' end='471'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='471' end='473'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='473' end='485'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_SEMICOLON' start='485' end='486'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='487' end='492'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='492' end='494'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='494' end='503'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='503' end='505'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='505' end='517'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_RECT' start='517' end='518'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='518' end='519'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='519' end='520'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='520' end='521'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='522' end='527'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='527' end='529'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='529' end='538'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='538' end='540'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='540' end='552'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_RECT' start='552' end='553'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='553' end='554'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='554' end='555'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='555' end='556'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='556' end='557'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='557' end='558'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='558' end='559'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='560' end='565'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='565' end='567'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='567' end='576'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='576' end='578'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='578' end='590'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='590' end='591'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='591' end='592'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='592' end='593'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='594' end='599'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='599' end='601'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='601' end='610'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='610' end='612'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='612' end='624'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='624' end='625'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='625' end='626'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='626' end='627'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='628' end='633'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='633' end='635'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='635' end='644'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='644' end='646'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='646' end='658'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='658' end='659'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='659' end='660'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='660' end='661'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='661' end='662'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='662' end='663'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='663' end='664'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='665' end='670'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='670' end='672'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='672' end='681'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='681' end='683'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='683' end='695'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='695' end='696'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='696' end='697'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='697' end='698'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='698' end='699'>
+            <text>1</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='699' end='700'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='700' end='701'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='703' end='704'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='704' end='709'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='709' end='710'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='710' end='712'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='712' end='721'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='721' end='723'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='723' end='731'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='731' end='732'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='733' end='734'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='734' end='738'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='738' end='739'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='739' end='740'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='740' end='741'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='741' end='743'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='743' end='752'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='752' end='754'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='754' end='762'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_OPEN_RECT' start='762' end='763'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='763' end='769'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='769' end='770'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='770' end='771'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='772' end='773'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='773' end='778'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='778' end='780'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='780' end='789'>
+            <text>$instance</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='789' end='790'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='790' end='792'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='792' end='804'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_SEMICOLON' start='804' end='805'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='806' end='807'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='807' end='812'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='812' end='813'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='813' end='815'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='815' end='824'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='824' end='826'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='826' end='838'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_RECT' start='838' end='839'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='839' end='840'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='840' end='841'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='841' end='842'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='843' end='844'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='844' end='849'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='849' end='850'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='850' end='852'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='852' end='861'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='861' end='863'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='863' end='875'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_RECT' start='875' end='876'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='876' end='877'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='877' end='878'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='878' end='879'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='879' end='880'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='880' end='881'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='881' end='882'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='883' end='884'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='884' end='889'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='889' end='890'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='890' end='892'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='892' end='901'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='901' end='903'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='903' end='915'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='915' end='916'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='916' end='917'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='917' end='918'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='919' end='920'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='920' end='925'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='925' end='926'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='926' end='928'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='928' end='937'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='937' end='939'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='939' end='951'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='951' end='952'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='952' end='953'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='953' end='954'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='955' end='956'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='956' end='961'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='961' end='962'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='962' end='964'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='964' end='973'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='973' end='975'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='975' end='987'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='987' end='988'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='988' end='989'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='989' end='990'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='990' end='991'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='991' end='992'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='992' end='993'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='994' end='995'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='995' end='1000'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1000' end='1001'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1001' end='1003'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='1003' end='1012'>
+            <text>$instance</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1012' end='1014'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1014' end='1026'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1026' end='1027'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1027' end='1028'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1028' end='1029'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='1029' end='1030'>
+            <text>1</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1030' end='1031'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1031' end='1032'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1033' end='1033'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1033'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='31'>
+                <FieldAccess start='7' end='30'>
+                    <StaticFieldAccess start='7' end='23'>
+                        <Variable start='7' end='12' isDollared='true'>
+                            <Identifier start='8' end='12' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='14' end='23' isDollared='true'>
+                                <Identifier start='15' end='23' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='14' end='23' isDollared='true'>
+                                <Identifier start='15' end='23' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <Variable start='25' end='30' isDollared='false'>
+                            <Identifier start='25' end='30' name='field'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='32' end='64'>
+                <FieldAccess start='32' end='63'>
+                    <StaticFieldAccess start='32' end='48'>
+                        <Variable start='32' end='37' isDollared='true'>
+                            <Identifier start='33' end='37' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='39' end='48' isDollared='true'>
+                                <Identifier start='40' end='48' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='39' end='48' isDollared='true'>
+                                <Identifier start='40' end='48' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='50' end='63' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='55' end='63'>
+                                <Index>
+                                    <Scalar start='56' end='62' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='50' end='55' isDollared='false'>
+                                    <Identifier start='50' end='55' name='field'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='65' end='100'>
+                <FieldAccess start='65' end='99'>
+                    <StaticFieldAccess start='65' end='81'>
+                        <Variable start='65' end='70' isDollared='true'>
+                            <Identifier start='66' end='70' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='72' end='81' isDollared='true'>
+                                <Identifier start='73' end='81' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='72' end='81' isDollared='true'>
+                                <Identifier start='73' end='81' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='83' end='99' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='96' end='99'>
+                                <Index>
+                                    <Scalar start='97' end='98' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='83' end='96' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='88' end='96'>
+                                        <Index>
+                                            <Scalar start='89' end='95' type='STRING' value='"test"'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='83' end='88' isDollared='false'>
+                                            <Identifier start='83' end='88' name='field'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='101' end='128'>
+                <MethodInvocation start='101' end='127'>
+                    <StaticFieldAccess start='101' end='117'>
+                        <Variable start='101' end='106' isDollared='true'>
+                            <Identifier start='102' end='106' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='108' end='117' isDollared='true'>
+                                <Identifier start='109' end='117' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='108' end='117' isDollared='true'>
+                                <Identifier start='109' end='117' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Method>
+                        <FunctionInvocation start='119' end='127'>
+                            <FucntionName start='119' end='125'>
+                                <Variable start='119' end='125' isDollared='false'>
+                                    <Identifier start='119' end='125' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='129' end='159'>
+                <DereferencedArrayAccess start='129' end='158'>
+                    <ArrayDimension start='155' end='158'>
+                        <Index>
+                            <Scalar start='156' end='157' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <MethodInvocation start='129' end='155'>
+                        <StaticFieldAccess start='129' end='145'>
+                            <Variable start='129' end='134' isDollared='true'>
+                                <Identifier start='130' end='134' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='136' end='145' isDollared='true'>
+                                    <Identifier start='137' end='145' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='136' end='145' isDollared='true'>
+                                    <Identifier start='137' end='145' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Method>
+                            <FunctionInvocation start='147' end='155'>
+                                <FucntionName start='147' end='153'>
+                                    <Variable start='147' end='153' isDollared='false'>
+                                        <Identifier start='147' end='153' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='160' end='190'>
+                <DereferencedArrayAccess start='160' end='189'>
+                    <ArrayDimension start='186' end='189'>
+                        <Index>
+                            <Scalar start='187' end='188' type='INT' value='1'/>
+                        </Index>
+                    </ArrayDimension>
+                    <MethodInvocation start='160' end='186'>
+                        <StaticFieldAccess start='160' end='176'>
+                            <Variable start='160' end='165' isDollared='true'>
+                                <Identifier start='161' end='165' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='167' end='176' isDollared='true'>
+                                    <Identifier start='168' end='176' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='167' end='176' isDollared='true'>
+                                    <Identifier start='168' end='176' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Method>
+                            <FunctionInvocation start='178' end='186'>
+                                <FucntionName start='178' end='184'>
+                                    <Variable start='178' end='184' isDollared='false'>
+                                        <Identifier start='178' end='184' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='192' end='219'>
+                <FieldAccess start='192' end='218'>
+                    <StaticFieldAccess start='192' end='211'>
+                        <DereferencableVariable start='192' end='200'>
+                            <FunctionInvocation start='193' end='199'>
+                                <FucntionName start='193' end='197'>
+                                    <NamespaceName start='193' end='197' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='193' end='197' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='202' end='211' isDollared='true'>
+                                <Identifier start='203' end='211' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='202' end='211' isDollared='true'>
+                                <Identifier start='203' end='211' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <Variable start='213' end='218' isDollared='false'>
+                            <Identifier start='213' end='218' name='field'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='220' end='254'>
+                <FieldAccess start='220' end='253'>
+                    <StaticFieldAccess start='220' end='238'>
+                        <DereferencableVariable start='220' end='227'>
+                            <Variable start='221' end='226' isDollared='true'>
+                                <Identifier start='222' end='226' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='229' end='238' isDollared='true'>
+                                <Identifier start='230' end='238' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='229' end='238' isDollared='true'>
+                                <Identifier start='230' end='238' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='240' end='253' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='245' end='253'>
+                                <Index>
+                                    <Scalar start='246' end='252' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='240' end='245' isDollared='false'>
+                                    <Identifier start='240' end='245' name='field'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='255' end='292'>
+                <FieldAccess start='255' end='291'>
+                    <StaticFieldAccess start='255' end='273'>
+                        <DereferencableVariable start='255' end='262'>
+                            <Variable start='256' end='261' isDollared='true'>
+                                <Identifier start='257' end='261' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='264' end='273' isDollared='true'>
+                                <Identifier start='265' end='273' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='264' end='273' isDollared='true'>
+                                <Identifier start='265' end='273' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='275' end='291' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='288' end='291'>
+                                <Index>
+                                    <Scalar start='289' end='290' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='275' end='288' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='280' end='288'>
+                                        <Index>
+                                            <Scalar start='281' end='287' type='STRING' value='"test"'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='275' end='280' isDollared='false'>
+                                            <Identifier start='275' end='280' name='field'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='293' end='322'>
+                <MethodInvocation start='293' end='321'>
+                    <DereferencableVariable start='293' end='311'>
+                        <StaticFieldAccess start='294' end='310'>
+                            <Variable start='294' end='299' isDollared='true'>
+                                <Identifier start='295' end='299' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='301' end='310' isDollared='true'>
+                                    <Identifier start='302' end='310' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='301' end='310' isDollared='true'>
+                                    <Identifier start='302' end='310' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                    </DereferencableVariable>
+                    <Method>
+                        <FunctionInvocation start='313' end='321'>
+                            <FucntionName start='313' end='319'>
+                                <Variable start='313' end='319' isDollared='false'>
+                                    <Identifier start='313' end='319' name='method'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='323' end='355'>
+                <DereferencedArrayAccess start='323' end='354'>
+                    <ArrayDimension start='351' end='354'>
+                        <Index>
+                            <Scalar start='352' end='353' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <MethodInvocation start='323' end='351'>
+                        <StaticFieldAccess start='323' end='341'>
+                            <DereferencableVariable start='323' end='330'>
+                                <Variable start='324' end='329' isDollared='true'>
+                                    <Identifier start='325' end='329' name='test'/>
+                                </Variable>
+                            </DereferencableVariable>
+                            <Field>
+                                <Variable start='332' end='341' isDollared='true'>
+                                    <Identifier start='333' end='341' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='332' end='341' isDollared='true'>
+                                    <Identifier start='333' end='341' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Method>
+                            <FunctionInvocation start='343' end='351'>
+                                <FucntionName start='343' end='349'>
+                                    <Variable start='343' end='349' isDollared='false'>
+                                        <Identifier start='343' end='349' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='356' end='388'>
+                <DereferencedArrayAccess start='356' end='387'>
+                    <ArrayDimension start='384' end='387'>
+                        <Index>
+                            <Scalar start='385' end='386' type='INT' value='1'/>
+                        </Index>
+                    </ArrayDimension>
+                    <MethodInvocation start='356' end='384'>
+                        <StaticFieldAccess start='356' end='374'>
+                            <DereferencableVariable start='356' end='363'>
+                                <Variable start='357' end='362' isDollared='true'>
+                                    <Identifier start='358' end='362' name='test'/>
+                                </Variable>
+                            </DereferencableVariable>
+                            <Field>
+                                <Variable start='365' end='374' isDollared='true'>
+                                    <Identifier start='366' end='374' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='365' end='374' isDollared='true'>
+                                    <Identifier start='366' end='374' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Method>
+                            <FunctionInvocation start='376' end='384'>
+                                <FucntionName start='376' end='382'>
+                                    <Variable start='376' end='382' isDollared='false'>
+                                        <Identifier start='376' end='382' name='method'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='390' end='417'>
+                <StaticConstantAccess start='390' end='416'>
+                    <StaticFieldAccess start='390' end='406'>
+                        <Variable start='390' end='395' isDollared='true'>
+                            <Identifier start='391' end='395' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='397' end='406' isDollared='true'>
+                                <Identifier start='398' end='406' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='397' end='406' isDollared='true'>
+                                <Identifier start='398' end='406' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Constant>
+                        <Identifier start='408' end='416' name='CONSTANT'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='408' end='416' name='CONSTANT'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='418' end='454'>
+                <StaticConstantAccess start='418' end='453'>
+                    <StaticFieldAccess start='418' end='435'>
+                        <FunctionInvocation start='418' end='424'>
+                            <FucntionName start='418' end='422'>
+                                <NamespaceName start='418' end='422' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='418' end='422' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                        <Field>
+                            <Variable start='426' end='435' isDollared='true'>
+                                <Identifier start='427' end='435' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='426' end='435' isDollared='true'>
+                                <Identifier start='427' end='435' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Constant>
+                        <ExpressionArrayAccess start='437' end='453'>
+                            <Identifier start='437' end='445' name='CONSTANT'/>
+                            <ArrayDimension start='445' end='453'>
+                                <Index>
+                                    <Scalar start='446' end='452' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Constant>
+                    <Member>
+                        <ExpressionArrayAccess start='437' end='453'>
+                            <Identifier start='437' end='445' name='CONSTANT'/>
+                            <ArrayDimension start='445' end='453'>
+                                <Index>
+                                    <Scalar start='446' end='452' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='455' end='486'>
+                <StaticFieldAccess start='455' end='485'>
+                    <StaticFieldAccess start='455' end='471'>
+                        <Variable start='455' end='460' isDollared='true'>
+                            <Identifier start='456' end='460' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='462' end='471' isDollared='true'>
+                                <Identifier start='463' end='471' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='462' end='471' isDollared='true'>
+                                <Identifier start='463' end='471' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <Variable start='473' end='485' isDollared='true'>
+                            <Identifier start='474' end='485' name='staticField'/>
+                        </Variable>
+                    </Field>
+                    <Member>
+                        <Variable start='473' end='485' isDollared='true'>
+                            <Identifier start='474' end='485' name='staticField'/>
+                        </Variable>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='487' end='521'>
+                <StaticFieldAccess start='487' end='520'>
+                    <StaticFieldAccess start='487' end='503'>
+                        <Variable start='487' end='492' isDollared='true'>
+                            <Identifier start='488' end='492' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='494' end='503' isDollared='true'>
+                                <Identifier start='495' end='503' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='494' end='503' isDollared='true'>
+                                <Identifier start='495' end='503' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='505' end='520' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='517' end='520'>
+                                <Index>
+                                    <Scalar start='518' end='519' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='505' end='517' isDollared='true'>
+                                    <Identifier start='506' end='517' name='staticField'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                    <Member>
+                        <ArrayAccess start='505' end='520' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='517' end='520'>
+                                <Index>
+                                    <Scalar start='518' end='519' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='505' end='517' isDollared='true'>
+                                    <Identifier start='506' end='517' name='staticField'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='522' end='559'>
+                <StaticFieldAccess start='522' end='558'>
+                    <StaticFieldAccess start='522' end='538'>
+                        <Variable start='522' end='527' isDollared='true'>
+                            <Identifier start='523' end='527' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='529' end='538' isDollared='true'>
+                                <Identifier start='530' end='538' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='529' end='538' isDollared='true'>
+                                <Identifier start='530' end='538' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='540' end='558' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='555' end='558'>
+                                <Index>
+                                    <Scalar start='556' end='557' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='540' end='555' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='552' end='555'>
+                                        <Index>
+                                            <Scalar start='553' end='554' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='540' end='552' isDollared='true'>
+                                            <Identifier start='541' end='552' name='staticField'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                    <Member>
+                        <ArrayAccess start='540' end='558' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='555' end='558'>
+                                <Index>
+                                    <Scalar start='556' end='557' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='540' end='555' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='552' end='555'>
+                                        <Index>
+                                            <Scalar start='553' end='554' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='540' end='552' isDollared='true'>
+                                            <Identifier start='541' end='552' name='staticField'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='560' end='593'>
+                <StaticMethodInvocation start='560' end='592'>
+                    <StaticFieldAccess start='560' end='576'>
+                        <Variable start='560' end='565' isDollared='true'>
+                            <Identifier start='561' end='565' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='567' end='576' isDollared='true'>
+                                <Identifier start='568' end='576' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='567' end='576' isDollared='true'>
+                                <Identifier start='568' end='576' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Member>
+                        <FunctionInvocation start='578' end='592'>
+                            <FucntionName start='578' end='590'>
+                                <Variable start='578' end='590' isDollared='true'>
+                                    <Identifier start='579' end='590' name='staticField'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='578' end='592'>
+                        <FucntionName start='578' end='590'>
+                            <Variable start='578' end='590' isDollared='true'>
+                                <Identifier start='579' end='590' name='staticField'/>
+                            </Variable>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='594' end='627'>
+                <StaticMethodInvocation start='594' end='626'>
+                    <StaticFieldAccess start='594' end='610'>
+                        <Variable start='594' end='599' isDollared='true'>
+                            <Identifier start='595' end='599' name='test'/>
+                        </Variable>
+                        <Field>
+                            <Variable start='601' end='610' isDollared='true'>
+                                <Identifier start='602' end='610' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='601' end='610' isDollared='true'>
+                                <Identifier start='602' end='610' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Member>
+                        <FunctionInvocation start='612' end='626'>
+                            <FucntionName start='612' end='624'>
+                                <Identifier start='612' end='624' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='612' end='626'>
+                        <FucntionName start='612' end='624'>
+                            <Identifier start='612' end='624' name='staticMethod'/>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='628' end='664'>
+                <DereferencedArrayAccess start='628' end='663'>
+                    <ArrayDimension start='660' end='663'>
+                        <Index>
+                            <Scalar start='661' end='662' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <StaticMethodInvocation start='628' end='660'>
+                        <StaticFieldAccess start='628' end='644'>
+                            <Variable start='628' end='633' isDollared='true'>
+                                <Identifier start='629' end='633' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='635' end='644' isDollared='true'>
+                                    <Identifier start='636' end='644' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='635' end='644' isDollared='true'>
+                                    <Identifier start='636' end='644' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Member>
+                            <FunctionInvocation start='646' end='660'>
+                                <FucntionName start='646' end='658'>
+                                    <Identifier start='646' end='658' name='staticMethod'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='646' end='660'>
+                            <FucntionName start='646' end='658'>
+                                <Identifier start='646' end='658' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='665' end='701'>
+                <DereferencedArrayAccess start='665' end='700'>
+                    <ArrayDimension start='697' end='700'>
+                        <Index>
+                            <Scalar start='698' end='699' type='INT' value='1'/>
+                        </Index>
+                    </ArrayDimension>
+                    <StaticMethodInvocation start='665' end='697'>
+                        <StaticFieldAccess start='665' end='681'>
+                            <Variable start='665' end='670' isDollared='true'>
+                                <Identifier start='666' end='670' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='672' end='681' isDollared='true'>
+                                    <Identifier start='673' end='681' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='672' end='681' isDollared='true'>
+                                    <Identifier start='673' end='681' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Member>
+                            <FunctionInvocation start='683' end='697'>
+                                <FucntionName start='683' end='695'>
+                                    <Identifier start='683' end='695' name='staticMethod'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='683' end='697'>
+                            <FucntionName start='683' end='695'>
+                                <Identifier start='683' end='695' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='703' end='732'>
+                <StaticConstantAccess start='703' end='731'>
+                    <StaticFieldAccess start='703' end='721'>
+                        <DereferencableVariable start='703' end='710'>
+                            <Variable start='704' end='709' isDollared='true'>
+                                <Identifier start='705' end='709' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='712' end='721' isDollared='true'>
+                                <Identifier start='713' end='721' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='712' end='721' isDollared='true'>
+                                <Identifier start='713' end='721' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Constant>
+                        <Identifier start='723' end='731' name='CONSTANT'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='723' end='731' name='CONSTANT'/>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='733' end='771'>
+                <StaticConstantAccess start='733' end='770'>
+                    <StaticFieldAccess start='733' end='752'>
+                        <DereferencableVariable start='733' end='741'>
+                            <FunctionInvocation start='734' end='740'>
+                                <FucntionName start='734' end='738'>
+                                    <NamespaceName start='734' end='738' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='734' end='738' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='743' end='752' isDollared='true'>
+                                <Identifier start='744' end='752' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='743' end='752' isDollared='true'>
+                                <Identifier start='744' end='752' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Constant>
+                        <ExpressionArrayAccess start='754' end='770'>
+                            <Identifier start='754' end='762' name='CONSTANT'/>
+                            <ArrayDimension start='762' end='770'>
+                                <Index>
+                                    <Scalar start='763' end='769' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Constant>
+                    <Member>
+                        <ExpressionArrayAccess start='754' end='770'>
+                            <Identifier start='754' end='762' name='CONSTANT'/>
+                            <ArrayDimension start='762' end='770'>
+                                <Index>
+                                    <Scalar start='763' end='769' type='STRING' value='"test"'/>
+                                </Index>
+                            </ArrayDimension>
+                        </ExpressionArrayAccess>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='772' end='805'>
+                <StaticFieldAccess start='772' end='804'>
+                    <DereferencableVariable start='772' end='790'>
+                        <StaticFieldAccess start='773' end='789'>
+                            <Variable start='773' end='778' isDollared='true'>
+                                <Identifier start='774' end='778' name='test'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='780' end='789' isDollared='true'>
+                                    <Identifier start='781' end='789' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='780' end='789' isDollared='true'>
+                                    <Identifier start='781' end='789' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                    </DereferencableVariable>
+                    <Field>
+                        <Variable start='792' end='804' isDollared='true'>
+                            <Identifier start='793' end='804' name='staticField'/>
+                        </Variable>
+                    </Field>
+                    <Member>
+                        <Variable start='792' end='804' isDollared='true'>
+                            <Identifier start='793' end='804' name='staticField'/>
+                        </Variable>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='806' end='842'>
+                <StaticFieldAccess start='806' end='841'>
+                    <StaticFieldAccess start='806' end='824'>
+                        <DereferencableVariable start='806' end='813'>
+                            <Variable start='807' end='812' isDollared='true'>
+                                <Identifier start='808' end='812' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='815' end='824' isDollared='true'>
+                                <Identifier start='816' end='824' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='815' end='824' isDollared='true'>
+                                <Identifier start='816' end='824' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='826' end='841' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='838' end='841'>
+                                <Index>
+                                    <Scalar start='839' end='840' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='826' end='838' isDollared='true'>
+                                    <Identifier start='827' end='838' name='staticField'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                    <Member>
+                        <ArrayAccess start='826' end='841' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='838' end='841'>
+                                <Index>
+                                    <Scalar start='839' end='840' type='INT' value='0'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='826' end='838' isDollared='true'>
+                                    <Identifier start='827' end='838' name='staticField'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='843' end='882'>
+                <StaticFieldAccess start='843' end='881'>
+                    <StaticFieldAccess start='843' end='861'>
+                        <DereferencableVariable start='843' end='850'>
+                            <Variable start='844' end='849' isDollared='true'>
+                                <Identifier start='845' end='849' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='852' end='861' isDollared='true'>
+                                <Identifier start='853' end='861' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='852' end='861' isDollared='true'>
+                                <Identifier start='853' end='861' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <ArrayAccess start='863' end='881' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='878' end='881'>
+                                <Index>
+                                    <Scalar start='879' end='880' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='863' end='878' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='875' end='878'>
+                                        <Index>
+                                            <Scalar start='876' end='877' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='863' end='875' isDollared='true'>
+                                            <Identifier start='864' end='875' name='staticField'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Field>
+                    <Member>
+                        <ArrayAccess start='863' end='881' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='878' end='881'>
+                                <Index>
+                                    <Scalar start='879' end='880' type='INT' value='1'/>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <ArrayAccess start='863' end='878' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='875' end='878'>
+                                        <Index>
+                                            <Scalar start='876' end='877' type='INT' value='0'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='863' end='875' isDollared='true'>
+                                            <Identifier start='864' end='875' name='staticField'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Name>
+                        </ArrayAccess>
+                    </Member>
+                </StaticFieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='883' end='918'>
+                <StaticMethodInvocation start='883' end='917'>
+                    <StaticFieldAccess start='883' end='901'>
+                        <DereferencableVariable start='883' end='890'>
+                            <Variable start='884' end='889' isDollared='true'>
+                                <Identifier start='885' end='889' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='892' end='901' isDollared='true'>
+                                <Identifier start='893' end='901' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='892' end='901' isDollared='true'>
+                                <Identifier start='893' end='901' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Member>
+                        <FunctionInvocation start='903' end='917'>
+                            <FucntionName start='903' end='915'>
+                                <Variable start='903' end='915' isDollared='true'>
+                                    <Identifier start='904' end='915' name='staticField'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='903' end='917'>
+                        <FucntionName start='903' end='915'>
+                            <Variable start='903' end='915' isDollared='true'>
+                                <Identifier start='904' end='915' name='staticField'/>
+                            </Variable>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='919' end='954'>
+                <StaticMethodInvocation start='919' end='953'>
+                    <StaticFieldAccess start='919' end='937'>
+                        <DereferencableVariable start='919' end='926'>
+                            <Variable start='920' end='925' isDollared='true'>
+                                <Identifier start='921' end='925' name='test'/>
+                            </Variable>
+                        </DereferencableVariable>
+                        <Field>
+                            <Variable start='928' end='937' isDollared='true'>
+                                <Identifier start='929' end='937' name='instance'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='928' end='937' isDollared='true'>
+                                <Identifier start='929' end='937' name='instance'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Member>
+                        <FunctionInvocation start='939' end='953'>
+                            <FucntionName start='939' end='951'>
+                                <Identifier start='939' end='951' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='939' end='953'>
+                        <FucntionName start='939' end='951'>
+                            <Identifier start='939' end='951' name='staticMethod'/>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='955' end='993'>
+                <DereferencedArrayAccess start='955' end='992'>
+                    <ArrayDimension start='989' end='992'>
+                        <Index>
+                            <Scalar start='990' end='991' type='INT' value='0'/>
+                        </Index>
+                    </ArrayDimension>
+                    <StaticMethodInvocation start='955' end='989'>
+                        <StaticFieldAccess start='955' end='973'>
+                            <DereferencableVariable start='955' end='962'>
+                                <Variable start='956' end='961' isDollared='true'>
+                                    <Identifier start='957' end='961' name='test'/>
+                                </Variable>
+                            </DereferencableVariable>
+                            <Field>
+                                <Variable start='964' end='973' isDollared='true'>
+                                    <Identifier start='965' end='973' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='964' end='973' isDollared='true'>
+                                    <Identifier start='965' end='973' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Member>
+                            <FunctionInvocation start='975' end='989'>
+                                <FucntionName start='975' end='987'>
+                                    <Identifier start='975' end='987' name='staticMethod'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='975' end='989'>
+                            <FucntionName start='975' end='987'>
+                                <Identifier start='975' end='987' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='994' end='1032'>
+                <DereferencedArrayAccess start='994' end='1031'>
+                    <ArrayDimension start='1028' end='1031'>
+                        <Index>
+                            <Scalar start='1029' end='1030' type='INT' value='1'/>
+                        </Index>
+                    </ArrayDimension>
+                    <StaticMethodInvocation start='994' end='1028'>
+                        <StaticFieldAccess start='994' end='1012'>
+                            <DereferencableVariable start='994' end='1001'>
+                                <Variable start='995' end='1000' isDollared='true'>
+                                    <Identifier start='996' end='1000' name='test'/>
+                                </Variable>
+                            </DereferencableVariable>
+                            <Field>
+                                <Variable start='1003' end='1012' isDollared='true'>
+                                    <Identifier start='1004' end='1012' name='instance'/>
+                                </Variable>
+                            </Field>
+                            <Member>
+                                <Variable start='1003' end='1012' isDollared='true'>
+                                    <Identifier start='1004' end='1012' name='instance'/>
+                                </Variable>
+                            </Member>
+                        </StaticFieldAccess>
+                        <Member>
+                            <FunctionInvocation start='1014' end='1028'>
+                                <FucntionName start='1014' end='1026'>
+                                    <Identifier start='1014' end='1026' name='staticMethod'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1014' end='1028'>
+                            <FucntionName start='1014' end='1026'>
+                                <Identifier start='1014' end='1026' name='staticMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

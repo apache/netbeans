@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="goodBasicWSDL" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:plink="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+    <wsdl:types/>
+    <wsdl:message name="goodBasicWSDLOperationRequest">
+        <wsdl:part name="part1" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="goodBasicWSDLOperationReply">
+        <wsdl:part name="part1" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:portType name="goodBasicWSDLPortType">
+        <wsdl:operation name="goodBasicWSDLOperation">
+            <wsdl:input name="input1" message="goodBasicWSDLOperationRequest"/>
+            <wsdl:output name="output1" message="goodBasicWSDLOperationReply"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="goodBasicWSDLBinding" type="goodBasicWSDLPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="goodBasicWSDLOperation">
+            <soap:operation/>
+            <wsdl:input name="input1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodBasicWSDL"/>
+            </wsdl:input>
+            <wsdl:output name="output1">
+                <soap:body use="literal" namespace="http://j2ee.netbeans.org/wsdl/goodBasicWSDL"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="goodBasicWSDLService">
+        <wsdl:port name="goodBasicWSDLPort" binding="goodBasicWSDLBinding">
+            <soap:address location="http://localhost:18181/goodBasicWSDLService/goodBasicWSDLPort"/>
+        </wsdl:port>
+    </wsdl:service>
+    <plink:partnerLinkType name="goodBasicWSDLPartner">
+        <!-- partnerLinkType are automatically generated when a new portType is added. partnerLinkType are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plink:role name="goodBasicWSDLPortTypeRole" portType="goodBasicWSDLPortType"/>
+    </plink:partnerLinkType>
+</wsdl:definitions>

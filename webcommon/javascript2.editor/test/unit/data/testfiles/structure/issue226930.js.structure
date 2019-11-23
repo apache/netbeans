@@ -1,0 +1,54 @@
+$:PARAMETER:[PUBLIC]:ESCAPED{$}:
+  fn:CLASS:[PUBLIC]:ESCAPED{fn}:
+    multicombo:METHOD:[PUBLIC]:ESCAPED{multicombo}ESCAPED{(}ESCAPED{options}ESCAPED{)}<font color="#999999">ESCAPED{ : }$.fn@call;each</font>:
+  multicombo:METHOD:[PUBLIC]:ESCAPED{multicombo}ESCAPED{(}ESCAPED{select}ESCAPED{, }ESCAPED{options}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    $element:VARIABLE:[PRIVATE]:ESCAPED{$element}:
+    $leftExpandButton:VARIABLE:[PRIVATE]:ESCAPED{$leftExpandButton}:
+    $leftSearch:VARIABLE:[PRIVATE]:ESCAPED{$leftSearch}:
+    $leftSelect:VARIABLE:[PRIVATE]:ESCAPED{$leftSelect}:
+    $openListButton:CLASS:[PRIVATE]:ESCAPED{$openListButton}:
+    $rightExpandButton:VARIABLE:[PRIVATE]:ESCAPED{$rightExpandButton}:
+    $rightSearch:VARIABLE:[PRIVATE]:ESCAPED{$rightSearch}:
+    $rightSelect:VARIABLE:[PRIVATE]:ESCAPED{$rightSelect}:
+    $selectRow:CLASS:[PRIVATE]:ESCAPED{$selectRow}:
+    $toLeftButton:VARIABLE:[PRIVATE]:ESCAPED{$toLeftButton}:
+    $toRightButton:VARIABLE:[PRIVATE]:ESCAPED{$toRightButton}:
+    addSelectOption:METHOD:[PRIVATE]:ESCAPED{addSelectOption}ESCAPED{(}ESCAPED{$sourceOption}ESCAPED{, }ESCAPED{target}ESCAPED{, }ESCAPED{ignoreIndex}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    defaults:CLASS:[PRIVATE]:ESCAPED{defaults}:
+      classes:CLASS:[PUBLIC]:ESCAPED{classes}:
+        mainElement:FIELD:[PUBLIC]:ESCAPED{mainElement}<font color="#999999">ESCAPED{ : }String</font>:
+        toLeftButton:FIELD:[PUBLIC]:ESCAPED{toLeftButton}<font color="#999999">ESCAPED{ : }String</font>:
+        toRightButton:FIELD:[PUBLIC]:ESCAPED{toRightButton}<font color="#999999">ESCAPED{ : }String</font>:
+      defaultSelectSize:FIELD:[PUBLIC]:ESCAPED{defaultSelectSize}<font color="#999999">ESCAPED{ : }Number</font>:
+      expandedSelectSize:FIELD:[PUBLIC]:ESCAPED{expandedSelectSize}<font color="#999999">ESCAPED{ : }Number</font>:
+      filterTimeout:FIELD:[PUBLIC]:ESCAPED{filterTimeout}<font color="#999999">ESCAPED{ : }Number</font>:
+      layoutFolder:FIELD:[PUBLIC]:ESCAPED{layoutFolder}<font color="#999999">ESCAPED{ : }String</font>:
+    enhanceOption:METHOD:[PRIVATE]:ESCAPED{enhanceOption}ESCAPED{(}ESCAPED{$option}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    filterSelect:METHOD:[PRIVATE]:ESCAPED{filterSelect}ESCAPED{(}ESCAPED{text}ESCAPED{, }ESCAPED{target}ESCAPED{, }ESCAPED{selectFirst}ESCAPED{, }ESCAPED{useTimeout}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    filterTimeout:VARIABLE:[PRIVATE]:ESCAPED{filterTimeout}:
+    getSelect:METHOD:[PRIVATE]:ESCAPED{getSelect}ESCAPED{(}ESCAPED{targetName}ESCAPED{)}<font color="#999999">ESCAPED{ : }"targetSelect": [jquerified select object],
+                      "sourceSelect": [jquerified select object],
+                      "targetData"  : object
+                      "sourceData"  : object</font>:
+    initGuiMultiple:METHOD:[PRIVATE]:ESCAPED{initGuiMultiple}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    initGuiSingle:METHOD:[PRIVATE]:ESCAPED{initGuiSingle}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    leftSelectOptionsData:VARIABLE:[PRIVATE]:ESCAPED{leftSelectOptionsData}<font color="#999999">ESCAPED{ : }Array</font>:
+    moveSelectOptions:METHOD:[PRIVATE]:ESCAPED{moveSelectOptions}ESCAPED{(}ESCAPED{target}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      data:CLASS:[PRIVATE]:ESCAPED{data}:
+        index:FIELD:[PUBLIC]:ESCAPED{index}<font color="#999999">ESCAPED{ : }@var;index</font>:
+        text:FIELD:[PUBLIC]:ESCAPED{text}<font color="#999999">ESCAPED{ : }@var;text</font>:
+        value:FIELD:[PUBLIC]:ESCAPED{value}<font color="#999999">ESCAPED{ : }@var;value</font>:
+    plugin:CLASS:[PRIVATE]:ESCAPED{plugin}:
+      init:METHOD:[PUBLIC]:ESCAPED{init}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      settings:CLASS:[PUBLIC]:ESCAPED{settings}:
+        expandedSelectSize:FIELD:[PUBLIC]:ESCAPED{expandedSelectSize}<font color="#999999">ESCAPED{ : }Number</font>:
+        selectContainerWidth:FIELD:[PUBLIC]:ESCAPED{selectContainerWidth}:
+        type:FIELD:[PUBLIC]:ESCAPED{type}<font color="#999999">ESCAPED{ : }String</font>:
+      val:METHOD:[PUBLIC]:ESCAPED{val}ESCAPED{(}ESCAPED{values}ESCAPED{)}<font color="#999999">ESCAPED{ : }$.multicombo.val.returnArray</font>:
+    resetSearchWidth:METHOD:[PRIVATE]:ESCAPED{resetSearchWidth}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+    resizeSelect:METHOD:[PRIVATE]:ESCAPED{resizeSelect}ESCAPED{(}ESCAPED{target}ESCAPED{, }ESCAPED{options}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+      defaultOptions:CLASS:[PRIVATE]:ESCAPED{defaultOptions}:
+        sizeAttr:FIELD:[PUBLIC]:ESCAPED{sizeAttr}<font color="#999999">ESCAPED{ : }Boolean</font>:
+        toggle:FIELD:[PUBLIC]:ESCAPED{toggle}<font color="#999999">ESCAPED{ : }Boolean</font>:
+        width:FIELD:[PUBLIC]:ESCAPED{width}<font color="#999999">ESCAPED{ : }Boolean</font>:
+    rightSelectOptionsData:VARIABLE:[PRIVATE]:ESCAPED{rightSelectOptionsData}<font color="#999999">ESCAPED{ : }Array</font>:

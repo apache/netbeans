@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="ide/xml.tax" default="build" basedir=".">
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="lib-compile" depends="build-init">
+        <mkdir dir="${build.dir}/libclasses"/>
+        <javac target="${javac.target}" destdir="${build.dir}/libclasses" debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}" deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" includeantruntime="false">
+            <src path="lib/src"/>
+            <classpath>
+                <pathelement location="${netbeans.dest.dir}/ide/modules/ext/xerces-2.8.0.jar"/>
+            </classpath>
+        </javac>
+        <copy todir="${build.dir}/libclasses">
+            <fileset dir="lib/src" excludes="${jar-excludes}"/>
+        </copy>
+    </target>
+
+    <target name="lib-jar" depends="lib-compile">
+        <nb-ext-jar jarfile="${netbeans.dest.dir}/ide/modules/ext/org-netbeans-tax.jar" index="${build.package.index}" compress="${build.package.compress}">
+            <fileset dir="${build.dir}/libclasses"/>
+        </nb-ext-jar>
+    </target>
+
+    <target name="compile" depends="lib-jar,projectized-common.compile"/>
+
+</project>

@@ -1,0 +1,43 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n\n
+token #2 PHP_CLASS class
+token #3 WHITESPACE  
+token #4 PHP_STRING A
+token #5 WHITESPACE  
+token #6 PHP_CURLY_OPEN {
+token #7 WHITESPACE \n    
+token #8 PHP_FUNCTION function
+token #9 WHITESPACE  
+token #10 PHP_STRING foo
+token #11 PHP_TOKEN (
+token #12 PHP_TOKEN )
+token #13 PHP_TOKEN :
+token #14 WHITESPACE  
+token #15 PHP_TYPE_INT int
+token #16 WHITESPACE  
+token #17 PHP_CURLY_OPEN {
+token #18 WHITESPACE \n    
+token #19 PHP_CURLY_CLOSE }
+token #20 WHITESPACE \n    
+token #21 PHP_PRIVATE private
+token #22 WHITESPACE  
+token #23 PHP_FUNCTION function
+token #24 WHITESPACE  
+token #25 PHP_STRING bar
+token #26 PHP_TOKEN (
+token #27 PHP_TOKEN )
+token #28 PHP_TOKEN :
+token #29 WHITESPACE  
+token #30 PHP_NS_SEPARATOR \
+token #31 PHP_STRING My
+token #32 PHP_NS_SEPARATOR \
+token #33 PHP_STRING Firm
+token #34 PHP_NS_SEPARATOR \
+token #35 PHP_STRING MyClass
+token #36 WHITESPACE  
+token #37 PHP_CURLY_OPEN {
+token #38 WHITESPACE \n    
+token #39 PHP_CURLY_CLOSE }
+token #40 WHITESPACE \n
+token #41 PHP_CURLY_CLOSE }
+token #42 WHITESPACE \n

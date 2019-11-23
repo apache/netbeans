@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->test->| // test1
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testMethod()                    [PUBLIC]   Test

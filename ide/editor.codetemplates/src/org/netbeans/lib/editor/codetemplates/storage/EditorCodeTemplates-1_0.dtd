@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    Created on : June 9, 2007, 5:37 PM
+    Author     : vstejskal
+    Description:
+        The vocabulary for an editor code templates settings file.
+
+    PUBLIC ID  : -//NetBeans//DTD Editor Code Templates settings 1.0//EN
+    SYSTEM ID  : http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd
+-->
+
+
+
+<!ELEMENT codetemplates ( codetemplate )* >
+<!ATTLIST codetemplates>
+
+<!--
+    abbreviation:  (String, required) Shortcut text that you type in
+                   the editor to expand your code template.
+    descriptionId: (String) A resource bundle key with description text for
+                   this code template. Modules are encouraged to use this
+                   instead of <description/> element to make their templates
+                   localizable.
+    contexts:      (String) The list of comma separated contexts for filtering
+                   templates offered in code completion. Presently this is only
+                   used by java module, which registers its own CodeTemplateFilter.Factory.
+    uuid:          (String) An id that uniquely identifies this template. If you
+                   provide one for your template make sure it is a real unique id.
+    remove:        When 'true' this code template will be removed and all its
+                   optional attributes and elements will be ignored.
+-->
+<!ELEMENT codetemplate ( code?, description? ) >
+<!ATTLIST codetemplate
+          abbreviation      CDATA #REQUIRED
+          descriptionId     CDATA #IMPLIED
+          contexts          CDATA #IMPLIED
+          uuid              CDATA #IMPLIED
+          remove            ( true | false ) "false"
+          xml:space         ( default | preserve ) "default"
+>
+
+<!--
+    Contains the actual code of the code template. In API this is also called
+    parametrized text. It should be raw text enclosed in <![CDATA[ ]]> section.
+    No character translation is done when loading the code text (eg. pipe '|'
+    characters are left alone). See editor/codetemplates module's documentation
+    for the list of supported parameters (eg. ${cursor} for positioning the caret).
+-->
+<!ELEMENT code ( #PCDATA ) >
+<!ATTLIST code>
+
+<!--
+    Contains description for a code template in form of raw text enclosed in
+    <![CDATA[ ]]> section. This is designed for users custom code templates or
+    when they change description provided by a module. The modules should use
+    'descriptionId' attribute instead.
+-->
+<!ELEMENT description ( #PCDATA ) >
+<!ATTLIST description>
+

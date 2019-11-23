@@ -1,0 +1,149 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='182'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='182'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='url' start='6' end='35'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='9'>
+        <name>url</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BinaryNode type='ADD' start='13' end='35'>
+        <!-- BinaryNode lhs -->
+        <BinaryNode type='ADD' start='13' end='34'>
+          <!-- BinaryNode lhs -->
+          <BinaryNode type='ADD' start='13' end='27'>
+            <!-- BinaryNode lhs -->
+            <BinaryNode type='ADD' start='13' end='26'>
+              <!-- BinaryNode lhs -->
+              <StringLiteralNode value='http://' start='13' end='20'/>
+              <!-- BinaryNode rhs -->
+              <RuntimeNode start='22' end='26'>
+                <IdentNode start='22' end='26'>
+                  <name>host</name>
+                </IdentNode>
+              </RuntimeNode>
+            </BinaryNode>
+            <!-- BinaryNode rhs -->
+            <StringLiteralNode value='' start='27' end='27'/>
+          </BinaryNode>
+          <!-- BinaryNode rhs -->
+          <RuntimeNode start='29' end='34'>
+            <IdentNode start='29' end='34'>
+              <name>route</name>
+            </IdentNode>
+          </RuntimeNode>
+        </BinaryNode>
+        <!-- BinaryNode rhs -->
+        <StringLiteralNode value='' start='35' end='35'/>
+      </BinaryNode>
+    </VarNode>
+    <VarNode name='dir' start='44' end='94'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='44' end='47'>
+        <name>dir</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BinaryNode type='ADD' start='51' end='94'>
+        <!-- BinaryNode lhs -->
+        <BinaryNode type='ADD' start='51' end='93'>
+          <!-- BinaryNode lhs -->
+          <StringLiteralNode value='build/public' start='51' end='63'/>
+          <!-- BinaryNode rhs -->
+          <RuntimeNode start='65' end='93'>
+            <CallNode start='65' end='93'>
+              <!-- CallNode Arguments -->
+              <LexerTokenLiteralNode value='/[^\/]*$/' start='79' end='88'/>
+              <StringLiteralNode value='' start='91' end='91'/>
+              <!-- CallNode Function -->
+              <AccessNode property='replace' start='65' end='78'>
+                <!-- AccessNode Base -->
+                <IdentNode start='65' end='70'>
+                  <name>route</name>
+                </IdentNode>
+              </AccessNode>
+            </CallNode>
+          </RuntimeNode>
+        </BinaryNode>
+        <!-- BinaryNode rhs -->
+        <StringLiteralNode value='' start='94' end='94'/>
+      </BinaryNode>
+    </VarNode>
+    <VarNode name='name' start='103' end='180'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='103' end='107'>
+        <name>name</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <TernaryNode start='130' end='180'>
+        <CallNode start='110' end='129'>
+          <!-- CallNode Arguments -->
+          <StringLiteralNode value='/' start='126' end='127'/>
+          <!-- CallNode Function -->
+          <AccessNode property='endsWith' start='110' end='124'>
+            <!-- AccessNode Base -->
+            <IdentNode start='110' end='115'>
+              <name>route</name>
+            </IdentNode>
+          </AccessNode>
+        </CallNode>
+        <JoinPredecessorExpression start='133' end='143'>
+          <StringLiteralNode value='index.html' start='133' end='143'/>
+        </JoinPredecessorExpression>
+        <JoinPredecessorExpression start='148' end='180'>
+          <BinaryNode type='ADD' start='148' end='180'>
+            <!-- BinaryNode lhs -->
+            <BinaryNode type='ADD' start='148' end='174'>
+              <!-- BinaryNode lhs -->
+              <StringLiteralNode value='' start='148' end='148'/>
+              <!-- BinaryNode rhs -->
+              <RuntimeNode start='171' end='174'>
+                <IndexNode start='150' end='174'>
+                  <isIndex/>
+                  <!-- IndexNode Base -->
+                  <CallNode start='150' end='171'>
+                    <!-- CallNode Arguments -->
+                    <LexerTokenLiteralNode value='/[^/]+$/' start='162' end='170'/>
+                    <!-- CallNode Function -->
+                    <AccessNode property='match' start='150' end='161'>
+                      <!-- AccessNode Base -->
+                      <IdentNode start='150' end='155'>
+                        <name>route</name>
+                      </IdentNode>
+                    </AccessNode>
+                  </CallNode>
+                  <!-- IndexNode Index -->
+                  <NumberLiteralNode value='0' start='172' end='173'/>
+                </IndexNode>
+              </RuntimeNode>
+            </BinaryNode>
+            <!-- BinaryNode rhs -->
+            <StringLiteralNode value='.html' start='175' end='180'/>
+          </BinaryNode>
+        </JoinPredecessorExpression>
+      </TernaryNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

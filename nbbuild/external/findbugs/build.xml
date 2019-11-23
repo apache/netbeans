@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project basedir="." default="findbugs" name="nbbuild/external/findbugs">
+    
+    <description>Prepares FindBugs libraries</description>
+    
+    <property name="nbroot" value="../../.."/>
+    
+    <!-- findbugs.jar checksum -->
+    <property name="findbugs.md5" value="8122e8036f3e4e4bca760f8fdd2f779a"/>
+    
+    <import file="${nbroot}/nbbuild/templates/projectized.xml"/>
+
+    <target name="findbugs-init">
+
+        <property name="findbugs.zip.url"
+                  value="http://downloads.sourceforge.net/project/findbugs/findbugs/3.0.1/findbugs-3.0.1.zip"/>
+
+        <condition property="findbugs.downloaded">
+            <and>
+                <available file="lib/annotations.jar"/>
+                <available file="lib/findbugs.jar"/>
+                <available file="lib/jsr305.jar"/>
+                
+                <checksum file="lib/findbugs.jar" property="${findbugs.md5}"/>
+            </and>
+        </condition>
+        
+        <property name="findbugs.name" value="findbugs-3.0.1"/>
+        
+        <property name="lib.dir" location="lib"/>
+        <property name="build.dir" location="build"/>
+        <property name="binary.zip" location="findbugs-3.0.1.zip"/>
+    </target>
+    
+    <target name="findbugs" depends="findbugs-init,findbugs-clean,-init-proxy" unless="findbugs.downloaded">
+        
+        <echo>Preparing FindBugs libraries...</echo>
+        
+        <get dest="${binary.zip}"
+                src="${findbugs.zip.url}"/>
+        
+        <mkdir dir="${build.dir}"/>
+        <unzip src="${binary.zip}" dest="${build.dir}"/>
+        
+        <mkdir dir="${lib.dir}"/>
+        <copy todir="${lib.dir}" overwrite="true">
+            <fileset dir="${build.dir}/${findbugs.name}/lib">
+                <include name="annotations.jar"/>
+                <include name="asm-debug-all-5.0.2.jar"/>
+                <include name="bcel-6.0-SNAPSHOT.jar"/>
+                <include name="commons-lang-2.6.jar"/>
+                <include name="dom4j-1.6.1.jar"/>
+                <include name="findbugs-ant.jar"/>
+                <include name="findbugs.jar"/>
+                <include name="jFormatString.jar"/>
+                <include name="jaxen-1.1.6.jar"/>
+                <include name="jcip-annotations.jar"/>
+                <include name="jdepend-2.9.jar"/>
+                <include name="jsr305.jar"/>
+                <include name="yjp-controller-api-redist.jar"/>
+            </fileset>
+        </copy>
+
+        <delete file="${binary.zip}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="findbugs-clean" depends="findbugs-init" unless="findbugs.downloaded">
+        <delete dir="${lib.dir}"/>
+        <delete dir="${build.dir}"/>
+        <delete file="${binary.zip}"/>
+    </target>
+    
+</project>

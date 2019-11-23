@@ -1,0 +1,7 @@
+Code completion result for source line:
+}.a|Property1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      aProperty3                      [PUBLIC]   issue223111.js
+FIELD      aProperty1: Number              [PUBLIC]   issue223111.js
+FIELD      aProperty2: String              [PUBLIC]   issue223111.js

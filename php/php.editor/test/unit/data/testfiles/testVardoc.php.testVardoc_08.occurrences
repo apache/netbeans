@@ -1,0 +1,4 @@
+    public function |>MARK_OCCURRENCES:test<|()
+$varType->|>MARK_OCCURRENCES:test<|();
+$varType2->|>MARK_OCCURRENCES:test<|();
+    $value->^|>MARK_OCCURRENCES:test<|();

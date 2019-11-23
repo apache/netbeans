@@ -1,0 +1,2 @@
+NetBeans_PresetCustomizer.|>MARK_OCCURRENCES:_addPresetB^utton<| = null;
+    this.|>MARK_OCCURRENCES:_addPresetButton<| = document.getElementById('addPreset');

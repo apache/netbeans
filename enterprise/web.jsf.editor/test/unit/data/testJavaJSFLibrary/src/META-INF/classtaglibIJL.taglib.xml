@@ -1,0 +1,23 @@
+<!DOCTYPE facelet-taglib PUBLIC 
+    "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
+    "http://java.sun.com/dtd/facelet-taglib_1_0.dtd">
+<facelet-taglib>
+    <namespace>http://mysite.org/classTaglibIJL</namespace>
+    <tag>
+        <tag-name>
+            mytag
+        </tag-name>
+        <description>
+            nice small tag
+        </description>
+        <handler-class>org.mysite.classtaglib.HyperComponent</handler-class>
+        <attribute>
+            <name>myattr</name>
+            <description>
+                nice small attribute
+            </description>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+</facelet-taglib>

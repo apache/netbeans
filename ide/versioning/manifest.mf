@@ -1,0 +1,5 @@
+OpenIDE-Module: org.netbeans.modules.versioning/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/versioning/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Provides: org.netbeans.modules.versioning
+

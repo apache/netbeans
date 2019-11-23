@@ -1,0 +1,9 @@
+<!ELEMENT menus (menu*, foo)>
+
+<!ELEMENT menu (name, (menu-item | separator | menu)*)>
+
+<!ELEMENT name #PCDATA>
+<!ELEMENT menu-item #PCDATA>
+<!ELEMENT separator ()>
+
+<!ELEMENT foo (name*, separator, name?, name?)>

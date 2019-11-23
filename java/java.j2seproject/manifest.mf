@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.java.j2seproject/1
+OpenIDE-Module-Layer: org/netbeans/modules/java/j2seproject/ui/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/j2seproject/Bundle.properties
+OpenIDE-Module-Implementation-Version: 48
+AutoUpdate-Show-In-Client: false
+

@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New PHP Project with Existing Sources: Run Configuration</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.ui.wizards.RunConfigurationPanel.EXISTING" name="org.netbeans.modules.php.project.ui.wizards.RunConfigurationPanel.EXISTING"></a></p>
+<div id="NBCSH3488"><!-- infolevel="all" infotype="General" --><a id="sthref470" name="sthref470"></a>
+<h1>New PHP Project with Existing Sources: Run Configuration</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>A run configuration is a stored setting for running a PHP project. You can define several configurations for one project and switch between them back and forth. Run configurations apply to both running and debugging. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3015">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>All projects have a default run configuration, which is created in this panel. After you create a project, you can add additional run configurations in the Project Properties window.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t6">Element</th>
+<th align="left" valign="bottom" id="r1c2-t6">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t6" headers="r1c1-t6">
+<p>Run As</p>
+</td>
+<td align="left" headers="r2c1-t6 r1c2-t6">Select the default run configuration for the project from the drop-down list. The Run Configuration options change depending on which Run As choice you make</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Local Web Site</p>
+</td>
+<td align="left" headers="r3c1-t6 r1c2-t6">Select this option to run the application on a local web server. This is the default option.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Project URL</p>
+</td>
+<td align="left" headers="r4c1-t6 r1c2-t6">By default, this is <code dir="ltr">http://localhost/</code> + the path to the copy of your project sources that is in your web server's public folder. You can change the URL if you have a different path mapped to your server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copy Files from Sources Folder to Another Location</p>
+</td>
+<td align="left" headers="r5c1-t6 r1c2-t6">When selected, source files are copies to the specified folder.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copy to Folder</p>
+</td>
+<td align="left" headers="r6c1-t6 r1c2-t6">Specify the absolute path to the folder for copies of the source files. You can use the Browse button to locate the folder on your local file system.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copy Files on Project Open</p>
+</td>
+<td align="left" headers="r7c1-t6 r1c2-t6">When selected, the source files are automatically copied to the target folder when you open the project.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Remote Web Site</p>
+</td>
+<td align="left" headers="r8c1-t6 r1c2-t6">Select this option to run the application on a remote server. You need to specify the FTP or SFTP connection details of the remote server in the wizard.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Project URL</p>
+</td>
+<td align="left" headers="r9c1-t6 r1c2-t6">Specify the URL for the remote server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remote Connection</p>
+</td>
+<td align="left" headers="r10c1-t6 r1c2-t6">Select an existing remote connection from the drop-down list. If no connection exists you can click Manage to create a new connection.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upload Directory</p>
+</td>
+<td align="left" headers="r11c1-t6 r1c2-t6">Specify the upload directory on the remote server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upload Files</p>
+</td>
+<td align="left" headers="r12c1-t6 r1c2-t6">Select an upload option from the drop-down list.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Script</p>
+</td>
+<td align="left" headers="r13c1-t6 r1c2-t6">Select this option to run the application on the command line.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r14c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PHP Interpreter</p>
+</td>
+<td align="left" headers="r14c1-t6 r1c2-t6">Specify the PHP interpreter for the project. The interpreter that you specify in this field overrides the interpreter that is specified in the Options window. The default interpreter is the default global interpreter that is specified in the Options window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r15c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;PHP Built-in Web Server</p>
+</td>
+<td align="left" headers="r15c1-t6 r1c2-t6">Select this option to run on the built-in web server. This option requires PHP 5.4 or newer.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r16c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hostname</p>
+</td>
+<td align="left" headers="r16c1-t6 r1c2-t6">Specify the hostname of the server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r17c1-t6" headers="r1c1-t6">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Port</p>
+</td>
+<td align="left" headers="r17c1-t6 r1c2-t6">Specify the port of the server.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3505" name="NBCSH3505"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1539">
+<param name="text" value="<html><u>&quot;Working with PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

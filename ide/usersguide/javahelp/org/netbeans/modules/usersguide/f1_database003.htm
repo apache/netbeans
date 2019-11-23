@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Connection Wizard: Customize Connection Dialog</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.db.explorer.dlg.ConnectionPanel" name="org.netbeans.modules.db.explorer.dlg.ConnectionPanel"></a></p>
+<div id="NBCSH5350"><!-- infolevel="all" infotype="General" --><a id="sthref793" name="sthref793"></a>
+<h1>New Connection Wizard: Customize Connection Dialog</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to supply the details to create a new database connection. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1821">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>You open this dialog box by doing one of the following:</p>
+<ul>
+<li>Right-click the Databases node in the Services window and choose New Connection. Specify the driver and click Next.</li>
+<li>Right-click a driver node under the Databases node in the Services window and choose Connect Using.</li>
+<li>Clicking Add Connection in the Resolve Data Sources dialog box.</li>
+</ul>
+<p>Supply the details needed to connect to a specific database. Depending on the database driver you are using, you need to supply some or all of the following database connection properties.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t4">Element</th>
+<th align="left" valign="bottom" id="r1c2-t4">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t4" headers="r1c1-t4">
+<p>Driver Name</p>
+</td>
+<td align="left" headers="r2c1-t4 r1c2-t4">Confirm that the JDBC driver you want to use is the correct one for your database. This drop-down list only contains drivers registered with the IDE. If your driver is not listed, you need to add the JDBC driver at the previous step of the New Connection wizard. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1823">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t4" headers="r1c1-t4">
+<p>Host</p>
+</td>
+<td align="left" headers="r3c1-t4 r1c2-t4">Enter the hostname for the database. Use <code dir="ltr">localhost</code> if the database is located on a local machine.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t4" headers="r1c1-t4">
+<p>Port</p>
+</td>
+<td align="left" headers="r4c1-t4 r1c2-t4">Enter the port to be used by the database connection. Refer to the database documentation to know the default port number for your database.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t4" headers="r1c1-t4">
+<p>Database or Service ID</p>
+</td>
+<td align="left" headers="r5c1-t4 r1c2-t4">Enter the name of the database instance.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t4" headers="r1c1-t4">
+<p>User Name</p>
+</td>
+<td align="left" headers="r6c1-t4 r1c2-t4">Enter the password for the database.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t4" headers="r1c1-t4">
+<p>Remember Password</p>
+</td>
+<td align="left" headers="r7c1-t4 r1c2-t4">Select to have the IDE remember your password. If selected, you will not be prompted for the user name and password on subsequent connections to the database and the Remember Password property is set to <code dir="ltr">True</code>.
+<p>To set the Remember Password property to <code dir="ltr">False</code>, right-click the database connection node in the Services window and choose Properties and modify the property in the Properties window (only when the connection is in the disconnected state).</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t4" headers="r1c1-t4">
+<p>JDBC URL</p>
+</td>
+<td align="left" headers="r8c1-t4 r1c2-t4">Displays the JDBC URL for this connection.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>If the database to which you want to connect contains database schemas, you can click <b>Next</b> and select a schema in the Choose Database Schemas page.</p>
+<a id="NBCSH5358" name="NBCSH5358"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1790">
+<param name="text" value="<html><u>&quot;Working and Connecting with Databases&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="subdir/imported1" basedir=".">
+    <target name="foundme"/>
+</project>

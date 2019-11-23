@@ -1,0 +1,6 @@
+Code completion result for source line:
+MyObj.cr|eate().getInfo().big();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     create(): MyObj                 [PUBLIC]   methodChainSimple.js
+METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.apache.xml.resolver
+OpenIDE-Module-Localizing-Bundle: org/apache/xml/resolver/Bundle.properties
+OpenIDE-Module-Implementation-Version: 12

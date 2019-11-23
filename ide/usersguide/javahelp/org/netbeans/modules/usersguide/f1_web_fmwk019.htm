@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Struts Action Wizard: Name and Location</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.struts.wizards.ActionPanel" name="org.netbeans.modules.web.struts.wizards.ActionPanel"></a></p>
+<div id="NBCSH4274"><!-- infolevel="all" infotype="General" --><a id="sthref567" name="sthref567"></a>
+<h1>New Struts Action Wizard: Name and Location</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to create a new action. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1189">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>An action responds to a request. Writing an action means subclassing one of the Action classes and then overriding the class's <code dir="ltr">execute</code> method. An ActionForward is returned by the <code dir="ltr">execute</code> method. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Before you can use the New Struts Action wizard, you must have a Struts configuration file. To create a Struts configuration file quickly and efficiently, right-click the project node, choose <b>Properties</b> and use the Frameworks panel. Not only does this provide you with a Struts configuration file, but you also get the Struts libraries and supporting files.</p>
+<p>Once you have a Struts configuration file, you open the New Struts Action wizard by right-clicking a web application, choosing <b>New</b> &gt; <b>Other</b> and selecting Struts Action from the Struts category.</p>
+<p>In the <b>Name and Location</b> page, you set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Class Name</p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">Specifies the action's class name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t19" headers="r1c1-t19">
+<p>Project</p>
+</td>
+<td align="left" headers="r3c1-t19 r1c2-t19">Specifies the project of the new action class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t19" headers="r1c1-t19">
+<p>Location</p>
+</td>
+<td align="left" headers="r4c1-t19 r1c2-t19">Specifies a folder to house the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t19" headers="r1c1-t19">
+<p>Package</p>
+</td>
+<td align="left" headers="r5c1-t19 r1c2-t19">Specifies a package within the location to house the action.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t19" headers="r1c1-t19">
+<p>Created File</p>
+</td>
+<td align="left" headers="r6c1-t19 r1c2-t19">Specifies the file that will be created for the new action class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t19" headers="r1c1-t19">
+<p>Superclass</p>
+</td>
+<td align="left" headers="r7c1-t19 r1c2-t19">Specifies the class on which the action is based. This can be one of the following:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t19" headers="r1c1-t19">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<code dir="ltr">org.apache.struts.action.Action</code></p>
+</td>
+<td align="left" headers="r8c1-t19 r1c2-t19">An Action is an adapter between the contents of an incoming HTTP request and the corresponding business logic that should be executed to process this request. The controller (<code dir="ltr">ActionServlet</code>) selects an appropriate Action for each request, creates an instance (if necessary), and calls the <code dir="ltr">perform</code> method.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t19" headers="r1c1-t19">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<code dir="ltr">org.apache.struts.actions.DispatchAction</code></p>
+</td>
+<td align="left" headers="r9c1-t19 r1c2-t19">An abstract Action that dispatches to a public method that is named by the request parameter whose name is specified by the <code dir="ltr">parameter</code> property of the corresponding <code dir="ltr">ActionMapping</code>. This Action is useful if you want to combine many similar actions into a single <code dir="ltr">Action</code> class, in order to simplify their application design.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t19" headers="r1c1-t19">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<code dir="ltr">org.apache.struts.actions.MappingDispatchAction</code></p>
+</td>
+<td align="left" headers="r10c1-t19 r1c2-t19">An abstract <code dir="ltr">Action</code> that dispatches to a public method that is named by the parameter attribute of the corresponding <code dir="ltr">ActionMapping</code>. This is useful if you want to combine many related actions into a single <code dir="ltr">Action</code> class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r11c1-t19" headers="r1c1-t19">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<code dir="ltr">org.apache.struts.actions.LookupDispatchAction</code></p>
+</td>
+<td align="left" headers="r11c1-t19 r1c2-t19">An abstract Action that dispatches to the subclass-mapped <code dir="ltr">execute</code> method. This is useful in cases where an HTML form has multiple submit buttons with the same name. The button name is specified by the <code dir="ltr">parameter</code> property of the corresponding <code dir="ltr">ActionMapping</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r12c1-t19" headers="r1c1-t19">
+<p>Configuration File</p>
+</td>
+<td align="left" headers="r12c1-t19 r1c2-t19">Specifies the Struts configuration file, <code dir="ltr">struts-config.xml</code>. If none exists, you cannot create the action. To create a Struts configuration file quickly and efficiently, right-click the project node, choose Properties and use the Frameworks panel. Not only does this provide you with a Struts configuration file, but you also get the Struts libraries and supporting files.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r13c1-t19" headers="r1c1-t19">
+<p>Action Path</p>
+</td>
+<td align="left" headers="r13c1-t19 r1c2-t19">Associates the action with an incoming path. For example, if you type <code dir="ltr">/login</code> in Action Path, then whenever the web application receives a request with <code dir="ltr">/login.do</code>, the execute method of the associated action is invoked. After completing the New Struts Action wizard, you can modify the action path in the Struts configuration file.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>If you click <b>Next</b>, you can let the IDE associate an existing actionform bean with the action. If you click Finish, the action is created on your computer and opened in the IDE.</p>
+<a id="NBCSH4287" name="NBCSH4287"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>&quot;Working with the Struts Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1140">
+<param name="text" value="<html><u>&quot;About Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

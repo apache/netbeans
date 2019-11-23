@@ -1,0 +1,4 @@
+Manifest-version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.errorstripe.api/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/errorstripe/apimodule/resources/Bundle.properties

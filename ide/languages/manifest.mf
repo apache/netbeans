@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.languages/0
+OpenIDE-Module-Layer: org/netbeans/modules/languages/resources/layer.xml
+OpenIDE-Module-Install: org/netbeans/modules/languages/dataobject/Install.class
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/languages/Bundle.properties
+OpenIDE-Module-Implementation-Version: 2
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module-Deprecated: true
+OpenIDE-Module-Recommends: languages.refactoring

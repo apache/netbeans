@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="JAX-B Jars" default="createJaxbJars" basedir=".">
+    <description>
+        A script to invoke xjc. Requires following properties:
+            xsd.file : absolute location of schema file
+            packageName : package name for generated JAXB classes
+            jaxb.base : work directory for generating sources and classes into
+            jaxb.jar : jaxb jar path relative to jaxb.base
+            jaxb.src.jar : jaxb source jar path relative to jaxb.base
+            user.build.properties.file : NetBeans build.properties file under userdir
+    </description>
+    
+    <target name="xjc-jar" depends="-run-xjc, -create-jars"/>
+    
+    <target name="-init-user">
+        <property file="${user.build.properties.file}"/>
+        <condition property="isMacOs">
+            <os family="mac"/>
+        </condition>
+        <condition property="jdk.home" value="${java.home}/" else="${java.home}/../">
+            <istrue value="${isMacOs}"/>
+        </condition>
+        <condition property="platform.home" value="${platforms.JDK_1.5.home}" else="${jdk.home}">
+            <isset property="platforms.JDK_1.5.home"/>
+        </condition>
+        <property name="platform.javac" value="${platform.home}/bin/javac"/>
+    </target>
+    
+    <target name="-init-xjc" depends="-init-user">
+        <mkdir dir="${jaxb.base}/build"/>
+        <mkdir dir="${jaxb.base}/src"/>
+        <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+            <classpath path="${platform.home}/lib/tools.jar:${netbeans.dest.dir}/${nb.cluster.ide.dir}/modules/ext/jaxb/jaxb-xjc.jar:${libs.jaxb.classpath}"/>
+        </taskdef>
+    </target>
+    
+    <target name="-run-xjc" depends="-init-user, -init-xjc">
+        <xjc schema="${xsd.file}"
+            target="2.1"
+            package="${packageName}"
+            destdir="${jaxb.base}/src">
+        </xjc>
+        
+        <delete dir="${jaxb.base}/build"/>
+        <mkdir dir="${jaxb.base}/build"/>
+        <javac srcdir="${jaxb.base}/src" 
+               destdir="${jaxb.base}/build" 
+               classpath="${platform.home}/lib/tools.jar:${libs.jaxb.classpath}" 
+               executable="${platform.javac}"
+               debug="on" source="1.5" fork="true">               
+        </javac>
+    </target>
+    
+    <target name="-create-jars" depends="-run-xjc">
+        <jar jarfile="${jaxb.base}/${jaxb.src.jar}">
+            <fileset dir="${jaxb.base}/src"/>
+        </jar>
+        
+        <jar jarfile="${jaxb.base}/${jaxb.jar}"
+             basedir="${jaxb.base}/build">
+            <metainf dir="${jaxb.base}/.." includes="*.xsd"/>
+        </jar>
+        
+        <delete failonerror="false" dir="${jaxb.base}/build"/>
+        <delete failonerror="false" dir="${jaxb.base}/src"/>
+    </target>
+    
+</project>

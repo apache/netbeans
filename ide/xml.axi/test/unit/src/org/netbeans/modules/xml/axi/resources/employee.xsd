@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns="http://xml.netbeans.org/examples/Employee"
+    xmlns:addr="http://xml.netbeans.org/examples/targetNS/Address"
+    targetNamespace="http://xml.netbeans.org/examples/Employee"
+    xmlns="http://xml.netbeans.org/examples/Employee"
+    elementFormDefault="qualified">
+        
+    <xsd:import
+        namespace="http://xml.netbeans.org/examples/targetNS/Address"
+        schemaLocation = "address1.xsd"/>
+
+    <xsd:element name="employee">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="personInfo" type="addr:USAddress"/>
+                <xsd:element name="salary" type="xsd:decimal"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
+

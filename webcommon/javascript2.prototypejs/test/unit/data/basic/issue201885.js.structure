@@ -1,0 +1,4 @@
+Person:CONSTRUCTOR:[PUBLIC]:ESCAPED{Person}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{name}ESCAPED{)}:
+  name:FIELD:[PUBLIC]:ESCAPED{name}:
+  say:METHOD:[PUBLIC]:ESCAPED{say}ESCAPED{(}<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{message}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+person:VARIABLE:[PUBLIC]:ESCAPED{person}<font color="#999999">ESCAPED{ : }Person</font>:

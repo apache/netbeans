@@ -1,0 +1,28 @@
+Code completion result for source line:
+MultipleUsedTrait::|$privateStaticMultipleUsedTraitField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticBaseTrait1Method(  [PRIVATE,  BaseTrait1
+METHOD     privateStaticBaseTrait2Method(  [PRIVATE,  BaseTrait2
+METHOD     privateStaticMultipleUsedTrait  [PRIVATE,  MultipleUsedTrait
+METHOD     privateStaticTraitedTraitMetho  [PRIVATE,  TraitedTrait
+METHOD     protectedStaticBaseTrait1Metho  [PROTECTE  BaseTrait1
+METHOD     protectedStaticBaseTrait2Metho  [PROTECTE  BaseTrait2
+METHOD     protectedStaticMultipleUsedTra  [PROTECTE  MultipleUsedTrait
+METHOD     protectedStaticTraitedTraitMet  [PROTECTE  TraitedTrait
+METHOD     publicStaticBaseTrait1Method()  [STATIC]   BaseTrait1
+METHOD     publicStaticBaseTrait2Method()  [STATIC]   BaseTrait2
+METHOD     publicStaticMultipleUsedTraitM  [STATIC]   MultipleUsedTrait
+METHOD     publicStaticTraitedTraitMethod  [STATIC]   TraitedTrait
+VARIABLE   ? $privateStaticBaseTrait1Fiel  [PRIVATE,  BaseTrait1
+VARIABLE   ? $privateStaticBaseTrait2Fiel  [PRIVATE,  BaseTrait2
+VARIABLE   ? $privateStaticMultipleUsedTr  [PRIVATE,  MultipleUsedTrait
+VARIABLE   ? $privateStaticTraitedTraitFi  [PRIVATE,  TraitedTrait
+VARIABLE   ? $protectedStaticBaseTrait1Fi  [PROTECTE  BaseTrait1
+VARIABLE   ? $protectedStaticBaseTrait2Fi  [PROTECTE  BaseTrait2
+VARIABLE   ? $protectedStaticMultipleUsed  [PROTECTE  MultipleUsedTrait
+VARIABLE   ? $protectedStaticTraitedTrait  [PROTECTE  TraitedTrait
+VARIABLE   ? $publicStaticBaseTrait1Field  [STATIC]   BaseTrait1
+VARIABLE   ? $publicStaticBaseTrait2Field  [STATIC]   BaseTrait2
+VARIABLE   ? $publicStaticMultipleUsedTra  [STATIC]   MultipleUsedTrait
+VARIABLE   ? $publicStaticTraitedTraitFie  [STATIC]   TraitedTrait
+CONSTANT   class \MultipleUsedTrait        [PUBLIC]   Magic Constant

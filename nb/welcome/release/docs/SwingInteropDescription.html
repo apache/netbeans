@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Swing Interop</title>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+        <link rel="stylesheet" type="text/css" href="netbeans.css" media="screen">
+
+</head>
+<body>
+<br>
+<h1 align="">Swing Interop Sample Description</h1>
+<p>
+
+This project demonstrates the use of JavaFX 2.0 components in a Swing based application. </p>
+
+<br>
+
+<h2>JavaFX2-in-Swing in NetBeans 7.1</h2>
+<p>Building the sample SwingInterop produces in project <code>dist/</code> subdirectory
+a JAR file, a HTML file and two JNLP files - one to enable standalone
+application launch, the other to enable launch as applet within the HTML page.
+Note that the application is not a JavaFX 2.0 application and
+the built files do not follow the JavaFX 2.0 deployment
+model as described at <a href="http://www.oracle.com/technetwork/java/javafx">JavaFX website</a>. The JNLP files
+are pre-FX WebStart files, extended only by the reference to the
+required JavaFX 2.0+ runtime, which must be present in the system
+in order to run the application. The application itself launches
+either as standard Swing application or as (pre-FX) applet.
+To run the sample outside of NetBeans IDE do one of the following:</p>
+<ul>
+    <li>java -jar SwingInterop.jar</li>
+    <li>double-click SwingInterop_application.jnlp</li>
+    <li>open SwingInterop.html in a browser with installed JavaFX plug-in</li>
+</ul>
+
+<h2>Creating JavaFX2-in-Swing projects</h2>
+<p>NetBeans 7.1 supports either pure Java2SE (Swing) projects or pure
+JavaFX 2.0+ projects, but does not provide specific support for
+JavaFX2-in-Swing projects. Such support will be included in NetBeans 7.2.
+Before NetBeans 7.2 is available, the following workarounds can be followed:</p>
+<ol>
+<li>Use SwingInterop sample as starting point and modify its contents
+    as required. Note that the <code>main.class</code> property must be updated
+   manually in <code>nbproject/project.properties</code> to point to the main class of
+   your modified project.</li>
+<li>To start from scratch, create a new JavaFX Preloader project (in menu
+    File->New Project->JavaFX->JavaFX Preloader). Replace <code>build.xml</code> by
+    <code>build.xml</code> taken from the SwingInterop sample (and preferably edit 
+    &lt;project&gt; name in it). Copy the whole <code>web/</code> subdirectory from
+   SwingInterop sample to the new project. In <code>nbproject/project.properties</code>
+   add manually the property <code>main.class</code> and set it to the true
+   main class name when your java sources are ready.</li>
+</ol>
+<p>
+Use Run to run the application within the IDE.<br>
+Use Clean and Build to obtain the deployment files as described above.</p>
+
+</body>
+</html>

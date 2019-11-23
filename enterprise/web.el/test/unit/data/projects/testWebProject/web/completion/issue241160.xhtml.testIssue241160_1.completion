@@ -1,0 +1,39 @@
+Code completion result for source line:
+#{cc.attrs.muj.|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     charAt(int index)               [PUBLIC]   char
+METHOD     codePointAt(int index)          [PUBLIC]   int
+METHOD     codePointBefore(int index)      [PUBLIC]   int
+METHOD     codePointCount(int beginIndex,  [PUBLIC]   int
+METHOD     compareTo(String anotherString  [PUBLIC]   int
+METHOD     compareToIgnoreCase(String str  [PUBLIC]   int
+METHOD     concat(String str)              [PUBLIC]   String
+METHOD     contains(CharSequence s)        [PUBLIC]   boolean
+METHOD     contentEquals(StringBuffer sb)  [PUBLIC]   boolean
+METHOD     endsWith(String suffix)         [PUBLIC]   boolean
+METHOD     equals(Object anObject)         [PUBLIC]   boolean
+METHOD     equalsIgnoreCase(String anothe  [PUBLIC]   boolean
+METHOD     getBytes(int srcBegin,int srcE  [PUBLIC]   void
+METHOD     getChars(int srcBegin,int srcE  [PUBLIC]   void
+METHOD     hashCode()                      [PUBLIC]   int
+METHOD     indexOf(int ch)                 [PUBLIC]   int
+METHOD     intern()                        [PUBLIC]   String
+METHOD     lastIndexOf(int ch)             [PUBLIC]   int
+METHOD     length()                        [PUBLIC]   int
+METHOD     matches(String regex)           [PUBLIC]   boolean
+METHOD     offsetByCodePoints(int index,i  [PUBLIC]   int
+METHOD     regionMatches(int toffset,Stri  [PUBLIC]   boolean
+METHOD     replace(char oldChar,char newC  [PUBLIC]   String
+METHOD     replaceAll(String regex,String  [PUBLIC]   String
+METHOD     replaceFirst(String regex,Stri  [PUBLIC]   String
+METHOD     split(String regex,int limit)   [PUBLIC]   String[]
+METHOD     startsWith(String prefix,int t  [PUBLIC]   boolean
+METHOD     subSequence(int beginIndex,int  [PUBLIC]   CharSequence
+METHOD     substring(int beginIndex)       [PUBLIC]   String
+METHOD     toCharArray()                   [PUBLIC]   char[]
+METHOD     toLowerCase(Locale locale)      [PUBLIC]   String
+METHOD     toString()                      [PUBLIC]   String
+METHOD     toUpperCase(Locale locale)      [PUBLIC]   String
+METHOD     trim()                          [PUBLIC]   String
+PROPERTY   bytes                           [PUBLIC]   byte[]

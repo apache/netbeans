@@ -1,0 +1,5 @@
+Code completion result for source line:
+$clsB->method1()->method2()->|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method1()                       [PUBLIC]   clsB
+METHOD     method2()                       [PUBLIC]   clsB

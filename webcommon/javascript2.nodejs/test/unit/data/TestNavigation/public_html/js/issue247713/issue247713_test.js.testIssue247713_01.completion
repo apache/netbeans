@@ -1,0 +1,5 @@
+Code completion result for source line:
+ee.b|age();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     bage()                          [PUBLIC]   issue247713_test.js

@@ -1,0 +1,2 @@
+protected native Object clone() - override
+class

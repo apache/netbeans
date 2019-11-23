@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.maven.grammar/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/grammar/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/maven/grammar/layer.xml
+AutoUpdate-Show-In-Client: false

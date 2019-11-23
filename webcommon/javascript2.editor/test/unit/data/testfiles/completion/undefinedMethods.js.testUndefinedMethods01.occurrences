@@ -1,0 +1,5 @@
+|>MARK_OCCURRENCES:dvorek<|.getPrasatko();
+|>MARK_OCCURRENCES:dvorek<|.getKocicku();
+|>MARK_OCCURRENCES:dvorek<|.getPrasatko().udelejChro(|>MARK_OCCURRENCES:dvo^rek<|.dejDefault(), "afdafa");
+|>MARK_OCCURRENCES:dvorek<|.getPrasatko().udelejChro(|>MARK_OCCURRENCES:dvorek<|.dejDefault(|>MARK_OCCURRENCES:dvorek<|.getKocicku()), "afdafa");
+|>MARK_OCCURRENCES:dvorek<|.getKocicku().udelejMau();

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.activate
+Bundle-Version: 1.2
+Import-Package: org.osgi.framework
+Bundle-Activator: org.activate.Main
+OpenIDE-Module-Layer: org/activate/layer.xml
+

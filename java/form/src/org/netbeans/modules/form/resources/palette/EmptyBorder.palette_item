@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.border.EmptyBorder" type="border" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/emptyBorder.gif" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/beaninfo/swing/emptyBorder32.gif" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_javax-swing-border-EmptyBorder"
+               tooltip-key="HINT_javax-swing-border-EmptyBorder" />
+</palette_item>

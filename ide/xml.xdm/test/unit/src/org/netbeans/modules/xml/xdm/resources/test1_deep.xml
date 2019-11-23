@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="http://www.test.com/TestModel">
+    <a index='1'>
+        <b>index='11'
+            <c index='101'></c>
+        </b>
+        <b>index='12'</b>
+        <b>index='13'</b>
+    </a>
+    <b index='1'></b>
+    <c index='1'></c>
+</test>

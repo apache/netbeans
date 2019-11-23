@@ -1,0 +1,93 @@
+<FunctionNode name='asyncFunctions6.js' kind='MODULE' start='0' end='77'>
+  <isProgram/>
+  <ExportNode start='28' end='76'>
+    <ObjectNode start='43' end='76'>
+      <!-- ObjectNode Elements -->
+      <PropertyNode name='action' start='49' end='73'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='49' end='55'>
+          <name>action</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='action' kind='NORMAL' start='49' end='73'>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='58' end='69'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+            <ExpressionStatement start='64' end='69'>
+              <IdentNode start='64' end='68'>
+                <name>test</name>
+              </IdentNode>
+            </ExpressionStatement>
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+    </ObjectNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='77'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='23'>
+      <CallNode start='0' end='22'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <FunctionNode name='L:1' kind='NORMAL' start='7' end='19'>
+          <isAnonymous/>
+          <isAsync/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='17' end='18'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+      </CallNode>
+    </ExpressionStatement>
+    <VarNode name='*default*' start='43' end='76'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='43' end='76'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='43' end='76'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='action' start='49' end='73'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='49' end='55'>
+            <name>action</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='action' kind='NORMAL' start='49' end='73'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='58' end='69'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='64' end='69'>
+                <IdentNode start='64' end='68'>
+                  <name>test</name>
+                </IdentNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

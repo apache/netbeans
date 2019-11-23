@@ -1,0 +1,86 @@
+/* 
+ * Object that provides output to a page
+ */
+
+var |>GLOBAL:formatter<| = {
+    |>FIELD:indent<|: 0,
+    |>FIELD:space<|: "",
+  
+    // all properties and object function has to be referenced throgh this
+    |>METHOD:addIndent<|: function (count) {
+        this.|>FIELD:indent<| += count;
+        this.|>FIELD:space<| = this.addSpace();
+    },
+
+    |>METHOD:removeIndent<|: function (count) {
+        this.|>FIELD:indent<| -= count;
+        if(this.|>FIELD:indent<| < 0) {
+            this.|>FIELD:indent<| = 0;
+        }
+        this.|>FIELD:space<| =  this.addSpace();
+    },
+
+    |>METHOD:println<|: function (text) {
+        |>GLOBAL:document<|.writeln(this.|>FIELD:space<| + text + "<br/>");
+    },
+
+    |>METHOD:delimiter<|: function(title, emptyLine) {
+        if (emptyLine == undefined || !(emptyLine instanceof Boolean)) {
+            emptyLine = new Boolean(false);
+        }
+        if (emptyLine.valueOf()) {
+            this.println("");
+        }
+        if (title != undefined) {
+            this.println("------------------- " + title + " ------------------");
+        } else {
+            this.println("-------------------------------------");
+        }
+    },
+
+    /**
+     * Adding space to the indent
+     * @type String
+     */
+    |>METHOD:addSpace<|: function(){
+        var |>LOCAL_VARIABLE_DECLARATION:space<| = "";
+        for(var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < this.|>FIELD:indent<|; |>LOCAL_VARIABLE:i<|++) {
+            |>LOCAL_VARIABLE:space<| += "&nbsp;";
+        }
+        return |>LOCAL_VARIABLE:space<|;
+    },
+    
+    |>METHOD:print<|: function (text) {
+        |>GLOBAL:document<|.writeln(text);
+    },
+
+    |>METHOD:printCode<| : function(code) {
+
+        var |>LOCAL_VARIABLE_DECLARATION:text<| = "" + code;
+        |>LOCAL_VARIABLE:text<| = "<pre>" + code + "</pre>";
+        var |>LOCAL_VARIABLE_DECLARATION:textParts<| = |>LOCAL_VARIABLE:text<|.split("\"");
+        var |>LOCAL_VARIABLE_DECLARATION:number<| = 0;
+        if (|>LOCAL_VARIABLE:textParts<|.length > 1){
+            |>LOCAL_VARIABLE:text<| = "";
+            for (var |>LOCAL_VARIABLE_DECLARATION:i<| = 0; |>LOCAL_VARIABLE:i<| < |>LOCAL_VARIABLE:textParts<|.length; |>LOCAL_VARIABLE:i<|++) {
+                if (|>LOCAL_VARIABLE:number<| == 0) {
+                    |>LOCAL_VARIABLE:text<| += |>LOCAL_VARIABLE:textParts<|[|>LOCAL_VARIABLE:i<|] + "<font color='#ce7b00'>\"";
+                    |>LOCAL_VARIABLE:number<| = 1;
+                } else {
+                    |>LOCAL_VARIABLE:text<| += |>LOCAL_VARIABLE:textParts<|[|>LOCAL_VARIABLE:i<|]+ "\"</font>"; 
+                    |>LOCAL_VARIABLE:number<| = 0;
+                }
+            }
+        }
+        
+        |>LOCAL_VARIABLE:text<| = |>LOCAL_VARIABLE:text<|.replace(/function/g, "<font color='blue'>function</font>");
+        |>LOCAL_VARIABLE:text<| = |>LOCAL_VARIABLE:text<|.replace(/if/g, "<font color='blue'>if</font>");
+        |>LOCAL_VARIABLE:text<| = |>LOCAL_VARIABLE:text<|.replace(/return/g, "<font color='blue'>return</font>");
+        |>LOCAL_VARIABLE:text<| = |>LOCAL_VARIABLE:text<|.replace(/new/g, "<font color='blue'>new</font>");
+        |>LOCAL_VARIABLE:text<| = |>LOCAL_VARIABLE:text<|.replace(/var/g, "<font color='blue'>var</font>");
+
+        |>GLOBAL:document<|.write(|>LOCAL_VARIABLE:text<|);
+        this.println("");
+    }
+
+}

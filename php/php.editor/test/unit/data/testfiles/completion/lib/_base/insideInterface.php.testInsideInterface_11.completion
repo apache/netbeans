@@ -1,0 +1,5 @@
+Code completion result for source line:
+pub|lic function doAnything();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    public                                     null

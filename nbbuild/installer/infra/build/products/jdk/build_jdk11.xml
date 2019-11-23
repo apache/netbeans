@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+  This is the build script for the JDK nbi product package.
+    
+  It inherits most of the functionality from the base script for building nbi 
+  product packages, while providing this instance-specific values for several
+  core properties. For more details on the values of these properties see
+  the build.properties file.
+-->
+<project name="jdk-product" default="usage" basedir=".">
+    <!-- import the properties that are specific to this environment -->
+    <property file="${environment.properties}"/>
+    
+    <!-- import the properties that are specific to this product package -->
+    <property file="build_jdk11.properties"/>
+    
+    <!-- import the base script for building product packages -->
+    <import file="${common.dir}/product.xml" optional="false"/>
+    
+    <!--
+      Cleans and builds the project.
+      
+      Overrides the 'build-all' target in common.xml. This target calls the
+      'build-platform' target once for each platform supported by mobility.
+    -->
+    <target name="clean-all">
+        <for-each list="${bundle.jdk.platform}" separator="," property="bundle.jdk.platform.single">
+	    <antcall target="clean-platform">
+                <param name="product.version" value="${product.version.${bundle.jdk.platform.single}}"/>
+                <param name="product.platforms" value="${bundle.jdk.platform.single}"/>
+            </antcall>
+        </for-each>
+    </target>
+    
+    <!--
+      Cleans and builds the project.
+      
+      Overrides the 'build-all' target in common.xml. This target calls the
+      'build-platform' target once for each platform supported by mobility.
+    -->
+    <target name="build-all">
+        <for-each list="${bundle.jdk.platform}" separator="," property="bundle.jdk.platform.single">
+            <antcall target="build-platform">
+                <param name="product.version" value="${product.version.${bundle.jdk.platform.single}}"/>
+                <param name="product.platforms" value="${bundle.jdk.platform.single}"/>
+            </antcall>
+        </for-each>
+    </target>
+    
+    <!--
+      Cleans, builds and releases the project.
+      
+      Overrides the 'release-all' target in common.xml. This target calls the
+      'release-platform' target once for each platform supported by mobility.
+    -->
+    <target name="release-all">
+        <for-each list="${bundle.jdk.platform}" separator="," property="bundle.jdk.platform.single">
+            <antcall target="release-platform">
+                <param name="product.version" value="${product.version.${bundle.jdk.platform.single}}"/>
+                <param name="product.platforms" value="${bundle.jdk.platform.single}"/>
+            </antcall>
+        </for-each>
+    </target>
+    
+    <!--
+      Cleans the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines a dependency on the 'clean' target.
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="clean-platform" depends="clean"/>
+    
+    <!--
+      Cleans and builds the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines dependencies on the 'clean', 'checkout' and 'build' targets.
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="build-platform" depends="clean-platform,checkout,build"/>
+    
+    <!--
+      Cleans, builds and releases the project for a given platform.
+      
+      This is an aggregation target, which does not contain any functionality,
+      but defines dependencies on the 'clean', 'checkout', 'build' and 
+      'release' targets. 
+      
+      It expects that the caller will supply the 'product.platforms' parameter,
+      which will be used in other operations.
+    -->
+    <target name="release-platform" depends="build-platform,release"/>
+    
+    <!--
+      Corrects the layout of the incoming installation data files. 
+      
+      Overrides the '-pre-package' target in product.xml.
+    -->
+    <target name="-pre-package">
+        <echo>CALLING JDK11 PRE-PACKAGE</echo>
+        <condition property="jdk.folder.exists" value="true">
+            <available file="${data.directory}/${folder.name.unzipped}" type="dir"/>
+        </condition>
+        <if property="jdk.folder.exists" value="true">
+            <exec executable="sh" failonerror="false" dir="${data.directory}">
+                <arg value="-c"/>
+                <arg value="mv ${folder.name.unzipped}/* ./"/>
+            </exec>
+            <delete dir="${data.directory}/${folder.name.unzipped}"/>
+        </if>
+    </target>
+    
+    <!-- ============================================================================
+      Default
+    ============================================================================= -->
+    
+    <!--
+      The default target. 
+      
+      Does nothing except printing the usage information.
+    -->
+    <target name="usage">
+        <echo>
+            In order to 'clean', 'checkout' and 'build' the group use the 
+            'build-all' target. To 'clean', 'checkout', 'build' and 
+            'release' - use 'release-all'.
+            
+            For more details, please see the source of this build script.
+        </echo>
+    </target>
+</project>

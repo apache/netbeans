@@ -1,0 +1,3 @@
+dvorek.|>MARK_OCCURRENCES:getKocicku<|();
+dvorek.getPrasatko().udelejChro(dvorek.dejDefault(dvorek.|>MARK_OCCURRENCES:getKocicku<|()), "afdafa");
+dvorek.|>MARK_OCCURRENCES:getKo^cicku<|().udelejMau();

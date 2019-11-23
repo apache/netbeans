@@ -1,0 +1,11 @@
+martin:VARIABLE:[PUBLIC]:ESCAPED{martin}<font color="#999999">ESCAPED{ : }Woman</font>:
+Woman:CONSTRUCTOR:[PUBLIC]:ESCAPED{Woman}ESCAPED{(}ESCAPED{fName}ESCAPED{, }ESCAPED{sName}ESCAPED{)}<font color="#999999">ESCAPED{ : }Woman</font>:
+  address:CLASS:[PUBLIC]:ESCAPED{address}:
+    city:FIELD:[PUBLIC]:ESCAPED{city}<font color="#999999">ESCAPED{ : }String</font>:
+    print:METHOD:[PUBLIC]:ESCAPED{print}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }String</font>:
+    street:FIELD:[PUBLIC]:ESCAPED{street}<font color="#999999">ESCAPED{ : }String</font>:
+    zip:FIELD:[PUBLIC]:ESCAPED{zip}<font color="#999999">ESCAPED{ : }String</font>:
+  firstName:VARIABLE:[PRIVATE]:ESCAPED{firstName}:
+  getFirstName:METHOD:[PROTECTED]:ESCAPED{getFirstName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Woman.firstName</font>:
+  getSecondName:METHOD:[PROTECTED]:ESCAPED{getSecondName}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Woman.secondName</font>:
+  secondName:VARIABLE:[PRIVATE]:ESCAPED{secondName}:

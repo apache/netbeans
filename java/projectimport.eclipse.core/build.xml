@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="java/projectimport.eclipse.core">
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    <target name="debug" depends="netbeans" description="Build related modules and debug them.">
+        <ant dir="../projectimport.eclipse.j2se" target="netbeans" inheritall="false" inheritrefs="false"/>
+        <ant dir="../projectimport.eclipse.web" target="netbeans" inheritall="false" inheritrefs="false"/>
+        <path id="clusters">
+            <dirset dir="../../nbbuild/netbeans">
+                <include name="ide*"/>
+                <exclude name="identity*"/>
+                <include name="java*"/>
+                <include name="enterprise*"/>
+                <include name="gsf*"/>
+                <include name="websvccommon*"/>
+                <include name="nb*"/>
+            </dirset>
+        </path>
+        <property name="clusters.toString" refid="clusters"/>
+        <ant dir="../../nbbuild" target="tryme-debug" inheritall="false" inheritrefs="false">
+            <property name="tryme.arg.eclipseimport" value="-J-Dorg.netbeans.modules.projectimport.eclipse.level=0 --clusters ${clusters.toString}"/>
+        </ant>
+    </target>
+</project>

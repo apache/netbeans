@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/Synchronous"
+            xmlns:tns="http://xml.netbeans.org/schema/Synchronous"
+            elementFormDefault="qualified">
+
+    <xsd:complexType name="simpleProcess">
+        <xsd:sequence>
+            <xsd:element name="paramA" type="xsd:string"/>
+            <aaa>
+                <xsd:element name="test" >
+                    Changed
+                </xsd:element>
+            </aaa>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="typeA" type="tns:simpleProcess"/>
+</xsd:schema>

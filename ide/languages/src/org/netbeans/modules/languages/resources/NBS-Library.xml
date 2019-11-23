@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<documentation>
+    <node key="ACTION"                      context="root" type="keyword" library="Feature name."/>
+        <node key="name"                    context="ACTION" type="property"/>
+        <node key="performer"               context="ACTION" type="property"/>
+        <node key="enabled"                 context="ACTION" type="property"/>
+        <!-- XXX seems to be unused currently; perhaps replace with numeric 'position' key?
+        <node key="install_after"           context="ACTION" type="property"/>
+        <node key="install_before"          context="ACTION" type="property"/>
+        -->
+        <node key="separator_before"        context="ACTION" type="property"/>
+        <node key="separator_after"         context="ACTION" type="property"/>
+    <node key="AST"                         context="root" type="keyword" library="Feature name."/>
+        <node key="process"                 context="AST" type="property"/>
+        <node key="process_embedded"        context="AST" type="property"/>
+        <node key="removeEmpty"             context="AST" type="property"/>
+        <node key="removeSimple"            context="AST" type="property"/>
+    <node key="BRACE"                       context="root" type="keyword" library="Feature name."/>
+    <node key="BUNDLE"                      context="root" type="keyword" library="Feature name."/>
+    <node key="COLOR"                       context="root" type="keyword" library="Feature name."/>
+        <node key="color_name"              context="COLOR" type="property"/>
+        <node key="default_coloring"        context="COLOR" type="property"/>
+        <node key="foreground_color"        context="COLOR" type="property"/>
+        <node key="background_color"        context="COLOR" type="property"/>
+        <node key="underline_color"         context="COLOR" type="property"/>
+        <node key="wave_underline_color"    context="COLOR" type="property"/>
+        <node key="strike_through_color"    context="COLOR" type="property"/>
+        <node key="font_name"               context="COLOR" type="property"/>
+        <node key="font_type"               context="COLOR" type="property"/>
+        <node key="condition"               context="COLOR" type="property"/>
+    <node key="COMPLETE"                    context="root" type="keyword" library="Feature name."/>
+    <node key="COMPLETION"                  context="root" type="keyword" library="Feature name."/>
+        <node key="recursive"               context="COMPLETION" type="property"/>
+        <node key="text"                    context="COMPLETION" type="property"/>
+        <node key="description"             context="COMPLETION" type="property"/>
+        <node key="icon"                    context="COMPLETION" type="property"/>
+        <node key="type"                    context="COMPLETION" type="property"/>
+    <node key="FOLD"                        context="root" type="keyword" library="Feature name."/>
+        <node key="expand_type_action_name" context="FOLD" type="property"/>
+        <node key="collapse_type_action_name" context="FOLD" type="property"/>
+        <node key="fold_display_name"       context="FOLD" type="property"/>
+    <node key="FORMAT"                      context="root" type="keyword" library="Feature name."/>
+    <node key="HYPERLINK"                   context="root" type="keyword" library="Feature name."/>
+    <node key="IMPORT"                      context="root" type="keyword" library="Feature name."/>
+        <node key="mimeType"                context="IMPORT" type="property"/>
+        <node key="startSkipLength"         context="IMPORT" type="property"/>
+        <node key="endSkipLength"           context="IMPORT" type="property"/>
+        <node key="start"                   context="IMPORT" type="property"/>
+        <node key="end"                     context="IMPORT" type="property"/>
+    <node key="INDENT"                      context="root" type="keyword" library="Feature name."/>
+    <node key="MARK"                        context="root" type="keyword" library="Feature name."/>
+        <node key="condition"               context="MARK" type="property"/>
+        <node key="type"                    context="MARK" type="property"/>
+        <node key="message"                 context="MARK" type="property"/>
+    <node key="NAVIGATOR"                   context="root" type="keyword" library="Feature name."/>
+        <node key="display_name"            context="NAVIGATOR" type="property"/>
+        <node key="tooltip"                 context="NAVIGATOR" type="property"/>
+        <node key="icon"                    context="NAVIGATOR" type="property"/>
+        <node key="isLeaf"                  context="NAVIGATOR" type="property"/>
+    <node key="PARSE"                       context="root" type="keyword" library="Feature name."/>
+    <node key="PROPERTIES"                  context="root" type="keyword" library="Feature name."/>
+        <node key="projectsViewIcon"        context="PROPERTIES" type="property"/>
+    <node key="REFORMAT"                    context="root" type="keyword" library="Feature name."/>
+    <node key="SKIP"                        context="root" type="keyword" library="Feature name."/>
+    <node key="STORE"                       context="root" type="keyword" library="Feature name."/>
+    <node key="TOKEN"                       context="root" type="keyword" library="Feature name."/>
+        <node key="pattern"                 context="TOKEN" type="property"/>
+        <node key="call"                    context="TOKEN" type="property"/>
+    <node key="TOOLTIP"                     context="root" type="keyword" library="Feature name."/>
+
+    
+</documentation>
+
+
+
+
+
+

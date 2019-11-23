@@ -1,0 +1,60 @@
+Calling GenBeans.doIt
+Calling GenBeans.doIt
+Bean Tree:
+namespaceSample <namespaceSample> : NamespaceSample
+	name <name> : java.lang.String
+	configProperty <config-property> : ConfigPropertyType[1,n]
+		configPropertyName <config-property-name> : java.lang.String
+		configPropertyType <config-property-type> : java.lang.String
+		description <description> : java.lang.String[0,1]
+	moreInfo <more-info> : simple.MoreInfoType
+		configProperty <config-property> : simple.ExpandedConfigPropertyType[1,n]
+			configPropertyName <config-property-name> : java.lang.String
+			configPropertyType <config-property-type> : java.lang.String
+			configPropertyValue <config-property-value> : java.lang.String
+	simpleConfigProperty <simple-config-property> : simple.ConfigPropertyType[0,1]
+		configPropertyName <config-property-name> : java.lang.String
+		configPropertyType <config-property-type> : java.lang.String
+
+Compiling
+Finished compiling: 0
+out: TestBeanWrapper - creating the DOM document
+out: TestBeanWrapper - creating the bean graph
+out: TestBeanWrapper - bean graph created
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <namespaceSample xmlns='http://anything.org/extension'>
+out: 	<name>Bean Wrapper test</name>
+out: 	<config-property>
+out: 		<config-property-name></config-property-name>
+out: 		<config-property-type>int</config-property-type>
+out: 	</config-property>
+out: 	<more-info>
+out: 		<config-property>
+out: 			<config-property-name>head</config-property-name>
+out: 			<config-property-type>body part</config-property-type>
+out: 			<config-property-value>on the door</config-property-value>
+out: 		</config-property>
+out: 	</more-info>
+out: </namespaceSample>
+out: TestBeanWrapper - Creating the simple.ConfigPropertyType
+out: TestBeanWrapper - scpt is a class simple.ConfigPropertyType
+out: <?xml version='1.0' encoding='UTF-8' ?>
+out: <namespaceSample xmlns='http://anything.org/extension'>
+out: 	<name>Bean Wrapper test</name>
+out: 	<config-property>
+out: 		<config-property-name></config-property-name>
+out: 		<config-property-type>int</config-property-type>
+out: 	</config-property>
+out: 	<more-info>
+out: 		<config-property>
+out: 			<config-property-name>head</config-property-name>
+out: 			<config-property-type>body part</config-property-type>
+out: 			<config-property-value>on the door</config-property-value>
+out: 		</config-property>
+out: 	</more-info>
+out: 	<simple-config-property>
+out: 		<config-property-name></config-property-name>
+out: 		<config-property-type></config-property-type>
+out: 	</simple-config-property>
+out: </namespaceSample>
+Finished running TestBeanWrapper: 0

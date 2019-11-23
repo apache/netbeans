@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Calculator2Test" file="/home/gapon/NetBeansProjects/PhpProject01/tests/hola/Calculator2Test.php" tests="1" assertions="1" failures="0" errors="0" time="0.009660">
+    <testcase name="testAdd" class="Calculator2Test" file="/home/gapon/NetBeansProjects/PhpProject01/tests/hola/Calculator2Test.php" line="43" assertions="1" time="0.009660"/>
+  </testsuite>
+</testsuites>

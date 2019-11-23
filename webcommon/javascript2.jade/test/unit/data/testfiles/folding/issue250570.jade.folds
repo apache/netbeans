@@ -1,0 +1,6 @@
+  - var task = {}
+  - task._id = 10;
++ input(type='hidden', value=task._id.toString(), name='id')
+- //
++ a(class='btn btn-danger btn-xs task-delete', data-task-id=task._id.toString(), data-csrf=locals._csrf) delete
+-    

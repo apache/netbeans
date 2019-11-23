@@ -1,0 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+E2C76A19F00128BB1806207E2989139BFB45F49D org.jruby.jcodings:jcodings:1.0.18
+655CC3ABA1BC9DBDD653F28937BEC16F3E9C4CEC org.jruby.joni:joni:2.1.11
+041CFB536DA85BCB9DBDF2E465BC952D40704863 org.eclipse.tm4e.core_0.2.0.201809031154.jar

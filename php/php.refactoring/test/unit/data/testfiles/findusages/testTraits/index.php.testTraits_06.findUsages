@@ -1,0 +1,14 @@
+Display text: trait <b>Baz</b> {
+File name: index.php
+Name: Baz
+Position: BEGIN: 95 END: 98
+
+Display text: use Foo, Bar, <b>Baz</b> {
+File name: index.php
+Name: Baz
+Position: BEGIN: 160 END: 163
+
+Display text: Foo::fnc insteadof Bar, <b>Baz</b>;
+File name: index.php
+Name: Baz
+Position: BEGIN: 198 END: 201

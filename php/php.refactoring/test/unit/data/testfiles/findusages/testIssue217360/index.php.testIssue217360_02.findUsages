@@ -1,0 +1,9 @@
+Display text: private function <b>getTwo</b>() //One
+File name: index.php
+Name: getTwo
+Position: BEGIN: 40 END: 46
+
+Display text: $two = $this-><b>getTwo</b>();
+File name: index.php
+Name: getTwo
+Position: BEGIN: 156 END: 162

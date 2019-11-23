@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.lexer.nbbridge.test/1
+OpenIDE-Module-Layer: org/netbeans/modules/lexer/nbbridge/test/testLayer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/lexer/nbbridge/test/TestBundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.lexer/2 > 1.0
+OpenIDE-Module-Public-Packages: -

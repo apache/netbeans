@@ -1,0 +1,52 @@
+"/usr/bin/karma" "start" "/home/gapon/NetBeansProjects/Karma-Coverage/config/karma.conf.js" "--port" "9876"
+WARN [plugin]: Cannot find plugin "karma-coverage".
+  Did you forget to install it ?
+  npm install karma-coverage --save-dev
+INFO [karma]: Karma v0.10.10 server started at http://localhost:9876/
+INFO [launcher]: Starting browser Firefox
+(node:11661) DeprecationWarning: process.EventEmitter is deprecated. Use require('events') instead.
+WARN [preprocess]: Can not load "coverage", it is not registered!
+  Perhaps you are missing some plugin?
+INFO [Firefox 46.0.0 (Ubuntu)]: Connected on socket xJwXnHQcH1YvaPbl6MCD
+Firefox 46.0.0 (Ubuntu) PhoneCat controllers PhoneListCtrl should create "phones" model with 2 phones fetched from xhr FAILED
+	Expected [  ] to equal data 10.
+	@/home/gapon/NetBeansProjects/Karma-Coverage/test/unit/controllersSpec.js:31:7
+
+Firefox 46.0.0 (Ubuntu): Executed 1 of 4 (1 FAILED) (0 secs / 0.041 secs)
+$NB$netbeans browserStart name=$NB$Firefox 46.0.0 (Ubuntu)$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneListCtrl$NB$
+$NB$netbeans testFailure browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should create "phones" model with 2 phones fetched from xhr$NB$ details=$NB$["Expected [  ] to equal data 10.\n@http://localhost:9876/base/test/unit/controllersSpec.js?1463052305655:31:7\n"]$NB$ duration=$NB$41$NB$
+Firefox 46.0.0 (Ubuntu): Executed 2 of 4 (1 FAILED) (0 secs / 0.055 secs)
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should set the default value of orderProp model$NB$ duration=$NB$14$NB$
+Firefox 46.0.0 (Ubuntu): Executed 3 of 4 (1 FAILED) (0 secs / 0.074 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneListCtrl$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneDetailCtrl$NB$
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should fetch phone detail$NB$ duration=$NB$19$NB$
+Firefox 46.0.0 (Ubuntu): Executed 4 of 4 (1 FAILED) (0 secs / 0.08 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneDetailCtrl$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$filter checkmark$NB$
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should convert boolean values to unicode checkmark or cross$NB$ duration=$NB$6$NB$
+Firefox 46.0.0 (Ubuntu): Executed 4 of 4 (1 FAILED) (0.435 secs / 0.08 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$filter checkmark$NB$
+$NB$netbeans browserEnd name=$NB$Firefox 46.0.0 (Ubuntu)$NB$
+Firefox 46.0.0 (Ubuntu) PhoneCat controllers PhoneListCtrl should create "phones" model with 2 phones fetched from xhr FAILED
+	Expected [  ] to equal data 10.
+	@/home/gapon/NetBeansProjects/Karma-Coverage/test/unit/controllersSpec.js:31:7
+
+Firefox 46.0.0 (Ubuntu): Executed 1 of 4 (1 FAILED) (0 secs / 0.094 secs)
+$NB$netbeans browserStart name=$NB$Firefox 46.0.0 (Ubuntu)$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneListCtrl$NB$
+$NB$netbeans testFailure browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should create "phones" model with 2 phones fetched from xhr$NB$ details=$NB$["Expected [  ] to equal data 10.\n@http://localhost:9876/base/test/unit/controllersSpec.js?1463052305655:31:7\n"]$NB$ duration=$NB$94$NB$
+Firefox 46.0.0 (Ubuntu): Executed 2 of 4 (1 FAILED) (0 secs / 0.109 secs)
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should set the default value of orderProp model$NB$ duration=$NB$15$NB$
+Firefox 46.0.0 (Ubuntu): Executed 3 of 4 (1 FAILED) (0 secs / 0.146 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneListCtrl$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneDetailCtrl$NB$
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should fetch phone detail$NB$ duration=$NB$37$NB$
+Firefox 46.0.0 (Ubuntu): Executed 4 of 4 (1 FAILED) (0 secs / 0.156 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$PhoneCat controllers PhoneDetailCtrl$NB$
+$NB$netbeans suiteStart browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$filter checkmark$NB$
+$NB$netbeans testPass browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$should convert boolean values to unicode checkmark or cross$NB$ duration=$NB$10$NB$
+Firefox 46.0.0 (Ubuntu): Executed 4 of 4 (1 FAILED) (0.42 secs / 0.156 secs)
+$NB$netbeans suiteEnd browser=$NB$Firefox 46.0.0 (Ubuntu)$NB$ name=$NB$filter checkmark$NB$
+$NB$netbeans browserEnd name=$NB$Firefox 46.0.0 (Ubuntu)$NB$

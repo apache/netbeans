@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://schemas.sun.com/point/venetianblind"
+    xmlns:tns="http://schemas.sun.com/point/venetianblind"
+    xmlns="http://schemas.sun.com/point/venetianblind"
+    elementFormDefault="qualified">
+    
+    <xsd:complexType name="PointType">
+        <xsd:attribute name="x" type="xsd:integer"/>
+        <xsd:attribute name="y" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:element name="Line">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="PointA" type="PointType"/>
+                <xsd:element name="PointB" type="PointType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>    
+</xsd:schema>

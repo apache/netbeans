@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<A:rootA1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:A="http://xml.netbeans.org/schema/TNSA"
+  xmlns:B="http://xml.netbeans.org/schema/TNSB"
+  xmlns:C="http://xml.netbeans.org/schema/TNSC"
+  xsi:schemaLocation="http://xml.netbeans.org/schema/TNSA A.xsd
+  http://xml.netbeans.org/schema/TNSB B.xsd
+  http://xml.netbeans.org/schema/TNSC C.xsd">
+  <
+  <C:rootC1>
+      <A:rootA1>
+          <
+      </A:rootA1>
+      <B:rootB1>
+          <
+      </B:rootB1>
+  </C:rootC1>
+</A:rootA1>

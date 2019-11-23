@@ -1,0 +1,24 @@
+Code completion result for source line:
+#{bean.myList['|}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     add(E e)                        [PUBLIC]   boolean
+METHOD     addAll(Collection<? extends E>  [PUBLIC]   boolean
+METHOD     clear()                         [PUBLIC]   void
+METHOD     contains(Object o)              [PUBLIC]   boolean
+METHOD     containsAll(Collection<?> c)    [PUBLIC]   boolean
+METHOD     equals(Object o)                [PUBLIC]   boolean
+METHOD     get(int index)                  [PUBLIC]   E
+METHOD     hashCode()                      [PUBLIC]   int
+METHOD     indexOf(Object o)               [PUBLIC]   int
+METHOD     iterator()                      [PUBLIC]   Iterator<E>
+METHOD     lastIndexOf(Object o)           [PUBLIC]   int
+METHOD     listIterator()                  [PUBLIC]   ListIterator<E>
+METHOD     remove(Object o)                [PUBLIC]   boolean
+METHOD     removeAll(Collection<?> c)      [PUBLIC]   boolean
+METHOD     retainAll(Collection<?> c)      [PUBLIC]   boolean
+METHOD     set(int index,E element)        [PUBLIC]   E
+METHOD     size()                          [PUBLIC]   int
+METHOD     stream()                        [PUBLIC]   Stream
+METHOD     subList(int fromIndex,int toIn  [PUBLIC]   List<E>
+METHOD     toArray()                       [PUBLIC]   Object[]

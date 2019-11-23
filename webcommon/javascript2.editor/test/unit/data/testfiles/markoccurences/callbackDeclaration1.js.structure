@@ -1,0 +1,5 @@
+r:VARIABLE:[PUBLIC]:ESCAPED{r}<font color="#999999">ESCAPED{ : }Requester</font>:
+Requester:CONSTRUCTOR:[PUBLIC]:ESCAPED{Requester}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Requester</font>:
+  prototype:CLASS:[PUBLIC]:ESCAPED{prototype}:
+    send:METHOD:[PUBLIC]:ESCAPED{send}ESCAPED{(}<font color="#999999">ESCAPED{Requester.requestCallback}ESCAPED{ }</font>ESCAPED{cb}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  requestCallback:OTHER:[PUBLIC]:ESCAPED{requestCallback}ESCAPED{(}<font color="#999999">ESCAPED{Number}ESCAPED{ }</font>ESCAPED{responseCode}ESCAPED{, }<font color="#999999">ESCAPED{String}ESCAPED{ }</font>ESCAPED{responseMessage}ESCAPED{)}:

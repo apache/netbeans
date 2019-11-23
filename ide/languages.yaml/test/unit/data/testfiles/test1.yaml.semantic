@@ -1,0 +1,40 @@
+|>METHOD:JFrame<|:
+    |>METHOD:title<|: frame.title
+    |>METHOD:content<|:
+        - |>METHOD:JPanel<|:
+            |>METHOD:content<|:
+                - |>METHOD:JBSeparator<|: {|>METHOD:name<|: sepName, |>METHOD:text<|: header.name}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: fNameLabel, |>METHOD:text<|: label.firstName}
+                - |>METHOD:JTextField<|: {|>METHOD:name<|: fNameField, |>METHOD:onFocus<|: onFirstNameFocus, |>METHOD:onFocusLost<|: onFirstNameFocusLost}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: lNameLabel, |>METHOD:text<|: label.lastName}
+                - |>METHOD:JTextField<|: {|>METHOD:name<|: lNameField, |>METHOD:onKeyPressed<|: onLastNameKeyPressed, |>METHOD:onKeyReleased<|: onLastNameKeyReleased}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: titleLabel, |>METHOD:text<|: label.title}
+                - |>METHOD:JTextField<|: {|>METHOD:name<|: titleField, |>METHOD:onKeyTyped<|: onTitleKeyTyped}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: dfLabel, |>METHOD:text<|: label.displayFormat}
+                - |>METHOD:JComboBox<|: {|>METHOD:name<|: dfCombo}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: nickLabel, |>METHOD:text<|: label.nickname}
+                - |>METHOD:JTextField<|: {|>METHOD:name<|: nickField}
+                - |>METHOD:JBSeparator<|: {|>METHOD:name<|: sepList, |>METHOD:text<|: header.list}
+                - |>METHOD:JLabel<|: {|>METHOD:name<|: labelEmail, |>METHOD:text<|: label.email}
+                - |>METHOD:JTextField<|: {|>METHOD:name<|: fieldEmail}                
+                - |>METHOD:JList<|: {|>METHOD:name<|: textArea}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: addButton, |>METHOD:text<|: button.add, |>METHOD:actionCommand<|: add}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: deleteButton, |>METHOD:text<|: button.delete, |>METHOD:actionCommand<|: delete}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: editButton, |>METHOD:text<|: button.edit, |>METHOD:onAction<|: edit}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: advancedButton, |>METHOD:text<|: button.advanced, |>METHOD:actionCommand<|: advanced}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: okButton, |>METHOD:text<|: button.ok, |>METHOD:onAction<|: save}
+                - |>METHOD:JButton<|: {|>METHOD:name<|: cancelButton, |>METHOD:text<|: button.cancel, |>METHOD:onAction<|: cancel}
+            |>METHOD:layout<|: |
+                [pref]       [grow,100px]              [grow]               [pref]             
+                sepName+*              
+                >fNameLabel  fNameField=1  >lNameLabel lNameField+2=1
+                >titleLabel  titleField=1  >nickLabel  nickField+2=1
+                >dfLabel     dfCombo+*
+                sepList+*
+                >labelEmail  fieldEmail+3                                    addButton+1+4=3      
+                textArea+4+3                                                 editButton=3         [grow]
+                                                                             deleteButton=3
+                                                                             advancedButton=3                          
+                                  
+                >okButton+*=2,cancelButton=2
+

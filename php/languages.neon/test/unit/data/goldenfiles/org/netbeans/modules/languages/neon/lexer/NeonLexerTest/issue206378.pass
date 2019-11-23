@@ -1,0 +1,23 @@
+token #0 NEON_BLOCK development
+token #1 NEON_WHITESPACE  
+token #2 NEON_INTERPUNCTION <
+token #3 NEON_WHITESPACE  
+token #4 NEON_BLOCK common
+token #5 NEON_INTERPUNCTION :
+token #6 NEON_WHITESPACE \n
+token #7 NEON_WHITESPACE     
+token #8 NEON_BLOCK database
+token #9 NEON_INTERPUNCTION :
+token #10 NEON_WHITESPACE \n
+token #11 NEON_WHITESPACE         
+token #12 NEON_VALUED_BLOCK database
+token #13 NEON_INTERPUNCTION :
+token #14 NEON_WHITESPACE  
+token #15 NEON_LITERAL //myserver:1521/mydb
+token #16 NEON_WHITESPACE \n
+token #17 NEON_WHITESPACE         
+token #18 NEON_VALUED_BLOCK username
+token #19 NEON_INTERPUNCTION :
+token #20 NEON_WHITESPACE  
+token #21 NEON_LITERAL myuser
+token #22 NEON_WHITESPACE \n

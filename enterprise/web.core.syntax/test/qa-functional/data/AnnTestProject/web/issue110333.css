@@ -1,0 +1,8 @@
+    example-class
+    {
+        top: expression(offsetParent.scrollTop);    
+    }
+    
+    example-class2{
+        filter: alpha(opacity=10);
+    }

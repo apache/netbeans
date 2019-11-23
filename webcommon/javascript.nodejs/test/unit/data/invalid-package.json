@@ -1,0 +1,38 @@
+{
+    "dependencies": {
+        "a/b": "1.13.1",
+        "c/d": 1,
+        "e/f": 1.5,
+        "g/h": null,
+        "i/j": true,
+        "k/l": {"myver": 123},
+        "m/n": [1, 2]
+    },
+    "devDependencies": {
+        "aa/bb": "42",
+        "cc/dd": 1,
+        "ee/ff": 1.5,
+        "gg/hh": null,
+        "ii/jj": true,
+        "kk/ll": {"myver": 123},
+        "mm/nn": [1, 2]
+    },
+    "peerDependencies": {
+        "aaa/bbb": "42",
+        "ccc/ddd": 1,
+        "eee/fff": 1.5,
+        "ggg/hhh": null,
+        "iii/jjj": true,
+        "kkk/lll": {"myver": 123},
+        "mmm/nnn": [1, 2]
+    },
+    "optionalDependencies": {
+        "aaaa/bbbb": "42",
+        "cccc/dddd": 1,
+        "eeee/ffff": 1.5,
+        "gggg/hhhh": null,
+        "iiii/jjjj": true,
+        "kkkk/llll": {"myver": 123},
+        "mmmm/nnnn": [1, 2]
+    }
+}

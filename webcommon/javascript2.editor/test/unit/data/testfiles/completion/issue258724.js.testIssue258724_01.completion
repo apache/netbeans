@@ -1,0 +1,5 @@
+Code completion result for source line:
+return this.n|; // .name gets suggested
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      name                            [PUBLIC]   issue258724.js

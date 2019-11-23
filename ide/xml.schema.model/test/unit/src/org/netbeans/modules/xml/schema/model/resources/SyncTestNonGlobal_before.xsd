@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.example.com/OrgChart">
+
+  <xsd:element name="OrgChart">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="CompanyLogo">
+          <xsd:complexType>
+            <xsd:attribute name="href" type="xsd:anyURI"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="Office" type="OfficeType" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>

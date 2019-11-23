@@ -1,0 +1,13 @@
+function |>METHOD:Person234390<|(name) {
+    this.|>FIELD:realname<| = name;
+    this.|>METHOD:hello<| = function() {
+        return this.|>FIELD:realname<|;
+    };
+}
+
+var |>GLOBAL:pe234390<| = new Person234390("John"); 
+with (|>GLOBAL:pe234390<|) {
+    //hello(); // uncomment hello() call to make it pe.hello() work OK
+    |>GLOBAL:pe234390<|.hello();     
+    |>GLOBAL:pe234390<|.|>FIELD:realname<| = "Doe";
+} 

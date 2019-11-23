@@ -1,0 +1,127 @@
+/*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+body#body{
+    font-family: Tahoma;
+    font-weight: 100;
+}
+
+input[type=checkbox],
+input[type=radio]
+{
+    -webkit-appearance: none;
+}
+
+input[type=text],
+input[type=number]
+{
+    border-radius: 0;
+    border-width: 1px;
+    border-color: #b2b2b2;
+    border-top-color: #b2b2b2;
+    border-style: solid;
+}
+
+input[type=text]:focus,
+input[type=number]:focus
+{
+    outline-style: none;
+    border-color: #78A7D8;
+    box-shadow: 0 0 4px 0px #97C5F5;
+}
+
+input[type=checkbox]{
+    background: #ffffff;
+    border-radius: 0;
+    border: solid 1px #000000;
+    padding: 6px;
+}
+
+input[type=checkbox]:checked {
+    background: url('cb-win-s.png') no-repeat;
+    background-size: 100%
+}
+
+input[type=checkbox]:hover {
+    border: solid 1px #0078D7;
+}
+
+input[type=checkbox]:hover:checked {
+    background: url('cb-win-s-a.png') no-repeat;
+    background-size: 100%
+}
+
+input[type=radio]{
+    background: #ffffff;
+    width: 16px;
+    height: 16px;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+input[type=radio]:checked:after{
+    background: black;
+    content: " ";
+    margin: 3px;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+input[type=radio]:hover {
+    border: solid 1px #0078D7;
+}
+
+input[type=radio]:hover:checked:after{
+    background: #0078D7;
+    content: " ";
+    margin: 3px;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 10px;
+    border-width: 1px;
+}
+
+button{
+    background: #CCCCCC;
+    border-radius: 0;
+    border-style: dotted;
+    border-width: 1px;
+    border-color: transparent;
+    outline-style: solid;
+    outline-color: #BFBFBF;
+    outline-width: 1px;
+}
+
+button:hover{
+    background-color: #E4EdF4;
+    border-radius: 0;
+    border-style: dotted;
+    border-width: 1px;
+    outline-width: 1px;
+    outline-style: outset;
+    outline-color: #0078D7;
+    border-color: #000000;
+    outline-offset: 1px;
+    outline-style: solid;
+    box-shadow: 0 0 1px 1px #aad2f2;
+}

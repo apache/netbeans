@@ -1,0 +1,4 @@
+8:31-8:35:error:test() has private access in javahints.ReferredTo
+9:39-9:40:error:a has private access in javahints.ReferredTo
+11:24-11:34:error:ReferredTo() has private access in javahints.ReferredTo
+13:31-13:32:error:javahints.ReferredTo.A has private access in javahints.ReferredTo

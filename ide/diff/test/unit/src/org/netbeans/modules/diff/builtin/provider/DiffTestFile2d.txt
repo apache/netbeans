@@ -1,0 +1,52 @@
+4c4,8
+<                 setStepRequest (StepRequest.STEP_OUT);
+---
+>                 //TODO following line of code is wrong !
+>                 // step out implementation calls getDebuggerImpl ().resume ();
+>                 // such code should not be called from operator!
+>                 //getStepActionProvider().doAction(ActionsManager.ACTION_STEP_OUT);
+>                 setStepRequest ();
+13,31c17,39
+<     private void setStepRequest (int step) {
+<         ThreadReference tr = ((JPDAThreadImpl) getDebuggerImpl ().
+<             getCurrentThread ()).getThreadReference ();
+<         removeStepRequests (tr);
+<         stepRequest = getDebuggerImpl ().getVirtualMachine ().
+<         eventRequestManager ().createStepRequest (
+<             tr,
+<             StepRequest.STEP_LINE,
+<             step
+<         );
+<         getDebuggerImpl ().getOperator ().register (stepRequest, this);
+<         stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+<         
+<         if (ssverbose)
+<             System.out.println("SS:    set patterns:");
+<         addPatternsToRequest (
+<             getSmartSteppingFilterImpl ().getExclusionPatterns ()
+<         );
+<         stepRequest.enable ();
+---
+>     private void setStepRequest () {
+>         JPDAThreadImpl jt = (JPDAThreadImpl) getDebuggerImpl ().
+>             getCurrentThread ();
+>         synchronized (jt) {
+>             if (!jt.isSuspended()) {}  // TODO Handle the condition or what?
+>             ThreadReference tr = jt.getThreadReference ();
+>             removeStepRequests (tr);
+>             stepRequest = getDebuggerImpl ().getVirtualMachine ().
+>             eventRequestManager ().createStepRequest (
+>                 tr,
+>                 StepRequest.STEP_LINE,
+>                 StepRequest.STEP_INTO
+>             );
+>             getDebuggerImpl ().getOperator ().register (stepRequest, this);
+>             stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+> 
+>             if (ssverbose)
+>                 System.out.println("SS:    set patterns:");
+>             addPatternsToRequest (
+>                 getSmartSteppingFilterImpl ().getExclusionPatterns ()
+>             );
+>             stepRequest.enable ();
+>         }

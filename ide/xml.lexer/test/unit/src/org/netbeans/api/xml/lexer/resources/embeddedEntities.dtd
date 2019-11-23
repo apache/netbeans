@@ -1,0 +1,14 @@
+%;
+%par
+%parsed;
+&ent;
+&;
+&en
+&1;
+<!ELEMENT some "a&ent">
+<!ELEMENT some "a&;">
+<!ELEMENT some "a&#x;">
+<!ELEMENT some "a&#xzz;">
+<!ELEMENT other %;>
+<!ELEMENT other %pa>
+<!ELEMENT other %1;>

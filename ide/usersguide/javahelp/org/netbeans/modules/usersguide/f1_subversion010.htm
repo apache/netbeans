@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Subversion: Merge Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.subversion.ui.copy.Merge" name="org.netbeans.modules.subversion.ui.copy.Merge"></a></p>
+<div id="NBCSH1493"><!-- infolevel="all" infotype="General" --><a id="sthref171" name="sthref171"></a>
+<h1>Subversion: Merge Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Subversion Merge dialog box enables you to incorporate changes from a specific repository revision into your local working copy of a file or folder. You can also specify changes from a given range of revisions from the repository. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG311">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The Merge dialog box can be accessed by right-clicking a versioned file or folder (e.g. in the Projects, Files or Favorites window) and choosing <b>Subversion &gt; Merge Changes</b>.</p>
+<p>In the Merge Changes dialog box, you must specify the following fields:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t18">Element</th>
+<th align="left" valign="bottom" id="r1c2-t18">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t18" headers="r1c1-t18">
+<p>Merge From</p>
+</td>
+<td align="left" headers="r2c1-t18 r1c2-t18">Select one of the following types of merge:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t18" headers="r1c1-t18">
+<p>One Repository Folder</p>
+</td>
+<td align="left" headers="r3c1-t18 r1c2-t18">Port changes from one repository folder.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t18" headers="r1c1-t18">
+<p>Two Repository Folders</p>
+</td>
+<td align="left" headers="r4c1-t18 r1c2-t18">Port changes from two repository folders.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t18" headers="r1c1-t18">
+<p>One Repository Folder Since Its Origin</p>
+</td>
+<td align="left" headers="r5c1-t18 r1c2-t18">Port changes that have occurred between the time of the folder's creation and the revision number that you specify in the Ending Revision Field.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Based on your selection above, the dialog dynamically updates to reflect the required fields. For example, if you chose to merge from two repository folders, combo boxes for the first and second repository folders display, and the preview is modified accordingly. Likewise, if you chose to merge from one repository folder since its origin, you need only specify the location of the repository folder in the Repository Folder combo box.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Repository Folder</p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">The folder from which you want to port changes. (If you select Two Repository Folders in the Merge From field, this field is replaced by First Repository Folder and Second Repository Folder fields.) Alternatively click Browse to open a dialog that displays all available folders in the repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t19" headers="r1c1-t19">
+<p>Starting Revision</p>
+</td>
+<td align="left" headers="r3c1-t19 r1c2-t19">If merging from a single revision, enter the revision number. If merging changes that occurred within a range of revisions, enter the starting point of that range.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t19" headers="r1c1-t19">
+<p>Ending Revision</p>
+</td>
+<td align="left" headers="r4c1-t19 r1c2-t19">If merging changes that occurred within a range of revisions, enter the ending point of that range.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>Click Merge to initiate the merge. The IDE incorporates any differences found in the selected revision to the local copy of the file. If merge conflicts occur, the file's status is updated to Merge Conflict to indicate this.</p>
+<p>After merging file changes to your local working directory, you must still commit the changes using the Commit command in order for them to be added to the repository.</p>
+<a id="NBCSH1501" name="NBCSH1501"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG274">
+<param name="text" value="<html><u>&quot;Versioning Applications with Subversion&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

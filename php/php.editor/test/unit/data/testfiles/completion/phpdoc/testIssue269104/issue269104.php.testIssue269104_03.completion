@@ -1,0 +1,23 @@
+Code completion result for source line:
+* @return |callable
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    boolean                                    null
+KEYWORD    callable                                   null
+KEYWORD    callback                                   null
+KEYWORD    double                                     null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    integer                                    null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    resource                                   null
+KEYWORD    self                                       null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    void                                       null

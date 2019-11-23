@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
+  targetNamespace="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  version="1.0">
+
+  <xsd:element name="endpoints">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="endpoint" type="tns:endpointType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="version" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+  </xsd:element>
+
+  <xsd:complexType name="param-valueType">
+    <xsd:sequence>
+      <xsd:element name="param-name" type="xsd:string"/>
+      <xsd:element name="param-value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="port-component_handlerType">
+
+    <xsd:sequence>
+      <xsd:element name="handler-name" type="xsd:string"/>
+      <xsd:element name="handler-class" type="xsd:string"/>
+      <xsd:element name="init-param" type="tns:param-valueType" minOccurs="0" maxOccurs="unbounded"/>
+<!--
+      This element is ignored for now in the runtime.
+      <xsd:element name="soap-header" type="xsd:QName" minOccurs="0" maxOccurs="unbounded"/>
+-->
+      <xsd:element name="soap-role" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="handler-chainType">
+
+    <xsd:sequence>
+      <xsd:element name="handler-chain-name" type="xsd:string"/>
+      <xsd:element name="handler" type="tns:port-component_handlerType"
+						 minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="endpointType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        An endpoint definition has several attributes:
+           "name" - the endpoint name
+           "implementation" - the name of the endpoint implementation class
+           "wsdl" - the name of a resource corresponding to the WSDL document for the endpoint
+           "service" - the QName of the WSDL service that owns this endpoint;
+           "port" - the QName of the WSDL port for this endpoint;
+           "url-pattern" - the URL pattern this endpoint is mapped to.
+           "binding" - specify binding id for SOAP1.1 or SOAP1.2
+           "enable-mtom" - Enables MTOM optimization
+        "wsdl", "service", "port" attributes are required for provider based endpoints
+      </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:sequence>
+      <xsd:element name="handler-chain" type="tns:handler-chainType" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="implementation" type="xsd:string" use="required"/>
+    <xsd:attribute name="wsdl" type="xsd:anyURI"/>
+
+    <xsd:attribute name="service" type="xsd:anyURI"/>
+    <xsd:attribute name="port" type="xsd:anyURI"/>
+    <xsd:attribute name="url-pattern" type="xsd:anyURI" use="required"/>
+    <xsd:attribute name="binding" type="xsd:string"/>
+    <xsd:attribute name="enable-mtom" type="xsd:boolean"/>
+  </xsd:complexType>
+   
+</xsd:schema>

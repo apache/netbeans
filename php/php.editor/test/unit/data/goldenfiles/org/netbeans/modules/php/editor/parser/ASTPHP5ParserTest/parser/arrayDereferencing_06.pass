@@ -1,0 +1,81 @@
+<testresult testFile='arrayDereferencing_06.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='7' end='14'>
+            <text>$object</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='14' end='16'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='16' end='27'>
+            <text>giveMeArray</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='27' end='28'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='28' end='29'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='29' end='30'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='30' end='36'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='36' end='37'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='37' end='38'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='38' end='39'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='39' end='40'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='42' end='45'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='45' end='45'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='44'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='40'>
+                <DereferencedArrayAccess start='7' end='39'>
+                    <ArrayDimension start='37' end='39'>
+                        <Index>
+                        </Index>
+                    </ArrayDimension>
+                    <DereferencedArrayAccess start='7' end='37'>
+                        <ArrayDimension start='29' end='37'>
+                            <Index>
+                                <Scalar start='30' end='36' type='STRING' value='"test"'/>
+                            </Index>
+                        </ArrayDimension>
+                        <MethodInvocation start='7' end='29'>
+                            <Variable start='7' end='14' isDollared='true'>
+                                <Identifier start='8' end='14' name='object'/>
+                            </Variable>
+                            <Method>
+                                <FunctionInvocation start='16' end='29'>
+                                    <FucntionName start='16' end='27'>
+                                        <Variable start='16' end='27' isDollared='false'>
+                                            <Identifier start='16' end='27' name='giveMeArray'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                    </DereferencedArrayAccess>
+                </DereferencedArrayAccess>
+            </ExpressionStatement>
+            <EmptyStatement start='42' end='44'/>
+        </Statements>
+    </Program>
+</testresult>

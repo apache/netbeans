@@ -1,0 +1,5 @@
+var |>GLOBAL:observer<| = new MutationObserver(function(|>UNUSED:mutations<|) {
+    var |>CLASS:$viewWrappers<| = foo();
+    if ($viewWrappers.length) {
+    }
+});          

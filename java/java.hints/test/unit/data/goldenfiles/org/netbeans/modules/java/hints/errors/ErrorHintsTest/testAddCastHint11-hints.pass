@@ -1,0 +1,2 @@
+[AddCastFix:...new ArrayList<...>(...):List<CharSequence>]
+Change type of l2 to ArrayList&lt;T>

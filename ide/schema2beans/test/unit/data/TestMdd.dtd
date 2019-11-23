@@ -1,0 +1,45 @@
+<!-- The following DTD is a simple view of a book:
+	  Index[1,n]
+ 	         Alpha - String
+ 	         Word - String
+ 	         Ref[1,n]
+ 	                Page - String
+ 	                Line[1,n] - String
+ 	  Chapter[1,n]
+ 	         Comment? - String
+ 	         Paragraph[0,n] - String
+ 	  Summary? - String
+ 	  Available - Boolean
+ 	  Price - String
+ 	  Date - String
+-->
+
+<!ELEMENT summary (#PCDATA)>
+
+<!ELEMENT book (index+, chapter+, summary?, available, price, date)>
+
+<!ELEMENT available EMPTY>
+
+<!ELEMENT index (alpha, word, ref+)>
+
+<!ELEMENT ref (page, line+)>
+
+<!ELEMENT alpha (#PCDATA)>
+
+<!ELEMENT price (#PCDATA)>
+
+<!ELEMENT date (#PCDATA)>
+
+<!ELEMENT word (#PCDATA)>
+
+<!ELEMENT line (#PCDATA)>
+
+<!ELEMENT page (#PCDATA)>
+
+<!ELEMENT chapter (comment?, paragraph*)>
+
+<!ELEMENT paragraph (#PCDATA)>
+
+<!ELEMENT comment (#PCDATA)>
+
+

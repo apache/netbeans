@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.subversion
+OpenIDE-Module-Layer: org/netbeans/modules/subversion/resources/svn-layer.xml
+OpenIDE-Module-Install: org/netbeans/modules/subversion/ModuleLifecycleManager.class
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/subversion/resources/Bundle.properties
+

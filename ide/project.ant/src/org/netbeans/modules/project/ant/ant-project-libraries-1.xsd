@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+Schema for references to versionable library descriptors. See #44035.
+Since: org.netbeans.modules.project.ant/1 1.18
+Include as a fragment in an nbproject/project.xml file.
+Content of a <definitions> element is a relative path to a properties file.
+('/'- or '\'-separated but NOT in URI syntax, e.g. do not encode spaces as %20.)
+The path is resolved against the project's base directory.
+The property values that are recognized are of the form libs.NAME.KEY
+where NAME is the (internal) name of a library,
+and KEY is one of the following (refer to http://www.netbeans.org/dtds/library-declaration-1_0.dtd for comparisons):
+1. 'type' - e.g. 'j2me', as in <library>/<type>; default is 'j2se'
+2. 'name' - e.g. 'My Library', as in <name> (localizing bundles not supported); default is internal name
+3. 'description' - e.g. 'Some library of mine.', as in <description>; default is null
+4. 'classpath', 'src', 'javadoc', etc. - according to the <volume>/<type>, as in $userdir/build.properties
+Volume-typed values should be paths (separated with ':' or ';') of file or folder names (usually relative).
+The special token '${base}' may be used to refer to the directory in which the properties file resides.
+For a definitions file PATH.properties, there may also be a file PATH-private.properties
+which can override or supplement its definitions (typically with absolute filenames).
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/ant-project-libraries/1"
+            xmlns="http://www.netbeans.org/ns/ant-project-libraries/1"
+            elementFormDefault="qualified">
+    <xsd:element name="libraries">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="definitions" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

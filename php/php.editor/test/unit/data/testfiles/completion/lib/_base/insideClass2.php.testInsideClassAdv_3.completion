@@ -1,0 +1,4 @@
+Code completion result for source line:
+/**/$bVa|r->meth_b();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   cls_B $bVar                     [PUBLIC]   insideClass2.php

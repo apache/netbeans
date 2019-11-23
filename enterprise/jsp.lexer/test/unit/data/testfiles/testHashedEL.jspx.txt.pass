@@ -1,0 +1,47 @@
+TokenSequence for text/x-jsp at tokenIndex=0. TokenList contains 45 tokens:
+*[ 0]: "<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>\n" <0,62> TEXT[0] DefT, la=10, st=0, IHC=848516929
+T[ 1]: "<" <62,63> SYMBOL[5] DefT, la=9, st=3, IHC=1732609623
+T[ 2]: "jsp:root" <63,71> TAG[3] DefT, la=1, st=5, IHC=91680441
+T[ 3]: " " <71,72> WHITESPACE[11] DefT, la=1, st=5, IHC=1127396988
+T[ 4]: "xmlns:jsp" <72,81> ATTRIBUTE[8] DefT, la=1, st=5, IHC=912959835
+T[ 5]: "=" <81,82> SYMBOL[5] DefT, st=12, IHC=345289030
+T[ 6]: ""http://java.sun.com/JSP/Page"" <82,112> ATTR_VALUE[9] DefT, st=5, IHC=771913016
+T[ 7]: " " <112,113> WHITESPACE[11] DefT, la=1, st=5, IHC=593348385
+T[ 8]: "version" <113,120> ATTRIBUTE[8] DefT, la=1, st=5, IHC=1639733674
+T[ 9]: "=" <120,121> SYMBOL[5] DefT, st=12, IHC=346216967
+T[10]: ""1.2"" <121,126> ATTR_VALUE[9] DefT, st=5, IHC=1335364646
+T[11]: "\n" <126,127> EOL[10] DefT, st=5, IHC=122010525
+T[12]: "          " <127,137> WHITESPACE[11] DefT, la=1, st=5, IHC=1931494437
+T[13]: "xmlns:f" <137,144> ATTRIBUTE[8] DefT, la=1, st=5, IHC=1264194607
+T[14]: "=" <144,145> SYMBOL[5] DefT, st=12, IHC=115556431
+T[15]: ""http://java.sun.com/jsf/core"" <145,175> ATTR_VALUE[9] DefT, st=5, IHC=831718929
+T[16]: "\n" <175,176> EOL[10] DefT, st=5, IHC=728981380
+T[17]: "          " <176,186> WHITESPACE[11] DefT, la=1, st=5, IHC=595847525
+T[18]: "xmlns:af" <186,194> ATTRIBUTE[8] DefT, la=1, st=5, IHC=693106714
+T[19]: "=" <194,195> SYMBOL[5] DefT, st=12, IHC=229218358
+T[20]: ""http://xmlns.oracle.com/adf/faces"" <195,230> ATTR_VALUE[9] DefT, st=5, IHC=2034763835
+T[21]: " " <230,231> WHITESPACE[11] DefT, la=1, st=5, IHC=1746180017
+T[22]: ">" <231,232> SYMBOL[5] DefT, st=0, IHC=536025817
+T[23]: "\n    " <232,237> TEXT[0] DefT, la=20, st=0, IHC=292007154
+T[24]: "<" <237,238> SYMBOL[5] DefT, la=19, st=3, IHC=764103883
+T[25]: "jsp:directive.page" <238,256> TAG[3] DefT, la=1, st=5, IHC=341752521
+T[26]: " " <256,257> WHITESPACE[11] DefT, la=1, st=5, IHC=1463348369
+T[27]: "isELIgnored" <257,268> ATTRIBUTE[8] DefT, la=1, st=5, IHC=1513312339
+T[28]: " " <268,269> WHITESPACE[11] DefT, la=1, st=5, IHC=1591650152
+T[29]: "=" <269,270> SYMBOL[5] DefT, st=12, IHC=1807797632
+T[30]: ""true"" <270,276> ATTR_VALUE[9] DefT, st=5, IHC=1056163268
+T[31]: "/>" <276,278> SYMBOL[5] DefT, st=0, IHC=1983702821
+T[32]: "\n    <f:view>\n        <af:document title="Survey Demo">\n            <af:form>\n\n                <af:panelPage title="Question 2 of 5">\n\n\n                    <af:panelForm>\n                        <af:inputText label="" <278,494> TEXT[0] DefT, la=2, st=0, IHC=409692872
+T[33]: "#{survey.q1.prompt}" <494,513> EL[12] DefT, st=0, IHC=875527422
+T[34]: ""\n                                      required="true"\n                                      value="" <513,614> TEXT[0] DefT, la=2, st=0, IHC=431432310
+T[35]: "#{survey.a1}" <614,626> EL[12] DefT, st=0, IHC=1178041898
+T[36]: ""/>\n                    </af:panelForm>\n\n                    <f:facet name="actions">\n                        ${test.tst}\n                        <af:singleStepButtonBar selectedStep="2" maxStep="5"\n                                                nextAction="" <626,885> TEXT[0] DefT, la=2, st=0, IHC=1698437993
+T[37]: "#{survey.next}" <885,899> EL[12] DefT, st=0, IHC=1294712427
+T[38]: ""\n                                                previousAction="" <899,965> TEXT[0] DefT, la=2, st=0, IHC=1927449185
+T[39]: "#{survey.back}" <965,979> EL[12] DefT, st=0, IHC=1188091971
+T[40]: ""\n                                                />\n                    </f:facet>\n                </af:panelPage>\n            </af:form>\n        </af:document>\n    </f:view>\n" <979,1155> TEXT[0] DefT, la=11, st=0, IHC=958806791
+T[41]: "</" <1155,1157> SYMBOL[5] DefT, la=9, st=9, IHC=2095932896
+T[42]: "jsp:root" <1157,1165> ENDTAG[4] DefT, la=1, st=5, IHC=1169921331
+T[43]: ">" <1165,1166> SYMBOL[5] DefT, st=0, IHC=507538185
+T[44]: "\n\n" <1166,1168> TEXT[0] DefT, la=1, st=0, IHC=389229411
+

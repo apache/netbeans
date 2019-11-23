@@ -1,0 +1,2 @@
+        var |>MARK_OCCURRENCES:indexOfB^eta<| = getIndexOfLatestBeta();
+        window.console.log(|>MARK_OCCURRENCES:indexOfBeta<|);

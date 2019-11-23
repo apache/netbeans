@@ -1,0 +1,22 @@
+{
+    javax.xml.parsers.DocumentBuilderFactory domFactory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+    domFactory.setNamespaceAware(false);
+    try {
+        javax.xml.parsers.DocumentBuilder builder = domFactory.newDocumentBuilder();
+        java.io.InputStream is = new java.io.ByteArrayInputStream(response.getBytes("UTF-8"));
+        org.w3c.dom.Document doc = builder.parse(is);
+        javax.xml.xpath.XPathFactory factory = javax.xml.xpath.XPathFactory.newInstance();
+        javax.xml.xpath.XPath xpath = factory.newXPath();
+        javax.xml.xpath.XPathExpression expr = xpath.compile(xPath);
+        return expr.evaluate(doc);
+    } catch (javax.xml.parsers.ParserConfigurationException ex) {
+        ex.printStackTrace();
+    } catch (org.xml.sax.SAXException ex) {
+        ex.printStackTrace();
+    } catch (javax.xml.xpath.XPathExpressionException ex) {
+        ex.printStackTrace();
+    } catch (java.io.IOException ex) {
+        ex.printStackTrace();
+    }
+    return null;
+}

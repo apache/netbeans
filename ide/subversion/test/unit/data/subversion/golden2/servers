@@ -1,0 +1,6 @@
+[global]
+http-proxy-host = my.proxy
+http-proxy-port = 8080
+
+http-compression = no
+ssl-authority-files = /path/to/CAcert.pem;/path/to/CAcert2.pem

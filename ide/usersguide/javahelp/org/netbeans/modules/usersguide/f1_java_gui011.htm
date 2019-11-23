@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Variables Modifier Property Editor</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.openide.explorer.propertysheet.editors.ModifierEditor" name="org.openide.explorer.propertysheet.editors.ModifierEditor"></a></p>
+<div id="NBCSH2300"><!-- infolevel="all" infotype="General" --><a id="sthref314" name="sthref314"></a>
+<h1>Variables Modifier Property Editor</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to define standard Java language modifiers for a Java element. The items that are available in this property editor depend on the type of Java element being modified. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2619">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<a id="NBCSH2301" name="NBCSH2301"></a>
+<p><b>Access Modifiers</b></p>
+<p>Access modifiers determine where a Java class, method, or field can be accessed.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Default</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">The Java element is accessible to any class in the same package.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>Private</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">The Java method or field is accessible within the current class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t8" headers="r1c1-t8">
+<p>Protected</p>
+</td>
+<td align="left" headers="r4c1-t8 r1c2-t8">The Java method or field is accessible within the current class and subclasses.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t8" headers="r1c1-t8">
+<p>Public</p>
+</td>
+<td align="left" headers="r5c1-t8 r1c2-t8">The Java element is accessible to any class.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2306" name="NBCSH2306"></a>
+<p><b>Other Modifiers</b></p>
+<p>Other modifiers define how a Java element can be used, or how it interacts with other classes.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t9">Element</th>
+<th align="left" valign="bottom" id="r1c2-t9">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t9" headers="r1c1-t9">
+<p>Abstract</p>
+</td>
+<td align="left" headers="r2c1-t9 r1c2-t9">An abstract class contains some methods that are not defined and must be implemented in subclasses. An abstract method contains no body and must be overridden in subclasses.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t9" headers="r1c1-t9">
+<p>Static</p>
+</td>
+<td align="left" headers="r3c1-t9 r1c2-t9">A static method or field is shared by all instances of the current class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t9" headers="r1c1-t9">
+<p>Transient</p>
+</td>
+<td align="left" headers="r4c1-t9 r1c2-t9">A transient field is not saved if the object is serialized.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t9" headers="r1c1-t9">
+<p>Native</p>
+</td>
+<td align="left" headers="r5c1-t9 r1c2-t9">A native method is invoked from a Java application, but written in another "native" language, usually C or C++.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t9" headers="r1c1-t9">
+<p>Final</p>
+</td>
+<td align="left" headers="r6c1-t9 r1c2-t9">A final class may not be used as a superclass. A final method may not be overridden by a subclass. A final field's value cannot be changed.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t9" headers="r1c1-t9">
+<p>Synchronized</p>
+</td>
+<td align="left" headers="r7c1-t9 r1c2-t9">A synchronized method will seize control of the class while it is running. This is used in a multithreaded environment to make sure two threads do not access an object at the same time.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t9" headers="r1c1-t9">
+<p>Volatile</p>
+</td>
+<td align="left" headers="r8c1-t9 r1c2-t9">A volatile field's value can be changed by unsynchronized threads.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2314" name="NBCSH2314"></a>
+<hr><p><b>Related Topics</b></p>
+<p>Developing Applications with NetBeans IDE, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2578">
+<param name="text" value="<html><u>&quot;Working with the GUI Builder&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

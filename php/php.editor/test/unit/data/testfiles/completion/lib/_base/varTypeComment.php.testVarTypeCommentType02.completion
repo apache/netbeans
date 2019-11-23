@@ -1,0 +1,4 @@
+Code completion result for source line:
+/* @var $hello VarTypeComment|Test */
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      VarTypeCommentTest              [PUBLIC]   varTypeComment.php

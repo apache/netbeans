@@ -1,0 +1,2228 @@
+<testresult testFile='contextSensitiveLexer_05.php'>
+    <scanner>
+        <token id='T_INTERFACE' start='7' end='16'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='17' end='33'>
+            <text>InterfaceExample</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='34' end='35'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='41' end='46'>
+            <text>const</text>
+        </token>
+        <token id='T_DEFINE' start='47' end='53'>
+            <text>define</text>
+        </token>
+        <token id='T_EQUAL' start='54' end='55'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='56' end='57'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='57' end='58'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='58' end='59'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='60' end='61'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='61' end='62'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='62' end='63'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='68' end='73'>
+            <text>const</text>
+        </token>
+        <token id='T_CALLABLE' start='74' end='82'>
+            <text>callable</text>
+        </token>
+        <token id='T_EQUAL' start='83' end='84'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='85' end='86'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='86' end='87'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='87' end='88'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='89' end='90'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='90' end='91'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='91' end='92'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='97' end='102'>
+            <text>const</text>
+        </token>
+        <token id='T_TRAIT' start='103' end='108'>
+            <text>trait</text>
+        </token>
+        <token id='T_EQUAL' start='109' end='110'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='111' end='112'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='112' end='113'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='113' end='114'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='115' end='116'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='116' end='117'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='117' end='118'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='123' end='128'>
+            <text>const</text>
+        </token>
+        <token id='T_EXTENDS' start='129' end='136'>
+            <text>extends</text>
+        </token>
+        <token id='T_EQUAL' start='137' end='138'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='139' end='140'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='140' end='141'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='141' end='142'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='143' end='144'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='144' end='145'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='145' end='146'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='151' end='156'>
+            <text>const</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='157' end='167'>
+            <text>implements</text>
+        </token>
+        <token id='T_EQUAL' start='168' end='169'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='170' end='171'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='171' end='172'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='172' end='173'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='174' end='175'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='175' end='176'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='176' end='177'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='182' end='187'>
+            <text>const</text>
+        </token>
+        <token id='T_STATIC' start='188' end='194'>
+            <text>static</text>
+        </token>
+        <token id='T_EQUAL' start='195' end='196'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='197' end='198'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='198' end='199'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='199' end='200'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='201' end='202'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='202' end='203'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='203' end='204'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='209' end='214'>
+            <text>const</text>
+        </token>
+        <token id='T_ABSTRACT' start='215' end='223'>
+            <text>abstract</text>
+        </token>
+        <token id='T_EQUAL' start='224' end='225'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='226' end='227'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='227' end='228'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='228' end='229'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='230' end='231'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='231' end='232'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='232' end='233'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='238' end='243'>
+            <text>const</text>
+        </token>
+        <token id='T_FINAL' start='244' end='249'>
+            <text>final</text>
+        </token>
+        <token id='T_EQUAL' start='250' end='251'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='252' end='253'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='253' end='254'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='254' end='255'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='256' end='257'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='257' end='258'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='258' end='259'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='264' end='269'>
+            <text>const</text>
+        </token>
+        <token id='T_PUBLIC' start='270' end='276'>
+            <text>public</text>
+        </token>
+        <token id='T_EQUAL' start='277' end='278'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='279' end='280'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='280' end='281'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='281' end='282'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='283' end='284'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='284' end='285'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='285' end='286'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='291' end='296'>
+            <text>const</text>
+        </token>
+        <token id='T_PROTECTED' start='297' end='306'>
+            <text>protected</text>
+        </token>
+        <token id='T_EQUAL' start='307' end='308'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='309' end='310'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='310' end='311'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='311' end='312'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='313' end='314'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='314' end='315'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='315' end='316'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='321' end='326'>
+            <text>const</text>
+        </token>
+        <token id='T_PRIVATE' start='327' end='334'>
+            <text>private</text>
+        </token>
+        <token id='T_EQUAL' start='335' end='336'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='337' end='338'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='338' end='339'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='339' end='340'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='341' end='342'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='342' end='343'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='343' end='344'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='349' end='354'>
+            <text>const</text>
+        </token>
+        <token id='T_CONST' start='355' end='360'>
+            <text>const</text>
+        </token>
+        <token id='T_EQUAL' start='361' end='362'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='363' end='364'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='364' end='365'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='365' end='366'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='367' end='368'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='368' end='369'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='369' end='370'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='375' end='380'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDDECLARE' start='381' end='391'>
+            <text>enddeclare</text>
+        </token>
+        <token id='T_EQUAL' start='392' end='393'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='394' end='395'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='395' end='396'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='396' end='397'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='398' end='399'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='399' end='400'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='400' end='401'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='406' end='411'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDFOR' start='412' end='418'>
+            <text>endfor</text>
+        </token>
+        <token id='T_EQUAL' start='419' end='420'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='421' end='422'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='422' end='423'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='423' end='424'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='425' end='426'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='426' end='427'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='427' end='428'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='433' end='438'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDFOREACH' start='439' end='449'>
+            <text>endforeach</text>
+        </token>
+        <token id='T_EQUAL' start='450' end='451'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='452' end='453'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='453' end='454'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='454' end='455'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='456' end='457'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='457' end='458'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='458' end='459'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='464' end='469'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDIF' start='470' end='475'>
+            <text>endif</text>
+        </token>
+        <token id='T_EQUAL' start='476' end='477'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='478' end='479'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='479' end='480'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='480' end='481'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='482' end='483'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='483' end='484'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='484' end='485'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='490' end='495'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDWHILEnejdu.' start='496' end='504'>
+            <text>endwhile</text>
+        </token>
+        <token id='T_EQUAL' start='505' end='506'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='507' end='508'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='508' end='509'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='509' end='510'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='511' end='512'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='512' end='513'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='513' end='514'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='519' end='524'>
+            <text>const</text>
+        </token>
+        <token id='T_LOGICAL_AND' start='525' end='528'>
+            <text>and</text>
+        </token>
+        <token id='T_EQUAL' start='529' end='530'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='531' end='532'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='532' end='533'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='533' end='534'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='535' end='536'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='536' end='537'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='537' end='538'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='543' end='548'>
+            <text>const</text>
+        </token>
+        <token id='T_GLOBAL' start='549' end='555'>
+            <text>global</text>
+        </token>
+        <token id='T_EQUAL' start='556' end='557'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='558' end='559'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='559' end='560'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='560' end='561'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='562' end='563'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='563' end='564'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='564' end='565'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='570' end='575'>
+            <text>const</text>
+        </token>
+        <token id='T_GOTO' start='576' end='580'>
+            <text>goto</text>
+        </token>
+        <token id='T_EQUAL' start='581' end='582'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='583' end='584'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='584' end='585'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='585' end='586'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='587' end='588'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='588' end='589'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='589' end='590'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='595' end='600'>
+            <text>const</text>
+        </token>
+        <token id='T_INSTANCEOF' start='601' end='611'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_EQUAL' start='612' end='613'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='614' end='617'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='617' end='618'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='623' end='628'>
+            <text>const</text>
+        </token>
+        <token id='T_INSTEADOF' start='629' end='638'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_EQUAL' start='639' end='640'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='641' end='644'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='644' end='645'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='650' end='655'>
+            <text>const</text>
+        </token>
+        <token id='T_INTERFACE' start='656' end='665'>
+            <text>interface</text>
+        </token>
+        <token id='T_EQUAL' start='666' end='667'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='668' end='671'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='671' end='672'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='677' end='682'>
+            <text>const</text>
+        </token>
+        <token id='T_NAMESPACE' start='683' end='692'>
+            <text>namespace</text>
+        </token>
+        <token id='T_EQUAL' start='693' end='694'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='695' end='698'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='698' end='699'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='704' end='709'>
+            <text>const</text>
+        </token>
+        <token id='T_NEW' start='710' end='713'>
+            <text>new</text>
+        </token>
+        <token id='T_EQUAL' start='714' end='715'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='716' end='719'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='719' end='720'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='725' end='730'>
+            <text>const</text>
+        </token>
+        <token id='T_LOGICAL_OR' start='731' end='733'>
+            <text>or</text>
+        </token>
+        <token id='T_EQUAL' start='734' end='735'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='736' end='739'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='739' end='740'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='745' end='750'>
+            <text>const</text>
+        </token>
+        <token id='T_LOGICAL_XOR' start='751' end='754'>
+            <text>xor</text>
+        </token>
+        <token id='T_EQUAL' start='755' end='756'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='757' end='760'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='760' end='761'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='766' end='771'>
+            <text>const</text>
+        </token>
+        <token id='T_TRY' start='772' end='775'>
+            <text>try</text>
+        </token>
+        <token id='T_EQUAL' start='776' end='777'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='778' end='781'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='781' end='782'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='787' end='792'>
+            <text>const</text>
+        </token>
+        <token id='T_USE' start='793' end='796'>
+            <text>use</text>
+        </token>
+        <token id='T_EQUAL' start='797' end='798'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='799' end='802'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='802' end='803'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='808' end='813'>
+            <text>const</text>
+        </token>
+        <token id='T_VAR' start='814' end='817'>
+            <text>var</text>
+        </token>
+        <token id='T_EQUAL' start='818' end='819'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='820' end='823'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='823' end='824'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='829' end='834'>
+            <text>const</text>
+        </token>
+        <token id='T_EXIT' start='835' end='839'>
+            <text>exit</text>
+        </token>
+        <token id='T_EQUAL' start='840' end='841'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='842' end='845'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='845' end='846'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='851' end='856'>
+            <text>const</text>
+        </token>
+        <token id='T_LIST' start='857' end='861'>
+            <text>list</text>
+        </token>
+        <token id='T_EQUAL' start='862' end='863'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='864' end='867'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='867' end='868'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='873' end='878'>
+            <text>const</text>
+        </token>
+        <token id='T_CLONE' start='879' end='884'>
+            <text>clone</text>
+        </token>
+        <token id='T_EQUAL' start='885' end='886'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='887' end='890'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='890' end='891'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='896' end='901'>
+            <text>const</text>
+        </token>
+        <token id='T_INCLUDE' start='902' end='909'>
+            <text>include</text>
+        </token>
+        <token id='T_EQUAL' start='910' end='911'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='912' end='915'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='915' end='916'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='921' end='926'>
+            <text>const</text>
+        </token>
+        <token id='T_INCLUDE_ONCE' start='927' end='939'>
+            <text>include_once</text>
+        </token>
+        <token id='T_EQUAL' start='940' end='941'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='942' end='945'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='945' end='946'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='951' end='956'>
+            <text>const</text>
+        </token>
+        <token id='T_THROW' start='957' end='962'>
+            <text>throw</text>
+        </token>
+        <token id='T_EQUAL' start='963' end='964'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='965' end='968'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='968' end='969'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='974' end='979'>
+            <text>const</text>
+        </token>
+        <token id='T_ARRAY' start='980' end='985'>
+            <text>array</text>
+        </token>
+        <token id='T_EQUAL' start='986' end='987'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='988' end='991'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='991' end='992'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='997' end='1002'>
+            <text>const</text>
+        </token>
+        <token id='T_PRINT' start='1003' end='1008'>
+            <text>print</text>
+        </token>
+        <token id='T_EQUAL' start='1009' end='1010'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1011' end='1014'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1014' end='1015'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1020' end='1025'>
+            <text>const</text>
+        </token>
+        <token id='T_ECHO' start='1026' end='1030'>
+            <text>echo</text>
+        </token>
+        <token id='T_EQUAL' start='1031' end='1032'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1033' end='1036'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1036' end='1037'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1042' end='1047'>
+            <text>const</text>
+        </token>
+        <token id='T_REQUIRE' start='1048' end='1055'>
+            <text>require</text>
+        </token>
+        <token id='T_EQUAL' start='1056' end='1057'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1058' end='1061'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1061' end='1062'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1067' end='1072'>
+            <text>const</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='1073' end='1085'>
+            <text>require_once</text>
+        </token>
+        <token id='T_EQUAL' start='1086' end='1087'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1088' end='1091'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1091' end='1092'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1097' end='1102'>
+            <text>const</text>
+        </token>
+        <token id='T_RETURN' start='1103' end='1109'>
+            <text>return</text>
+        </token>
+        <token id='T_EQUAL' start='1110' end='1111'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1112' end='1115'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1115' end='1116'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1121' end='1126'>
+            <text>const</text>
+        </token>
+        <token id='T_ELSE' start='1127' end='1131'>
+            <text>else</text>
+        </token>
+        <token id='T_EQUAL' start='1132' end='1133'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1134' end='1137'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1137' end='1138'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1143' end='1148'>
+            <text>const</text>
+        </token>
+        <token id='T_ELSEIF' start='1149' end='1155'>
+            <text>elseif</text>
+        </token>
+        <token id='T_EQUAL' start='1156' end='1157'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1158' end='1161'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1161' end='1162'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1167' end='1172'>
+            <text>const</text>
+        </token>
+        <token id='T_DEFAULT' start='1173' end='1180'>
+            <text>default</text>
+        </token>
+        <token id='T_EQUAL' start='1181' end='1182'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1183' end='1186'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1186' end='1187'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1192' end='1197'>
+            <text>const</text>
+        </token>
+        <token id='T_BREAK' start='1198' end='1203'>
+            <text>break</text>
+        </token>
+        <token id='T_EQUAL' start='1204' end='1205'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1206' end='1209'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1209' end='1210'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1215' end='1220'>
+            <text>const</text>
+        </token>
+        <token id='T_CONTINUE' start='1221' end='1229'>
+            <text>continue</text>
+        </token>
+        <token id='T_EQUAL' start='1230' end='1231'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1232' end='1235'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1235' end='1236'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1241' end='1246'>
+            <text>const</text>
+        </token>
+        <token id='T_SWITCH' start='1247' end='1253'>
+            <text>switch</text>
+        </token>
+        <token id='T_EQUAL' start='1254' end='1255'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1256' end='1259'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1259' end='1260'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1265' end='1270'>
+            <text>const</text>
+        </token>
+        <token id='T_YIELD' start='1271' end='1276'>
+            <text>yield</text>
+        </token>
+        <token id='T_EQUAL' start='1277' end='1278'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1279' end='1282'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1282' end='1283'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1288' end='1293'>
+            <text>const</text>
+        </token>
+        <token id='T_FUNCTION' start='1294' end='1302'>
+            <text>function</text>
+        </token>
+        <token id='T_EQUAL' start='1303' end='1304'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1305' end='1308'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1308' end='1309'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1314' end='1319'>
+            <text>const</text>
+        </token>
+        <token id='T_IF' start='1320' end='1322'>
+            <text>if</text>
+        </token>
+        <token id='T_EQUAL' start='1323' end='1324'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1325' end='1328'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1328' end='1329'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1334' end='1339'>
+            <text>const</text>
+        </token>
+        <token id='T_ENDSWITCH' start='1340' end='1349'>
+            <text>endswitch</text>
+        </token>
+        <token id='T_EQUAL' start='1350' end='1351'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1352' end='1355'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1355' end='1356'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1361' end='1366'>
+            <text>const</text>
+        </token>
+        <token id='T_FINALLY' start='1367' end='1374'>
+            <text>finally</text>
+        </token>
+        <token id='T_EQUAL' start='1375' end='1376'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1377' end='1380'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1380' end='1381'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1386' end='1391'>
+            <text>const</text>
+        </token>
+        <token id='T_FOR' start='1392' end='1395'>
+            <text>for</text>
+        </token>
+        <token id='T_EQUAL' start='1396' end='1397'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1398' end='1401'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1401' end='1402'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1407' end='1412'>
+            <text>const</text>
+        </token>
+        <token id='T_FOREACH' start='1413' end='1420'>
+            <text>foreach</text>
+        </token>
+        <token id='T_EQUAL' start='1421' end='1422'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1423' end='1426'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1426' end='1427'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1432' end='1437'>
+            <text>const</text>
+        </token>
+        <token id='T_DECLARE' start='1438' end='1445'>
+            <text>declare</text>
+        </token>
+        <token id='T_EQUAL' start='1446' end='1447'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1448' end='1451'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1451' end='1452'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1457' end='1462'>
+            <text>const</text>
+        </token>
+        <token id='T_CASE' start='1463' end='1467'>
+            <text>case</text>
+        </token>
+        <token id='T_EQUAL' start='1468' end='1469'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1470' end='1473'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1473' end='1474'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1479' end='1484'>
+            <text>const</text>
+        </token>
+        <token id='T_DO' start='1485' end='1487'>
+            <text>do</text>
+        </token>
+        <token id='T_EQUAL' start='1488' end='1489'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1490' end='1493'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1493' end='1494'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1499' end='1504'>
+            <text>const</text>
+        </token>
+        <token id='T_WHILE' start='1505' end='1510'>
+            <text>while</text>
+        </token>
+        <token id='T_EQUAL' start='1511' end='1512'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1513' end='1516'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1516' end='1517'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1522' end='1527'>
+            <text>const</text>
+        </token>
+        <token id='T_AS' start='1528' end='1530'>
+            <text>as</text>
+        </token>
+        <token id='T_EQUAL' start='1531' end='1532'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1533' end='1536'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1536' end='1537'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1542' end='1547'>
+            <text>const</text>
+        </token>
+        <token id='T_CATCH' start='1548' end='1553'>
+            <text>catch</text>
+        </token>
+        <token id='T_EQUAL' start='1554' end='1555'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1556' end='1559'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1559' end='1560'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1565' end='1570'>
+            <text>const</text>
+        </token>
+        <token id='T_EXIT' start='1571' end='1574'>
+            <text>die</text>
+        </token>
+        <token id='T_EQUAL' start='1575' end='1576'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1577' end='1580'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1580' end='1581'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1586' end='1591'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1592' end='1596'>
+            <text>self</text>
+        </token>
+        <token id='T_EQUAL' start='1597' end='1598'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1599' end='1602'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1602' end='1603'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1608' end='1613'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1614' end='1620'>
+            <text>parent</text>
+        </token>
+        <token id='T_EQUAL' start='1621' end='1622'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1623' end='1626'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1626' end='1627'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1632' end='1637'>
+            <text>const</text>
+        </token>
+        <token id='T_CLASS_C' start='1638' end='1647'>
+            <text>__CLASS__</text>
+        </token>
+        <token id='T_EQUAL' start='1648' end='1649'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1650' end='1653'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1653' end='1654'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1659' end='1664'>
+            <text>const</text>
+        </token>
+        <token id='T_TRAIT_C' start='1665' end='1674'>
+            <text>__TRAIT__</text>
+        </token>
+        <token id='T_EQUAL' start='1675' end='1676'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1677' end='1680'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1680' end='1681'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1686' end='1691'>
+            <text>const</text>
+        </token>
+        <token id='T_FUNC_C' start='1692' end='1704'>
+            <text>__FUNCTION__</text>
+        </token>
+        <token id='T_EQUAL' start='1705' end='1706'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1707' end='1710'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1710' end='1711'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1716' end='1721'>
+            <text>const</text>
+        </token>
+        <token id='T_METHOD_C' start='1722' end='1732'>
+            <text>__METHOD__</text>
+        </token>
+        <token id='T_EQUAL' start='1733' end='1734'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1735' end='1738'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1738' end='1739'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1744' end='1749'>
+            <text>const</text>
+        </token>
+        <token id='T_LINE' start='1750' end='1758'>
+            <text>__LINE__</text>
+        </token>
+        <token id='T_EQUAL' start='1759' end='1760'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1761' end='1764'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1764' end='1765'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1770' end='1775'>
+            <text>const</text>
+        </token>
+        <token id='T_FILE' start='1776' end='1784'>
+            <text>__FILE__</text>
+        </token>
+        <token id='T_EQUAL' start='1785' end='1786'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1787' end='1790'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1790' end='1791'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1796' end='1801'>
+            <text>const</text>
+        </token>
+        <token id='unknown' start='1802' end='1809'>
+            <text>__DIR__</text>
+        </token>
+        <token id='T_EQUAL' start='1810' end='1811'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1812' end='1815'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1815' end='1816'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1821' end='1826'>
+            <text>const</text>
+        </token>
+        <token id='unknown' start='1827' end='1840'>
+            <text>__NAMESPACE__</text>
+        </token>
+        <token id='T_EQUAL' start='1841' end='1842'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1843' end='1846'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1846' end='1847'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1848' end='1849'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1850' end='1850'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1850'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <InterfaceDeclaration start='7' end='1849'>
+                <Name>
+                    <Identifier start='17' end='33' name='InterfaceExample'/>
+                </Name>
+                <Block start='34' end='1849' isCurly='true'>
+                    <ClassConstantDeclaration start='41' end='63' modifier='public'>
+                        <Names>
+                            <Identifier start='47' end='53' name='define'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='56' end='62' type='NEW'>
+                                <ArrayElement start='57' end='58'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='57' end='58' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='60' end='61'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='60' end='61' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='68' end='92' modifier='public'>
+                        <Names>
+                            <Identifier start='74' end='82' name='callable'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='85' end='91' type='NEW'>
+                                <ArrayElement start='86' end='87'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='86' end='87' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='89' end='90'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='89' end='90' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='97' end='118' modifier='public'>
+                        <Names>
+                            <Identifier start='103' end='108' name='trait'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='111' end='117' type='NEW'>
+                                <ArrayElement start='112' end='113'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='112' end='113' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='115' end='116'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='115' end='116' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='123' end='146' modifier='public'>
+                        <Names>
+                            <Identifier start='129' end='136' name='extends'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='139' end='145' type='NEW'>
+                                <ArrayElement start='140' end='141'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='140' end='141' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='143' end='144'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='143' end='144' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='151' end='177' modifier='public'>
+                        <Names>
+                            <Identifier start='157' end='167' name='implements'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='170' end='176' type='NEW'>
+                                <ArrayElement start='171' end='172'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='171' end='172' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='174' end='175'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='174' end='175' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='182' end='204' modifier='public'>
+                        <Names>
+                            <Identifier start='188' end='194' name='static'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='197' end='203' type='NEW'>
+                                <ArrayElement start='198' end='199'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='198' end='199' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='201' end='202'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='201' end='202' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='209' end='233' modifier='public'>
+                        <Names>
+                            <Identifier start='215' end='223' name='abstract'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='226' end='232' type='NEW'>
+                                <ArrayElement start='227' end='228'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='227' end='228' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='230' end='231'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='230' end='231' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='238' end='259' modifier='public'>
+                        <Names>
+                            <Identifier start='244' end='249' name='final'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='252' end='258' type='NEW'>
+                                <ArrayElement start='253' end='254'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='253' end='254' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='256' end='257'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='256' end='257' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='264' end='286' modifier='public'>
+                        <Names>
+                            <Identifier start='270' end='276' name='public'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='279' end='285' type='NEW'>
+                                <ArrayElement start='280' end='281'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='280' end='281' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='283' end='284'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='283' end='284' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='291' end='316' modifier='public'>
+                        <Names>
+                            <Identifier start='297' end='306' name='protected'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='309' end='315' type='NEW'>
+                                <ArrayElement start='310' end='311'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='310' end='311' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='313' end='314'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='313' end='314' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='321' end='344' modifier='public'>
+                        <Names>
+                            <Identifier start='327' end='334' name='private'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='337' end='343' type='NEW'>
+                                <ArrayElement start='338' end='339'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='338' end='339' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='341' end='342'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='341' end='342' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='349' end='370' modifier='public'>
+                        <Names>
+                            <Identifier start='355' end='360' name='const'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='363' end='369' type='NEW'>
+                                <ArrayElement start='364' end='365'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='364' end='365' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='367' end='368'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='367' end='368' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='375' end='401' modifier='public'>
+                        <Names>
+                            <Identifier start='381' end='391' name='enddeclare'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='394' end='400' type='NEW'>
+                                <ArrayElement start='395' end='396'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='395' end='396' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='398' end='399'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='398' end='399' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='406' end='428' modifier='public'>
+                        <Names>
+                            <Identifier start='412' end='418' name='endfor'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='421' end='427' type='NEW'>
+                                <ArrayElement start='422' end='423'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='422' end='423' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='425' end='426'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='425' end='426' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='433' end='459' modifier='public'>
+                        <Names>
+                            <Identifier start='439' end='449' name='endforeach'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='452' end='458' type='NEW'>
+                                <ArrayElement start='453' end='454'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='453' end='454' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='456' end='457'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='456' end='457' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='464' end='485' modifier='public'>
+                        <Names>
+                            <Identifier start='470' end='475' name='endif'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='478' end='484' type='NEW'>
+                                <ArrayElement start='479' end='480'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='479' end='480' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='482' end='483'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='482' end='483' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='490' end='514' modifier='public'>
+                        <Names>
+                            <Identifier start='496' end='504' name='endwhile'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='507' end='513' type='NEW'>
+                                <ArrayElement start='508' end='509'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='508' end='509' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='511' end='512'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='511' end='512' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='519' end='538' modifier='public'>
+                        <Names>
+                            <Identifier start='525' end='528' name='and'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='531' end='537' type='NEW'>
+                                <ArrayElement start='532' end='533'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='532' end='533' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='535' end='536'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='535' end='536' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='543' end='565' modifier='public'>
+                        <Names>
+                            <Identifier start='549' end='555' name='global'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='558' end='564' type='NEW'>
+                                <ArrayElement start='559' end='560'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='559' end='560' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='562' end='563'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='562' end='563' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='570' end='590' modifier='public'>
+                        <Names>
+                            <Identifier start='576' end='580' name='goto'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='583' end='589' type='NEW'>
+                                <ArrayElement start='584' end='585'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='584' end='585' type='INT' value='1'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='587' end='588'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='587' end='588' type='INT' value='2'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='595' end='618' modifier='public'>
+                        <Names>
+                            <Identifier start='601' end='611' name='instanceof'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='614' end='617' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='623' end='645' modifier='public'>
+                        <Names>
+                            <Identifier start='629' end='638' name='insteadof'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='641' end='644' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='650' end='672' modifier='public'>
+                        <Names>
+                            <Identifier start='656' end='665' name='interface'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='668' end='671' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='677' end='699' modifier='public'>
+                        <Names>
+                            <Identifier start='683' end='692' name='namespace'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='695' end='698' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='704' end='720' modifier='public'>
+                        <Names>
+                            <Identifier start='710' end='713' name='new'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='716' end='719' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='725' end='740' modifier='public'>
+                        <Names>
+                            <Identifier start='731' end='733' name='or'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='736' end='739' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='745' end='761' modifier='public'>
+                        <Names>
+                            <Identifier start='751' end='754' name='xor'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='757' end='760' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='766' end='782' modifier='public'>
+                        <Names>
+                            <Identifier start='772' end='775' name='try'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='778' end='781' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='787' end='803' modifier='public'>
+                        <Names>
+                            <Identifier start='793' end='796' name='use'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='799' end='802' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='808' end='824' modifier='public'>
+                        <Names>
+                            <Identifier start='814' end='817' name='var'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='820' end='823' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='829' end='846' modifier='public'>
+                        <Names>
+                            <Identifier start='835' end='839' name='exit'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='842' end='845' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='851' end='868' modifier='public'>
+                        <Names>
+                            <Identifier start='857' end='861' name='list'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='864' end='867' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='873' end='891' modifier='public'>
+                        <Names>
+                            <Identifier start='879' end='884' name='clone'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='887' end='890' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='896' end='916' modifier='public'>
+                        <Names>
+                            <Identifier start='902' end='909' name='include'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='912' end='915' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='921' end='946' modifier='public'>
+                        <Names>
+                            <Identifier start='927' end='939' name='include_once'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='942' end='945' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='951' end='969' modifier='public'>
+                        <Names>
+                            <Identifier start='957' end='962' name='throw'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='965' end='968' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='974' end='992' modifier='public'>
+                        <Names>
+                            <Identifier start='980' end='985' name='array'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='988' end='991' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='997' end='1015' modifier='public'>
+                        <Names>
+                            <Identifier start='1003' end='1008' name='print'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1011' end='1014' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1020' end='1037' modifier='public'>
+                        <Names>
+                            <Identifier start='1026' end='1030' name='echo'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1033' end='1036' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1042' end='1062' modifier='public'>
+                        <Names>
+                            <Identifier start='1048' end='1055' name='require'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1058' end='1061' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1067' end='1092' modifier='public'>
+                        <Names>
+                            <Identifier start='1073' end='1085' name='require_once'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1088' end='1091' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1097' end='1116' modifier='public'>
+                        <Names>
+                            <Identifier start='1103' end='1109' name='return'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1112' end='1115' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1121' end='1138' modifier='public'>
+                        <Names>
+                            <Identifier start='1127' end='1131' name='else'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1134' end='1137' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1143' end='1162' modifier='public'>
+                        <Names>
+                            <Identifier start='1149' end='1155' name='elseif'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1158' end='1161' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1167' end='1187' modifier='public'>
+                        <Names>
+                            <Identifier start='1173' end='1180' name='default'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1183' end='1186' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1192' end='1210' modifier='public'>
+                        <Names>
+                            <Identifier start='1198' end='1203' name='break'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1206' end='1209' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1215' end='1236' modifier='public'>
+                        <Names>
+                            <Identifier start='1221' end='1229' name='continue'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1232' end='1235' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1241' end='1260' modifier='public'>
+                        <Names>
+                            <Identifier start='1247' end='1253' name='switch'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1256' end='1259' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1265' end='1283' modifier='public'>
+                        <Names>
+                            <Identifier start='1271' end='1276' name='yield'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1279' end='1282' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1288' end='1309' modifier='public'>
+                        <Names>
+                            <Identifier start='1294' end='1302' name='function'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1305' end='1308' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1314' end='1329' modifier='public'>
+                        <Names>
+                            <Identifier start='1320' end='1322' name='if'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1325' end='1328' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1334' end='1356' modifier='public'>
+                        <Names>
+                            <Identifier start='1340' end='1349' name='endswitch'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1352' end='1355' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1361' end='1381' modifier='public'>
+                        <Names>
+                            <Identifier start='1367' end='1374' name='finally'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1377' end='1380' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1386' end='1402' modifier='public'>
+                        <Names>
+                            <Identifier start='1392' end='1395' name='for'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1398' end='1401' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1407' end='1427' modifier='public'>
+                        <Names>
+                            <Identifier start='1413' end='1420' name='foreach'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1423' end='1426' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1432' end='1452' modifier='public'>
+                        <Names>
+                            <Identifier start='1438' end='1445' name='declare'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1448' end='1451' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1457' end='1474' modifier='public'>
+                        <Names>
+                            <Identifier start='1463' end='1467' name='case'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1470' end='1473' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1479' end='1494' modifier='public'>
+                        <Names>
+                            <Identifier start='1485' end='1487' name='do'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1490' end='1493' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1499' end='1517' modifier='public'>
+                        <Names>
+                            <Identifier start='1505' end='1510' name='while'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1513' end='1516' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1522' end='1537' modifier='public'>
+                        <Names>
+                            <Identifier start='1528' end='1530' name='as'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1533' end='1536' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1542' end='1560' modifier='public'>
+                        <Names>
+                            <Identifier start='1548' end='1553' name='catch'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1556' end='1559' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1565' end='1581' modifier='public'>
+                        <Names>
+                            <Identifier start='1571' end='1574' name='die'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1577' end='1580' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1586' end='1603' modifier='public'>
+                        <Names>
+                            <Identifier start='1592' end='1596' name='self'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1599' end='1602' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1608' end='1627' modifier='public'>
+                        <Names>
+                            <Identifier start='1614' end='1620' name='parent'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1623' end='1626' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1632' end='1654' modifier='public'>
+                        <Names>
+                            <Identifier start='1638' end='1647' name='__CLASS__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1650' end='1653' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1659' end='1681' modifier='public'>
+                        <Names>
+                            <Identifier start='1665' end='1674' name='__TRAIT__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1677' end='1680' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1686' end='1711' modifier='public'>
+                        <Names>
+                            <Identifier start='1692' end='1704' name='__FUNCTION__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1707' end='1710' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1716' end='1739' modifier='public'>
+                        <Names>
+                            <Identifier start='1722' end='1732' name='__METHOD__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1735' end='1738' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1744' end='1765' modifier='public'>
+                        <Names>
+                            <Identifier start='1750' end='1758' name='__LINE__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1761' end='1764' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1770' end='1791' modifier='public'>
+                        <Names>
+                            <Identifier start='1776' end='1784' name='__FILE__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1787' end='1790' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1796' end='1816' modifier='public'>
+                        <Names>
+                            <Identifier start='1802' end='1809' name='__DIR__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1812' end='1815' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1821' end='1847' modifier='public'>
+                        <Names>
+                            <Identifier start='1827' end='1840' name='__NAMESPACE__'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1843' end='1846' type='INT' value='100'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

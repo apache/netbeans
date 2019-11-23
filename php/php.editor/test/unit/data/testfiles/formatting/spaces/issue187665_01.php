@@ -1,0 +1,13 @@
+<?php
+
+class ClassName
+{
+
+    function test($param)
+    {
+        if ($this->test($param))
+    }
+
+}
+    
+?>

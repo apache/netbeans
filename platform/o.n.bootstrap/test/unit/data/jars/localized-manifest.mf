@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+OpenIDE-Module: locmani
+OpenIDE-Module-Localizing-Bundle: locmani/Bundle.properties
+some-key: value #3
+some-key_cs: vyznam #3
+untrans: value #5
+
+Name: locmani/something.txt
+key: value #4
+key_cs: vyznam #4
+untrans: value #6
+

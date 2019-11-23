@@ -1,0 +1,22 @@
+<?php
+class |>CLASS:user<| {
+  public $|>FIELD:first_name<|,$|>FIELD:family_name<|,$|>FIELD:address<|,$|>FIELD:phone_num<|;
+  function |>METHOD:display<|()
+  {
+    echo "User information\n";
+    echo "----------------\n\n";
+    echo "First name:\t  ".$this->|>FIELD:first_name<|."\n";
+    echo "Family name:\t  ".$this->|>FIELD:family_name<|."\n";
+    echo "Address:\t  ".$this->|>FIELD:address<|."\n";
+    echo "Phone:\t\t  ".$this->|>FIELD:phone_num<|."\n";
+    echo "\n\n";
+  }
+  function |>METHOD:initialize<|($first_name,$family_name,$address,$phone_num)
+  {
+    $this->|>FIELD:first_name<| = $first_name;
+    $this->|>FIELD:family_name<| = $family_name;
+    $this->|>FIELD:address<| = $address;
+    $this->|>FIELD:phone_num<| = $phone_num;
+  }
+};
+?>

@@ -1,0 +1,14 @@
+<html>
+    <style type="text/css">
+        Q:lang(en){ 
+            /*
+                                  my own 
+                                 comment
+                describing this CSS rule
+            */
+            background: black;
+            color: green;
+        }
+    </style>
+</html>
+

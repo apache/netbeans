@@ -1,0 +1,9 @@
+var |>GLOBAL:prop<| = "foo";
+var |>GLOBAL:o<| = {
+  [|>GLOBAL:prop<|]: |>GLOBAL:prop<| + " " + |>GLOBAL:prop<|,
+  ["b" + "ar"]: "there",
+  |>FIELD:prop<| : "test"
+};
+
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.|>FIELD:prop<|); // test
+|>GLOBAL:console<|.log(|>GLOBAL:o<|.foo);  // foo foo 

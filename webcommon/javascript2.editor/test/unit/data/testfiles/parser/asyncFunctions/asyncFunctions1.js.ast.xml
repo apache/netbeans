@@ -1,0 +1,135 @@
+<FunctionNode name='asyncFunctions1.js' kind='MODULE' start='0' end='96'>
+  <isProgram/>
+  <ExportNode start='0' end='95'>
+    <ObjectNode start='15' end='95'>
+      <!-- ObjectNode Elements -->
+      <PropertyNode name='path' start='20' end='28'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='20' end='24'>
+          <name>path</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <StringLiteralNode value='/' start='27' end='28'/>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+      <PropertyNode name='action' start='40' end='91'>
+        <!-- PropertyNode Key -->
+        <IdentNode start='40' end='46'>
+          <name>action</name>
+          <isPropertyName/>
+        </IdentNode>
+        <!-- PropertyNode Value -->
+        <FunctionNode name='action' kind='NORMAL' start='40' end='91'>
+          <isMethod/>
+          <isNamedFunctionExpression/>
+          <isAsync/>
+          <!-- FunctionNode Parameters -->
+          <!-- FunctionNode Body -->
+          <Block start='49' end='86'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+            <VarNode name='component' start='61' end='85'>
+              <hasInit/>
+              <isAssignment/>
+              <isBlockScoped/>
+              <isConst/>
+              <!-- VarNode Assignment Dest -->
+              <IdentNode start='61' end='70'>
+                <name>component</name>
+                <isDeclaredHere/>
+                <isInitializedHere/>
+              </IdentNode>
+              <!-- VarNode Init -->
+              <UnaryNode type='AWAIT' start='73' end='85'>
+                <!-- UnaryNode Expression -->
+                <CallNode start='79' end='85'>
+                  <!-- CallNode Arguments -->
+                  <!-- CallNode Function -->
+                  <IdentNode start='79' end='83'>
+                    <name>next</name>
+                  </IdentNode>
+                </CallNode>
+              </UnaryNode>
+            </VarNode>
+          </Block>
+        </FunctionNode>
+        <!-- PropertyNode Decorators -->
+      </PropertyNode>
+    </ObjectNode>
+  </ExportNode>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='96'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='*default*' start='15' end='95'>
+      <hasInit/>
+      <isAssignment/>
+      <isExport/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='15' end='95'>
+        <name>*default*</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='15' end='95'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='path' start='20' end='28'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='20' end='24'>
+            <name>path</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <StringLiteralNode value='/' start='27' end='28'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='action' start='40' end='91'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='40' end='46'>
+            <name>action</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='action' kind='NORMAL' start='40' end='91'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isAsync/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='49' end='86'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <VarNode name='component' start='61' end='85'>
+                <hasInit/>
+                <isAssignment/>
+                <isBlockScoped/>
+                <isConst/>
+                <!-- VarNode Assignment Dest -->
+                <IdentNode start='61' end='70'>
+                  <name>component</name>
+                  <isDeclaredHere/>
+                  <isInitializedHere/>
+                </IdentNode>
+                <!-- VarNode Init -->
+                <UnaryNode type='AWAIT' start='73' end='85'>
+                  <!-- UnaryNode Expression -->
+                  <CallNode start='79' end='85'>
+                    <!-- CallNode Arguments -->
+                    <!-- CallNode Function -->
+                    <IdentNode start='79' end='83'>
+                      <name>next</name>
+                    </IdentNode>
+                  </CallNode>
+                </UnaryNode>
+              </VarNode>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>MainApp-test</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>java-app-src</name>
+			<type>2</type>
+			<location>/home/david/projs/JavaApplication1/src</location>
+		</link>
+		<link>
+			<name>src2</name>
+			<type>2</type>
+			<locationURI>SOME_ROOT/JavaApplication2/src</locationURI>
+		</link>
+		<link>
+			<name>my_jars</name>
+			<type>2</type>
+			<locationURI>SOME_ROOT/libs</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

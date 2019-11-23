@@ -1,0 +1,53 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='37'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='37'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='4' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='5'>
+        <name>a</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <NumberLiteralNode value='10' start='8' end='10'/>
+    </VarNode>
+    <VarNode name='b' start='17' end='27'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='17' end='18'>
+        <name>b</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <BinaryNode type='EXP' start='21' end='27'>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='21' end='22'>
+          <name>a</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='5' start='26' end='27'/>
+      </BinaryNode>
+    </VarNode>
+    <ExpressionStatement start='30' end='37'>
+      <BinaryNode type='ASSIGN_EXP' start='30' end='37'>
+        <isAssignment/>
+        <isSelfModifying/>
+        <!-- BinaryNode lhs -->
+        <IdentNode start='30' end='31'>
+          <name>c</name>
+        </IdentNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='7' start='36' end='37'/>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

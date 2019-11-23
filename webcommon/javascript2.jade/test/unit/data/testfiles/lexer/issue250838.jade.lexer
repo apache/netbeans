@@ -1,0 +1,2 @@
+[CODE_DELIMITER(1):-][JAVASCRIPT(22):var something = "test"][EOL(1):\n]
+[TAG(7):title-i][WHITESPACE(1): ][TEXT(13):The title is ][EXPRESSION_DELIMITER_OPEN(2):#{][JAVASCRIPT(11): something ][EXPRESSION_DELIMITER_CLOSE(1):}][EOL(1):\n]

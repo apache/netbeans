@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Find Usages Dialog Box</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.refactoring.java.ui.WhereUsedQueryUI" name="org.netbeans.modules.refactoring.java.ui.WhereUsedQueryUI"></a></p>
+<div id="NBCSH2921"><!-- infolevel="all" infotype="General" --><a id="sthref376" name="sthref376"></a>
+<h1>Find Usages Dialog Box</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to specify search options for the <b>Find Usages</b> command. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG552">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>The Find Usages dialog box displays the following options for all types of identifiers:</p>
+
+<table summary="Descriptions of identifier options for Find Usages command." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="37%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t8">Element</th>
+<th align="left" valign="bottom" id="r1c2-t8">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t8" headers="r1c1-t8">
+<p>Search in Comments</p>
+</td>
+<td align="left" headers="r2c1-t8 r1c2-t8">Displays occurrences of the identifier that appear in code comments.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t8" headers="r1c1-t8">
+<p>Open in New Tab</p>
+</td>
+<td align="left" headers="r3c1-t8 r1c2-t8">Displays occurrences of the identifier in the Usages tab in the bottom panel of the IDE.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>For classes and interfaces, the Find Usages dialog box displays the following additional options:</p>
+
+<table summary="Descriptions of class and interface options for Find Usages command" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="37%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t9">Element</th>
+<th align="left" valign="bottom" id="r1c2-t9">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t9" headers="r1c1-t9">
+<p>Find Usages</p>
+</td>
+<td align="left" headers="r2c1-t9 r1c2-t9">Displays all usages of the class.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t9" headers="r1c1-t9">
+<p>Find All Subtypes</p>
+</td>
+<td align="left" headers="r3c1-t9 r1c2-t9">Displays usages of all subtypes of the class, including subtypes of subtypes.
+<p>Usages of the class itself are not displayed.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t9" headers="r1c1-t9">
+<p>Find Direct Subtypes Only.</p>
+</td>
+<td align="left" headers="r4c1-t9 r1c2-t9">Displays only usages of direct subtypes.
+<p>Subtypes of those subtypes are ignored.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>For methods, the Find Usages dialog box sometimes displays the following additional options:</p>
+
+<table summary="Descriptions of method options for Find Usages command." dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="37%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t10">Element</th>
+<th align="left" valign="bottom" id="r1c2-t10">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t10" headers="r1c1-t10">
+<p>Find Usages</p>
+</td>
+<td align="left" headers="r2c1-t10 r1c2-t10">Displays all usages of that specific method in your project.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t10" headers="r1c1-t10">
+<p>Find Overriding Methods</p>
+</td>
+<td align="left" headers="r3c1-t10 r1c2-t10">Displays every usage of a method that overrides this method in your project in the output.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t10" headers="r1c1-t10">Find Usages and Overriding Methods</td>
+<td align="left" headers="r4c1-t10 r1c2-t10">Displays all usages of the selected method and all usages of any method that override it.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t10" headers="r1c1-t10">Include overloaded methods</td>
+<td align="left" headers="r5c1-t10 r1c2-t10">Displays all overloaded methods in your project.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t10" headers="r1c1-t10">
+<p>Search from Base Class</p>
+</td>
+<td align="left" headers="r6c1-t10 r1c2-t10">Displays every usage of that base method in the output.
+<p>This option is only relevant if the method for which you are finding usages overrides another method.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH2930" name="NBCSH2930"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG547">
+<param name="text" value="<html><u>&quot;Refactoring Java Projects&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

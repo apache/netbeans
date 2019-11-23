@@ -1,0 +1,853 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+#VERSION 1.0.1
+
+1. Jemmy versioning has been started.
+Current major version - 1.0
+Current minor version - 1
+Version can be received:
+- By manifest file using:
+META-INF/MANIFEST.MF file contains information like:
+Jemmy-MajorVersion: 1.0
+Jemmy-MinorVersion: 1
+Jemmy-Build: 010323
+- By static method within java:
+public static String getMajorVersion();
+public static String getMinorVersion();
+public static String getBuild();
+public static String getVersion();
+- By java "-jar" option:
+bash-2.03$ java -jar jemmy.jar 
+Jemmy version : 1.0.1-010326
+
+
+2. Robot operations are now produced safely.
+Earlier dangerous mouse clicks on system gui application were possible
+as a result of incorrect test.
+Now NoComponentUnderMouseException exception is produced, if mouse is going to be pressed,
+but no java component is under the mouse.
+
+
+3. Some changes in org.netbeans.jemmy.testing package for stability.
+
+#VERSION 1.0.2
+
+Two errors were checked:
+	jemmy/com/sun/jemmy/Timeouts.java
+		Sleeping methods did not work if timeout had only default value
+		and was not defined in this Timeouts instance.
+	
+	jemmy/com/sun/jemmy/operators/ComponentOperator.java
+		Component should use visible part center coordinates
+		(instead off the whole component coordinates) 
+		for a mouse operation, if no coordinates were passed.
+
+Functionality to work with JTable component.	
+	New methods in org.netbeans.jemmy.operators.JTableOperator class.
+		isEditing()
+		isRowSelected(int)
+		isColumnSelected(int)
+		isCellSelected(int, int)
+		getEditingRow()
+		getEditingColumn()
+		getModel()
+		getValueAt(int, int)
+		getPointToClick(int, int)
+		clickOnCell(int, int, int)
+		clickOnCell(int, int)
+		findCellRow(String, boolean, boolean, int)
+		findCellColumn(String, boolean, boolean, int)
+		findCellRow(String, boolean, boolean)
+		findCellColumn(String, boolean, boolean)
+		clickForEdit(int, int)
+		changeCellText(int, int, String)
+	
+Text components operators (JTextComponentOperator, JTextAreaOperator, 
+JTextFieldOperator, JEditorPaneOperator) were modified.
+	Caret operations were optimized by using all possible navigation keys.
+
+	Some different approaches to clear text in text component were implemented.
+
+Minor version was changed to 2.
+
+#VERSION 1.0.3
+
+4433709 bugfix
+	enterText(String) methods have been implemented in JTextComponentOperator
+	and JComboBoxOperator. It clears text, types new text, and pushes "Enter".
+
+New operator - JComponentOperator.
+	In contains methods to find and wait component by its tool tip,
+	and some other useful methods.
+Some classes were reparented to JComponentOperator.
+jemmy/com/sun/jemmy/operators/AbstractButtonOperator.java
+jemmy/com/sun/jemmy/operators/JLabelOperator.java
+jemmy/com/sun/jemmy/operators/JComboBoxOperator.java
+jemmy/com/sun/jemmy/operators/JListOperator.java
+jemmy/com/sun/jemmy/operators/JTextComponentOperator.java
+jemmy/com/sun/jemmy/operators/WindowOperator.java
+jemmy/com/sun/jemmy/operators/JMenuBarOperator.java
+jemmy/com/sun/jemmy/operators/JTableOperator.java
+jemmy/com/sun/jemmy/operators/JPopupMenuOperator.java
+jemmy/com/sun/jemmy/operators/JTabbedPaneOperator.java
+jemmy/com/sun/jemmy/operators/JScrollPaneOperator.java
+jemmy/com/sun/jemmy/operators/JSplitPaneOperator.java
+jemmy/com/sun/jemmy/operators/JScrollBarOperator.java
+jemmy/com/sun/jemmy/operators/JSliderOperator.java
+jemmy/com/sun/jemmy/operators/JInternalFrameOperator.java
+
+Javadoc comments.
+jemmy/com/sun/jemmy/Action.java
+jemmy/com/sun/jemmy/TestOut.java
+jemmy/com/sun/jemmy/ActionProducer.java
+jemmy/com/sun/jemmy/ComponentChooser.java
+jemmy/com/sun/jemmy/DialogWaiter.java
+jemmy/com/sun/jemmy/ComponentSearcher.java
+jemmy/com/sun/jemmy/JemmyProperties.java
+jemmy/com/sun/jemmy/FrameWaiter.java
+jemmy/com/sun/jemmy/EventDispatcher.java
+jemmy/com/sun/jemmy/Waiter.java
+jemmy/com/sun/jemmy/WindowWaiter.java
+jemmy/com/sun/jemmy/Test.java
+jemmy/com/sun/jemmy/Scenario.java
+jemmy/com/sun/jemmy/operators/AbstractButtonOperator.java
+jemmy/com/sun/jemmy/operators/ComponentOperator.java
+jemmy/com/sun/jemmy/operators/JButtonOperator.java
+jemmy/com/sun/jemmy/operators/JCheckBoxOperator.java
+jemmy/com/sun/jemmy/operators/JComboBoxOperator.java
+jemmy/com/sun/jemmy/operators/JLabelOperator.java
+jemmy/com/sun/jemmy/operators/JListOperator.java
+jemmy/com/sun/jemmy/operators/JRadioButtonOperator.java
+jemmy/com/sun/jemmy/operators/JTextAreaOperator.java
+jemmy/com/sun/jemmy/operators/JTextComponentOperator.java
+jemmy/com/sun/jemmy/operators/JTextFieldOperator.java
+jemmy/com/sun/jemmy/operators/JToggleButtonOperator.java
+jemmy/com/sun/jemmy/operators/WindowOperator.java
+jemmy/com/sun/jemmy/operators/JMenuBarOperator.java
+jemmy/com/sun/jemmy/operators/JMenuOperator.java
+jemmy/com/sun/jemmy/operators/JPopupMenuOperator.java
+jemmy/com/sun/jemmy/operators/JMenuItemOperator.java
+jemmy/com/sun/jemmy/operators/JTreeOperator.java
+jemmy/com/sun/jemmy/operators/JDialogOperator.java
+jemmy/com/sun/jemmy/operators/JFrameOperator.java
+jemmy/com/sun/jemmy/operators/JTabbedPaneOperator.java
+jemmy/com/sun/jemmy/operators/JEditorPaneOperator.java
+jemmy/com/sun/jemmy/operators/ContainerOperator.java
+jemmy/com/sun/jemmy/operators/JInternalFrameOperator.java
+jemmy/com/sun/jemmy/operators/JComponentOperator.java
+
+jemmy/com/sun/jemmy/operators/ComponentOperator.java
+	One error was checked: in event dispatching mode moveMouse(int, int) method did exitMouse().
+
+jemmy/com/sun/jemmy/operators/JMenuOperator.java
+	findJMenu(*) and waitJMenu(*) methods.
+	isPopupMenuVisible() method
+	getPopupMenu() method.
+
+jemmy/com/sun/jemmy/operators/JMenuItemOperator.java
+	Using Container instead of JPopupMenu in static findJMenuItem and waitJMenuItem method
+	since MenuItem also can be on JMenuBar.
+	
+jemmy/com/sun/jemmy/operators/JTreeOperator.java
+	One error was checked: isEditable() method returned value of isEditing().
+
+update: jemmy/com/sun/jemmy/operators/JScrollPaneOperator.java
+	setValues(int, int) method.
+	
+update: jemmy/com/sun/jemmy/operators/JScrollBarOperator.java
+	setValue(int) method.
+
+Minor version was changed to 3.
+
+#VERSION 1.0.4
+
+New implementation of methods to wait event queue empty
+	One new class QueueTool.
+	There are two methods:
+	QueueTool.waitEmpty() - waits EventQueue to be empty.
+	QueueTool.waitEmpty(long emptyTime) - waits EventQueue to stay empty
+	for "emptyTime" milliseconds.
+
+	Existing static EventDispatcher.waitQueueEmpty methods use 
+	QueueTool class. New implementation is more correct, and tests should
+	be more stable even if they use one of these two methods.
+
+	EventDispatcher has two new methods:
+	EventDispatcher.waitQueueEmpty(long emptyTime);
+	EventDispatcher.waitQueueEmpty(long emptyTime, TestOut output, Timeouts timeouts);
+
+jemmy/com/sun/jemmy/operators/ComponentOperator.java
+	clickMouse should move mouse first both for robot and nonrobot modes.
+
+Minor version has been changed to 4
+
+#VERSION 1.0.5
+
+4478876 and 4464081 bugfixes
+
+4482908 bugfix
+4464101 bugfix.
+
+jemmy/com/sun/jemmy/operators/JComboBoxOperator.java
+	Combo button have not to be pushed if popup is already visible.
+
+jemmy/com/sun/jemmy/operators/JListOperator.java
+jemmy/com/sun/jemmy/operators/JTableOperator.java
+jemmy/com/sun/jemmy/operators/JTreeOperator.java
+	Changes to work with components covered by renderer and editor.
+	
+jemmy/com/sun/jemmy/operators/ContainerOperator.java
+	getComponentAt(int, int) method
+
+Component visualizer.
+Interface and three default implementation allow to define own/on of implemented
+algorithm to prepare component to "user" input.
+Interface:
+org.netbeans.jemmy.ComponentOperator.ComponentVisualizer
+Default implementations:
+jemmy/com/sun/jemmy/util/EmptyVisualizer.java - do not do anything.
+jemmy/com/sun/jemmy/util/DefaultVisualizer.java
+	- activates window by toFront() and window event
+	- scrolls to the component
+	- switches tabs
+	- activates internal frames
+jemmy/com/sun/jemmy/util/MouseVisualizer.java - just like DefaultVisualizer,
+	except uses robot operation to activate window (click on window (0,0) point)
+	
+
+makeComponentVisible method in ComponentOperator replaces activateWindow
+(last has been made deprecated (still works)). 
+
+ComponentOperator.copyEnvironment(ComponentOperator) method.
+Copies everithing: timeouts, output, disp. model, visualizer.
+
+JMenuItemOperator shouldn't activate window before push.
+JemmyProperties.getProperty and JemmyProperties.setProperty methods
+was made public to allow other classes keep their static part.
+
+EventDispatcher class can now be used to provide mouse robot operations 
+outside any component. It does not throw exception if value defined by
+method checkComponentUnderMouse(boolean) is false.
+	
+WindowOperator.getFocusOwner() method.
+Can be used to define if window is really activated.
+	
+JScrollPaneOperator.checkInside methods.
+	
+ Author tag was modified.
+Alexander Ilyin shura@nbsp.nsk.su => Alexandre Iline alexandre.iline@sun.com
+
+"Old" jemmy version was removed.
+
+jemmy/com/sun/jemmy/operators/ComponentOperator.java
+	Two new methods: isVisible and isShowing
+	Javadoc comments regarding 4463363 bug.
+
+jemmy/com/sun/jemmy/operators/JDialogOperator.java
+	getTopModalDialog method (4469838 bugfix)
+	
+jemmy/com/sun/jemmy/operators/JTabbedPaneOperator.java
+	Javadoc comments regarding 4463363 bug.
+	
+jemmy/com/sun/jemmy/util/DefaultVisualizer.java
+	Visualizer can now check that component isn't under modal dialog. 
+	(4469838 bugfix)
+
+#VERSION 1.0.6
+
+EventTool class
+Class has functionality to work with events 
+received by AWTEventListener, which was added by 
+Toolkit.addAWTEventListener(AWTEventListener, long)
+method.
+
+It can also be used for test reliability instead of 
+QueueTool class.
+If tested application do something through EventQueue
+what does not change GUI components state, test developer
+can wait that no events are posted instead of wait
+EventQueue empty.
+
+EventTool class has a bunch of methods to do this.
+
+#VERSION 1.0.7
+
+One more operator:
+JFileChooserOperator
+
+Six more targets were added into main Makefile
+to build zip and jar archives.
+Now the full list of targets is:
+jar - builds jar with classes.
+jarsrc - adds sources into jar
+jarapi - adds javadoc
+jarall - adds both javadoc and sources
+zip - builds zip with classes.
+zipsrc - adds sources into zip
+zipapi - adds javadoc
+zipall - adds both javadoc and sources
+
+ComponentOperator:
+One error has been fixed for the robot mode.
+
+#VERSION 1.0.8
+
+Steps 2 and 4 from Jemmy updating plan.
+
+2. Operator class.
+
+Common ancestor for all operator classes.
+Contain all functionality to work with operator environment.
+
+Class has method:
+public static Operator getEnvironmentOperator();
+which returns
+
+4. Operator constructors. 
+
+New operator be created by typical
+<component>Operator(ContainerOperator container, int index)
+<component>Operator(ContainerOperator container, String text, int index)
+has all container's enironment (not just timeouts and output as was before)
+
+Changes in window operators constructors 
+<window>Operator(WindowOperator owner, int index)
+<window>Operator(WindowOperator owner, String title, int index)
+are the same.
+
+If component does not have a container(owner), 
+operator has one more constructor with operator to get environment from:
+JDialogOperator(String title, int index, Operator envOperator)
+JPopupMenu(Operator envOperator)
+These operators have constructors without this parameter as well:
+JDialogOperator(String title, int index)
+In this case operator returned by getEnvironmentOperator() is used.
+
+
+
+
+ComponentOperator.StringComparator interface.
+
+Defines how to compare two strings.
+
+Default implementation (ComponentOperator.DefaultStringComparator)
+uses a way was used before by 
+isCaptionEqual(String, String, boolean, boolean) method.
+
+Each operator class has it's own StringComparator.
+
+It is used in another operator constructor (during component waiting), 
+if an operator plays a role of container/owner/environment.
+
+It is also used in new operators' methods like
+public int JListOperator.findItemIndex(String item, int index);
+
+NoBlocking methods.
+AbstractButtonOperator.pushNoBlock()
+AbstractButtonOperator.changeSelectionNoBlock(boolean)
+JMenuOperator.pushMenuNoBlock(ComponentChooser[] choosers) 
+JMenuOperator.pushMenuNoBlock(String[] names, boolean ce, boolean ccs) 
+JMenuOperator.pushMenuNoBlock(String[] names) 
+JMenuOperator.pushMenuNoBlock(String path, String delim, boolean ce, boolean ccs) 
+JMenuOperator.pushMenuNoBlock(String path, String delim) 
+JPopupMenuOperator.pushMenuNoBlock(ComponentChooser[] choosers) 
+JPopupMenuOperator.pushMenuNoBlock(String[] names, boolean ce, boolean ccs) 
+JPopupMenuOperator.pushMenuNoBlock(String[] names) 
+JPopupMenuOperator.pushMenuNoBlock(String path, String delim, boolean ce, boolean ccs) 
+JPopupMenuOperator.pushMenuNoBlock(String path, String delim) 
+JMenuOperator.pushMenuNoBlock(ComponentChooser[] choosers) 
+JMenuOperator.pushMenuNoBlock(String[] names, boolean ce, boolean ccs) 
+JMenuOperator.pushMenuNoBlock(String[] names) 
+JMenuOperator.pushMenuNoBlock(String path, String delim, boolean ce, boolean ccs) 
+JMenuOperator.pushMenuNoBlock(String path, String delim) 
+
+4512814 rfe
+JTreeOperator.getChildCount(Object)
+JTreeOperator.getChildCount(TreePath)
+JTreeOperator.getChild(Object, int)
+JTreeOperator.getChildren(Object)
+JTreeOperator.getChildPath(TreePath, int)
+JTreeOperator.getChildPaths(TreePath)
+
+#VERSION 1.0.9
+
+jemmy/com/sun/jemmy/util/MouseVisualizer.java
+	Should activate window by toFront() before click on corner.
+	
+jemmy/com/sun/jemmy/operators/JListOperator.java
+	Throw exception if item does not exist.
+	methods selectItem(String, ...) should throw an exception
+	if item is not found.
+
+jemmy/com/sun/jemmy/Timeout.java
+	Do not sleep if time equals to 0
+	Thread.sleep(0) can take up to 10 milliseconds.
+
+jemmy/com/sun/jemmy/explorer/ComponentBrowser.java
+	Shows implemented interfaces.
+	There is one more page containing interface implemented
+	by component class.
+
+jemmy/com/sun/jemmy/ActionProducer.java
+	run() and actionProduced(Object) are final.
+
+jemmy/com/sun/jemmy/EventDispatcher.java
+	4607042 bugfix.
+
+
+Javadoc has been updated.
+Most files has been affected by this change.
+
+
+#VERSION 1.0.10
+
+Javadoc has been updated (Allan Jacobs).
+
+getDump() method has been fixed in some classes:
+jemmy/com/sun/jemmy/operators/JComboBoxOperator.java
+jemmy/com/sun/jemmy/operators/JLabelOperator.java
+jemmy/com/sun/jemmy/operators/JMenuOperator.java
+jemmy/com/sun/jemmy/operators/JTabbedPaneOperator.java
+
+Right way to pass no parameters into the application.
+jemmy/com/sun/jemmy/ClassReference.java
+
+One more method: selectItem(String) in
+jemmy/com/sun/jemmy/operators/JComboBoxOperator.java
+
+
+#VERSION 1.0.11
+
+4637840 bugfix
+
+Ability to work with javax.swing.text.StyledDocument:
+
+New interface:
+org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser - 
+	defines text searching criteria
+
+
+New methods:
+org.netbeans.jemmy.operators.JTextComponentOperator.getPositionByText(String, TextChooser, int),
+org.netbeans.jemmy.operators.JTextComponentOperator.getPositionByText(String, TextChooser) - 
+	searches position by text and criteria defined by TextChooser
+
+org.netbeans.jemmy.operators.JTextComponentOperator.getDisplayedText() - 
+	gives text which is actually displayed.
+
+
+New classes:
+org.netbeans.jemmy.operators.JTextPaneOperator - 
+	operator for javax.swing.JTextPane component
+
+jemmy.org.netbeans.jemmy.util.AbstractTextStyleChooser - 
+	abstract org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser
+	simplifying working with StyledDocument
+
+jemmy.org.netbeans.jemmy.util.TextStyleChooser
+	implementation containing most tipical criteria.
+
+
+Other new operators:
+org.netbeans.jemmy.operators.JCheckBoxMenuItemOperator
+org.netbeans.jemmy.operators.JColorChooserOperator
+org.netbeans.jemmy.operators.JPasswordFieldOperator
+org.netbeans.jemmy.operators.JProgressBarOperator
+org.netbeans.jemmy.operators.JRadioButtonMenuItemOperator
+
+#VERSION 1.0.12
+
+Solution to work with dynamic popups loading.
+JPopupMenuOperator:
+One more constructor, methods to wait popup by a chooser and menu item text. 
+
+21187 issue fix
+
+Workaround for Gnome window activization.
+Do this before any operators creation:
+ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(MouseVisualizer.TOP, 0.5, 10, false));
+
+
+
+Some wait methods which could be used for test synchronization.
+
+Root one:
+Operator.waitState(ComponentChooser)
+Timeout value to wait the state defined by ComponentChooser parameter
+is defined by ComponentOperator.WaitStateTimeout timeout.
+
+Next some invoke waitState methods:
+AbstractButtonOperator.waitText(String)
+DialogOperator.waitTitle(String)
+FrameOperator.waitTitle(String)
+JComboBoxOperator.waitItemSelected(int)
+JComboBoxOperator.waitItemSelected(String)
+JLabelOperator.waitText(String)
+JListOperator.waitItemSelection(int, boolean)
+JListOperator.waitItem(String, int)
+JTableOperator.waitCell(String, int, int)
+JTextComponentOperator.waitText(String, int)
+JTextComponentOperator.waitText(String)
+JTextComponentOperator.waitCaretPosition(int)
+JTreeOperator.waitExpanded(TreePath)
+JTreeOperator.waitCollapsed(TreePath)
+JTreeOperator.waitVisible(TreePath)
+JTreeOperator.waitSelected(TreePath[])
+JTreeOperator.waitSelected(TreePath)
+JTreeOperator.waitRow(String, int)
+
+
+
+Post-operation verifications.
+If verification mode is on (Operator.getVerification() == true),
+post-verification is performed for some particular operations:
+text typing (JTextComponentOperator), combobox item selecting (JComboBoxOperator), 
+tree path selecting (JTreeOperator).
+Methods to work with verification mode:
+static Operator.getDefaultVerification()
+static Operator.setDefaultVerification(boolean)
+Operator.getVerification()
+Operator.setVerification(boolean)
+
+
+
+Safety feature. 
+Text component clearing now works through ActionProducer.
+
+21668 issue fix.
+
+#VERSION 1.0.13
+
+
+21846, 21769, 21771 and 21872 fixes
+
+#VERSION 2.0.beta
+
+#VERSION 2.0.gamma
+
+Focus, Window, Menu drivers.
+
+Correct way to install input drivers depending on mode.
+
+One more method in TreeDriver - startEditing.
+
+All method containing two boolean parameters
+(compare exactly, compare case sensitively) have been made deprecated.
+
+22726, 22953 fixes
+
+#VERSION 2.0.1
+
+23663 DefaultJMenuDriver.java
+        Subpopup is now searched by regular window/component searching - 
+        not by JMenu.getPopupMenu().
+      JMenuBarOperator.java
+	makeComponentVisible() before menu pushing
+	
+25020 ComponentOperator.java
+        getWindow() method modified as proposed in bug description.
+	
+25319 JComboBoxOperator.java
+        If no item selected, JComboBoxByItemFinder returns true.
+
+25134 JListOperator.java
+        NoSuchItemException is thrown for nonexistent item.
+	
+25303 JTabbedPaneOperator.java
+	makeComponentVisible() before tab selecting
+	
+GUIBrowser.java
+	One reload() removed, only showing windows showed.
+
+JTreeOperator.java
+	Adding only visible nodes to dump
+        It make GUI browser loading inside IDE twice faster.
+
+DefaultWindowDriver.java
+	COMPONENT_RESIZED is posted during resizing.
+
+
+#VERSION 2.0.2
+
+25983 
+        JTreeOperator
+25255 
+        Added new package - src.org.netbeans.jemmy.accessibility
+        Classes: AccessibilityChooser, AccessibleNameChooser, AccessibleNameChooser
+	
+25307
+        - all inner finders made public:
+                AbstractButtonOperator.AbstractButtonFinder
+                AbstractButtonOperator.AbstractButtonByLabelFinder
+
+        - new constructor added to all by-class finders:
+                public AbstractButtonOperator.AbstractButtonFinder()
+
+        - new constructor added to all by-string resource finders:
+                public AbstractButtonOperator.AbstractButtonByLabelFinder(String)
+                public JListOperator.JListByItemFinder(String, int)
+
+        - new constructors are added to all operators:
+                public AbstractButtonOperator(ContainerOperator, ComponentChooser, int)
+                public AbstractButtonOperator(ContainerOperator, ComponentChooser)
+
+        - methods for finding subcomponent added to ContainerOperator:
+                public Component findSubComponent(ComponentChooser, int)
+                public Component findSubComponent(ComponentChooser)
+                
+        - methods for finding subwindow added to WindowOperator:
+                public Window findSubWindow(ComponentChooser, int)
+                public Window findSubWindow(ComponentChooser)
+
+
+
+25409, 25406, 25407, 25408
+
+        New methods in JTableOperator:
+        Point findCell(*)
+        int findCellRow(*, int column, int index)
+        int findCellColumn(*, int row, int index)
+        int findColumn(String)
+
+        new classes JTableHeaderOperator, OrderedListDriver
+
+#VERSION 2.0.3
+
+26251:
+
+        QueueTool:
+                new methods invokeSmoothly(*).
+                They perform an action directly if executed in event dispatching thread,
+                otherwise invoke invokeAndWait(*).
+
+        EventDriver:
+                uses QueueTool.invokeSmoothly(*) for event dispatching.
+                It makes possible to create bigger transactions including
+                event dispatching.
+
+        RobotDriver.java:
+                Does not wait for the event queue emptying being executed
+                in event dispatching thread.
+	
+        JTreeMouseDriver.java, JListMouseDriver.java, JTableMouseDriver.java:
+        	Click point calculation performed in the same InvocationEvent as events dispatching.
+
+        Operator.java:
+                Uses QueueTool.invokeSmoothly(*) for mapping
+	
+        JTreeOperator.java, JListOperator.java, JTableOperator.java:
+                Row calculation performed in the same InvocationEvent as events dispatching.
+
+ChoiceDriver.java:
+	Changes for 1.4
+        Behavior of java.awt.Choise is a little bit different for 1.4.
+	
+Documentation: 
+        new document describing operator environment.
+        plans page has been updated.
+
+Some javadoc for classes in "drivers" subpackage.
+
+#VERSION 2.0.3.queue-branch
+
+New EventQueue using technique. See http://jemmy.netbeans.org/queue.html for more info.
+
+Post-verification added to some operators.
+
+        Files:
+        src/org/netbeans/jemmy/operators/AbstractButtonOperator.java
+        src/org/netbeans/jemmy/operators/JListOperator.java
+        src/org/netbeans/jemmy/operators/JTabbedPaneOperator.java
+        src/org/netbeans/jemmy/operators/ListOperator.java
+        src/org/netbeans/jemmy/operators/CheckboxOperator.java
+        src/org/netbeans/jemmy/operators/ChoiceOperator.java
+        src/org/netbeans/jemmy/operators/WindowOperator.java
+
+src/org/netbeans/jemmy/operators/WindowOperator.java
+	isFocused() works as (getFocusOwner() != null) for java older than 1.4
+	isActive() - as isShowing()
+
+src/org/netbeans/jemmy/TestOut.java
+	No in after print(String) method
+
+#VERSION 2.0.3.queue-branch.1
+
+26907: KeyEvent are posted to first native container.
+Files:
+        src/org/netbeans/jemmy/drivers/input/KeyEventDriver.java
+	
+27152: 
+Files:
+src/org/netbeans/jemmy/drivers/menus/DefaultJMenuDriver.java
+src/org/netbeans/jemmy/drivers/menus/QueueJMenuDriver.java
+
+25018 bugfix propogated on branch.
+
+27140:
+Files:
+src/org/netbeans/jemmy/drivers/menus/QueueJMenuDriver.java
+
+#VERSION 2.1.0
+
+Merge of trunk and queue-branch versions. See <a href="http://jemmy.netbeans.org/queue.html">"Queue Using"</a>
+for more information
+
+Versioning. Build number and packages implementtion version.
+See <a href="http://jemmy.netbeans.org/JemmyVersioning.html">"Jemmy Versioning"</a>
+for more info.
+
+Image library. New library allowing to compare two images using different approaches
+and to find one image inside another.
+
+New class: PNGDecored. Allows to load image from PNG graphics file.
+
+Bugfixes: 23436, 28144, 23436, 21011
+
+
+#VERSION 2.1.1
+
+28822:
+src/org/netbeans/jemmy/drivers/menus/DefaultJMenuDriver.java
+	
+28754:
+src/org/netbeans/jemmy/operators/FrameOperator.java
+src/org/netbeans/jemmy/operators/JInternalFrameOperator.java
+	
+28833:
+src/org/netbeans/jemmy/operators/JFileChooserOperator.java
+
+28835:
+src/org/netbeans/jemmy/operators/JFileChooserOperator.java
+	
+24313:
+src/org/netbeans/jemmy/operators/JMenuBarOperator.java
+src/org/netbeans/jemmy/operators/JPopupMenuOperator.java
+	
+28672:
+src/org/netbeans/jemmy/operators/JTabbedPaneOperator.java
+
+some more callPopup methods:
+src/org/netbeans/jemmy/operators/JPopupMenuOperator.java
+	
+Correct initialization:
+src/org/netbeans/jemmy/JemmyProperties.java
+	
+Do not install new queue unless necessary:
+src/org/netbeans/jemmy/QueueTool.java
+	
+	
+
+
+#VERSION 2.1.2
+
+ New set of methods with String path parameter:
+ they do not have a parameter-separator:
+ JMenuOperator.pushMenu(String path);
+ JTreeOperator.findPath(String path);
+ 
+The way of parsing path string is defined by 
+Operator.PathParser implementation. Parser is passed
+ between operators similar to other environment.
+ 
+By default, path string is treated as separated by "|" symbol, 
+so, by default, this two lines are equal:
+ menubar.pushMenu("File|New", "|");
+ and
+ menubar.pushMenu("File|New");
+ 
+Files:
+ src/org/netbeans/jemmy/operators/JMenuBarOperator.java
+ src/org/netbeans/jemmy/operators/JMenuOperator.java
+ src/org/netbeans/jemmy/operators/JPopupMenuOperator.java
+ src/org/netbeans/jemmy/operators/JTreeOperator.java
+ src/org/netbeans/jemmy/operators/Operator.java
+ 
+
+ 29761 fix:
+ src/org/netbeans/jemmy/operators/JMenuBarOperator.java
+ src/org/netbeans/jemmy/operators/JMenuItemOperator.java
+ src/org/netbeans/jemmy/operators/JMenuOperator.java
+ src/org/netbeans/jemmy/operators/JPopupMenuOperator.java
+
+
+ 28672 fix:
+ src/org/netbeans/jemmy/operators/JTabbedPaneOperator.java
+
+
+ Symbolic constants for names in Hashtable generated by 
+getDump() methods.
+ All constants have "_DPROP" postfix:
+ public static final String AbstractButtonOperator.TEXT_DPROP = "Text";
+ 
+Files:
+ Almost all operators - the ones having getDump() method.
+ 
+ 
+#VERSION 2.2.0
+
+Divers updated as described in
+http://jemmy.netbeans.org/servlets/ReadMsg?msgId=446615&listName=users
+Files: Almost all driver classes.
+
+InternalFrameDriver class as described in
+http://jellytools.netbeans.org/issues/show_bug.cgi?id=30195
+Affected files:
+src/org/netbeans/jemmy/drivers/DriverManager.java
+src/org/netbeans/jemmy/drivers/windows/DefaultInternalFrameDriver.java
+src/org/netbeans/jemmy/operators/JInternalFrameOperator.java
+src/org/netbeans/jemmy/drivers/InternalFrameDriver.java
+
+JComponentOperator.getWindowContainer() returns first window-like 
+container: JInternalFrame or Window.
+
+util.NameComponentChooser class. (thanks to Nathan Paris)
+Allows to find a component by component name - string
+returned by Component.getname() method.
+
+29761 fix:
+src/org/netbeans/jemmy/operators/JMenuItemOperator.java
+	
+	
+
+#VERSION 2.2.1
+
+Javadoc has been completed.
+
+JSpinner operator and driver
+(Could be compiled and used under 1.4 only.)
+        src/org/netbeans/jemmy/drivers/scrolling/JSpinnerDriver.java
+        src/org/netbeans/jemmy/operators/JSpinnerOperator.java
+
+JSlider is now working through ScrollDriver
+        src/org/netbeans/jemmy/operators/JSliderOperator.java
+        src/org/netbeans/jemmy/drivers/scrolling/JSliderDriver.java
+
+28835: JemmyException is thrown if getApproveButton() returns null.
+        src/org/netbeans/jemmy/operators/JFileChooserOperator.java
+
+30939: description field has been removed.
+        src/org/netbeans/jemmy/JemmyException.java
+
+Throwable is accepted as an inner exception by JemmyException
+        src/org/netbeans/jemmy/JemmyException.java
+
+StringComparator can be passed to StringPropChooser constructor
+        src/org/netbeans/jemmy/util/StringPropChooser.java
+
+Tooltip component is now searched through all the windows:
+        src/org/netbeans/jemmy/operators/JComponentOperator.java

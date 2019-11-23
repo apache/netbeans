@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Enterprise Application Client with Existing Sources Wizard: Existing Sources and Libraries</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.javaee.project.api.ant.ui.wizard.PanelSourceFolders" name="org.netbeans.modules.javaee.project.api.ant.ui.wizard.PanelSourceFolders"></a></p>
+<div id="NBCSH4477"><!-- infolevel="all" infotype="General" --><a id="sthref638" name="sthref638"></a>
+<h1>New Enterprise Application Client with Existing Sources Wizard: Existing Sources and Libraries</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>This wizard creates a new standard project&nbsp; containing an enterprise application client.</p>
+<p>Your existing application client source does not have to adhere to any particular directory structure. You specify the locations of the configuration files, libraries, and source roots. The only requirement is that the module contain a valid <code dir="ltr">application-client.xml</code> deployment descriptor.</p>
+<p>In the Existing Sources and Libraries page, you specify the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t7">Element</th>
+<th align="left" valign="bottom" id="r1c2-t7">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t7" headers="r1c1-t7">
+<p>Configuration Files Folder</p>
+</td>
+<td align="left" headers="r2c1-t7 r1c2-t7">Specifies the location of your deployment descriptors and other configuration files. You must have at least a valid <code dir="ltr">application-client.xml</code> deployment descriptor to complete the wizard.
+<p><b>Note</b>: The IDE does not convert deployment descriptors for unsupported application servers to Sun Java System Application Server deployment descriptors. You must use an external tool for this purpose.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t7" headers="r1c1-t7">
+<p>Libraries Folder</p>
+</td>
+<td align="left" headers="r3c1-t7 r1c2-t7">Specifies the location of the class libraries on which the application client depends. All JAR files in this folder are added to the enterprise application project's classpath and packaged with the module for deployment.
+<p><b>Note</b>: The IDE only scans this folder once when you create the project. After the project is created, adding JAR files to this folder outside the IDE does not add them to the module's classpath. You have to add them manually through the Libraries tab of the module's Project Properties dialog box.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can also specify each of the project's source package folders (containing source packages) and test package folders (containing JUnit tests). You can have multiple source roots in a standard project, with the following exceptions:</p>
+<ul>
+<li>The source root cannot already exist in another IDE project.</li>
+<li>The source root cannot already be added to another compilation unit of the same project. For example, a source root that is registered under Test Packages cannot be added to the list of Source Packages.</li>
+<li>All of the source roots are packaged into the same JAR file and share the same classpath.</li>
+</ul>
+<p><b>Note</b>: If you have a source root that needs to be used by several projects, you should create a separate project for the source root and set up compilation dependencies between the projects.</p>
+<a id="NBCSH4480" name="NBCSH4480"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG2901">
+<param name="text" value="<html><u>&quot;Creating Application Clients&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG370">
+<param name="text" value="<html><u>&quot;Using Java Project Templates&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

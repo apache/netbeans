@@ -1,0 +1,5 @@
+Code completion result for source line:
+B\C\f|c
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     fc()                            [PUBLIC]   A\B\C

@@ -1,0 +1,103 @@
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='122'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='121'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='Test' start='0' end='10'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='6' end='10'>
+        <name>Test</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Test' start='0' end='121'>
+        <!-- ClassNode Constructor -->
+        <PropertyNode name='Test' start='0' end='121'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='6' end='10'>
+            <name>Test</name>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='Test' kind='NORMAL' start='0' end='121'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='0' end='121'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Elements -->
+        <PropertyNode name='a' start='18' end='38'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='18' end='19'>
+            <name>a</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NumberLiteralNode value='25' start='22' end='24'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='b' start='47' end='49'>
+          <isStatic/>
+          <!-- PropertyNode Key -->
+          <IdentNode start='47' end='48'>
+            <name>b</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='get' start='59' end='63'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='59' end='62'>
+            <name>get</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='x' start='73' end='97'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='77' end='78'>
+            <name>x</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Getter -->
+          <FunctionNode name='get x' kind='GETTER' start='73' end='97'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='81' end='82'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='u' start='113' end='119'>
+          <isStatic/>
+          <!-- PropertyNode Key -->
+          <IdentNode start='113' end='114'>
+            <name>u</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NumberLiteralNode value='17' start='117' end='119'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

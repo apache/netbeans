@@ -1,0 +1,44 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace max="$pref" attributes="1024"/>
+              <Group type="parallel" groupAlignment="trailing" attributes="0">
+                  <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                  <Group type="sequential" attributes="0">
+                      <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="1024"/>
+                      <Component id="jTextField1" min="$pref" pref="156" max="$pref" attributes="1024"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="$pref" attributes="0"/>
+              <Component id="jScrollPane2" min="$pref" max="$pref" attributes="0"/>
+              <EmptySpace pref="116" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="2048">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="0">
+                  <Group type="sequential" attributes="0">
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="26" max="$pref" attributes="0"/>
+                      <Group type="parallel" groupAlignment="baseline" attributes="0">
+                          <Component id="jLabel1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                          <Component id="jTextField1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="jScrollPane2" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="159" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

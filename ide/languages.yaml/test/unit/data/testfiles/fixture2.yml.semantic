@@ -1,0 +1,6 @@
+<% for i in 1..1000 %>
+|>METHOD:fix_<%= i<| %>:
+  |>METHOD:id<|: <%= i %>
+  |>METHOD:name<|: guy_<%= 1 %>
+<% end %>
+

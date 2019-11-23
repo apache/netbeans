@@ -1,0 +1,845 @@
+[@|, @namespace, @namespace, 36]
+@charset
+@font-face
+@import
+@media
+@namespace
+@page
+End cursor position = 47
+[.a2[class^="start"]:|, active, .a2[class^="start"]:active, 102]
+active
+after
+armed
+before
+bottom
+cancel
+cell-selection
+checked
+collapsed
+default
+determinate
+disabled
+editable
+empty
+enabled
+even
+expanded
+filled
+first-child
+first-letter
+first-line
+first-of-type
+fitToHeight
+fitToWidth
+focus
+focused
+horizontal
+hover
+in-range
+indeterminate
+invalid
+lang
+last-child
+last-of-type
+left
+link
+multiline
+not
+nth-child
+nth-last-child
+nth-last-of-type
+nth-of-type
+odd
+only-child
+only-of-type
+openvertically
+optional
+out-of-range
+pannable
+pressed
+read-only
+read-write
+readonly
+required
+right
+root
+row-selection
+selected
+show-mnemonic
+showing
+target
+top
+valid
+vertical
+visited
+End cursor position = 129
+[.a2[class^="start"]::|, after, .a2[class^="start"]::after, 169]
+after
+before
+choices
+first-letter
+first-line
+marker
+repeat-index
+repeat-item
+selection
+value
+End cursor position = 196
+[a + |, div, a + div, 197]
+*
+a
+abbr
+abs
+address
+and
+animate
+animateColor
+animateMotion
+animateTransform
+animation
+annotation
+annotation-xml
+apply
+approx
+arccos
+arccosh
+arccot
+arccoth
+arccsc
+arccsch
+arcsec
+arcsech
+arcsin
+arcsinh
+arctan
+arctanh
+area
+arg
+article
+aside
+audio
+b
+base
+bdo
+blockquote
+body
+br
+button
+bvar
+canvas
+caption
+card
+cartesianproduct
+ceiling
+ci
+circle
+cite
+cn
+code
+codomain
+col
+colgroup
+command
+complexes
+compose
+condition
+conjugate
+cos
+cosh
+cot
+coth
+csc
+csch
+csymbol
+curl
+datalist
+dd
+declare
+defs
+degree
+del
+desc
+details
+determinant
+dfn
+diff
+discard
+div
+divergence
+divide
+dl
+domain
+domainofapplication
+dt
+ellipse
+em
+embed
+emptyset
+encoding
+eq
+equivalent
+eulergamma
+exists
+exp
+exponentiale
+factorial
+factorof
+false
+fieldset
+figcaption
+figure
+floor
+fn
+font
+font-face
+font-face-src
+font-face-uri
+footer
+forall
+foreignObject
+form
+function
+g
+gcd
+geq
+glyph
+grad
+gt
+h1
+h2
+h3
+h4
+h5
+h6
+handler
+head
+header
+hgroup
+hkern
+hr
+html
+i
+ident
+iframe
+image
+imaginary
+imaginaryi
+img
+implies
+in
+infinity
+input
+ins
+int
+integers
+intersect
+interval
+inverse
+kbd
+keygen
+label
+lambda
+laplacian
+lcm
+legend
+leq
+li
+limit
+line
+linearGradient
+link
+list
+listener
+ln
+log
+logbase
+lowlimit
+lt
+maction
+malign
+maligngroup
+malignmark
+malignscope
+map
+mark
+math
+matrix
+matrixrow
+max
+mean
+median
+menclose
+menu
+merror
+meta
+metadata
+meter
+mfenced
+mfrac
+mfraction
+mglyph
+mi
+min
+minus
+missing-glyph
+mlabeledtr
+mmultiscripts
+mn
+mo
+mode
+moment
+momentabout
+mover
+mpadded
+mpath
+mphantom
+mprescripts
+mroot
+mrow
+ms
+mspace
+msqrt
+mstyle
+msub
+msubsup
+msup
+mtable
+mtd
+mtext
+mtr
+munder
+munderover
+naturalnumbers
+nav
+neq
+none
+noscript
+not
+notanumber
+notin
+notprsubset
+notsubset
+object
+ol
+optgroup
+option
+or
+otherwise
+outerproduct
+output
+p
+param
+partialdiff
+partialdiff
+path
+path
+pi
+pi
+piece
+piece
+piecewice
+piecewice
+piecewise
+piecewise
+plus
+polygon
+polyline
+power
+pre
+prefetch
+primes
+product
+progress
+prsubset
+q
+quotient
+radialGradient
+rationals
+real
+reals
+rect
+reln
+rem
+root
+rp
+rt
+ruby
+samp
+scalarproduct
+script
+sdev
+sec
+sech
+section
+select
+selector
+semantics
+sep
+set
+setdiff
+sin
+sinh
+small
+solidColor
+source
+span
+stop
+strong
+style
+sub
+subset
+sum
+summary
+sup
+svg
+switch
+table
+tan
+tanh
+tbody
+tbreak
+td
+tendsto
+text
+textArea
+textarea
+tfoot
+th
+thead
+time
+times
+title
+tr
+track
+transpose
+true
+tspan
+ul
+union
+uplimit
+use
+var
+variance
+vector
+vectorproduct
+video
+wbr
+xor
+End cursor position = 205
+[display: |, display none, display: none, 264]
+display anything
+display block
+display compact
+display inherit
+display initial
+display inline
+display inline-block
+display inline-table
+display list-item
+display none
+display ruby
+display ruby-base
+display ruby-base-group
+display ruby-text
+display ruby-text-group
+display run-in
+display table
+display table-caption
+display table-cell
+display table-column
+display table-column-group
+display table-footer-group
+display table-header-group
+display table-row
+display table-row-group
+End cursor position = 278
+[color: |, color navy, color: navy, 330]
+color color chooser
+color activeborder
+color activecaption
+color aliceblue
+color antiquewhite
+color appworkspace
+color aqua
+color aquamarine
+color azure
+color background
+color beige
+color bisque
+color black
+color blanchedalmond
+color blue
+color blueviolet
+color brown
+color burlywood
+color buttonface
+color buttonhighlight
+color buttonshadow
+color buttontext
+color cadetblue
+color captiontext
+color chartreuse
+color chocolate
+color coral
+color cornflowerblue
+color cornsilk
+color crimson
+color currentColor
+color cyan
+color darkblue
+color darkcyan
+color darkgoldenrod
+color darkgray
+color darkgreen
+color darkgrey
+color darkkhaki
+color darkmagenta
+color darkolivegreen
+color darkorange
+color darkorchid
+color darkred
+color darksalmon
+color darkseagreen
+color darkslateblue
+color darkslategray
+color darkslategrey
+color darkturquoise
+color darkviolet
+color deeppink
+color deepskyblue
+color dimgray
+color dimgrey
+color dodgerblue
+color firebrick
+color floralwhite
+color forestgreen
+color fuchsia
+color gainsboro
+color ghostwhite
+color gold
+color goldenrod
+color gray
+color graytext
+color green
+color greenyellow
+color grey
+color highlight
+color highlighttext
+color honeydew
+color hotpink
+color hsl
+color hsla
+color inactiveborder
+color inactivecaption
+color inactivecaptiontext
+color indianred
+color indigo
+color infobackground
+color infotext
+color inherit
+color initial
+color ivory
+color khaki
+color lavender
+color lavenderblush
+color lawngreen
+color lemonchiffon
+color lightblue
+color lightcoral
+color lightcyan
+color lightgoldenrodyellow
+color lightgray
+color lightgreen
+color lightgrey
+color lightpink
+color lightsalmon
+color lightseagreen
+color lightskyblue
+color lightslategray
+color lightslategrey
+color lightsteelblue
+color lightyellow
+color lime
+color limegreen
+color linen
+color magenta
+color maroon
+color mediumaquamarine
+color mediumblue
+color mediumorchid
+color mediumpurple
+color mediumseagreen
+color mediumslateblue
+color mediumspringgreen
+color mediumturquoise
+color mediumvioletred
+color menu
+color menutext
+color midnightblue
+color mintcream
+color mistyrose
+color moccasin
+color navajowhite
+color navy
+color oldlace
+color olive
+color olivedrab
+color orange
+color orangered
+color orchid
+color palegoldenrod
+color palegreen
+color paleturquoise
+color palevioletred
+color papayawhip
+color peachpuff
+color peru
+color pink
+color plum
+color powderblue
+color purple
+color red
+color rgb
+color rgba
+color rosybrown
+color royalblue
+color saddlebrown
+color salmon
+color sandybrown
+color scrollbar
+color seagreen
+color seashell
+color sienna
+color silver
+color skyblue
+color slateblue
+color slategray
+color slategrey
+color snow
+color springgreen
+color steelblue
+color tan
+color teal
+color thistle
+color threeddarkshadow
+color threedface
+color threedhighlight
+color threedlightshadow
+color threedshadow
+color tomato
+color transparent
+color turquoise
+color violet
+color wheat
+color white
+color whitesmoke
+color window
+color windowframe
+color windowtext
+color yellow
+color yellowgreen
+End cursor position = 342
+[-web|, -webkit-animation, -webkit-animation: , 394]
+Chrome -webkit-animation
+Chrome -webkit-animation-delay
+Chrome -webkit-animation-direc
+Chrome -webkit-animation-durat
+Chrome -webkit-animation-fill-
+Chrome -webkit-animation-itera
+Chrome -webkit-animation-name
+Chrome -webkit-animation-play-
+Chrome -webkit-animation-timin
+Chrome -webkit-appearance
+Chrome -webkit-backface-visibi
+Chrome -webkit-background-clip
+Chrome -webkit-background-comp
+Chrome -webkit-background-orig
+Chrome -webkit-background-size
+Chrome -webkit-border-bottom-l
+Chrome -webkit-border-bottom-r
+Chrome -webkit-border-horizont
+Chrome -webkit-border-image
+Chrome -webkit-border-radius
+Chrome -webkit-border-top-left
+Chrome -webkit-border-top-righ
+Chrome -webkit-border-vertical
+Chrome -webkit-box-align
+Chrome -webkit-box-direction
+Chrome -webkit-box-flex
+Chrome -webkit-box-flex-group
+Chrome -webkit-box-lines
+Chrome -webkit-box-ordinal-gro
+Chrome -webkit-box-orient
+Chrome -webkit-box-pack
+Chrome -webkit-box-reflect
+Chrome -webkit-box-shadow
+Chrome -webkit-box-sizing
+Chrome -webkit-column-break-af
+Chrome -webkit-column-break-be
+Chrome -webkit-column-break-in
+Chrome -webkit-column-count
+Chrome -webkit-column-gap
+Chrome -webkit-column-rule
+Chrome -webkit-column-rule-col
+Chrome -webkit-column-rule-sty
+Chrome -webkit-column-rule-wid
+Chrome -webkit-column-width
+Chrome -webkit-columns
+Chrome -webkit-dashboard-regio
+Chrome -webkit-line-break
+Chrome -webkit-margin-bottom-c
+Chrome -webkit-margin-collapse
+Chrome -webkit-margin-start
+Chrome -webkit-margin-top-coll
+Chrome -webkit-marquee
+Chrome -webkit-marquee-directi
+Chrome -webkit-marquee-increme
+Chrome -webkit-marquee-repetit
+Chrome -webkit-marquee-speed
+Chrome -webkit-marquee-style
+Chrome -webkit-mask
+Chrome -webkit-mask-attachment
+Chrome -webkit-mask-box-image
+Chrome -webkit-mask-clip
+Chrome -webkit-mask-composite
+Chrome -webkit-mask-image
+Chrome -webkit-mask-origin
+Chrome -webkit-mask-position
+Chrome -webkit-mask-position-x
+Chrome -webkit-mask-position-y
+Chrome -webkit-mask-repeat
+Chrome -webkit-mask-size
+Chrome -webkit-nbsp-mode
+Chrome -webkit-padding-start
+Chrome -webkit-perspective
+Chrome -webkit-perspective-ori
+Chrome -webkit-rtl-ordering
+Chrome -webkit-tap-highlight-c
+Chrome -webkit-text-fill-color
+Chrome -webkit-text-security
+Chrome -webkit-text-size-adjus
+Chrome -webkit-text-stroke
+Chrome -webkit-text-stroke-col
+Chrome -webkit-text-stroke-wid
+Chrome -webkit-touch-callout
+Chrome -webkit-transform
+Chrome -webkit-transform-origi
+Chrome -webkit-transform-origi
+Chrome -webkit-transform-origi
+Chrome -webkit-transform-origi
+Chrome -webkit-transform-style
+Chrome -webkit-transition
+Chrome -webkit-transition-dela
+Chrome -webkit-transition-dura
+Chrome -webkit-transition-prop
+Chrome -webkit-transition-timi
+Chrome -webkit-user-drag
+Chrome -webkit-user-modify
+Chrome -webkit-user-select
+End cursor position = 413
+[box-|, box-shadow, box-shadow: , 434]
+Box box-decoration-break
+Box box-shadow
+User interface box-sizing
+End cursor position = 446
+[border-|, border-radius, border-radius: , 483]
+Box border-bottom
+Box border-bottom-color
+Box border-bottom-left-radius
+Box border-bottom-right-radius
+Box border-bottom-style
+Box border-bottom-width
+Default border-collapse
+Box border-color
+Box border-image
+Box border-image-outset
+Box border-image-repeat
+Box border-image-slice
+Box border-image-source
+Box border-image-width
+Box border-left
+Box border-left-color
+Box border-left-style
+Box border-left-width
+Box border-radius
+Box border-right
+Box border-right-color
+Box border-right-style
+Box border-right-width
+Default border-spacing
+Box border-style
+Box border-top
+Box border-top-color
+Box border-top-left-radius
+Box border-top-right-radius
+Box border-top-style
+Box border-top-width
+Box border-width
+End cursor position = 498
+[div:not(:|){}, hover, div:not(:hover){}, 534]
+active
+after
+armed
+before
+bottom
+cancel
+cell-selection
+checked
+collapsed
+default
+determinate
+disabled
+editable
+empty
+enabled
+even
+expanded
+filled
+first-child
+first-letter
+first-line
+first-of-type
+fitToHeight
+fitToWidth
+focus
+focused
+horizontal
+hover
+in-range
+indeterminate
+invalid
+lang
+last-child
+last-of-type
+left
+link
+multiline
+not
+nth-child
+nth-last-child
+nth-last-of-type
+nth-of-type
+odd
+only-child
+only-of-type
+openvertically
+optional
+out-of-range
+pannable
+pressed
+read-only
+read-write
+readonly
+required
+right
+root
+row-selection
+selected
+show-mnemonic
+showing
+target
+top
+valid
+vertical
+visited
+End cursor position = 549

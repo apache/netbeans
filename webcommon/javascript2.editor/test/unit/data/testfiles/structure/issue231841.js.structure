@@ -1,0 +1,5 @@
+Test:CONSTRUCTOR:[PRIVATE]:ESCAPED{Test}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Test</font>:
+  publisher:CLASS:[PUBLIC]:ESCAPED{publisher}:
+    listeners:FIELD:[PUBLIC]:ESCAPED{listeners}<font color="#999999">ESCAPED{ : }Array</font>:
+    name:FIELD:[PUBLIC]:ESCAPED{name}<font color="#999999">ESCAPED{ : }String</font>:
+    subscribe:METHOD:[PROTECTED]:ESCAPED{subscribe}ESCAPED{(}ESCAPED{callback}ESCAPED{, }ESCAPED{event}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

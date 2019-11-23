@@ -1,0 +1,1 @@
+public static void testStatic(String permanent, String... variable)

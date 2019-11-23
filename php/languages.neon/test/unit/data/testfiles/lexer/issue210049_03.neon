@@ -1,0 +1,1 @@
+test: class(@o::new(@foo))

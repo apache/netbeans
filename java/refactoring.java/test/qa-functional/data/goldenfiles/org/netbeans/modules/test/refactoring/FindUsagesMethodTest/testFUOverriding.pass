@@ -1,0 +1,8 @@
+Overriding Methods of Iface.method [3 occurrences]
+    RefactoringTest
+        SubClass.java
+            48: public void method() {
+        SuperClass.java
+            46: public void method() {
+        Test.java
+            47: public void method() {

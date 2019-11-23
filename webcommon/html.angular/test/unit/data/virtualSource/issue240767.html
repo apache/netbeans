@@ -1,0 +1,10 @@
+<h1 data-ng-controller="">DB</h1>
+<textarea class="span8" cols="250" rows="20" data-ng-model="query">
+{{(tribe.testedTotal/tribe.users)|number:1}}
+</textarea><br/>
+<button class="btn" value="Run" data-ng-click="makeQuery()">Run</button>
+
+<h2>Result: </h2>
+<pre data-ng-bind-html-unsafe="result">
+
+</pre>

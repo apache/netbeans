@@ -1,0 +1,7 @@
+Code completion result for source line:
+use function \A\{|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+METHOD     fa()                            [PUBLIC]   A
+METHOD     testA()                         [PUBLIC]   A

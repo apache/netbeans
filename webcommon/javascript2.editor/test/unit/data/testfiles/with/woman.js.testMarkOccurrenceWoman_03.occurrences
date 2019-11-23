@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:martin<| = new Woman("Martin", "Chloupek");
+with(|>MARK_OCCURRENCES:martin<|) {
+console.log(|>MARK_OCCURRENCES:mar^tin<|.address.city);

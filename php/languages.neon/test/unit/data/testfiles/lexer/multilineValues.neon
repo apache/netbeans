@@ -1,0 +1,6 @@
+database:
+			class: Nette\Database\Connection(
+				'%database.driver%:host=%database.host%;dbname=%database.dbname%'
+				%database.user%
+				%database.password%
+			)

@@ -1,0 +1,3 @@
+    var |>MARK_OCCURRENCES:sel^f<| = this; // in MyClass
+    |>MARK_OCCURRENCES:self<|.myField = {};
+    |>MARK_OCCURRENCES:self<|.myField.doAgain();

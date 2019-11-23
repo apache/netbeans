@@ -1,0 +1,42 @@
+/* -------- DIRECT STYLES FOR TAGS-----------*/
+body, table ,.trida #d45{
+        color: #2F2F2F; padding:0px; margin:0px;
+	font-size: 0.7em;
+	font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+	height:500px;
+}
+
+body.blue-bg {
+	 background-color:#E3EAF1;
+}
+
+h1 > h2 > h3 *  {
+	font-size: 1.6em;color: #D20106;font-weight : normal;padding:0px;margin:0px 0px 10px 0px;
+	text-align:left;
+}
+*[foo="warning"]{}
+
+E[foo|="warning"]{}
+
+E[foo~="warning"]{}
+  
+zn {
+   font-family: "Times \
+   New Roman",Times,serif;
+} 
+.\55ft{} 
+zn {
+   font-family: "Times New Roman",Times,serif;
+} 
+
+#id{
+    text-decoration: none;
+    font-variant: small-caps;
+    font-family: Arial,Helvetica,sans-serif;
+    margin-top: 3px;
+    text-align: right;
+    position: static;
+    height: 2px;
+    clip: rect(0px, 0px, 0px, 3px);
+}
+

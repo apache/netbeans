@@ -1,0 +1,2 @@
+        test2: function(|>MARK_OCCURRENCES:par1<|) { // par1 is underlined as unused
+                par1: |>MARK_OCCURRENCES:pa^r1<| // par1 after : is marked green as member variable

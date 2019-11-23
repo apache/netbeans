@@ -1,0 +1,4 @@
+Code completion result for source line:
+$source2 = $reques|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? $request2                     [PUBLIC]   issue136092.php

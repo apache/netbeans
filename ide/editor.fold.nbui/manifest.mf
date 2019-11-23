@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.editor.fold.nbui
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/editor/fold/ui/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/editor/fold/ui/layer.xml
+OpenIDE-Module-Provides: org.netbeans.modules.editor.fold.ui
+AutoUpdate-Show-In-Client: false

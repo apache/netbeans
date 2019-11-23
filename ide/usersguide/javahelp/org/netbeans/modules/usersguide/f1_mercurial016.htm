@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Mercurial: Search History</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.mercurial.ui.log.SearchHistoryTopComponent" name="org.netbeans.modules.mercurial.ui.log.SearchHistoryTopComponent"></a></p>
+<div id="NBCSH1266"><!-- infolevel="all" infotype="General" --><a id="sthref142" name="sthref142"></a>
+<h1>Mercurial: Search History</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Mercurial History window enables you to search the history of changes of the relevant file(s) on branch and date. It also supports diff to a previous revision, backing out a revision from the repository, and view of a revision. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG328">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<div id="NBCSH1267"><!-- infolevel="all" infotype="General" --><a id="sthref143" name="sthref143"></a>
+<h2>Toolbar</h2>
+<p>The history toolbar is at the top of the Mercurial History window.</p>
+<p>The following table lists components for the commands that are available in the Mercurial History toolbar for the currently displayed project or file.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t19">Element</th>
+<th align="left" valign="bottom" id="r1c2-t19">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t19" headers="r1c1-t19">
+<p>Go to Previous Difference</p>
+</td>
+<td align="left" headers="r2c1-t19 r1c2-t19">Highlights the previous difference found between versions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t19" headers="r1c1-t19">
+<p>Go to Next Difference</p>
+</td>
+<td align="left" headers="r3c1-t19 r1c2-t19">Highlights the next difference found between versions.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t19" headers="r1c1-t19">
+<p>Show All Change Paths (check-box)</p>
+</td>
+<td align="left" headers="r4c1-t19 r1c2-t19">Displays all files in a changeset.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t19" headers="r1c1-t19">
+<p>Filter (drop-down list) contains</p>
+</td>
+<td align="left" headers="r5c1-t19 r1c2-t19">Displays only those revisions that match the criteria you specified for the selected filter (No Filter, Revision, Message, or User).</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<!-- -->
+<div id="NBCSH1272"><!-- infolevel="all" infotype="General" --><a id="sthref144" name="sthref144"></a>
+<h2>Summary View</h2>
+<p>The Summary view displays a list containing the details of the results matching the specified search criteria. Each row corresponds to a revision obtained from the repository.</p>
+<p>If your search criteria specified a revision, all files contained therein are displayed beneath the revision heading.</p>
+<p>You can call the following commands from the list directly on revisions:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t20">Element</th>
+<th align="left" valign="bottom" id="r1c2-t20">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t20" headers="r1c1-t20">
+<p>Diff Revision</p>
+</td>
+<td align="left" headers="r2c1-t20 r1c2-t20">Compares your currently selected file with the previous revision.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t20" headers="r1c1-t20">
+<p>Backout Revision</p>
+</td>
+<td align="left" headers="r3c1-t20 r1c2-t20">Adds a new revision to the current branch that reverts your previous change.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<!-- -->
+<div id="NBCSH1275"><!-- infolevel="all" infotype="General" --><a id="sthref145" name="sthref145"></a>
+<h2>Diff View</h2>
+<p>The Diff Viewer is divided into two panes:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t21">Element</th>
+<th align="left" valign="bottom" id="r1c2-t21">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t21" headers="r1c1-t21">
+<p>Upper pane</p>
+</td>
+<td align="left" headers="r2c1-t21 r1c2-t21">Contains a table that enables you to view a summary of a file's evolution by the date and time stamps. A stamp is applied whenever a file is saved in the IDE or committed to the Mercurial repository.
+<p>The table features the following columns and components:</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t21" headers="r1c1-t21">
+<p>Nodes</p>
+</td>
+<td align="left" headers="r3c1-t21 r1c2-t21">Displays the revision label for a file tracked in the Mercurial repository. The revisions can be sorted by clicking the Nodes column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t21" headers="r1c1-t21">
+<p>Time</p>
+</td>
+<td align="left" headers="r4c1-t21 r1c2-t21">Displays the creation date and time of the revision in the history. The file revisions are listed according to the date, with the most current version displayed on top. They can be sorted by clicking the Time column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t21" headers="r1c1-t21">
+<p>User</p>
+</td>
+<td align="left" headers="r5c1-t21 r1c2-t21">Displays the name of the person who created and authored the revision. The users can be sorted by clicking the User column header.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t21" headers="r1c1-t21">
+<p>Message</p>
+</td>
+<td align="left" headers="r6c1-t21 r1c2-t21">Lists any message associated with the file. The messages can be sorted by clicking the Message column header.
+<p>You can call commands from the table directly on revisions using the right-click menu:</p>
+<ul>
+<li><b>Backout</b>. Adds a new revision to the current branch that reverts your previous change.</li>
+<li><b>Revert to</b>. Reverts your current file to the specified version.</li>
+<li><b>Show only rows where</b>. Filters revisions in accordance with the filter specified (Time/User/Message ==, Time/User/Message &lt;&gt;, Time/User/Message &gt;, Time/User/Message &lt;, Time/User/Message &gt;=, Time/User/Message &lt;=, No Filter). Available in the Time, User, and Message columns.</li>
+</ul>
+<p>Multiple selection of any two revisions in the table displays them compared in the Diff Viewer in the lower pane.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t21" headers="r1c1-t21">
+<p>Lower pane</p>
+</td>
+<td align="left" headers="r7c1-t21 r1c2-t21">Enables you to compare revisions of a file in the following two modes:</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t21" headers="r1c1-t21">
+<p>Graphical</p>
+</td>
+<td align="left" headers="r8c1-t21 r1c2-t21">Displays the differences between the files being compared side by side using color coding.
+<p>The Diff Viewer provides the following UI components:</p>
+<ul>
+<li><b>Blue</b>. Indicates lines that have been changed since the earlier revision.</li>
+<li><b>Green</b>. Indicates lines that have been added since the earlier revision.</li>
+<li><b>Red</b>. Indicates lines that have been removed since the earlier revision.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t21" headers="r1c1-t21">
+<p>Textual</p>
+</td>
+<td align="left" headers="r9c1-t21 r1c2-t21">Displays the collection of differences between the compared files in text.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>You can adjust the size of the Diff Viewer panes by dragging the divider between them.</p>
+
+<!-- -->
+<div id="NBCSH1284"><!-- infolevel="all" infotype="General" --><a id="sthref146" name="sthref146"></a>
+<h2>Search Options</h2>
+<p>You can use the following criteria to search for files or folders:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t22">Element</th>
+<th align="left" valign="bottom" id="r1c2-t22">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t22" headers="r1c1-t22">
+<p>Branch</p>
+</td>
+<td align="left" headers="r2c1-t22 r1c2-t22">Enter the name of a branch to search for the revisions of files committed within this branch. Click the Select button to choose a branch from the list of available branches in the repository in the Select Branch in Repository dialog box.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t22" headers="r1c1-t22">
+<p>Limit</p>
+</td>
+<td align="left" headers="r3c1-t22 r1c2-t22">Enter a positive integer to limit the number of revisions from the top of the repository to be displayed in the Mercurial History window.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t22" headers="r1c1-t22">
+<p>Show merges</p>
+</td>
+<td align="left" headers="r4c1-t22 r1c2-t22">Select to display merge changes between repository revisions and your local working copy.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t22" headers="r1c1-t22">
+<p>From</p>
+</td>
+<td align="left" headers="r5c1-t22 r1c2-t22">Enter a revision or date of a revision to search for the revisions of file(s) committed after that revision or date.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t22" headers="r1c1-t22">
+<p>To</p>
+</td>
+<td align="left" headers="r6c1-t22 r1c2-t22">Enter a revision or date of a revision to search for the revisions of file(s) committed before that revision or date.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>When you click the Search button, revisions meeting the specified criteria are displayed in Mercurial History window.</p>
+<a id="NBCSH1290" name="NBCSH1290"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG318">
+<param name="text" value="<html><u>&quot;Versioning Applications with Mercurial&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

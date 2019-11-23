@@ -1,0 +1,4 @@
+Code completion result for source line:
+fnc()->getNumbers()::|MAX;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   MAX 100                         [PUBLIC]   Numbers

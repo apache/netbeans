@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" 
+                  xmlns="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                  xmlns:plink="http://docs.oasis-open.org/wsbpel/2.0/plnktype" 
+                  xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" 
+                  xmlns:sap="http://schemas.sun.com/jbi/wsdl-extensions/sap/">
+    <wsdl:types>
+       <!--xsd:schema targetNamespace="urn:sap-com:document:sap:rfc:functions" elementFormDefault="unqualified" attributeFormDefault="qualified">
+            <xsd:simpleType name="char1">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="1"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char10">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="10"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char2">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="2"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char20">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="20"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char220">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="220"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char240">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="240"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char3">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="3"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char30">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="30"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char32">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="32"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="char50">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="50"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="cuky5">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="5"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="date">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="10"/>
+                    <xsd:pattern value="\d\d\d\d-\d\d-\d\d"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="decimal23.4">
+                <xsd:restriction base="xsd:decimal">
+                    <xsd:totalDigits value="23"/>
+                    <xsd:fractionDigits value="4"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="numeric3">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="3"/>
+                    <xsd:pattern value="\d*"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="numeric4">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="4"/>
+                    <xsd:pattern value="\d*"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="numeric6">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="6"/>
+                    <xsd:pattern value="\d*"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="quantum9.4">
+                <xsd:restriction base="xsd:decimal">
+                    <xsd:totalDigits value="9"/>
+                    <xsd:fractionDigits value="4"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="time">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="8"/>
+                    <xsd:pattern value="\d\d:\d\d:\d\d"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="unit3">
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="3"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:schema-->
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+                    xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" 
+                    targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" 
+                    elementFormDefault="unqualified" 
+                    attributeFormDefault="qualified" 
+                    xmlns:n0="urn:sap-com:document:sap:rfc:functions">
+            <!--xsd:import namespace="urn:sap-com:document:sap:rfc:functions"/--> 
+            <xsd:import namespace="urn:sap-com:document:sap:rfc:functions" schemaLocation="sapBasicTypes.xsd"/> 
+            <xsd:complexType name="Bapisflava"> 
+                <xsd:sequence>
+                    <xsd:element name="Economax" type="xsd:int" /> 
+                    <xsd:element name="Econofree" type="xsd:int" /> 
+                    <xsd:element name="Businmax" type="xsd:int" /> 
+                    <xsd:element name="Businfree" type="xsd:int" /> 
+                    <xsd:element name="Firstmax" type="xsd:int" /> 
+                    <xsd:element name="Firstfree" type="xsd:int" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapiret2">
+                <xsd:sequence>
+                    <xsd:element name="Type" type="n0:char1" /> 
+                    <xsd:element name="Id" type="n0:char20" /> 
+                    <xsd:element name="Number" type="n0:numeric3" /> 
+                    <xsd:element name="Message" type="n0:char220" /> 
+                    <xsd:element name="Logno" type="n0:char20" /> 
+                    <xsd:element name="Logmsgno" type="n0:numeric6" /> 
+                    <xsd:element name="Messagev1" type="n0:char50" /> 
+                    <xsd:element name="Messagev2" type="n0:char50" /> 
+                    <xsd:element name="Messagev3" type="n0:char50" /> 
+                    <xsd:element name="Messagev4" type="n0:char50" /> 
+                    <xsd:element name="Parameter" type="n0:char32" /> 
+                    <xsd:element name="Row" type="xsd:int" /> 
+                    <xsd:element name="Field" type="n0:char30" /> 
+                    <xsd:element name="System" type="n0:char10" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapiparex">
+                <xsd:sequence>
+                    <xsd:element name="Structure" type="n0:char30" /> 
+                    <xsd:element name="Valuepart1" type="n0:char240" /> 
+                    <xsd:element name="Valuepart2" type="n0:char240" /> 
+                    <xsd:element name="Valuepart3" type="n0:char240" /> 
+                    <xsd:element name="Valuepart4" type="n0:char240" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapisfladd">
+                <xsd:sequence>
+                    <xsd:element name="Flighttime" type="xsd:int" /> 
+                    <xsd:element name="Distance" type="n0:quantum9.4" /> 
+                    <xsd:element name="Unit" type="n0:unit3" /> 
+                    <xsd:element name="Unitiso" type="n0:char3" /> 
+                    <xsd:element name="Planetype" type="n0:char10" /> 
+                    <xsd:element name="Flighttype" type="n0:char1" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapisfldat">
+                <xsd:sequence>
+                    <xsd:element name="Airlineid" type="n0:char3" /> 
+                    <xsd:element name="Airline" type="n0:char20" /> 
+                    <xsd:element name="Connectid" type="n0:numeric4" /> 
+                    <xsd:element name="Flightdate" type="n0:date" /> 
+                    <xsd:element name="Airportfr" type="n0:char3" /> 
+                    <xsd:element name="Cityfrom" type="n0:char20" /> 
+                    <xsd:element name="Airportto" type="n0:char3" /> 
+                    <xsd:element name="Cityto" type="n0:char20" /> 
+                    <xsd:element name="Deptime" type="n0:time" /> 
+                    <xsd:element name="Arrtime" type="n0:time" /> 
+                    <xsd:element name="Arrdate" type="n0:date" /> 
+                    <xsd:element name="Price" type="n0:decimal23.4" /> 
+                    <xsd:element name="Curr" type="n0:cuky5" /> 
+                    <xsd:element name="Curriso" type="n0:char3" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapisfldra">
+                <xsd:sequence>
+                    <xsd:element name="Sign" type="n0:char1" /> 
+                    <xsd:element name="Option" type="n0:char2" /> 
+                    <xsd:element name="Low" type="n0:date" /> 
+                    <xsd:element name="High" type="n0:date" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapisfldst">
+                <xsd:sequence>
+                    <xsd:element name="Airportid" type="n0:char3" /> 
+                    <xsd:element name="City" type="n0:char20" /> 
+                    <xsd:element name="Countr" type="n0:char3" /> 
+                    <xsd:element name="Countriso" type="n0:char2" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Bapisflrep">
+                <xsd:sequence>
+                    <xsd:element name="Airlineid" type="n0:char3" /> 
+                    <xsd:element name="Connectid" type="n0:numeric4" /> 
+                    <xsd:element name="Flightdate" type="n0:date" /> 
+                    <xsd:element name="Price" type="n0:decimal23.4" /> 
+                    <xsd:element name="Curr" type="n0:cuky5" /> 
+                    <xsd:element name="CurrIso" type="n0:char3" /> 
+                    <xsd:element name="Planetype" type="n0:char10" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="TableOfbapiret2">
+                <xsd:sequence>
+                    <xsd:element name="item" minOccurs="0" maxOccurs="unbounded" type="tns:Bapiret2" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="TableOfbapiparex">
+                <xsd:sequence>
+                    <xsd:element name="item" minOccurs="0" maxOccurs="unbounded" type="tns:Bapiparex" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="TableOfbapisfldra">
+                <xsd:sequence>
+                    <xsd:element name="item" minOccurs="0" maxOccurs="unbounded" type="tns:Bapisfldra" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="TableOfbapisfldat">
+                <xsd:sequence>
+                    <xsd:element name="item" minOccurs="0" maxOccurs="unbounded" type="tns:Bapisfldat" /> 
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="FlightCheckAvailibility">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="AirlineID" type="n0:char3" /> 
+                        <xsd:element name="ConnectionID" type="n0:numeric4" /> 
+                        <xsd:element name="FlightDate" type="n0:date" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightCheckAvailibilityResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Availibility" type="tns:Bapisflava" /> 
+                        <xsd:element name="Return" type="tns:TableOfbapiret2" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightGetDetail">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="AirlineID" type="n0:char3" /> 
+                        <xsd:element name="ConnectionID" type="n0:numeric4" /> 
+                        <xsd:element name="ExtensionIn" minOccurs="0" type="tns:TableOfbapiparex" /> 
+                        <xsd:element name="FlightDate" type="n0:date" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightGetDetailResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="AdditionalInfo" type="tns:Bapisfladd" /> 
+                        <xsd:element name="Availibility" type="tns:Bapisflava" /> 
+                        <xsd:element name="ExtensionOut" type="tns:TableOfbapiparex" /> 
+                        <xsd:element name="FlightData" type="tns:Bapisfldat" /> 
+                        <xsd:element name="Return" type="tns:TableOfbapiret2" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightGetList">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Airline" minOccurs="0" type="n0:char3" /> 
+                        <xsd:element name="DateRange" minOccurs="0" type="tns:TableOfbapisfldra" /> 
+                        <xsd:element name="DestinationFrom" minOccurs="0" type="tns:Bapisfldst" /> 
+                        <xsd:element name="DestinationTo" minOccurs="0" type="tns:Bapisfldst" /> 
+                        <xsd:element name="ExtensionIn" minOccurs="0" type="tns:TableOfbapiparex" /> 
+                        <xsd:element name="MaxRows" minOccurs="0" type="xsd:int" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightGetListResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="ExtensionOut" type="tns:TableOfbapiparex" /> 
+                        <xsd:element name="FlightList" type="tns:TableOfbapisfldat" /> 
+                        <xsd:element name="Return" type="tns:TableOfbapiret2" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightSaveReplica">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="ExtensionIn" minOccurs="0" type="tns:TableOfbapiparex" /> 
+                        <xsd:element name="FlightData" type="tns:Bapisflrep" /> 
+                        <xsd:element name="TestRun" minOccurs="0" type="n0:char1" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="FlightSaveReplicaResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Return" type="tns:TableOfbapiret2" /> 
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="FlightCheckAvailibility">
+        <wsdl:part name="parameters" element="tns:FlightCheckAvailibility" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightCheckAvailibilityResponse">
+        <wsdl:part name="parameters" element="tns:FlightCheckAvailibilityResponse" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightGetDetail">
+        <wsdl:part name="parameters" element="tns:FlightGetDetail" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightGetDetailResponse">
+        <wsdl:part name="parameters" element="tns:FlightGetDetailResponse" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightGetList">
+        <wsdl:part name="parameters" element="tns:FlightGetList" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightGetListResponse">
+        <wsdl:part name="parameters" element="tns:FlightGetListResponse" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightSaveReplica">
+        <wsdl:part name="parameters" element="tns:FlightSaveReplica" /> 
+    </wsdl:message>
+    <wsdl:message name="FlightSaveReplicaResponse">
+        <wsdl:part name="parameters" element="tns:FlightSaveReplicaResponse" /> 
+    </wsdl:message>
+    <wsdl:portType name="Z_FlightWSD">
+        <wsdl:operation name="FlightCheckAvailibility">
+            <wsdl:input message="tns:FlightCheckAvailibility" /> 
+            <wsdl:output message="tns:FlightCheckAvailibilityResponse" /> 
+        </wsdl:operation>
+        <wsdl:operation name="FlightGetDetail">
+            <wsdl:input message="tns:FlightGetDetail" /> 
+            <wsdl:output message="tns:FlightGetDetailResponse" /> 
+        </wsdl:operation>
+        <wsdl:operation name="FlightGetList">
+            <wsdl:input message="tns:FlightGetList" /> 
+            <wsdl:output message="tns:FlightGetListResponse" /> 
+        </wsdl:operation>
+        <wsdl:operation name="FlightSaveReplica">
+            <wsdl:input message="tns:FlightSaveReplica" /> 
+            <wsdl:output message="tns:FlightSaveReplicaResponse" /> 
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="Z_FlightWSDSAPBinding" type="tns:Z_FlightWSD">
+        <sap:binding transactionalMode="Transactional"/>
+        <wsdl:operation name="FlightGetDetail">
+            <sap:fmoperation functionName="BAPI_FLIGHT_GETDETAIL"/>
+            <wsdl:input name="FlightGetDetailRequest">
+                <sap:message/>
+            </wsdl:input>
+            <wsdl:output name="FlightGetDetailResponse">
+                <sap:message/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="FlightGetList">
+            <sap:fmoperation functionName="BAPI_FLIGHT_GETLIST"/>
+            <wsdl:input name="FlightGetListRequest"/>
+            <wsdl:output name="FlightGetListResponse"/>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Z_FlightWSDService">
+        <wsdl:port name="Z_FlightWSDSAPBindingPort" binding="tns:Z_FlightWSDSAPBinding">
+            <sap:address applicationServerHostname="sap50uni" clientNumber="800" systemNumber="00" systemID="EUC" user="PS1" password="ONLY4RD" language="EN" enableABAPDebugWindow="No" isSAPSystemUnicode="Yes" gatewayHostname="sap50uni" gatewayService="sapgw00">
+                <sap:ClientParameters useLoadBalancing="No"/>
+                <sap:ServerParameters programID="Provide value for this required attribute"/>
+            </sap:address>
+        </wsdl:port>
+    </wsdl:service>
+    <plink:partnerLinkType xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" name="Z_FlightWSDLinkType">
+        <plink:role name="Z_FlightWSDRole" portType="tns:Z_FlightWSD"/>
+    </plink:partnerLinkType>
+</wsdl:definitions>

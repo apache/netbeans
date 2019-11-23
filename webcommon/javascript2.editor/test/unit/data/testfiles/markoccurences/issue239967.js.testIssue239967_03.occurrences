@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:pool<| = []; // purple
+    |>MARK_OCCURRENCES:pool<| = [];
+        |>MARK_OCCURRENCES:po^ol<|[i] = i; 

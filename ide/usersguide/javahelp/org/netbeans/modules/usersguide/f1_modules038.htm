@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Module Project Properties Dialog Box: API Versioning</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.apisupport.project.ui.customizer.CustomizerVersioning" name="org.netbeans.modules.apisupport.project.ui.customizer.CustomizerVersioning"></a></p>
+<div id="NBCSH1971"><!-- infolevel="all" infotype="General" --><a id="sthref262" name="sthref262"></a>
+<h1>Module Project Properties Dialog Box: API Versioning</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>You open the Module Project Properties dialog box by right-clicking a module project and choosing Properties.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t38">Element</th>
+<th align="left" valign="bottom" id="r1c2-t38">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t38" headers="r1c1-t38">
+<p>Code Name Base</p>
+</td>
+<td align="left" headers="r2c1-t38 r1c2-t38">Displays the name that uniquely identifies the module. Sets <code dir="ltr">OpenIDE-Module</code> in the <code dir="ltr">MANIFEST.MF</code> file. This line in the <code dir="ltr">MANIFEST.MF</code> file identifies the JAR file as a module, and provides its code name. If you expose APIs, the code name is what other modules will use to refer to your module when they declare a dependency on it. The standard convention is for the name to match the package structure of the module.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t38" headers="r1c1-t38">Major Release Version</td>
+<td align="left" headers="r3c1-t38 r1c2-t38">Specifies the major release version in <code dir="ltr">MANIFEST.MF</code>; may be blank or a non-negative integer. For example, if your module is called <code dir="ltr">org.myorg.module</code>, the major release version will be displayed as a forward slash with a number in the <code dir="ltr">MANIFEST.MF</code> file: <code dir="ltr">org.myorg.module/1</code>. This is typically useful if your module exposes some APIs; modules can declare a dependency on a specific specification version of the module, so that the depending module will not be loaded if it requires version 2, but the version of your module that's installed is version 1. For modules with no API to expose, or which are trivial and unlikely ever to change, the major release version is not required.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t38" headers="r1c1-t38">
+<p>Specification Version</p>
+</td>
+<td align="left" headers="r4c1-t38 r1c2-t38">Sets <code dir="ltr">OpenIDE-Module-Specification-Version</code> in the <code dir="ltr">MANIFEST.MF</code> file. Typically when you add methods that are publicly available (part of the API of your module), you will increment this number by 0.1, so versions increment 1.0, 1.1, 1.2 and so forth. Thus other modules that need to use a method or class introduced in 1.1 can declare a dependency on 1.1, so they will not be loaded if that version is not present.
+<p><b>Note</b>: Increment this version whenever you wish a new version of the module to be pushed to users of an update center.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t38" headers="r1c1-t38">
+<p>Append Implementation Versions Automatically</p>
+</td>
+<td align="left" headers="r5c1-t38 r1c2-t38"></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t38" headers="r1c1-t38">
+<p>Implementation Version</p>
+</td>
+<td align="left" headers="r6c1-t38 r1c2-t38">Sets <code dir="ltr">OpenIDE-Module-Implementation-Version</code> in the <code dir="ltr">MANIFEST.MF</code> file. Modules declare, in their <code dir="ltr">MANIFEST.MF</code> file, what packages they make available to other modules, in the <code dir="ltr">public-packages</code> section of the <code dir="ltr">nbproject/project.xml</code> file. If your module tries to use a class from another module which is public, but that class is not actually in one of the packages the other module declares as its "public packages", it will throw a <code dir="ltr">NoClassDefFoundException</code> at runtime.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t38" headers="r1c1-t38">
+<p>Module Type</p>
+</td>
+<td align="left" headers="r7c1-t38 r1c2-t38">
+<ul>
+<li>Regular. A module that is loaded when the platform starts up.</li>
+<li>Autoload. A module that is loaded only when another module needs it. For example, a library wrapper module is only loaded when a module that depends on it needs it.</li>
+<li>Eager. A module that is loaded if all its dependencies are satisfied. For example, the module that provides coloring for NetBeans files depends on the module that provides the editor. Therefore, when you disable the editor module, the IDE automatically disables the coloring module.</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t38" headers="r1c1-t38">
+<p>Public Packages</p>
+</td>
+<td align="left" headers="r8c1-t38 r1c2-t38">Displays a list of all packages contained in the source directory plus any <code dir="ltr">class-path-extensions</code>. If checked, the package is included among <code dir="ltr">public-packages</code> section of the <code dir="ltr">nbproject/project.xm</code>l file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r9c1-t38" headers="r1c1-t38">
+<p>Export Packages Only to Friends</p>
+</td>
+<td align="left" headers="r9c1-t38 r1c2-t38">Is checked if and only if there is at least one entry in the list below it. The list may include code name bases of other modules and is sorted. If not empty, packages are kept in <code dir="ltr">friend-packages</code> instead and the friends are listed in <code dir="ltr">nbproject/project.xml</code>.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r10c1-t38" headers="r1c1-t38">
+<p>Provided Tokens</p>
+</td>
+<td align="left" headers="r10c1-t38 r1c2-t38">Sets <code dir="ltr">OpenIDE-Module-Provides</code> in the <code dir="ltr">MANIFEST.MF</code> file.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1980" name="NBCSH1980"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3071">
+<param name="text" value="<html><u>&quot;About the NetBeans Platform and Module Development&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3059">
+<param name="text" value="<html><u>&quot;About the NetBeans Platform&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

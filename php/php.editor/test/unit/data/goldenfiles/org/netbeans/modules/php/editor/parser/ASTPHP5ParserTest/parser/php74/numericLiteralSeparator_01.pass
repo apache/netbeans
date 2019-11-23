@@ -1,0 +1,407 @@
+<testresult testFile='numericLiteralSeparator_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='824'>
+            <text>$billion1</text>
+        </token>
+        <token id='T_EQUAL' start='825' end='826'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='827' end='837'>
+            <text>1000000000</text>
+        </token>
+        <token id='T_SEMICOLON' start='837' end='838'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='839' end='848'>
+            <text>$billion2</text>
+        </token>
+        <token id='T_EQUAL' start='849' end='850'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='851' end='864'>
+            <text>1_000_000_000</text>
+        </token>
+        <token id='T_SEMICOLON' start='864' end='865'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='867' end='872'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='873' end='882'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='883' end='884'>
+            <text>=</text>
+        </token>
+        <token id='T_DNUMBER' start='885' end='897'>
+            <text>123456789.88</text>
+        </token>
+        <token id='T_SEMICOLON' start='897' end='898'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='899' end='904'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='905' end='914'>
+            <text>CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='915' end='916'>
+            <text>=</text>
+        </token>
+        <token id='T_DNUMBER' start='917' end='931'>
+            <text>123_456_789.88</text>
+        </token>
+        <token id='T_SEMICOLON' start='931' end='932'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='933' end='938'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='939' end='948'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='949' end='950'>
+            <text>=</text>
+        </token>
+        <token id='T_DNUMBER' start='951' end='975'>
+            <text>1_234_5678_9.88_888_8_88</text>
+        </token>
+        <token id='T_SEMICOLON' start='975' end='976'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='978' end='985'>
+            <text>$value1</text>
+        </token>
+        <token id='T_EQUAL' start='986' end='987'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='988' end='993'>
+            <text>13500</text>
+        </token>
+        <token id='T_SEMICOLON' start='993' end='994'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='995' end='1002'>
+            <text>$value2</text>
+        </token>
+        <token id='T_EQUAL' start='1003' end='1004'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1005' end='1011'>
+            <text>135_00</text>
+        </token>
+        <token id='T_SEMICOLON' start='1011' end='1012'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1014' end='1017'>
+            <text>.88</text>
+        </token>
+        <token id='T_SEMICOLON' start='1017' end='1018'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1019' end='1025'>
+            <text>.88_00</text>
+        </token>
+        <token id='T_SEMICOLON' start='1025' end='1026'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1027' end='1036'>
+            <text>.88_000_0</text>
+        </token>
+        <token id='T_SEMICOLON' start='1036' end='1037'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1038' end='1041'>
+            <text>33.</text>
+        </token>
+        <token id='T_SEMICOLON' start='1041' end='1042'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1043' end='1049'>
+            <text>33_44.</text>
+        </token>
+        <token id='T_SEMICOLON' start='1049' end='1050'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1051' end='1064'>
+            <text>33_44_5_6666.</text>
+        </token>
+        <token id='T_SEMICOLON' start='1064' end='1065'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1067' end='1079'>
+            <text>1.234567e-11</text>
+        </token>
+        <token id='T_SEMICOLON' start='1079' end='1080'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1090' end='1103'>
+            <text>1.234_567e-11</text>
+        </token>
+        <token id='T_SEMICOLON' start='1103' end='1104'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1114' end='1129'>
+            <text>1.2_34_567e-1_1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1129' end='1130'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1140' end='1155'>
+            <text>1.2_3456_7E1_11</text>
+        </token>
+        <token id='T_SEMICOLON' start='1155' end='1156'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1167' end='1176'>
+            <text>123456789</text>
+        </token>
+        <token id='T_SEMICOLON' start='1176' end='1177'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1189' end='1200'>
+            <text>123_456_789</text>
+        </token>
+        <token id='T_SEMICOLON' start='1200' end='1201'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1213' end='1225'>
+            <text>12_3456_7_89</text>
+        </token>
+        <token id='T_SEMICOLON' start='1225' end='1226'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1239' end='1249'>
+            <text>0x1234ABCD</text>
+        </token>
+        <token id='T_SEMICOLON' start='1249' end='1250'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1266' end='1277'>
+            <text>0x1234_ABCD</text>
+        </token>
+        <token id='T_SEMICOLON' start='1277' end='1278'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1294' end='1307'>
+            <text>0x1_23_4ABC_D</text>
+        </token>
+        <token id='T_SEMICOLON' start='1307' end='1308'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1325' end='1335'>
+            <text>0b01011111</text>
+        </token>
+        <token id='T_SEMICOLON' start='1335' end='1336'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1347' end='1358'>
+            <text>0b0101_1111</text>
+        </token>
+        <token id='T_SEMICOLON' start='1358' end='1359'>
+            <text>;</text>
+        </token>
+        <token id='T_DNUMBER' start='1370' end='1383'>
+            <text>0b010_11_1_11</text>
+        </token>
+        <token id='T_SEMICOLON' start='1383' end='1384'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1396' end='1403'>
+            <text>0123456</text>
+        </token>
+        <token id='T_SEMICOLON' start='1403' end='1404'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1414' end='1422'>
+            <text>0123_456</text>
+        </token>
+        <token id='T_SEMICOLON' start='1422' end='1423'>
+            <text>;</text>
+        </token>
+        <token id='T_LNUMBER' start='1433' end='1443'>
+            <text>01_2_345_6</text>
+        </token>
+        <token id='T_SEMICOLON' start='1443' end='1444'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1455' end='1459'>
+            <text>_100</text>
+        </token>
+        <token id='T_SEMICOLON' start='1459' end='1460'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1478' end='1478'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1461'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1081' end='1090' commentType='singleLine'/>
+            <Comment start='1105' end='1114' commentType='singleLine'/>
+            <Comment start='1131' end='1140' commentType='singleLine'/>
+            <Comment start='1157' end='1166' commentType='singleLine'/>
+            <Comment start='1178' end='1189' commentType='singleLine'/>
+            <Comment start='1202' end='1213' commentType='singleLine'/>
+            <Comment start='1227' end='1238' commentType='singleLine'/>
+            <Comment start='1251' end='1266' commentType='singleLine'/>
+            <Comment start='1279' end='1294' commentType='singleLine'/>
+            <Comment start='1309' end='1324' commentType='singleLine'/>
+            <Comment start='1337' end='1347' commentType='singleLine'/>
+            <Comment start='1360' end='1370' commentType='singleLine'/>
+            <Comment start='1385' end='1395' commentType='singleLine'/>
+            <Comment start='1405' end='1414' commentType='singleLine'/>
+            <Comment start='1424' end='1433' commentType='singleLine'/>
+            <Comment start='1445' end='1454' commentType='singleLine'/>
+            <Comment start='1461' end='1478' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1081' end='1090' commentType='singleLine'/>
+            <Comment start='1105' end='1114' commentType='singleLine'/>
+            <Comment start='1131' end='1140' commentType='singleLine'/>
+            <Comment start='1157' end='1166' commentType='singleLine'/>
+            <Comment start='1178' end='1189' commentType='singleLine'/>
+            <Comment start='1202' end='1213' commentType='singleLine'/>
+            <Comment start='1227' end='1238' commentType='singleLine'/>
+            <Comment start='1251' end='1266' commentType='singleLine'/>
+            <Comment start='1279' end='1294' commentType='singleLine'/>
+            <Comment start='1309' end='1324' commentType='singleLine'/>
+            <Comment start='1337' end='1347' commentType='singleLine'/>
+            <Comment start='1360' end='1370' commentType='singleLine'/>
+            <Comment start='1385' end='1395' commentType='singleLine'/>
+            <Comment start='1405' end='1414' commentType='singleLine'/>
+            <Comment start='1424' end='1433' commentType='singleLine'/>
+            <Comment start='1445' end='1454' commentType='singleLine'/>
+            <Comment start='1461' end='1478' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='838'>
+                <Assignment start='815' end='837' operator='EQUAL'>
+                    <Variable start='815' end='824' isDollared='true'>
+                        <Identifier start='816' end='824' name='billion1'/>
+                    </Variable>
+                    <Scalar start='827' end='837' type='INT' value='1000000000'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='839' end='865'>
+                <Assignment start='839' end='864' operator='EQUAL'>
+                    <Variable start='839' end='848' isDollared='true'>
+                        <Identifier start='840' end='848' name='billion2'/>
+                    </Variable>
+                    <Scalar start='851' end='864' type='INT' value='1_000_000_000'/>
+                </Assignment>
+            </ExpressionStatement>
+            <GlobalConstantDeclaration start='867' end='898'>
+                <Names>
+                    <Identifier start='873' end='882' name='CONSTANT1'/>
+                </Names>
+                <Initializers>
+                    <Scalar start='885' end='897' type='REAL' value='123456789.88'/>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='899' end='932'>
+                <Names>
+                    <Identifier start='905' end='914' name='CONSTANT2'/>
+                </Names>
+                <Initializers>
+                    <Scalar start='917' end='931' type='REAL' value='123_456_789.88'/>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='933' end='976'>
+                <Names>
+                    <Identifier start='939' end='948' name='CONSTANT1'/>
+                </Names>
+                <Initializers>
+                    <Scalar start='951' end='975' type='REAL' value='1_234_5678_9.88_888_8_88'/>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <ExpressionStatement start='978' end='994'>
+                <Assignment start='978' end='993' operator='EQUAL'>
+                    <Variable start='978' end='985' isDollared='true'>
+                        <Identifier start='979' end='985' name='value1'/>
+                    </Variable>
+                    <Scalar start='988' end='993' type='INT' value='13500'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='995' end='1012'>
+                <Assignment start='995' end='1011' operator='EQUAL'>
+                    <Variable start='995' end='1002' isDollared='true'>
+                        <Identifier start='996' end='1002' name='value2'/>
+                    </Variable>
+                    <Scalar start='1005' end='1011' type='INT' value='135_00'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1014' end='1018'>
+                <Scalar start='1014' end='1017' type='REAL' value='.88'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1019' end='1026'>
+                <Scalar start='1019' end='1025' type='REAL' value='.88_00'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1027' end='1037'>
+                <Scalar start='1027' end='1036' type='REAL' value='.88_000_0'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1038' end='1042'>
+                <Scalar start='1038' end='1041' type='REAL' value='33.'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1043' end='1050'>
+                <Scalar start='1043' end='1049' type='REAL' value='33_44.'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1051' end='1065'>
+                <Scalar start='1051' end='1064' type='REAL' value='33_44_5_6666.'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1067' end='1080'>
+                <Scalar start='1067' end='1079' type='REAL' value='1.234567e-11'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1090' end='1104'>
+                <Scalar start='1090' end='1103' type='REAL' value='1.234_567e-11'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1114' end='1130'>
+                <Scalar start='1114' end='1129' type='REAL' value='1.2_34_567e-1_1'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1140' end='1156'>
+                <Scalar start='1140' end='1155' type='REAL' value='1.2_3456_7E1_11'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1167' end='1177'>
+                <Scalar start='1167' end='1176' type='INT' value='123456789'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1189' end='1201'>
+                <Scalar start='1189' end='1200' type='INT' value='123_456_789'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1213' end='1226'>
+                <Scalar start='1213' end='1225' type='INT' value='12_3456_7_89'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1239' end='1250'>
+                <Scalar start='1239' end='1249' type='REAL' value='0x1234ABCD'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1266' end='1278'>
+                <Scalar start='1266' end='1277' type='REAL' value='0x1234_ABCD'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1294' end='1308'>
+                <Scalar start='1294' end='1307' type='REAL' value='0x1_23_4ABC_D'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1325' end='1336'>
+                <Scalar start='1325' end='1335' type='REAL' value='0b01011111'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1347' end='1359'>
+                <Scalar start='1347' end='1358' type='REAL' value='0b0101_1111'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1370' end='1384'>
+                <Scalar start='1370' end='1383' type='REAL' value='0b010_11_1_11'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1396' end='1404'>
+                <Scalar start='1396' end='1403' type='INT' value='0123456'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1414' end='1423'>
+                <Scalar start='1414' end='1422' type='INT' value='0123_456'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1433' end='1444'>
+                <Scalar start='1433' end='1443' type='INT' value='01_2_345_6'/>
+            </ExpressionStatement>
+            <ExpressionStatement start='1455' end='1460'>
+                <NamespaceName start='1455' end='1459' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1455' end='1459' name='_100'/>
+                </NamespaceName>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

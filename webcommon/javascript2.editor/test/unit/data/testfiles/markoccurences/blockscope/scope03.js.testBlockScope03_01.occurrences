@@ -1,0 +1,3 @@
+var |>MARK_OCCURRENCES:i<| = {
+console.log(|>MARK_OCCURRENCES:i<|);  // object
+console.log(|>MARK_OCCURRENCES:i^<|);  // object again

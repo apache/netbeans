@@ -1,0 +1,35 @@
+<!--
+  - Licensed to the Apache Software Foundation (ASF) under one
+  - or more contributor license agreements.  See the NOTICE file
+  - distributed with this work for additional information
+  - regarding copyright ownership.  The ASF licenses this file
+  - to you under the Apache License, Version 2.0 (the
+  - "License"); you may not use this file except in compliance
+  - with the License.  You may obtain a copy of the License at
+  -
+  -   http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing,
+  - software distributed under the License is distributed on an
+  - "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  - KIND, either express or implied.  See the License for the
+  - specific language governing permissions and limitations
+  - under the License.
+-->
+
+<HTML><BODY>
+
+<p>Adds to the functionality in <b>Leaf&nbsp;Node</b> by providing
+a list of child nodes, in this case using the common and versatile <code>Children.Keys</code>.
+It adds support for adding new subnodes, handling pastes of various types of data and converting
+them, and reordering child nodes.</p>
+
+<p>The children class (separate) shows how you can lazily determine
+what the children should be (only when the parent is expanded), including garbage collecting them
+after a period of disuse; create nodes corresponding to various abstract keys which represent them;
+and manipulate the key set in various ways, usually in cooperation with the parent node. The icon
+set for the parent may provide a different appearance when the node is expanded.</p>
+
+<p>The default executor lets you see a test sample of the node inside the IDE.</p>
+
+</BODY></HTML>

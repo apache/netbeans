@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->b->|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   ? a                             [PUBLIC]   A
+VARIABLE   ? b                             [PUBLIC]   A

@@ -1,0 +1,430 @@
+Calling GenBeans.doIt
+Bean Tree:
+webApp <web-app> : WebApp
+	[attr: version CDATA #REQUIRED 2.4 : java.lang.String] 	[enumeration (2.4)]
+	description <description> : java.lang.String[0,n]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+	icon <icon> : IconType[0,n]
+		[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		smallIcon <small-icon> : java.lang.String[0,1]
+		largeIcon <large-icon> : java.lang.String[0,1]
+	distributable <distributable> : EmptyType[0,1]
+	contextParam <context-param> : ParamValueType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+		paramValue <param-value> : java.lang.String
+	thing <thing> : FilterType[0,1] 	[key name='param-key']
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		filterName <filter-name> : java.lang.String
+		filterClass <filter-class> : java.lang.String
+		initParam <init-param> : ParamValueType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+			paramValue <param-value> : java.lang.String
+	filter <filter> : FilterType[0,n] 	[key name='param-key']
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		filterName <filter-name> : java.lang.String
+		filterClass <filter-class> : java.lang.String
+		initParam <init-param> : ParamValueType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+			paramValue <param-value> : java.lang.String
+	thing2 <thing> : FilterType[0,1] 	[key name='param-key']
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		filterName <filter-name> : java.lang.String
+		filterClass <filter-class> : java.lang.String
+		initParam <init-param> : ParamValueType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+			paramValue <param-value> : java.lang.String
+	thing3 <thing> : FilterType[0,1] 	[key name='param-key']
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		filterName <filter-name> : java.lang.String
+		filterClass <filter-class> : java.lang.String
+		initParam <init-param> : ParamValueType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+			paramValue <param-value> : java.lang.String
+	filterMapping <filter-mapping> : FilterMappingType[0,n]
+		filterName <filter-name> : java.lang.String
+		| urlPattern <url-pattern> : java.lang.String
+		| servletName <servlet-name> : java.lang.String
+		dispatcher <dispatcher> : java.lang.String[0,n] 	[enumeration (FORWARD), enumeration (INCLUDE), enumeration (REQUEST)]
+	listener <listener> : ListenerType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		listenerClass <listener-class> : java.lang.String
+	servlet <servlet> : ServletType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		servletName <servlet-name> : java.lang.String
+		| servletClass <servlet-class> : java.lang.String
+		| jspFile <jsp-file> : java.lang.String
+		initParam <init-param> : ParamValueType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			paramName <param-name> : java.lang.String 	[whiteSpace (collapse)]
+			paramValue <param-value> : java.lang.String
+		loadOnStartup <load-on-startup> : java.math.BigInteger[0,1]
+		runAs <run-as> : RunAsType[0,1]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			roleName <role-name> : java.lang.String
+		securityRoleRef <security-role-ref> : SecurityRoleRefType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			roleName <role-name> : java.lang.String
+			roleLink <role-link> : java.lang.String[0,1]
+		deploymentExtension <deployment-extension> : DeploymentExtensionType[0,n]
+			[attr: namespace CDATA #REQUIRED  : java.net.URI]
+			[attr: mustUnderstand CDATA #IMPLIED  : boolean]
+			extensionElement <extension-element> : ExtensibleType[1,n]
+	servletMapping <servlet-mapping> : ServletMappingType[0,n]
+		servletName <servlet-name> : java.lang.String
+		urlPattern <url-pattern> : java.lang.String
+	sessionConfig <session-config> : SessionConfigType[0,1]
+		sessionTimeout <session-timeout> : long[0,1] 	[minInclusive (0)]
+	mimeMapping <mime-mapping> : MimeMappingType[0,n]
+		extension <extension> : java.lang.String 	[whiteSpace (collapse)]
+		mimeType <mime-type> : java.lang.String 	[pattern ([\p{L}\-\p{Nd}]+/[\p{L}\-\p{Nd}\.]+)]
+	welcomeFileList <welcome-file-list> : WelcomeFileListType[0,1]
+		welcomeFile <welcome-file> : java.lang.String[1,n] 	[whiteSpace (collapse)]
+	errorPage <error-page> : ErrorPageType[0,n]
+		| errorCode <error-code> : java.lang.Long
+		| exceptionType <exception-type> : java.lang.String
+		location <location> : java.lang.String
+	jspConfig <jsp-config> : JspConfigType[0,1]
+		taglib <taglib> : TaglibType[0,n]
+			taglibUri <taglib-uri> : java.lang.String 	[whiteSpace (collapse)]
+			taglibLocation <taglib-location> : java.lang.String
+		jspPropertyGroup <jsp-property-group> : JspPropertyGroupType[0,n]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			urlPattern <url-pattern> : java.lang.String[1,n]
+			elEnabled <el-enabled> : boolean[0,1] 	[pattern ((true|false))]
+			pageEncoding <page-encoding> : java.lang.String[0,1] 	[whiteSpace (collapse)]
+			scriptingEnabled <scripting-enabled> : boolean[0,1] 	[pattern ((true|false))]
+			isXml <is-xml> : boolean[0,1] 	[pattern ((true|false))]
+			includePrelude <include-prelude> : java.lang.String[0,n]
+			includeCoda <include-coda> : java.lang.String[0,n]
+	resourceEnvRef <resource-env-ref> : ResourceEnvRefType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		resourceEnvRefName <resource-env-ref-name> : java.lang.String
+		resourceEnvRefType <resource-env-ref-type> : java.lang.String
+	messageDestinationRef <message-destination-ref> : MessageDestinationRefType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		messageDestinationRefName <message-destination-ref-name> : java.lang.String
+		messageDestinationType <message-destination-type> : java.lang.String
+		messageDestinationUsage <message-destination-usage> : java.lang.String 	[enumeration (Consumes), enumeration (Produces), enumeration (ConsumesProduces)]
+		messageDestinationLink <message-destination-link> : java.lang.String[0,1]
+	resourceRef <resource-ref> : ResourceRefType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		resRefName <res-ref-name> : java.lang.String
+		resType <res-type> : java.lang.String
+		resAuth <res-auth> : java.lang.String 	[enumeration (Application), enumeration (Container)]
+		resSharingScope <res-sharing-scope> : java.lang.String[0,1] 	[enumeration (Shareable), enumeration (Unshareable)]
+	securityConstraint <security-constraint> : SecurityConstraintType[0,n]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		webResourceCollection <web-resource-collection> : WebResourceCollectionType[1,n]
+			webResourceName <web-resource-name> : java.lang.String 	[whiteSpace (collapse)]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			urlPattern <url-pattern> : java.lang.String[1,n]
+			httpMethod <http-method> : java.lang.String[0,n] 	[enumeration (GET), enumeration (POST), enumeration (PUT), enumeration (DELETE), enumeration (HEAD), enumeration (OPTIONS), enumeration (TRACE)]
+		authConstraint <auth-constraint> : AuthConstraintType[0,1]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			roleName <role-name> : java.lang.String[0,n]
+			goodPresidentCandidate <goodPresidentCandidate> : boolean[1,n] 	[maxOccurs (2)]
+		userDataConstraint <user-data-constraint> : UserDataConstraintType[0,1]
+			description <description> : java.lang.String[0,n]
+				[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			transportGuarantee <transport-guarantee> : java.lang.String 	[enumeration (NONE), enumeration (INTEGRAL), enumeration (CONFIDENTIAL)]
+	loginConfig <login-config> : LoginConfigType[0,1]
+		authMethod <auth-method> : java.lang.String[0,1] 	[enumeration (BASIC), enumeration (DIGEST), enumeration (FORM), enumeration (CLIENT-CERT)]
+		realmName <realm-name> : java.lang.String[0,1] 	[whiteSpace (collapse)]
+		formLoginConfig <form-login-config> : FormLoginConfigType[0,1]
+			formLoginPage <form-login-page> : java.lang.String 	[pattern (/.*)]
+			formErrorPage <form-error-page> : java.lang.String 	[pattern (/.*)]
+	securityRole <security-role> : SecurityRoleType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		roleName <role-name> : java.lang.String
+	envEntry <env-entry> : EnvEntryType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		envEntryName <env-entry-name> : java.lang.String
+		envEntryType <env-entry-type> : java.lang.String 	[enumeration (java.lang.Boolean), enumeration (java.lang.Byte), enumeration (java.lang.Character), enumeration (java.lang.String), enumeration (java.lang.Short), enumeration (java.lang.Integer), enumeration (java.lang.Long), enumeration (java.lang.Float), enumeration (java.lang.Double)]
+		envEntryValue <env-entry-value> : java.lang.String[0,1]
+	ejbRef <ejb-ref> : EjbRefType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		ejbRefName <ejb-ref-name> : java.lang.String
+		ejbRefType <ejb-ref-type> : java.lang.String 	[enumeration (Entity), enumeration (Session)]
+		home <home> : java.lang.String
+		remote <remote> : java.lang.String
+		ejbLink <ejb-link> : java.lang.String[0,1]
+	ejbLocalRef <ejb-local-ref> : EjbLocalRefType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		ejbRefName <ejb-ref-name> : java.lang.String
+		ejbRefType <ejb-ref-type> : java.lang.String 	[enumeration (Entity), enumeration (Session)]
+		localHome <local-home> : java.lang.String
+		local <local> : java.lang.String
+		ejbLink <ejb-link> : java.lang.String[0,1]
+	messageDestination <message-destination> : MessageDestinationType[0,n]
+		description <description> : java.lang.String[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		displayName <display-name> : java.lang.String[0,n] 	[whiteSpace (collapse)]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+		icon <icon> : IconType[0,n]
+			[attr: xml:lang CDATA #IMPLIED  : java.lang.String]
+			smallIcon <small-icon> : java.lang.String[0,1]
+			largeIcon <large-icon> : java.lang.String[0,1]
+		messageDestinationName <message-destination-name> : java.lang.String 	[whiteSpace (collapse)]
+	localeEncodingMappingList <locale-encoding-mapping-list> : LocaleEncodingMappingListType[0,1]
+		localeEncodingMapping <locale-encoding-mapping> : LocaleEncodingMappingType[1,n]
+			locale <locale> : java.lang.String 	[whiteSpace (collapse)]
+			encoding <encoding> : java.lang.String 	[whiteSpace (collapse)]
+	deploymentExtension <deployment-extension> : DeploymentExtensionType[0,n]
+		[attr: namespace CDATA #REQUIRED  : java.net.URI]
+		[attr: mustUnderstand CDATA #IMPLIED  : boolean]
+		extensionElement <extension-element> : ExtensibleType[1,n]
+
+Compiling
+Finished compiling: 0
+out: TestWebAppDelegatorBaseBean - creating the DOM document
+out: TestWebAppDelegatorBaseBean - creating the bean graph
+out: TestWebAppDelegatorBaseBean - bean graph created
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee">
+out:   <description>This is my Web App</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out: </web-app>
+out: TestWebAppDelegatorBaseBean - making some minor changes
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee">
+out:   <description>Changed the description</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:     <filter-class>foo</filter-class>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out: </web-app>
+out: TestWebAppDelegatorBaseBean - set some goodnesses
+out: TestWebAppDelegatorBaseBean null firstCandiateGoodness is good -> OK
+out: TestWebAppDelegatorBaseBean null 2 candidates goodness -> OK
+out: TestWebAppDelegatorBaseBean null candidate 0 is good -> OK
+out: TestWebAppDelegatorBaseBean null candidate 1 is not good -> OK
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee">
+out:   <description>Changed the description</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:     <filter-class>foo</filter-class>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out:   <security-constraint>
+out:     <auth-constraint>
+out:       <goodPresidentCandidate>true</goodPresidentCandidate>
+out:       <goodPresidentCandidate>false</goodPresidentCandidate>
+out:     </auth-constraint>
+out:   </security-constraint>
+out: </web-app>
+out: TestWebAppDelegatorBaseBean null Got good validate exception: sizeWebResourceCollection() == 0 -> OK
+out: TestWebAppDelegatorBaseBean null Got good validate exception: sizeWebResourceCollection() == 0 -> OK
+out: TestWebAppDelegatorBaseBean null Got good validate exception: getWebResourceName() == null -> OK
+out: TestWebAppDelegatorBaseBean null Got good validate exception: sizeUrlPattern() == 0 -> OK
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee">
+out:   <description>Changed the description</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:     <filter-class>foo</filter-class>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out:   <security-constraint>
+out:     <web-resource-collection>
+out:       <web-resource-name>blue</web-resource-name>
+out:       <url-pattern>*.html</url-pattern>
+out:     </web-resource-collection>
+out:     <auth-constraint>
+out:       <goodPresidentCandidate>true</goodPresidentCandidate>
+out:       <goodPresidentCandidate>false</goodPresidentCandidate>
+out:     </auth-constraint>
+out:   </security-constraint>
+out: </web-app>
+out: TestWebAppDelegatorBaseBean - Add some descriptions with xml:lang attributes.
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee">
+out:   <description xml:lang="en">Changed the description</description>
+out:   <description xml:lang="de">Das ist mein App.</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:     <filter-class>foo</filter-class>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out:   <security-constraint>
+out:     <web-resource-collection>
+out:       <web-resource-name>blue</web-resource-name>
+out:       <url-pattern>*.html</url-pattern>
+out:     </web-resource-collection>
+out:     <auth-constraint>
+out:       <goodPresidentCandidate>true</goodPresidentCandidate>
+out:       <goodPresidentCandidate>false</goodPresidentCandidate>
+out:     </auth-constraint>
+out:   </security-constraint>
+out: </web-app>
+out: TestWebAppDelegatorBaseBean - Test multiple things
+out: TestWebAppDelegatorBaseBean null thing1 -> OK
+out: TestWebAppDelegatorBaseBean null thing2 -> OK
+out: TestWebAppDelegatorBaseBean null thing3 -> OK
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+out:   <description xml:lang="en">Changed the description</description>
+out:   <description xml:lang="de">Das ist mein App.</description>
+out:   <display-name>MyWebApp</display-name>
+out:   <thing>
+out:     <filter-name>thing1</filter-name>
+out:     <filter-class>A</filter-class>
+out:   </thing>
+out:   <filter>
+out:     <filter-name>Bob</filter-name>
+out:     <filter-class>foo</filter-class>
+out:   </filter>
+out:   <thing>
+out:     <filter-name>thing2</filter-name>
+out:     <filter-class>B</filter-class>
+out:   </thing>
+out:   <thing>
+out:     <filter-name>thing3</filter-name>
+out:     <filter-class>C</filter-class>
+out:   </thing>
+out:   <security-constraint>
+out:     <web-resource-collection>
+out:       <web-resource-name>blue</web-resource-name>
+out:       <url-pattern>*.html</url-pattern>
+out:     </web-resource-collection>
+out:     <auth-constraint>
+out:       <goodPresidentCandidate>true</goodPresidentCandidate>
+out:       <goodPresidentCandidate>false</goodPresidentCandidate>
+out:     </auth-constraint>
+out:   </security-constraint>
+out: </web-app>
+Finished running TestWebAppDelegatorBaseBean: 0

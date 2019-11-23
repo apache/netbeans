@@ -1,0 +1,2 @@
+var {p: foo, q: bar, w: |>MARK_OCCURRENCES:ab^c<|} = {p: 5, q:7};     
+console.log(|>MARK_OCCURRENCES:abc<|); // undefined

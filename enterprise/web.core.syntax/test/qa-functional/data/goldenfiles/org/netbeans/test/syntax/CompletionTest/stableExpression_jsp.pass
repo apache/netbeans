@@ -1,0 +1,60 @@
+[${|, Integer integer, ${integer, 856]
+Calendar calendar
+Date date
+Integer integer
+applicationScope[]
+cc
+cookie[]
+facesContext
+headerValues[]
+header[]
+initParam[]
+pageContext
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+sessionScope[]
+End cursor position = 866
+[${p|, pageContext, ${pageContext, 900]
+pageContext
+pageScope[]
+paramValues[]
+param[]
+End cursor position = 914
+[#{| }, Date date, #{date }, 938]
+Calendar calendar
+Date date
+Integer integer
+applicationScope[]
+cc
+cookie[]
+javax.faces.context.FacesConte
+headerValues[]
+header[]
+initParam[]
+Integer integer
+javax.servlet.jsp.PageContext 
+pageScope[]
+paramValues[]
+param[]
+requestScope[]
+sessionScope[]
+javax.faces.component.UIViewRo
+and
+div
+empty
+eq
+false
+ge
+gt
+instanceof
+le
+lt
+mod
+ne
+not
+null
+or
+true
+End cursor position = 945

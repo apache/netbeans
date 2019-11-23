@@ -1,0 +1,12 @@
+Calling GenBeans.doIt
+Bean Tree:
+emptyElement <EmptyElement> : EmptyElement
+	EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestEmpty - creating the bean graph
+out: TestEmpty - bean graph created
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <EmptyElement/>
+Finished running TestEmpty: 0

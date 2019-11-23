@@ -1,0 +1,5 @@
+Code completion result for source line:
+$v1->|fld;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     meth()                          [PUBLIC]   Cls136188
+VARIABLE   ? fld                           [PUBLIC]   Cls136188

@@ -1,0 +1,114 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<title>Actions API - Advanced Toolbar Configuration</title>
+<link rel="stylesheet" href="../../../../prose.css" type="text/css">
+</head>
+<body>
+<h1>Actions API - Advanced Toolbar Configuration</h1>
+
+<p>The items in toolbars may actually be derived from several
+sorts of instances:
+
+<ol>
+
+<li>An action implementing
+<a href="@org-openide-util-ui@/org/openide/util/actions/Presenter.Toolbar.html"><code>Presenter.Toolbar</code></a>
+
+<li>Any
+<a href="@JDK@/java/awt/Component.html"><code>Component</code></a>.
+Usually this will just be a
+<a href="@JDK@/javax/swing/JToolBar.Separator.html"><code>JToolBar.Separator</code></a>,
+since special widgets such as combo boxes and so on are better
+given as the toolbar presenter of an action.
+</ol>
+
+<p>A toolbar as created when a folder is encountered is actually an instance
+of
+<a href="@org-openide-loaders@/org/openide/awt/Toolbar.html"><code>Toolbar</code></a>,
+which is a subclass of
+<a href="@JDK@/javax/swing/JToolBar.html"><code>JToolBar</code></a>
+that is able to compose itself from the contents of a folder.
+If you want to replace the whole toolbar with a special
+component, you may do so. You need only provide an instance of some
+subclass of <code>Component</code> (in the main toolbars folder)
+rather than a subfolder.
+
+
+<p>All available toolbars, whether created by the normal
+folder-scanning mechanism or whether custom written, are available
+using
+
+<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getToolbars--"><code>ToolbarPool.getToolbars()</code></a>.
+
+However, at any given time not all of these are visible. All of this 
+information is controlled by a
+
+<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.Configuration.html"><code>ToolbarPool.Configuration</code></a>
+
+object. All available configurations are listed in
+
+<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getConfigurations--"><code>ToolbarPool.getConfigurations()</code></a>,
+
+and <code>ToolbarPool</code> also permits the current configuration
+to be retrieved and set.  Please note that even though there are two
+ToolbarConfiguration instances by default (Standard/Coding and Debugging)
+there is no user interface for switching between them. Use 
+<code>ToolbarPool.setConfiguration(String)</code> to activate a different toolbar
+configuration. Users may only show/hide toolbars from the active configuration.
+
+<p>What are these configurations and how may new ones be added?
+Essentially, a configuration is just a component which displays the
+toolbars it represents (it is the responsibility of the
+configuration to determine which these are). To add a
+new configuration, you should as usual add an instance to the main
+toolbars folder, which should be a subclass of either:
+
+<ol>
+
+<li><code>ToolbarPool.Configuration</code> (you should implement
+this interface according to your needs), which will then be used as
+a configuration.
+
+<li><code>Component</code> (but not <code>JToolBar</code>), in
+which case the supplied component will be wrapped in an adapter
+which provides the name and a standard popup menu, while the
+display is otherwise handled by the component.
+
+</ol>
+
+<p>Currently, the standard toolbar configurations are a private
+implementation of <code>ToolbarPool.Configuration</code> which
+reads the configuration based on an XML file. The format of this
+file is not specified by the Open APIs, so modules should not
+attempt to modify it. (A user-level customizer for such files may
+be supplied.) Rather, module authors should note that the standard
+implementation lists toolbars from the pool which should be
+displayed, and possibly also toolbars which should not be
+displayed; any toolbar in the pool not explicitly mentioned will
+just be displayed somewhere at the end of the component. So,
+module-supplied toolbars will at least appear, though their exact
+placing will not be customizable.
+
+  
+  </body>
+</html>

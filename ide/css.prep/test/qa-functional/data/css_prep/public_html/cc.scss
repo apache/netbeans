@@ -1,0 +1,72 @@
+@import "folder/part";
+
+div{
+    /*cc;5;c;color,caption-side;0*/
+
+}
+
+/*cc;9; ;div,body;0*/
+
+a{
+    /*cc;12;color: ;red,green,blue;0*/
+
+}
+
+$redColor: red;
+$blueColor: blue;
+a {
+    /*cc;19;color: $;redColor,blueColor;0*/
+
+}
+
+@mixin test2_s($para) { 
+    /*cc;24; ;div,color;0*/
+
+}
+
+div{
+    /*cc;29;@include t;test2_s,test_s;0*/
+
+} 
+
+@mixin test2($para) {
+    /*cc;34;color: ;red;0*/
+
+}
+@mixin test22($para) {
+    /*cc;38;color: $;para,redColor;0*/
+
+}
+
+@for $i from 1 through 3 { 
+    .item-#{$i} { 
+        /*cc;44; ;div,color;0*/
+
+    }
+}
+
+@for $i from 1 through 3 { 
+    @media tv {  
+        /*cc;51; ;div,span;0*/
+        
+        /*cc;53;@;@debug,@each,@if;0*/
+
+    }
+}
+
+#pes{
+
+}
+.kocka{
+}
+.krecek{}
+.seriousError {
+    /*cc;65;@extend .;kocka,krecek;0*/
+
+}
+
+/*cc;69;@import ;cc.scss,folder;0*/
+
+/*cc;71;@import "";cc.scss,folder;1*/
+
+/*cc;73;@import "folder/";part.scss;1*/

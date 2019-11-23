@@ -1,0 +1,159 @@
+Code completion result for source line:
+$anon = new class($int, foo(|)) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    A                               [PUBLIC]   null
+PACKAGE    B                               [PUBLIC]   null
+PACKAGE    GroupUse1                       [PUBLIC]   null
+PACKAGE    GroupUse2                       [PUBLIC]   null
+PACKAGE    My                              [PUBLIC]   null
+PACKAGE    Run                             [PUBLIC]   null
+METHOD     foo()                           [PUBLIC]   My\Firm
+VARIABLE   int $int                        [PUBLIC]   anonymousClass02.php
+VARIABLE   {} $anon                        [PUBLIC]   anonymousClass02.php
+------------------------------------
+PACKAGE    B                               [PUBLIC]   A
+PACKAGE    C                               [PUBLIC]   A\B
+PACKAGE    Firm                            [PUBLIC]   My
+CLASS      BoolClass                       [PUBLIC]   scalarTypeHints.php
+CLASS      C1                              [PUBLIC]   GroupUse1
+CLASS      C2                              [PUBLIC]   GroupUse1
+CLASS      Cls                             [PUBLIC]   uniformVariableSyntax01.php
+CLASS      Cls                             [PUBLIC]   uniformVariableSyntax02.php
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsA                            [PUBLIC]   A
+CLASS      ClsAB                           [PUBLIC]   A
+CLASS      ClsAB                           [PUBLIC]   A\B
+CLASS      ClsAB                           [PUBLIC]   A\B
+CLASS      ClsABC                          [PUBLIC]   A\B\C
+CLASS      ClsABC                          [PUBLIC]   A\B\C
+CLASS      ClsABC2                         [PUBLIC]   A\B\C
+CLASS      ClsUnused                       [PUBLIC]   A
+CLASS      Comment                         [PUBLIC]   My\Firm
+CLASS      Comment                         [PUBLIC]   returnTypesTyping05.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping06.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping07.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping08.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping09.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping10.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping11.php
+CLASS      Comment                         [PUBLIC]   returnTypesTyping12.php
+CLASS      CommentsIterator                [PUBLIC]   My\Firm
+CLASS      FloatClass                      [PUBLIC]   scalarTypeHints.php
+CLASS      IntClass                        [PUBLIC]   scalarTypeHints.php
+CLASS      MyA                             [PUBLIC]   A
+CLASS      MyAA                            [PUBLIC]   A
+CLASS      MyCls                           [PUBLIC]   A
+CLASS      Numbers                         [PUBLIC]   uniformVariableSyntax01.php
+CLASS      Numbers                         [PUBLIC]   uniformVariableSyntax02.php
+CLASS      Outer                           [PUBLIC]   My
+CLASS      StringClass                     [PUBLIC]   scalarTypeHints.php
+CLASS      UVS1                            [PUBLIC]   uniformVariableSyntax03.php
+CLASS      UVS2                            [PUBLIC]   uniformVariableSyntax03.php
+CLASS      UVS3                            [PUBLIC]   uniformVariableSyntax03.php
+METHOD     bar()                           [PUBLIC]   My\Firm
+METHOD     baz($data)                      [PUBLIC]   My\Firm
+METHOD     bazz(&...$data)                 [PUBLIC]   My\Firm
+METHOD     bazz()                          [PUBLIC]   My\Firm
+METHOD     bazz()                          [PUBLIC]   My\Firm
+METHOD     bazz(...$data)                  [PUBLIC]   My\Firm
+METHOD     boolTypeHint(bool $arg)         [PUBLIC]   scalarTypeHints.php
+METHOD     fa()                            [PUBLIC]   A
+METHOD     fb()                            [PUBLIC]   A\B
+METHOD     fc()                            [PUBLIC]   A\B\C
+METHOD     floatTypeHint(float $arg)       [PUBLIC]   scalarTypeHints.php
+METHOD     fnc()                           [PUBLIC]   uniformVariableSyntax01.php
+METHOD     fnc()                           [PUBLIC]   uniformVariableSyntax02.php
+METHOD     foo()                           [PUBLIC]   My\Firm
+METHOD     intTypeHint(int $arg)           [PUBLIC]   scalarTypeHints.php
+METHOD     my_array_sort(array &$data)     [PUBLIC]   My\Firm
+METHOD     mytest()                        [PUBLIC]   returnTypesTyping03.php
+METHOD     mytest()                        [PUBLIC]   returnTypesTyping04.php
+METHOD     stringTypeHint(string $arg)     [PUBLIC]   scalarTypeHints.php
+METHOD     test1()                         [PUBLIC]   GroupUse1
+METHOD     test2()                         [PUBLIC]   GroupUse1
+METHOD     testA()                         [PUBLIC]   A
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+CONSTANT   CONSTANTA "CONSTANTA"           [PUBLIC]   A
+CONSTANT   CONST_1 "CONST_1"               [PUBLIC]   GroupUse1
+CONSTANT   CONST_2 "CONST_2"               [PUBLIC]   GroupUse1
+CONSTANT   C_A 'C-A'                       [PUBLIC]   A
+CONSTANT   C_B 'C-B'                       [PUBLIC]   A\B
+CONSTANT   C_C 'C-C'                       [PUBLIC]   A\B\C
+KEYWORD    abstract                                   null
+KEYWORD    and                                        null
+KEYWORD    array                                      null
+KEYWORD    as                                         null
+KEYWORD    break                                      null
+KEYWORD    case                                       null
+KEYWORD    catch                                      null
+KEYWORD    class                                      null
+KEYWORD    clone                                      null
+KEYWORD    const                                      null
+KEYWORD    continue                                   null
+KEYWORD    declare                                    null
+KEYWORD    default                                    null
+KEYWORD    die()                                      Language Construct
+KEYWORD    do                                         null
+KEYWORD    echo '';                                   Language Construct
+KEYWORD    else                                       null
+KEYWORD    elseif                                     null
+KEYWORD    empty()                                    Language Construct
+KEYWORD    enddeclare                                 null
+KEYWORD    endfor                                     null
+KEYWORD    endforeach                                 null
+KEYWORD    endif                                      null
+KEYWORD    endswitch                                  null
+KEYWORD    endwhile                                   null
+KEYWORD    eval()                                     Language Construct
+KEYWORD    exit()                                     Language Construct
+KEYWORD    extends                                    null
+KEYWORD    final                                      null
+KEYWORD    finally                                    null
+KEYWORD    fn                                         null
+KEYWORD    for                                        null
+KEYWORD    foreach                                    null
+KEYWORD    function                                   null
+KEYWORD    global                                     null
+KEYWORD    goto                                       null
+KEYWORD    if                                         null
+KEYWORD    implements                                 null
+KEYWORD    include '';                                Language Construct
+KEYWORD    include_once '';                           Language Construct
+KEYWORD    instanceof                                 null
+KEYWORD    interface                                  null
+KEYWORD    isset()                                    Language Construct
+KEYWORD    list()                                     Language Construct
+KEYWORD    namespace                                  null
+KEYWORD    new                                        null
+KEYWORD    or                                         null
+KEYWORD    print '';                                  Language Construct
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    require '';                                Language Construct
+KEYWORD    require_once '';                           Language Construct
+KEYWORD    return ;                                   Language Construct
+KEYWORD    static                                     null
+KEYWORD    switch                                     null
+KEYWORD    throw                                      null
+KEYWORD    try                                        null
+KEYWORD    unset()                                    Language Construct
+KEYWORD    use                                        null
+KEYWORD    var                                        null
+KEYWORD    while                                      null
+KEYWORD    xor                                        null
+KEYWORD    yield                                      null
+KEYWORD    yield from                                 null

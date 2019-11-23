@@ -1,0 +1,414 @@
+<testresult testFile='constantScalarExpressions_01.php'>
+    <scanner>
+        <token id='T_CONST' start='6' end='11'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='12' end='15'>
+            <text>ONE</text>
+        </token>
+        <token id='T_EQUAL' start='16' end='17'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='18' end='19'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='19' end='20'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='21' end='26'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='27' end='30'>
+            <text>TWO</text>
+        </token>
+        <token id='T_EQUAL' start='31' end='32'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='33' end='36'>
+            <text>ONE</text>
+        </token>
+        <token id='T_TIMES' start='37' end='38'>
+            <text>*</text>
+        </token>
+        <token id='T_LNUMBER' start='39' end='40'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='40' end='41'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='43' end='48'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='49' end='50'>
+            <text>C</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='51' end='52'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='57' end='62'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='63' end='68'>
+            <text>THREE</text>
+        </token>
+        <token id='T_EQUAL' start='69' end='70'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='71' end='74'>
+            <text>TWO</text>
+        </token>
+        <token id='T_PLUS' start='75' end='76'>
+            <text>+</text>
+        </token>
+        <token id='T_LNUMBER' start='77' end='78'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='78' end='79'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='84' end='89'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='90' end='99'>
+            <text>ONE_THIRD</text>
+        </token>
+        <token id='T_EQUAL' start='100' end='101'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='102' end='105'>
+            <text>ONE</text>
+        </token>
+        <token id='T_DIV' start='106' end='107'>
+            <text>/</text>
+        </token>
+        <token id='T_STRING' start='108' end='112'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='112' end='114'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='114' end='119'>
+            <text>THREE</text>
+        </token>
+        <token id='T_SEMICOLON' start='119' end='120'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='125' end='130'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='131' end='139'>
+            <text>SENTENCE</text>
+        </token>
+        <token id='T_EQUAL' start='140' end='141'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='142' end='166'>
+            <text>&apos;The value of THREE is &apos;</text>
+        </token>
+        <token id='T_NEKUDA' start='166' end='167'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='167' end='171'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='171' end='173'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='173' end='178'>
+            <text>THREE</text>
+        </token>
+        <token id='T_SEMICOLON' start='178' end='179'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='185' end='191'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='192' end='200'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='201' end='202'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='202' end='203'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='203' end='205'>
+            <text>$a</text>
+        </token>
+        <token id='T_EQUAL' start='206' end='207'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='208' end='211'>
+            <text>ONE</text>
+        </token>
+        <token id='T_PLUS' start='212' end='213'>
+            <text>+</text>
+        </token>
+        <token id='T_STRING' start='214' end='218'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='218' end='220'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='220' end='225'>
+            <text>THREE</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='225' end='226'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='227' end='228'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='237' end='243'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='244' end='246'>
+            <text>$a</text>
+        </token>
+        <token id='T_SEMICOLON' start='246' end='247'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='252' end='253'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='254' end='255'>
+            <text>}</text>
+        </token>
+        <token id='T_ECHO' start='257' end='261'>
+            <text>echo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='262' end='263'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='263' end='266'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='267' end='268'>
+            <text>C</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='268' end='269'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='269' end='271'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='271' end='272'>
+            <text>f</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='272' end='273'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='273' end='274'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='274' end='275'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='275' end='279'>
+            <text>"\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='279' end='280'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='281' end='285'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='286' end='287'>
+            <text>C</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='287' end='289'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='289' end='297'>
+            <text>SENTENCE</text>
+        </token>
+        <token id='T_SEMICOLON' start='297' end='298'>
+            <text>;</text>
+        </token>
+        <token id='T_SEMICOLON' start='299' end='302'>
+            <text>?&gt;\n</text>
+        </token>
+        <token id='EOF' start='302' end='302'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='301'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <GlobalConstantDeclaration start='6' end='20'>
+                <Names>
+                    <Identifier start='12' end='15' name='ONE'/>
+                </Names>
+                <Initializers>
+                    <Scalar start='18' end='19' type='INT' value='1'/>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='21' end='41'>
+                <Names>
+                    <Identifier start='27' end='30' name='TWO'/>
+                </Names>
+                <Initializers>
+                    <InfixExpression start='33' end='40' operator='MUL'>
+                        <NamespaceName start='33' end='36' isCurrent='false' isGlobal='false'>
+                            <Identifier start='33' end='36' name='ONE'/>
+                        </NamespaceName>
+                        <Scalar start='39' end='40' type='INT' value='2'/>
+                    </InfixExpression>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <ClassDeclaration start='43' end='255' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='49' end='50' name='C'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='51' end='255' isCurly='true'>
+                    <ClassConstantDeclaration start='57' end='79' modifier='public'>
+                        <Names>
+                            <Identifier start='63' end='68' name='THREE'/>
+                        </Names>
+                        <Initializers>
+                            <InfixExpression start='71' end='78' operator='PLUS'>
+                                <NamespaceName start='71' end='74' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='71' end='74' name='TWO'/>
+                                </NamespaceName>
+                                <Scalar start='77' end='78' type='INT' value='1'/>
+                            </InfixExpression>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='84' end='120' modifier='public'>
+                        <Names>
+                            <Identifier start='90' end='99' name='ONE_THIRD'/>
+                        </Names>
+                        <Initializers>
+                            <InfixExpression start='102' end='119' operator='DIV'>
+                                <NamespaceName start='102' end='105' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='102' end='105' name='ONE'/>
+                                </NamespaceName>
+                                <StaticConstantAccess start='108' end='119'>
+                                    <NamespaceName start='108' end='112' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='108' end='112' name='self'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='114' end='119' name='THREE'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='114' end='119' name='THREE'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                            </InfixExpression>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='125' end='179' modifier='public'>
+                        <Names>
+                            <Identifier start='131' end='139' name='SENTENCE'/>
+                        </Names>
+                        <Initializers>
+                            <InfixExpression start='142' end='178' operator='CONCAT'>
+                                <Scalar start='142' end='166' type='STRING' value='&apos;The value of THREE is &apos;'/>
+                                <StaticConstantAccess start='167' end='178'>
+                                    <NamespaceName start='167' end='171' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='167' end='171' name='self'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='173' end='178' name='THREE'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='173' end='178' name='THREE'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                            </InfixExpression>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <MethodDeclaration start='185' end='253' modifiers='public'>
+                        <FunctionDeclaration start='192' end='253' isReference='false'>
+                            <Identifier start='201' end='202' name='f'/>
+                            <FormalParameters>
+                                <FormalParameter start='203' end='225' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='203' end='205' isDollared='true'>
+                                            <Identifier start='204' end='205' name='a'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <InfixExpression start='208' end='225' operator='PLUS'>
+                                            <NamespaceName start='208' end='211' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='208' end='211' name='ONE'/>
+                                            </NamespaceName>
+                                            <StaticConstantAccess start='214' end='225'>
+                                                <NamespaceName start='214' end='218' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='214' end='218' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='220' end='225' name='THREE'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='220' end='225' name='THREE'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                        </InfixExpression>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='227' end='253' isCurly='true'>
+                                <ReturnStatement start='237' end='247'>
+                                    <Variable start='244' end='246' isDollared='true'>
+                                        <Identifier start='245' end='246' name='a'/>
+                                    </Variable>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <EchoStatement start='257' end='280'>
+                <InfixExpression start='262' end='279' operator='CONCAT'>
+                    <MethodInvocation start='262' end='274'>
+                        <AnonymousObjectVariable start='262' end='269'>
+                            <ClassInstanceCreation start='263' end='268' anonymous='false'>
+                                <ClassName start='267' end='268'>
+                                    <NamespaceName start='267' end='268' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='267' end='268' name='C'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </AnonymousObjectVariable>
+                        <Method>
+                            <FunctionInvocation start='271' end='274'>
+                                <FucntionName start='271' end='272'>
+                                    <Variable start='271' end='272' isDollared='false'>
+                                        <Identifier start='271' end='272' name='f'/>
+                                    </Variable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                    <Scalar start='275' end='279' type='STRING' value='"\n"'/>
+                </InfixExpression>
+            </EchoStatement>
+            <EchoStatement start='281' end='298'>
+                <StaticConstantAccess start='286' end='297'>
+                    <NamespaceName start='286' end='287' isCurrent='false' isGlobal='false'>
+                        <Identifier start='286' end='287' name='C'/>
+                    </NamespaceName>
+                    <Constant>
+                        <Identifier start='289' end='297' name='SENTENCE'/>
+                    </Constant>
+                    <Member>
+                        <Identifier start='289' end='297' name='SENTENCE'/>
+                    </Member>
+                </StaticConstantAccess>
+            </EchoStatement>
+            <EmptyStatement start='299' end='301'/>
+        </Statements>
+    </Program>
+</testresult>

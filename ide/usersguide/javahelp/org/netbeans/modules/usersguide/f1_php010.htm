@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Project Properties Window: Run Configuration</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.php.project.ui.customizer.CustomizerRun" name="org.netbeans.modules.php.project.ui.customizer.CustomizerRun"></a></p>
+<div id="NBCSH3532"><!-- infolevel="all" infotype="General" --><a id="sthref475" name="sthref475"></a>
+<h1>Project Properties Window: Run Configuration</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Run configurations accommodate the most commonly used PHP development use cases. A run configuration is a stored setting for running a PHP project. You can define several configurations for one project and switch between them. Run configurations apply to both running and debugging. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG3015">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Changes you make to the default run configuration, other than to the Run As field, propagate to all other configurations. Changes you make to any other configuration are specific to that configuration.</p>
+<p>The Project Properties Run Configuration panel contains the following fields:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t11">Element</th>
+<th align="left" valign="bottom" id="r1c2-t11">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t11" headers="r1c1-t11">
+<p>Configuration</p>
+</td>
+<td align="left" headers="r2c1-t11 r1c2-t11">Select the run configuration that you want to modify from the drop-down list.
+<p>Click New to create a new run configuration and open a dialog box where you can name the new configuration. After you name the new configuration, the new configuration is selected in the Configuration field.</p>
+<p>Click Delete to delete the selected run configuration.</p>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t11" headers="r1c1-t11">
+<p>Run As</p>
+</td>
+<td align="left" headers="r3c1-t11 r1c2-t11">Choose one of the following. The Run Configuration options change depending on which Run As choice you make:
+<ul>
+<li>Local Web Site (running on local web server). The default option, described below.</li>
+<li>Remote Web Site (FTP/SFTP)</li>
+<li>Script (Run on command line)</li>
+<li>PHP Built-in Web Server (PHP 5.4 only)</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t11" headers="r1c1-t11">
+<p>Local Web Site Options</p>
+</td>
+<td align="left" headers="r4c1-t11 r1c2-t11">If you select the default, Local Web Site, you can configure it with the following options.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t11" headers="r1c1-t11">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Project URL</p>
+</td>
+<td align="left" headers="r5c1-t11 r1c2-t11">By default, this is <code dir="ltr">http://localhost/</code> + the path to the copy of your project sources that is in your web server's public folder. You can change the URL if you have a different path mapped to your server.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t11" headers="r1c1-t11">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Index File</p>
+</td>
+<td align="left" headers="r6c1-t11 r1c2-t11">By default, this is index.php. Click Browse... to browse your project files for a different index file.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t11" headers="r1c1-t11">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Arguments</p>
+</td>
+<td align="left" headers="r7c1-t11 r1c2-t11">Arguments for running the index file. For example, debug=true.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t11" headers="r1c1-t11">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Advanced</p>
+</td>
+<td align="left" headers="r8c1-t11 r1c2-t11">Click this button if you use remote debugging or symbolic links. A dialog opens in which you set path mapping.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH3540" name="NBCSH3540"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1539">
+<param name="text" value="<html><u>&quot;Working with PHP Applications&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

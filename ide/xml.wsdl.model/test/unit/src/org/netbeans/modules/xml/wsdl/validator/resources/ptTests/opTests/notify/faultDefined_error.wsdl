@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="goodNOperation" targetNamespace="http://j2ee.netbeans.org/wsdl/goodNOperation"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/goodNOperation" xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/">
+    <types/>
+    <message name="goodNOperationOperationReply">
+        <part name="part1" type="xsd:string"/>
+    </message>
+    <portType name="goodNOperationPortType">
+        <operation name="goodNOperationOperation">
+            <output name="output1" message="tns:goodNOperationOperationReply">
+                <documentation>Description of the output.</documentation>
+            </output>
+            <fault name="shouldNotBeDefined" message="tns:goodNOperationOperationReply"/>
+        </operation>
+    </portType>
+    
+</definitions>

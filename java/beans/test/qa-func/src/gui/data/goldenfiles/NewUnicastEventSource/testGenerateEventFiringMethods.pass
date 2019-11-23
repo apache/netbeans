@@ -1,0 +1,42 @@
+public class TestFile {
+    
+    /**
+     * Utility field holding the ActionListener.
+     */
+    private transient java.awt.event.ActionListener actionListener =  null;
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Registers ActionListener to receive events.
+     * @param listener The listener to register.
+     */
+    public synchronized void addActionListener(java.awt.event.ActionListener listener) throws java.util.TooManyListenersException {
+        if (actionListener != null) {
+            throw new java.util.TooManyListenersException();
+        }
+        actionListener = listener;
+    }
+    
+    /**
+     * Removes ActionListener from the list of listeners.
+     * @param listener The listener to remove.
+     */
+    public synchronized void removeActionListener(java.awt.event.ActionListener listener) {
+        actionListener = null;
+    }
+    
+    /**
+     * Notifies the registered listener about the event.
+     *
+     * @param event The event to be fired
+     */
+    private void fireActionListenerActionPerformed(java.awt.event.ActionEvent event) {
+        if (actionListener == null) return;
+        actionListener.actionPerformed(event);
+    }
+    
+}
+

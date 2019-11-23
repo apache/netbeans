@@ -1,0 +1,32 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="trailing" attributes="0">
+              <EmptySpace min="0" pref="283" max="Short.MAX_VALUE" attributes="12"/>
+              <Component id="jPanel1" min="$pref" max="$pref" attributes="16"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="trailing" attributes="0">
+              <EmptySpace min="0" pref="208" max="Short.MAX_VALUE" attributes="12"/>
+              <Component id="jPanel1" min="$pref" max="$pref" attributes="16"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+  <Root id="jPanel1">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="117" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <EmptySpace min="0" pref="92" max="Short.MAX_VALUE" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

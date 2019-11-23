@@ -1,0 +1,11 @@
+|>GLOBAL:MySpace<|.|>METHOD:addOrRemoveCSSClassName<| = function(
+    add,
+    domElement,
+    className) // TODO move into some "domutils" class
+  {
+    var |>LOCAL_VARIABLE_DECLARATION:func<| = (add)
+                 ? |>GLOBAL:adf<|.mf.internal.amx.addCSSClassName
+                 : |>GLOBAL:adf<|.mf.internal.amx.removeCSSClassName;
+
+    return |>LOCAL_VARIABLE:func<|(domElement, className);
+  };

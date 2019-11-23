@@ -1,0 +1,4 @@
+        let |>MARK_OCCURRENCES:match<| = glob.sync(src, { cwd: util.destPath(cwd) });
+        |>MARK_OCCURRENCES:match<| = _removeNonFile(|>MARK_OCCURRENCES:match<|, util.destPath(cwd));
+          matches = _difference(matches, |>MARK_OCCURRENCES:match<|);
+          matches = _union(matches, |>MARK_OCCURRENCES:ma^tch<|);

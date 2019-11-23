@@ -1,0 +1,7 @@
+[TAG(4):html][EOL(1):\n]
+[WHITESPACE(1):	][TAG(4):head][EOL(1):\n]
+[WHITESPACE(2):		][TAG(5):title][WHITESPACE(1): ][TEXT(13):Jade Template][EOL(1):\n]
+[WHITESPACE(2):		][TAG(5):style][EOL(1):\n]
+[WHITESPACE(3):			][TAG(1):a][TEXT(46):,h1 { color: #C2575B; text-decoration: none; }][EOL(1):\n]
+[WHITESPACE(3):			][TAG(1):a][OPERATOR_COLON(1)::][TAG(5):hover][WHITESPACE(1): ][TEXT(19):{ color: #F76F76; }][EOL(1):\n]
+[WHITESPACE(1):	][TAG(4):body]

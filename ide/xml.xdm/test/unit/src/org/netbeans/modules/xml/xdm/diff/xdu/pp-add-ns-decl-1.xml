@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope 
+xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ 
+http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP-ENV:Header/>
+<SOAP-ENV:Body>
+<result>
+<string xmlns="urn:BindingsCombinationTest">b1</string>
+<nonNegativeInteger 
+xmlns="urn:BindingsCombinationTest">100</nonNegativeInteger>
+<byte xmlns="urn:BindingsCombinationTest">a</byte>
+<short xmlns="urn:BindingsCombinationTest">5</short>
+<int xmlns="urn:BindingsCombinationTest">12345</int>
+<long xmlns="urn:BindingsCombinationTest">12345</long>
+<negativeInteger xmlns="urn:BindingsCombinationTest">-
+100</negativeInteger>
+<dateTime xmlns="urn:BindingsCombinationTest">10/10/2000</dateTime>
+<nonPositiveInteger 
+xmlns="urn:BindingsCombinationTest">0</nonPositiveInteger>
+<duration xmlns="urn:BindingsCombinationTest">P0Y0M0DT0H0M10S</duration>
+<ENTITIES xmlns="urn:BindingsCombinationTest">string byte 
+short</ENTITIES>
+<double xmlns="urn:BindingsCombinationTest">1.111</double>
+<ENTITY xmlns="urn:BindingsCombinationTest">byte</ENTITY>
+<float xmlns="urn:BindingsCombinationTest">1.11</float>
+</result>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

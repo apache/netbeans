@@ -1,0 +1,27 @@
+<?php
+
+static $a = array(// outside any function, class, etc, scope
+    1,
+    2,
+    3,
+);
+
+class a {
+
+    static $a = array(
+        1,
+        2,
+        3,
+    );
+
+    function b() {
+        static $a = array(
+            1,
+            2,
+            3,
+        );
+    }
+
+}
+
+?>

@@ -1,0 +1,83 @@
+public class TestFile {
+    
+    /**
+     * Holds value of property indexProperty.
+     */
+    private MyType[] indexProperty;
+    
+    /**
+     * Utility field used by bound properties.
+     */
+    private java.beans.PropertyChangeSupport propertyChangeSupport =  new java.beans.PropertyChangeSupport(this);
+    
+    /**
+     * Utility field used by constrained properties.
+     */
+    private java.beans.VetoableChangeSupport vetoableChangeSupport =  new java.beans.VetoableChangeSupport(this);
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Adds a PropertyChangeListener to the listener list.
+     * @param l The listener to add.
+     */
+    public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+        propertyChangeSupport.addPropertyChangeListener(l);
+    }
+    
+    /**
+     * Removes a PropertyChangeListener from the listener list.
+     * @param l The listener to remove.
+     */
+    public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+        propertyChangeSupport.removePropertyChangeListener(l);
+    }
+    
+    /**
+     * Adds a VetoableChangeListener to the listener list.
+     * @param l The listener to add.
+     */
+    public void addVetoableChangeListener(java.beans.VetoableChangeListener l) {
+        vetoableChangeSupport.addVetoableChangeListener(l);
+    }
+    
+    /**
+     * Removes a VetoableChangeListener from the listener list.
+     * @param l The listener to remove.
+     */
+    public void removeVetoableChangeListener(java.beans.VetoableChangeListener l) {
+        vetoableChangeSupport.removeVetoableChangeListener(l);
+    }
+    
+    /**
+     * Indexed getter for property indexProperty.
+     * @param index Index of the property.
+     * @return Value of the property at <CODE>index</CODE>.
+     */
+    public MyType getIndexProperty(int index) {
+    }
+    
+    /**
+     * Indexed setter for property indexProperty.
+     * @param index Index of the property.
+     * @param indexProperty New value of the property at <CODE>index</CODE>.
+     *
+     * @throws PropertyVetoException if some vetoable listeners reject the new value
+     */
+    public void setIndexProperty(int index, MyType indexProperty) throws java.beans.PropertyVetoException {
+        MyType oldIndexProperty = this.indexProperty[index];
+        this.indexProperty[index] = indexProperty;
+        try {
+            vetoableChangeSupport.fireVetoableChange("indexProperty", null, null );
+        }
+        catch(java.beans.PropertyVetoException vetoException ) {
+            this.indexProperty[index] = oldIndexProperty;
+            throw vetoException;
+        }
+        propertyChangeSupport.firePropertyChange("indexProperty", null, null );
+    }
+    
+}
+

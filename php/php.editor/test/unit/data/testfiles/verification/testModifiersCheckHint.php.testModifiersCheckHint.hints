@@ -1,0 +1,34 @@
+class ClassMethods {
+      ------------
+HINT:Class "ClassMethods" contains abstract methods and must be declared abstract
+FIX:Add modifier: abstract
+    abstract private function classAbstractPrivate();
+                              --------------------
+HINT:Abstract method "classAbstractPrivate" can not be declared private
+FIX:Remove modifier: private
+    public abstract function classWithBody() {
+                             -------------
+HINT:Abstract method "classWithBody" can not contain body
+FIX:Remove body of the method: classWithBody
+    private function ifacePrivateMethod();
+                     ------------------
+HINT:Interface method "ifacePrivateMethod" can not be declared private
+FIX:Remove modifier: private
+    protected function ifaceProtectedMethod();
+                       --------------------
+HINT:Interface method "ifaceProtectedMethod" can not be declared protected
+FIX:Remove modifier: protected
+    public final function ifaceFinalMethod();
+                          ----------------
+HINT:Interface method "ifaceFinalMethod" can not be declared final
+FIX:Remove modifier: final
+class PossibleAbstract {
+      ----------------
+HINT:Class "PossibleAbstract" contains abstract methods and must be declared abstract
+FIX:Add modifier: abstract
+final class FinalAbstract {
+            -------------
+HINT:Class "FinalAbstract" contains abstract methods and can not be declared final
+FIX:Remove modifier: final
+HINT:Class "FinalAbstract" contains abstract methods and must be declared abstract
+FIX:Add modifier: abstract

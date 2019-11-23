@@ -1,0 +1,29 @@
+Code completion result for source line:
+{$item||}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+RULE       bytes:precision=2                          Helper
+RULE       capitalize                                 Helper
+RULE       dataStream:mimetype=NULL                   Helper
+RULE       date:'format'                              Helper
+RULE       firstUpper                                 Helper
+RULE       implode:glue=''                            Helper
+RULE       indent:level=1:char='\t'                   Helper
+RULE       length                                     Helper
+RULE       lower                                      Helper
+RULE       nl2br                                      Helper
+RULE       null                                       Helper
+RULE       number:decimals=0:decPoint='.'             Helper
+RULE       padLeft:length:pad=' '                     Helper
+RULE       padRight:length:pad=' '                    Helper
+RULE       repeat:count                               Helper
+RULE       replace:search:replace=''                  Helper
+RULE       replaceRE:pattern:replace=''               Helper
+RULE       strip                                      Helper
+RULE       striptags                                  Helper
+RULE       substr:offset:length=stringLen             Helper
+RULE       toAscii                                    Helper
+RULE       trim:charlist=' \t\n\r\0\x0B\x             Helper
+RULE       truncate:length:append='…'                 Helper
+RULE       upper                                      Helper
+RULE       url                                        Helper
+RULE       webalize:charlist=NULL:lower=t             Helper

@@ -1,0 +1,85 @@
+package inspectAndTransform;
+
+import java.util.Arrays;
+
+public class Class_A_F {
+
+    public void m1(int value) {
+        if(value > 10) {
+            System.out.println("1234");
+        }
+    }
+
+    public void m2(String value) {
+        if(value.isEmpty()){
+            System.out.println("1234");
+        }
+    }
+
+    public void m3(int[] array) {
+        System.out.println(Arrays.toString(array));
+    }
+
+    public void m2(String value, int[] array) {
+        if(value.isEmpty()) {
+            System.out.println(Arrays.toString(array));
+        }
+    }
+}
+package inspectAndTransform_1;
+
+import java.util.Arrays;
+
+public class Class_A {
+
+    public void m1(int value) {
+        if(value > 10) {
+            System.out.println("1234");
+        }
+    }
+
+    public void m2(String value) {
+        if(value.isEmpty()){
+            System.out.println("1234");
+        }
+    }
+
+    public void m3(int[] array) {
+        System.out.println(Arrays.toString(array));
+    }
+
+    public void m2(String value, int[] array) {
+        if(value.isEmpty()) {
+            System.out.println(Arrays.toString(array));
+        }
+    }
+}
+package inspectAndTransform_2;
+
+import java.util.Arrays;
+
+public class Class_A {
+
+    public void m1(int value) {
+        if(value > 10) {
+            System.out.println("1234");
+        }
+    }
+
+    public void m2(String value) {
+        if(value.isEmpty()){
+            System.out.println("1234");
+        }
+    }
+
+    public void m3(int[] array) {
+        System.out.println(Arrays.toString(array));
+    }
+
+    public void m2(String value, int[] array) {
+        if(value.isEmpty()) {
+            System.out.println(Arrays.toString(array));
+        }
+    }
+}
+

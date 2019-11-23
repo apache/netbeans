@@ -1,0 +1,2 @@
+    function ftest($|>MARK_OCCURRENCES:name<|) {
+        $this->name = $|>MARK_OCCURRENCES:na^me<|;

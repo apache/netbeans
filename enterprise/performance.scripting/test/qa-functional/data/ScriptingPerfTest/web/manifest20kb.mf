@@ -1,0 +1,379 @@
+Manifest-Version: 1.0
+#Copy - 1
+OpenIDE-Module-1: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-1: 1
+OpenIDE-Module-Localizing-Bundle-1: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-1: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-1: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 2
+OpenIDE-Module-2: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-2: 1
+OpenIDE-Module-Localizing-Bundle-2: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-2: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-2: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 3
+OpenIDE-Module-3: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-3: 1
+OpenIDE-Module-Localizing-Bundle-3: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-3: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-3: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 4
+OpenIDE-Module-4: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-4: 1
+OpenIDE-Module-Localizing-Bundle-4: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-4: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-4: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 5
+OpenIDE-Module-5: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-5: 1
+OpenIDE-Module-Localizing-Bundle-5: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-5: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-5: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 6
+OpenIDE-Module-6: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-6: 1
+OpenIDE-Module-Localizing-Bundle-6: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-6: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-6: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 7
+OpenIDE-Module-7: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-7: 1
+OpenIDE-Module-Localizing-Bundle-7: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-7: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-7: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 8
+OpenIDE-Module-8: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-8: 1
+OpenIDE-Module-Localizing-Bundle-8: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-8: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-8: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 9
+OpenIDE-Module-9: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-9: 1
+OpenIDE-Module-Localizing-Bundle-9: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-9: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-9: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 10
+OpenIDE-Module-10: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-10: 1
+OpenIDE-Module-Localizing-Bundle-10: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-10: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-10: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 11
+OpenIDE-Module-11: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-11: 1
+OpenIDE-Module-Localizing-Bundle-11: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-11: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-11: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 12
+OpenIDE-Module-12: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-12: 1
+OpenIDE-Module-Localizing-Bundle-12: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-12: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-12: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 13
+OpenIDE-Module-13: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-13: 1
+OpenIDE-Module-Localizing-Bundle-13: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-13: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-13: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 14
+OpenIDE-Module-14: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-14: 1
+OpenIDE-Module-Localizing-Bundle-14: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-14: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-14: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 15
+OpenIDE-Module-15: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-15: 1
+OpenIDE-Module-Localizing-Bundle-15: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-15: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-15: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 16
+OpenIDE-Module-16: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-16: 1
+OpenIDE-Module-Localizing-Bundle-16: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-16: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-16: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 17
+OpenIDE-Module-17: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-17: 1
+OpenIDE-Module-Localizing-Bundle-17: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-17: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-17: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 18
+OpenIDE-Module-18: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-18: 1
+OpenIDE-Module-Localizing-Bundle-18: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-18: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-18: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 19
+OpenIDE-Module-19: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-19: 1
+OpenIDE-Module-Localizing-Bundle-19: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-19: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-19: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 20
+OpenIDE-Module-20: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-20: 1
+OpenIDE-Module-Localizing-Bundle-20: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-20: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-20: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 21
+OpenIDE-Module-21: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-21: 1
+OpenIDE-Module-Localizing-Bundle-21: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-21: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-21: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 22
+OpenIDE-Module-22: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-22: 1
+OpenIDE-Module-Localizing-Bundle-22: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-22: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-22: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 23
+OpenIDE-Module-23: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-23: 1
+OpenIDE-Module-Localizing-Bundle-23: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-23: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-23: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 24
+OpenIDE-Module-24: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-24: 1
+OpenIDE-Module-Localizing-Bundle-24: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-24: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-24: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 25
+OpenIDE-Module-25: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-25: 1
+OpenIDE-Module-Localizing-Bundle-25: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-25: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-25: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 26
+OpenIDE-Module-26: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-26: 1
+OpenIDE-Module-Localizing-Bundle-26: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-26: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-26: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 27
+OpenIDE-Module-27: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-27: 1
+OpenIDE-Module-Localizing-Bundle-27: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-27: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-27: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 28
+OpenIDE-Module-28: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-28: 1
+OpenIDE-Module-Localizing-Bundle-28: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-28: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-28: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 29
+OpenIDE-Module-29: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-29: 1
+OpenIDE-Module-Localizing-Bundle-29: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-29: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-29: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 30
+OpenIDE-Module-30: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-30: 1
+OpenIDE-Module-Localizing-Bundle-30: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-30: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-30: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 31
+OpenIDE-Module-31: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-31: 1
+OpenIDE-Module-Localizing-Bundle-31: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-31: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-31: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 32
+OpenIDE-Module-32: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-32: 1
+OpenIDE-Module-Localizing-Bundle-32: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-32: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-32: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 33
+OpenIDE-Module-33: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-33: 1
+OpenIDE-Module-Localizing-Bundle-33: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-33: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-33: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 34
+OpenIDE-Module-34: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-34: 1
+OpenIDE-Module-Localizing-Bundle-34: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-34: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-34: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 35
+OpenIDE-Module-35: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-35: 1
+OpenIDE-Module-Localizing-Bundle-35: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-35: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-35: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 36
+OpenIDE-Module-36: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-36: 1
+OpenIDE-Module-Localizing-Bundle-36: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-36: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-36: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 37
+OpenIDE-Module-37: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-37: 1
+OpenIDE-Module-Localizing-Bundle-37: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-37: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-37: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 38
+OpenIDE-Module-38: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-38: 1
+OpenIDE-Module-Localizing-Bundle-38: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-38: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-38: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 39
+OpenIDE-Module-39: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-39: 1
+OpenIDE-Module-Localizing-Bundle-39: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-39: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-39: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 40
+OpenIDE-Module-40: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-40: 1
+OpenIDE-Module-Localizing-Bundle-40: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-40: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-40: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 41
+OpenIDE-Module-41: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-41: 1
+OpenIDE-Module-Localizing-Bundle-41: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-41: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-41: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 42
+OpenIDE-Module-42: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-42: 1
+OpenIDE-Module-Localizing-Bundle-42: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-42: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-42: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 43
+OpenIDE-Module-43: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-43: 1
+OpenIDE-Module-Localizing-Bundle-43: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-43: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-43: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 44
+OpenIDE-Module-44: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-44: 1
+OpenIDE-Module-Localizing-Bundle-44: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-44: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-44: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 45
+OpenIDE-Module-45: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-45: 1
+OpenIDE-Module-Localizing-Bundle-45: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-45: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-45: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 46
+OpenIDE-Module-46: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-46: 1
+OpenIDE-Module-Localizing-Bundle-46: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-46: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-46: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 47
+OpenIDE-Module-47: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-47: 1
+OpenIDE-Module-Localizing-Bundle-47: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-47: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-47: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 48
+OpenIDE-Module-48: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-48: 1
+OpenIDE-Module-Localizing-Bundle-48: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-48: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-48: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 49
+OpenIDE-Module-49: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-49: 1
+OpenIDE-Module-Localizing-Bundle-49: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-49: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-49: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 50
+OpenIDE-Module-50: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-50: 1
+OpenIDE-Module-Localizing-Bundle-50: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-50: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-50: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 51
+OpenIDE-Module-51: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-51: 1
+OpenIDE-Module-Localizing-Bundle-51: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-51: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-51: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 52
+OpenIDE-Module-52: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-52: 1
+OpenIDE-Module-Localizing-Bundle-52: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-52: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-52: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 53
+OpenIDE-Module-53: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-53: 1
+OpenIDE-Module-Localizing-Bundle-53: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-53: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-53: org/netbeans/modules/web/core/syntax/resources/layer.xml
+
+#Copy - 54
+OpenIDE-Module-54: org.netbeans.modules.web.core.syntax/1
+OpenIDE-Module-Implementation-Version-54: 1
+OpenIDE-Module-Localizing-Bundle-54: org/netbeans/modules/web/core/syntax/Bundle.properties
+OpenIDE-Module-Install-54: org/netbeans/modules/web/core/syntax/settings/RestoreSettings.class
+OpenIDE-Module-Layer-54: org/netbeans/modules/web/core/syntax/resources/layer.xml
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" 
+           xmlns="urn:parent"
+           targetNamespace="urn:parent"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.w3.org/2001/XMLSchema XMLSchema.xsd"
+           elementFormDefault="qualified" xml:lang="EN">
+               
+    <xs:element name="parent" type="Parent"/>
+
+    <xs:element name="child" abstract="true"/>
+
+    <xs:complexType name="Parent">
+        <xs:sequence>
+            <xs:element ref="child" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Child" abstract="true">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>

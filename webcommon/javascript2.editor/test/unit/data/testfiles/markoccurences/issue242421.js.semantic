@@ -1,0 +1,10 @@
+var |>METHOD:myF<| = function |>METHOD,UNUSED:MyLib_Function<| (path, ref, pfx, options) {
+   var |>LOCAL_VARIABLE_DECLARATION:v<| = expand(path, ref, pfx, options);
+    
+   if( options && options.option1 && (|>LOCAL_VARIABLE:v<| === path) )
+       return path;
+
+   |>LOCAL_VARIABLE:v<| = |>GLOBAL:page<|.root + '~/' + |>LOCAL_VARIABLE:v<|;
+
+   return |>LOCAL_VARIABLE:v<|;
+};

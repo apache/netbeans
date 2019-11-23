@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>New Struts ActionForm Bean Wizard: Name and Location</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.web.struts.wizards.FormBeanNewPanel" name="org.netbeans.modules.web.struts.wizards.FormBeanNewPanel"></a></p>
+<div id="NBCSH4297"><!-- infolevel="all" infotype="General" --><a id="sthref569" name="sthref569"></a>
+<h1>New Struts ActionForm Bean Wizard: Name and Location</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>Use to create a new actionform bean. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1189">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>An actionform bean acts as a bridge between a JSP page and a Struts action. It captures user input from the JSP pages and delivers it to the action. An actionform bean can also validate the input before passing it on to the action. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>More</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>Before you can use the New Struts ActionForm Bean wizard, you must have a Struts configuration file. To create a Struts configuration file quickly and efficiently, right-click the project node, choose <b>Properties</b> and use the Frameworks panel. Not only does this provide you with a Struts configuration file, but you also get the Struts libraries and supporting files.</p>
+<p>Once you have a Struts configuration file, you open the New Struts ActionForm Bean wizard by right-clicking a web application, choosing <b>New</b> &gt; <b>Other</b> and selecting <b>Struts ActionForm Bean</b> from the <b>Struts</b> category.</p>
+<p>In the <b>Name and Location</b> page, you set the following properties:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t21">Element</th>
+<th align="left" valign="bottom" id="r1c2-t21">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t21" headers="r1c1-t21">
+<p>Class Name</p>
+</td>
+<td align="left" headers="r2c1-t21 r1c2-t21">Specifies the actionform bean's class name.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t21" headers="r1c1-t21">
+<p>Project</p>
+</td>
+<td align="left" headers="r3c1-t21 r1c2-t21">Specifies the project of the new actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t21" headers="r1c1-t21">
+<p>Location</p>
+</td>
+<td align="left" headers="r4c1-t21 r1c2-t21">Specifies a folder to house the actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t21" headers="r1c1-t21">
+<p>Package</p>
+</td>
+<td align="left" headers="r5c1-t21 r1c2-t21">Specifies a package within the location to house the actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t21" headers="r1c1-t21">
+<p>Created File</p>
+</td>
+<td align="left" headers="r6c1-t21 r1c2-t21">Specifies the file that will created for the new actionform bean.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r7c1-t21" headers="r1c1-t21">
+<p>Superclass</p>
+</td>
+<td align="left" headers="r7c1-t21 r1c2-t21">Specifies the class on which the actionform bean is based. A normal actionform bean is based on either the <code dir="ltr">org.apache.struts.action.ActionForm</code> or <code dir="ltr">org.apache.struts.action.DynaActionForm</code> classes for statically defined or dynamic form beans respectively. If you want to validate the input to an actionform bean using a validator, you have to use one of the following superclasses instead:
+<ul>
+<li>
+<p>For static (coded) beans</p>
+<ul>
+<li><code dir="ltr">org.apache.struts.validator.ValidatorForm</code></li>
+<li><code dir="ltr">org.apache.struts.validator.ValidatorActionForm</code></li>
+</ul>
+</li>
+<li>
+<p>For dynamic (declarative) beans</p>
+<ul>
+<li><code dir="ltr">org.apache.struts.validator.DynaValidatorForm</code></li>
+<li><code dir="ltr">org.apache.struts.validator.DynaValidatorActionForm</code></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r8c1-t21" headers="r1c1-t21">
+<p>Configuration File</p>
+</td>
+<td align="left" headers="r8c1-t21 r1c2-t21">Specifies the Struts configuration file, the <code dir="ltr">struts-config.xml</code> file. If none exists, you cannot create the actionform bean. To create a Struts configuration file quickly and efficiently, right-click the project node, choose Properties and use the Frameworks panel. Not only does this provide you with a Struts configuration file, but you also get the Struts libraries and supporting files.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH4305" name="NBCSH4305"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1188">
+<param name="text" value="<html><u>&quot;Working with the Struts Framework&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG1140">
+<param name="text" value="<html><u>&quot;About Using Web Application Frameworks&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

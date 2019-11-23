@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ <wsdl:definitions targetNamespace="http://ebank.netjets.com" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ebank.netjets.com" xmlns:intf="http://ebank.netjets.com" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:message name="transferFundsResponse" /> 
+ <wsdl:message name="transferFundsRequest">
+  <wsdl:part name="in0" type="xsd:decimal" /> 
+  <wsdl:part name="in1" type="xsd:string" /> 
+  <wsdl:part name="in2" type="xsd:string" /> 
+  <wsdl:part name="in3" type="xsd:string" /> 
+  </wsdl:message>
+ <wsdl:portType name="AccountTransactionEndpoint">
+ <wsdl:operation name="transferFunds" parameterOrder="in0 in1 in2 in3">
+  <wsdl:input message="impl:transferFundsRequest" name="transferFundsRequest" /> 
+  <wsdl:output message="impl:transferFundsResponse" name="transferFundsResponse" /> 
+  </wsdl:operation>
+  </wsdl:portType>
+ <wsdl:binding name="AccountTransactionEndpointSoapBinding" type="impl:AccountTransactionEndpoint">
+  <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" /> 
+ <wsdl:operation name="transferFunds">
+  <wsdlsoap:operation soapAction="" /> 
+ <wsdl:input name="transferFundsRequest">
+  <wsdlsoap:body namespace="http://ebank.netjets.com" use="literal" /> 
+  </wsdl:input>
+ <wsdl:output name="transferFundsResponse">
+  <wsdlsoap:body namespace="http://ebank.netjets.com" use="literal" /> 
+  </wsdl:output>
+  </wsdl:operation>
+  </wsdl:binding>
+ <wsdl:service name="AccountTransactionService">
+ <wsdl:port binding="impl:AccountTransactionEndpointSoapBinding" name="AccountTransactionEndpoint">
+  <wsdlsoap:address location="http://10.18.25.47:8080/ebank.netjets.com/AccountTransaction" /> 
+  </wsdl:port>
+  </wsdl:service>
+  </wsdl:definitions>

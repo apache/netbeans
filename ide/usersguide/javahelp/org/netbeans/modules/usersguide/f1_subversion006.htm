@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+<title>Subversion Import Wizard: Subversion Repository</title>
+<link rel="stylesheet" href="ide.css" title="Oracle BLAFDoc" type="text/css"/>
+</head>
+
+<body>
+<p><a id="org.netbeans.modules.subversion.ui.wizards.repositorystep.RepositoryStep.import" name="org.netbeans.modules.subversion.ui.wizards.repositorystep.RepositoryStep.import"></a></p>
+<div id="NBCSH1462"><!-- infolevel="all" infotype="General" --><a id="sthref167" name="sthref167"></a>
+<h1>Subversion Import Wizard: Subversion Repository</h1>
+<a name="BEGIN" id="BEGIN"></a>
+<p>The Subversion Repository panel of the Subversion Import wizard enables you to specify the root path to the repository which you want to have files imported into. 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG286">
+<param name="text" value="<html><u>How?</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+<p>When importing files into a repository, you need to specify the location of the repository as defined by the Subversion root. The following fields allow you to do this.</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="24%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t12">Element</th>
+<th align="left" valign="bottom" id="r1c2-t12">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t12" headers="r1c1-t12">
+<p>Repository URL</p>
+</td>
+<td align="left" headers="r2c1-t12 r1c2-t12">Select a Subversion root protocol and location from the drop-down list. The drop-down list contains a list of supported protocols, as well as previous Subversion root locations used in the IDE.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t12" headers="r1c1-t12">
+<p>User</p>
+</td>
+<td align="left" headers="r3c1-t12 r1c2-t12">Enter your user name for access to the repository. (Required for http, https, and svn protocols.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t12" headers="r1c1-t12">
+<p>Password</p>
+</td>
+<td align="left" headers="r4c1-t12 r1c2-t12">Enter your password for access to the repository. (Required for http, https, and svn protocols.)</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t12" headers="r1c1-t12">Proxy configuration</td>
+<td align="left" headers="r5c1-t12 r1c2-t12">Click the Proxy configuration button to specify details of your proxy configuration to connect to the Subversion repository.</td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t12" headers="r1c1-t12">
+<p>Tunnel Command</p>
+</td>
+<td align="left" headers="r6c1-t12 r1c2-t12">If you are accessing a repository through the svn+ssh protocol, you must supply the tunnel command to establish the external tunnel.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<p>The IDE supports the following Subversion protocol types:</p>
+
+<table summary="User interface elements and descriptions" dir="ltr" border="1" width="100%" frame="hsides" rules="groups" cellpadding="3" cellspacing="0">
+<col width="12%" />
+<col width="42%" />
+<col width="*" />
+<thead>
+<tr align="left" valign="top">
+<th align="left" valign="bottom" id="r1c1-t13">Protocol</th>
+<th align="left" valign="bottom" id="r1c2-t13">Access Method</th>
+<th align="left" valign="bottom" id="r1c3-t13">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr align="left" valign="top">
+<td align="left" id="r2c1-t13" headers="r1c1-t13">
+<p>file</p>
+</td>
+<td align="left" headers="r2c1-t13 r1c2-t13">Direct repository access (on local disk)</td>
+<td align="left" headers="r2c1-t13 r1c3-t13"><code dir="ltr">file:///repository_path[@REV]</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r3c1-t13" headers="r1c1-t13">
+<p>http</p>
+</td>
+<td align="left" headers="r3c1-t13 r1c2-t13">Access via WebDAV protocol to a Subversion-aware server</td>
+<td align="left" headers="r3c1-t13 r1c3-t13"><code dir="ltr">http://hostname/repository_path[@REV]</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r4c1-t13" headers="r1c1-t13">
+<p>https</p>
+</td>
+<td align="left" headers="r4c1-t13 r1c2-t13">Access via HTTP protocol with SSL encryption</td>
+<td align="left" headers="r4c1-t13 r1c3-t13"><code dir="ltr">https://hostname/repository_path[@REV]</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r5c1-t13" headers="r1c1-t13">
+<p>svn</p>
+</td>
+<td align="left" headers="r5c1-t13 r1c2-t13">Access via custom protocol to an svnserve server</td>
+<td align="left" headers="r5c1-t13 r1c3-t13"><code dir="ltr">svn://hostname/repository_path[@REV]</code></td>
+</tr>
+<tr align="left" valign="top">
+<td align="left" id="r6c1-t13" headers="r1c1-t13">
+<p>svn+ssh</p>
+</td>
+<td align="left" headers="r6c1-t13 r1c2-t13">Access via SVN protocol through an external SSH tunnel</td>
+<td align="left" headers="r6c1-t13 r1c3-t13"><code dir="ltr">svn+ssh://hostname/repository_path[@REV]</code></td>
+</tr>
+</tbody>
+</table>
+<br />
+<!-- -->
+<a id="NBCSH1472" name="NBCSH1472"></a>
+<hr><p><b>Related Topics</b></p>
+<p><i>Developing Applications with NetBeans IDE</i>, 
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+<param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb8200&id=NBDAG274">
+<param name="text" value="<html><u>&quot;Versioning Applications with Subversion&quot;</u></html>">
+<param name="textFontSize" value="medium">
+<param name="textColor" value="blue">
+</object>
+</p>
+
+<!-- -->
+<!-- Start Footer -->
+
+
+<table summary="" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td align="left" width="86%"><a href="legal_notice.htm">
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.</a>
+</td>
+</tr>
+</table>
+<!-- -->
+</body>
+</html>

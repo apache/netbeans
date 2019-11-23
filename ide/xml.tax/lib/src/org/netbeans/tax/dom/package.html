@@ -1,0 +1,48 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>TAX DOM wrapper</TITLE>
+  </HEAD>
+  <BODY>
+
+Readonly DOM level 1 implementation wraping TAX.
+Entry point is a set of {@link Wrapper.wrap} methods.
+
+<h3>Why Wrapper?</H3>
+Another alternative i.e. let TAX directly implement DOM
+intefaces would polute TAX API and cause schizofreny.
+
+<h3>Status</h3>
+Prototype that doe not handle refs, PIs, comments etc. It should
+prove concept only.
+
+<h3>Why so Many new</H3>
+Claim: Latest HotSpot has very optimalized <code>new</code> and
+authors suggest to leave classical pool approach.
+<p>Consequence: This implementation uses very lightweight wrappers
+therefore only drawback it increased garbage production. It should
+be also handled in latest HotSpot implementations.
+
+  </BODY>
+</HTML>

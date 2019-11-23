@@ -1,0 +1,2 @@
+{ "name" : "some-library",
+  "main" : "./lib/some-library.js" }

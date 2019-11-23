@@ -20,12 +20,16 @@ package org.netbeans.swing.flatlaf;
 
 import javax.swing.UIManager;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.*;
 
+@NbBundle.Messages({
+    "LBL_FLATLAF_DARK=FlatLaf Dark (experimental)"
+})
 public class Installer extends ModuleInstall {
 
     @Override
     public void validate() throws IllegalStateException {
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Dark", NbFlatDarkLaf.class.getName()));
+        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), NbFlatDarkLaf.class.getName()));
 //        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Light", FlatLightLaf.class.getName()));
 //        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat IntelliJ", FlatIntelliJLaf.class.getName()));
 //        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Darcula", FlatDarculaLaf.class.getName()));

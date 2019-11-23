@@ -139,6 +139,11 @@ public class UtilsTest extends NbTestCase {
         LifecycleManager.getDefault().saveAll();
     }
 
+    public void testRemovedTestPosition() throws Exception {
+        assertEquals(new Position(2, 3), Utils.computeEndPositionForRemovedText(new Position(2, 2), "a"));
+        assertEquals(new Position(4, 1), Utils.computeEndPositionForRemovedText(new Position(2, 2), "aaaaa\naaaaaaaa\na"));
+    }
+
     private void assertContent(String expectedContent, FileObject sourceFile) throws Exception {
         EditorCookie ec = sourceFile.getLookup().lookup(EditorCookie.class);
         StyledDocument doc = ec.openDocument();

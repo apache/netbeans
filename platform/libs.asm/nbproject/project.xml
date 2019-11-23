@@ -36,6 +36,10 @@
                 <runtime-relative-path>asm-tree-7.2.jar</runtime-relative-path>
                 <binary-origin>external/asm-tree-7.2.jar</binary-origin>
             </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>asm-commons-7.2.jar</runtime-relative-path>
+                <binary-origin>external/asm-commons-7.2.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

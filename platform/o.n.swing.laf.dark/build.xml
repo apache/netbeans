@@ -21,5 +21,5 @@
 -->
 <project basedir="." default="netbeans" name="platform/o.n.swing.laf.dark">
     <description>Builds, tests, and runs the project org.netbeans.swing.laf.dark</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

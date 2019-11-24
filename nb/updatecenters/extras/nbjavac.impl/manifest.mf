@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.nbjavac.impl
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/nbjavac/impl/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Specification-Version: 2.1
 OpenIDE-Module-Hide-Classpath-Packages: com.sun.tools.javac.**, com.sun.tools.javadoc.**, com.sun.tools.javap.**, com.sun.tools.classfile.**, com.sun.tools.doclint.**
 OpenIDE-Module-Fragment-Host: org.netbeans.libs.javacimpl
 OpenIDE-Module-Provides: org.netbeans.modules.nbjavac

@@ -23,7 +23,6 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import org.openide.util.Lookup.Template;
@@ -122,7 +121,7 @@ final class NodeLookup extends AbstractLookup {
     private void blockingBeforeLookup(Class<?> type) {
         if (type == Object.class) {
             // ok, this is likely query for everything
-            java.util.Set all;
+            Set<Class<?>> all;
             Object prev = null;
 
             try {
@@ -133,10 +132,7 @@ final class NodeLookup extends AbstractLookup {
                 all = CookieSet.exitAllClassesMode(prev);
             }
 
-            Iterator it = all.iterator();
-
-            while (it.hasNext()) {
-                Class c = (Class) it.next();
+            for (Class<?> c : all) {
                 updateLookupAsCookiesAreChanged(c);
             }
 

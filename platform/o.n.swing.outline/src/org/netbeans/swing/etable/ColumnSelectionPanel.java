@@ -226,10 +226,10 @@ class ColumnSelectionPanel extends JPanel {
         if (columnModel == null) {
             return;
         }
-        for (Iterator it = checkBoxes.keySet().iterator(); it.hasNext(); ) {
-            ETableColumn etc = (ETableColumn) it.next();
-            JCheckBox checkBox = checkBoxes.get (etc);
-            columnModel.setColumnHidden(etc,! checkBox.isSelected());
+        for (Map.Entry<ETableColumn, JCheckBox> entry : checkBoxes.entrySet()) {
+            ETableColumn etc = entry.getKey();
+            JCheckBox checkBox = entry.getValue();
+            columnModel.setColumnHidden(etc, !checkBox.isSelected());
         }
     }
     

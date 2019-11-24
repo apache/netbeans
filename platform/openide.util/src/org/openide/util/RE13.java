@@ -121,8 +121,9 @@ ALL:
     }
 
     /** Data structure to needed to store the */
+    @Override
     public void init(String[] original, String[] newversion) {
-        ArrayList<Object> root = new ArrayList<Object>();
+        List<Object> root = new ArrayList<>();
 
         for (int i = 0; i < original.length; i++) {
             placeString(root, original[i], i);
@@ -139,7 +140,7 @@ ALL:
      */
     private static void placeString(List<Object> item, String s, int indx) {
         if (s.length() == 0) {
-            item.add(new Integer(indx));
+            item.add(indx);
 
             return;
         }
@@ -165,17 +166,17 @@ ALL:
                             // next is the list or null
                             List listForPref = (List) it.next();
 
-                            ArrayList<Object> switchList = new ArrayList<Object>();
+                            List<Object> switchList = new ArrayList<>();
                             it.set(switchList);
 
                             switchList.add(pref.substring(i));
                             switchList.add(listForPref);
 
                             if (i >= s.length()) {
-                                switchList.add(new Integer(indx));
+                                switchList.add(indx);
                             } else {
-                                ArrayList<Object> terminalList = new ArrayList<Object>();
-                                terminalList.add(new Integer(indx));
+                                List<Object> terminalList = new ArrayList<>();
+                                terminalList.add(indx);
 
                                 switchList.add(s.substring(i));
                                 switchList.add(terminalList);
@@ -199,8 +200,8 @@ ALL:
         //
         // ok new prefix in this item
         //
-        ArrayList<Object> id = new ArrayList<Object>();
-        id.add(new Integer(indx));
+        List<Object> id = new ArrayList<>();
+        id.add(indx);
 
         item.add(s);
         item.add(id);
@@ -214,40 +215,27 @@ ALL:
 
     /** Compress tree of Lists into tree of Objects.
      */
-    private static Object[] compress(List item) {
+    private static Object[] compress(List<Object> item) {
         Object[] arr = new Object[item.size()];
 
         Integer last = null;
 
-        Iterator it = item.iterator();
         int i = 0;
 
-        while (it.hasNext()) {
-            Object o = it.next();
-
+        for (Object o : item) {
             if (o instanceof Integer) {
                 if (last != null) {
                     throw new IllegalStateException();
                 }
 
                 last = (Integer) o;
-
-                continue;
-            }
-
-            if (o instanceof String) {
+            } else if (o instanceof String) {
                 arr[i++] = ((String) o).intern();
-
-                continue;
-            }
-
-            if (o instanceof List) {
+            } else if (o instanceof List) {
                 arr[i++] = compress((List) o);
-
-                continue;
+            } else {
+                throw new IllegalStateException();
             }
-
-            throw new IllegalStateException();
         }
 
         if (last != null) {

@@ -45,11 +45,11 @@ public abstract class VetoSystemOption extends SystemOption {
     /** Lazy getter for veto hashtable.
     * @return the hashtable
     */
-    private HashSet getVeto() {
-        HashSet set = (HashSet) getProperty(PROP_VETO_SUPPORT);
+    private HashSet<VetoableChangeListener> getVeto() {
+        HashSet<VetoableChangeListener> set = (HashSet<VetoableChangeListener>) getProperty(PROP_VETO_SUPPORT);
 
         if (set == null) {
-            set = new HashSet();
+            set = new HashSet<>();
             putProperty(PROP_VETO_SUPPORT, set);
         }
 
@@ -84,14 +84,14 @@ public abstract class VetoSystemOption extends SystemOption {
     throws PropertyVetoException {
         PropertyChangeEvent ev = new PropertyChangeEvent(this, name, oldValue, newValue);
 
-        Iterator en;
+        HashSet<VetoableChangeListener> listeners;
 
         synchronized (getLock()) {
-            en = ((HashSet) getVeto().clone()).iterator();
+            listeners = (HashSet<VetoableChangeListener>) getVeto().clone();
         }
 
-        while (en.hasNext()) {
-            ((VetoableChangeListener) en.next()).vetoableChange(ev);
+        for (VetoableChangeListener listener : listeners) {
+            listener.vetoableChange(ev);
         }
     }
 }

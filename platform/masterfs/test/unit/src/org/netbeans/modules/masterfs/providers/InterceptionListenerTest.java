@@ -20,8 +20,6 @@
 package org.netbeans.modules.masterfs.providers;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import javax.swing.Action;
 import org.netbeans.junit.MockServices;
@@ -51,11 +49,9 @@ public class InterceptionListenerTest extends NbTestCase  {
     }
 
     private InterceptionListenerImpl lookupImpl() {
-        Lookup.Result result = Lookups.metaInfServices(Thread.currentThread().getContextClassLoader()).
+        Lookup.Result<BaseAnnotationProvider> result = Lookups.metaInfServices(Thread.currentThread().getContextClassLoader()).
                 lookup(new Lookup.Template(BaseAnnotationProvider.class));
-        Collection all = result.allInstances();
-        for (Iterator it = all.iterator(); it.hasNext();) {
-            BaseAnnotationProvider ap = (BaseAnnotationProvider) it.next();
+        for (BaseAnnotationProvider ap : result.allInstances()) {
             InterceptionListener iil = ap.getInterceptionListener();
             if (iil != null && !(iil instanceof ProvidedExtensions)) {
                 return (InterceptionListenerImpl)iil;
@@ -136,11 +132,10 @@ public class InterceptionListenerTest extends NbTestCase  {
         }
 
         private InterceptionListenerImpl impl = new InterceptionListenerImpl(this);
-        public String annotateName(String name, java.util.Set files) {
+        @Override
+        public String annotateName(String name, Set<? extends FileObject> files) {
             java.lang.StringBuffer sb = new StringBuffer(name);
-            Iterator it = files.iterator();
-            while (it.hasNext()) {
-                FileObject fo = (FileObject)it.next();
+            for (FileObject fo : files) {
                 try {
                     sb.append("," +fo.getNameExt());//NOI18N
                 } catch (Exception ex) {
@@ -155,7 +150,8 @@ public class InterceptionListenerTest extends NbTestCase  {
             return icon;
         }
         
-        public String annotateNameHtml(String name, Set files) {
+        @Override
+        public String annotateNameHtml(String name, Set<? extends FileObject> files) {
             return annotateName(name, files);
         }
         

@@ -66,7 +66,7 @@ public class MapFormat extends Format {
     private String rdel = "}"; // NOI18N
 
     /** Used formatting map */
-    private Map argmap;
+    private Map<String, ? extends Object> argmap;
 
     /** Offsets to {} expressions */
     private int[] offsets;
@@ -88,7 +88,7 @@ public class MapFormat extends Format {
     * For common work use  <code>format(pattern, arguments) </code>.
     * @param arguments keys and values to use in the format
     */
-    public MapFormat(Map arguments) {
+    public MapFormat(Map<String, ? extends Object> arguments) {
         super();
         setMap(arguments);
     }
@@ -310,14 +310,13 @@ public class MapFormat extends Format {
     */
     public String parse(String source) {
         StringBuffer sbuf = new StringBuffer(source);
-        Iterator key_it = argmap.keySet().iterator();
 
         //skipped = new RangeList();
         // What was this for??
         //process(source, "\"", "\""); // NOI18N
-        while (key_it.hasNext()) {
-            String it_key = (String) key_it.next();
-            String it_obj = formatObject(argmap.get(it_key));
+        for (Map.Entry<String, ? extends Object> keyEntry : argmap.entrySet()) {
+            String it_key = keyEntry.getKey();
+            String it_obj = formatObject(keyEntry.getValue());
             int it_idx = -1;
 
             do {
@@ -395,7 +394,7 @@ public class MapFormat extends Format {
     }
 
     /** Returns argument map */
-    public Map getMap() {
+    public Map<String, ? extends Object> getMap() {
         return argmap;
     }
 
@@ -407,7 +406,7 @@ public class MapFormat extends Format {
     *
     * @param map the argument map
     */
-    public void setMap(Map map) {
+    public void setMap(Map<String, ? extends Object> map) {
         argmap = map;
     }
 

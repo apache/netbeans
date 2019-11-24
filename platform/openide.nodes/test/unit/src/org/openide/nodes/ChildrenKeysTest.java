@@ -30,13 +30,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,7 +79,6 @@ public class ChildrenKeysTest extends NbTestCase {
 
     public void testGetNodesFromTwoThreads57769() throws Exception {
         final Ticker tick1 = new Ticker();
-        final List who = new java.util.Vector();
         
         final int[] count = new int[1];
         Children children= new Children.Keys(lazy()) {
@@ -126,11 +123,6 @@ public class ChildrenKeysTest extends NbTestCase {
             StringWriter w = new StringWriter();
             PrintWriter pw = new PrintWriter(w);
             w.write("Just two nodes created: " + count[0] + " stacks:\n");
-            Iterator it = who.iterator();
-            while (it.hasNext()) {
-                Exception e = (Exception)it.next();
-                e.printStackTrace(pw);
-            }
             pw.close();
             
             fail(w.toString());
@@ -2175,7 +2167,7 @@ public class ChildrenKeysTest extends NbTestCase {
 
     public void testGetNodesFromTwoThreads57769WhenBlockingAtRightPlaces() throws Exception {
         final Ticker tick = new Ticker();
-        final List who = new java.util.Vector();
+        final List<Exception> who = new java.util.Vector<>();
         
         final int[] count = new int[1];
         class ChildrenKeys extends Children.Keys {
@@ -2242,9 +2234,7 @@ public class ChildrenKeysTest extends NbTestCase {
             StringWriter w = new StringWriter();
             PrintWriter pw = new PrintWriter(w);
             w.write("Just two nodes created: " + count[0] + " stacks:\n");
-            Iterator it = who.iterator();
-            while (it.hasNext()) {
-                Exception e = (Exception)it.next();
+            for (Exception e : who) {
                 e.printStackTrace(pw);
             }
             pw.close();

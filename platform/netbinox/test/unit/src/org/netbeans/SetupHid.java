@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -128,11 +127,9 @@ public abstract class SetupHid extends NbTestCase {
         OutputStream os = new FileOutputStream(jar);
         try {
             JarOutputStream jos = new JarOutputStream(os, m);
-            Iterator it = contents.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                String path = (String) entry.getKey();
-                byte[] data = ((String) entry.getValue()).getBytes("UTF-8");
+            for (Map.Entry<String, String> entry : contents.entrySet()) {
+                String path =  entry.getKey();
+                byte[] data = entry.getValue().getBytes("UTF-8");
                 JarEntry je = new JarEntry(path);
                 je.setSize(data.length);
                 CRC32 crc = new CRC32();

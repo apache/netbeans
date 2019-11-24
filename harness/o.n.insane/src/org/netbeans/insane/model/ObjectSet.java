@@ -90,8 +90,8 @@ class ObjectSet {
         return get(key) != null;
     }
     
-    public Iterator iterator() {
-        return new Iterator() {
+    public Iterator<Object> iterator() {
+        return new Iterator<Object>() {
             int ptr = 0;
             Object next;
             public boolean hasNext() {

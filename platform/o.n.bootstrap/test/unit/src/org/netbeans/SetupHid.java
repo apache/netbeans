@@ -129,11 +129,11 @@ public abstract class SetupHid extends NbTestCase {
         OutputStream os = new FileOutputStream(jar);
         try {
             JarOutputStream jos = new JarOutputStream(os, m);
-            Iterator it = contents.entrySet().iterator();
+            Iterator<Map.Entry<String, String>> it = contents.entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                String path = (String) entry.getKey();
-                byte[] data = ((String) entry.getValue()).getBytes("UTF-8");
+                Map.Entry<String, String> entry = it.next();
+                String path = entry.getKey();
+                byte[] data = entry.getValue().getBytes("UTF-8");
                 JarEntry je = new JarEntry(path);
                 je.setSize(data.length);
                 CRC32 crc = new CRC32();

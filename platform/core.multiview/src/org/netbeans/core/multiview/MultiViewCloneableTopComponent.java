@@ -285,14 +285,11 @@ public final class MultiViewCloneableTopComponent extends CloneableTopComponent
         }
         // now try a best guess.. iterate the already created elements and check if any of
         // them is a Pane
-        Collection col = peer.model.getCreatedElements();
-        Iterator it = col.iterator();
-        while (it.hasNext()) {
-            el = (MultiViewElement)it.next();
-            if (el.getVisualRepresentation() instanceof CloneableEditorSupport.Pane) {
+        for (MultiViewElement el2 : peer.model.getCreatedElements()) {
+            if (el2.getVisualRepresentation() instanceof CloneableEditorSupport.Pane) {
                 // fingers crossed and hope for the best... could result in bad results once
                 // we have multiple editors in the multiview component.
-                return el;
+                return el2;
             }
         }
         

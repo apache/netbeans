@@ -130,8 +130,9 @@ public class CreateFromTemplateTest extends NbTestCase {
             super(mo, fo);
         }
         
+        @Override
         protected java.text.Format createFormat(FileObject target, String n, String e) {
-            return new MapFormat(Collections.emptyMap());
+            return new MapFormat(Collections.<String, Object>emptyMap());
         }
     }
     

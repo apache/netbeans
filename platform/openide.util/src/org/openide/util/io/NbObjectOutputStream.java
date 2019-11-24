@@ -27,7 +27,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -140,17 +139,14 @@ public class NbObjectOutputStream extends ObjectOutputStream {
         String classname = cl.getName();
 
         if (alreadyReported.add(classname)) {
-            Set<Class> serializingUniq = new HashSet<Class>();
+            Set<Class> serializingUniq = new HashSet<>();
             StringBuffer b = new StringBuffer("Serializable class "); // NOI18N
             b.append(classname);
             b.append(" does not declare serialVersionUID field. Encountered while storing: ["); // NOI18N
 
-            Iterator it = serializing.iterator();
             boolean first = true;
 
-            while (it.hasNext()) {
-                Class c = (Class) it.next();
-
+            for (Class c : serializing) {
                 if ((c != cl) && serializingUniq.add(c)) {
                     if (first) {
                         first = false;

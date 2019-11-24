@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,12 +97,10 @@ public final class LocalFileSystemEx extends LocalFileSystem {
         }
     }
 
-    private static Set<String> getInvalid (Set names) {
+    private static Set<String> getInvalid(Set<String> names) {
         LOGGER.finest("133616 - checking invalid");
         HashSet<String> invalid = new HashSet<String>();
-        Iterator i = names.iterator ();
-        while (i.hasNext ()) {
-            String name = (String) i.next ();
+        for (String name : names) {
             FileObject fo = FileUtil.getConfigFile(name);
             if (null == fo || !fo.isLocked()) {
                 // file lock recorded in potentialLock has been used

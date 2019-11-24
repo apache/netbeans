@@ -45,9 +45,9 @@ public final class NodesRegistrationSupport {
     static final String PACKAGE = "packagePath"; //NOI18N
     static final String EDITOR_CLASS = "propertyEditorClass"; //NOI18N
     
-    private static AbstractRegistrator clsReg = null;
-    private static AbstractRegistrator beanInfoReg = null;
-    private static AbstractRegistrator pkgReg = null;
+    private static AbstractRegistrator<PEClassRegistration> clsReg = null;
+    private static AbstractRegistrator<BeanInfoRegistration> beanInfoReg = null;
+    private static AbstractRegistrator<PEPackageRegistration> pkgReg = null;
     
     private static List<String> originalPath = null;
     private static List<String> originalBeanInfoSearchPath = null;
@@ -55,13 +55,12 @@ public final class NodesRegistrationSupport {
     public static synchronized void registerPropertyEditors() {
         
         if (clsReg == null) {
-            clsReg = new AbstractRegistrator(PEClassRegistration.class) {
+            clsReg = new AbstractRegistrator<PEClassRegistration>(PEClassRegistration.class) {
 
                 @Override
                 void register() {
                     ClassLoader clsLoader = findClsLoader();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEClassRegistration clsReg = (PEClassRegistration) it.next();
+                    for (PEClassRegistration clsReg : lookupResult.allInstances()) {
                         for (String type : clsReg.targetTypes) {
                             try {
                                 Class<?> cls = getClassFromCanonicalName(type);
@@ -83,13 +82,12 @@ public final class NodesRegistrationSupport {
         }
         
         if (pkgReg == null) {
-            pkgReg = new AbstractRegistrator(PEPackageRegistration.class) {
+            pkgReg = new AbstractRegistrator<PEPackageRegistration>(PEPackageRegistration.class) {
 
                 @Override
                 void register() {
-                    Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEPackageRegistration pkgReg = (PEPackageRegistration) it.next();
+                    Set<String> newPath = new LinkedHashSet<>();
+                    for (PEPackageRegistration pkgReg : lookupResult.allInstances()) {
                         newPath.add(pkgReg.pkg);
                     }
                     newPath.addAll(originalPath);
@@ -108,13 +106,12 @@ public final class NodesRegistrationSupport {
         }
         
         if (beanInfoReg == null) {
-            beanInfoReg = new AbstractRegistrator(BeanInfoRegistration.class) {
+            beanInfoReg = new AbstractRegistrator<BeanInfoRegistration>(BeanInfoRegistration.class) {
 
                 @Override
                 void register() {
-                    Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        BeanInfoRegistration biReg = (BeanInfoRegistration) it.next();
+                    Set<String> newPath = new LinkedHashSet<>();
+                    for (BeanInfoRegistration biReg : lookupResult.allInstances()) {
                         newPath.add(biReg.searchPath);
                     }
                     newPath.addAll(originalBeanInfoSearchPath);
@@ -237,11 +234,11 @@ public final class NodesRegistrationSupport {
         }
     }
     
-    private static abstract class AbstractRegistrator implements LookupListener {
-        Result lookupResult;
-        private final Class cls;
+    private static abstract class AbstractRegistrator<T> implements LookupListener {
+        Result<T> lookupResult;
+        private final Class<T> cls;
         
-        AbstractRegistrator(Class cls) {
+        AbstractRegistrator(Class<T> cls) {
             this.cls = cls;
             init();
             lookupResult = Lookup.getDefault().lookupResult(cls);

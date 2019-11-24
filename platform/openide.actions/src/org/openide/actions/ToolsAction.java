@@ -362,10 +362,10 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
 
                     removeAll();
 
-                    Iterator it = generate(toolsAction, false).iterator();
+                    Iterator<JMenuItem> it = generate(toolsAction, false).iterator();
 
                     while (it.hasNext()) {
-                        java.awt.Component item = (java.awt.Component) it.next();
+                        JMenuItem item = it.next();
 
                         if (item == null) {
                             addSeparator();

@@ -351,7 +351,7 @@ final class InsaneConverter {
         objsOffset = currentOffset;
         
         // compute offsets of instances
-        for (Iterator it = instanceInfo.iterator(); it.hasNext(); ) {
+        for (Iterator<Object> it = instanceInfo.iterator(); it.hasNext(); ) {
             InstanceInfo info = (InstanceInfo)it.next();
             currentOffset = info.computeNextOffset(currentOffset);
         }

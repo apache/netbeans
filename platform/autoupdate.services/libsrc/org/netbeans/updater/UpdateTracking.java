@@ -854,17 +854,15 @@ public final class UpdateTracking {
             config.getParentFile().mkdirs();
             Boolean isAutoload = null;
             Boolean isEager = null;
-            java.util.Iterator it = newVersion.getFiles().iterator();
             boolean needToWrite = false;
-            while (it.hasNext()) {
-                ModuleFile f = (ModuleFile) it.next ();
+            for (ModuleFile f : newVersion.getFiles()) {
                 String n = f.getName();
                 String parentDir;
                 {
                     File p = new File(f.getName()).getParentFile();
                     parentDir = p != null ? p.getName() : "";
                 }
-                needToWrite = needToWrite || n.indexOf(ModuleDeactivator.MODULES) >= 0 || osgi;
+                needToWrite = needToWrite || n.contains(ModuleDeactivator.MODULES) || osgi;
                 if (n.endsWith(".jar") && ! parentDir.equals("ext")) { // NOI18N
                     // ok, module candidate
                     candidate = f.getName();

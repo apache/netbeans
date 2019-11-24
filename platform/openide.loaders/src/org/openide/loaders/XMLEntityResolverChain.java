@@ -92,26 +92,22 @@ final class XMLEntityResolverChain implements EntityResolver {
      * @return An InputSource object describing the new input source, 
      *         or null to request that the parser open a regular URI connection to the system identifier.
      */
+    @Override
     public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
-        
         // user's resolver chain
         SAXException lsex = null;
         IOException lioex = null;
         
         synchronized (resolverChain) {
-            Iterator it = resolverChain.iterator();
-            while (it.hasNext()) {
-                EntityResolver resolver = (EntityResolver) it.next();
+            for (EntityResolver resolver : resolverChain) {
                 try {
                     InputSource test = resolver.resolveEntity(publicID, systemID);
                     if (test == null) continue;
                     return test;
                 } catch (SAXException sex) {
                     lsex = sex;
-                    continue;
                 } catch (IOException ioex) {
                     lioex = ioex;
-                    continue;
                 }
             }
             

@@ -570,10 +570,8 @@ implements java.io.Serializable {
                 // [PENDING] in the future a more efficient API may be introduced
                 // (actually currently you can look up with a template giving the name
                 // as part of the lookup item ID but this is not an official API)
-                Iterator modules = Lookup.getDefault().lookupAll(ModuleInfo.class).iterator();
                 boolean ok = false;
-                while (modules.hasNext()) {
-                    ModuleInfo module = (ModuleInfo)modules.next();
+                for (ModuleInfo module : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
                     if (module.getCodeNameBase().equals(modulename)) {
                         if (module.isEnabled()) {
                             // Carry on.

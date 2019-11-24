@@ -273,11 +273,9 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     /** Mark all contained files as belonging to this loader.
      * If the files are rescanned (e.g. after a disposal), the current data loader will be given preference.
     */
-    protected final void markFiles () throws IOException {
-        Iterator en = files ().iterator ();
-        while (en.hasNext ()) {
-            FileObject fo = (FileObject)en.next ();
-            loader.markFile (fo);
+    protected final void markFiles() throws IOException {
+        for (FileObject fo : files()) {
+            loader.markFile(fo);
         }
     }
 

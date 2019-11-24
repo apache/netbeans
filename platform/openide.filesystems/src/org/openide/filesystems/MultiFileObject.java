@@ -75,7 +75,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
     /** list of objects that we delegate to and that already
     * has been created.
     */
-    private Set delegates;
+    private Set<FileObject> delegates;
 
     /** current delegate (the first object to delegate to), never null */
     private FileObject leader;
@@ -170,8 +170,8 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         MultiFileSystem mfs = getMultiFileSystem();
         FileSystem[] arr = mfs.getDelegates();
 
-        Set now = (delegates == null) ? Collections.EMPTY_SET : delegates;
-        Set<FileObject> del = new HashSet<FileObject>(arr.length * 2);
+        Set<FileObject> now = (delegates == null) ? Collections.emptySet() : delegates;
+        Set<FileObject> del = new HashSet<>(arr.length * 2);
         Number maxWeight = 0;
         FileObject led = null;
 
@@ -204,9 +204,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             }
         }
 
-        Iterator it = now.iterator();
-        while (it.hasNext()) {
-            FileObject fo = (FileObject) it.next();
+        for (FileObject fo : now) {
             fo.removeFileChangeListener(weakL);
         }
 

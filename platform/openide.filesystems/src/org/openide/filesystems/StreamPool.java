@@ -39,8 +39,8 @@ final class StreamPool extends Object {
     private static Map<FileObject, StreamPool> fo2StreamPool = new WeakHashMap<FileObject, StreamPool>();
     private static Map<FileSystem, StreamPool> fs2StreamPool = new WeakHashMap<FileSystem, StreamPool>();
     private static Boolean annotateUnclosedStreams;
-    private Set<InputStream> iStreams;
-    private Set<OutputStream> oStreams;
+    private Set<NotifyInputStream> iStreams;
+    private Set<NotifyOutputStream> oStreams;
 
     /** Creates new StreamPool */
     private StreamPool() {
@@ -59,19 +59,22 @@ final class StreamPool extends Object {
      * @return subclassed InputStream that is registered as mentioned above */
     public static InputStream createInputStream(final AbstractFolder fo)
     throws FileNotFoundException {
-        InputStream retVal = null;
+        NotifyInputStream notyfyIS = null;
 
         synchronized (StreamPool.class) {
             if (get(fo).waitForOutputStreamsClosed(fo, 2000)) {
-                retVal = new NotifyInputStream(fo);
-                get(fo).iStream().add(retVal);
-                get(fo.getFileSystem()).iStream().add(retVal);
+                notyfyIS = new NotifyInputStream(fo);
+                get(fo).iStream().add(notyfyIS);
+                get(fo.getFileSystem()).iStream().add(notyfyIS);
             }
         }
 
-        if ((retVal != null) && (retVal instanceof NotifyInputStream)) {
+        InputStream retVal;
+
+        if (null != notyfyIS) {
             AbstractFileSystem abstractFileSystem = ((AbstractFileSystem) fo.getFileSystem());
-            ((NotifyInputStream) retVal).setOriginal(abstractFileSystem.info.inputStream(fo.getPath()));
+            notyfyIS.setOriginal(abstractFileSystem.info.inputStream(fo.getPath()));
+            retVal = notyfyIS;
         } else {
             retVal = new InputStream() {
                         @Override
@@ -100,21 +103,24 @@ final class StreamPool extends Object {
      * */
     public static OutputStream createOutputStream(final AbstractFolder fo, boolean fireFileChanged)
     throws IOException {
-        OutputStream retVal = null;
+        NotifyOutputStream notifyOS = null;
 
         synchronized (StreamPool.class) {
             if (get(fo).waitForInputStreamsClosed(fo, 2000) &&
                 get(fo).waitForOutputStreamsClosed(fo, 2000)
             ) {
-                retVal = new NotifyOutputStream(fo, fireFileChanged);
-                get(fo).oStream().add(retVal);
-                get(fo.getFileSystem()).oStream().add(retVal);
+                notifyOS = new NotifyOutputStream(fo, fireFileChanged);
+                get(fo).oStream().add(notifyOS);
+                get(fo.getFileSystem()).oStream().add(notifyOS);
             }
         }
 
-        if ((retVal != null) && (retVal instanceof NotifyOutputStream)) {
+        OutputStream retVal;
+
+        if (null != notifyOS) {
             AbstractFileSystem abstractFileSystem = ((AbstractFileSystem) fo.getFileSystem());
-            ((NotifyOutputStream) retVal).setOriginal(abstractFileSystem.info.outputStream(fo.getPath()));
+            notifyOS.setOriginal(abstractFileSystem.info.outputStream(fo.getPath()));
+            retVal = notifyOS;
         } else {
             retVal = new OutputStream() {
                         @Override
@@ -157,12 +163,7 @@ final class StreamPool extends Object {
 
         synchronized (StreamPool.class) {
             if (iStreams != null) {
-                Iterator itIs = iStreams.iterator();
-                NotifyInputStream nis;
-
-                while (itIs.hasNext()) {
-                    nis = (NotifyInputStream) itIs.next();
-
+                for (NotifyInputStream nis : iStreams) {
                     Exception annotation = nis.getException();
 
                     if (annotation != null) {
@@ -172,12 +173,7 @@ final class StreamPool extends Object {
             }
 
             if (oStreams != null) {
-                Iterator itOs = oStreams.iterator();
-                NotifyOutputStream nos;
-
-                while (itOs.hasNext()) {
-                    nos = (NotifyOutputStream) itOs.next();
-
+                for (NotifyOutputStream nos : oStreams) {
                     Exception annotation = nos.getException();
 
                     if (annotation != null) {
@@ -262,17 +258,17 @@ final class StreamPool extends Object {
         return strPool;
     }
 
-    private Set<InputStream> iStream() {
+    private Set<NotifyInputStream> iStream() {
         if (iStreams == null) {
-            iStreams = new WeakSet<InputStream>();
+            iStreams = new WeakSet<>();
         }
 
         return iStreams;
     }
 
-    private Set<OutputStream> oStream() {
+    private Set<NotifyOutputStream> oStream() {
         if (oStreams == null) {
-            oStreams = new WeakSet<OutputStream>();
+            oStreams = new WeakSet<>();
         }
 
         return oStreams;

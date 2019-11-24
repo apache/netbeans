@@ -64,9 +64,11 @@ public final class InsaneEngine {
     // to the known* structures and reported to the visitor
     private Queue<Object> queue = new Queue<Object>();
     
-    public void traverse(Collection roots) throws Exception {
+    public void traverse(Collection<?> roots) throws Exception {
         // process all given roots first - remember them and put them into queue
-        for (Iterator it = roots.iterator(); it.hasNext(); ) recognize(it.next());
+        for (Object root : roots) {
+            recognize(root);
+        }
         
         while (!queue.isEmpty()) {
             process(queue.get());

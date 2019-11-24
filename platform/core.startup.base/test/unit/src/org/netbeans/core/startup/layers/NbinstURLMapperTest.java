@@ -30,7 +30,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.Permission;
 import java.util.StringTokenizer;
-import org.netbeans.core.startup.layers.NbinstURLMapper;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -63,10 +62,9 @@ public class NbinstURLMapperTest extends NbTestCase {
         
         File f = this.getWorkDir();
         this.clearWorkDir();
-        Lookup.Result result = Lookup.getDefault().lookupResult(InstalledFileLocator.class);
+        Lookup.Result<InstalledFileLocator> result = Lookup.getDefault().lookupResult(InstalledFileLocator.class);
         boolean found = false;
-        for (java.util.Iterator it = result.allInstances().iterator(); it.hasNext();) {
-            Object locator = it.next();
+        for (InstalledFileLocator locator : result.allInstances()) {
             if (locator instanceof TestInstalledFileLocator) {
                 ((TestInstalledFileLocator)locator).setRoot(f);
                 found = true;

@@ -1257,9 +1257,9 @@ widthcheck:  {
      */
     public static <T> List<T> topologicalSort(Collection<? extends T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
-        Map<T,Boolean> finished = new HashMap<T,Boolean>();
-        List<T> r = new ArrayList<T>(Math.max(c.size(), 1));
-        List<T> cRev = new ArrayList<T>(c);
+        Map<T,Boolean> finished = new HashMap<>();
+        List<T> r = new ArrayList<>(Math.max(c.size(), 1));
+        List<T> cRev = new ArrayList<>(c);
         Collections.reverse(cRev);
 
         Iterator<T> it = cRev.iterator();
@@ -1304,7 +1304,7 @@ widthcheck:  {
                 return null;
             }
 
-            ArrayList<T> cycle = new ArrayList<T>();
+            ArrayList<T> cycle = new ArrayList<>();
             cycle.add(node);
             finished.put(node, null);
 

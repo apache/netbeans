@@ -200,7 +200,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
     }
    
     public void testNodesAreThereEvenIfTheyAreNotContainedInTheirOwnLookup () {
-        Lookup.Result res = lookup.lookup(new Lookup.Template(Node.class));
+        Lookup.Result<Node> res = lookup.lookup(new Lookup.Template(Node.class));
         
         AbstractNode n1 = new AbstractNode(Children.LEAF, Lookup.EMPTY);
         
@@ -227,7 +227,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         // then it contains only the one correct node..
         listener.check ("Node changed", 1);
         
-        Collection addedByTCLookup = res.allInstances();
+        Collection<? extends Node> addedByTCLookup = res.allInstances();
         assertEquals ("One item still", 1, addedByTCLookup.size ());
         
         content.add (n2);
@@ -247,9 +247,9 @@ public class TopComponentGetLookupTest extends NbTestCase {
         // this could be commented out if necessary:
         listener.check ("And nothing is fired", 0);
         // Change from former behavior (#36336): we don't *want* n1 in res.
-        Collection one = res.allInstances();
+        Collection<? extends Node> one = res.allInstances();
         assertEquals("Really just the activated node", 1, one.size());
-        Iterator it = one.iterator();
+        Iterator<? extends Node> it = one.iterator();
         assertEquals("It is the one added by the TC lookup", n2, it.next());
     }
     

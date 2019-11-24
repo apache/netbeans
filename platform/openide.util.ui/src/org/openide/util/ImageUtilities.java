@@ -441,7 +441,7 @@ public final class ImageUtilities {
         currentLoader = Thread.currentThread();
             
         if (loaderQuery == null) {
-            loaderQuery = Lookup.getDefault().lookup(new Lookup.Template<ClassLoader>(ClassLoader.class));
+            loaderQuery = Lookup.getDefault().lookup(new Lookup.Template<>(ClassLoader.class));
             loaderQuery.addLookupListener(
                 new LookupListener() {
                     public void resultChanged(LookupEvent ev) {
@@ -452,9 +452,9 @@ public final class ImageUtilities {
             );
         }
 
-        Iterator it = loaderQuery.allInstances().iterator();
+        Iterator<? extends ClassLoader> it = loaderQuery.allInstances().iterator();
         if (it.hasNext()) {
-            ClassLoader toReturn = (ClassLoader) it.next();
+            ClassLoader toReturn = it.next();
             if (currentLoader == Thread.currentThread()) {
                 currentLoader = toReturn;
             }

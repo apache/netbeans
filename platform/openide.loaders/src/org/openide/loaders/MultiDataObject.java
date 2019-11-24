@@ -385,11 +385,11 @@ public class MultiDataObject extends DataObject {
      */
     private void removeAllInvalid () {
         ERR.log(Level.FINE, "removeAllInvalid, started {0}", this); // NOI18N
-        Iterator it = checkSecondary ().entrySet ().iterator ();
+        Iterator<Map.Entry<FileObject,Entry>> it = checkSecondary ().entrySet ().iterator ();
         boolean fire = false;
         while (it.hasNext ()) {
-            Map.Entry e = (Map.Entry)it.next ();
-            FileObject fo = (FileObject)e.getKey ();
+            Map.Entry<FileObject,Entry> e = it.next ();
+            FileObject fo = e.getKey ();
             if (fo == null || !fo.isValid ()) {
                 it.remove ();
                 if (ERR.isLoggable(Level.FINE)) {

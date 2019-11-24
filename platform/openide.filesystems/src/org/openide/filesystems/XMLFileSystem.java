@@ -861,10 +861,8 @@ public final class XMLFileSystem extends AbstractFileSystem {
                 foAttrs = new XMLMapAttr();
             }
 
-            Iterator it = attrs.entrySet().iterator();
             boolean ch = false;
-            while (it.hasNext()) {
-                Map.Entry attrEntry = (Map.Entry) it.next();
+            for (Map.Entry<String, XMLMapAttr.Attr> attrEntry : attrs.entrySet()) {
                 Object prev = foAttrs.put(attrEntry.getKey(), attrEntry.getValue());
                 
                 ch |= (prev == null && attrEntry.getValue() != null) || !prev.equals(attrEntry.getValue());
@@ -1212,7 +1210,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
                     if (XMLMapAttr.Attr.isValid(key) != -1) {
                         XMLMapAttr.Attr attr = XMLMapAttr.createAttributeAndDecode(key, value);
                         XMLMapAttr attrMap = topRE.getAttr(true);
-                        Object retVal = attrMap.put(foName, attr);
+                        XMLMapAttr.Attr retVal = attrMap.put(foName, attr);
 
                         if (retVal != null) {
                             attrMap.put(foName, retVal);

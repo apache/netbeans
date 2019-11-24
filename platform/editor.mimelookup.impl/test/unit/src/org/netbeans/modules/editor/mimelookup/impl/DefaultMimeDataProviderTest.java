@@ -21,7 +21,6 @@ package org.netbeans.modules.editor.mimelookup.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.openide.util.Lookup;
@@ -38,14 +37,13 @@ public class DefaultMimeDataProviderTest extends NbTestCase {
     }
 
     public void testProviderRegistration() {
-        Collection providers = Lookup.getDefault().lookupAll(MimeDataProvider.class);
+        Collection<? extends MimeDataProvider> providers = Lookup.getDefault().lookupAll(MimeDataProvider.class);
         assertTrue("No providers registered", providers.size() > 0);
         
-        ArrayList defaultProviders = new ArrayList();
-        for (Iterator i = providers.iterator(); i.hasNext(); ) {
-            MimeDataProvider provider = (MimeDataProvider) i.next();
+        ArrayList<DefaultMimeDataProvider> defaultProviders = new ArrayList<>();
+        for (MimeDataProvider provider : providers) {
             if (provider instanceof DefaultMimeDataProvider) {
-                defaultProviders.add(provider);
+                defaultProviders.add((DefaultMimeDataProvider) provider);
             }
         }
         
@@ -53,8 +51,7 @@ public class DefaultMimeDataProviderTest extends NbTestCase {
         if (defaultProviders.size() > 1) {
             String msg = "Too many default providers registered:\n";
             
-            for (Iterator i = defaultProviders.iterator(); i.hasNext();) {
-                DefaultMimeDataProvider provider = (DefaultMimeDataProvider) i.next();
+            for (DefaultMimeDataProvider provider : defaultProviders) {
                 msg += provider + "\n";
             }
             

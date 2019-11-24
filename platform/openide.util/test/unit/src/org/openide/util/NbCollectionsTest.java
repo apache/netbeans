@@ -132,7 +132,7 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedIteratorByFilter() throws Exception {
-        Iterator raw = Arrays.asList("one", 2, "three").iterator();
+        Iterator<?> raw = Arrays.asList("one", 2, "three").iterator();
         Iterator<String> strings = NbCollections.checkedIteratorByFilter(raw, String.class, false);
         assertTrue(strings.hasNext());
         assertEquals("one", strings.next());
@@ -154,7 +154,7 @@ public class NbCollectionsTest extends NbTestCase {
         assertTrue(strings.hasNext());
         assertEquals("three", strings.next());
         assertFalse(strings.hasNext());
-        List l = new ArrayList(Arrays.asList(new Object[] {"one", 2, "three"}));
+        List<?> l = new ArrayList(Arrays.asList(new Object[] {"one", 2, "three"}));
         raw = l.iterator();
         strings = NbCollections.checkedIteratorByFilter(raw, String.class, false);
         assertTrue(strings.hasNext());

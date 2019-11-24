@@ -19,11 +19,13 @@
 
 package org.bar;
 
-public class Iterator2 implements java.util.Iterator {
+public class Iterator2<T> implements java.util.Iterator<T> {
+    @Override
     public boolean hasNext() {return false;}
     
-    public Object next() {return null;}
+    @Override
+    public T next() {return null;}
     
+    @Override
     public void remove() {}
-   
 }

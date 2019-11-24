@@ -131,17 +131,14 @@ public abstract class SystemOption extends SharedClassObject implements HelpCtx.
      */
     protected void reset() {
         synchronized (getLock()) {
-            Map m = (Map) getProperty(PROP_ORIGINAL_VALUES);
+            Map<?, ?> m = (Map<?, ?>) getProperty(PROP_ORIGINAL_VALUES);
 
             if ((m == null) || m.isEmpty()) {
                 return;
             }
 
-            java.util.Iterator it = m.entrySet().iterator();
 WHILE: 
-            while (it.hasNext()) {
-                Map.Entry e = (Map.Entry) it.next();
-
+            for (Map.Entry<?, ?> e : m.entrySet()) {
                 if (e.getValue() instanceof Box) {
                     Object value = ((Box) e.getValue()).value;
 

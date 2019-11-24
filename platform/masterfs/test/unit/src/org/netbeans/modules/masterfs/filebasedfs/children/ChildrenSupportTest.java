@@ -288,7 +288,7 @@ public class ChildrenSupportTest extends NbTestCase {
         assertTrue(childrenSupport.isStatus(ChildrenSupport.ALL_CHILDREN_CACHED));
     }
 
-    private Map refresh(ChildrenSupport childrenSupport, FileNaming fromFile) {
+    private Map<FileNaming, Integer> refresh(ChildrenSupport childrenSupport, FileNaming fromFile) {
         Runnable[] task = new Runnable[1];
         Map<FileNaming, Integer> res = null;
         while (res == null) {
@@ -400,11 +400,9 @@ public class ChildrenSupportTest extends NbTestCase {
      * Test of getChildren method, of class org.netbeans.modules.masterfs.children.FolderPathItems.
      */
     public void testGetChildrenPathItems() throws Exception{
-        Set childItems = getChildren(folderItem, folderName, true);
-        List lst = Arrays.asList(testFile.listFiles());
-        Iterator it = childItems.iterator();
-        while (it.hasNext()) {
-            FileNaming pi = (FileNaming)it.next();
+        Set<FileNaming> childItems = getChildren(folderItem, folderName, true);
+        List<File> lst = Arrays.asList(testFile.listFiles());
+        for (FileNaming pi : childItems) {
             File f = pi.getFile();
             assertTrue (lst.contains(f));
         }
@@ -415,10 +413,8 @@ public class ChildrenSupportTest extends NbTestCase {
      */
     public void testGetChildItem() throws Exception{
         getChildren(folderItem, folderName, true);
-        List lst = Arrays.asList(testFile.listFiles());
-        Iterator it = lst.iterator();
-        while (it.hasNext()) {
-            File f = (File)it.next();
+        List<File> lst = Arrays.asList(testFile.listFiles());
+        for (File f : lst) {
             FileNaming item = folderItem.getChild(f.getName(), folderName,false);
             assertNotNull(item);
             assertTrue (item.getFile().equals(f));
@@ -434,15 +430,13 @@ public class ChildrenSupportTest extends NbTestCase {
         assertTrue (added1.mkdirs());
         assertTrue (added2.mkdirs());
 
-        List added = Arrays.asList(new String[] {"added1", "added2"});
-        List removed = Arrays.asList(new String[] {"removed1", "removed2"});
+        List<String> added = Arrays.asList(new String[] {"added1", "added2"});
+        List<String> removed = Arrays.asList(new String[] {"removed1", "removed2"});
 
-        Map changes = refresh(fpi, fpiName);
-        Iterator it = changes.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            FileNaming pItem = (FileNaming)entry.getKey();
-            Integer type = (Integer)entry.getValue();
+        Map<FileNaming, Integer> changes = refresh(fpi, fpiName);
+        for (Map.Entry<FileNaming, Integer> entry : changes.entrySet()) {
+            FileNaming pItem = entry.getKey();
+            Integer type = entry.getValue();
             if (type == ChildrenCache.ADDED_CHILD) {
                 assertTrue (added.contains(pItem.getName()));
             }
@@ -462,12 +456,10 @@ public class ChildrenSupportTest extends NbTestCase {
         assertTrue (added1.mkdirs());
         assertTrue (added2.mkdirs());
 
-        Map changes = refresh(fpi, fpiName);
-        Iterator it = changes.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            FileNaming pItem = (FileNaming)entry.getKey();
-            Integer type = (Integer)entry.getValue();
+        Map<FileNaming, Integer> changes = refresh(fpi, fpiName);
+        for (Map.Entry<FileNaming, Integer> entry : changes.entrySet()) {
+            FileNaming pItem = entry.getKey();
+            Integer type = entry.getValue();
             assertEquals("removed1", pItem.getName());
         }
         assertTrue (changes.size() == 1);

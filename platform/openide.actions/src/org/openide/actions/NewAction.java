@@ -156,14 +156,11 @@ public final class NewAction extends NodeAction {
 
         private NewType[] newTypes() {
             if (lookup != null) {
-                java.util.Collection c = lookup.lookupResult(Node.class).allItems();
+                java.util.Collection<? extends Lookup.Item<Node>> c = lookup.lookupResult(Node.class).allItems();
 
                 if (c.size() == 1) {
-                    java.util.Iterator it = c.iterator();
-
-                    while (it.hasNext()) {
-                        Lookup.Item item = (Lookup.Item) it.next();
-                        Node n = (Node) item.getInstance();
+                    for (Lookup.Item<Node> item : c) {
+                        Node n = item.getInstance();
 
                         if (n != null) {
                             if (n == prevNode && prevTypes != null) {

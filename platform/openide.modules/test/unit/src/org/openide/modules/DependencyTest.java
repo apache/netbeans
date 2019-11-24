@@ -76,11 +76,11 @@ public class DependencyTest extends NbTestCase {
     }
     
     public void testParseMultiple() throws Exception {
-        Set multiple = Dependency.create(Dependency.TYPE_MODULE, " org.foo/1 > 0.1, org.bar  ");
+        Set<Dependency> multiple = Dependency.create(Dependency.TYPE_MODULE, " org.foo/1 > 0.1, org.bar  ");
         assertTrue(multiple.size() == 2);
-        Iterator it = multiple.iterator();
-        Dependency d1 = (Dependency)it.next();
-        Dependency d2 = (Dependency)it.next();
+        Iterator<Dependency> it = multiple.iterator();
+        Dependency d1 = it.next();
+        Dependency d2 = it.next();
         if (d1.getName().equals("org.bar")) {
             // Swap so they are in order.
             Dependency tmp = d1;

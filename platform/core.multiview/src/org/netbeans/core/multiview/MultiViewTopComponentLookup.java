@@ -31,8 +31,8 @@ import org.openide.util.lookup.ProxyLookup;
 
 class MultiViewTopComponentLookup extends Lookup {
 
-    private MyProxyLookup proxy;
-    private InitialProxyLookup initial;
+    private final MyProxyLookup proxy;
+    private final InitialProxyLookup initial;
     
     public MultiViewTopComponentLookup(ActionMap initialObject) {
         super();
@@ -48,8 +48,8 @@ class MultiViewTopComponentLookup extends Lookup {
     }
     
     @Override
-    public Lookup.Item lookupItem(Lookup.Template template) {
-        Lookup.Item retValue;
+    public <T> Item<T> lookupItem(Template<T> template) {
+        Lookup.Item<T> retValue;
         if (template.getType() == ActionMap.class || (template.getId() != null && template.getId().equals("javax.swing.ActionMap"))) {
             return initial.lookupItem(template);
         }
@@ -59,24 +59,25 @@ class MultiViewTopComponentLookup extends Lookup {
     }    
     
      
-    public Object lookup(Class clazz) {
+    @Override
+    public <T> T lookup(Class<T> clazz) {
         if (clazz == ActionMap.class) {
             return initial.lookup(clazz);
         }
-        Object retValue;
+        T retValue;
         
         retValue = proxy.lookup(clazz);
         return retValue;
     }
     
-    public Lookup.Result lookup(Lookup.Template template) {
-        
+    @Override
+    public <T> Lookup.Result<T> lookup(Lookup.Template<T> template) {
         if (template.getType() == ActionMap.class || (template.getId() != null && template.getId().equals("javax.swing.ActionMap"))) {
             return initial.lookup(template);
         }
-        Lookup.Result retValue;
+        Lookup.Result<T> retValue;
         retValue = proxy.lookup(template);
-        retValue = new ExclusionResult(retValue);
+        retValue = new ExclusionResult<>(retValue);
         return retValue;
     }
 
@@ -87,33 +88,35 @@ class MultiViewTopComponentLookup extends Lookup {
     /**
      * A lookup result excluding some instances.
      */
-    private static final class ExclusionResult extends Lookup.Result implements LookupListener {
+    private static final class ExclusionResult<T> extends Lookup.Result<T> implements LookupListener {
         
-        private final Lookup.Result delegate;
-        private final List listeners = new ArrayList(); // List<LookupListener>
+        private final Lookup.Result<T> delegate;
+        private final List<LookupListener> listeners = new ArrayList<>();
         private Collection lastResults;
         
-        public ExclusionResult(Lookup.Result delegate) {
+        public ExclusionResult(Lookup.Result<T> delegate) {
             this.delegate = delegate;
         }
         
-        public Collection allInstances() {
+        @Override
+        public Collection<T> allInstances() {
             // this shall remove duplicates??
-            Set s = new HashSet(delegate.allInstances());
-            return s;
+            return new HashSet<>(delegate.allInstances());
         }
         
-        public Set allClasses() {
+        @Override
+        public Set<Class<? extends T>> allClasses() {
             return delegate.allClasses(); // close enough
         }
         
-        public Collection allItems() {
+        @Override
+        public Collection<? extends Item<T>> allItems() {
             // remove duplicates..
-            Set s = new HashSet(delegate.allItems());
-            Iterator it = s.iterator();
-            Set instances = new HashSet();
+            Set<? extends Item<T>> s = new HashSet<>(delegate.allItems());
+            Iterator<? extends Item<T>> it = s.iterator();
+            Set<T> instances = new HashSet();
             while (it.hasNext()) {
-                Lookup.Item i = (Lookup.Item)it.next();
+                Lookup.Item<T> i = it.next();
                 if (instances.contains(i.getInstance())) {
                     it.remove();
                 } else {
@@ -123,6 +126,7 @@ class MultiViewTopComponentLookup extends Lookup {
             return s;
         }
         
+        @Override
         public void addLookupListener(LookupListener l) {
             synchronized (listeners) {
                 if (listeners.isEmpty()) {
@@ -135,6 +139,7 @@ class MultiViewTopComponentLookup extends Lookup {
             }
         }
         
+        @Override
         public void removeLookupListener(LookupListener l) {
             synchronized (listeners) {
                 listeners.remove(l);
@@ -145,6 +150,7 @@ class MultiViewTopComponentLookup extends Lookup {
             }
         }
         
+        @Override
         public void resultChanged(LookupEvent ev) {
             synchronized (listeners) {
                 Collection current = allInstances();
@@ -159,7 +165,7 @@ class MultiViewTopComponentLookup extends Lookup {
             LookupEvent ev2 = new LookupEvent(this);
             LookupListener[] ls;
             synchronized (listeners) {
-                ls = (LookupListener[])listeners.toArray(new LookupListener[listeners.size()]);
+                ls = listeners.toArray(new LookupListener[listeners.size()]);
             }
             for (int i = 0; i < ls.length; i++) {
                 ls[i].resultChanged(ev2);
@@ -169,7 +175,7 @@ class MultiViewTopComponentLookup extends Lookup {
     }
     
     private static class MyProxyLookup extends ProxyLookup {
-        private Lookup initialLookup;
+        private final Lookup initialLookup;
         public MyProxyLookup(Lookup initial) {
             super(new Lookup[] {initial});
             initialLookup = initial;
@@ -189,7 +195,7 @@ class MultiViewTopComponentLookup extends Lookup {
     }
     
     static class InitialProxyLookup extends ProxyLookup {
-        private ActionMap initObject;
+        private final ActionMap initObject;
         public InitialProxyLookup(ActionMap obj) {
             super(new Lookup[] {Lookups.fixed(new Object[] {new LookupProxyActionMap(obj)})});
             initObject = obj;
@@ -206,7 +212,7 @@ class MultiViewTopComponentLookup extends Lookup {
      * non private because of tests..
      */
     static class LookupProxyActionMap extends ActionMap  {
-        private ActionMap map;
+        private final ActionMap map;
         public LookupProxyActionMap(ActionMap original) {
             map = original;
         }

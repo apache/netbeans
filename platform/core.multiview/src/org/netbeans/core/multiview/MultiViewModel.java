@@ -110,8 +110,8 @@ class MultiViewModel {
     /**
      * returns all elements that were so far created/instantiated.
      */
-    synchronized Collection getCreatedElements() {
-       Collection<MultiViewElement> col = new ArrayList<MultiViewElement>(nestedElements.size());
+    synchronized Collection<MultiViewElement> getCreatedElements() {
+       Collection<MultiViewElement> col = new ArrayList<>(nestedElements.size());
        for (Map.Entry<MultiViewDescription, MultiViewElement> entry : nestedElements.entrySet()) {
            if (entry.getValue() != null) {
                col.add(entry.getValue());

@@ -33,7 +33,7 @@ import java.util.*;
 */
 public final class TopologicalSortException extends Exception {
     /** all vertexes */
-    private Collection vertexes;
+    private final Collection<?> vertexes;
 
     /** map with edges */
     private Map<?,? extends Collection<?>> edges;
@@ -47,7 +47,7 @@ public final class TopologicalSortException extends Exception {
     /** vertexes sorted by increasing value of y */
     private Stack<Vertex> dualGraph = new Stack<Vertex>();
 
-    TopologicalSortException(Collection vertexes, Map<?,? extends Collection<?>> edges) {
+    TopologicalSortException(Collection<?> vertexes, Map<?,? extends Collection<?>> edges) {
         this.vertexes = vertexes;
         this.edges = edges;
     }
@@ -180,24 +180,22 @@ public final class TopologicalSortException extends Exception {
         // computes value X and Y for each vertex
         counter = 0;
 
-        Iterator it = vertexes.iterator();
-
-        while (it.hasNext()) {
-            constructDualGraph(counter, it.next(), vertexInfo);
+        for (Object itVertex : vertexes) {
+            constructDualGraph(counter, itVertex, vertexInfo);            
         }
 
         // now connect vertexes that cannot be sorted into own
         // sets
         // map from the original objects to 
-        Map<Object,Set> objectsToSets = new HashMap<Object,Set>();
+        Map<Object,Set<?>> objectsToSets = new HashMap<>();
 
-        ArrayList<Set> sets = new ArrayList<Set>();
+        List<Set<?>> sets = new ArrayList<>();
 
         while (!dualGraph.isEmpty()) {
             Vertex v = dualGraph.pop();
 
             if (!v.visited) {
-                Set<Object> set = new HashSet<Object>();
+                Set<Object> set = new HashSet<>();
                 visitDualGraph(v, set);
 
                 if ((set.size() == 1) && v.edgesFrom.contains(v)) {
@@ -213,22 +211,18 @@ public final class TopologicalSortException extends Exception {
                 sets.add(set);
 
                 // fill the objectsToSets mapping
-                it = set.iterator();
-
-                while (it.hasNext()) {
-                    objectsToSets.put(it.next(), set);
+                for (Object itSet : set) {
+                    objectsToSets.put(itSet, set);
                 }
             }
         }
 
         // now topologically sort the sets
         // 1. prepare the map
-        HashMap<Set,Collection<Set>> edgesBetweenSets = new HashMap<Set,Collection<Set>>();
-        it = edges.entrySet().iterator();
+        Map<Set,Collection<Set>> edgesBetweenSets = new HashMap<>();
 
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            Collection leadsTo = (Collection) entry.getValue();
+        for (Map.Entry<? extends Object, ? extends Collection<?>> entry : edges.entrySet()) {
+            Collection<?> leadsTo = entry.getValue();
 
             if ((leadsTo == null) || leadsTo.isEmpty()) {
                 continue;
@@ -239,14 +233,12 @@ public final class TopologicalSortException extends Exception {
             Collection<Set> setsTo = edgesBetweenSets.get(from);
 
             if (setsTo == null) {
-                setsTo = new ArrayList<Set>();
+                setsTo = new ArrayList<>();
                 edgesBetweenSets.put(from, setsTo);
             }
 
-            Iterator convert = leadsTo.iterator();
-
-            while (convert.hasNext()) {
-                Set to = objectsToSets.get(convert.next());
+            for (Object itLeadsTo : leadsTo) {
+                Set to = objectsToSets.get(itLeadsTo);
 
                 if (from != to) {
                     // avoid self cycles
@@ -283,13 +275,11 @@ public final class TopologicalSortException extends Exception {
         }
 
         // process children
-        Collection c = (Collection) edges.get(vertex);
+        Collection<?> c = edges.get(vertex);
 
         if (c != null) {
-            Iterator it = c.iterator();
-
-            while (it.hasNext()) {
-                Vertex next = constructDualGraph(counter, it.next(), vertexInfo);
+            for (Object itVertex : c) {
+                Vertex next = constructDualGraph(counter, itVertex, vertexInfo);
                 next.edgesFrom.add(info);
             }
         }
@@ -316,10 +306,10 @@ public final class TopologicalSortException extends Exception {
         visited.add(vertex.object);
         vertex.visited = true;
 
-        Iterator it = vertex.edges();
+        Iterator<Vertex> it = vertex.edges();
 
         while (it.hasNext()) {
-            Vertex v = (Vertex) it.next();
+            Vertex v = it.next();
             visitDualGraph(v, visited);
         }
     }
@@ -355,7 +345,7 @@ public final class TopologicalSortException extends Exception {
         /** Iterator over edges
          * @return iterator of Vertex items
          */
-        public Iterator edges() {
+        public Iterator<Vertex> edges() {
             if (!sorted) {
                 Collections.sort(edgesFrom);
                 sorted = true;

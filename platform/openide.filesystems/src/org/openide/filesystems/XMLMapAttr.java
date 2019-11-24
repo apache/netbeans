@@ -108,8 +108,8 @@ import org.openide.util.io.NbObjectInputStream;
  * @author rmatous
  */
 @SuppressWarnings("unchecked")
-final class XMLMapAttr implements Map {
-    Map/*<String,Attr>*/ map;
+final class XMLMapAttr implements Map<String, XMLMapAttr.Attr> {
+    Map<String, XMLMapAttr.Attr> map;
 
     /** Creates new XMLMapAttr and delegetaor is instanced */
     public XMLMapAttr() {
@@ -155,11 +155,12 @@ final class XMLMapAttr implements Map {
     * @param p1 is name of attribute
     * @return attribute, which is hold in XMLMapAttr.Attr or null if such attribute doesn`t exist or isn`t able to construct form String representation
     */
-    public Object get(final Object p1) {
-        Object obj;
+    @Override
+    public Attr get(final Object p1) {
+        Attr obj;
 
         try {
-            obj = getAttribute(p1);
+            obj = (Attr) getAttribute(p1);
         } catch (Exception e) {
             obj = null;
             ExternalUtil.LOG.log(Level.INFO, p1.toString(), e);
@@ -172,7 +173,7 @@ final class XMLMapAttr implements Map {
      * @param params has sense only for methodvalue invocation; and only 2 parametres will be used
      * @return attribute, which is hold in XMLMapAttr.Attr or null if such attribute doesn`t exist or isn`t able to construct form String representation
      */
-    public Object get(final Object p1, Object[] params) {
+    public Object get(final String p1, Object[] params) {
         Object obj;
 
         try {
@@ -199,7 +200,7 @@ final class XMLMapAttr implements Map {
         attrName = (String) keyValuePair[0];
 
         synchronized (this) {
-            attr = (Attr) map.get(attrName);
+            attr = map.get(attrName);
         }
 
         Object retVal = null;
@@ -250,23 +251,24 @@ final class XMLMapAttr implements Map {
      * @return previous value associated with specified key, or null if there was no mapping for key.
      * A null return can also indicate that the HashMap previously associated null with the specified key.
      */
-    public synchronized Object put(final Object p1, final Object p2) {
+    @Override
+    public synchronized Attr put(final String p1, final Attr p2) {
         return put(p1, p2, true);
     }
 
-    synchronized Object put(final Object p1, final Object p2, boolean decode) {
+    synchronized Attr put(final String p1, final Object p2, boolean decode) {
         if ((p1 == null) || !(p1 instanceof String)) {
             return null;
         }
 
-        Object[] keyValuePair = ModifiedAttribute.translateInto((String) p1, p2);
+        Object[] keyValuePair = ModifiedAttribute.translateInto(p1, p2);
         String key = (String) keyValuePair[0];
         Object value = keyValuePair[1];
-        Object toStore;
+        Attr toStore;
         if (value == null) {
             toStore = null;
         } else if (value instanceof Attr) {
-            toStore = value;
+            toStore = (Attr) value;
         } else if (value instanceof Method && key.startsWith("methodvalue:")) { // NOI18N
             Method m = (Method)value;
             key = key.substring("methodvalue:".length()); // NOI18N
@@ -319,14 +321,14 @@ final class XMLMapAttr implements Map {
         }
 
         //pw.println(blockPrefix+"<fileobject name=\""+fileName+"\">");// NOI18N
-        SortedSet<String> attrNames = new TreeSet<String>();
-        Iterator entryIter = map.entrySet().iterator();
+        SortedSet<String> attrNames = new TreeSet<>();
+        Iterator<Entry<String, Attr>> entryIter = map.entrySet().iterator();
 
         while (entryIter.hasNext()) {
-            Map.Entry entry = (Map.Entry) entryIter.next();
+            Map.Entry<String, Attr> entry = entryIter.next();
 
-            String attrName = (String) entry.getKey();
-            Attr attr = (Attr) entry.getValue();
+            String attrName = entry.getKey();
+            Attr attr = entry.getValue();
 
             if ((attrName == null) || (attr == null) || (attrName.length() == 0) || (attr.isValid() == -1)) {
                 if ((attrName != null) && (attrName.length() != 0) && ((attr == null) || (attr.isValid() == -1))) {
@@ -339,11 +341,8 @@ final class XMLMapAttr implements Map {
             attrNames.add(attrName);
         }
 
-        entryIter = attrNames.iterator();
-
-        while (entryIter.hasNext()) {
-            String attrName = (String) entryIter.next();
-            Attr attr = (Attr) map.get(attrName);
+        for (String attrName : attrNames) {
+            Attr attr = map.get(attrName);
 
             if (attr != null) {
                 attr.transformMe();
@@ -386,10 +385,12 @@ final class XMLMapAttr implements Map {
         map.clear();
     }
 
-    public synchronized Object remove(Object p1) {
+    @Override
+    public synchronized Attr remove(Object p1) {
         return map.remove(p1);
     }
 
+    @Override
     public synchronized boolean containsValue(Object p1) {
         return map.containsValue(p1);
     }
@@ -399,20 +400,24 @@ final class XMLMapAttr implements Map {
         return map.hashCode();
     }
 
-    public synchronized java.util.Set<String> keySet() {
+    @Override
+    public synchronized Set<String> keySet() {
         return map.keySet();
     }
 
-    public synchronized java.util.Collection values() {
+    @Override
+    public synchronized java.util.Collection<Attr> values() {
         return map.values();
     }
 
     // XXX this is wrong - values not translated
-    public synchronized java.util.Set entrySet() {
+    @Override
+    public synchronized Set<Map.Entry<String, Attr>> entrySet() {
         return map.entrySet();
     }
 
-    public synchronized void putAll(java.util.Map p1) {
+    @Override
+    public synchronized void putAll(java.util.Map<? extends String,? extends Attr> p1) {
         map.putAll(p1);
     }
 

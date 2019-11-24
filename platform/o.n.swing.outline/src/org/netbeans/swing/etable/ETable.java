@@ -2157,7 +2157,7 @@ public class ETable extends JTable {
             implements DocumentListener, FocusListener {
         
         /** The last search results */
-        private List results = new ArrayList();
+        private List<Integer> results = new ArrayList<>();
         /** The last selected index from the search results. */
         private int currentSelectionIndex;
         
@@ -2226,8 +2226,7 @@ public class ETable extends JTable {
                 int rows[] = getSelectedRows();
                 int selectedRowIndex = (rows == null || rows.length == 0) ? 0 : rows[0];
                 int r = 0;
-                for (Iterator it = results.iterator(); it.hasNext(); r++) {
-                    int curResult = ((Integer)it.next()).intValue();
+                for (int curResult : results) {
                     if (selectedRowIndex <= curResult) {
                         currentSelectionIndex = r;
                         break;
@@ -2246,7 +2245,7 @@ public class ETable extends JTable {
                 if (currentSelectionIndex >= sz) {
                     currentSelectionIndex = sz - 1;
                 }
-                int selRow = ((Integer)results.get(currentSelectionIndex)).intValue();
+                int selRow = results.get(currentSelectionIndex);
                 setRowSelectionInterval(selRow, selRow);
                 Rectangle rect = getCellRect(selRow, 0, true);
                 scrollRectToVisible(rect);

@@ -20,7 +20,6 @@
 package org.openide.nodes;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
@@ -33,7 +32,7 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
     /** start time of the test */
     private long time;
     /** table with test resutls Integer -> Long */
-    private static HashMap times = new HashMap ();
+    private static Map<Integer, Long> times = new HashMap<>();
     /** node to work on */
     private Node node;
     
@@ -137,10 +136,7 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
         long max = Long.MIN_VALUE;
         int maxIndex = -1;
         {
-            Iterator it = times.entrySet ().iterator ();
-            int cnt = 0;
-            while (it.hasNext ()) {
-                Map.Entry en = (Map.Entry)it.next ();
+            for (Map.Entry<Integer, Long> en : times.entrySet()) {
                 error.append ("Test "); error.append (en.getKey ());
                 error.append (" took "); error.append (en.getValue ());
                 
@@ -153,8 +149,6 @@ public class ChildrenArrayNodeAtShouldNotBeSlowTest extends NbTestCase {
                     min = l.longValue ();
                 }
                 error.append (" ms\n");
-                
-                cnt++;
             }
         }
         

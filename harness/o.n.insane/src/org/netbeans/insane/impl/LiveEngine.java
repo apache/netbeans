@@ -126,14 +126,14 @@ public class LiveEngine implements ObjectMap, Visitor {
         objects.put(to, entry);
     }
 
-    private Iterator/*<Object>*/ getIncomingRefs(Object to) {
+    private Collection<Object> getIncomingRefs(Object to) {
         Object oo = objects.get(to);
         if (oo instanceof Object[]) {
-            return Arrays.asList((Object[])oo).iterator();
+            return Arrays.asList((Object[])oo);
         } else if (oo == null) {
-            return Collections.emptyIterator();
+            return Collections.emptyList();
         } else {
-            return Collections.singleton(oo).iterator();
+            return Collections.singleton(oo);
         }
     }
         
@@ -181,8 +181,7 @@ public class LiveEngine implements ObjectMap, Visitor {
         int base = objExpected;
         int step = found > 0 ? objExpected/9/found : 0;
         
-        for (Iterator it = objs.iterator(); it.hasNext(); ) {
-            Object obj = it.next();
+        for (Object obj : objs) {
             if (rest.containsKey(obj)) continue; // not found
             Path toObj = findRoots(obj, s.keySet());
             if (toObj != null) result.put(obj, toObj);
@@ -212,9 +211,7 @@ public class LiveEngine implements ObjectMap, Visitor {
             }
 
             // follow incomming
-            Iterator it = getIncomingRefs(item);
-            while(it.hasNext()) {
-                Object o = it.next();
+            for (Object o : getIncomingRefs(item)) {
                 Path prev = Utils.createPath(o, act);
                 if (o instanceof Root) return prev;
 

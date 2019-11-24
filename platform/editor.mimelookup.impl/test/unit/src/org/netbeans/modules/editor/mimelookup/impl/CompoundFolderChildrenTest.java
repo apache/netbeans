@@ -21,7 +21,6 @@ package org.netbeans.modules.editor.mimelookup.impl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +63,7 @@ public class CompoundFolderChildrenTest extends NbTestCase {
         TestUtilities.createFile(getWorkDir(), "Tmp/A/B/" + fileName2);
 
         CompoundFolderChildren cfch = new CompoundFolderChildren(new String [] { "Tmp/A/B/C/D", "Tmp/A/B" }, false);
-        List files = cfch.getChildren();
+        List<FileObject> files = cfch.getChildren();
         
         assertEquals("Wrong number of files", 2, files.size());
         assertNotNull("Files do not contain " + fileName1, findFileByName(files, fileName1));
@@ -258,9 +257,8 @@ public class CompoundFolderChildrenTest extends NbTestCase {
 
     // test events
 
-    private FileObject findFileByName(List files, String nameExt) {
-        for (Iterator i = files.iterator(); i.hasNext(); ) {
-            FileObject f = (FileObject) i.next();
+    private FileObject findFileByName(List<FileObject> files, String nameExt) {
+        for (FileObject f : files) {
             if (nameExt.equals(f.getNameExt())) {
                 return f;
             }

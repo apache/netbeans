@@ -201,7 +201,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
             return;
         }
         Collection<? extends Lookup.Item<?>> items = lookup.lookupResult(clazz).allItems();
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             return;
         }
         AbstractLookup.Pair[] arr = new AbstractLookup.Pair[items.size()];
@@ -261,12 +261,12 @@ public final class CookieSet extends Object implements Lookup.Provider {
     }
 
     /** Returns list of all classes. */
-    static Set exitAllClassesMode(Object prev) {
+    static Set<Class<?>> exitAllClassesMode(Object prev) {
         Object cookie = QUERY_MODE.get();
         QUERY_MODE.set(prev);
 
         if (cookie instanceof HashSet) {
-            return (Set) cookie;
+            return (Set<Class<?>>) cookie;
         }
 
         return null;

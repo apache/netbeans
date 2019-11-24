@@ -68,7 +68,7 @@ public class Task extends Object implements Runnable {
     private boolean finished;
 
     /** listeners for the finish of task (TaskListener) */
-    private HashSet<TaskListener> list;
+    private HashSet<TaskListener> listeners;
 
     /** Create a new task.
     * The runnable should provide its own error-handling, as
@@ -195,7 +195,7 @@ public class Task extends Object implements Runnable {
     * @see #run
     */
     protected final void notifyFinished() {
-        Iterator it;
+        Iterator<TaskListener> it;
 
         synchronized (this) {
             finished = true;
@@ -203,15 +203,15 @@ public class Task extends Object implements Runnable {
             notifyAll();
 
             // fire the listeners
-            if (list == null) {
+            if (listeners == null) {
                 return;
             }
 
-            it = ((HashSet) list.clone()).iterator();
+            it = ((HashSet<TaskListener>) listeners.clone()).iterator();
         }
 
         while (it.hasNext()) {
-            TaskListener l = (TaskListener) it.next();
+            TaskListener l = it.next();
             l.taskFinished(this);
         }
     }
@@ -245,10 +245,10 @@ public class Task extends Object implements Runnable {
     public void addTaskListener(TaskListener l) {
         boolean callNow;
         synchronized (this) {
-            if (list == null) {
-                list = new HashSet<TaskListener>();
+            if (listeners == null) {
+                listeners = new HashSet<TaskListener>();
             }
-            list.add(l);
+            listeners.add(l);
             
             callNow = finished;
         }
@@ -262,11 +262,11 @@ public class Task extends Object implements Runnable {
     * @param l the listener to remove
     */
     public synchronized void removeTaskListener(TaskListener l) {
-        if (list == null) {
+        if (listeners == null) {
             return;
         }
 
-        list.remove(l);
+        listeners.remove(l);
     }
 
     public String toString() {

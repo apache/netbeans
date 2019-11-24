@@ -45,7 +45,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -523,7 +523,7 @@ public class EditableDisplayerTest extends NbTestCase {
             System.err.println("Cannot run test in < 16 bit graphics environment");
         }
         Component[] c = jp.getComponents();
-        Hashtable map = new Hashtable();
+        Hashtable<EditablePropertyDisplayer, RendererPropertyDisplayer> map = new Hashtable<>();
         synchronized (jp.getTreeLock()) {
             for (int i=0; i < c.length; i++) {
                 System.err.println("  Checking " + c[i]);
@@ -547,11 +547,9 @@ public class EditableDisplayerTest extends NbTestCase {
         
         jp.repaint();
         
-        
-        Iterator i = map.keySet().iterator();
-        while (i.hasNext()) {
-            EditablePropertyDisplayer editable = (EditablePropertyDisplayer) i.next();
-            RendererPropertyDisplayer renderer = (RendererPropertyDisplayer) map.get(editable);
+        for (Map.Entry<EditablePropertyDisplayer, RendererPropertyDisplayer> entry : map.entrySet()) {
+            EditablePropertyDisplayer editable = entry.getKey();
+            RendererPropertyDisplayer renderer = entry.getValue();
             assertPaintIdentically("Painting was not a pixel-for-pixel match between " + editable + " and " + renderer, editable, renderer);
             //            assertEquals("Preferred size of a renderer and an editor should match.  They do not for " + editable + " and " + renderer, getPreferredSize(editable), getPreferredSize(renderer));
         }

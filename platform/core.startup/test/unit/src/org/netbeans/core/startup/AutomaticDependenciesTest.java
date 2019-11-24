@@ -203,13 +203,12 @@ public class AutomaticDependenciesTest extends NbTestCase {
     }
     
     private static String normalMessages(AutomaticDependencies.Report rep) {
-        SortedSet<String> s = new TreeSet<String>(); // Set<String>
-        Iterator it = rep.getMessages().iterator();
-        while (it.hasNext()) {
-            s.add((String)it.next());
+        Set<String> s = new TreeSet<>();
+        for (String message : rep.getMessages()) {
+            s.add(message);
         }
         StringBuilder b = new StringBuilder();
-        it = s.iterator();
+        Iterator<String> it = s.iterator();
         while (it.hasNext()) {
             b.append(it.next());
             if (it.hasNext()) {

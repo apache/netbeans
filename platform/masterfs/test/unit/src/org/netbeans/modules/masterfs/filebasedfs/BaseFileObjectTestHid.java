@@ -1362,11 +1362,9 @@ public class BaseFileObjectTestHid extends TestBaseHid{
     private class IgnoreDirFileSystem extends LocalFileSystem {
         org.openide.filesystems.StatusDecorator status = new org.openide.filesystems.StatusDecorator() {
             @Override
-            public String annotateName (String name, java.util.Set files) {
+            public String annotateName (String name, Set<? extends FileObject> files) {
                 StringBuilder sb = new StringBuilder (name);
-                Iterator it = files.iterator ();
-                while (it.hasNext()) {                    
-                    FileObject fo = (FileObject)it.next();
+                for (FileObject fo : files) {
                     try {
                         if (fo.getFileSystem() instanceof IgnoreDirFileSystem) {
                             sb.append(",").append (fo.getNameExt());//NOI18N
@@ -1380,7 +1378,7 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             }
 
             @Override
-            public String annotateNameHtml(String name, Set files) {
+            public String annotateNameHtml(String name, Set<? extends FileObject> files) {
                 return annotateName (name, files);
             }            
             

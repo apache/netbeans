@@ -309,9 +309,7 @@ public final class MultiViewFactory {
             }
             
             StringBuilder sb = new StringBuilder();
-            Iterator it = elems.values().iterator();
-            while (it.hasNext()) {
-                CloseOperationState state = (CloseOperationState)it.next();
+            for (CloseOperationState state : elems.values()) {
                 if (sb.length() > 0) {
                     sb.append(" ");
                 }

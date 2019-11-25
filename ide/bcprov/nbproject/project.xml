@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>bcprov.jar</runtime-relative-path>
-                <binary-origin>external/bcprov-jdk15on-1.63.jar</binary-origin>
+                <binary-origin>external/bcprov-jdk15on-1.64.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

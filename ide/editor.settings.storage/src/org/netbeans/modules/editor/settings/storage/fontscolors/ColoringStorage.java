@@ -237,15 +237,15 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
                 FileObject baseFolder = FileUtil.getConfigFile("Editors"); //NOI18N
                 FileObject f = FileUtil.createData(baseFolder, settingFileName);
                 f.setAttribute(FA_TYPE, type);
-                
-                Map<String, AttributeSet> added = new HashMap<String, AttributeSet>();
-                Map<String, AttributeSet> removed = new HashMap<String, AttributeSet>();
+
+                    Map<String, AttributeSet> added = new HashMap<String, AttributeSet>();
+                    Map<String, AttributeSet> removed = new HashMap<String, AttributeSet>();
                 Utils.diff(defaultFontColors, fontColors, added, removed);
-                
+
                 ColoringsWriter writer = new ColoringsWriter();
                 writer.setAdded(added);
                 writer.setRemoved(removed.keySet());
-                
+
                 Utils.save(f, writer);
             }
         });
@@ -258,7 +258,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
         assert profile != null : "The parameter profile must not be null"; //NOI18N
         
         FileObject baseFolder = FileUtil.getConfigFile("Editors"); //NOI18N
-        Map<String, List<Object []>> files = new HashMap<String, List<Object []>>();
+        Map<String, List<Object []>> files = new HashMap<>();
         SettingsType.getLocator(this).scan(baseFolder, mimePath.getPath(), profile, true, defaults, !defaults, false, files);
         
         assert files.size() <= 1 : "Too many results in the scan"; //NOI18N
@@ -289,9 +289,11 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     private static final String HIGHLIGHTING_FILE_NAME = "editorColoring.xml"; // NOI18N
     
     private static final String E_ROOT = "fontscolors"; //NOI18N
+    private static final String E_COLORDEF = "colordef"; //NOI18N
     private static final String E_FONTCOLOR = "fontcolor"; //NOI18N
     private static final String E_FONT = "font"; //NOI18N
     private static final String A_NAME = "name"; //NOI18N
+    private static final String A_COLOR = "color"; //NOI18N
     private static final String A_FOREGROUND = "foreColor"; //NOI18N
     private static final String A_BACKGROUND = "bgColor"; //NOI18N
     private static final String A_STRIKETHROUGH = "strikeThrough"; //NOI18N
@@ -305,8 +307,8 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     private static final String V_ITALIC = "italic"; //NOI18N
     private static final String V_PLAIN = "plain"; //NOI18N
     
-    private static final String PUBLIC_ID = "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN"; //NOI18N
-    private static final String SYSTEM_ID = "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd"; //NOI18N
+    private static final String PUBLIC_ID = "-//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN"; //NOI18N
+    private static final String SYSTEM_ID = "http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd"; //NOI18N
 
     private static final String FA_TYPE = "nbeditor-settings-ColoringType"; //NOI18N
     public static final String FAV_TOKEN = "token"; //NOI18N
@@ -345,7 +347,8 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     
 
     private static class ColoringsReader extends StorageReader<String, SimpleAttributeSet> {
-        
+
+        private final Map<String, String> colordefs = new HashMap<>();
         private final Map<String, SimpleAttributeSet> colorings = new HashMap<String, SimpleAttributeSet>();
         private SimpleAttributeSet attribs = null;
         
@@ -365,7 +368,14 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
             try {
                 if (name.equals(E_ROOT)) {
                     // We don't read anythhing from the root element
-                    
+                    colordefs.clear();
+                } else if (name.equals(E_COLORDEF)) {
+                    String nameAttr = attributes.getValue(A_NAME);
+                    String colorAttr = attributes.getValue(A_COLOR);
+                    String oldRef = colordefs.put(nameAttr, colorAttr);
+                    if (oldRef != null) {
+                        LOG.log(Level.WARNING, "Color reference: '" + nameAttr + "' previously defined as '" + oldRef + "' is now '" + colorAttr +"'");
+                    }
                 } else if (name.equals(E_FONTCOLOR)) {
                     assert attribs == null;
                     attribs = new SimpleAttributeSet();
@@ -447,6 +457,12 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
                 attribs = null;
             }
         }
+
+        Color stringToColor(String name) throws Exception {
+            String resolve = colordefs.getOrDefault(name, name);
+            return ColoringStorage.stringToColor(resolve);
+        }
+
     } // End of ColoringsReader class
     
     private static final class ColoringsWriter extends StorageWriter<String, AttributeSet> {

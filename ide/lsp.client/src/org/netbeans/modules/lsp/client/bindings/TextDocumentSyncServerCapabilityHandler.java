@@ -126,18 +126,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                 private void fireEvent(int start, String newText, String oldText) {
                     try {
                         Position startPos = Utils.createPosition(doc, start);
-                        int additionalLines = 0;
-                        int additionalChars = 0;
-                        for (char c : oldText.toCharArray()) {
-                            if (c == '\n') {
-                                additionalLines++;
-                                additionalChars = 0;
-                            } else {
-                                additionalChars++;
-                            }
-                        }
-                        Position endPos = new Position(startPos.getLine() + additionalLines,
-                                                       startPos.getCharacter() + additionalChars);
+                        Position endPos = Utils.computeEndPositionForRemovedText(startPos, oldText);
                         TextDocumentContentChangeEvent[] event = new TextDocumentContentChangeEvent[1];
                         event[0] = new TextDocumentContentChangeEvent(new Range(startPos,
                                                                              endPos),

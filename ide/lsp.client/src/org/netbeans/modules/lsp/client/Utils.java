@@ -159,4 +159,17 @@ public class Utils {
             Exceptions.printStackTrace(ex);
         }
     }
+    public static Position computeEndPositionForRemovedText(Position startPos, String removedText) {
+        int endLine = startPos.getLine();
+        int endChar = startPos.getCharacter();
+        for (char c : removedText.toCharArray()) {
+            if (c == '\n') {
+                endLine++;
+                endChar = 0;
+            } else {
+                endChar++;
+            }
+        }
+        return new Position(endLine, endChar);
+    }
 }

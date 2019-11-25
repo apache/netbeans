@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.StreamCorruptedException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -42,6 +42,7 @@ import org.gradle.tooling.BuildCancelledException;
 import org.gradle.tooling.BuildException;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.CancellationTokenSource;
+import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
@@ -95,7 +96,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         "# {0} - Project name",
         "BUILD_FAILED=Building {0} failed.",
         "# {0} - Platform Key",
-        "NO_PLATFORM=No valid Java Platform found for key: ''{0}''"
+        "NO_PLATFORM=No valid Java Platform found for key: ''{0}''",
+        "GRADLE_IO_ERROR=Gradle internal IO problem has been detected.\nThe running build may or may not have finished succesfully."
     })
     @Override
     public void run() {
@@ -187,6 +189,21 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 // an external aplication
                 showAbort();
             }
+        } catch (GradleConnectionException ex) {
+            Throwable th = ex.getCause();
+            boolean handled = false;
+            while (th != null && !handled) {
+                if (th instanceof StreamCorruptedException) {
+                    LOGGER.log(Level.INFO, "Suspecting Gradle Serialization IO Error:", ex);
+                    try {
+                        IOColorPrint.print(io, Bundle.GRADLE_IO_ERROR(), IOColors.getColor(io, IOColors.OutputType.LOG_WARNING));
+                    } catch (IOException iex) {
+                    }
+                    handled = true;
+                }
+                th = th.getCause();
+            }
+            if (!handled) throw ex;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
             if (pconn != null) {

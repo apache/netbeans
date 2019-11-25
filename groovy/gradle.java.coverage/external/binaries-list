@@ -14,12 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-javac.compilerargs=-Xlint -Xlint:-serial
-javac.source=1.8
-module.jar.dir=core
-
-release.external/asm-7.2.jar=core/asm-7.2.jar
-release.external/asm-tree-7.2.jar=core/asm-tree-7.2.jar
-release.external/asm-commons-7.2.jar=core/asm-commons-7.2.jar
-license.file=../external/asm-7.2-license.txt
+1AC96769AA83E5492D1A1A694774F6BAEC4EB704 org.jacoco:org.jacoco.core:0.8.5

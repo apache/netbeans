@@ -375,7 +375,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
@@ -498,7 +498,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {

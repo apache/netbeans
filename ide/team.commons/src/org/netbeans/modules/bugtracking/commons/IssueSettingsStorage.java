@@ -83,7 +83,7 @@ public class IssueSettingsStorage {
             l.release();
         }
                 
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
     
     private Properties load(File file, String repoUrl, String id) throws IOException {

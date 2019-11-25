@@ -300,7 +300,7 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider, L
         
         @Override
         protected void removeNotify() {
-            setKeys( Collections.EMPTY_SET );
+            setKeys( Collections.emptySet());
             super.removeNotify();
         }
         

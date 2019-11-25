@@ -170,7 +170,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         MultiFileSystem mfs = getMultiFileSystem();
         FileSystem[] arr = mfs.getDelegates();
 
-        Set now = (delegates == null) ? Collections.EMPTY_SET : delegates;
+        Set now = (delegates == null) ? Collections.emptySet(): delegates;
         Set<FileObject> del = new HashSet<FileObject>(arr.length * 2);
         Number maxWeight = 0;
         FileObject led = null;

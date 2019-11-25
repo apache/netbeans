@@ -78,6 +78,7 @@ ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.14.0.jar java/java.lsp.ser
 
 # Derby jar is used when run tests, so we can ignore the duplicates
 ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
+ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar
 
 # Amazon Beanstalk SDK has frequently changing dependencies, so they are better kept separate
 enterprise/libs.amazon/external/httpclient-4.5.5.jar groovy/gradle/external/gradle-4.10.2-bin.zip

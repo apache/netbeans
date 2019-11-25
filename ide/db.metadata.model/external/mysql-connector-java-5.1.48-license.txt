@@ -1,5 +1,5 @@
 Name: MySQL Connector/J
-Version: 5.1.23
+Version: 5.1.48
 License: GPL
 Type: compile-time
 Comment: Dependency required to run unit tests with DB support

@@ -59,13 +59,13 @@ public class FileObjectFactorySizeTest extends NbTestCase {
         //root + workdir
         assertEquals(2, fbs.getSize());
         assertEquals(2, fbs.getSize());
-        Reference rf = new  WeakReference(workDir.getParent());
+        Reference<FileObject> rf = new  WeakReference<>(workDir.getParent());
         assertGC("", rf);
         assertNull(((BaseFileObj)workDir).getExistingParent());
         assertEquals(2, fbs.getSize());
         fbs.getRoot().getFileObject(workDir.getPath());
         assertEquals(2, fbs.getSize());
-        rf = new  WeakReference(workDir.getParent());
+        rf = new  WeakReference<>(workDir.getParent());
         assertGC("", rf);
         assertNull(((BaseFileObj)workDir).getExistingParent());
         assertEquals(2, fbs.getSize());

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.xml.text.syntax;
 
-import java.lang.ref.*;
 import java.util.*;
 
 import javax.swing.text.*;
@@ -50,7 +49,6 @@ import org.openide.util.WeakListeners;
  */
 public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLTokenIDs {
     
-    private Reference reference = new SoftReference(null);  // cached helper
     private String systemId = null;  // cached refernce to DTD
     private String publicId = null;  // cached refernce to DTD
     private volatile boolean requestedAutoCompletion = false;

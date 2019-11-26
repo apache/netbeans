@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -34,6 +35,7 @@ import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.ResourceOperationKind;
@@ -43,6 +45,8 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -124,24 +128,29 @@ public class Utils {
                 return ;
             }
             NbDocument.runAtomic((StyledDocument) doc, () -> {
-                edits
-                 .stream()
-                 .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
-                 .forEach(te -> {
-                    try {
-                        int start = Utils.getOffset(doc, te.getRange().getStart());
-                        int end = Utils.getOffset(doc, te.getRange().getEnd());
-                        doc.remove(start, end - start);
-                        doc.insertString(start, te.getNewText(), null);
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                 });
+                applyEditsNoLock(doc, edits);
             });
         } catch (URISyntaxException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
+
+    public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits) {
+        edits
+         .stream()
+         .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
+         .forEach(te -> {
+            try {
+                int start = Utils.getOffset(doc, te.getRange().getStart());
+                int end = Utils.getOffset(doc, te.getRange().getEnd());
+                doc.remove(start, end - start);
+                doc.insertString(start, te.getNewText(), null);
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+         });
+    }
+
     public static void applyCodeAction(LSPBindings server, Either<Command, CodeAction> cmd) {
         try {
             Command command;
@@ -159,6 +168,7 @@ public class Utils {
             Exceptions.printStackTrace(ex);
         }
     }
+
     public static Position computeEndPositionForRemovedText(Position startPos, String removedText) {
         int endLine = startPos.getLine();
         int endChar = startPos.getCharacter();
@@ -171,5 +181,43 @@ public class Utils {
             }
         }
         return new Position(endLine, endChar);
+    }
+
+    public static List<TextEdit> computeDefaultOnTypeIndent(Document doc, int changeStart, Position startPos, String newText) {
+        List<TextEdit> edits = new ArrayList<>();
+        try {
+            int indentLevel = IndentUtils.indentLevelSize(doc);
+            int lineStart = IndentUtils.lineStartOffset(doc, changeStart);
+            int indent = IndentUtils.lineIndent(doc, lineStart);
+            if (newText.equals("}") && indent == changeStart - lineStart) {
+                CharSequence cs = DocumentUtilities.getText(doc);
+                int balance = 1;
+                int idx = changeStart - 1;
+                while (idx >= 0 && balance > 0) {
+                    switch (cs.charAt(idx)) {
+                        case '{': balance--; break;
+                        case '}': balance++; break;
+                    }
+                    idx--;
+                }
+                int newIndent;
+                if (balance == 0) {
+                    newIndent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, idx));
+                } else {
+                    newIndent = 0;
+                }
+                edits.add(new TextEdit(new Range(new Position(startPos.getLine(), 0), new Position(startPos.getLine(), indent)), IndentUtils.createIndentString(doc, newIndent)));
+            } else if (newText.equals("\n")) {
+                Position insertPos = new Position(startPos.getLine() + 1, 0);
+                int newIndent = indent;
+                if (changeStart > 0 && DocumentUtilities.getText(doc, changeStart - 1, 1).charAt(0) == '{') {
+                    newIndent += indentLevel;
+                }
+                edits.add(new TextEdit(new Range(insertPos, insertPos), IndentUtils.createIndentString(doc, newIndent)));
+            }
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return edits;
     }
 }

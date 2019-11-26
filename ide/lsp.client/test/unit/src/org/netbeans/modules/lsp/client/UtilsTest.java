@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
@@ -136,6 +137,63 @@ public class UtilsTest extends NbTestCase {
                       wd.getFileObject("Test2.txt"));
         assertContent("new content", wd.getFileObject("Test4.txt"));
         assertNull(wd.getFileObject("Test3.txt"));
+        LifecycleManager.getDefault().saveAll();
+    }
+
+    public void testDefaultIndent1() throws Exception {
+        doTestDefaultIndent("if (true) {|",
+                            "\n",
+                            "if (true) {\n" +
+                            "    |");
+    }
+
+    public void testDefaultIndent2() throws Exception {
+        doTestDefaultIndent("    if (true) {\n" +
+                            "        |",
+                            "}",
+                            "    if (true) {\n" +
+                            "    }|");
+    }
+
+    public void testDefaultIndent3() throws Exception {
+        doTestDefaultIndent("   if (true) {\n" +
+                            "             |",
+                            "}",
+                            "   if (true) {\n" +
+                            "   }|");
+    }
+
+    public void testDefaultIndent4  () throws Exception {
+        doTestDefaultIndent("         |",
+                            "}",
+                            "}|");
+    }
+
+    public void testDefaultIndent5() throws Exception {
+        doTestDefaultIndent("   if (true) {\n" +
+                            "   }|",
+                            "}",
+                            "   if (true) {\n" +
+                            "   }}|");
+    }
+
+    private void doTestDefaultIndent(String code, String insertCode, String expectedResult) throws Exception {
+        clearWorkDir();
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceFile1 = wd.createData("Test1.txt");
+        EditorCookie ec = sourceFile1.getLookup().lookup(EditorCookie.class);
+        Document doc = ec.openDocument();
+        int insertPos = code.indexOf("|");
+        code = code.replace("|", "");
+        doc.insertString(0, code, null);
+        javax.swing.text.Position caret = doc.createPosition(insertPos);
+        doc.insertString(insertPos, insertCode, null);
+        List<TextEdit> edits = Utils.computeDefaultOnTypeIndent(doc, insertPos, Utils.createPosition(doc, insertPos), insertCode);
+        Utils.applyEditsNoLock(doc, edits);
+        int expectedPos = expectedResult.indexOf("|");
+        expectedResult = expectedResult.replace("|", "");
+        assertEquals(expectedResult, doc.getText(0, doc.getLength()));
+        assertEquals(expectedPos, caret.getOffset());
         LifecycleManager.getDefault().saveAll();
     }
 

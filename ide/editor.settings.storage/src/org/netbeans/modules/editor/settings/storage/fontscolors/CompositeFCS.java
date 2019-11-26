@@ -24,7 +24,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +64,7 @@ public final class CompositeFCS extends FontColorSettings {
     
     private final FontColorSettingsImpl[] allFcsi;
     /* package */ final String profile;
-    private final Map<String, AttributeSet> tokensCache = new HashMap<String, AttributeSet>();
+    private final Map<String, AttributeSet> tokensCache = new HashMap<>();
     
     private final Preferences preferences;
 
@@ -117,7 +116,7 @@ public final class CompositeFCS extends FontColorSettings {
         }
 
         if (highlightName.equals(FontColorNames.DEFAULT_COLORING) && (attribs == null || attribs.getAttribute(StyleConstants.FontFamily) == null) ) {
-            ArrayList<AttributeSet> colorings = new ArrayList<AttributeSet>();
+            ArrayList<AttributeSet> colorings = new ArrayList<>();
             String name = highlightName;
 
             for (FontColorSettingsImpl fcsi : allFcsi) {
@@ -169,7 +168,7 @@ public final class CompositeFCS extends FontColorSettings {
     //-----------------------------------------------------------------------
     
     private AttributeSet findColoringForToken(String tokenName) {
-        ArrayList<AttributeSet> colorings = new ArrayList<AttributeSet>();
+        ArrayList<AttributeSet> colorings = new ArrayList<>();
         String name = tokenName;
 
         for (FontColorSettingsImpl fcsi : allFcsi) {
@@ -322,12 +321,12 @@ public final class CompositeFCS extends FontColorSettings {
             LOG.fine("Text Antialiasing was set " + (aaOn.booleanValue() ? "ON" : "OFF") + " by " + reason + "."); //NOI18N
             if (desktopHints != null) {
                 LOG.fine("Using system provided desktop hints"); //NOI18N
-                hints = new HashMap<Object, Object>(desktopHints);
+                hints = new HashMap<>(desktopHints);
             } else {
                 LOG.fine("No system provided desktop hints available, using hardcoded defaults"); //NOI18N
-                hints = new HashMap<Object, Object>();
+                hints = new HashMap<>();
             }
-            if (aaOn.booleanValue()) {
+            if (aaOn) {
                 // aaOn == true normally means that we should use system defaults,
                 // but if there are none we will turn text antialiasing on manually. This
                 // may not provide the best results, but should be better than nothing.

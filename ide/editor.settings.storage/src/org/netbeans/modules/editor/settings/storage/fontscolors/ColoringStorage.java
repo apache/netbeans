@@ -74,26 +74,32 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
         this(FAV_TOKEN);
     }
     
+    @Override
     public String getId() {
         return ID;
     }
 
+    @Override
     public boolean isUsingProfiles() {
         return true;
     }
 
+    @Override
     public String getMimeType() {
         return MIME_TYPE;
     }
 
+    @Override
     public String getLegacyFileName() {
         return null;
     }
 
+    @Override
     public StorageReader<String, AttributeSet> createReader(FileObject f, String mimePath) {
         throw new UnsupportedOperationException("Should not be called.");
     }
 
+    @Override
     public StorageWriter<String, AttributeSet> createWriter(FileObject f, String mimePath) {
         throw new UnsupportedOperationException("Should not be called.");
     }
@@ -102,12 +108,13 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     // StorageDescription implementation
     // ---------------------------------------------------------
     
+    @Override
     public Map<String, AttributeSet> load(MimePath mimePath, String profile, boolean defaults) {
         assert mimePath != null : "The parameter mimePath must not be null"; //NOI18N
         assert profile != null : "The parameter profile must not be null"; //NOI18N
         
         FileObject baseFolder = FileUtil.getConfigFile("Editors"); //NOI18N
-        Map<String, List<Object []>> files = new HashMap<String, List<Object []>>();
+        Map<String, List<Object []>> files = new HashMap<>();
         SettingsType.Locator locator = SettingsType.getLocator(this);
         locator.scan(baseFolder, mimePath.getPath(), profile, true, true, !defaults, false, files);
         
@@ -122,7 +129,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
         if (!profile.equals(EditorSettingsImpl.DEFAULT_PROFILE)) {
             // If non-default profile load the default profile supplied by modules
             // to find the localizing bundles.
-            Map<String, List<Object []>> defaultProfileModulesFiles = new HashMap<String, List<Object []>>();
+            Map<String, List<Object []>> defaultProfileModulesFiles = new HashMap<>();
             locator.scan(baseFolder, mimePath.getPath(), EditorSettingsImpl.DEFAULT_PROFILE, true, true, false, false, defaultProfileModulesFiles);
             filesForLocalization = defaultProfileModulesFiles.get(EditorSettingsImpl.DEFAULT_PROFILE);
             
@@ -134,13 +141,13 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
             filesForLocalization = profileInfos;
         }
         
-        Map<String, SimpleAttributeSet> fontsColorsMap = new HashMap<String, SimpleAttributeSet>();
+        Map<String, SimpleAttributeSet> fontsColorsMap = new HashMap<>();
         for(Object [] info : profileInfos) {
             assert info.length == 5;
             FileObject profileHome = (FileObject) info[0];
             FileObject settingFile = (FileObject) info[1];
-            boolean modulesFile = ((Boolean) info[2]).booleanValue();
-            boolean legacyFile = ((Boolean) info[4]).booleanValue();
+            boolean modulesFile = ((Boolean) info[2]);
+            boolean legacyFile = ((Boolean) info[4]);
 
             // Skip files with wrong type of colorings
             if (!type.equals(getColoringFileType(settingFile))) {
@@ -218,6 +225,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
         return NbUtils.immutize(fontsColorsMap, ATTR_MODULE_SUPPLIED);
     }
     
+    @Override
     public boolean save(
             MimePath mimePath, String profile, boolean defaults, 
             final Map<String, AttributeSet> fontColors, 
@@ -232,27 +240,26 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
                 FAV_TOKEN.equals(type) ? "-tokenColorings" : FAV_HIGHLIGHT.equals(type) ? "-highlights" : "-annotations", //NOI18N
                 defaults);
 
-        FileUtil.runAtomicAction(new FileSystem.AtomicAction() {
-            public void run() throws IOException {
-                FileObject baseFolder = FileUtil.getConfigFile("Editors"); //NOI18N
-                FileObject f = FileUtil.createData(baseFolder, settingFileName);
-                f.setAttribute(FA_TYPE, type);
+        FileUtil.runAtomicAction((FileSystem.AtomicAction) () -> {
+            FileObject baseFolder = FileUtil.getConfigFile("Editors"); //NOI18N
+            FileObject f = FileUtil.createData(baseFolder, settingFileName);
+            f.setAttribute(FA_TYPE, type);
 
-                    Map<String, AttributeSet> added = new HashMap<String, AttributeSet>();
-                    Map<String, AttributeSet> removed = new HashMap<String, AttributeSet>();
-                Utils.diff(defaultFontColors, fontColors, added, removed);
+            Map<String, AttributeSet> added = new HashMap<>();
+            Map<String, AttributeSet> removed = new HashMap<>();
+            Utils.diff(defaultFontColors, fontColors, added, removed);
+            
+            ColoringsWriter writer = new ColoringsWriter();
+            writer.setAdded(added);
+            writer.setRemoved(removed.keySet());
 
-                ColoringsWriter writer = new ColoringsWriter();
-                writer.setAdded(added);
-                writer.setRemoved(removed.keySet());
-
-                Utils.save(f, writer);
-            }
+            Utils.save(f, writer);
         });
         
         return true; // reset the cache, to force reloading from files next time colorings are accessed
     }
 
+    @Override
     public void delete(MimePath mimePath, String profile, boolean defaults) throws IOException {
         assert mimePath != null : "The parameter mimePath must not be null"; //NOI18N
         assert profile != null : "The parameter profile must not be null"; //NOI18N
@@ -265,18 +272,16 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
 
         final List<Object []> profileInfos = files.get(profile);
         if (profileInfos != null) {
-            FileUtil.runAtomicAction(new FileSystem.AtomicAction() {
-                public void run() throws IOException {
-                    for(Object [] info : profileInfos) {
-                        FileObject settingFile = (FileObject) info[1];
+            FileUtil.runAtomicAction((FileSystem.AtomicAction) () -> {
+                for(Object [] info : profileInfos) {
+                    FileObject settingFile = (FileObject) info[1];
 
-                        // Skip files with wrong type of colorings
-                        if (!type.equals(getColoringFileType(settingFile))) {
-                            continue;
-                        }
-
-                        settingFile.delete();
+                    // Skip files with wrong type of colorings
+                    if (!type.equals(getColoringFileType(settingFile))) {
+                        continue;
                     }
+
+                    settingFile.delete();
                 }
             });
         }
@@ -349,7 +354,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     private static class ColoringsReader extends StorageReader<String, SimpleAttributeSet> {
 
         private final Map<String, String> colordefs = new HashMap<>();
-        private final Map<String, SimpleAttributeSet> colorings = new HashMap<String, SimpleAttributeSet>();
+        private final Map<String, SimpleAttributeSet> colorings = new HashMap<>();
         private SimpleAttributeSet attribs = null;
         
         public ColoringsReader(FileObject f, String mimePath) {
@@ -366,85 +371,69 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
 
         public @Override void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
             try {
-                if (name.equals(E_ROOT)) {
-                    // We don't read anythhing from the root element
-                    colordefs.clear();
-                } else if (name.equals(E_COLORDEF)) {
-                    String nameAttr = attributes.getValue(A_NAME);
-                    String colorAttr = attributes.getValue(A_COLOR);
-                    String oldRef = colordefs.put(nameAttr, colorAttr);
-                    if (oldRef != null) {
-                        LOG.log(Level.WARNING, "Color reference: '" + nameAttr + "' previously defined as '" + oldRef + "' is now '" + colorAttr +"'");
-                    }
-                } else if (name.equals(E_FONTCOLOR)) {
-                    assert attribs == null;
-                    attribs = new SimpleAttributeSet();
-                    String value;
-
-                    String nameAttributeValue = attributes.getValue(A_NAME);
-                    attribs.addAttribute(StyleConstants.NameAttribute, nameAttributeValue);
-
-                    value = attributes.getValue(A_BACKGROUND);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.Background, stringToColor(value));
-                    }
-                    
-                    value = attributes.getValue(A_FOREGROUND);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.Foreground, stringToColor(value));
-                    }
-
-                    value = attributes.getValue(A_UNDERLINE);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.Underline, stringToColor(value));
-                    }
-
-                    value = attributes.getValue(A_STRIKETHROUGH);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.StrikeThrough, stringToColor(value));
-                    }
-
-                    value = attributes.getValue(A_WAVEUNDERLINE);
-                    if (value != null) {
-                        attribs.addAttribute(EditorStyleConstants.WaveUnderlineColor, stringToColor(value));
-                    }
-                    
-                    value = attributes.getValue(A_DEFAULT);
-                    if (value != null) {
-                        attribs.addAttribute(EditorStyleConstants.Default, value);
-                    }
-                    
-                    colorings.put(nameAttributeValue, attribs);
-                    
-                } else if (name.equals(E_FONT)) {
-                    assert attribs != null;
-                    String value;
-                    
-                    value = attributes.getValue(A_NAME);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.FontFamily, value);
-                    }
-
-                    value = attributes.getValue(A_SIZE);
-                    if (value != null) {
-                        try {
-                            attribs.addAttribute(StyleConstants.FontSize, Integer.decode(value));
-                        } catch (NumberFormatException ex) {
-                            LOG.log(Level.WARNING, value + " is not a valid Integer; parsing attribute " + A_SIZE + //NOI18N
-                                getProcessedFile().getPath(), ex);
+                switch (name) {
+                    case E_ROOT:
+                        // We don't read anythhing from the root element
+                        colordefs.clear();
+                        break;
+                    case E_COLORDEF:
+                        String nameAttr = attributes.getValue(A_NAME);
+                        String colorAttr = attributes.getValue(A_COLOR);
+                        String oldRef = colordefs.put(nameAttr, colorAttr);
+                        if (oldRef != null) {
+                            LOG.log(Level.WARNING, "Color reference: '" + nameAttr + "' previously defined as '" + oldRef + "' is now '" + colorAttr +"'");
+                        }   break;
+                    case E_FONTCOLOR:
+                        {
+                            assert attribs == null;
+                            attribs = new SimpleAttributeSet();
+                            String value;
+                            String nameAttributeValue = attributes.getValue(A_NAME);
+                            attribs.addAttribute(StyleConstants.NameAttribute, nameAttributeValue);
+                            value = attributes.getValue(A_BACKGROUND);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.Background, stringToColor(value));
+                            }       value = attributes.getValue(A_FOREGROUND);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.Foreground, stringToColor(value));
+                            }       value = attributes.getValue(A_UNDERLINE);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.Underline, stringToColor(value));
+                            }       value = attributes.getValue(A_STRIKETHROUGH);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.StrikeThrough, stringToColor(value));
+                            }       value = attributes.getValue(A_WAVEUNDERLINE);
+                            if (value != null) {
+                                attribs.addAttribute(EditorStyleConstants.WaveUnderlineColor, stringToColor(value));
+                            }       value = attributes.getValue(A_DEFAULT);
+                            if (value != null) {
+                                attribs.addAttribute(EditorStyleConstants.Default, value);
+                            }       colorings.put(nameAttributeValue, attribs);
+                            break;
                         }
-                    }
-                    
-                    value = attributes.getValue(A_STYLE);
-                    if (value != null) {
-                        attribs.addAttribute(StyleConstants.Bold,
-                            Boolean.valueOf(value.indexOf(V_BOLD) >= 0)
-                        );
-                        attribs.addAttribute(
-                            StyleConstants.Italic,
-                            Boolean.valueOf(value.indexOf(V_ITALIC) >= 0)
-                        );
-                    }
+                    case E_FONT:
+                        {
+                            assert attribs != null;
+                            String value;
+                            value = attributes.getValue(A_NAME);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.FontFamily, value);
+                            }       value = attributes.getValue(A_SIZE);
+                            if (value != null) {
+                                try {
+                                    attribs.addAttribute(StyleConstants.FontSize, Integer.decode(value));
+                                } catch (NumberFormatException ex) {
+                                    LOG.log(Level.WARNING, value + " is not a valid Integer; parsing attribute " + A_SIZE + //NOI18N
+                                            getProcessedFile().getPath(), ex);
+                                }
+                            }       value = attributes.getValue(A_STYLE);
+                            if (value != null) {
+                                attribs.addAttribute(StyleConstants.Bold, value.contains(V_BOLD));
+                                attribs.addAttribute(StyleConstants.Italic, value.contains(V_ITALIC));
+                            }       break;
+                        }
+                    default:
+                        break;
                 }
             } catch (Exception ex) {
                 LOG.log(Level.WARNING, "Can't parse colorings file " + getProcessedFile().getPath(), ex); //NOI18N
@@ -471,6 +460,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
             super();
         }
         
+        @Override
         public Document getDocument() {
             Document doc = XMLUtil.createDocument(E_ROOT, null, PUBLIC_ID, SYSTEM_ID);
             Node root = doc.getElementsByTagName(E_ROOT).item(0);
@@ -549,9 +539,9 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
                             italic = (Boolean) category.getAttribute(StyleConstants.Italic);
                         }
 
-                        font.setAttribute(A_STYLE, bold.booleanValue() ?
-                            (italic.booleanValue() ? V_BOLD_ITALIC : V_BOLD) :
-                            (italic.booleanValue() ? V_ITALIC : V_PLAIN)
+                        font.setAttribute(A_STYLE, bold ?
+                            (italic ? V_BOLD_ITALIC : V_BOLD) :
+                            (italic ? V_ITALIC : V_PLAIN)
                         );
                     }
                 }

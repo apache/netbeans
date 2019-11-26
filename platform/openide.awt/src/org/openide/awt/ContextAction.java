@@ -458,7 +458,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 return true;
             }
             if (obj instanceof Performer) {
-                Performer l = (Performer)obj;
+                Performer<?> l = (Performer<?>) obj;
                 return delegate.equals(l.delegate);
             }
             return false;

@@ -64,8 +64,8 @@ public abstract class Breakpoint {
     private String                      validityMessage;
     private int                         hitCountFilter;
     private HIT_COUNT_FILTERING_STYLE   hitCountFilteringStyle;
-    private volatile Set<Breakpoint>    breakpointsToEnable = Collections.EMPTY_SET;
-    private volatile Set<Breakpoint>    breakpointsToDisable = Collections.EMPTY_SET;
+    private volatile Set<Breakpoint>    breakpointsToEnable = Collections.emptySet();
+    private volatile Set<Breakpoint>    breakpointsToDisable = Collections.emptySet();
     
     { pcs = new PropertyChangeSupport (this); }
 

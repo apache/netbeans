@@ -779,7 +779,7 @@ public class DebuggingViewComponent extends TopComponent implements org.openide.
                         // collect all deadlocked threads
                         Set<DVThread> deadlockedThreads;
                         if (deadlocks == null) {
-                            deadlockedThreads = Collections.EMPTY_SET;
+                            deadlockedThreads = Collections.emptySet();
                         } else {
                             deadlockedThreads = new HashSet<DVThread>();
                             for (Deadlock deadlock : deadlocks) {

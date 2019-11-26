@@ -240,7 +240,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
         
         @Override
         protected void removeNotify() {
-            setKeys( Collections.EMPTY_SET );
+            setKeys( Collections.emptySet());
             super.removeNotify();
         }
         

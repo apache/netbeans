@@ -310,7 +310,7 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
         if (bpGroup != null) {
             return new BreakpointsFromGroup(new TestGroupProperties(bpGroup));
         }
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
     
     private static void setBreakpointsFromGroup(Properties properties, String base, Set<Breakpoint> breakpointsFromGroup) {

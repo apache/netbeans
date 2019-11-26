@@ -107,7 +107,7 @@ public class UninstallUtils {
             Set<File> clustersRootsList = getClustersRoots();
 
             if (clustersRootsList == null || clustersRootsList.isEmpty()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             
             FileFilter onlyXmlFilter = new FileFilter() {
@@ -165,7 +165,7 @@ public class UninstallUtils {
                 };
                 clustersRoots = new HashSet<File>(Arrays.asList(installationLoc.listFiles(onlyDirFilter)));
             } else {
-                clustersRoots = Collections.EMPTY_SET;
+                clustersRoots = Collections.emptySet();
             }
         }
 

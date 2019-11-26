@@ -69,7 +69,7 @@ public class StringPrefixTree<Type> {
          */
         Node() {
             this.finalState = false;
-            this.next = new TreeMap();
+            this.next = new TreeMap<>();
         }
 
         /**
@@ -80,7 +80,7 @@ public class StringPrefixTree<Type> {
          */
         Node(Type value) {
             this.finalState = true;
-            this.next = new TreeMap();
+            this.next = new TreeMap<>();
             this.value = value;
         }
 

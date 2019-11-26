@@ -480,10 +480,10 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that precedes the offset
      */
-    public List getPreviousLevelTags( int offset) throws BadLocationException {
-        List result = new ArrayList();
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getPreviousLevelTags( int offset) throws BadLocationException {
+        List<String> result = new ArrayList<>();
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -538,9 +538,9 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that follows the offset
      */
-    public List getFollowingLevelTags(int offset)throws BadLocationException{
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getFollowingLevelTags(int offset)throws BadLocationException{
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -549,7 +549,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             if( offset > 0 ) {
                 elem = getElementChain( offset-1 );
             } else { // beginning of document too, not much we can do on empty doc
-                return new ArrayList();
+                return new ArrayList<>();
             }
         }
         

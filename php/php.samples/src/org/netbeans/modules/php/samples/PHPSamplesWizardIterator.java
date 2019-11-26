@@ -265,7 +265,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
     }
 
     private static FileObject createFolder(File dir) throws IOException {
-        Stack stack = new Stack();
+        Stack<String> stack = new Stack<>();
         while (!dir.exists()) {
             stack.push(dir.getName());
             dir = dir.getParentFile();
@@ -277,7 +277,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
         }
         assert dirFO != null;
         while (!stack.isEmpty()) {
-            dirFO = dirFO.createFolder((String) stack.pop());
+            dirFO = dirFO.createFolder(stack.pop());
         }
         return dirFO;
     }

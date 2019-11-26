@@ -55,6 +55,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
@@ -144,6 +145,12 @@ public class CreateLicenseSummary extends Task {
     private FileSet moduleFiles;
     public FileSet createModuleFiles() {
         return (moduleFiles = new FileSet());
+    }
+
+    private PatternSet excludeFiles;
+    public void setExcludes(String str) {
+        excludeFiles = new PatternSet();
+        excludeFiles.setExcludes(str);
     }
 
     private Map<String, String> pseudoTests;
@@ -383,8 +390,15 @@ public class CreateLicenseSummary extends Task {
 
     private Map<Long, Map<String, String>> findCrc2LicenseHeaderMapping() throws IOException {
         Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<>();
+
         for(String module: modules) {
+            if (excludeFiles != null && matchModule(getProject(), excludeFiles, module)) {
+                continue;
+            }
+
             File d = new File(new File(nball, module), "external");
+
+
             Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
             Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
             for (String n : hgFiles) {
@@ -427,6 +441,15 @@ public class CreateLicenseSummary extends Task {
             }
         }
         return crc2LicenseHeaders;
+    }
+
+    private static boolean matchModule(Project project, PatternSet pattern, String module) {
+        for (String p : pattern.getExcludePatterns(project)) {
+            if (SelectorUtils.matchPath(p, module)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String normalizeNotice(String inputNotice) {

@@ -48,6 +48,7 @@ import org.netbeans.core.windows.Switches;
 import org.netbeans.core.windows.view.ui.slides.SlideBar;
 import org.netbeans.core.windows.view.ui.slides.SlideBarActionEvent;
 import org.netbeans.core.windows.view.ui.slides.SlideOperationFactory;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 
 
@@ -163,7 +164,7 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
             }
             tabbed.addTopComponent(
                 title,
-                icon == null ? null : new ImageIcon(icon),
+                icon == null ? null : ImageUtilities.image2Icon(icon),
                 tc, tc.getToolTipText());
         } finally {
             ignoreChange = false;
@@ -205,7 +206,7 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
 
         Image icon = tc.getIcon();
         if( null != icon ) {
-            tabbed.setIconAt(index, new ImageIcon(tc.getIcon()));
+            tabbed.setIconAt(index, ImageUtilities.image2Icon(tc.getIcon()));
         } else {
             Logger.getLogger(TabbedHandler.class.getName()).log(Level.INFO, "TopComponent has no icon: " + tc);
             tabbed.setIconAt(index, null);

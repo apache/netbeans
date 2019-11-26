@@ -42,8 +42,11 @@ import org.openide.filesystems.FileUtil;
  * @author Maros Sandor
  */
 public class VersioningSystemTest extends JellyTestCase {
+
+    private static final Logger LOG = Logger.getLogger(VersioningSystemTest.class.getName());
     
-    private File    propertiesFile;
+    private static final String CONFIG_FILE = "tck.properties";
+    
     private String  versioningSystemClassName;
     private File    rootDir;
     private VersioningSystem testedSystem;
@@ -57,29 +60,33 @@ public class VersioningSystemTest extends JellyTestCase {
     }
     
     public static Test suite() {
-//        NbTestSuite suite = new NbTestSuite();
-//        suite.addTest(new VersioningSystemTest("testOwnership"));
-//        suite.addTest(new VersioningSystemTest("testInterceptor"));
-//        return suite;
-        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration()
+        return NbModuleSuite.emptyConfiguration()
                 .addTest(VersioningSystemTest.class, 
-                        "testOwnership",
+                        "testOwnership", 
                         "testInterceptor")
-                .enableModules(".*").clusters(".*"));
+                .enableModules(".*")
+                .clusters(".*")
+                .suite();
     }
 
+    @Override
+    public boolean canRun() {
+        return super.canRun() && getConfigFile().exists();
+    }
+
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        propertiesFile = new File(getDataDir(), "tck.properties");
+        File propertiesFile = getConfigFile();
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propertiesFile);
         props.load(fis);
         versioningSystemClassName = props.getProperty("test.vcs");
         rootDir = new File(props.getProperty("test.root"));
-
         testedSystem = VersioningSupport.getOwner(rootDir);
+
         assertNotNull(testedSystem);
-        assertEquals(testedSystem.getClass().getName(), versioningSystemClassName);
+        assertEquals(versioningSystemClassName, testedSystem.getClass().getName());
     }
 
     public void testInterceptor() throws IOException {
@@ -97,9 +104,7 @@ public class VersioningSystemTest extends JellyTestCase {
     }
     
     public void testOwnership() throws IOException {
-        VersioningSystem vs;
-
-        vs = VersioningSupport.getOwner(rootDir.getParentFile());
+        VersioningSystem vs = VersioningSupport.getOwner(rootDir.getParentFile());
         assertNull(vs);
 
         testOwnershipRecursively(rootDir);
@@ -109,7 +114,7 @@ public class VersioningSystemTest extends JellyTestCase {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            Logger.getLogger(VersioningSystemTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -122,4 +127,9 @@ public class VersioningSystemTest extends JellyTestCase {
             testOwnershipRecursively(child);
         }
     }
+    
+    private File getConfigFile() {
+        return new File(getDataDir(), CONFIG_FILE);
+    }
+    
 }

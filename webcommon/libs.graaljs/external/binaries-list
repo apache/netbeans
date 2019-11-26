@@ -14,5 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-36E95FC415035174626479AFA64D145088ED512F org.graalvm.js:js:1.0.0-rc10
-E9D20C2841577D83B6DE44ADD90BD201E2A9134D org.graalvm.regex:regex:1.0.0-rc10
+7123118BFA4B0FF077D60985B784C148FAB724FE org.graalvm.js:js:19.0.0
+530ED62C07B9CD8C3E4BB0429B4243F6328E331F org.graalvm.regex:regex:19.0.0
+7A4D00D5EC5FEBD252A6182E8B6E87A0A9821F81 com.ibm.icu:icu4j:62.1

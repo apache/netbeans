@@ -24,10 +24,10 @@
 
     <folder name="Templates">
         <folder name="Project">
-            <folder name="Standard">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.java.j2seproject.ui.wizards.Bundle#Templates/Project/Standard"/>
+            <folder name="AntJava">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.java.j2seproject.ui.wizards.Bundle#Templates/Project/AntJava"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/java/j2seproject/ui/resources/desktop.html"/>
-                <attr name="position" intvalue="100"/>
+                <attr name="position" intvalue="170"/>
             </folder>
         </folder>
     </folder>

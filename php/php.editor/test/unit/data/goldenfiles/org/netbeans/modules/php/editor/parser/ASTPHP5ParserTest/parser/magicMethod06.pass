@@ -23,7 +23,7 @@
         <Comments>
             <PHPDocBlock start='10' end='66'>
                 <Tags>
-                    <PHPDocMethodTag start='14' end='62' kind='method'>
+                    <PHPDocMethodTag start='14' end='62' kind='method' isStatic='false'>
                         <Name>
                             <PHPDocNode start='24' end='26' value='m1'/>
                         </Name>
@@ -46,7 +46,7 @@
             </PHPDocBlock>
             <PHPDocBlock start='10' end='66'>
                 <Tags>
-                    <PHPDocMethodTag start='14' end='62' kind='method'>
+                    <PHPDocMethodTag start='14' end='62' kind='method' isStatic='false'>
                         <Name>
                             <PHPDocNode start='24' end='26' value='m1'/>
                         </Name>

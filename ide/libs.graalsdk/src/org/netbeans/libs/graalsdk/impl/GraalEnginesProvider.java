@@ -21,7 +21,9 @@ package org.netbeans.libs.graalsdk.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.script.Bindings;
 import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.Language;
 import org.netbeans.spi.scripting.EngineProvider;
@@ -36,10 +38,15 @@ public final class GraalEnginesProvider implements EngineProvider {
 
     @Override
     public List<ScriptEngineFactory> factories() {
+        return factories(null);
+    }
+
+    @Override
+    public List<ScriptEngineFactory> factories(ScriptEngineManager m) {
         List<ScriptEngineFactory> arr = new ArrayList<>();
         try {
             if (disable == null) {
-                enumerateLanguages(arr);
+                enumerateLanguages(arr, m == null ? null : m.getBindings());
             }
         } catch (IllegalStateException | LinkageError err) {
             disable = err;
@@ -47,8 +54,8 @@ public final class GraalEnginesProvider implements EngineProvider {
         return arr;
     }
 
-    private void enumerateLanguages(List<ScriptEngineFactory> arr) {
-        final GraalContext ctx = new GraalContext();
+    private void enumerateLanguages(List<ScriptEngineFactory> arr, Bindings globals) {
+        final GraalContext ctx = new GraalContext(globals);
         try (Engine engine = Engine.newBuilder().build()) {
             for (Map.Entry<String, Language> entry : engine.getLanguages().entrySet()) {
                 arr.add(new GraalEngineFactory(ctx, entry.getKey(), entry.getValue()));

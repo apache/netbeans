@@ -45,6 +45,7 @@ public abstract class AnnotationProvider extends BaseAnnotationProvider {
      * @return null or array of actions for these files.
      * @deprecated Will be deleted in the future. Overwrite {@link #findExtrasFor(java.util.Set)}.
      */
+    @Deprecated
     public javax.swing.Action[] actions(Set<? extends FileObject> files) {
         return findExtrasFor(files).lookupAll(javax.swing.Action.class).toArray(new javax.swing.Action[0]);
     }
@@ -61,6 +62,6 @@ public abstract class AnnotationProvider extends BaseAnnotationProvider {
     @Override
     public Lookup findExtrasFor(Set<? extends FileObject> files) {
         Object[] arr = actions(files);
-        return arr == null ? null : Lookups.fixed((Object[]) arr);
+        return arr == null ? null : Lookups.fixed(arr);
     }
 }

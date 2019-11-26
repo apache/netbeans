@@ -281,13 +281,8 @@ public class WebAppMetadataImpl implements WebAppMetadata {
 
     private FragmentRec findFragmentRec(FileObject fo) {
         for (FragmentRec fr : myRootToFragment.values()) {
-            try {
-                if (fr.source.getURL().equals(fo.getURL()))
-                    return fr;
-            }
-            catch (FileStateInvalidException ex) {
-                ex.printStackTrace();
-            }
+            if (fr.source.toURL().equals(fo.toURL()))
+                return fr;
         }
         return null;
     }

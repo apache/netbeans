@@ -19,16 +19,20 @@
 package org.netbeans.modules.maven.modelcache;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -146,8 +150,27 @@ public final class MavenProjectCache {
         M2Configuration active = config.getActiveConfiguration();
         MavenExecutionResult res = null;
         try {
+            FileObject mavenConfig = projectDir.getFileObject(".mvn/maven.config");
+            List<String> mavenConfigOpts = Collections.emptyList();
+            if (mavenConfig != null && mavenConfig.isData()) {
+                mavenConfigOpts = Arrays.asList(mavenConfig.asText().split("\\s+"));
+            }
             final MavenExecutionRequest req = projectEmbedder.createMavenExecutionRequest();
             req.addActiveProfiles(active.getActivatedProfiles());
+            BiConsumer<String, String> addActiveProfiles = (opt, prefix) -> req.addActiveProfiles(Arrays.asList(opt.substring(prefix.length()).split(",")));
+            Iterator<String> optIt = mavenConfigOpts.iterator();
+            while (optIt.hasNext()) {
+                String opt = optIt.next();
+                // Could try to write/integrate a more general option parser here,
+                // but some options like -amd anyway violate GNU style.
+                if (opt.equals("-P") || opt.equals("--activate-profiles")) {
+                    addActiveProfiles.accept(optIt.next(), "");
+                } else if (opt.startsWith("-P")) {
+                    addActiveProfiles.accept(opt, "-P");
+                } else if (opt.startsWith("--activate-profiles=")) {
+                    addActiveProfiles.accept(opt, "--activate-profiles=");
+                }
+            }
 
             req.setPom(pomFile);
             req.setNoSnapshotUpdates(true);
@@ -161,6 +184,26 @@ public final class MavenProjectCache {
             req.setOffline(true);
             //#238800 important to merge, not replace
             Properties uprops = req.getUserProperties();
+            BiConsumer<String, String> setProperty = (opt, prefix) -> {
+                String value = opt.substring(prefix.length());
+                int equals = value.indexOf('=');
+                if (equals != -1) {
+                    uprops.setProperty(value.substring(0, equals), value.substring(equals + 1));
+                } else {
+                    uprops.setProperty(value, "true");
+                }
+            };
+            optIt = mavenConfigOpts.iterator();
+            while (optIt.hasNext()) {
+                String opt = optIt.next();
+                if (opt.equals("-D") || opt.equals("--define")) {
+                    setProperty.accept(optIt.next(), "");
+                } else if (opt.startsWith("-D")) {
+                    setProperty.accept(opt, "-D");
+                } else if (opt.startsWith("--define=")) {
+                    setProperty.accept(opt, "--define=");
+                }
+            }
             uprops.putAll(createUserPropsForProjectLoading(active.getProperties()));
             req.setUserProperties(uprops);
             res = projectEmbedder.readProjectWithDependencies(req, true);
@@ -215,7 +258,7 @@ public final class MavenProjectCache {
                     }
                 }
             }
-        } catch (RuntimeException exc) {
+        } catch (RuntimeException | IOException exc) {
             //guard against exceptions that are not processed by the embedder
             //#136184 NumberFormatException
             LOG.log(Level.INFO, "Runtime exception thrown while loading maven project at " + pomFile, exc); //NOI18N

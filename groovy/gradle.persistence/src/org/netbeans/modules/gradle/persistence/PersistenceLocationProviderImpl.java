@@ -71,7 +71,7 @@ public class PersistenceLocationProviderImpl implements PersistenceLocationProvi
     }
 
     /**
-     * creates a new persistence location using the maven resource folder ->
+     * creates a new persistence location using the Gradle resource folder ->
      * /src/main/resources/META-INF
      *
      * @return the newly created FileObject the location (eg. parent folder) of
@@ -103,7 +103,7 @@ public class PersistenceLocationProviderImpl implements PersistenceLocationProvi
     }
 
     /**
-     * Protected method used by MavenPersistenceSupport to create a file
+     * Protected method used by GradlePersistenceSupport to create a file
      * listener
      *
      * @return property access to the current persistence.xml file

@@ -1,0 +1,1 @@
+$af = fn(int $x): callable => fn(int $|>MARK_OCCURRENCES:z<|): int => $x + $y * $^|>MARK_OCCURRENCES:z<|;

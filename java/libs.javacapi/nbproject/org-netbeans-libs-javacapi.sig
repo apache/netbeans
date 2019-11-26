@@ -1,314 +1,5 @@
 #Signature file v4.1
-#Version 8.24.1
-
-CLSS public abstract interface com.sun.javadoc.AnnotatedType
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Type
-meth public abstract com.sun.javadoc.AnnotationDesc[] annotations()
-meth public abstract com.sun.javadoc.Type underlyingType()
-
-CLSS public abstract interface com.sun.javadoc.AnnotationDesc
- anno 0 java.lang.Deprecated()
-innr public abstract interface static ElementValuePair
-meth public abstract boolean isSynthesized()
-meth public abstract com.sun.javadoc.AnnotationDesc$ElementValuePair[] elementValues()
-meth public abstract com.sun.javadoc.AnnotationTypeDoc annotationType()
-
-CLSS public abstract interface static com.sun.javadoc.AnnotationDesc$ElementValuePair
- outer com.sun.javadoc.AnnotationDesc
- anno 0 java.lang.Deprecated()
-meth public abstract com.sun.javadoc.AnnotationTypeElementDoc element()
-meth public abstract com.sun.javadoc.AnnotationValue value()
-
-CLSS public abstract interface com.sun.javadoc.AnnotationTypeDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.ClassDoc
-meth public abstract com.sun.javadoc.AnnotationTypeElementDoc[] elements()
-
-CLSS public abstract interface com.sun.javadoc.AnnotationTypeElementDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.MethodDoc
-meth public abstract com.sun.javadoc.AnnotationValue defaultValue()
-
-CLSS public abstract interface com.sun.javadoc.AnnotationValue
- anno 0 java.lang.Deprecated()
-meth public abstract java.lang.Object value()
-meth public abstract java.lang.String toString()
-
-CLSS public abstract interface com.sun.javadoc.ClassDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.ProgramElementDoc
-intf com.sun.javadoc.Type
-meth public abstract boolean definesSerializableFields()
-meth public abstract boolean isAbstract()
-meth public abstract boolean isExternalizable()
-meth public abstract boolean isSerializable()
-meth public abstract boolean subclassOf(com.sun.javadoc.ClassDoc)
-meth public abstract com.sun.javadoc.ClassDoc findClass(java.lang.String)
-meth public abstract com.sun.javadoc.ClassDoc superclass()
-meth public abstract com.sun.javadoc.ClassDoc[] importedClasses()
- anno 0 java.lang.Deprecated()
-meth public abstract com.sun.javadoc.ClassDoc[] innerClasses()
-meth public abstract com.sun.javadoc.ClassDoc[] innerClasses(boolean)
-meth public abstract com.sun.javadoc.ClassDoc[] interfaces()
-meth public abstract com.sun.javadoc.ConstructorDoc[] constructors()
-meth public abstract com.sun.javadoc.ConstructorDoc[] constructors(boolean)
-meth public abstract com.sun.javadoc.FieldDoc[] enumConstants()
-meth public abstract com.sun.javadoc.FieldDoc[] fields()
-meth public abstract com.sun.javadoc.FieldDoc[] fields(boolean)
-meth public abstract com.sun.javadoc.FieldDoc[] serializableFields()
-meth public abstract com.sun.javadoc.MethodDoc[] methods()
-meth public abstract com.sun.javadoc.MethodDoc[] methods(boolean)
-meth public abstract com.sun.javadoc.MethodDoc[] serializationMethods()
-meth public abstract com.sun.javadoc.PackageDoc[] importedPackages()
- anno 0 java.lang.Deprecated()
-meth public abstract com.sun.javadoc.ParamTag[] typeParamTags()
-meth public abstract com.sun.javadoc.Type superclassType()
-meth public abstract com.sun.javadoc.TypeVariable[] typeParameters()
-meth public abstract com.sun.javadoc.Type[] interfaceTypes()
-
-CLSS public abstract interface com.sun.javadoc.ConstructorDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.ExecutableMemberDoc
-
-CLSS public abstract interface com.sun.javadoc.Doc
- anno 0 java.lang.Deprecated()
-intf java.lang.Comparable<java.lang.Object>
-meth public abstract boolean isAnnotationType()
-meth public abstract boolean isAnnotationTypeElement()
-meth public abstract boolean isClass()
-meth public abstract boolean isConstructor()
-meth public abstract boolean isEnum()
-meth public abstract boolean isEnumConstant()
-meth public abstract boolean isError()
-meth public abstract boolean isException()
-meth public abstract boolean isField()
-meth public abstract boolean isIncluded()
-meth public abstract boolean isInterface()
-meth public abstract boolean isMethod()
-meth public abstract boolean isOrdinaryClass()
-meth public abstract com.sun.javadoc.SeeTag[] seeTags()
-meth public abstract com.sun.javadoc.SourcePosition position()
-meth public abstract com.sun.javadoc.Tag[] firstSentenceTags()
-meth public abstract com.sun.javadoc.Tag[] inlineTags()
-meth public abstract com.sun.javadoc.Tag[] tags()
-meth public abstract com.sun.javadoc.Tag[] tags(java.lang.String)
-meth public abstract int compareTo(java.lang.Object)
-meth public abstract java.lang.String commentText()
-meth public abstract java.lang.String getRawCommentText()
-meth public abstract java.lang.String name()
-meth public abstract void setRawCommentText(java.lang.String)
-
-CLSS public abstract interface com.sun.javadoc.DocErrorReporter
- anno 0 java.lang.Deprecated()
-meth public abstract void printError(com.sun.javadoc.SourcePosition,java.lang.String)
-meth public abstract void printError(java.lang.String)
-meth public abstract void printNotice(com.sun.javadoc.SourcePosition,java.lang.String)
-meth public abstract void printNotice(java.lang.String)
-meth public abstract void printWarning(com.sun.javadoc.SourcePosition,java.lang.String)
-meth public abstract void printWarning(java.lang.String)
-
-CLSS public abstract com.sun.javadoc.Doclet
- anno 0 java.lang.Deprecated()
-cons public init()
-meth public static boolean start(com.sun.javadoc.RootDoc)
-meth public static boolean validOptions(java.lang.String[][],com.sun.javadoc.DocErrorReporter)
-meth public static com.sun.javadoc.LanguageVersion languageVersion()
-meth public static int optionLength(java.lang.String)
-supr java.lang.Object
-
-CLSS public abstract interface com.sun.javadoc.ExecutableMemberDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.MemberDoc
-meth public abstract boolean isNative()
-meth public abstract boolean isSynchronized()
-meth public abstract boolean isVarArgs()
-meth public abstract com.sun.javadoc.ClassDoc[] thrownExceptions()
-meth public abstract com.sun.javadoc.ParamTag[] paramTags()
-meth public abstract com.sun.javadoc.ParamTag[] typeParamTags()
-meth public abstract com.sun.javadoc.Parameter[] parameters()
-meth public abstract com.sun.javadoc.ThrowsTag[] throwsTags()
-meth public abstract com.sun.javadoc.Type receiverType()
-meth public abstract com.sun.javadoc.TypeVariable[] typeParameters()
-meth public abstract com.sun.javadoc.Type[] thrownExceptionTypes()
-meth public abstract java.lang.String flatSignature()
-meth public abstract java.lang.String signature()
-
-CLSS public abstract interface com.sun.javadoc.FieldDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.MemberDoc
-meth public abstract boolean isTransient()
-meth public abstract boolean isVolatile()
-meth public abstract com.sun.javadoc.SerialFieldTag[] serialFieldTags()
-meth public abstract com.sun.javadoc.Type type()
-meth public abstract java.lang.Object constantValue()
-meth public abstract java.lang.String constantValueExpression()
-
-CLSS public final !enum com.sun.javadoc.LanguageVersion
- anno 0 java.lang.Deprecated()
-fld public final static com.sun.javadoc.LanguageVersion JAVA_1_1
-fld public final static com.sun.javadoc.LanguageVersion JAVA_1_5
-meth public static com.sun.javadoc.LanguageVersion valueOf(java.lang.String)
-meth public static com.sun.javadoc.LanguageVersion[] values()
-supr java.lang.Enum<com.sun.javadoc.LanguageVersion>
-
-CLSS public abstract interface com.sun.javadoc.MemberDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.ProgramElementDoc
-meth public abstract boolean isSynthetic()
-
-CLSS public abstract interface com.sun.javadoc.MethodDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.ExecutableMemberDoc
-meth public abstract boolean isAbstract()
-meth public abstract boolean isDefault()
-meth public abstract boolean overrides(com.sun.javadoc.MethodDoc)
-meth public abstract com.sun.javadoc.ClassDoc overriddenClass()
-meth public abstract com.sun.javadoc.MethodDoc overriddenMethod()
-meth public abstract com.sun.javadoc.Type overriddenType()
-meth public abstract com.sun.javadoc.Type returnType()
-
-CLSS public abstract interface com.sun.javadoc.PackageDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Doc
-meth public abstract com.sun.javadoc.AnnotationDesc[] annotations()
-meth public abstract com.sun.javadoc.AnnotationTypeDoc[] annotationTypes()
-meth public abstract com.sun.javadoc.ClassDoc findClass(java.lang.String)
-meth public abstract com.sun.javadoc.ClassDoc[] allClasses()
-meth public abstract com.sun.javadoc.ClassDoc[] allClasses(boolean)
-meth public abstract com.sun.javadoc.ClassDoc[] enums()
-meth public abstract com.sun.javadoc.ClassDoc[] errors()
-meth public abstract com.sun.javadoc.ClassDoc[] exceptions()
-meth public abstract com.sun.javadoc.ClassDoc[] interfaces()
-meth public abstract com.sun.javadoc.ClassDoc[] ordinaryClasses()
-
-CLSS public abstract interface com.sun.javadoc.ParamTag
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Tag
-meth public abstract boolean isTypeParameter()
-meth public abstract java.lang.String parameterComment()
-meth public abstract java.lang.String parameterName()
-
-CLSS public abstract interface com.sun.javadoc.Parameter
- anno 0 java.lang.Deprecated()
-meth public abstract com.sun.javadoc.AnnotationDesc[] annotations()
-meth public abstract com.sun.javadoc.Type type()
-meth public abstract java.lang.String name()
-meth public abstract java.lang.String toString()
-meth public abstract java.lang.String typeName()
-
-CLSS public abstract interface com.sun.javadoc.ParameterizedType
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Type
-meth public abstract com.sun.javadoc.ClassDoc asClassDoc()
-meth public abstract com.sun.javadoc.Type containingType()
-meth public abstract com.sun.javadoc.Type superclassType()
-meth public abstract com.sun.javadoc.Type[] interfaceTypes()
-meth public abstract com.sun.javadoc.Type[] typeArguments()
-
-CLSS public abstract interface com.sun.javadoc.ProgramElementDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Doc
-meth public abstract boolean isFinal()
-meth public abstract boolean isPackagePrivate()
-meth public abstract boolean isPrivate()
-meth public abstract boolean isProtected()
-meth public abstract boolean isPublic()
-meth public abstract boolean isStatic()
-meth public abstract com.sun.javadoc.AnnotationDesc[] annotations()
-meth public abstract com.sun.javadoc.ClassDoc containingClass()
-meth public abstract com.sun.javadoc.PackageDoc containingPackage()
-meth public abstract int modifierSpecifier()
-meth public abstract java.lang.String modifiers()
-meth public abstract java.lang.String qualifiedName()
-
-CLSS public abstract interface com.sun.javadoc.RootDoc
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Doc
-intf com.sun.javadoc.DocErrorReporter
-meth public abstract com.sun.javadoc.ClassDoc classNamed(java.lang.String)
-meth public abstract com.sun.javadoc.ClassDoc[] classes()
-meth public abstract com.sun.javadoc.ClassDoc[] specifiedClasses()
-meth public abstract com.sun.javadoc.PackageDoc packageNamed(java.lang.String)
-meth public abstract com.sun.javadoc.PackageDoc[] specifiedPackages()
-meth public abstract java.lang.String[][] options()
-
-CLSS public abstract interface com.sun.javadoc.SeeTag
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Tag
-meth public abstract com.sun.javadoc.ClassDoc referencedClass()
-meth public abstract com.sun.javadoc.MemberDoc referencedMember()
-meth public abstract com.sun.javadoc.PackageDoc referencedPackage()
-meth public abstract java.lang.String label()
-meth public abstract java.lang.String referencedClassName()
-meth public abstract java.lang.String referencedMemberName()
-
-CLSS public abstract interface com.sun.javadoc.SerialFieldTag
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Tag
-intf java.lang.Comparable<java.lang.Object>
-meth public abstract com.sun.javadoc.ClassDoc fieldTypeDoc()
-meth public abstract int compareTo(java.lang.Object)
-meth public abstract java.lang.String description()
-meth public abstract java.lang.String fieldName()
-meth public abstract java.lang.String fieldType()
-
-CLSS public abstract interface com.sun.javadoc.SourcePosition
- anno 0 java.lang.Deprecated()
-meth public abstract int column()
-meth public abstract int line()
-meth public abstract java.io.File file()
-meth public abstract java.lang.String toString()
-
-CLSS public abstract interface com.sun.javadoc.Tag
- anno 0 java.lang.Deprecated()
-meth public abstract com.sun.javadoc.Doc holder()
-meth public abstract com.sun.javadoc.SourcePosition position()
-meth public abstract com.sun.javadoc.Tag[] firstSentenceTags()
-meth public abstract com.sun.javadoc.Tag[] inlineTags()
-meth public abstract java.lang.String kind()
-meth public abstract java.lang.String name()
-meth public abstract java.lang.String text()
-meth public abstract java.lang.String toString()
-
-CLSS public abstract interface com.sun.javadoc.ThrowsTag
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Tag
-meth public abstract com.sun.javadoc.ClassDoc exception()
-meth public abstract com.sun.javadoc.Type exceptionType()
-meth public abstract java.lang.String exceptionComment()
-meth public abstract java.lang.String exceptionName()
-
-CLSS public abstract interface com.sun.javadoc.Type
- anno 0 java.lang.Deprecated()
-meth public abstract boolean isPrimitive()
-meth public abstract com.sun.javadoc.AnnotatedType asAnnotatedType()
-meth public abstract com.sun.javadoc.AnnotationTypeDoc asAnnotationTypeDoc()
-meth public abstract com.sun.javadoc.ClassDoc asClassDoc()
-meth public abstract com.sun.javadoc.ParameterizedType asParameterizedType()
-meth public abstract com.sun.javadoc.Type getElementType()
-meth public abstract com.sun.javadoc.TypeVariable asTypeVariable()
-meth public abstract com.sun.javadoc.WildcardType asWildcardType()
-meth public abstract java.lang.String dimension()
-meth public abstract java.lang.String qualifiedTypeName()
-meth public abstract java.lang.String simpleTypeName()
-meth public abstract java.lang.String toString()
-meth public abstract java.lang.String typeName()
-
-CLSS public abstract interface com.sun.javadoc.TypeVariable
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Type
-meth public abstract com.sun.javadoc.AnnotationDesc[] annotations()
-meth public abstract com.sun.javadoc.ProgramElementDoc owner()
-meth public abstract com.sun.javadoc.Type[] bounds()
-
-CLSS public abstract interface com.sun.javadoc.WildcardType
- anno 0 java.lang.Deprecated()
-intf com.sun.javadoc.Type
-meth public abstract com.sun.javadoc.Type[] extendsBounds()
-meth public abstract com.sun.javadoc.Type[] superBounds()
-
-CLSS abstract interface com.sun.javadoc.package-info
+#Version 8.27.0
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind
@@ -394,6 +85,7 @@ fld public final static com.sun.source.doctree.DocTree$Kind SERIAL_FIELD
 fld public final static com.sun.source.doctree.DocTree$Kind SINCE
 fld public final static com.sun.source.doctree.DocTree$Kind START_ELEMENT
 fld public final static com.sun.source.doctree.DocTree$Kind SUMMARY
+fld public final static com.sun.source.doctree.DocTree$Kind SYSTEM_PROPERTY
 fld public final static com.sun.source.doctree.DocTree$Kind TEXT
 fld public final static com.sun.source.doctree.DocTree$Kind THROWS
 fld public final static com.sun.source.doctree.DocTree$Kind UNKNOWN_BLOCK_TAG
@@ -440,6 +132,7 @@ meth public {com.sun.source.doctree.DocTreeVisitor%0} visitHidden(com.sun.source
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitIndex(com.sun.source.doctree.IndexTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitProvides(com.sun.source.doctree.ProvidesTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSummary(com.sun.source.doctree.SummaryTree,{com.sun.source.doctree.DocTreeVisitor%1})
+meth public {com.sun.source.doctree.DocTreeVisitor%0} visitSystemProperty(com.sun.source.doctree.SystemPropertyTree,{com.sun.source.doctree.DocTreeVisitor%1})
 meth public {com.sun.source.doctree.DocTreeVisitor%0} visitUses(com.sun.source.doctree.UsesTree,{com.sun.source.doctree.DocTreeVisitor%1})
 
 CLSS public abstract interface com.sun.source.doctree.DocTypeTree
@@ -538,6 +231,10 @@ CLSS public abstract interface com.sun.source.doctree.SummaryTree
 intf com.sun.source.doctree.InlineTagTree
 meth public abstract java.util.List<? extends com.sun.source.doctree.DocTree> getSummary()
 
+CLSS public abstract interface com.sun.source.doctree.SystemPropertyTree
+intf com.sun.source.doctree.InlineTagTree
+meth public abstract javax.lang.model.element.Name getPropertyName()
+
 CLSS public abstract interface com.sun.source.doctree.TextTree
 intf com.sun.source.doctree.DocTree
 meth public abstract java.lang.String getBody()
@@ -614,9 +311,25 @@ intf com.sun.source.tree.StatementTree
 meth public abstract javax.lang.model.element.Name getLabel()
 
 CLSS public abstract interface com.sun.source.tree.CaseTree
+innr public final static !enum CaseKind
 intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
+meth public abstract java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.List<? extends com.sun.source.tree.StatementTree> getStatements()
+meth public com.sun.source.tree.CaseTree$CaseKind getCaseKind()
+ anno 0 java.lang.Deprecated()
+meth public com.sun.source.tree.Tree getBody()
+ anno 0 java.lang.Deprecated()
+
+CLSS public final static !enum com.sun.source.tree.CaseTree$CaseKind
+ outer com.sun.source.tree.CaseTree
+ anno 0 java.lang.Deprecated()
+fld public final static com.sun.source.tree.CaseTree$CaseKind RULE
+fld public final static com.sun.source.tree.CaseTree$CaseKind STATEMENT
+meth public static com.sun.source.tree.CaseTree$CaseKind valueOf(java.lang.String)
+meth public static com.sun.source.tree.CaseTree$CaseKind[] values()
+supr java.lang.Enum<com.sun.source.tree.CaseTree$CaseKind>
 
 CLSS public abstract interface com.sun.source.tree.CatchTree
 intf com.sun.source.tree.Tree
@@ -874,6 +587,12 @@ meth public abstract javax.lang.model.element.TypeElement getEnclosingClass()
 CLSS public abstract interface com.sun.source.tree.StatementTree
 intf com.sun.source.tree.Tree
 
+CLSS public abstract interface com.sun.source.tree.SwitchExpressionTree
+ anno 0 java.lang.Deprecated()
+intf com.sun.source.tree.ExpressionTree
+meth public abstract com.sun.source.tree.ExpressionTree getExpression()
+meth public abstract java.util.List<? extends com.sun.source.tree.CaseTree> getCases()
+
 CLSS public abstract interface com.sun.source.tree.SwitchTree
 intf com.sun.source.tree.StatementTree
 meth public abstract com.sun.source.tree.ExpressionTree getExpression()
@@ -986,6 +705,8 @@ fld public final static com.sun.source.tree.Tree$Kind RIGHT_SHIFT_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind STRING_LITERAL
 fld public final static com.sun.source.tree.Tree$Kind SUPER_WILDCARD
 fld public final static com.sun.source.tree.Tree$Kind SWITCH
+fld public final static com.sun.source.tree.Tree$Kind SWITCH_EXPRESSION
+ anno 0 java.lang.Deprecated()
 fld public final static com.sun.source.tree.Tree$Kind SYNCHRONIZED
 fld public final static com.sun.source.tree.Tree$Kind THROW
 fld public final static com.sun.source.tree.Tree$Kind TRY
@@ -1003,6 +724,8 @@ fld public final static com.sun.source.tree.Tree$Kind VARIABLE
 fld public final static com.sun.source.tree.Tree$Kind WHILE_LOOP
 fld public final static com.sun.source.tree.Tree$Kind XOR
 fld public final static com.sun.source.tree.Tree$Kind XOR_ASSIGNMENT
+fld public final static com.sun.source.tree.Tree$Kind YIELD
+ anno 0 java.lang.Deprecated()
 meth public java.lang.Class<? extends com.sun.source.tree.Tree> asInterface()
 meth public static com.sun.source.tree.Tree$Kind valueOf(java.lang.String)
 meth public static com.sun.source.tree.Tree$Kind[] values()
@@ -1059,6 +782,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1070,6 +795,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.sourc
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface com.sun.source.tree.TryTree
 intf com.sun.source.tree.StatementTree
@@ -1118,6 +845,11 @@ CLSS public abstract interface com.sun.source.tree.WildcardTree
 intf com.sun.source.tree.Tree
 meth public abstract com.sun.source.tree.Tree getBound()
 
+CLSS public abstract interface com.sun.source.tree.YieldTree
+ anno 0 java.lang.Deprecated()
+intf com.sun.source.tree.StatementTree
+meth public abstract com.sun.source.tree.ExpressionTree getValue()
+
 CLSS abstract interface com.sun.source.tree.package-info
 
 CLSS public abstract interface com.sun.source.util.DocSourcePositions
@@ -1155,6 +887,7 @@ meth public abstract com.sun.source.doctree.SerialFieldTree newSerialFieldTree(c
 meth public abstract com.sun.source.doctree.SerialTree newSerialTree(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public abstract com.sun.source.doctree.SinceTree newSinceTree(java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public abstract com.sun.source.doctree.StartElementTree newStartElementTree(javax.lang.model.element.Name,java.util.List<? extends com.sun.source.doctree.DocTree>,boolean)
+meth public abstract com.sun.source.doctree.SystemPropertyTree newSystemPropertyTree(javax.lang.model.element.Name)
 meth public abstract com.sun.source.doctree.TextTree newTextTree(java.lang.String)
 meth public abstract com.sun.source.doctree.ThrowsTree newExceptionTree(com.sun.source.doctree.ReferenceTree,java.util.List<? extends com.sun.source.doctree.DocTree>)
 meth public abstract com.sun.source.doctree.ThrowsTree newThrowsTree(com.sun.source.doctree.ReferenceTree,java.util.List<? extends com.sun.source.doctree.DocTree>)
@@ -1223,6 +956,7 @@ meth public {com.sun.source.util.DocTreeScanner%0} visitSerialField(com.sun.sour
 meth public {com.sun.source.util.DocTreeScanner%0} visitSince(com.sun.source.doctree.SinceTree,{com.sun.source.util.DocTreeScanner%1})
 meth public {com.sun.source.util.DocTreeScanner%0} visitStartElement(com.sun.source.doctree.StartElementTree,{com.sun.source.util.DocTreeScanner%1})
 meth public {com.sun.source.util.DocTreeScanner%0} visitSummary(com.sun.source.doctree.SummaryTree,{com.sun.source.util.DocTreeScanner%1})
+meth public {com.sun.source.util.DocTreeScanner%0} visitSystemProperty(com.sun.source.doctree.SystemPropertyTree,{com.sun.source.util.DocTreeScanner%1})
 meth public {com.sun.source.util.DocTreeScanner%0} visitText(com.sun.source.doctree.TextTree,{com.sun.source.util.DocTreeScanner%1})
 meth public {com.sun.source.util.DocTreeScanner%0} visitThrows(com.sun.source.doctree.ThrowsTree,{com.sun.source.util.DocTreeScanner%1})
 meth public {com.sun.source.util.DocTreeScanner%0} visitUnknownBlockTag(com.sun.source.doctree.UnknownBlockTagTree,{com.sun.source.util.DocTreeScanner%1})
@@ -1263,7 +997,11 @@ meth public abstract void addTaskListener(com.sun.source.util.TaskListener)
 meth public abstract void removeTaskListener(com.sun.source.util.TaskListener)
 meth public abstract void setTaskListener(com.sun.source.util.TaskListener)
 meth public static com.sun.source.util.JavacTask instance(javax.annotation.processing.ProcessingEnvironment)
+meth public void setParameterNameProvider(com.sun.source.util.ParameterNameProvider)
 supr java.lang.Object
+
+CLSS public abstract interface com.sun.source.util.ParameterNameProvider
+meth public abstract java.lang.CharSequence getParameterName(javax.lang.model.element.VariableElement)
 
 CLSS public abstract interface com.sun.source.util.Plugin
 meth public abstract !varargs void init(com.sun.source.util.JavacTask,java.lang.String[])
@@ -1305,6 +1043,7 @@ meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitSerialField(com.su
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitSince(com.sun.source.doctree.SinceTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitStartElement(com.sun.source.doctree.StartElementTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitSummary(com.sun.source.doctree.SummaryTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
+meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitSystemProperty(com.sun.source.doctree.SystemPropertyTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitText(com.sun.source.doctree.TextTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitThrows(com.sun.source.doctree.ThrowsTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
 meth public {com.sun.source.util.SimpleDocTreeVisitor%0} visitUnknownBlockTag(com.sun.source.doctree.UnknownBlockTagTree,{com.sun.source.util.SimpleDocTreeVisitor%1})
@@ -1371,6 +1110,8 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitProvides(com.sun.sour
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1382,6 +1123,8 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitUses(com.sun.source.t
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.SimpleTreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.source.util.SourcePositions
@@ -1495,6 +1238,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -1506,6 +1251,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.Us
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract com.sun.source.util.Trees
@@ -1744,6 +1491,7 @@ meth public abstract javax.annotation.processing.Messager getMessager()
 meth public abstract javax.lang.model.SourceVersion getSourceVersion()
 meth public abstract javax.lang.model.util.Elements getElementUtils()
 meth public abstract javax.lang.model.util.Types getTypeUtils()
+meth public boolean isPreviewEnabled()
 
 CLSS public abstract interface javax.annotation.processing.Processor
 meth public abstract boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
@@ -1795,6 +1543,8 @@ fld public final static javax.lang.model.SourceVersion RELEASE_0
 fld public final static javax.lang.model.SourceVersion RELEASE_1
 fld public final static javax.lang.model.SourceVersion RELEASE_10
 fld public final static javax.lang.model.SourceVersion RELEASE_11
+fld public final static javax.lang.model.SourceVersion RELEASE_12
+fld public final static javax.lang.model.SourceVersion RELEASE_13
 fld public final static javax.lang.model.SourceVersion RELEASE_2
 fld public final static javax.lang.model.SourceVersion RELEASE_3
 fld public final static javax.lang.model.SourceVersion RELEASE_4
@@ -1908,6 +1658,7 @@ meth public abstract java.util.List<? extends javax.lang.model.element.VariableE
 meth public abstract java.util.List<? extends javax.lang.model.type.TypeMirror> getThrownTypes()
 meth public abstract javax.lang.model.element.AnnotationValue getDefaultValue()
 meth public abstract javax.lang.model.element.Name getSimpleName()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 meth public abstract javax.lang.model.type.TypeMirror getReceiverType()
 meth public abstract javax.lang.model.type.TypeMirror getReturnType()
 
@@ -1947,6 +1698,7 @@ meth public abstract java.util.List<? extends javax.lang.model.element.ModuleEle
 meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Name getQualifiedName()
 meth public abstract javax.lang.model.element.Name getSimpleName()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 
 CLSS public abstract interface static javax.lang.model.element.ModuleElement$Directive
  outer javax.lang.model.element.ModuleElement
@@ -2029,6 +1781,7 @@ meth public abstract java.util.List<? extends javax.lang.model.element.Element> 
 meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Name getQualifiedName()
 meth public abstract javax.lang.model.element.Name getSimpleName()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 
 CLSS public abstract interface javax.lang.model.element.Parameterizable
 intf javax.lang.model.element.Element
@@ -2049,6 +1802,7 @@ meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Name getQualifiedName()
 meth public abstract javax.lang.model.element.Name getSimpleName()
 meth public abstract javax.lang.model.element.NestingKind getNestingKind()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 meth public abstract javax.lang.model.type.TypeMirror getSuperclass()
 
 CLSS public abstract interface javax.lang.model.element.TypeParameterElement
@@ -2056,6 +1810,7 @@ intf javax.lang.model.element.Element
 meth public abstract java.util.List<? extends javax.lang.model.type.TypeMirror> getBounds()
 meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Element getGenericElement()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 
 CLSS public javax.lang.model.element.UnknownAnnotationValueException
 cons public init(javax.lang.model.element.AnnotationValue,java.lang.Object)
@@ -2083,6 +1838,7 @@ intf javax.lang.model.element.Element
 meth public abstract java.lang.Object getConstantValue()
 meth public abstract javax.lang.model.element.Element getEnclosingElement()
 meth public abstract javax.lang.model.element.Name getSimpleName()
+meth public abstract javax.lang.model.type.TypeMirror asType()
 
 CLSS abstract interface javax.lang.model.element.package-info
 
@@ -2226,6 +1982,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor6<{javax.lang.model.util.AbstractAnnotationValueVisitor7%0},{javax.lang.model.util.AbstractAnnotationValueVisitor7%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2234,7 +1991,7 @@ cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor7<{javax.lang.model.util.AbstractAnnotationValueVisitor8%0},{javax.lang.model.util.AbstractAnnotationValueVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor8<{javax.lang.model.util.AbstractAnnotationValueVisitor9%0},{javax.lang.model.util.AbstractAnnotationValueVisitor9%1}>
 
@@ -2252,6 +2009,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.AbstractElementVisitor7%0},{javax.lang.model.util.AbstractElementVisitor7%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2260,7 +2018,7 @@ cons protected init()
 supr javax.lang.model.util.AbstractElementVisitor7<{javax.lang.model.util.AbstractElementVisitor8%0},{javax.lang.model.util.AbstractElementVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 meth public abstract {javax.lang.model.util.AbstractElementVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.AbstractElementVisitor9%1})
 supr javax.lang.model.util.AbstractElementVisitor8<{javax.lang.model.util.AbstractElementVisitor9%0},{javax.lang.model.util.AbstractElementVisitor9%1}>
@@ -2280,6 +2038,7 @@ supr java.lang.Object
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 meth public abstract {javax.lang.model.util.AbstractTypeVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.AbstractTypeVisitor7%1})
 supr javax.lang.model.util.AbstractTypeVisitor6<{javax.lang.model.util.AbstractTypeVisitor7%0},{javax.lang.model.util.AbstractTypeVisitor7%1}>
 
@@ -2290,7 +2049,7 @@ meth public abstract {javax.lang.model.util.AbstractTypeVisitor8%0} visitInterse
 supr javax.lang.model.util.AbstractTypeVisitor7<{javax.lang.model.util.AbstractTypeVisitor8%0},{javax.lang.model.util.AbstractTypeVisitor8%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 supr javax.lang.model.util.AbstractTypeVisitor8<{javax.lang.model.util.AbstractTypeVisitor9%0},{javax.lang.model.util.AbstractTypeVisitor9%1}>
 
@@ -2345,7 +2104,9 @@ supr javax.lang.model.util.SimpleElementVisitor6<{javax.lang.model.util.ElementK
 CLSS public javax.lang.model.util.ElementKindVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.ElementKindVisitor7%0})
+ anno 0 java.lang.Deprecated()
 meth public {javax.lang.model.util.ElementKindVisitor7%0} visitVariableAsResourceVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementKindVisitor7%1})
 supr javax.lang.model.util.ElementKindVisitor6<{javax.lang.model.util.ElementKindVisitor7%0},{javax.lang.model.util.ElementKindVisitor7%1}>
 
@@ -2356,7 +2117,7 @@ cons protected init({javax.lang.model.util.ElementKindVisitor8%0})
 supr javax.lang.model.util.ElementKindVisitor7<{javax.lang.model.util.ElementKindVisitor8%0},{javax.lang.model.util.ElementKindVisitor8%1}>
 
 CLSS public javax.lang.model.util.ElementKindVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementKindVisitor9%0})
 meth public {javax.lang.model.util.ElementKindVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.ElementKindVisitor9%1})
@@ -2382,7 +2143,9 @@ supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.Elemen
 CLSS public javax.lang.model.util.ElementScanner7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.ElementScanner7%0})
+ anno 0 java.lang.Deprecated()
 meth public {javax.lang.model.util.ElementScanner7%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.ElementScanner7%1})
 supr javax.lang.model.util.ElementScanner6<{javax.lang.model.util.ElementScanner7%0},{javax.lang.model.util.ElementScanner7%1}>
 
@@ -2393,7 +2156,7 @@ cons protected init({javax.lang.model.util.ElementScanner8%0})
 supr javax.lang.model.util.ElementScanner7<{javax.lang.model.util.ElementScanner8%0},{javax.lang.model.util.ElementScanner8%1}>
 
 CLSS public javax.lang.model.util.ElementScanner9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementScanner9%0})
 meth public {javax.lang.model.util.ElementScanner9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.ElementScanner9%1})
@@ -2464,7 +2227,9 @@ supr javax.lang.model.util.AbstractAnnotationValueVisitor6<{javax.lang.model.uti
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor7%0})
+ anno 0 java.lang.Deprecated()
 supr javax.lang.model.util.SimpleAnnotationValueVisitor6<{javax.lang.model.util.SimpleAnnotationValueVisitor7%0},{javax.lang.model.util.SimpleAnnotationValueVisitor7%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor8<%0 extends java.lang.Object, %1 extends java.lang.Object>
@@ -2474,7 +2239,7 @@ cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor8%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor7<{javax.lang.model.util.SimpleAnnotationValueVisitor8%0},{javax.lang.model.util.SimpleAnnotationValueVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor9%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor8<{javax.lang.model.util.SimpleAnnotationValueVisitor9%0},{javax.lang.model.util.SimpleAnnotationValueVisitor9%1}>
@@ -2497,7 +2262,9 @@ supr javax.lang.model.util.AbstractElementVisitor6<{javax.lang.model.util.Simple
 CLSS public javax.lang.model.util.SimpleElementVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.SimpleElementVisitor7%0})
+ anno 0 java.lang.Deprecated()
 meth public {javax.lang.model.util.SimpleElementVisitor7%0} visitVariable(javax.lang.model.element.VariableElement,{javax.lang.model.util.SimpleElementVisitor7%1})
 supr javax.lang.model.util.SimpleElementVisitor6<{javax.lang.model.util.SimpleElementVisitor7%0},{javax.lang.model.util.SimpleElementVisitor7%1}>
 
@@ -2508,7 +2275,7 @@ cons protected init({javax.lang.model.util.SimpleElementVisitor8%0})
 supr javax.lang.model.util.SimpleElementVisitor7<{javax.lang.model.util.SimpleElementVisitor8%0},{javax.lang.model.util.SimpleElementVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleElementVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleElementVisitor9%0})
 meth public {javax.lang.model.util.SimpleElementVisitor9%0} visitModule(javax.lang.model.element.ModuleElement,{javax.lang.model.util.SimpleElementVisitor9%1})
@@ -2536,7 +2303,9 @@ supr javax.lang.model.util.AbstractTypeVisitor6<{javax.lang.model.util.SimpleTyp
 CLSS public javax.lang.model.util.SimpleTypeVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.SimpleTypeVisitor7%0})
+ anno 0 java.lang.Deprecated()
 meth public {javax.lang.model.util.SimpleTypeVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.SimpleTypeVisitor7%1})
 supr javax.lang.model.util.SimpleTypeVisitor6<{javax.lang.model.util.SimpleTypeVisitor7%0},{javax.lang.model.util.SimpleTypeVisitor7%1}>
 
@@ -2548,7 +2317,7 @@ meth public {javax.lang.model.util.SimpleTypeVisitor8%0} visitIntersection(javax
 supr javax.lang.model.util.SimpleTypeVisitor7<{javax.lang.model.util.SimpleTypeVisitor8%0},{javax.lang.model.util.SimpleTypeVisitor8%1}>
 
 CLSS public javax.lang.model.util.SimpleTypeVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleTypeVisitor9%0})
 supr javax.lang.model.util.SimpleTypeVisitor8<{javax.lang.model.util.SimpleTypeVisitor9%0},{javax.lang.model.util.SimpleTypeVisitor9%1}>
@@ -2578,7 +2347,9 @@ supr javax.lang.model.util.SimpleTypeVisitor6<{javax.lang.model.util.TypeKindVis
 CLSS public javax.lang.model.util.TypeKindVisitor7<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_7)
 cons protected init()
+ anno 0 java.lang.Deprecated()
 cons protected init({javax.lang.model.util.TypeKindVisitor7%0})
+ anno 0 java.lang.Deprecated()
 meth public {javax.lang.model.util.TypeKindVisitor7%0} visitUnion(javax.lang.model.type.UnionType,{javax.lang.model.util.TypeKindVisitor7%1})
 supr javax.lang.model.util.TypeKindVisitor6<{javax.lang.model.util.TypeKindVisitor7%0},{javax.lang.model.util.TypeKindVisitor7%1}>
 
@@ -2590,7 +2361,7 @@ meth public {javax.lang.model.util.TypeKindVisitor8%0} visitIntersection(javax.l
 supr javax.lang.model.util.TypeKindVisitor7<{javax.lang.model.util.TypeKindVisitor8%0},{javax.lang.model.util.TypeKindVisitor8%1}>
 
 CLSS public javax.lang.model.util.TypeKindVisitor9<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_11)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_13)
 cons protected init()
 cons protected init({javax.lang.model.util.TypeKindVisitor9%0})
 meth public {javax.lang.model.util.TypeKindVisitor9%0} visitNoTypeAsModule(javax.lang.model.type.NoType,{javax.lang.model.util.TypeKindVisitor9%1})
@@ -2843,6 +2614,8 @@ meth public abstract java.lang.Iterable<? extends javax.tools.JavaFileObject> ge
 meth public abstract void setLocation(javax.tools.JavaFileManager$Location,java.lang.Iterable<? extends java.io.File>) throws java.io.IOException
 meth public java.lang.Iterable<? extends java.nio.file.Path> getLocationAsPaths(javax.tools.JavaFileManager$Location)
 meth public java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjectsFromPaths(java.lang.Iterable<? extends java.nio.file.Path>)
+ anno 0 java.lang.Deprecated()
+meth public java.lang.Iterable<? extends javax.tools.JavaFileObject> getJavaFileObjectsFromPaths(java.util.Collection<? extends java.nio.file.Path>)
 meth public java.nio.file.Path asPath(javax.tools.FileObject)
 meth public void setLocationForModule(javax.tools.JavaFileManager$Location,java.lang.String,java.util.Collection<? extends java.nio.file.Path>) throws java.io.IOException
 meth public void setLocationFromPaths(javax.tools.JavaFileManager$Location,java.util.Collection<? extends java.nio.file.Path>) throws java.io.IOException

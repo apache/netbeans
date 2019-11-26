@@ -31,6 +31,7 @@
     <Toolbar name="Build" />
     <Toolbar name="Debug" />
     <Toolbar name="Memory"/>
+    <Toolbar name="Git" visible="false"/>
     <Toolbar name="QuickSearch" align="right" />
   </Row>
 

@@ -1,6 +1,7 @@
 Code completion result for source line:
 |;// HERE
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   MyTrait
 KEYWORD    MyTrait $this->                            null
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null
@@ -50,6 +51,7 @@ KEYWORD    exit()                                     Language Construct
 KEYWORD    extends                                    null
 KEYWORD    final                                      null
 KEYWORD    finally                                    null
+KEYWORD    fn                                         null
 KEYWORD    for                                        null
 KEYWORD    foreach                                    null
 KEYWORD    function                                   null

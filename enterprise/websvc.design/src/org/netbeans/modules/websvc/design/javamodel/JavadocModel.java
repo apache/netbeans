@@ -50,39 +50,6 @@ public class JavadocModel {
         this.text=text;
     }
     
-    public List<String> getInlineJavadoc() {
-        return inlineJavadoc;
-    }
-
-    void setInlineJavadoc(List<String> inlineJavadoc) {
-        this.inlineJavadoc = inlineJavadoc;
-    }
-
-    public List<String> getParamJavadoc() {
-        return paramJavadoc;
-    }
-
-    void setParamJavadoc(List<String> paramJavadoc) {
-        this.paramJavadoc = paramJavadoc;
-    }
-
-    public List<String> getThrowsJavadoc() {
-        return throwsJavadoc;
-    }
-
-    void setThrowsJavadoc(List<String> throwsJavadoc) {
-        this.throwsJavadoc = throwsJavadoc;
-    }
-
-    public String getReturnJavadoc() {
-        return returnJavadoc;
-    }
-
-    void setReturnJavadoc(String returnJavadoc) {
-        this.returnJavadoc = returnJavadoc;
-    }
-
-        
     public boolean isEqualTo(JavadocModel model) {
         if (!Utils.isEqualTo(text,model.text)) return false;
         return true;

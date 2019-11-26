@@ -69,6 +69,7 @@ import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
+import com.sun.source.tree.ExpressionTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
@@ -84,6 +85,7 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
@@ -103,6 +105,7 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -115,8 +118,6 @@ import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-
-import org.openide.util.Exceptions;
 
 /** Prints out a tree as an indented Java source program.
  */
@@ -238,6 +239,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void newline() {
 	out.nlTerm();
+    }
+
+    private void newLineNoTrim() {
+        out.nlTermNoTrim();
     }
 
     public void blankline() {
@@ -403,7 +408,15 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                t.accept(this);
+                if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
+                    visitSwitchExpression(t);
+                } 
+                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
+                    visitYield(t);
+                }
+                else {
+                    t.accept(this);
+                }
                 this.commentsEnabled = saveComments;
             }
 
@@ -1269,6 +1282,47 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	print('}');
     }
 
+    public void visitSwitchExpression(Tree tree) {
+        print("switch");
+        print(cs.spaceBeforeSwitchParen() ? " (" : "(");
+        if (cs.spaceWithinSwitchParens()) {
+            print(' ');
+        }
+        printNoParenExpr((JCTree) TreeShims.getExpressions(tree).get(0));
+        print(cs.spaceWithinSwitchParens() ? " )" : ")");
+        int bcol = out.leftMargin;
+        switch (cs.getOtherBracePlacement()) {
+            case NEW_LINE:
+                newline();
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_HALF_INDENTED:
+                newline();
+                bcol += (indentSize >> 1);
+                toColExactly(bcol);
+                break;
+            case NEW_LINE_INDENTED:
+                newline();
+                bcol += indentSize;
+                toColExactly(bcol);
+                break;
+        }
+        if (cs.spaceBeforeSwitchLeftBrace()) {
+            needSpace();
+        }
+        print('{');
+        if (!TreeShims.getCases(tree).isEmpty()) {
+            newline();
+            ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
+            for (CaseTree t : TreeShims.getCases(tree)) {
+                newTcases.append((JCTree.JCCase) t);
+            }
+            printStats(newTcases.toList());
+            toColExactly(bcol);
+        }
+        print('}');
+    }
+
     @Override
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
@@ -1295,6 +1349,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         } else {
             print(" -> "); //TODO: configure spaces!
             printStat(tree.stats.head);
+            undent(old);
         }
     }
 
@@ -1436,13 +1491,25 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitBreak(JCBreak tree) {
-	print("break");
-        //TODO: value breaks
-	if (tree.getLabel() != null) {
-	    needSpace();
-	    print(tree.getLabel());
-	}
-	print(';');
+        print("break");
+        if (TreeShims.getValue(tree) != null) {
+            needSpace();
+            print((JCTree) TreeShims.getValue(tree));
+        } else if (tree.getLabel() != null) {
+            needSpace();
+            print(tree.getLabel());
+        }
+        print(';');
+    }
+
+    public void visitYield(Tree tree) {
+        print("yield");
+        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        if (expr != null) {
+            needSpace();
+            print((JCTree) expr);
+        }
+        print(';');
     }
 
     @Override
@@ -1825,7 +1892,34 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 		  "\'");
 	    break;
 	   case CLASS:
-	    print("\"" + quote((String) tree.value, '\'') + "\"");
+             if (tree.value instanceof String) {
+                 print("\"" + quote((String) tree.value, '\'') + "\"");
+             } else if (tree.value instanceof String[]) {
+                 int indent = out.col;
+                 print("\"\"\"");
+                 newline();
+                 String[] lines = (String[]) tree.value;
+                 for (int i = 0; i < lines.length; i++) {
+                     out.toCol(indent);
+                     String line = lines[i];
+                     for (int c = 0; c < line.length(); c++) {
+                         if (line.startsWith("\"\"\"", c)) {
+                             print('\\');
+                             print('"');
+                         } else if (line.charAt(c) != '\'' && line.charAt(c) != '"') {
+                             print(Convert.quote(line.charAt(c)));
+                         } else {
+                             print(line.charAt(c));
+                         }
+                     }
+                     if (i + 1 < lines.length) {
+                         newLineNoTrim();
+                     }
+                 }
+                 print("\"\"\"");
+             } else {
+                 throw new IllegalStateException("Incorrect literal value.");
+             }
 	    break;
           case BOOLEAN:
             print(tree.getValue().toString());

@@ -33,7 +33,6 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.ChangeListener;
 import org.netbeans.core.windows.Constants;
@@ -48,6 +47,7 @@ import org.netbeans.swing.tabcontrol.TabDataModel;
 import org.netbeans.swing.tabcontrol.TabbedContainer;
 import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
 import org.openide.util.ChangeSupport;
+import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
 
 /*
@@ -227,7 +227,7 @@ public final class TabbedSlideAdapter extends Tabbed {
             String displayName = WindowManagerImpl.getInstance().getTopComponentDisplayName(tc);
             data[i] = new TabData(
                 tc,
-                icon == null ? null : new ImageIcon(icon),
+                icon == null ? null : ImageUtilities.image2Icon(icon),
                 displayName == null ? "" : displayName, // NOI18N
                 tc.getToolTipText());
             if (selected == tcs[i]) {

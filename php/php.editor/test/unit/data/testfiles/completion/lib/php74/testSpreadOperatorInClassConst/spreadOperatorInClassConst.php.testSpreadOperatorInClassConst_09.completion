@@ -1,0 +1,5 @@
+Code completion result for source line:
+private const CONST1 = [...U|npackClass::CONSTANT];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      UnpackChildClass                [PUBLIC]   Foo
+CLASS      UnpackClass                     [PUBLIC]   Foo

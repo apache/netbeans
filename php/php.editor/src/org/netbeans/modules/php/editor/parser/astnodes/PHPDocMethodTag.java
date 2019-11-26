@@ -29,13 +29,44 @@ public class PHPDocMethodTag extends PHPDocTypeTag {
 
     private final List<PHPDocVarTypeTag> params;
     private final PHPDocNode name;
+    private final boolean isStatic;
 
     public PHPDocMethodTag(int start, int end, AnnotationParsedLine kind,
             List<PHPDocTypeNode> returnTypes, PHPDocNode methodName,
             List<PHPDocVarTypeTag> parameters, String documentation) {
+        this(start, end, kind, returnTypes, methodName, parameters, documentation, false);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param start start offset
+     * @param end end offset
+     * @param kind parsed annotation line
+     * @param returnTypes return types
+     * @param methodName method name
+     * @param parameters parameters
+     * @param documentation documentation
+     * @param isStatic static flag
+     * @since 1.84.0
+     */
+    public PHPDocMethodTag(int start, int end, AnnotationParsedLine kind,
+            List<PHPDocTypeNode> returnTypes, PHPDocNode methodName,
+            List<PHPDocVarTypeTag> parameters, String documentation, boolean isStatic) {
         super(start, end, kind, documentation, returnTypes);
         this.params = parameters;
         this.name = methodName;
+        this.isStatic = isStatic;
+    }
+
+    /**
+     * Check whethere the method is static.
+     *
+     * @return {@code true} if the method is static, {@code false} otherwise
+     * @since 1.84.0
+     */
+    public boolean isStatic() {
+        return isStatic;
     }
 
     public PHPDocNode getMethodName() {

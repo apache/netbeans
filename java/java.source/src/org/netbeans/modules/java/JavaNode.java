@@ -52,6 +52,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
 import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.modules.classfile.Access;
@@ -75,6 +77,7 @@ import static org.openide.util.ImageUtilities.loadImage;
 import org.openide.util.Lookup;
 
 import static org.openide.util.NbBundle.getMessage;
+import org.openide.util.NbPreferences;
 
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -97,6 +100,8 @@ public final class JavaNode extends DataNode implements ChangeListener {
     private static final String ANNOTATION_ICON_BASE = "org/netbeans/modules/java/resources/annotation_file.png";   //NOI18N
     private static final String EXECUTABLE_BADGE_URL = "org/netbeans/modules/java/resources/executable-badge.png";  //NOI18N
     private static final String NEEDS_COMPILE_BADGE_URL = "org/netbeans/modules/java/resources/needs-compile.png";  //NOI18N
+    private static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
+    private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
     private static final Map<String,Image> IMAGE_CACHE = new ConcurrentHashMap<>();
     private static final boolean ALWAYS_PREFFER_COMPUTED_ICON = Boolean.getBoolean("JavaNode.prefferComputedIcon"); //NOI18N
@@ -212,6 +217,64 @@ public final class JavaNode extends DataNode implements ChangeListener {
                     getMessage(JavaNode.class, "HINT_JavaNode_boot_classpath")),
         });
         sheet.put(ps);
+        
+        Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
+        DataObject dObj = super.getDataObject();
+        // If any of the parent folders is a project, user won't have the option to specify these attributes to the java files.
+        if (parentProject == null) {
+            Node.Property arguments = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+                    "runFileArguments", // NOI18N
+                    String.class,
+                    "Arguments",
+                    "Arguments passed to the main method while running the file."
+                ) {
+                    public String getValue () {
+                        Object arguments = dObj.getPrimaryFile().getAttribute(FILE_ARGUMENTS);
+                        return arguments != null ? (String) arguments : "";
+                    }
+
+                    public void setValue (String o) {
+                        try {
+                            dObj.getPrimaryFile().setAttribute(FILE_ARGUMENTS, o);
+                        } catch (IOException ex) {
+                            LOG.log(
+                                    Level.WARNING,
+                                    "Java File does not exist : {0}", //NOI18N
+                                    dObj.getPrimaryFile().getName());
+                        }
+                    }
+                };
+            Node.Property vmOptions = new org.openide.nodes.PropertySupport.ReadWrite<String> (
+                    "runFileVMOptions", // NOI18N
+                    String.class,
+                    "VM Options",
+                    "VM Options to be considered while running the file."
+                ) {
+                    public String getValue () {
+                        Object vmOptions = dObj.getPrimaryFile().getAttribute(FILE_VM_OPTIONS);
+                        return vmOptions != null ? (String) vmOptions : "";
+                    }
+
+                    public void setValue (String o) {
+                        try {
+                            dObj.getPrimaryFile().setAttribute(FILE_VM_OPTIONS, o);
+                        } catch (IOException ex) {
+                            LOG.log(
+                                    Level.WARNING,
+                                    "Java File does not exist : {0}", //NOI18N
+                                    dObj.getPrimaryFile().getName());
+                        }
+                    }
+                };
+            Sheet.Set ss = new Sheet.Set();
+            ss.setName("runFileArguments"); // NOI18N
+            ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run"));
+            ss.setShortDescription("Run the file's source code.");
+            ss.put (arguments);
+            ss.put (vmOptions);
+            sheet.put(ss);
+        }
+        
         
         @SuppressWarnings("LocalVariableHidesMemberVariable")
         PropertySet[] propertySets = sheet.toArray();

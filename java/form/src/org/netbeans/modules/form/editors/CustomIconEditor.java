@@ -272,7 +272,7 @@ public class CustomIconEditor extends javax.swing.JPanel {
     private void setFromFileName(String fileName) {
         selectedExternalFile = new File(fileName);
         try {
-            urlField.setText(selectedExternalFile.toURL().toExternalForm());
+            urlField.setText(selectedExternalFile.toURI().toURL().toExternalForm());
         }
         catch (MalformedURLException ex) {
             urlField.setText("file:/" + fileName); // NOI18N
@@ -344,7 +344,7 @@ public class CustomIconEditor extends javax.swing.JPanel {
             if (selectedCPFile != null && selectedExternalFile == null && selectedURL == null) {
                 selectedExternalFile = FileUtil.toFile(selectedCPFile);
                 try {
-                    urlField.setText(selectedExternalFile.toURL().toExternalForm());
+                    urlField.setText(selectedExternalFile.toURI().toURL().toExternalForm());
                 }
                 catch (MalformedURLException ex) { // should not happen for existing file
                     ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
@@ -366,14 +366,14 @@ public class CustomIconEditor extends javax.swing.JPanel {
                 name = FileUtil.getRelativePath(packageRoot, selectedCPFile);
                 try {
                     try {
-                        Image image = ImageIO.read(selectedCPFile.getURL());
+                        Image image = ImageIO.read(selectedCPFile.toURL());
                         if (image != null) {
                             icon = new ImageIcon(image);
                             type = IconEditor.TYPE_CLASSPATH;
                         } // no NbImageIcon will be created for invalid file
                     } catch (IllegalArgumentException iaex) { // Issue 178906
                         Logger.getLogger(CustomIconEditor.class.getName()).log(Level.INFO, null, iaex);
-                        icon = new ImageIcon(selectedCPFile.getURL());
+                        icon = new ImageIcon(selectedCPFile.toURL());
                         type = IconEditor.TYPE_CLASSPATH;
                     }
                 } catch (IOException ex) { // should not happen
@@ -519,11 +519,11 @@ public class CustomIconEditor extends javax.swing.JPanel {
             this.file = file;
             try {
                 try {
-                    Image image = (file.getSize() < SIZE_LIMIT) ? ImageIO.read(file.getURL()) : null;
+                    Image image = (file.getSize() < SIZE_LIMIT) ? ImageIO.read(file.toURL()) : null;
                     icon = (image != null) ? new ImageIcon(image) : null;
                 } catch (IllegalArgumentException iaex) { // Issue 178906
                     Logger.getLogger(CustomIconEditor.class.getName()).log(Level.INFO, null, iaex);
-                    icon = new ImageIcon(file.getURL());
+                    icon = new ImageIcon(file.toURL());
                 }
             } catch (IOException ex) {
                 Logger.getLogger(CustomIconEditor.class.getName()).log(Level.WARNING, null, ex);
@@ -658,7 +658,7 @@ public class CustomIconEditor extends javax.swing.JPanel {
                         selectedURL = null;
                         externalRadio.setSelected(true);
                         try {
-                            urlField.setText(file.toURL().toExternalForm());
+                            urlField.setText(file.toURI().toURL().toExternalForm());
                         } catch (MalformedURLException ex) {
                             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
                         }
@@ -734,7 +734,7 @@ public class CustomIconEditor extends javax.swing.JPanel {
             File file = fileChooser.getSelectedFile();
             if (file != null) {
                 try {
-                    urlField.setText(file.toURL().toExternalForm());
+                    urlField.setText(file.toURI().toURL().toExternalForm());
                 }
                 catch (MalformedURLException ex) {
                     ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);

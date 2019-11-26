@@ -30,7 +30,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.2</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -71,15 +71,17 @@
             </test-dependencies>
             <public-packages>
                 <package>org.graalvm.options</package>
+                <package>org.graalvm.collections</package>
                 <package>org.graalvm.polyglot</package>
                 <package>org.graalvm.polyglot.io</package>
                 <package>org.graalvm.polyglot.management</package>
                 <package>org.graalvm.polyglot.proxy</package>
+                <package>org.graalvm.polyglot.impl</package>
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-1.0.0-rc10.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-1.0.0-rc10.jar</binary-origin>
+                <runtime-relative-path>ext/graal-sdk-19.0.0.jar</runtime-relative-path>
+                <binary-origin>external/graal-sdk-19.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

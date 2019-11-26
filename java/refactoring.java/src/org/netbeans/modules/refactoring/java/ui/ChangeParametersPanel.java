@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.refactoring.java.ui;
 
-import com.sun.javadoc.Doc;
+import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -201,8 +201,8 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
                                     Document.StreamDescriptionProperty,
                                     dob);
                         }
-                        Doc javadocDoc = info.getElementUtilities().javaDocFor(e);
-                        if(javadocDoc.commentText() == null || javadocDoc.getRawCommentText().equals("")) {
+                        DocCommentTree javadocDoc = info.getDocTrees().getDocCommentTree(e);
+                        if(javadocDoc != null && !javadocDoc.getFullBody().isEmpty()) {
                             chkGenJavadoc.setEnabled(true);
                             chkGenJavadoc.setVisible(true);
                             chkUpdateJavadoc.setVisible(false);

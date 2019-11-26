@@ -104,10 +104,21 @@
       which clients are supposed to download and execute in order to find 
       out which proxy to use. This is known as <a href="https://en.wikipedia.org/wiki/Proxy_auto-config">Proxy Auto-Config</a>
       (or PAC). This module provides a pluggable PAC evaluation environment
-      based on Nashorn. However, it will gracefully degrade to any other JavaScript
-      which may be installed in the JVM. Execution of the downloaded
-      JavaScript code is sandboxed. (only true for Nashorn)
+      based on available JavaScript engine installed in the JVM.
+      Execution of the downloaded JavaScript code is sandboxed.
   </p>
+  <api name="ALLOWED_PAC_ENGINES" type="export" category="stable" group="branding">
+      To further secure execution of downloaded scripts, it is possible
+      to restrict the set of allowed 
+      <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+      to evaluate the PAC scripts.
+      Provide a branding of bundle
+      <code>org.netbeans.core.network.proxy.pac.impl.Bundle</code>
+      in your own application
+      and change the value of <code>ALLOWED_PAC_ENGINES</code> key.
+      The default is <code>GraalVM:js,Graal.js,Nashorn</code> - e.g. the engines
+      currently considered secure.
+  </api>
   <p>
       If you don't like the PAC evaluation environment provided
       by this module then you can plug in your own by registering
@@ -732,14 +743,6 @@
         </question>
 -->
  <answer id="exec-reflection">
-  <p>
-   Yes. It detects the presence of Nashorn (as opposed to say Rhino) by way 
-      of reflection. In particular it needs to know if the Java version is
-      Java 8u40 as Nashorn was greatly enhanced in that update and was more
-      or less useless (for our purpose) before this time. The use of reflection
-      means the code will gracefully 'degrade' to whatever script engine is
-      available if we are not on Java 8u40 or later.
-  </p>
   <p>
    For testing only a dirty hack is used in our <code>FakeDns</code> class.
    This installs itself as a preferred name service in Java. This is done

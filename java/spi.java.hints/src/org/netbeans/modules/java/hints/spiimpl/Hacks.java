@@ -75,7 +75,7 @@ public class Hacks {
             clazz.append("import ").append(i).append(";\n");
         }
 
-        clazz.append("public class $").append(inc++).append("{");
+        clazz.append("public class $$scopeclass$").append(inc++).append("{");
 
         clazz.append("private void test() {\n");
         clazz.append("}\n");

@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.extexecution.startup.StartupExtender.StartMode;
@@ -39,7 +37,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @SupportedAnnotationTypes("org.netbeans.spi.extexecution.startup.StartupExtenderImplementation.Registration")
 @ServiceProvider(service = Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class StartupExtenderRegistrationProcessor extends LayerGeneratingProcessor {
 
     public static final String PATH = "StartupExtender"; // NOI18N

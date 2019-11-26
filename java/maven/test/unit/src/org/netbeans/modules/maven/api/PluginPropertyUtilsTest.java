@@ -120,5 +120,22 @@ public class PluginPropertyUtilsTest extends NbTestCase {
                 "</project>");
         assertEquals("[one, two]", Arrays.toString(PluginPropertyUtils.getReportPluginPropertyList(ProjectManager.getDefault().findProject(d), "g", "r", "things", "thing", null)));
     }
+    public void testGetCompilerArgs() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>"
+                        + "<modelVersion>4.0.0</modelVersion>"
+                        + "<groupId>g</groupId>"
+                        + "<artifactId>a</artifactId>"
+                        + "<version>0</version>"
+                        + "<build>"
+                        + "<plugins><plugin>"
+                        + "<groupId>org.apache.maven.plugins</groupId>"
+                        + "<artifactId>maven-compiler-plugin</artifactId>"
+                        + "<version>3.8.0</version>"
+                        + "<configuration><compilerArgs><arg>--enable-preview</arg></compilerArgs>"
+                        + "</configuration>"
+                        + "</plugin></plugins></build></project>");
+        assertEquals("[--enable-preview]", Arrays.toString(PluginPropertyUtils.getPluginPropertyList(ProjectManager.getDefault().findProject(d), "org.apache.maven.plugins", "maven-compiler-plugin", "compilerArgs", "arg", null)));
+    }
 
 }

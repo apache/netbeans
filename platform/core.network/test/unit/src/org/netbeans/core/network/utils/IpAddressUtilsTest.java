@@ -22,12 +22,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.junit.MockServices;
+import org.openide.util.Lookup;
 
 /**
  *
  */
 public class IpAddressUtilsTest {
-
     private FakeDns fakeDns;
     private InetAddress ipv4Addr;
     private InetAddress ipv6Addr;
@@ -37,6 +38,7 @@ public class IpAddressUtilsTest {
 
     @BeforeClass
     public static void setUpClass() {
+        MockServices.setServices(FakeDns.class);
     }
 
     @AfterClass
@@ -45,7 +47,7 @@ public class IpAddressUtilsTest {
 
     @Before
     public void setUp() throws UnknownHostException {
-        fakeDns = new FakeDns();
+        fakeDns = Lookup.getDefault().lookup(FakeDns.class);
         fakeDns.install(true);
 
         ipv4Addr = InetAddress.getByName("172.217.17.36"); // just some random address

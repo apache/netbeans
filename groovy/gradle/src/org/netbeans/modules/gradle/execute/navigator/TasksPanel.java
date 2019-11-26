@@ -20,7 +20,6 @@
 package org.netbeans.modules.gradle.execute.navigator;
 
 import org.netbeans.modules.gradle.ActionProviderImpl;
-import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.api.GradleTask;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
@@ -68,14 +67,10 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
     private NbGradleProject current;
     private Project currentP;
 
-    private final PropertyChangeListener pchadapter = new PropertyChangeListener() {
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                showWaitNode();
-                RequestProcessor.getDefault().post(TasksPanel.this);
-            }
+    private final PropertyChangeListener pchadapter = (PropertyChangeEvent evt) -> {
+        if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+            showWaitNode();
+            RequestProcessor.getDefault().post(TasksPanel.this);
         }
     };
 
@@ -163,24 +158,18 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
                 }
                 ch.add(new Node[]{new TaskGroupNode(GradleBaseProject.PRIVATE_TASK_GROUP, prj)});
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        treeView.setRootVisible(false);
-                        manager.setRootContext(new AbstractNode(ch));
-                        treeView.expandAll();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    treeView.setRootVisible(false);
+                    manager.setRootContext(new AbstractNode(ch));
+                    treeView.expandAll();
                 });
                 return;
             }
 
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                treeView.setRootVisible(false);
-                manager.setRootContext(createEmptyNode());
-            }
+        SwingUtilities.invokeLater(() -> {
+            treeView.setRootVisible(false);
+            manager.setRootContext(createEmptyNode());
         });
     }
 
@@ -299,6 +288,10 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
             return task;
         }
 
+        @Override
+        public Action getPreferredAction() {
+            return getActions(false)[0];
+        }
     }
 
     private class TaskGroupChildren extends ChildFactory<GradleTask> {

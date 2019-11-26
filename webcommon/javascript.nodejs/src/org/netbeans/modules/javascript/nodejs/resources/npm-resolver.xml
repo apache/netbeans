@@ -26,4 +26,12 @@
         <name name="package.json"/>
         <resolver mime="text/package+x-json"/>
     </file>
+    <file>
+        <name name="package-lock.json"/>
+        <resolver mime="text/package-lock+x-json"/>
+    </file>
+    <file>
+        <name name="npm-debug.log"/>
+        <resolver mime="text/npm-log"/>
+    </file>
 </MIME-resolver>

@@ -1195,6 +1195,134 @@ public class JavaFixUtilitiesTest extends TestBase {
 		           "}\n");
     }
     
+    public void testImplicitThis1() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "        this.z(new Test());\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z($1) => $1.z($0)",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "        new Test().z(this);\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testImplicitThis2() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "        z(new Test());\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z($1) => $1.z($0)",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "        new Test().z(this);\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testImplicitThis3() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "    }\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            z(new Test());\n" +
+                           "        }\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z($1) => $1.z($0)",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z(Test t) {\n" +
+                           "    }\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            new Test().z(Test.this);\n" +
+                           "        }\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testImplicitThis4() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    public void a() {}\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            z();\n" +
+                           "        }\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z() => $0.a()",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    public void a() {}\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            a();\n" +
+                           "        }\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testImplicitThis5() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    public void a() {}\n" +
+                           "    private class T {\n" +
+                           "        public void a() {}\n" +
+                           "        void t() {\n" +
+                           "            z();\n" +
+                           "        }\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z() => $0.a()",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    public void a() {}\n" +
+                           "    private class T {\n" +
+                           "        public void a() {}\n" +
+                           "        void t() {\n" +
+                           "            Test.this.a();\n" +
+                           "        }\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
+    public void testImplicitThis6() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            z();\n" +
+                           "        }\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.z() => $0.toString()",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void z() {}\n" +
+                           "    private class T {\n" +
+                           "        void t() {\n" +
+                           "            Test.this.toString();\n" +
+                           "        }\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
     public void performRewriteTest(String code, String rule, String golden) throws Exception {
         performRewriteTest(code, rule, golden, null);
     }

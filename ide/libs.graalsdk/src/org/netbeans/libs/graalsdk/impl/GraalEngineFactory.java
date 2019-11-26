@@ -60,7 +60,7 @@ final class GraalEngineFactory implements ScriptEngineFactory {
 
     @Override
     public List<String> getNames() {
-        return Arrays.asList(language.getName());
+        return Arrays.asList(language.getName(), getEngineName());
     }
 
     @Override

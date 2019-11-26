@@ -48,14 +48,6 @@ public class OQLEngineTest {
     public OQLEngineTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() throws IOException, URISyntaxException {
         URL url = getClass().getResource("small_heap.bin");
@@ -506,7 +498,7 @@ public class OQLEngineTest {
     public void testMap() throws Exception {
         System.out.println("map");
 
-        final String[] output = new String[] {"", "$assertionsDisabled=true\nserialVersionUID=301077366599181570\ntmpdir=null\ncounter=-1\ntmpFileLock=<a href='file://instance/1684106928' name='1684106928'>java.lang.Object#6</a>\npathSeparator=<a href='file://instance/1684106888' name='1684106888'>java.lang.String#101</a>\npathSeparatorChar=:\nseparator=<a href='file://instance/1684106848' name='1684106848'>java.lang.String#100</a>\nseparatorChar=/\nfs=<a href='file://instance/1684106408' name='1684106408'>java.io.UnixFileSystem#1</a>\n<classLoader>=null\n"};
+        final String[] output = new String[] {"", "$assertionsDisabled=true\nserialVersionUID=301077366599181567\ntmpdir=null\ncounter=-1\ntmpFileLock=<a href='file://instance/1684106928' name='1684106928'>java.lang.Object#6</a>\npathSeparator=<a href='file://instance/1684106888' name='1684106888'>java.lang.String#101</a>\npathSeparatorChar=:\nseparator=<a href='file://instance/1684106848' name='1684106848'>java.lang.String#100</a>\nseparatorChar=/\nfs=<a href='file://instance/1684106408' name='1684106408'>java.io.UnixFileSystem#1</a>\n<classLoader>=null\n"};
 
         instance.executeQuery("select map(heap.findClass(\"java.io.File\").statics, \"index + '=' + toHtml(it)\")", new ObjectVisitor() {
 
@@ -515,6 +507,7 @@ public class OQLEngineTest {
                 return false;
             }
         });
+        output[0] = output[0].replaceAll("UID=301077366599181[0-9]*", "UID=301077366599181567");
         assertEquals(output[1], output[0]);
     }
 
@@ -620,7 +613,7 @@ public class OQLEngineTest {
             }
         });
 
-        assertEquals(Double.class, rsltClass[0]);
+        assertTrue(Number.class.isAssignableFrom(rsltClass[0]));
     }
 
     @Test
@@ -669,7 +662,7 @@ public class OQLEngineTest {
     public void testComplexStatement2() throws Exception {
         System.out.println("complex statement 2");
 
-        final String[] rslt = new String[1];
+        final Map[] rslt = new Map[1];
 
         instance.executeQuery(
             "select map(filter(heap.findClass('java.lang.System').statics.props.table, 'it != null && it.key != null && it.value != null'), " +
@@ -677,11 +670,14 @@ public class OQLEngineTest {
 
             public boolean visit(Object o) {
                 System.out.println(o);
-                rslt[0] = o.toString();
+                assertTrue(o instanceof Map);
+                rslt[0] = (Map) o;
                 return true;
             }
         });
-        assertEquals("{value=, key=sun.cpu.isalist}", rslt[0]);
+        assertEquals("Two elements: " + rslt[0], 2, rslt[0].size());
+        assertEquals("Correct key: " + rslt[0], "sun.cpu.isalist", rslt[0].get("key"));
+        assertEquals("Empty value: " + rslt[0], "", rslt[0].get("value"));
     }
 
     @Test

@@ -29,6 +29,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.SystemReader;
+import org.netbeans.junit.Filter;
 import org.netbeans.libs.git.GitClient;
 import org.netbeans.libs.git.GitClientCallback;
 import org.netbeans.libs.git.GitException;
@@ -44,6 +45,24 @@ public class ConnectionTest extends AbstractGitTestCase {
 
     public ConnectionTest (String testName) throws IOException {
         super(testName);
+        if (Boolean.getBoolean("skip.git.integration.tests")) {
+            Filter filter = new Filter();
+            filter.setExcludes(new Filter.IncludeExclude[] {
+                new Filter.IncludeExclude("testGitConnection", ""),
+                new Filter.IncludeExclude("testHttpConnection", ""),
+                new Filter.IncludeExclude("testHttpConnectionPublic", ""),
+                new Filter.IncludeExclude("testHttpConnectionCredentialsInUri", ""),
+                new Filter.IncludeExclude("testHttpConnectionEmptyPassword", ""),
+                new Filter.IncludeExclude("testSshConnectionCredentialsInUri", ""),
+                new Filter.IncludeExclude("testSshConnectionCredentialsFromCallback", ""),
+                new Filter.IncludeExclude("testSshConnectionGITSSH_Issue213394", ""),
+                new Filter.IncludeExclude("testSshConnectionPassphrase", ""),
+                new Filter.IncludeExclude("testSshFetchCredentialsFromCallback", ""),
+                new Filter.IncludeExclude("testSshConnectionUserInUriPasswordFromCallback", ""),
+                new Filter.IncludeExclude("testSshConnectionCanceled", "")
+            });
+            setFilter(filter);
+        }
     }
 
     @Override

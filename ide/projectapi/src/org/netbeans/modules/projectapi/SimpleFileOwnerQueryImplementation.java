@@ -104,7 +104,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     
     
     public Project getOwner(FileObject f) {
-        List<FileObject> folders = new ArrayList();
+        List<FileObject> folders = new ArrayList<>();
         
         deserialize();
         while (f != null) {

@@ -1092,7 +1092,7 @@ public class XMLDataObject extends MultiDataObject {
             if (!Processor.class.isAssignableFrom (proc)) {
                 Constructor[] arr = proc.getConstructors();
                 for (int i = 0; i < arr.length; i++) {
-                    Class[] params = arr[i].getParameterTypes();
+                    Class<?>[] params = arr[i].getParameterTypes();
                     if (params.length == 1) {
                         if (
                             params[0] == DataObject.class || 
@@ -1235,7 +1235,7 @@ public class XMLDataObject extends MultiDataObject {
                 
                 // the clazz will be null to signal, that an instance
                 // of object has been created
-                Class next = clazz;
+                Class<?> next = clazz;
                 clazz = null;
 
                 try {
@@ -1253,7 +1253,7 @@ public class XMLDataObject extends MultiDataObject {
 
                         Constructor[] arr = next.getConstructors();
                         for (int i = 0; i < arr.length; i++) {
-                            Class[] params = arr[i].getParameterTypes();
+                            Class<?>[] params = arr[i].getParameterTypes();
                             if (params.length == 1) {
                                 if (
                                     params[0] == DataObject.class || 
@@ -1283,7 +1283,7 @@ public class XMLDataObject extends MultiDataObject {
              * @return the class of the item
              */
             public Class getType () {
-                Class temp = clazz;
+                Class<?> temp = clazz;
                 return temp != null ? temp : obj.getClass ();
             }
 

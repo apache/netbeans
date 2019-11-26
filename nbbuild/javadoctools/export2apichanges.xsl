@@ -104,7 +104,8 @@
                 <a href="http://bits.netbeans.org/8.1/javadoc/apichanges.html">release 8.1</a>,
                 <a href="http://bits.netbeans.org/8.2/javadoc/apichanges.html">release 8.2</a>,
                 <a href="http://bits.netbeans.org/9.0/javadoc/apichanges.html">release 9.0</a>,
-                <a href="http://bits.netbeans.org/10.0/javadoc/apichanges.html">release 10.0</a>.
+                <a href="http://bits.netbeans.org/10.0/javadoc/apichanges.html">release 10.0</a>,
+                <a href="http://bits.netbeans.org/11.0/javadoc/apichanges.html">release 11.0</a>.
             <xsl:call-template name="do-the-table" />
             </body>
             </html>

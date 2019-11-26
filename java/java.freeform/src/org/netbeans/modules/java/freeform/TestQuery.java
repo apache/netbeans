@@ -58,12 +58,7 @@ final class TestQuery implements MultipleRootsUnitTestForSourceQueryImplementati
 
     public URL[] findUnitTests(FileObject source) {
         URL[][] data = findSourcesAndTests();
-        URL sourceURL;
-        try {
-            sourceURL = source.getURL();
-        } catch (FileStateInvalidException e) {
-            return null;
-        }
+        URL sourceURL = source.toURL();
         if (Arrays.asList(data[0]).contains(sourceURL)) {
             return data[1];
         } else {
@@ -73,12 +68,7 @@ final class TestQuery implements MultipleRootsUnitTestForSourceQueryImplementati
 
     public URL[] findSources(FileObject unitTest) {
         URL[][] data = findSourcesAndTests();
-        URL testURL;
-        try {
-            testURL = unitTest.getURL();
-        } catch (FileStateInvalidException e) {
-            return null;
-        }
+        URL testURL = unitTest.toURL();
         if (Arrays.asList(data[1]).contains(testURL)) {
             return data[0];
         } else {

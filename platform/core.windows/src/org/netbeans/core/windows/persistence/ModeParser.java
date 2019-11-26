@@ -37,6 +37,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
+import org.openide.util.io.ReaderInputStream;
 
 
 /**
@@ -96,12 +97,23 @@ class ModeParser {
     
     private final Object LOCK = new Object();
     
-    public ModeParser (String name, Set maskSet) {
-        this.modeName = name;
-        this.maskSet = maskSet;
+    private final boolean fileObjectNameMustMatchModeName;
+
+    public static ModeParser parseFromFileObject(String name, Set maskSet) {
+        return new ModeParser(name, maskSet, true);
     }
     
-    /** Load mode configuration including all tcrefs. */
+    public static ModeParser parseFromString(String name, Set maskSet) {
+        return new ModeParser(name, maskSet, false);
+    }
+    
+    private ModeParser (String name, Set maskSet, boolean fileObjectNameMustMatchModeName) {
+        this.modeName = name;
+        this.maskSet = maskSet;
+        this.fileObjectNameMustMatchModeName = fileObjectNameMustMatchModeName;
+    }
+    
+    /** Load mode configuration including all tcrefs from an XML file. */
     ModeConfig load () throws IOException {
         synchronized( LOCK ) {
             //if (DEBUG) Debug.log(ModeParser.class, "load ENTER" + " mo:" + name);
@@ -127,6 +139,30 @@ class ModeParser {
         }
     }
     
+    /** Load mode configuration from an XML String. */
+    ModeConfig load (String xml) throws IOException {
+        synchronized( LOCK ) {
+            //if (DEBUG) Debug.log(ModeParser.class, "load ENTER" + " mo:" + name);
+            ModeConfig mc = new ModeConfig();
+            readProperties(mc, xml);
+            if (mc.kind == Constants.MODE_KIND_SLIDING && mc.side != null && !mc.permanent) {
+                // now we have the 4.0 anonymous mode for the slide bar. replace with the 
+                // predefined ones..
+                mc.permanent = true;
+                // well, the names are defined in core/ui.
+                // shall we at all care about the name? or is making it permanent just fine?
+    //            if (mc.side.equals(Constants.BOTTOM)) {
+    //                mc.name = "bottomSlidingSide"; //NOI18N
+    //            } else if (mc.side.equals(Constants.LEFT)) {
+    //                mc.name = "leftSlidingSide"; //NOI18N
+    //            } else if (mc.side.equals(Constants.RIGHT)) {
+    //                mc.name = "rightSlidingSide"; //NOI18N
+    //            }
+            }
+            return mc;
+        }
+    }
+    
     /** Save mode configuration including all tcrefs. */
     void save (ModeConfig mc) throws IOException {
         synchronized( LOCK ) {
@@ -137,12 +173,36 @@ class ModeParser {
         }
     }
     
+    String modeConfigXml(ModeConfig mc) throws IOException {
+        synchronized( LOCK ) {
+            PropertyHandler propertyHandler = new PropertyHandler();
+            InternalConfig internalCfg = getInternalConfig();
+            StringBuffer buff = propertyHandler.generateData(mc, internalCfg);
+            return buff.toString();
+        }
+    }
+    
     private void readProperties (ModeConfig mc) throws IOException {
         if (DEBUG) Debug.log(ModeParser.class, "readProperties ENTER" + " mo:" + getName());
         PropertyHandler propertyHandler = new PropertyHandler();
         InternalConfig internalCfg = getInternalConfig();
         internalCfg.clear();
         propertyHandler.readData(mc, internalCfg);
+        
+        /*if (DEBUG) Debug.log(ModeParser.class, "               specVersion: " + internalCfg.specVersion);
+        if (DEBUG) Debug.log(ModeParser.class, "        moduleCodeNameBase: " + internalCfg.moduleCodeNameBase);
+        if (DEBUG) Debug.log(ModeParser.class, "     moduleCodeNameRelease: " + internalCfg.moduleCodeNameRelease);
+        if (DEBUG) Debug.log(ModeParser.class, "moduleSpecificationVersion: " + internalCfg.moduleSpecificationVersion);*/
+        
+        if (DEBUG) Debug.log(ModeParser.class, "readProperties LEAVE" + " mo:" + getName());
+    }
+    
+    private void readProperties (ModeConfig mc, String xml) throws IOException {
+        if (DEBUG) Debug.log(ModeParser.class, "readProperties ENTER" + " mo:" + getName());
+        PropertyHandler propertyHandler = new PropertyHandler();
+        InternalConfig internalCfg = getInternalConfig();
+        internalCfg.clear();
+        propertyHandler.readData(mc, internalCfg, xml);
         
         /*if (DEBUG) Debug.log(ModeParser.class, "               specVersion: " + internalCfg.specVersion);
         if (DEBUG) Debug.log(ModeParser.class, "        moduleCodeNameBase: " + internalCfg.moduleCodeNameBase);
@@ -894,22 +954,42 @@ class ModeParser {
                 return modeConfigFO;
             }
         }
-        /** 
-         Reads mode configuration data from XML file. 
-         Data are returned in output params.
+        
+        /**
+         * Reads mode configuration data from XML file. Data are returned in
+         * output params.
          */
-        void readData (ModeConfig modeCfg, InternalConfig internalCfg)
-        throws IOException {
+        void readData(ModeConfig modeCfg, InternalConfig internalCfg)
+                throws IOException {
+            FileObject cfgFOInput = getConfigFOInput();
+            if (cfgFOInput == null) {
+                throw new FileNotFoundException("[WinSys] Missing Mode configuration file:" // NOI18N
+                        + ModeParser.this.getName());
+            }
+            InputStream is = cfgFOInput.getInputStream();
+            readData(modeCfg, internalCfg, is, cfgFOInput);
+        }
+        
+        /**
+         * Reads mode configuration data from XML String. Data are returned in
+         * output params.
+         */
+        void readData(ModeConfig modeCfg, InternalConfig internalCfg, String xml)
+                throws IOException {
+            InputStream is = new BufferedInputStream( new ReaderInputStream( new StringReader(xml)));
+            readData(modeCfg, internalCfg, is, xml);
+        }
+        
+        /**
+         * Reads mode configuration data from an InputStream. Data are returned
+         * in output params.
+         */
+        private void readData(ModeConfig modeCfg, InternalConfig internalCfg, InputStream is, Object source)
+                throws IOException {
             modeConfig = modeCfg;
             internalConfig = internalCfg;
             itemList.clear();
             
-            FileObject cfgFOInput = getConfigFOInput();
-            if (cfgFOInput == null) {
-                throw new FileNotFoundException("[WinSys] Missing Mode configuration file:" // NOI18N
-                + ModeParser.this.getName());
-            }
-            InputStream is = null;
             try {
                 synchronized (RW_LOCK) {
                     //DUMP BEGIN
@@ -922,13 +1002,12 @@ class ModeParser {
                         if (DEBUG) Debug.log(ModeParser.class, s);
                     }*/
                     //DUMP END
-                    is = cfgFOInput.getInputStream();
                     PersistenceManager.getDefault().getXMLParser(this).parse(new InputSource(is));
                 }
             } catch (SAXException exc) {
                 // Turn into annotated IOException
                 String msg = NbBundle.getMessage(ModeParser.class,
-                                                 "EXC_ModeParse", cfgFOInput);
+                                                 "EXC_ModeParse", source);
 
                 throw (IOException) new IOException(msg).initCause(exc);
             } finally {
@@ -1049,11 +1128,11 @@ class ModeParser {
             String name = attrs.getValue("unique"); // NOI18N
             if (name != null) {
                 modeConfig.name = name;
-                if (!name.equals(ModeParser.this.getName())) {
+                if (fileObjectNameMustMatchModeName && !name.equals(ModeParser.this.getName())) {
                     PersistenceManager.LOG.log(Level.INFO,
                     "[WinSys.ModeParser.handleName]" // NOI18N
                     + " Error: Value of attribute \"unique\" of element \"name\"" // NOI18N
-                    + " and configuration file name must be the same."); // NOI18N
+                    + " and configuration file name must be the same: " + name + " != " + ModeParser.this.getName() + "."); // NOI18N
                     throw new SAXException("Invalid attribute value"); // NOI18N
                 }
             } else {
@@ -1096,13 +1175,13 @@ class ModeParser {
                     if( null != modeConfig.otherNames && !modeConfig.otherNames.isEmpty() ) {
                         PersistenceManager.LOG.log(Level.INFO,
                         "[WinSys.ModeParser.handleName]" // NOI18N
-                        + " Error: Sliding modes are not allowed to have additional names."); // NOI18N
+                        + " Error: Sliding modes are not allowed to have additional names: " + modeConfig.otherNames + "."); // NOI18N
                         throw new SAXException("Invalid attribute value"); // NOI18N
                     }
                 } else {
                     PersistenceManager.LOG.log(Level.INFO,
                     "[WinSys.ModeParser.handleKind]" // NOI18N
-                    + " Warning: Invalid value of attribute \"type\"."); // NOI18N
+                    + " Warning: Invalid value of attribute \"type\": " + type + "."); // NOI18N
                     modeConfig.kind = Constants.MODE_KIND_VIEW;
                 }
             } else {
@@ -1154,7 +1233,7 @@ class ModeParser {
             } 
             PersistenceManager.LOG.log(Level.INFO,
             "[WinSys.ModeParser.handleSlideInSize]" // NOI18N
-            + " Warning: Invalid attributes for preferred slide-in size."); // NOI18N
+            + " Warning: Invalid attributes for preferred slide-in size: tc-id=" + tcId + ", size=" + size + "."); // NOI18N
         }      
         
         private void handleState(Attributes attrs) throws SAXException {
@@ -1167,7 +1246,7 @@ class ModeParser {
                 } else {
                     PersistenceManager.LOG.log(Level.INFO,
                     "[WinSys.ModeParser.handleState]" // NOI18N
-                    + " Warning: Invalid value of attribute \"type\"" // NOI18N
+                    + " Warning: Invalid value " + type + " of attribute \"type\"" // NOI18N
                     + " of element \"state\"."); // NOI18N
                     modeConfig.state = Constants.MODE_STATE_JOINED;
                 }
@@ -1193,7 +1272,7 @@ class ModeParser {
                 } else {
                     PersistenceManager.LOG.log(Level.INFO,
                     "[WinSys.ModeParser.handleState]" // NOI18N
-                    + " Warning: Invalid value of attribute \"minimized\"" // NOI18N
+                    + " Warning: Invalid value " + minimized + " of attribute \"minimized\"" // NOI18N
                     + " of element \"state\"."); // NOI18N
                     modeConfig.minimized = false;
                 }
@@ -1215,7 +1294,7 @@ class ModeParser {
             } else {
                 PersistenceManager.LOG.log(Level.INFO,
                 "[WinSys.ModeParser.handlePath]" // NOI18N
-                + " Warning: Invalid or missing value of attribute \"orientation\"."); // NOI18N
+                + " Warning: Invalid or missing value " + s + " of attribute \"orientation\"."); // NOI18N
                 orientation = Constants.VERTICAL;
             }
             
@@ -1367,7 +1446,7 @@ class ModeParser {
                 } catch (NumberFormatException exc) {
                     PersistenceManager.LOG.log(Level.INFO,
                     "[WinSys.ModeParser.handleFrame]" // NOI18N
-                    + " Warning: Cannot read attribute \"state\"" // NOI18N
+                    + " Warning: Cannot read value " + frameState + " for attribute \"state\"" // NOI18N
                     + " of element \"frame\".", exc); // NOI18N
                     modeConfig.frameState = Frame.NORMAL;
                 }
@@ -1406,9 +1485,13 @@ class ModeParser {
             } else {
                 PersistenceManager.LOG.log(Level.INFO,
                 "[WinSys.ModeParser.handleEmptyBehavior]" // NOI18N
-                + " Warning: Invalid value of attribute \"permanent\"."); // NOI18N
+                + " Warning: Invalid value " + value + " of attribute \"permanent\"."); // NOI18N
                 modeConfig.permanent = false;
             }
+        }
+        
+        StringBuffer generateData(ModeConfig mc, InternalConfig ic) throws IOException {
+            return fillBuffer(mc, ic);
         }
         
         /** Writes data from asociated mode to the xml representation */

@@ -46,7 +46,13 @@ public class ECMAVersionCustomizer implements ProjectCustomizer.CompositeCategor
             category = FrameworksUtils.CATEGORY,
             categoryLabel = "#LBL_CATEGORY_FRAMEWORKS_LABEL",
             position = 493
-    )
+    ),
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+            projectType = FrameworksUtils.GRADLE_PROJECT,
+            category = FrameworksUtils.CATEGORY,
+            categoryLabel = "#LBL_CATEGORY_FRAMEWORKS_LABEL",
+            position = 493
+    ),
 }
 )
     public static ECMAVersionCustomizer createCustomizer() {

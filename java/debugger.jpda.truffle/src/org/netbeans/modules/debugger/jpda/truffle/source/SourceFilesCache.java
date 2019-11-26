@@ -22,12 +22,15 @@ package org.netbeans.modules.debugger.jpda.truffle.source;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
+import java.util.WeakHashMap;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
 
 import org.openide.filesystems.FileObject;
 
 final class SourceFilesCache {
     
-    private static final SourceFilesCache DEFAULT = new SourceFilesCache();
+    private static final Map<JPDADebugger, SourceFilesCache> MAP = new WeakHashMap<>();
     
     private final SourceFS fs;
     
@@ -35,8 +38,13 @@ final class SourceFilesCache {
         fs = new SourceFS();
     }
     
-    public static SourceFilesCache getDefault() {
-        return DEFAULT;
+    public static synchronized SourceFilesCache get(JPDADebugger jpda) {
+        SourceFilesCache sfc = MAP.get(jpda);
+        if (sfc == null) {
+            sfc = new SourceFilesCache();
+            MAP.put(jpda, sfc);
+        }
+        return sfc;
     }
     
     public URL getSourceFile(String name, long hash, URI uri, String content) throws IOException {

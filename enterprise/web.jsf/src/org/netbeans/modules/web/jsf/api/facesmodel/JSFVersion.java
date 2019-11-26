@@ -65,11 +65,13 @@ public enum JSFVersion {
     JSF_1_2("JSF 1.2"),
     JSF_2_0("JSF 2.0"),
     JSF_2_1("JSF 2.1"),
-    JSF_2_2("JSF 2.2");
+    JSF_2_2("JSF 2.2"),
+    JSF_2_3("JSF 2.3");
 
     private static final LinkedHashMap<JSFVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<JSFVersion, String>();
 
     static {
+        SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_3, JSFUtils.JSF_2_3__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_2, JSFUtils.JSF_2_2__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_1, JSFUtils.JSF_2_1__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JSFVersion.JSF_2_0, JSFUtils.JSF_2_0__API_SPECIFIC_CLASS);
@@ -209,7 +211,9 @@ public enum JSFVersion {
     public static JSFVersion forServerLibrary(@NonNull ServerLibrary lib) {
         Parameters.notNull("serverLibrary", lib); //NOI18N
         if ("JavaServer Faces".equals(lib.getSpecificationTitle())) { // NOI18N
-            if (Version.fromJsr277NotationWithFallback("2.2").equals(lib.getSpecificationVersion())) { //NOI18N
+            if (Version.fromJsr277NotationWithFallback("2.3").equals(lib.getSpecificationVersion())) { //NOI18N
+                return JSFVersion.JSF_2_3;
+            } else if (Version.fromJsr277NotationWithFallback("2.2").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JSFVersion.JSF_2_2;
             } else if (Version.fromJsr277NotationWithFallback("2.1").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JSFVersion.JSF_2_1;

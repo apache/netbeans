@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.gradle.test;
 
+import java.util.Objects;
+import org.gradle.tooling.events.OperationDescriptor;
 import org.gradle.tooling.events.test.JvmTestOperationDescriptor;
 import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 
@@ -26,17 +28,50 @@ import org.netbeans.modules.gsf.testrunner.api.TestSuite;
  *
  * @author Laszlo Kishalmi
  */
-public class GradleTestSuite extends TestSuite {
-    
+public final class GradleTestSuite extends TestSuite {
+
     private final JvmTestOperationDescriptor operation;
-    
+
     public GradleTestSuite(JvmTestOperationDescriptor op) {
-        super(op.getClassName());
+        super(suiteName(op));
         this.operation = op;
     }
 
     public JvmTestOperationDescriptor getOperation() {
         return operation;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.operation);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GradleTestSuite other = (GradleTestSuite) obj;
+        return Objects.equals(this.getName(), other.getName());
+    }
+
+    static String suiteName(OperationDescriptor op) {
+        assert op != null;
+
+        if (op instanceof JvmTestOperationDescriptor) {
+            JvmTestOperationDescriptor desc = (JvmTestOperationDescriptor)op;
+            return desc.getSuiteName() != null ? desc.getSuiteName() : desc.getClassName();
+        } else {
+            return op.getDisplayName() != null ? op.getDisplayName() : op.getName();
+        }
+    }
+
 }

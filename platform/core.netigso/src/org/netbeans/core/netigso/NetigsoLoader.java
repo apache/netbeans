@@ -33,11 +33,19 @@ import org.osgi.framework.Bundle;
 
 final class NetigsoLoader extends ProxyClassLoader {
     private static final Logger LOG = Logger.getLogger(NetigsoLoader.class.getName());
-    final Bundle bundle;
+    private Bundle bundle;
 
     NetigsoLoader(Bundle b, ModuleInfo m, File jar) {
         super(new ClassLoader[0], true);
         this.bundle = b;
+    }
+
+    public Bundle getBundle() {
+        return bundle;
+    }
+
+    public void setBundle(Bundle bundle) {
+        this.bundle = bundle;
     }
 
     @Override

@@ -234,3 +234,5 @@
 <link href="${javadoc.docs.org-netbeans-libs-graalsdk}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-libs-graalsdk"/>
 <link href="${javadoc.docs.org-netbeans-modules-gradle}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle"/>
 <link href="${javadoc.docs.org-netbeans-modules-gradle-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle-java"/>
+<link href="${javadoc.docs.org-netbeans-modules-textmate-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-textmate-lexer"/>
+<link href="https://www.graalvm.org/truffle/javadoc/" offline="true" packagelistloc="./truffle"/>

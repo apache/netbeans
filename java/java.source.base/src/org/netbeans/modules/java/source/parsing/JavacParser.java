@@ -25,6 +25,9 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.util.Abort;
 
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -40,6 +43,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +62,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -85,7 +93,6 @@ import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.JavadocEnv;
 import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
@@ -94,14 +101,11 @@ import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.lib.nbjavac.services.NBClassReader;
 import org.netbeans.lib.nbjavac.services.NBEnter;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
-import org.netbeans.lib.nbjavac.services.NBJavadocEnter;
-import org.netbeans.lib.nbjavac.services.NBJavadocMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
-import org.netbeans.lib.nbjavac.services.NBJavadocClassFinder;
-import org.netbeans.lib.nbjavac.services.NBMessager;
+import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
@@ -620,7 +624,43 @@ public class JavacParser extends Parser {
                     return Phase.MODIFIED;
                 }
                 long start = System.currentTimeMillis();
-                currentInfo.getJavacTask().enter();
+                Supplier<Object> setJavacHandler = () -> null;
+                Consumer<Object> restoreHandler = h -> {};
+                try {
+                    //the DeferredCompletionFailureHandler should be set to javac mode:
+                    Class<?> dcfhClass = Class.forName("com.sun.tools.javac.code.DeferredCompletionFailureHandler");
+                    Class<?> dcfhHandlerClass = Class.forName("com.sun.tools.javac.code.DeferredCompletionFailureHandler$Handler");
+                    Object dcfh = dcfhClass.getDeclaredMethod("instance", Context.class).invoke(null, currentInfo.getJavacTask().getContext());
+                    Method setHandler = dcfhClass.getDeclaredMethod("setHandler", dcfhHandlerClass);
+                    Object javacCodeHandler = dcfhClass.getDeclaredField("javacCodeHandler").get(dcfh);
+
+                    setJavacHandler = () -> {
+                        try {
+                            return setHandler.invoke(dcfh, javacCodeHandler);
+                        } catch (ReflectiveOperationException ex) {
+                            LOGGER.log(Level.FINE, null, ex);
+                            return null;
+                        }
+                    };
+                    restoreHandler = h -> {
+                        if (h != null) {
+                            try {
+                                setHandler.invoke(dcfh, h);
+                            } catch (ReflectiveOperationException ex) {
+                                LOGGER.log(Level.WARNING, null, ex);
+                            }
+                        }
+                    };
+                } catch (ReflectiveOperationException | SecurityException ex) {
+                    //ignore
+                    LOGGER.log(Level.FINEST, null, ex);
+                }
+                Object oldHandler = setJavacHandler.get();
+                try {
+                    currentInfo.getJavacTask().enter();
+                } finally {
+                    restoreHandler.accept(oldHandler);
+                }
                 currentPhase = Phase.ELEMENTS_RESOLVED;
                 long end = System.currentTimeMillis();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));
@@ -631,7 +671,17 @@ public class JavacParser extends Parser {
                 }
                 long start = System.currentTimeMillis ();
                 JavacTaskImpl jti = currentInfo.getJavacTask();
-                PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
+                List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
+                try {
+                    compiler.todo.retainFiles(Collections.singletonList(currentInfo.jfo));
+                    savedTodo.removeAll(compiler.todo);
+                    PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
+                } finally {
+                    for (Env<AttrContext> env : savedTodo) {
+                        compiler.todo.offer(env);
+                    }
+                }
                 currentPhase = Phase.RESOLVED;
                 long end = System.currentTimeMillis ();
                 logTime(currentInfo.getFileObject(),currentPhase,(end-start));
@@ -744,6 +794,7 @@ public class JavacParser extends Parser {
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
                   .forEach(r -> r.enhance(javacTask.getContext(), cpInfo, detached));
+            ParameterNameProviderImpl.register(javacTask, cpInfo);
             return javacTask;
         }
     }
@@ -880,7 +931,7 @@ public class JavacParser extends Parser {
 
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
-        NBMessager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
+        NBLog.preRegister(context, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null,
                 ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, validatedSourceLevel.name),
                 diagnosticListener, options, files.iterator().hasNext() ? null : Arrays.asList("java.lang.Object"), files,
@@ -908,14 +959,10 @@ public class JavacParser extends Parser {
         NBJavacTrees.preRegister(context);
         if (!backgroundCompilation) {
             JavacFlowListener.preRegister(context, task);
-            NBJavadocEnter.preRegister(context);
-            NBJavadocMemberEnter.preRegister(context);
-            JavadocEnv.preRegister(context, cpInfo);
             NBResolve.preRegister(context);
-        } else {
-            NBEnter.preRegister(context);
-            NBMemberEnter.preRegister(context);
         }
+        NBEnter.preRegister(context);
+        NBMemberEnter.preRegister(context, backgroundCompilation);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);
         return task;
     }
@@ -1332,10 +1379,7 @@ public class JavacParser extends Parser {
     public static class VanillaJavacContextEnhancer implements ContextEnhancer {
         @Override
         public void enhance(Context context, boolean backgroundCompilation) {
-            if (!backgroundCompilation)
-                NBJavadocClassFinder.preRegister(context);
-            else
-                NBClassFinder.preRegister(context);
+            NBClassFinder.preRegister(context);
             NBJavaCompiler.preRegister(context);
         }
     }

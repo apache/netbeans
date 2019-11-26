@@ -97,6 +97,6 @@ public final class ProjectLocationWizardPanel implements WizardDescriptor.Panel,
     public void storeSettings(Object settings) {
         WizardDescriptor d = (WizardDescriptor) settings;
         component.store(d);
-        ((WizardDescriptor) d).putProperty("NewProjectWizard_Title", null); // NOI18N
+        d.putProperty("NewProjectWizard_Title", null); // NOI18N
     }
 }

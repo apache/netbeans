@@ -35,10 +35,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.eclipse.lsp4j.ClientCapabilities;
+import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
+import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
+import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
@@ -109,12 +112,7 @@ public class LSPBindings {
                                                        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeParams initParams = new InitializeParams();
-                                                       initParams.setRootUri(Utils.toURI(prj.getProjectDirectory())); //XXX: what if a different root is expected????
-                                                       initParams.setRootPath(FileUtil.toFile(prj.getProjectDirectory()).getAbsolutePath()); //some servers still expect root path
-                                                       initParams.setProcessId(0);
-                                                       initParams.setCapabilities(new ClientCapabilities(new WorkspaceClientCapabilities(), new TextDocumentClientCapabilities(), null));
-                                                       InitializeResult result = server.initialize(initParams).get();
+                                                       InitializeResult result = initServer(server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
                                                        LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
                                                        return b;
@@ -152,11 +150,7 @@ public class LSPBindings {
                 });
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
-
-                InitializeParams initParams = new InitializeParams();
-                initParams.setRootUri(Utils.toURI(root));
-                initParams.setProcessId(0);
-                InitializeResult result = server.initialize(initParams).get();
+                InitializeResult result = initServer(server, root);
                 LSPBindings bindings = new LSPBindings(server, result, null);
 
                 lc.setBindings(bindings);
@@ -166,6 +160,23 @@ public class LSPBindings {
                 Exceptions.printStackTrace(ex);
             }
         }, Bundle.LBL_Connecting());
+    }
+
+    private static InitializeResult initServer(LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
+       InitializeParams initParams = new InitializeParams();
+       initParams.setRootUri(Utils.toURI(root));
+       initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
+       initParams.setProcessId(0);
+       TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
+       DocumentSymbolCapabilities dsc = new DocumentSymbolCapabilities();
+       dsc.setHierarchicalDocumentSymbolSupport(true);
+       tdcc.setDocumentSymbol(dsc);
+       WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+       wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
+       wcc.getWorkspaceEdit().setDocumentChanges(true);
+       wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
+       initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
+       return server.initialize(initParams).get();
     }
 
     private final LanguageServer server;
@@ -239,14 +250,14 @@ public class LSPBindings {
         public void run() {
             for (Map<String, LSPBindings> mime2Bindings : project2MimeType2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    if (b != null) {
+                    if (b != null && b.process != null) {
                         b.process.destroy();
                     }
                 }
             }
             for (Map<String, LSPBindings> mime2Bindings : workspace2Extension2Server.values()) {
                 for (LSPBindings b : mime2Bindings.values()) {
-                    if (b != null) {
+                    if (b != null && b.process != null) {
                         b.process.destroy();
                     }
                 }

@@ -22,8 +22,10 @@ import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import sun.net.spi.nameservice.NameService;
@@ -41,13 +43,13 @@ import sun.net.spi.nameservice.NameService;
  * 
  * @author lbruun
  */
-public class FakeDns {
+public class FakeDns extends IpAddressUtils {
 
 
     private final Map<String, InetAddress[]> forwardResolutions = new ConcurrentHashMap<>();
     private final Map<InetAddress, String> reverseResolutions = new ConcurrentHashMap<>();
     private final List<NameService> orgNameServices = new ArrayList<>();   
-    private volatile boolean installed = false;
+    private volatile List<NameService> installed = null;
     private final AtomicLong delayAnsweringByMs = new AtomicLong(0);
 
     public FakeDns() {
@@ -95,7 +97,7 @@ public class FakeDns {
      * @param removeOthers if other name services should be removed
      */
     public synchronized void install(boolean removeOthers) {
-        if (installed) {
+        if (installed != null) {
             return;
         }
         List<NameService> nameServices = getKnownNameServices();
@@ -109,7 +111,9 @@ public class FakeDns {
             // Install ourselves in position 0, ahead of everyone else
             nameServices.add(0, new NameServiceInMemory());
 
-            installed = true;
+            installed = nameServices;
+        } else {
+            installed = Collections.singletonList(new NameServiceInMemory());
         }
     }
 
@@ -119,7 +123,7 @@ public class FakeDns {
      * FakeDns.
      */
     public synchronized void unInstall() {
-        if (!installed) {
+        if (installed == null) {
             return;
         }
         List<NameService> nameServices = getKnownNameServices();
@@ -129,7 +133,7 @@ public class FakeDns {
             if (ns != null) {
                 if (ns instanceof NameServiceInMemory) {
                     nameServices.remove(0);
-                    installed = false;
+                    installed = null;
                 }
             }
             
@@ -172,6 +176,22 @@ public class FakeDns {
         return null;
     }
 
+    @Override
+    Callable<InetAddress[]> createDnsTimeoutTask(String host) {
+        return () -> {
+            List<NameService> namedServices = installed;
+            if (namedServices == null) {
+                return null;
+            }
+            for (NameService ns : namedServices) {
+                InetAddress[] result = ns.lookupAllHostAddr(host);
+                if (result != null) {
+                    return result;
+                }
+            }
+            return null;
+        };
+    }
     private class NameServiceInMemory implements NameService {
 
         @Override

@@ -26,6 +26,15 @@
             <code-name-base>org.netbeans.modules.docker.api</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>libs.c.kohlschutter.junixsocket</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>2.20</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

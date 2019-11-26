@@ -1,0 +1,118 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  field : a;a;834;1;int;int;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;1;
+  field : array;array;1125;2;array;array;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : b;b;857;1;double;double;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;1;
+  field : bool;bool;1016;1;bool;bool;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : c;c;897;1;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;1;
+  field : callble;callble;1980;1;callable;callable;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : d;d;926;1;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;1;
+  field : floatx;floatX;1061;1;float;float;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : floaty;floatY;1070;1;float;float;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : int;int;1038;1;int;int;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : iterable;iterable;1182;2;iterable;iterable;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : myclass2;myClass2;1309;1;\Foo\Bar\MyClass;\Foo\Bar\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : myclass;myClass;1271;4;MyClass;\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : object;object;1152;2;object;object;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : parent;parent;1240;4;parent;\parent;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : self;self;1212;4;self;\self;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticarray;staticArray;1578;10;array;array;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticbool;staticBool;1382;9;bool;bool;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticfloatx;staticFloatX;1464;9;float;float;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticfloaty;staticFloatY;1485;9;float;float;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticint;staticInt;1424;9;int;int;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticiterable;staticIterable;1681;10;iterable;iterable;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticmyclass2;staticMyClass2;1860;9;\Foo\Bar\MyClass;\Foo\Bar\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticmyclass;staticMyClass;1809;12;MyClass;\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticobject;staticObject;1631;10;object;object;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticparent;staticParent;1765;12;parent;\parent;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticself;staticSelf;1724;12;self;\self;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticstring;staticString;1527;10;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticwithouttype;staticWithoutType;1339;9;;;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : string;string;1098;2;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : varint;varInt;1890;1;int;int;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : void;void;2027;1;void;void;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : withouttype;withoutType;986;1;;;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  top : typedpropertiestrait
+  trait : typedpropertiestrait;TypedPropertiesTrait;950;;;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : array;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : callable;
+  identifier_used : callble;
+  identifier_used : double;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : floatx;
+  identifier_used : floaty;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : myclass2;
+  identifier_used : myclass;
+  identifier_used : myclass;
+  identifier_used : myclass;
+  identifier_used : myclass;
+  identifier_used : myclass;
+  identifier_used : null;
+  identifier_used : object;
+  identifier_used : object;
+  identifier_used : object;
+  identifier_used : parent;
+  identifier_used : parent;
+  identifier_used : parent;
+  identifier_used : self;
+  identifier_used : self;
+  identifier_used : self;
+  identifier_used : staticarray;
+  identifier_used : staticbool;
+  identifier_used : staticfloatx;
+  identifier_used : staticfloaty;
+  identifier_used : staticint;
+  identifier_used : staticiterable;
+  identifier_used : staticmyclass2;
+  identifier_used : staticmyclass;
+  identifier_used : staticobject;
+  identifier_used : staticparent;
+  identifier_used : staticself;
+  identifier_used : staticstring;
+  identifier_used : staticwithouttype;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : true;
+  identifier_used : typedpropertiestrait;
+  identifier_used : varint;
+  identifier_used : void;
+  identifier_used : void;
+  identifier_used : withouttype;
+
+Not Searchable Keys:

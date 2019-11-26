@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.refactoring.java.plugins;
 
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.Tag;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
@@ -29,6 +29,7 @@ import com.sun.source.util.Trees;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -853,18 +854,23 @@ public class MoveMembersTransformer extends RefactoringVisitor {
     }
     
     private Comment updateJavadoc(Element method, Element targetElement, boolean addDeprecated) {
-        Doc javadoc = workingCopy.getElementUtilities().javaDocFor(method);
+        DocCommentTree javadoc = workingCopy.getDocTrees().getDocCommentTree(method);
         
-        List<Tag> otherTags = new LinkedList<Tag>(Arrays.asList(javadoc.tags()));
-        List<Tag> returnTags = new LinkedList<Tag>(Arrays.asList(javadoc.tags("@return"))); // NOI18N
-        List<Tag> throwsTags = new LinkedList<Tag>(Arrays.asList(javadoc.tags("@throws"))); // NOI18N
-        List<Tag> paramTags = new LinkedList<Tag>(Arrays.asList(javadoc.tags("@param"))); // NOI18N
+        List<DocTree> otherTags = new LinkedList<>();
+        List<DocTree> returnTags = new LinkedList<>();
+        List<DocTree> throwsTags = new LinkedList<>();
+        List<DocTree> paramTags = new LinkedList<>();
 
-        otherTags.removeAll(returnTags);
-        otherTags.removeAll(throwsTags);
-        otherTags.removeAll(paramTags);
+        for (DocTree tag : javadoc.getBlockTags()) {
+            switch (tag.getKind()) {
+                case RETURN: returnTags.add(tag); break;
+                case THROWS: throwsTags.add(tag); break;
+                case PARAM: paramTags.add(tag); break;
+                default: otherTags.add(tag);
+            }
+        }
         
-        StringBuilder text = new StringBuilder(javadoc.commentText()).append("\n\n"); // NOI18N
+        StringBuilder text = new StringBuilder(javadoc.getBody().stream().map(t -> t.toString()).collect(Collectors.joining(""))).append("\n\n"); // NOI18N
         text.append(tagsToString(paramTags));
         text.append(tagsToString(returnTags));
         text.append(tagsToString(throwsTags));
@@ -877,10 +883,10 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         return comment;
     }
     
-    private String tagsToString(List<Tag> tags) {
+    private String tagsToString(List<DocTree> tags) {
         StringBuilder sb = new StringBuilder();
-        for (Tag tag : tags) {
-            sb.append(tag.name()).append(" ").append(tag.text()).append("\n"); // NOI18N
+        for (DocTree tag : tags) {
+            sb.append(tag.toString()).append("\n"); // NOI18N
         }
         return sb.toString();
     }

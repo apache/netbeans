@@ -23,9 +23,9 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
-            <folder name="Standard">
+            <folder name="AntJava">
                 <file name="j2sefreeform.xml">
-                    <attr name="displayName" bundlevalue="org.netbeans.modules.java.freeform.resources.Bundle#Templates/Project/Standard/j2sefreeform.xml"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.java.freeform.resources.Bundle#Templates/Project/AntJava/j2sefreeform.xml"/>
                     <attr name="iconBase" stringvalue="org/netbeans/modules/ant/freeform/resources/freeform-project.png"/>
                     <attr name="position" intvalue="400"/>
                     <attr name="template" boolvalue="true"/>

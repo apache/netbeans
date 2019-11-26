@@ -1,0 +1,62 @@
+fn($used, $unused) => $used; // 1a $unused
+           ------
+HINT:Variable $unused seems to be unused in its scope
+$fn = fn($used, $unused) => $used; // 1b $unused
+                 ------
+HINT:Variable $unused seems to be unused in its scope
+fn($unused, $used) => $used; // 2a $unused
+    ------
+HINT:Variable $unused seems to be unused in its scope
+$fn = fn($unused, $used) => $used; // 2b $unused
+          ------
+HINT:Variable $unused seems to be unused in its scope
+fn($unused1, $unused2) => $used1 + $used2; // 3a $unused1 $unused2
+              -------
+HINT:Variable $unused1 seems to be unused in its scope
+HINT:Variable $unused2 seems to be unused in its scope
+$fn = fn($unused1, $unused2) => $used1 + $used2; // 3b $unused1 $unused2
+                    -------
+HINT:Variable $unused1 seems to be unused in its scope
+HINT:Variable $unused2 seems to be unused in its scope
+fn(array $unused) => $used; // 4 $unused
+          ------
+HINT:Variable $unused seems to be unused in its scope
+fn($unused = 100) => $used; // 5 $unused
+    ------
+HINT:Variable $unused seems to be unused in its scope
+fn(&$unused) => $used; // 6 $unused
+     ------
+HINT:Variable $unused seems to be unused in its scope
+fn&($unused) => $used; // 7 $unused
+     ------
+HINT:Variable $unused seems to be unused in its scope
+fn($unused, ...$used) => $used; // 8 $unused
+    ------
+HINT:Variable $unused seems to be unused in its scope
+fn($unused1, ...$unused2) => $used; // 9 $unused1 $unused2
+                 -------
+HINT:Variable $unused1 seems to be unused in its scope
+HINT:Variable $unused2 seems to be unused in its scope
+$af = fn($unused) => $callable1($callable2($used), $used); // 10 $unused
+          ------
+HINT:Variable $unused seems to be unused in its scope
+        ->test1(fn($unused) => $used * 2)  // 11 $unused
+                    ------
+HINT:Variable $unused seems to be unused in its scope
+        ->test2(fn($unused1, $unused2) => $used1 + $used2, 0); // 12 $unused1 $unused2
+                              -------
+HINT:Variable $unused1 seems to be unused in its scope
+HINT:Variable $unused2 seems to be unused in its scope
+function array_map_example2(array $unusedArray, array $unusedKeys) { // 13 $unusedArray $unusedKeys
+                                                       ----------
+HINT:Variable $unusedArray seems to be unused in its scope
+HINT:Variable $unusedKeys seems to be unused in its scope
+    return array_map(fn($unused) => $usedArray[$used], $usedKeys); // 14 $unused
+                         ------
+HINT:Variable $unused seems to be unused in its scope
+function test2(callable $unusedCallable) { // 15 $unusedCallable
+                         --------------
+HINT:Variable $unusedCallable seems to be unused in its scope
+    return fn(...$unused) => !$usedCallable(...$used); // 16 $unused
+                  ------
+HINT:Variable $unused seems to be unused in its scope

@@ -175,7 +175,7 @@ public class ResourceRegistrationHelper {
             if (key.indexOf("property.") != -1) { // NOI18N
                 props.add(key);
             }
-            String localValue = (String) localData.get(key);
+            String localValue = localData.get(key);
             if (localValue != null) {
                 if (remoteValue == null || !localValue.equals(remoteValue)) {
                     changedData.put(remoteDataKey, localValue);

@@ -25,19 +25,18 @@ import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import org.netbeans.modules.openfile.RecentFiles.HistoryItem;
 import org.openide.awt.*;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -51,10 +50,9 @@ import org.openide.util.actions.Presenter;
 @ActionID(category="System", id="org.netbeans.modules.openfile.RecentFileAction")
 @ActionReference(path="Menu/File", position=900)
 public class RecentFileAction extends AbstractAction
-        implements Presenter.Menu, PopupMenuListener, ChangeListener {
+        implements Presenter.Menu, ChangeListener, PropertyChangeListener {
 
-    private static final RequestProcessor RP =
-            new RequestProcessor(RecentFileAction.class);
+    private static final RequestProcessor RP = new RequestProcessor(RecentFileAction.class);
 
     /** property of menu items where we store fileobject to open */
     private static final String PATH_PROP =
@@ -73,12 +71,15 @@ public class RecentFileAction extends AbstractAction
                                          "OFMSG_NO_RECENT_FILE");     // NOI18N
 
     private JMenu menu;
+    private boolean recreate = true;
     
     public RecentFileAction() {
         super(NbBundle.getMessage(RecentFileAction.class,
                                   "LBL_RecentFileAction_Name")); // NOI18N
+
+        RecentFiles.addPropertyChangeListener(this);
     }
-    
+
     /********* Presenter.Menu impl **********/
     
     @Override
@@ -87,70 +88,60 @@ public class RecentFileAction extends AbstractAction
             menu = new UpdatingMenu(this);
             menu.setMnemonic(NbBundle.getMessage(RecentFileAction.class,
                               "MNE_RecentFileAction_Name").charAt(0)); // NOI18N
-            // #115277 - workaround, PopupMenuListener don't work on Mac 
-            if (!Utilities.isMac()) {
-                menu.getPopupMenu().addPopupMenuListener(this);
-            } else {
-                menu.addChangeListener(this);
-            }
+
+            menu.getModel().addChangeListener(this);
+            fillSubMenu();
         }
         return menu;
     }
-    
-    /******* PopupMenuListener impl *******/
 
-    /* Fills submenu when popup is about to be displayed.
-     * Note that argument may be null on Mac due to #115277 fix
-     */
-    @Override
-    public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-        fillSubMenu();
-    }
-    
-    /* Clears submenu when popup is about to be hidden.
-     * Note that argument may be null on Mac due to #115277 fix
-     */
-    @Override
-    public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-        menu.removeAll();
-    }
+    // Implementation of change listener ---------------------------------------
     
     @Override
-    public void popupMenuCanceled(PopupMenuEvent arg0) {
+    public void propertyChange(PropertyChangeEvent e) {
+        if ( RecentFiles.PROPERTY_RECENT_FILES.equals( e.getPropertyName() ) ) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    recreate = true;
+                }
+            });
+        }
     }
 
     /******** ChangeListener impl *********/
 
-    /** Delegates to popupMenuListener based on menu current selection status */ 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (menu.isSelected()) {
-            popupMenuWillBecomeVisible(null);
-        } else {
-            popupMenuWillBecomeInvisible(null);
+        if (menu.getModel().isSelected()) {
+            fillSubMenu();
         }
     }
     
     /** Fills submenu with recently closed files got from RecentFiles support */
     private void fillSubMenu () {
-        List<HistoryItem> files = RecentFiles.getRecentFiles();
-        boolean first = true;
-        for (final HistoryItem hItem : files) {
-            try { // #188403
-                JMenuItem jmi = newSubMenuItem(hItem);
-                menu.add(jmi);
-                if( first ) {
-                    Object accel = getValue( Action.ACCELERATOR_KEY );
-                    if( accel instanceof KeyStroke ) {
-                        jmi.setAccelerator( (KeyStroke)accel );
+        if (recreate && RecentFiles.hasRecentFiles()) {
+            menu.removeAll();
+            List<HistoryItem> files = RecentFiles.getRecentFiles();
+            boolean first = true;
+            for (final HistoryItem hItem : files) {
+                try { // #188403
+                    JMenuItem jmi = newSubMenuItem(hItem);
+                    menu.add(jmi);
+                    if( first ) {
+                        Object accel = getValue( Action.ACCELERATOR_KEY );
+                        if( accel instanceof KeyStroke ) {
+                            jmi.setAccelerator( (KeyStroke)accel );
+                        }
+                        first = false;
                     }
-                    first = false;
+                } catch (Exception ex) {
+                    continue;
                 }
-            } catch (Exception ex) {
-                continue;
             }
+            ensureSelected();
+            recreate = false;
         }
-        ensureSelected();
     }
 
     /**
@@ -270,7 +261,6 @@ public class RecentFileAction extends AbstractAction
     
         @Override
         public JComponent[] getMenuPresenters() {
-            setEnabled(RecentFiles.hasRecentFiles());
             return content;
         }
 
@@ -278,6 +268,9 @@ public class RecentFileAction extends AbstractAction
         public JComponent[] synchMenuPresenters(JComponent[] items) {
             return getMenuPresenters();
         }
-    }
 
+        @Override public boolean isEnabled() {
+            return RecentFiles.hasRecentFiles();
+        }
+    }
 }

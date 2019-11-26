@@ -19,7 +19,7 @@
 package org.netbeans.modules.java.source.nbjavac.parsing;
 
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javadoc.main.JavadocClassFinder;
+import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.modules.java.source.parsing.JavacParser.ContextEnhancer;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -32,8 +32,7 @@ public class ContextEnhancerImpl implements ContextEnhancer {
 
     @Override
     public void enhance(Context context, boolean backgroundCompilation) {
-        if (!backgroundCompilation)
-            JavadocClassFinder.preRegister(context);
+        NBClassFinder.preRegister(context);
     }
     
 }

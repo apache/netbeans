@@ -85,6 +85,24 @@ public class RetrieverTest implements Retriever.Updater {
             try {
                 message = "";
                 status = "";
+                // Test 301 redirect
+                r = new Retriever(file, "http://localhost:" + server.getPort() + "/glassfishv3/moved.zip",
+                        "http://localhost:" + server.getPort() + "/",
+                        "http://localhost:" + server.getPort() + "/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip", this,
+                        "glassfishv3");
+                r.run();
+                System.out.println("message="+message);
+                System.out.println("status="+status);
+                assert message.startsWith("Download & Install completed in") : message;
+                assert status.equals("") : status;
+            } finally {
+                deleteJunk(file);
+            }
+            
+            try {
+                message = "";
+                status = "";
+                // Test indirect download location correct
                 r = new Retriever(file, "http://localhost:" + server.getPort() + "/glassfishv3/preludezipfilename.txt",
                         "http://localhost:" + server.getPort() + "/",
                         "http://localhost:" + server.getPort() + "/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip", this,
@@ -97,7 +115,7 @@ public class RetrieverTest implements Retriever.Updater {
             } finally {
                 deleteJunk(file);
             }
-
+            
             try {
                 message = "";
                 status = "";
@@ -111,45 +129,6 @@ public class RetrieverTest implements Retriever.Updater {
                 System.out.println("status="+status);
                 assert message.startsWith("Download & Install completed in") : message;
                 assert status.equals("") : status;
-            } finally {
-                deleteJunk(file);
-            }
-
-            try {
-                message = "";
-                status = "";
-                // bad url prefix
-                r = new Retriever(file, "http://localhost:" + server.getPort() + "/glassfishv3/preludezipfilename.txt",
-                        "http://java.tent/download/",
-                        "http://localhost:" + server.getPort() + "/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip", this,
-                        "glassfishv3");
-                r.run();
-                System.out.println("message="+message);
-                System.out.println("status="+status);
-                assert message.startsWith("Invalid URL: http://java.tent/download/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip") : message;
-                assert status.startsWith("I/O Exception: ") : status;
-            } finally {
-                deleteJunk(file);
-            }
-
-            try {
-                message = "";
-                status = "";
-                // bad url prefix
-                r = new Retriever(file,"http://localhost:" + server.getPort() + "/glassfishv3/preludezipfilename.tx",
-                        "http://java.tent/download/",
-                        "http://download.java.net/glassfish/v3-FFFprelude/release/glassfish-v3-prelude-ml.zip", this,
-                        "glassfishv3");
-                r.run();
-                System.out.println("message="+message);
-                System.out.println("status="+status);
-                assert message.startsWith("Invalid URL: http://") || 
-                        message.startsWith("Connecting...") : message;
-                assert status.startsWith("I/O Exception: http://") ||
-                        status.startsWith("I/O Exception: connect timed out") ||
-                        status.startsWith("I/O Exception: java.net") ||
-                        status.startsWith("I/O Exception: Connection reset") ||
-                        status.startsWith("Connection Exception: Connection timed out") : status ;
             } finally {
                 deleteJunk(file);
             }

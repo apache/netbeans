@@ -42,4 +42,7 @@ public class LoaderDelegator implements LoaderDelegate {
     public Class<?> findClass(String string) throws ClassNotFoundException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    public void classesRedefined(ExecutionControl.ClassBytecodes[] cbcs) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

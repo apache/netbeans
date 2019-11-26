@@ -38,12 +38,6 @@
                     <run-dependency/>
                 </dependency>
                 <dependency>
-                    <code-name-base>net.java.html.geo</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency/>
-                </dependency>
-                <dependency>
                     <code-name-base>net.java.html.boot.fx</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

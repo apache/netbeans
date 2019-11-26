@@ -51,6 +51,7 @@ public interface WebApp extends org.netbeans.modules.j2ee.dd.api.common.RootInte
      * @since 1.29
      */
     static final String VERSION_3_1 = "3.1"; //NOI18N
+    static final String VERSION_4_0 = "4.0"; //NOI18N
     static final int STATE_VALID = 0;
     static final int STATE_INVALID_PARSABLE = 1;
     static final int STATE_INVALID_UNPARSABLE = 2;

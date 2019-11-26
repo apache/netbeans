@@ -31,7 +31,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Maven2 Implementation of <CODE>org.netbeans.modules.j2ee.persistence.spi.PersistenceScopeImplementation</CODE>
+ * Gradle Implementation of <CODE>org.netbeans.modules.j2ee.persistence.spi.PersistenceScopeImplementation</CODE>
  *
  * @author Daniel Mohni
  */

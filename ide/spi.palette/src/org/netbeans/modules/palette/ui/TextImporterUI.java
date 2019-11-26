@@ -254,7 +254,7 @@ private void btnSelectLargeIconActionPerformed(java.awt.event.ActionEvent evt) {
         if( null != icon ) {
             lblLargeIcon.setIcon(icon);
             try {
-                largeIconPath = iconFile.toURL().toExternalForm();
+                largeIconPath = iconFile.toURI().toURL().toExternalForm();
             } catch (MalformedURLException ex) {
                 //TODO log error
             }
@@ -269,7 +269,7 @@ private void btnSelectSmallIconActionPerformed(java.awt.event.ActionEvent evt) {
         if( null != icon ) {
             lblSmallIcon.setIcon(icon);
             try {
-                smallIconPath = iconFile.toURL().toExternalForm();
+                smallIconPath = iconFile.toURI().toURL().toExternalForm();
             } catch (MalformedURLException ex) {
                 //TODO log error
             }
@@ -308,7 +308,7 @@ private void btnSelectSmallIconActionPerformed(java.awt.event.ActionEvent evt) {
     
     private Icon readIconFromFile( File iconFile ) {
         try {
-            Image img = ImageIO.read( iconFile.toURL() );
+            Image img = ImageIO.read( iconFile.toURI().toURL() );
             if( null != img ) {
                 ImageIcon res = new ImageIcon( img );
                 if( res.getIconWidth() > 32 || res.getIconHeight() > 32 )  {

@@ -128,8 +128,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
         int i = 0;
         int numColumns = tableColumns.size();
         p.setProperty(propertyPrefix + NUMBER_OF_COLUMNS, Integer.toString(numColumns));
-        for (Iterator it = tableColumns.iterator(); it.hasNext(); ) {
-            Object obj = it.next();
+        for (Object obj : tableColumns) {
             if (obj instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn) obj;
                 etc.writeSettings(p, i++, propertyPrefix);
@@ -138,8 +137,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
         i = 0;
         int numHiddenColumns = hiddenColumns.size();
         p.setProperty(propertyPrefix + NUMBER_OF_HIDDEN_COLUMNS, Integer.toString(numHiddenColumns));
-        for (Iterator it = hiddenColumns.iterator(); it.hasNext(); ) {
-            Object obj = it.next();
+        for (Object obj : hiddenColumns) {
             if (obj instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn) obj;
                 etc.writeSettings(p, i++, propertyPrefix + PROP_HIDDEN_PREFIX);
@@ -390,8 +388,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
      */
     @SuppressWarnings("deprecation")
     public void clearSortedColumns() {
-        for (Iterator it = sortedColumns.iterator(); it.hasNext(); ) {
-            Object o = it.next();
+        for (Object o : sortedColumns) {
             if (o instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn)o;
                 etc.setSorted(0, false);
@@ -406,8 +403,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
     @SuppressWarnings("deprecation")
     void clearSortedColumns(TableColumn notThisOne) {
         boolean wasSorted = sortedColumns.contains(notThisOne);
-        for (Iterator it = sortedColumns.iterator(); it.hasNext(); ) {
-            Object o = it.next();
+        for (Object o : sortedColumns) {
             if ((o instanceof ETableColumn) && (o != notThisOne)) {
                 ETableColumn etc = (ETableColumn)o;
                 etc.setSorted(0, false);
@@ -424,8 +420,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
      */
     private void updateRanks() {
         int i = 1;
-        for (Iterator it = sortedColumns.iterator(); it.hasNext(); i++) {
-            Object o = it.next();
+        for (Object o : sortedColumns) {
             if (o instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn)o;
                 if (etc.isSorted()) {
@@ -464,8 +459,7 @@ public class ETableColumnModel extends DefaultTableColumnModel {
         }
         @Override
         public int compare(RowMapping o1, RowMapping o2) {
-            for (Iterator it = sortedColumns.iterator(); it.hasNext(); ) {
-                Object o = it.next();
+            for (Object o : sortedColumns) {
                 if (o instanceof ETableColumn) {
                     ETableColumn etc = (ETableColumn)o;
                     Comparator<RowMapping> c = etc.getComparator();

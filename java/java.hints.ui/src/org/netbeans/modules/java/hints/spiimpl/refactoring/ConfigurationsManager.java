@@ -19,10 +19,14 @@
 package org.netbeans.modules.java.hints.spiimpl.refactoring;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -75,7 +79,32 @@ public class ConfigurationsManager {
     private void init() {
         Preferences prefs = NbPreferences.forModule(this.getClass());
         try {
-            for (String kid:prefs.childrenNames()) {
+            String[] configList = prefs.childrenNames();
+            //fix sorting for JDK migrators
+            List<String> sl = Arrays.asList(configList);
+            final String exp = "([0-9]+)$"; //NOI18N
+
+            sl.sort(new Comparator<String>() {
+                @Override
+                public int compare(String s1, String s2) {
+                    Pattern pattern = Pattern.compile(exp);
+                    Matcher m1 = pattern.matcher(s1);
+                    if (m1.find()) {
+                        Matcher m2 = pattern.matcher(s2);
+                        if (m2.find()) {
+                            String part_s1 = s1.substring(0, m1.start());
+                            String part_s2 = s2.substring(0, m2.start());
+                            if (part_s1.equals(part_s2)) {
+                                int val1 = Integer.parseInt(m1.group());
+                                int val2 = Integer.parseInt(m2.group());
+                                return val1 - val2;
+                            }
+                        }
+                    }
+                    return s1.compareTo(s2);
+                }
+            });
+            for (String kid : sl.toArray(configList)) {
                 if (kid.startsWith(RULE_PREFIX)) {
                     Preferences p = NbPreferences.forModule(this.getClass()).node(kid);
                     String displayName = p.get("display.name", "unknown");

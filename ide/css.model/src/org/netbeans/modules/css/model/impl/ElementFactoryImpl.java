@@ -140,6 +140,8 @@ public final class ElementFactoryImpl implements ElementFactory {
                 return new MediaFeatureValueI(model, node);
             case "MediaType":
                 return new MediaTypeI(model, node);
+            case "SupportsAtRule":
+                return new PlainElementI(model, node);
             case "Namespaces":
                 return new NamespacesI(model, node);
             case "Namespace":

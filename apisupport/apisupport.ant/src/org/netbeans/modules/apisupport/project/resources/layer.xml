@@ -263,9 +263,11 @@
             </file>
         </folder>
         <folder name="Project">
-            <folder name="APISupport">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.apisupport.project.ui.wizard.Bundle#Templates/Project/APISupport"/>
-                <attr name="position" intvalue="900"/>
+            <folder name="AntJava">
+                <folder name="APISupport">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.apisupport.project.ui.wizard.Bundle#Templates/Project/APISupport"/>
+                    <attr name="position" intvalue="900"/>
+                </folder>
             </folder>
         </folder>
     </folder>

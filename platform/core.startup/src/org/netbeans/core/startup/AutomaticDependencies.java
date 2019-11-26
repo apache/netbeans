@@ -369,9 +369,8 @@ public final class AutomaticDependencies {
          * Is the given code name base excluded from this group of transformations?
          */
         public boolean isExcluded(String cnb) {
-            Iterator it = exclusions.iterator();
-            while (it.hasNext()) {
-                if (((Exclusion)it.next()).matches(cnb)) {
+            for (Exclusion e : exclusions) {
+                if (e.matches(cnb)) {
                     return true;
                 }
             }
@@ -406,10 +405,9 @@ public final class AutomaticDependencies {
                 } else {
                     throw new IllegalStateException(triggerType);
                 }
+
                 // Add in results.
-                Iterator it = results.iterator();
-                while (it.hasNext()) {
-                    Dep nue = (Dep)it.next();
+                for (Dep nue : results) {
                     nue.update(modDeps, tokDeps, pkgDeps, dependencies);
                 }
             }

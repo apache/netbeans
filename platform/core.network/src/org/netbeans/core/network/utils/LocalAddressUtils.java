@@ -521,7 +521,7 @@ public class LocalAddressUtils {
             // (above from VirtualBox source code)
             //
             byte[] macAddress = nif.getHardwareAddress();
-            if (macAddress != null & macAddress.length >= 3) {
+            if (macAddress != null && macAddress.length >= 3) {
                 if ((macAddress[0] == 0x0A || macAddress[0] == 0x08) &&
                         (macAddress[1] == 0x00) &&
                         (macAddress[2] == 0x27)) {                

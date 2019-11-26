@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
+import org.openide.util.BaseUtilities;
 import org.openide.util.lookup.Lookups;
 
 /** Interface to environment that the Module system needs around itself.
@@ -139,25 +139,25 @@ public abstract class CoreBridge {
      * @param provides a collection that may be added to
      */
     public static void defineOsTokens(Collection<? super String> provides) {
-        if (Utilities.isUnix()) {
+        if (BaseUtilities.isUnix()) {
             provides.add("org.openide.modules.os.Unix"); // NOI18N
-            if (!Utilities.isMac()) {
+            if (!BaseUtilities.isMac()) {
                 provides.add("org.openide.modules.os.PlainUnix"); // NOI18N
             }
         }
-        if (Utilities.isWindows()) {
+        if (BaseUtilities.isWindows()) {
             provides.add("org.openide.modules.os.Windows"); // NOI18N
         }
-        if (Utilities.isMac()) {
+        if (BaseUtilities.isMac()) {
             provides.add("org.openide.modules.os.MacOSX"); // NOI18N
         }
-        if ((Utilities.getOperatingSystem() & Utilities.OS_OS2) != 0) {
+        if ((BaseUtilities.getOperatingSystem() & BaseUtilities.OS_OS2) != 0) {
             provides.add("org.openide.modules.os.OS2"); // NOI18N
         }
-        if ((Utilities.getOperatingSystem() & Utilities.OS_LINUX) != 0) {
+        if ((BaseUtilities.getOperatingSystem() & BaseUtilities.OS_LINUX) != 0) {
             provides.add("org.openide.modules.os.Linux"); // NOI18N
         }
-        if ((Utilities.getOperatingSystem() & Utilities.OS_SOLARIS) != 0) {
+        if ((BaseUtilities.getOperatingSystem() & BaseUtilities.OS_SOLARIS) != 0) {
             provides.add("org.openide.modules.os.Solaris"); // NOI18N
         }
         

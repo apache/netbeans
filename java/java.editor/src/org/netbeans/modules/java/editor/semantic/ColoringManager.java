@@ -85,6 +85,7 @@ public final class ColoringManager {
         put("mod-unused", UNUSED);
         put("mod-keyword", KEYWORD);
         put("javadoc-identifier", JAVADOC_IDENTIFIER);
+        put("mod-unindented-text-block", UNINDENTED_TEXT_BLOCK);
     }
     
     private static void put(String coloring, ColoringAttributes... attributes) {

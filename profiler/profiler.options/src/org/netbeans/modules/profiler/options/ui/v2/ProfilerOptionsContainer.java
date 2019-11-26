@@ -82,7 +82,7 @@ public class ProfilerOptionsContainer extends ProfilerOptionsPanel {
         int sel = categoriesSelection.getLeadSelectionIndex();
         if (sel == -1) sel = 0;
         
-        if (panels == null) panels = new ArrayList();
+        if (panels == null) panels = new ArrayList<ProfilerOptionsPanel>();
         else panels.clear();
         
         panels.addAll(Lookup.getDefault().lookupAll(ProfilerOptionsPanel.class));

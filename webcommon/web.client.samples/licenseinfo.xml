@@ -21,27 +21,7 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>EaselDemo/public_html/rest/resources/id19974892.json</file>
-        <file>EaselDemo/public_html/rest/resources/id19985678.json</file>
-        <file>EaselDemo/public_html/rest/resources/id19986196.json</file>
-        <file>EaselDemo/public_html/rest/resources/id19986982.json</file>
-        <file>EaselDemo/public_html/rest/resources/manufacturer.json</file>
         <file>src/org/netbeans/modules/web/client/samples/resources/HTML5_project_icon.png</file>
-        <file>EaselDemo/public_html/css/images/icons-18-white.png</file>
-        <file>EaselDemo/public_html/css/images/close_pop.png</file>
-        <file>EaselDemo/public_html/css/images/icons-18-black.png</file>
-        <file>EaselDemo/public_html/css/images/ajax-loader.png</file>
-        <file>EaselDemo/public_html/css/images/icons-36-black.png</file>
-        <file>EaselDemo/public_html/css/images/icons-36-white.png</file>
-        <file>EaselDemo/public_html/img/cute_rabbit2.jpg</file>
-        <file>EaselDemo/public_html/img/glyphicons-halflings.png</file>
-        <file>EaselDemo/public_html/img/rabbit2.jpg</file>
-        <file>EaselDemo/public_html/img/rabbit1.jpg</file>
-        <file>EaselDemo/public_html/img/kitten1.jpg</file>
-        <file>EaselDemo/public_html/img/rabbit3.jpg</file>
-        <file>EaselDemo/public_html/img/cute_rabbit1.jpg</file>
-        <file>EaselDemo/public_html/img/glyphicons-halflings-white.png</file>
-        <file>EaselDemo/public_html/img/cute_rabbit3.jpg</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

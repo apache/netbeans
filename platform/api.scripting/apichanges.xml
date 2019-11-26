@@ -30,6 +30,24 @@
     </apidefs>
 
   <changes>
+      <change id="builder">
+          <api name="scripting_api"/>
+          <summary>
+              Scripting is now a builder!
+          </summary>
+          <version major="1" minor="2"/>
+          <date day="1" month="6" year="2019"/>
+          <author login="jtulach"/>
+          <compatibility binary="compatible" source="compatible" addition="yes"/>
+          <description>
+              Use
+              <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting.newBuilder().build()</a>
+              to obtain enhanced and secured version of 
+              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
+          </description>
+          <class package="org.netbeans.api.scripting" name="Scripting"/>
+          <class package="org.netbeans.spi.scripting" name="EngineProvider"/>
+      </change>
       <change id="initial.version">
           <api name="scripting_api"/>
           <summary>

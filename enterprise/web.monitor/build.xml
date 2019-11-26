@@ -27,7 +27,7 @@
 
     <target name="compile-server" depends="init,compile">
         <mkdir dir="build/server-classes"/>
-        <javac srcdir="serversrc" destdir="build/server-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.4" includeantruntime="false">
+        <javac srcdir="serversrc" destdir="build/server-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" includeantruntime="false">
             <classpath>
                 <path path="${server.cp.extra}:build/classes"/>
             </classpath>

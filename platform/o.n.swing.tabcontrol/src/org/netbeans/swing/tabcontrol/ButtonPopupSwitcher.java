@@ -186,7 +186,9 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     @Override
     public void valueChanged( ListSelectionEvent e ) {
         SwitcherTableItem item = pTable.getSelectedItem();
-        StatusDisplayer.getDefault().setStatusText( null == item ? null : item.getDescription() );
+        if (item != null) {
+            StatusDisplayer.getDefault().setStatusText( item.getDescription() );
+        }
     }
     
     @Override

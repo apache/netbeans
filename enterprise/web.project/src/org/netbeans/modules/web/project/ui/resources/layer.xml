@@ -23,7 +23,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
-
+            <folder name="AntJava">
             <folder name="Web">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.project.ui.wizards.Bundle"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/project/ui/resources/web.html"/>
@@ -48,6 +48,7 @@
                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/web/project/ui/resources/webProjectIcon.gif"/>
                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/project/ui/resources/web-importProject.html"/>
                 </file>
+            </folder>
             </folder>
         </folder>
     </folder>

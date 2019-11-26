@@ -33,6 +33,7 @@ import org.netbeans.modules.java.api.common.util.CommonProjectUtils;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.openide.util.WeakListeners;
@@ -107,7 +108,7 @@ public abstract class AbstractBootPathImpl implements ClassPathImplementation, P
 
     @Override 
     public void propertyChange(PropertyChangeEvent evt) {
-        String newVal = project.getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+        String newVal = project.getHintJavaPlatform();
         if (evt.getSource() == platformManager && 
                 JavaPlatformManager.PROP_INSTALLED_PLATFORMS.equals(evt.getPropertyName()) 
                 && lastHintValue != null) {
@@ -150,7 +151,7 @@ public abstract class AbstractBootPathImpl implements ClassPathImplementation, P
             }
             //TODO ideally we would handle this by toolchains in future.
             //only use the default auximpl otherwise we get recursive calls problems.
-            String val = project.getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+            String val = project.getHintJavaPlatform();
             JavaPlatform plat = getActivePlatform(val);
             if (plat == null) {
                 //TODO report how?

@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.docker.api;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Petr Hejl
  */
-public final class DockerImage implements DockerEntity {
+public final class DockerImage implements DockerInstanceEntity {
 
     private final DockerInstance instance;
 
@@ -64,6 +61,7 @@ public final class DockerImage implements DockerEntity {
         }
     }
 
+    @Override
     public DockerInstance getInstance() {
         return instance;
     }
@@ -126,6 +124,11 @@ public final class DockerImage implements DockerEntity {
     @Override
     public String toString() {
         return "DockerImage{" + "instance=" + instance + ", id=" + id + '}';
+    }
+
+    @Override
+    public DockerEntityType getType() {
+        return DockerEntityType.Container;
     }
 
 }

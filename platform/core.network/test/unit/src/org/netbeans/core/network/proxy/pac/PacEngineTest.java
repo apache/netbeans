@@ -71,6 +71,7 @@ public class PacEngineTest extends NbTestCase {
         testPacFile("pac-test2.js", factory, 3, true);
         testPacFile("pac-test3.js", factory, 1, false);
         testPacFileMalicious("pac-test-sandbox-breakout.js", factory);
+        testPacFileMalicious("pac-test-getclass.js", factory);
 
         testPacFile2("pac-test4.js", factory);
     }

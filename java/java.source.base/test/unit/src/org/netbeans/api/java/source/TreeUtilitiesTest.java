@@ -26,6 +26,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -121,6 +122,27 @@ public class TreeUtilitiesTest extends NbTestCase {
         tp = new TreePath(tp, bt.getStatements().get(0));
         
         assertFalse(info.getTreeUtilities().isSynthetic(tp));
+    }
+
+    public void testIsSyntheticNewClassExtends() throws Exception {
+        prepareTest("Test", "package test; import java.util.*; public class Test { void t() { new ArrayList<String>() { private int i; }; } }");
+
+        TreePath tp = info.getTreeUtilities().pathFor(67);
+        NewClassTree nct = (NewClassTree) tp.getLeaf();
+
+        assertTrue(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getExtendsClause())));
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getMembers().get(1))));
+        assertFalse(info.getTreeUtilities().isSynthetic(new TreePath(tp, nct.getIdentifier())));
+    }
+
+    public void testIsSyntheticNewClassImplements() throws Exception {
+        prepareTest("Test", "package test; import java.io.*; public class Test { void t() { new Serializable() { }; } }");
+
+        TreePath tp = info.getTreeUtilities().pathFor(65);
+        NewClassTree nct = (NewClassTree) tp.getLeaf();
+        TreePath toTest = new TreePath(new TreePath(tp, nct.getClassBody()), nct.getClassBody().getImplementsClause().get(0));
+
+        assertTrue(info.getTreeUtilities().isSynthetic(toTest));
     }
 
     public void testFindNameSpan1() throws Exception {

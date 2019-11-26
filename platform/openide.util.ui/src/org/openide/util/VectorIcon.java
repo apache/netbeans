@@ -178,7 +178,7 @@ public abstract class VectorIcon implements Icon, Serializable {
      * Paint the icon at the given width and height. The dimensions given are the device pixels onto
      * which the icon must be drawn after it has been scaled up from its originally constant logical
      * dimensions and aligned onto the device pixel grid. Painting onto the supplied
-     * {@code Graphics2D} instance using whole number coordinates (for horizontal and veritcal
+     * {@code Graphics2D} instance using whole number coordinates (for horizontal and vertical
      * lines) will encourage sharp and well-aligned icons.
      *
      * <p>The icon should be painted with its upper left-hand corner at position (0, 0). Icons need

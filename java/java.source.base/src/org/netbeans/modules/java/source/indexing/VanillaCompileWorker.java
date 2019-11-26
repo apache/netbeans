@@ -32,7 +32,9 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -40,6 +42,7 @@ import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.CompileStates.CompileState;
 import com.sun.tools.javac.comp.Enter;
@@ -48,7 +51,9 @@ import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -61,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.*;
 import java.util.Map.Entry;
@@ -305,6 +311,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     Modules modules = Modules.instance(jtFin.getContext());
                     compiler.shouldStopPolicyIfError = CompileState.FLOW; 
                     for (Element type : types) {
+                        if (type.asType() == null || type.asType().getKind() == TypeKind.ERROR) {
+                            //likely a duplicate of another class, don't touch:
+                            continue;
+                        }
                         TreePath tp = Trees.instance(jtFin).getPath(type);
                         assert tp != null;
                         log.nerrors = 0;
@@ -462,6 +472,7 @@ final class VanillaCompileWorker extends CompileWorker {
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
         Symtab syms = Symtab.instance(ctx);
         Names names = Names.instance(ctx);
+        Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
@@ -470,6 +481,17 @@ final class VanillaCompileWorker extends CompileWorker {
                 JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
                 if ((decl.mods.flags & Flags.ENUM) == 0) {
                     decl.init = null;
+                } else {
+                    MethodSymbol constructor = (MethodSymbol) decl.type.tsym.members().findFirst(names.init);
+                    ListBuffer<JCExpression> args = new ListBuffer<>();
+                    for (VarSymbol param : constructor.params) {
+                        args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
+                    }
+                    JCNewClass nct = (JCNewClass) decl.init;
+                    nct.args = args.toList();
+                    nct.constructor = constructor;
+                    nct.constructorType = constructor.type;
+                    nct.def = null;
                 }
                 decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
@@ -492,6 +514,8 @@ final class VanillaCompileWorker extends CompileWorker {
                             s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
                     ).iterator().next();
                     decl.body = make.Block(0, com.sun.tools.javac.util.List.of(make.Throw(nct)));
+                } else {
+                    decl.body = null;
                 }
                 Type.MethodType mt;
                 if (msym.type.hasTag(TypeTag.FORALL)) {
@@ -518,6 +542,10 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitClass(ClassTree node, Void p) {
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
+                if (csym.asType() == null || csym.asType().getKind() == TypeKind.ERROR) {
+                    //likely a duplicate of another class, don't touch:
+                    return null;
+                }
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
                 ct.allparams_field = error2Object(ct.allparams_field);
@@ -581,12 +609,31 @@ final class VanillaCompileWorker extends CompileWorker {
                         Type.WildcardType wt = ((Type.WildcardType) t);
                         wt.type = error2Object(wt.type);
                         TypeVar tv = wt.bound;
-                        tv.bound = error2Object(tv.bound);
-                        tv.lower = error2Object(tv.lower);
+                        if (tv != null) {
+                            clearTypeVar(tv);
+                        }
+                        break;
+                    }
+                    case TYPEVAR: {
+                        clearTypeVar((Type.TypeVar) t);
                         break;
                     }
                 }
                 return t;
+            }
+
+            private void clearTypeVar(Type.TypeVar tv) {
+                String[] boundNames = {"bound", "_bound"};
+                for (String boundName : boundNames) {
+                    try {
+                        Field bound = tv.getClass().getDeclaredField(boundName);
+                        bound.setAccessible(true);
+                        bound.set(tv, error2Object((Type) bound.get(tv)));
+                    } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+                        JavaIndex.LOG.log(Level.FINEST, null, ex);
+                    }
+                }
+                tv.lower = error2Object(tv.lower);
             }
 
             private com.sun.tools.javac.util.List<Type> error2Object(com.sun.tools.javac.util.List<Type> types) {

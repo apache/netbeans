@@ -51,7 +51,7 @@ public class DataSourceBeanDataNode extends BaseResourceNode implements java.bea
         
         key.addPropertyChangeListener(this);
         
-        Class clazz = key.getClass ();
+        Class<?> clazz = key.getClass ();
         try{
             createProperties(key, Utilities.getBeanInfo(clazz));
         } catch (Exception e){

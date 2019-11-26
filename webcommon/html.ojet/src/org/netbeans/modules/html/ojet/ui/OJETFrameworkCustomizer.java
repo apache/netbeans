@@ -46,7 +46,12 @@ public class OJETFrameworkCustomizer implements ProjectCustomizer.CompositeCateg
                 projectType = FrameworksUtils.MAVEN_PROJECT,
                 category = FrameworksUtils.CATEGORY,
                 position = 261
-        )
+        ),
+        @ProjectCustomizer.CompositeCategoryProvider.Registration(
+                projectType = FrameworksUtils.GRADLE_PROJECT,
+                category = FrameworksUtils.CATEGORY,
+                position = 261
+        ),
     })
 
     public static OJETFrameworkCustomizer createCustomizer() {

@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.NodeChangeEvent;
 import java.util.prefs.NodeChangeListener;
@@ -129,12 +128,12 @@ public final class DockerSupport {
     }
 
     public boolean isSocketSupported() {
-        return false;
-//        if (BaseUtilities.getOperatingSystem() != BaseUtilities.OS_LINUX) {
-//            return false;
-//        }
-//        String arch = System.getProperty("os.arch"); // NOI18N
-//        return arch != null && (arch.contains("x86") || arch.contains("amd64")); // NOI18N
+        if (BaseUtilities.getOperatingSystem() != BaseUtilities.OS_LINUX
+                && BaseUtilities.getOperatingSystem() != BaseUtilities.OS_MAC) {
+            return false;
+        }
+        String arch = System.getProperty("os.arch"); // NOI18N
+        return arch != null && (arch.contains("x86") || arch.contains("amd64")); // NOI18N
     }
 
     private boolean isInitialized() {

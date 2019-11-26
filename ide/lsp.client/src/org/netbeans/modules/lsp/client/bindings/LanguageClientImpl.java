@@ -40,7 +40,9 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
+import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.ConfigurationItem;
@@ -56,6 +58,7 @@ import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
@@ -88,8 +91,8 @@ public class LanguageClientImpl implements LanguageClient {
     public void setBindings(LSPBindings bindings) {
         this.bindings = bindings;
         ServerCapabilities serverCapabilities = bindings.getInitResult().getCapabilities();
-        Boolean codeActions = serverCapabilities.getCodeActionProvider();
-        allowCodeActions = codeActions != null && codeActions;
+        Either<Boolean, CodeActionOptions> codeActions = serverCapabilities.getCodeActionProvider();
+        allowCodeActions = codeActions != null && (!codeActions.isLeft() || codeActions.getLeft());
     }
 
     @Override
@@ -121,39 +124,12 @@ public class LanguageClientImpl implements LanguageClient {
         severityMap.put(DiagnosticSeverity.Error, Severity.ERROR);
         severityMap.put(DiagnosticSeverity.Hint, Severity.HINT);
         severityMap.put(DiagnosticSeverity.Information, Severity.HINT);
-        severityMap.put(DiagnosticSeverity.Warning, Severity.HINT);
+        severityMap.put(DiagnosticSeverity.Warning, Severity.WARNING);
     }
 
     @Override
     public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
-        WorkspaceEdit edit = params.getEdit();
-        for (Entry<String, List<TextEdit>> e : edit.getChanges().entrySet()) {
-            try {
-                FileObject file = URLMapper.findFileObject(new URI(e.getKey()).toURL());
-                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-                Document doc = ec != null ? ec.openDocument() : null;
-                if (doc == null) {
-                    continue;
-                }
-                NbDocument.runAtomic((StyledDocument) doc, () -> {
-                    e.getValue()
-                     .stream()
-                     .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
-                     .forEach(te -> {
-                        try {
-                            int start = Utils.getOffset(doc, te.getRange().getStart());
-                            int end = Utils.getOffset(doc, te.getRange().getEnd());
-                            doc.remove(start, end - start);
-                            doc.insertString(start, te.getNewText(), null);
-                        } catch (BadLocationException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                     });
-                });
-            } catch (URISyntaxException | IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
+        Utils.applyWorkspaceEdit(params.getEdit());
         return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(true));
     }
 
@@ -221,7 +197,7 @@ public class LanguageClientImpl implements LanguageClient {
                 computing = true;
                 bindings.runOnBackground(() -> {
                     try {
-                        List<? extends Command> commands =
+                        List<Either<Command, CodeAction>> commands =
                                 bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
                                         diagnostic.getRange(),
                                         new CodeActionContext(Collections.singletonList(diagnostic)))).get();
@@ -250,25 +226,20 @@ public class LanguageClientImpl implements LanguageClient {
 
         private class CommandBasedFix implements Fix {
 
-            private final Command cmd;
+            private final Either<Command, CodeAction> cmd;
 
-            public CommandBasedFix(Command cmd) {
+            public CommandBasedFix(Either<Command, CodeAction> cmd) {
                 this.cmd = cmd;
             }
 
             @Override
             public String getText() {
-                return cmd.getTitle();
+                return cmd.isLeft() ? cmd.getLeft().getTitle() : cmd.getRight().getTitle();
             }
 
             @Override
             public ChangeInfo implement() throws Exception {
-                try {
-                    bindings.getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd.getCommand(), cmd.getArguments())).get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                
+                Utils.applyCodeAction(bindings, cmd);
                 return null;
             }
         }

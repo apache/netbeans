@@ -52,6 +52,24 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="BinaryForSourceQueryImplementation2">
+        <api name="classpath"/>
+        <summary>Prefer binaries over sources when parsing</summary>
+        <version major="1" minor="58"/>
+        <date day="14" month="2" year="2019"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" modification="no" semantic="compatible" source="compatible" binary="compatible"/>
+        <description>
+            <p>
+                New <code>Result2</code> and new <code>BinaryForSourceQueryImplementation2</code>
+                that allows one to specify that binaries should be used instead
+                of compiling the sources (if the binaries are already compiled and
+                newer).
+            </p>
+        </description>
+        <class package="org.netbeans.api.java.queries" name="BinaryForSourceQuery"/>
+        <class package="org.netbeans.spi.java.queries" name="BinaryForSourceQueryImplementation2"/>
+    </change>
     <change id="MultiplexClassPath">
             <api name="classpath"/>
             <summary>Added a <code>ClassPath</code> switching among several <code>ClassPath</code> instances</summary>

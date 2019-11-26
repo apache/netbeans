@@ -94,6 +94,7 @@
                         <property name="empty.dir" location="${{build.dir}}/empty"/>
                         <mkdir dir="${{empty.dir}}"/>
                         <groovyc>
+                            <xsl:attribute name="javahome">${platform.home}</xsl:attribute>
                             <xsl:attribute name="srcdir">@{srcdir}</xsl:attribute>
                             <xsl:attribute name="sourcepath">@{sourcepath}</xsl:attribute>
                             <xsl:attribute name="destdir">@{destdir}</xsl:attribute>

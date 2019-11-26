@@ -197,7 +197,7 @@ public class FilesystemsAPICompatTest extends NbTestCase {
         Method m = fs.getClass().getMethod("getStatus");
         // is not null otherwise MNFE
         Object status = m.invoke(fs);
-        Class clazz = Class.forName("org.openide.filesystems.FileSystem$Status", true, Lookup.getDefault().lookup(ClassLoader.class));
+        Class<?> clazz = Class.forName("org.openide.filesystems.FileSystem$Status", true, Lookup.getDefault().lookup(ClassLoader.class));
         assertTrue(clazz.isInstance(status));
         
         // check that decorator is working

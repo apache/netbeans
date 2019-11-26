@@ -434,22 +434,18 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, JaxWsRe
     
     WsdlModeler getWsdlModeler() {
         if (getLocalWsdl()!=null) {
-            try {
-                WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFileObject.getURL());
-                if (modeler!=null) {
-                    String packageName = client.getPackageName();
-                    if (packageName!=null && client.isPackageNameForceReplace()) {
-                        // set the package name for the modeler
-                        modeler.setPackageName(packageName);
-                    } else {
-                        modeler.setPackageName(null);
-                    }
-                    modeler.setCatalog(getJAXWSClientSupport().getCatalog());
-                    setBindings(modeler);
-                    return modeler;
+            WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFileObject.toURL());
+            if (modeler!=null) {
+                String packageName = client.getPackageName();
+                if (packageName!=null && client.isPackageNameForceReplace()) {
+                    // set the package name for the modeler
+                    modeler.setPackageName(packageName);
+                } else {
+                    modeler.setPackageName(null);
                 }
-            } catch (FileStateInvalidException ex) {
-                ErrorManager.getDefault().log(ex.getLocalizedMessage());
+                modeler.setCatalog(getJAXWSClientSupport().getCatalog());
+                setBindings(modeler);
+                return modeler;
             }
         } else {
             ErrorManager.getDefault().log(ErrorManager.ERROR, NbBundle.getMessage(JaxWsNode.class,"ERR_missingLocalWsdl"));
@@ -490,11 +486,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, JaxWsRe
         for (int i=0;i<bindingFiles.length;i++) {
             FileObject fo = bindingsFolder.getFileObject(bindingFiles[i]);
             if (fo != null) {
-                try {
-                    list.add(fo.getURL());
-                } catch (FileStateInvalidException ex) {
-                    // if there is problem no bindings will be added
-                }
+                list.add(fo.toURL());
             }
         }
         URL[] bindings = new URL[list.size()];

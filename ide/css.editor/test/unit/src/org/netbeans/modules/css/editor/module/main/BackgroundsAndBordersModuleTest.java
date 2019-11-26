@@ -129,7 +129,7 @@ public class BackgroundsAndBordersModuleTest extends CssModuleTestBase {
         PropertyDefinition pm = Properties.getPropertyDefinition( "border-width");
         ResolvedProperty rp = assertResolve(pm.getGrammarElement(null), "", false);
         
-        assertAlternatives(rp, "thick","thin","inherit","initial","!length","-", "medium", "calc");
+        assertAlternatives(rp, "thick","thin","inherit","initial","!length","-", "medium", "calc", "var");
         
         //ok - so the minus "-" is still in the alternatives (which is correct),
         //but finally filtered out in the code completion result by the "_operator" postfix

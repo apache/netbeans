@@ -44,7 +44,8 @@ import org.openide.filesystems.FileUtil;
  */
 public class VersioningSystemTest extends JellyTestCase {
     
-    private File    propertiesFile;
+    private static final String CONFIG_FILE = "tck.properties";
+    
     private String  versioningSystemClassName;
     private File    rootDir;
     private VersioningSystem testedSystem;
@@ -58,20 +59,24 @@ public class VersioningSystemTest extends JellyTestCase {
     }
     
     public static Test suite() {
-//        NbTestSuite suite = new NbTestSuite();
-//        suite.addTest(new VersioningSystemTest("testOwnership"));
-//        suite.addTest(new VersioningSystemTest("testInterceptor"));
-//        return suite;
-        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration()
+        return NbModuleSuite.emptyConfiguration()
                 .addTest(VersioningSystemTest.class, 
                         "testOwnership",
                         "testInterceptor")
-                .enableModules(".*").clusters(".*"));
+                .enableModules(".*")
+                .clusters(".*")
+                .suite();
+    }
+    
+    @Override
+    public boolean canRun() {
+        return super.canRun() && getConfigFile().exists();
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        propertiesFile = new File(getDataDir(), "tck.properties");
+        File propertiesFile = getConfigFile();
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propertiesFile);
         props.load(fis);
@@ -80,7 +85,7 @@ public class VersioningSystemTest extends JellyTestCase {
 
         testedSystem = VersioningManager.getInstance().getOwner(VCSFileProxy.createFileProxy(rootDir));
         assertNotNull(testedSystem);
-        assertEquals(testedSystem.getClass().getName(), versioningSystemClassName);
+        assertEquals(versioningSystemClassName, testedSystem.getClass().getName());
     }
 
     public void testInterceptor() throws IOException {
@@ -122,5 +127,9 @@ public class VersioningSystemTest extends JellyTestCase {
         for (VCSFileProxy child : children) {
             testOwnershipRecursively(child);
         }
+    }
+    
+    private File getConfigFile() {
+        return new File(getDataDir(), CONFIG_FILE);
     }
 }

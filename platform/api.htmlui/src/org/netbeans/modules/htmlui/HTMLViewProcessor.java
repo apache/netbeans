@@ -22,8 +22,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -41,7 +39,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author jtulach
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
 @ServiceProvider(service = Processor.class)
 public class HTMLViewProcessor extends LayerGeneratingProcessor {
     @Override

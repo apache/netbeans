@@ -21,7 +21,6 @@ package org.netbeans.modules.docker;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,14 +56,17 @@ public class MuxedStreamResult implements StreamResult {
         this.stdErr = new ResultInputStream(true);
     }
 
+    @Override
     public OutputStream getStdIn() {
         return outputStream;
     }
 
+    @Override
     public InputStream getStdOut() {
         return stdOut;
     }
 
+    @Override
     public InputStream getStdErr() {
         return stdErr;
     }

@@ -101,7 +101,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     private static Object[] extraLookupContent = null;
 
-    public static void prepareTest(String[] additionalLayers, Object[] additionalLookupContent) throws IOException, SAXException, PropertyVetoException {
+    public static void prepareTest(String[] additionalLayers, Object... additionalLookupContent) throws IOException, SAXException, PropertyVetoException {
         List<URL> layers = new LinkedList<URL>();
         
         for (int cntr = 0; cntr < additionalLayers.length; cntr++) {

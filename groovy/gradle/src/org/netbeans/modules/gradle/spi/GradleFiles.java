@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.spi;
 
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,7 +43,7 @@ import org.openide.util.Utilities;
 
 /**
  * Collection of notable files used in a Gradle project.
- * 
+ *
  * @author Laszlo Kishalmi
  */
 public final class GradleFiles implements Serializable {
@@ -68,15 +68,20 @@ public final class GradleFiles implements Serializable {
     public static final String WRAPPER_PROPERTIES     = "gradle/wrapper/gradle-wrapper.properties"; //NOI18N
 
     final File projectDir;
+    final boolean knownProject;
     File rootDir;
     File buildScript;
     File parentScript;
     File settingsScript;
-    List<File> propertyFiles;
     File gradlew;
     File wrapperProperties;
 
     public GradleFiles(File dir) {
+        this(dir, false);
+    }
+    
+    public GradleFiles(File dir, boolean knownProject) {
+        this.knownProject = knownProject;
         try {
             dir = dir.getCanonicalFile();
         } catch (IOException ex) {
@@ -86,6 +91,17 @@ public final class GradleFiles implements Serializable {
         rootDir = projectDir;
         searchBuildScripts();
         searchWrapper();
+    }
+
+    private List<File> searchPropertyFiles() {
+        List<File> ret = new ArrayList<>(3);
+        for (Kind kind:Kind.PROPERTIES){
+            File f = getFile(kind);
+            if (f.exists()){
+                ret.add(f);
+            }
+        }
+        return Collections.unmodifiableList(ret);
     }
 
     private void searchBuildScripts() {
@@ -143,7 +159,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public List<File> getPropertyFiles() {
-        return propertyFiles;
+        return searchPropertyFiles();
     }
 
     public File getProjectDir() {
@@ -179,7 +195,7 @@ public final class GradleFiles implements Serializable {
     }
 
     public boolean isProject() {
-        boolean ret = buildScript != null;
+        boolean ret = knownProject || (buildScript != null);
         if (!ret && (settingsScript != null)) {
             ret = SettingsFile.getSubProjects(settingsScript).contains(projectDir);
         }
@@ -344,7 +360,7 @@ public final class GradleFiles implements Serializable {
             }
             return firstGuess;
         }
-        
+
         public static Set<File> getSubProjects(File f) {
             SettingsFile sf = CACHE.get(f);
             if ((sf == null) || (sf.time < f.lastModified())) {

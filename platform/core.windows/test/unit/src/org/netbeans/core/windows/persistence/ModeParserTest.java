@@ -613,7 +613,7 @@ public class ModeParserTest extends NbTestCase {
         assertNotNull("Test parent folder not found. ParentFolder is null.",url);
 
         Set setLocal = new HashSet();
-        ModeParser modeParser = new ModeParser(name,setLocal);
+        ModeParser modeParser = ModeParser.parseFromFileObject(name,setLocal);
         modeParser.setInLocalFolder(true);
         modeParser.setLocalParentFolder(parentFolder);
         

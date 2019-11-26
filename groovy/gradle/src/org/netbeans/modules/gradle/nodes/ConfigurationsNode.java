@@ -290,7 +290,7 @@ public class ConfigurationsNode extends AbstractNode {
             GradleProject gp = project.getGradleProject();
             ArrayList<GradleDependency> ret = new ArrayList<>();
             GradleConfiguration conf = gp.getBaseProject().getConfigurations().get(configuration);
-            // We can get null here ins ome extreme cases, e.g. when the project is being deleted
+            // We can get null here in some extreme cases, e.g. when the project is being deleted
             if (conf != null) {
                 ret.addAll(conf.getUnresolved());
                 ret.addAll(conf.getProjects());
@@ -370,7 +370,7 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         public String getDisplayName() {
-            return module.getName() + ":" + module.getVersion();
+            return module.getVersion().isEmpty() ? module.getName() : module.getName() + ":" + module.getVersion();
         }
 
         @Override

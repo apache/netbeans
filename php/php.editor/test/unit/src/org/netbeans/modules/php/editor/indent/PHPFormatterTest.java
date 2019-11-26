@@ -791,4 +791,41 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/flexibleNowdoc_01.php", options);
     }
 
+    // PHP 7.4
+    public void testNullCoalescingAssignment01() throws Exception {
+        // "??="
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/nullCoalescingAssignment01.php", options);
+    }
+
+    public void testTypedProperties20_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/typedProperties20_01.php", options);
+    }
+
+    public void testSpeadOperatorInArrayExpression_01() throws Exception {
+        // $array = [...$array, 1];
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spreadOperatorInArrayExpression.php", options);
+    }
+
+    public void testSpeadOperatorInArrayExpression_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spreadOperatorInClassConst.php", options);
+    }
+
+    public void testArrowFunctions_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/arrowFunctions01.php", options);
+    }
+
+    public void testArrowFunctions_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/arrowFunctions02.php", options);
+    }
+
+    public void testNetBeans1047() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/netbeans1047.php", options);
+    }
 }

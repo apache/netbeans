@@ -2521,7 +2521,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
     }
 
     private Class getClassByName(String className, org.w3c.dom.Node node) {
-        Class clazz = null;
+        Class<?> clazz = null;
         Throwable t = null;
         try {
             clazz = getClassFromString(className);

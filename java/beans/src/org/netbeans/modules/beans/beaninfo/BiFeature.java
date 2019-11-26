@@ -940,7 +940,7 @@ public abstract class BiFeature implements IconBases, Node.Cookie, Comparable<Bi
                 int index;
                 
                 while( it.hasNext() ) {
-                    String statement = (String) it.next();
+                    String statement = it.next();
                     if ((index = statement.indexOf(creation)) > -1) {
                         this.varName = statement.substring(statement.indexOf("methods[METHOD_") + 15, index - 2); // NOI18N
                         break;

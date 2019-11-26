@@ -367,7 +367,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
 
     private Window createDragWindow( Image dragImage, Rectangle bounds ) {
         Window w = new Window( SwingUtilities.windowForComponent(sourceRow) );
-        w.add(new JLabel(new ImageIcon(dragImage)));
+        w.add(new JLabel(ImageUtilities.image2Icon(dragImage)));
         w.setBounds(bounds);
         w.setVisible(true);
         NativeWindowSystem nws = NativeWindowSystem.getDefault();

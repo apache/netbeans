@@ -55,7 +55,7 @@ public class OJETHtmlExtension extends HtmlExtension {
                 case DATA_BINDING:
                     String prefix = OJETUtils.getPrefix(ojContext, document, offset);
                     Collection<DataItem> data = DataProvider.filterByPrefix(DataProviderImpl.getInstance().getBindingOptions(), prefix);
-                    List<CompletionItem> result = new ArrayList();
+                    List<CompletionItem> result = new ArrayList<CompletionItem>();
                     for (DataItem item : data) {
                         result.add(new OJETCompletionHtmlItem(item, OJETUtils.getPrefixOffset(ojContext, document, offset)));
                     }

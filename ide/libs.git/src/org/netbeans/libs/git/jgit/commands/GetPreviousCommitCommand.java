@@ -59,30 +59,26 @@ public class GetPreviousCommitCommand extends GitCommand {
     @Override
     protected void run () throws GitException {
         Repository repository = getRepository();
-            RevWalk walk = null;
             try {
                 RevCommit rev = Utils.findCommit(repository, revision);
                 if (rev.getParentCount() == 1) {
-                    walk = new RevWalk(repository);
-                    walk.markStart(walk.parseCommit(rev.getParent(0)));
-                    String path = Utils.getRelativePath(repository.getWorkTree(), file);
-                    if (path != null && !path.isEmpty()) {
-                        walk.setTreeFilter(FollowFilter.create(path, repository.getConfig().get(DiffConfig.KEY)));
-                    }
-                    walk.setRevFilter(AndRevFilter.create(new RevFilter[] { new CancelRevFilter(monitor), MaxCountRevFilter.create(1) }));
-                    Iterator<RevCommit> it = walk.iterator();
-                    if (it.hasNext()) {
-                        previousRevision = getClassFactory().createRevisionInfo(new RevWalk(repository).parseCommit(it.next()), repository);
+                    try (RevWalk walk = new RevWalk(repository)) {
+                        walk.markStart(walk.parseCommit(rev.getParent(0)));
+                        String path = Utils.getRelativePath(repository.getWorkTree(), file);
+                        if (path != null && !path.isEmpty()) {
+                            walk.setTreeFilter(FollowFilter.create(path, repository.getConfig().get(DiffConfig.KEY)));
+                        }
+                        walk.setRevFilter(AndRevFilter.create(new RevFilter[]{new CancelRevFilter(monitor), MaxCountRevFilter.create(1)}));
+                        Iterator<RevCommit> it = walk.iterator();
+                        if (it.hasNext()) {
+                            previousRevision = getClassFactory().createRevisionInfo(new RevWalk(repository).parseCommit(it.next()), repository);
+                        }
                     }
                 }
             } catch (MissingObjectException ex) {
                 throw new GitException.MissingObjectException(ex.getObjectId().toString(), GitObjectType.COMMIT);
             } catch (IOException ex) {
                 throw new GitException(ex);
-            } finally {
-                if (walk != null) {
-                    walk.release();
-                }
             }
     }
 

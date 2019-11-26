@@ -39,7 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This is the de-serialization support class for GradleBaseProject.
- * 
+ *
  * @author Laszlo Kishalmi
  */
 @SuppressWarnings("unchecked")
@@ -81,6 +81,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         prj.path = (String) info.get("project_path");
         prj.status = (String) info.get("project_status");
         prj.parentName = (String) info.get("project_parent_name");
+        prj.displayName = (String) info.get("project_display_name");
         prj.description = (String) info.get("project_description");
         prj.group = (String) info.get("project_group");
         prj.buildDir = (File) info.get("project_buildDir");

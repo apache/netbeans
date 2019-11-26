@@ -141,7 +141,37 @@ public class Css3LexerTest extends CslTestBase {
         assertANTLRToken(null ,Css3Lexer.RESOLUTION, lexer.nextToken());
 
     }
-
+    
+    public void testSupportsToken() throws Exception {
+        String source = "@supports ";
+        
+        Lexer lexer = createLexer(source);
+        
+        assertANTLRToken("@supports", Css3Lexer.SUPPORTS_SYM, lexer.nextToken());
+        
+    }
+    
+    public void testSimpleSupportsStatementTokens() throws Exception {
+        String source = "@supports not (text-align: center) {} ";
+        
+        Lexer lexer = createLexer(source);
+        
+        assertANTLRToken("@supports", Css3Lexer.SUPPORTS_SYM, lexer.nextToken());
+        assertANTLRToken(null ,Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("not" ,Css3Lexer.NOT, lexer.nextToken());
+        assertANTLRToken(null ,Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("(" ,Css3Lexer.LPAREN, lexer.nextToken());
+        assertANTLRToken("text-align" ,Css3Lexer.IDENT, lexer.nextToken());
+        assertANTLRToken(":", Css3Lexer.COLON, lexer.nextToken());
+        assertANTLRToken(null ,Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("center" ,Css3Lexer.IDENT, lexer.nextToken());
+        assertANTLRToken(")" ,Css3Lexer.RPAREN, lexer.nextToken());
+        assertANTLRToken(null ,Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("{" ,Css3Lexer.LBRACE, lexer.nextToken());
+        assertANTLRToken("}" ,Css3Lexer.RBRACE, lexer.nextToken());
+        
+    }
+    
     public void testCaseInsensivityOfSomeAtTokens() throws Exception {
         String source = "@FONT-face @charset @CHARSET @charSeT ";
 
@@ -314,6 +344,28 @@ public class Css3LexerTest extends CslTestBase {
         ExtCss3Lexer lexer = createLexer(source);
         
         assertANTLRToken(null, Css3Lexer.NL, lexer.nextToken());
+        assertANTLRToken(null, Css3Lexer.EOF, lexer.nextToken());
+    }
+
+
+    public void testVariableLexing() {
+        ExtCss3Lexer lexer = createLexer("h1{--test: 1em;margin: var(--test);}");
+        assertANTLRToken("h1", Css3Lexer.IDENT, lexer.nextToken());
+        assertANTLRToken("{", Css3Lexer.LBRACE, lexer.nextToken());
+        assertANTLRToken("--test", Css3Lexer.VARIABLE, lexer.nextToken());
+        assertANTLRToken(":", Css3Lexer.COLON, lexer.nextToken());
+        assertANTLRToken(" ", Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("1em", Css3Lexer.EMS, lexer.nextToken());
+        assertANTLRToken(";", Css3Lexer.SEMI, lexer.nextToken());
+        assertANTLRToken("margin", Css3Lexer.IDENT, lexer.nextToken());
+        assertANTLRToken(":", Css3Lexer.COLON, lexer.nextToken());
+        assertANTLRToken(" ", Css3Lexer.WS, lexer.nextToken());
+        assertANTLRToken("var", Css3Lexer.IDENT, lexer.nextToken());
+        assertANTLRToken("(", Css3Lexer.LPAREN, lexer.nextToken());
+        assertANTLRToken("--test", Css3Lexer.VARIABLE, lexer.nextToken());
+        assertANTLRToken(")", Css3Lexer.RPAREN, lexer.nextToken());
+        assertANTLRToken(";", Css3Lexer.SEMI, lexer.nextToken());
+        assertANTLRToken("}", Css3Lexer.RBRACE, lexer.nextToken());
         assertANTLRToken(null, Css3Lexer.EOF, lexer.nextToken());
     }
 

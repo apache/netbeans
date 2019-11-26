@@ -40,7 +40,7 @@ final class RefreshAction extends CookieAction {
             for (int i = 0; i<nodes.length; i++) {
                 String msg = NbBundle.getMessage(RefreshAction.class, "MSG_refreshing", nodes[i].getDisplayName());
                 StatusDisplayer.getDefault().setStatusText(msg);
-                Refreshable cake = (Refreshable) nodes[i].getCookie(Refreshable.class);
+                Refreshable cake = nodes[i].getCookie(Refreshable.class);
                 cake.refresh();
             }
         } finally {

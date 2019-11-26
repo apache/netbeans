@@ -858,7 +858,7 @@ public class ProfilerInterface implements CommonConstants {
                     if(detachStarted) {
                         return;
                     }
-                    Class clazz = allClasses[i];
+                    Class<?> clazz = allClasses[i];
                     loadedClassesArray[i] = new WeakReference(clazz);
                     loadedClassesLoaders[i] = ClassLoaderManager.registerLoader(clazz);
                 }
@@ -1367,7 +1367,7 @@ public class ProfilerInterface implements CommonConstants {
 
             reflectMethods.put(method, null);
 
-            Class clazz = method.getDeclaringClass();
+            Class<?> clazz = method.getDeclaringClass();
             String className = clazz.getName();
             String methodName = method.getName();
             Class[] paramTypes = method.getParameterTypes();
@@ -1486,7 +1486,7 @@ public class ProfilerInterface implements CommonConstants {
         Class[] classesArray = new Class[len];
 
         for (int i = 0; i < len; i++) {
-            Class clazz = getOrdinaryClass(loadedClassesArray[i]);
+            Class<?> clazz = getOrdinaryClass(loadedClassesArray[i]);
             if (clazz == null) {
                 // class was unloaded or has special name
                 continue;
@@ -1497,7 +1497,7 @@ public class ProfilerInterface implements CommonConstants {
             classIndex.put(clazz, new Integer(index));
         }
         for (int i = 0; i < classIndex.size(); i++) {
-            Class clazz = classesArray[i];
+            Class<?> clazz = classesArray[i];
             String name = clazz.getName();
             boolean forceClassFile = (!isLazyInstrType && !isMemoryProfiling) || isRootClass(name);
             loadedClassNames[i] = name;
@@ -1537,7 +1537,7 @@ public class ProfilerInterface implements CommonConstants {
     }
 
     private static Class getOrdinaryClass(WeakReference classRef) {
-        Class clazz = (Class) classRef.get();
+        Class<?> clazz = (Class) classRef.get();
         if (clazz != null) {
             String name = clazz.getName();
 

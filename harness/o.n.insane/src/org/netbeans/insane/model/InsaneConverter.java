@@ -337,16 +337,14 @@ final class InsaneConverter {
         int currentOffset = 4+4+4;
 
         // compute offset of classes
-        for (Iterator it = classInfo.values().iterator(); it.hasNext(); ) {
-            ClassInfo info = (ClassInfo)it.next();
+        for (ClassInfo info : classInfo.values()) {
             currentOffset = info.computeNextOffset(currentOffset);
         }
         
         refsOffset = currentOffset;
         
         // compute offsets of refs
-        for (Iterator it = refInfo.values().iterator(); it.hasNext(); ) {
-            RefInfo info = (RefInfo)it.next();
+        for (RefInfo info : refInfo.values()) {
             currentOffset = info.computeNextOffset(currentOffset);
         }
 
@@ -367,14 +365,12 @@ final class InsaneConverter {
         store.putInt(objsOffset);
         
         // store classes
-        for (Iterator it = classInfo.values().iterator(); it.hasNext(); ) {
-            ClassInfo info = (ClassInfo)it.next();
+        for (ClassInfo info : classInfo.values()) {
             info.storeHeader();
         }
         
         // store refs
-        for (Iterator it = refInfo.values().iterator(); it.hasNext(); ) {
-            RefInfo info = (RefInfo)it.next();
+        for (RefInfo info : refInfo.values()) {
             info.storeHeader();
         }
         

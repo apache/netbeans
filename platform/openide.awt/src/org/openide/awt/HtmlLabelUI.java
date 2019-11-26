@@ -561,7 +561,7 @@ class HtmlLabelUI extends LabelUI {
     public static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = new Integer(1).equals(o) ? Boolean.TRUE : Boolean.FALSE;
+            gtkAA = Integer.valueOf(1).equals(o);
         }
 
         return gtkAA.booleanValue();

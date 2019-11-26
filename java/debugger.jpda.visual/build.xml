@@ -28,7 +28,7 @@
         <mkdir dir="build/remoteclasses"/>
         <nb-javac srcdir="remotesrc" destdir="build/remoteclasses" debug="true"
                   encoding="UTF-8" deprecation="${build.compiler.deprecation}"
-                  optimize="off" source="1.2" target="1.2" includeantruntime="false">
+                  optimize="off" source="${javac.source}" target="${javac.target}" includeantruntime="false">
         </nb-javac>
     </target>
     

@@ -214,6 +214,19 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public void callRFunctionFromJava() throws Exception {
+        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
+        // FastR currently needs access to native libraries:
+        final ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
+        ScriptEngine rEngine = manager.getEngineByMimeType("application/x-r");
+        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
+
+        final Object funcRaw = rEngine.eval("qbinom");
+        BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);
+        assertEquals(4, func.qbinom(0.37, 10, 0.5));
+    }
+    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callRFunctionFromJava
+
+    public void testCallRFunctionFromJavaTheOldWay() throws Exception {
         ScriptEngine rEngine = Scripting.createManager().getEngineByMimeType("application/x-r");
         // FastR currently needs access to native libraries:
         rEngine.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
@@ -222,7 +235,6 @@ public class ScriptingTutorial extends NbTestCase {
         BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);
         assertEquals(4, func.qbinom(0.37, 10, 0.5));
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callRFunctionFromJava
 
     public void testCallJavaScriptFunctionsWithSharedStateFromJava() throws Exception {
         callJavaScriptFunctionsWithSharedStateFromJava();
@@ -516,7 +528,7 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public void accessJavaScriptJSONObjectFromJava() throws Exception {
-        String src = 
+        String src =
             "(function () { \n" +
             "  return function() {\n" +
             "    return [\n" +

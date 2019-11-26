@@ -511,9 +511,12 @@ public class UtilitiesTest extends TestBase {
         assertTrue(result.getKind().name(), result.getKind() == Kind.VARIABLE);
 
         ModifiersTree mods = ((VariableTree) result).getModifiers();
-        String golden = "$mods$,@Deprecated(), [public]";
+        String golden1 = "$mods$,@Deprecated(), [public]";
+        String golden2 = "$mods$,@Deprecated, [public]";
+        String actual = mods.getAnnotations().toString() + ", " + mods.getFlags().toString();
         
-        assertEquals(golden.replaceAll("[ \n\r]+", " "), mods.getAnnotations().toString() + ", " + mods.getFlags().toString());
+        if (!golden1.equals(actual) && !golden2.equals(actual))
+            assertEquals(golden1, actual);
     }
     
     public void testBrokenPlatform226678() throws Exception {

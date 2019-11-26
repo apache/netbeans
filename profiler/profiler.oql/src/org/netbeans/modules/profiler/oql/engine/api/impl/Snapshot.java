@@ -199,7 +199,7 @@ public class Snapshot {
 
             @Override
             protected Iterator<JavaClass> getTraversingIterator(JavaClass popped) {
-                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.EMPTY_LIST.iterator();
+                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.<JavaClass>emptyList().iterator();
             }
         };
     }
@@ -280,7 +280,7 @@ public class Snapshot {
 
         List finalizables = new ArrayList();
         if (headFld != null) {
-            Instance head = (Instance) headFld.getInstance();
+            Instance head = headFld.getInstance();
             while (true) {
                 ObjectFieldValue referentFld = (ObjectFieldValue) head.getValueOfField("referent"); // NOI18N
                 ObjectFieldValue nextFld = (ObjectFieldValue) head.getValueOfField("next"); // NOI18N
@@ -288,7 +288,7 @@ public class Snapshot {
                 if (nextFld == null || nextFld.getInstance().equals(head)) {
                     break;
                 }
-                head = (Instance) nextFld.getInstance();
+                head = nextFld.getInstance();
                 finalizables.add(referentFld.getInstance());
             }
         }

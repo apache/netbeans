@@ -180,12 +180,8 @@ public class GoToSupport {
                 return ;
             }
             
-            final int[] offsetToOpen = new int[] {-1};
-            final ElementHandle[] elementToOpen = new ElementHandle[1];
-            final String[] displayNameForError = new String[1];
-            final boolean[] tryToOpen = new boolean[1];
-            final ClasspathInfo[] cpInfo = new ClasspathInfo[1];
-            
+            GoToTarget[] target = new GoToTarget[1];
+
             ParserManager.parse(Collections.singleton (Source.create(doc)), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
@@ -197,12 +193,11 @@ public class GoToSupport {
                     if (controller == null || controller.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                         return;
                     }
-                    cpInfo[0] = controller.getClasspathInfo();
 
                     Context resolved = resolveContext(controller, doc, offset, goToSource, false);
 
                     if (resolved == null) {
-                        CALLER.beep(goToSource, javadoc);
+                        target[0] = new GoToTarget(-1, null, null, null, false);
                         return;
                     }
                     
@@ -211,53 +206,34 @@ public class GoToSupport {
                         if (url != null) {
                             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
                         } else {
-                            CALLER.beep(goToSource, javadoc);
+                            target[0] = new GoToTarget(-1, null, null, null, false);
                         }
                     } else {
-                        TreePath elpath = getPath(controller, resolved.resolved);
-                        
-                        if (elpath != null) {
-                            Tree tree = elpath.getLeaf();
-                            long startPos = controller.getTrees().getSourcePositions().getStartPosition(controller.getCompilationUnit(), tree);
-                            
-                            if (startPos != (-1)) {
-                                //check if the caret is inside the declaration itself, as jump in this case is not very usefull:
-                                if (isCaretInsideDeclarationName(controller, tree, elpath, offset)) {
-                                    CALLER.beep(goToSource, javadoc);
-                                } else {
-                                    //#71272: it is necessary to translate the offset:
-                                    offsetToOpen[0] = controller.getSnapshot().getOriginalOffset((int) startPos);
-                                    displayNameForError[0] = controller.getElementUtilities().getElementName(resolved.resolved, false).toString();
-                                    tryToOpen[0] = true;
-                                }
-                            } else {
-                                CALLER.beep(goToSource, javadoc);
-                            }
-                        } else {
-                            elementToOpen[0] = ElementHandle.create(resolved.resolved);
-                            displayNameForError[0] = controller.getElementUtilities().getElementName(resolved.resolved, false).toString();
-                            tryToOpen[0] = true;
-                        }
+                        target[0] = computeGoToTarget(controller, resolved, offset);
                     }
                 }
             });
             
-            if (tryToOpen[0]) {
+            if (target[0] != null) {
                 boolean openSucceeded = false;
 
                 if (cancel.get()) {
                     return ;
                 }
 
-                if (offsetToOpen[0] >= 0) {
-                    openSucceeded = CALLER.open(fo, offsetToOpen[0]);
+                if (!target[0].success)  {
+                    CALLER.beep(goToSource, javadoc);
                 } else {
-                    if (elementToOpen[0] != null) {
-                        openSucceeded = CALLER.open(cpInfo[0], elementToOpen[0]);
+                    if (target[0].offsetToOpen >= 0) {
+                        openSucceeded = CALLER.open(fo, target[0].offsetToOpen);
+                    } else {
+                        if (target[0].elementToOpen != null) {
+                            openSucceeded = CALLER.open(target[0].cpInfo, target[0].elementToOpen);
+                        }
                     }
-                }
-                if (!openSucceeded) {
-                    CALLER.warnCannotOpen(displayNameForError[0]);
+                    if (!openSucceeded) {
+                        CALLER.warnCannotOpen(target[0].displayNameForError);
+                    }
                 }
             }
         } catch (ParseException ex) {
@@ -265,6 +241,54 @@ public class GoToSupport {
         }
     }
     
+    public static GoToTarget computeGoToTarget(CompilationController controller, Context resolved, int offset) {
+        TreePath elpath = getPath(controller, resolved.resolved);
+
+        if (elpath != null) {
+            Tree tree = elpath.getLeaf();
+            long startPos = controller.getTrees().getSourcePositions().getStartPosition(controller.getCompilationUnit(), tree);
+
+            if (startPos != (-1)) {
+                //check if the caret is inside the declaration itself, as jump in this case is not very usefull:
+                if (isCaretInsideDeclarationName(controller, tree, elpath, offset)) {
+                    return new GoToTarget(-1, null, null, null, false);
+                } else {
+                    //#71272: it is necessary to translate the offset:
+                    return new GoToTarget(controller.getSnapshot().getOriginalOffset((int) startPos),
+                                          null,
+                                          null,
+                                          controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
+                                          true);
+                }
+            } else {
+                return new GoToTarget(-1, null, null, null, false);
+            }
+        } else {
+            return new GoToTarget(-1,
+                                  controller.getClasspathInfo(),
+                                  ElementHandle.create(resolved.resolved),
+                                  controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
+                                  true);
+        }
+    }
+
+    public static final class GoToTarget {
+        public final int offsetToOpen;
+        public final ClasspathInfo cpInfo;
+        public final ElementHandle elementToOpen;
+        public final String displayNameForError;
+        public final boolean success;
+
+        public GoToTarget(int offsetToOpen, ClasspathInfo cpInfo, ElementHandle elementToOpen, String displayNameForError, boolean success) {
+            this.offsetToOpen = offsetToOpen;
+            this.cpInfo = cpInfo;
+            this.elementToOpen = elementToOpen;
+            this.displayNameForError = displayNameForError;
+            this.success = success;
+        }
+
+    }
+
     public static void goTo(final Document doc, final int offset, final boolean goToSource) {
         performGoTo(doc, offset, goToSource, false);
     }

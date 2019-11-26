@@ -49,7 +49,7 @@ class SimpleInvoker {
         return name;
     }
 
-    private Class clazz = null;
+    private Class<?> clazz = null;
     private Class getTargetClass() throws ClassNotFoundException {
         if (clazz == null) {
             clazz = Class.forName(targetClass);
@@ -72,7 +72,7 @@ class SimpleInvoker {
             if (isDirect) {
                 getTargetMethod().invoke(null, null);
             } else {
-                Class clazz = getTargetClass();
+                Class<?> clazz = getTargetClass();
                 Object o = context.get(clazz);
                 if (o == null) {
                     throw new NullPointerException ("No instance of " + clazz + " in context");

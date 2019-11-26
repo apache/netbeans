@@ -320,7 +320,7 @@ public class PacUtilsDateTime {
      * {@link PacHelperMethodsNetscape#weekdayRange(java.lang.Object...) weekdayRange()}
      * 
      * <p>
-     * Note: In Nashorn, JavaScript function arguments that are not used in the
+     * Note: In some engines, JavaScript function arguments that are not used in the
      * call will have a type of {@code Undefined}.
      *
      * @param objs

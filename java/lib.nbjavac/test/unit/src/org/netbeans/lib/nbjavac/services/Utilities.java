@@ -21,8 +21,7 @@ package org.netbeans.lib.nbjavac.services;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javadoc.main.JavadocClassFinder;
-import com.sun.tools.javadoc.main.Messager;
+import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -50,7 +49,7 @@ public class Utilities {
         assert tool != null;
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
-        Messager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
+        Log.preRegister(context, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null, 
                 fm,
                 null, Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),

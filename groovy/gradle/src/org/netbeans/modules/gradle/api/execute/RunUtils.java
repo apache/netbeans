@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.api.execute;
 
+import java.io.File;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
@@ -46,15 +47,19 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.prefs.Preferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.GradleDistributionManager;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -73,6 +78,7 @@ public final class RunUtils {
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
     private RunUtils() {}
+    private static final Map<RunConfig, GradleExecutor> GRADLE_TASKS = new WeakHashMap<>();
 
     public static FileObject extractFileObjectfromLookup(Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
@@ -95,15 +101,37 @@ public final class RunUtils {
         return files.toArray(new FileObject[files.size()]);
     }
 
+    /**
+     * Executes a Gradle build with the given configuration. It can also take an
+     * initial message, which is printed to the output tab before the actual
+     * execution takes over the output handling.
+     *
+     * @param config the configuration of the Gradle execution
+     * @param initialOutput the initial message to be displayed,
+     *        can be {@code null} for no message.
+     * @return The Gradle Execution task
+     */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
 
         GradleExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
+        GRADLE_TASKS.put(config, exec);
 
         return task;
     }
 
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line.
+     *
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     */
     public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
@@ -123,6 +151,20 @@ public final class RunUtils {
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
         RunConfig ret = new RunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), cmd);
         return ret;
+    }
+
+    /**
+     * Enable plugins to Cancel a currently running Gradle execution.
+     * 
+     * @param config the RunConfig with which the Gradle execution has been started.
+     * @return {@code true} if the current execution was cancelled successfully,
+     *         {@code false} if the execution was already cancelled or it cannot
+     *         be cancelled for some reason.
+     * @since 1.4
+     */
+    public static boolean cancelGradle(RunConfig config) {
+        GradleExecutor exec = GRADLE_TASKS.get(config);
+        return exec != null ? exec.cancel() : false;
     }
 
     private static ExecutorTask executeGradleImpl(String runtimeName, final GradleExecutor exec, String initialOutput) {
@@ -156,6 +198,43 @@ public final class RunUtils {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
         return args != null ? new GradleCommandLine(args) : null;
     }
+
+    public static File evaluateGradleDistribution(Project project, boolean forceCompatibility) {
+        File ret = null;
+
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
+
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+
+        if ((gbp != null) && settings.isWrapperPreferred()) {
+            GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
+            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+                ngv = mgr.defaultToolingVersion();
+            }
+            if ((ngv != null) && ngv.isAvailable()) {
+                ret = ngv.distributionDir();
+            }
+        }
+
+        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
+            File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
+            if (f.isDirectory()) {
+                ret = f;
+            }
+        }
+        if (ret == null) {
+            GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
+            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+                ngv = mgr.defaultToolingVersion();
+            }
+            if ((ngv != null) && ngv.isAvailable()) {
+                ret = ngv.distributionDir();
+            }
+        }
+        return ret;
+    }
+
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);

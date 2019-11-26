@@ -22,6 +22,7 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/profiler/oql/icons/impl/oql.png</file>
+        <file>test/unit/src/org/netbeans/modules/profiler/oql/engine/api/impl/small_heap.bin</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

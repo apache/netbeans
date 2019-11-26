@@ -22,11 +22,9 @@ package org.netbeans.modules.gradle.actions;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,31 +35,26 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.WeakListeners;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_PROJECT_INFO;
-import static org.netbeans.modules.gradle.api.NbGradleProject.PROP_RESOURCES;
 import static org.netbeans.spi.project.ActionProvider.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {
-    ProjectActionMappingProvider.class, WatchedResourceProvider.class
-}, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class ProjectActionMappingProviderImpl implements ProjectActionMappingProvider, WatchedResourceProvider {
+@ProjectServiceProvider(service = ProjectActionMappingProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
+public class ProjectActionMappingProviderImpl implements ProjectActionMappingProvider {
 
     private static final Logger LOG = Logger.getLogger(ProjectActionMappingProviderImpl.class.getName());
     private static final ActionMapping DEFAULT_RUN = new DefaultActionMapping("run", "run"); //NOI18N
     private static final ActionMapping DEFAULT_TEST = new DefaultActionMapping("test", "--rerun-tasks test"); //NOI18N
     private static final ActionMapping DEFAULT_DEBUG = new DefaultActionMapping("debug", "debug"); //NOI18N
     private static final ActionMapping DEFAULT_DEBUG2 = new DefaultActionMapping("debug", "run --debug-jvm"); //NOI18N
-
-    private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
 
     final Project project;
     final PropertyChangeListener pcl;
@@ -77,20 +70,15 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         pcl = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                switch (evt.getPropertyName()) {
-                    case PROP_PROJECT_INFO:
-                        cleanCache();
-                        break;
-                    case PROP_RESOURCES:
-                        if (projectMappingFile.toURI().equals(evt.getNewValue())) {
-                            loadProjectCustomMappings();
-                        }
+                if (PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                    cleanCache();
+                    loadProjectCustomMappings();
                 }
             }
         };
         NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, null));
         File projectDir = FileUtil.toFile(project.getProjectDirectory());
-        projectMappingFile = new File(projectDir, NB_ACTIONS);
+        projectMappingFile = new File(projectDir, GradleFiles.GRADLE_PROPERTIES_NAME);
         loadProjectCustomMappings();
     }
 
@@ -169,19 +157,16 @@ public class ProjectActionMappingProviderImpl implements ProjectActionMappingPro
         projectMappings.clear();
         if (projectMappingFile.canRead()) {
             try (InputStream is = new FileInputStream(projectMappingFile)) {
-                Set<ActionMapping> customMappings = ActionMappingScanner.loadMappings(is);
+                Properties props = new Properties();
+                props.load(is);
+                Set<ActionMapping> customMappings = ActionMappingPropertyReader.loadMappings(props);
                 for (ActionMapping mapping : customMappings) {
                     projectMappings.put(mapping.getName(), mapping);
                 }
-            } catch (IOException | ParserConfigurationException | SAXException ex) {
+            } catch (IOException ex) {
 
             }
         }
-    }
-
-    @Override
-    public Set<File> getWatchedResources() {
-        return Collections.singleton(projectMappingFile);
     }
 
     @Override

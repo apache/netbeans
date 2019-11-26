@@ -1,0 +1,124 @@
+<testresult testFile='nullCoalescingAssignmentOperator_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='819'>
+            <text>$foo</text>
+        </token>
+        <token id='T_EQUAL' start='820' end='821'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='822' end='826'>
+            <text>$foo</text>
+        </token>
+        <token id='T_COALESCE' start='827' end='829'>
+            <text>??</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='830' end='836'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='836' end='837'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='838' end='842'>
+            <text>$bar</text>
+        </token>
+        <token id='T_COALESCE_EQUAL' start='843' end='846'>
+            <text>??=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='847' end='853'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='853' end='854'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='866' end='870'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='871' end='875'>
+            <text>$foo</text>
+        </token>
+        <token id='T_NEKUDA' start='876' end='877'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='878' end='885'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='885' end='886'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='887' end='891'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='892' end='896'>
+            <text>$bar</text>
+        </token>
+        <token id='T_NEKUDA' start='897' end='898'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='899' end='906'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='906' end='907'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='908' end='908'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='908'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='855' end='866' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='855' end='866' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='837'>
+                <Assignment start='815' end='836' operator='EQUAL'>
+                    <Variable start='815' end='819' isDollared='true'>
+                        <Identifier start='816' end='819' name='foo'/>
+                    </Variable>
+                    <ConditionalExpression start='822' end='836'>
+                        <Condition>
+                            <Variable start='822' end='826' isDollared='true'>
+                                <Identifier start='823' end='826' name='foo'/>
+                            </Variable>
+                        </Condition>
+                        <Then>
+                        </Then>
+                        <Else>
+                            <Scalar start='830' end='836' type='STRING' value='"test"'/>
+                        </Else>
+                    </ConditionalExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='838' end='854'>
+                <Assignment start='838' end='853' operator='COALESCE_EQUAL'>
+                    <Variable start='838' end='842' isDollared='true'>
+                        <Identifier start='839' end='842' name='bar'/>
+                    </Variable>
+                    <Scalar start='847' end='853' type='STRING' value='"test"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='866' end='886'>
+                <InfixExpression start='871' end='885' operator='CONCAT'>
+                    <Variable start='871' end='875' isDollared='true'>
+                        <Identifier start='872' end='875' name='foo'/>
+                    </Variable>
+                    <NamespaceName start='878' end='885' isCurrent='false' isGlobal='false'>
+                        <Identifier start='878' end='885' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+            <EchoStatement start='887' end='907'>
+                <InfixExpression start='892' end='906' operator='CONCAT'>
+                    <Variable start='892' end='896' isDollared='true'>
+                        <Identifier start='893' end='896' name='bar'/>
+                    </Variable>
+                    <NamespaceName start='899' end='906' isCurrent='false' isGlobal='false'>
+                        <Identifier start='899' end='906' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -912,9 +912,11 @@ final class ActionProviderSupport {
             ClassPathSupport.createClassPath(new URL[0]),
             ClassPathSupport.createClassPath(new URL[0]));
         final JavaSource js = JavaSource.create(info);
-        js.runWhenScanFinished((final CompilationController controller) -> {
-            runnable.run();
-        }, true);
+        if (js != null) {
+            js.runWhenScanFinished((final CompilationController controller) -> {
+                runnable.run();
+            }, true);
+        }
     }
 
     @CheckForNull

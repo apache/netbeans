@@ -54,13 +54,13 @@ public final class Source {
     private final long hash;
     private String content;
     
-    private Source(String name, URI uri, long hash, StringReference codeRef) {
+    private Source(JPDADebugger jpda, String name, URI uri, long hash, StringReference codeRef) {
         this.name = name;
         this.codeRef = codeRef;
         URL url = null;
         if (uri == null || !"file".equalsIgnoreCase(uri.getScheme())) {
             try {
-                url = SourceFilesCache.getDefault().getSourceFile(name, hash, uri, getContent());
+                url = SourceFilesCache.get(jpda).getSourceFile(name, hash, uri, getContent());
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -135,7 +135,7 @@ public final class Source {
                                        URI uri,
                                        StringReference codeRef) {
         
-        Source src = new Source(name, uri, id, codeRef);
+        Source src = new Source(debugger, name, uri, id, codeRef);
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
             if (dbgSources == null) {

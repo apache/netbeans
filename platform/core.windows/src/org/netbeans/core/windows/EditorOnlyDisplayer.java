@@ -143,6 +143,9 @@ public class EditorOnlyDisplayer {
         JFrame frame = ( JFrame ) WindowManagerImpl.getInstance().getMainWindow();
         frame.setContentPane( originalContentPane );
         originalContentPane = null;
+        frame.invalidate();
+        frame.revalidate();
+        frame.repaint();
         setShowEditorToolbar( originalShowEditorToolbar );
         if( restoreFocus )
             restoreFocus();

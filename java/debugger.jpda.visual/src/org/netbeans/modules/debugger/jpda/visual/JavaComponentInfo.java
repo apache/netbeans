@@ -352,7 +352,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
             //Method getTextMethod = methodsByName.get("getText");    // NOI18N
             if (getTextMethod != null) {
                 try {
-                    Value theText = ObjectReferenceWrapper.invokeMethod(component, getThread().getThreadReference(), getTextMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    Value theText = ObjectReferenceWrapper.invokeMethod(component, getThread().getThreadReference(), getTextMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     if (theText instanceof StringReference) {
                         setComponentText(StringReferenceWrapper.value((StringReference) theText));
                     }
@@ -583,7 +583,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
             Lock l = t.accessLock.writeLock();
             l.lock();
             try {
-                Value v = ObjectReferenceWrapper.invokeMethod(component, tawt, getter, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                Value v = ObjectReferenceWrapper.invokeMethod(component, tawt, getter, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 if (v != null) {
                     typePtr[0] = ValueWrapper.type(v);
                 }
@@ -596,7 +596,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
                     Type t = ValueWrapper.type(v);
                     if (t instanceof ClassType) {
                         Method toStringMethod = ClassTypeWrapper.concreteMethodByName((ClassType) t, "toString", "()Ljava/lang/String;");
-                        v = ObjectReferenceWrapper.invokeMethod((ObjectReference) v, tawt, toStringMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        v = ObjectReferenceWrapper.invokeMethod((ObjectReference) v, tawt, toStringMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         if (v instanceof StringReference) {
                             return StringReferenceWrapper.value((StringReference) v);
                         }

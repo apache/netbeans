@@ -1060,7 +1060,7 @@ public class ElementJavadoc {
         final Elements elements = info.getElements();
         for (TypeMirror iface : type.getInterfaces()) {
             for (ExecutableElement method : ElementFilter.methodsIn(((DeclaredType)iface).asElement().getEnclosedElements())) {
-                if (elements.overrides((ExecutableElement)element, method, (TypeElement)element.getEnclosingElement())) {
+                if (elements.overrides(element, method, (TypeElement)element.getEnclosingElement())) {
                     T ret = funct.apply(method);
                     if (ret != null) {
                         return ret;
@@ -1077,7 +1077,7 @@ public class ElementJavadoc {
         TypeMirror superclass = type.getSuperclass();
         if (superclass.getKind() == TypeKind.DECLARED) {
             for (ExecutableElement method : ElementFilter.methodsIn(((DeclaredType)superclass).asElement().getEnclosedElements())) {
-                if (elements.overrides((ExecutableElement)element, method, (TypeElement)element.getEnclosingElement())) {
+                if (elements.overrides(element, method, (TypeElement)element.getEnclosingElement())) {
                     T ret = funct.apply(method);
                     if (ret != null) {
                         return ret;

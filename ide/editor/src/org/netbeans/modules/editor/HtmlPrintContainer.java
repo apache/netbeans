@@ -75,6 +75,9 @@ public class HtmlPrintContainer implements PrintContainer {
     private static final String ESC_AMP = "&amp;";      //NOI18N
     private static final String ESC_QUOT = "&quot;";    //NOI18N
     private static final String ESC_APOS = "&#39;"; // IZ #74203 "&apos;";    //NOI18N
+    private static final String FF_SANSSERIF = "sans-serif"; //NOI18N
+    private static final String FF_SERIF = "serif";          //NOI18N
+    private static final String FF_MONOSPACE = "monospace";  //NOI18N
     private static final char   ZERO    = '0';          //NOI18N
     private static final char   DOT = '.';              //NOI18N
     private static final String STYLE_PREFIX = "ST";    //NOI18N
@@ -98,7 +101,7 @@ public class HtmlPrintContainer implements PrintContainer {
     public final void begin (FileObject fo, Font font, Color fgColor, Color bgColor, Color hfgColor, Color hbgColor, Class kitClass, String charset) {
         begin(fo, font, fgColor, bgColor, hfgColor, hbgColor, MimePath.parse(BaseKit.getKit(kitClass).getContentType()), charset);
     }
-    
+
     /* package */ final void begin (FileObject fo, Font font, Color fgColor, Color bgColor, Color hfgColor, Color hbgColor, MimePath mimePath, String charset) {
         styles = new Styles ();
         buffer = new StringBuffer();
@@ -113,7 +116,7 @@ public class HtmlPrintContainer implements PrintContainer {
         this.syntaxColoring = ColoringMap.get(mimePath.getPath()).getMap();
         this.charset = charset;
     }
-    
+
     public void addLines(List<AttributedCharacterIterator> lines) {
         for (int i = 0; i < lines.size(); i++) {
             AttributedCharacterIterator line = lines.get(i);
@@ -314,7 +317,25 @@ public class HtmlPrintContainer implements PrintContainer {
                 sb.append (ST_SEPARATOR);
             }
             sb.append (ST_FONT_FAMILY);
-            sb.append (font.getFamily());   //TODO: Locale should go here
+            switch(font.getFamily()) {
+                case Font.MONOSPACED:
+                    sb.append (FF_MONOSPACE);
+                    break;
+                case Font.SERIF:
+                    sb.append (FF_SERIF);
+                    break;
+                case Font.SANS_SERIF:
+                    sb.append (FF_SANSSERIF);
+                    break;
+                case Font.DIALOG:
+                    sb.append (FF_SANSSERIF);
+                    break;
+                case Font.DIALOG_INPUT:
+                    sb.append (FF_MONOSPACE);
+                    break;
+                default:
+                    sb.append (font.getFamily()); //TODO: Locale should go here
+            }
             if (font.isBold()) {
                 sb.append (ST_SEPARATOR);
                 sb.append (ST_BOLD);
@@ -329,7 +350,7 @@ public class HtmlPrintContainer implements PrintContainer {
                 sb.append (ST_SIZE);
                 sb.append (String.valueOf(font.getSize()));
             }
-            
+
         }
         sb.append (ST_END);
         return sb.toString();
@@ -372,10 +393,10 @@ public class HtmlPrintContainer implements PrintContainer {
             if (coloringForeColor == null) coloringForeColor = getDefaultColor();
             Color coloringBackColor = coloring.getBackColor();
             if (coloringBackColor == null) coloringBackColor = getDefaultBackgroundColor();
-            
+
             return f.equals(coloringFont) && fc.equals(coloringForeColor) && bc.equals(coloringBackColor);
         }
-        
+
         public final String getStyleId (Font f, Color fc, Color bc) {
             if (!fc.equals(getDefaultColor()) || !bc.equals(getDefaultBackgroundColor()) || !f.equals(getDefaultFont())) {
                 StyleDescriptor sd = new StyleDescriptor (f, fc, bc);
@@ -390,7 +411,7 @@ public class HtmlPrintContainer implements PrintContainer {
                             break;
                         }
                     }
-                    
+
                     if (id == null){
                         id = STYLE_PREFIX + this.sequence++;
                     }

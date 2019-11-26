@@ -47,7 +47,6 @@ import org.netbeans.modules.db.dataview.api.DataViewPageContext;
 import org.netbeans.modules.db.sql.execute.SQLExecuteHelper;
 import org.netbeans.modules.db.sql.execute.SQLExecutionResult;
 import org.netbeans.modules.db.sql.execute.SQLExecutionResults;
-import org.netbeans.modules.db.sql.execute.StatementInfo;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
@@ -60,7 +59,6 @@ import org.openide.nodes.Node.Cookie;
 import org.openide.text.CloneableEditor;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.text.DataEditorSupport;
-import org.openide.text.Line;
 import org.openide.util.*;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.CloneableOpenSupport;
@@ -91,16 +89,17 @@ public class SQLEditorSupport extends DataEditorSupport
     private final RequestProcessor rp = new RequestProcessor("SQLExecution", 1, true); // NOI18N
     
     // the database connection to execute against
-    private DatabaseConnection dbconn;
+    private volatile DatabaseConnection dbconn;
     
     // whether we are executing statements
-    private boolean executing;
+    private volatile boolean executing;
     
     // execution results. Not synchronized since accessed only from rp of throughput 1.
     private SQLExecutionResults executionResults;
     
     // execution logger
     private SQLExecutionLoggerImpl logger;
+    private final Object loggerLock = new Object();
     
     /** 
      * SaveCookie for this support instance. The cookie is adding/removing 
@@ -305,15 +304,12 @@ public class SQLEditorSupport extends DataEditorSupport
         sqlPropChangeSupport.removePropertyChangeListener(listener);
     }
     
-    synchronized DatabaseConnection getActiveDatabaseConnection() {
-        return dbconn;
-    }
-    
     @Override
-    public synchronized void setDatabaseConnection(DatabaseConnection dbconn) {
+    public void setDatabaseConnection(DatabaseConnection dbconn) {
+        DatabaseConnection oldCon = this.dbconn;
         this.dbconn = dbconn;
         sqlPropChangeSupport.firePropertyChange(
-                SQLExecution.PROP_DATABASE_CONNECTION, null, null);
+                SQLExecution.PROP_DATABASE_CONNECTION, oldCon, dbconn);
         updateTitles();
     }
     
@@ -372,10 +368,7 @@ public class SQLEditorSupport extends DataEditorSupport
      * have to be delimited by \n.
      */
     void execute(String sql, int startOffset, int endOffset, SQLCloneableEditor editor) {
-        DatabaseConnection conn;
-        synchronized (this) {
-            conn = this.dbconn;
-        }
+        DatabaseConnection conn = this.dbconn;
         if (conn == null) {
             return;
         }
@@ -394,13 +387,14 @@ public class SQLEditorSupport extends DataEditorSupport
         }
     }
     
-    synchronized boolean isExecuting() {
+    boolean isExecuting() {
         return executing;
     }
     
-    private synchronized void setExecuting(boolean executing) {
+    private void setExecuting(boolean executing) {
+        boolean oldExecuting = this.executing;
         this.executing = executing;
-        sqlPropChangeSupport.firePropertyChange(SQLExecution.PROP_EXECUTING, null, null);
+        sqlPropChangeSupport.firePropertyChange(SQLExecution.PROP_EXECUTING, oldExecuting, this.executing);
     }
     
     private void setResultsToEditors(final SQLExecutionResults results, final SQLCloneableEditor editor) {
@@ -472,24 +466,25 @@ public class SQLEditorSupport extends DataEditorSupport
     }
     
     private SQLExecutionLoggerImpl createLogger() {
-        closeLogger();
-        
-        String loggerDisplayName;
-        if (isConsole()) {
-            loggerDisplayName = getDataObject().getName();
-        } else {
-            loggerDisplayName = getDataObject().getNodeDelegate().getDisplayName();
+        synchronized (loggerLock) {
+            closeLogger();
+
+            String loggerDisplayName;
+            if (isConsole()) {
+                loggerDisplayName = getDataObject().getName();
+            } else {
+                loggerDisplayName = getDataObject().getNodeDelegate().getDisplayName();
+            }
+
+            return new SQLExecutionLoggerImpl(loggerDisplayName, this);
         }
-        
-        synchronized (this) {
-            logger = new SQLExecutionLoggerImpl(loggerDisplayName, this);
-        }
-        return logger;
     }
     
     private synchronized void closeLogger() {
-        if (logger != null) {
-            logger.close();
+        synchronized (loggerLock) {
+            if (logger != null) {
+                logger.close();
+            }
         }
     }
 

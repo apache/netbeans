@@ -1,0 +1,4 @@
+Code completion result for source line:
+$array6 = [...getAr|ray()];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getArray()                      [PUBLIC]   Foo

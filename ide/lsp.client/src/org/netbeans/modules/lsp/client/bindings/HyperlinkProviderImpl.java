@@ -29,8 +29,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.LocationLink;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
@@ -66,6 +69,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
+        if (doc.getProperty(HyperlinkProviderImpl.class) != Boolean.TRUE) {
+            //not handled by a LSP handler
+            return null;
+        }
+
         try {
             //XXX: not really using the server, are we?
             return Utilities.getIdentifierBlock((BaseDocument) doc, offset);
@@ -91,32 +99,44 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
                                                     Utils.createPosition(doc, offset));
             //TODO: Location or Location[]
-            CompletableFuture<List<? extends Location>> def = server.getTextDocumentService().definition(params);
+            CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> def = server.getTextDocumentService().definition(params);
             def.handleAsync((locations, exception) -> {
                 if (exception != null) {
                     exception.printStackTrace();
                 }
-                if (locations != null && locations.size() == 1) { //TODO: what to do when there are multiple locations?
-                    try {
-                        URI target = URI.create(locations.get(0).getUri());
-                        FileObject targetFile = URLMapper.findFileObject(target.toURL());
+                if (locations == null) {
+                    return null;
+                }
+                String targetUri;
+                Range targetRange;
+                if (locations.isLeft() && locations.getLeft().size() == 1) { //TODO: what to do when there are multiple locations?
+                    targetUri = locations.getLeft().get(0).getUri();
+                    targetRange = locations.getLeft().get(0).getRange();
+                } else if (locations.isRight() && locations.getRight().size() == 1) { //TODO: what to do when there are multiple locations?
+                    targetUri = locations.getRight().get(0).getTargetUri();
+                    targetRange = locations.getRight().get(0).getTargetRange();
+                } else {
+                    return null;
+                }
+                try {
+                    URI target = URI.create(targetUri);
+                    FileObject targetFile = URLMapper.findFileObject(target.toURL());
 
-                        if (targetFile != null) {
-                            LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+                    if (targetFile != null) {
+                        LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
 
-                            //TODO: expecting lc != null!
+                        //TODO: expecting lc != null!
 
-                            Line line = lc.getLineSet().getCurrent(locations.get(0).getRange().getStart().getLine());
+                        Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
 
-                            SwingUtilities.invokeLater(() ->
-                                line.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, locations.get(0).getRange().getStart().getCharacter())
-                            );
-                        } else {
-                            //TODO: beep
-                        }
-                    } catch (MalformedURLException ex) {
-                        Exceptions.printStackTrace(ex);
+                        SwingUtilities.invokeLater(() ->
+                            line.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+                        );
+                    } else {
+                        //TODO: beep
                     }
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
                 return null;
             }).get();

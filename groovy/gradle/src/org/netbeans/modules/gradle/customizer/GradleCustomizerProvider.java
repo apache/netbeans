@@ -50,7 +50,7 @@ import org.openide.util.lookup.Lookups;
         projectType = NbGradleProject.GRADLE_PROJECT_TYPE
 )
 public class GradleCustomizerProvider implements CustomizerProvider2 {
-    
+
     public static final HelpCtx HELP_CTX = new HelpCtx("gradle_settings");
 
     private final Project project;
@@ -62,8 +62,8 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
     @NbBundle.Messages({
         "# {0} - project display name",
         "TIT_Project_Properties=Project Properties - {0}",
-        "TXT_Unloadable=Project is unloadable, the project information is unreliable. Show Project Rroperties dialog?",
-        "TIT_Unloadable=Project Unlodable"
+        "TXT_Unloadable=Project is unloadable, the project information is unreliable. Show Project Properties dialog?",
+        "TIT_Unloadable=Project Unloadable"
     })
     @Override
     public void showCustomizer(final String preselectedCategory, final String preselectedSubCategory) {

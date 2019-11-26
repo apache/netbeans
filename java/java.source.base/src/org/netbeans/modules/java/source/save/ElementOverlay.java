@@ -184,7 +184,11 @@ public class ElementOverlay {
     }
     
     public Element resolve(ASTService ast, Elements elements, String what, ModuleElement modle) {
-        Element result = null;
+        return resolve(ast, elements, what, null, modle);
+    }
+
+    public Element resolve(ASTService ast, Elements elements, String what, Element original, ModuleElement modle) {
+        Element result = original;
         
         if (classes.containsKey(what)) {
             result = createElement(ast, elements, what, null, modle);

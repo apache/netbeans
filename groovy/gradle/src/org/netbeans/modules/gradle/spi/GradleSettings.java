@@ -19,10 +19,9 @@
 
 package org.netbeans.modules.gradle.spi;
 
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
 import java.io.File;
 import java.util.prefs.Preferences;
+import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
 import org.openide.util.NbBundle.Messages;
@@ -77,6 +76,7 @@ public final class GradleSettings {
     public static final String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs";
     public static final String PROP_USE_CUSTOM_GRADLE = "useCustomGradle";
     public static final String PROP_GRADLE_VERSION = "gradleVersion";
+    public static final String PROP_SILENT_INSTALL = "silentInstall";
 
     public static final String PROP_OPT_OFFLINE = "offline";
     public static final String PROP_OPT_NO_REBUILD = "noRebuild";
@@ -141,6 +141,14 @@ public final class GradleSettings {
         return dir != null ? new File(dir) : new File(System.getProperty("user.home"), ".gradle"); //NOI18N
     }
 
+    public void setSilentInstall(boolean b) {
+        getPreferences().putBoolean(PROP_SILENT_INSTALL, b);
+    }
+
+    public boolean isSilentInstall() {
+        return getPreferences().getBoolean(PROP_SILENT_INSTALL, false);
+    }
+
     public void setReuseOutputTabs(boolean b) {
         getPreferences().putBoolean(PROP_REUSE_OUTPUT_TABS, b);
     }
@@ -162,7 +170,7 @@ public final class GradleSettings {
     }
 
     public boolean isAlwaysShowOutput() {
-        return getPreferences().getBoolean(PROP_ALWAYS_SHOW_OUTPUT, false);
+        return getPreferences().getBoolean(PROP_ALWAYS_SHOW_OUTPUT, true);
     }
 
     public void setStartDaemonOnStart(boolean b) {
@@ -197,12 +205,12 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_SKIP_CHECK, true);
     }
 
-    public void setGradleVersion(NbGradleVersion version) {
-        getPreferences().put(PROP_GRADLE_VERSION, version.getVersion().getVersion());
+    public void setGradleVersion(String version) {
+        getPreferences().put(PROP_GRADLE_VERSION, version);
     }
 
-    public NbGradleVersion getGradleVersion() {
-        return GradleDistributionManager.createVersion(getPreferences().get(PROP_GRADLE_VERSION, GradleDistributionManager.defaultToolingVersion()));
+    public String getGradleVersion() {
+        return getPreferences().get(PROP_GRADLE_VERSION, GradleVersion.current().getVersion());
     }
 
     public void setNoRebuild(boolean b) {

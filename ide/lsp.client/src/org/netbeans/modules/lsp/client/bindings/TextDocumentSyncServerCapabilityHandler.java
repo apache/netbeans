@@ -34,7 +34,10 @@ import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentItem;
+import org.eclipse.lsp4j.TextDocumentSyncKind;
+import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
 import org.netbeans.modules.editor.*;
@@ -65,9 +68,9 @@ public class TextDocumentSyncServerCapabilityHandler {
         newOpened.removeAll(lastOpened);
         Set<JTextComponent> newClosed = Collections.newSetFromMap(new IdentityHashMap<>());
         newClosed.addAll(lastOpened);
-        newClosed.removeAll(newOpened);
-        lastOpened.removeAll(newClosed);
-        lastOpened.addAll(newOpened);
+        newClosed.removeAll(currentOpened);
+        lastOpened.clear();
+        lastOpened.addAll(currentOpened);
 
         for (JTextComponent opened : newOpened) {
             FileObject file = NbEditorUtilities.getFileObject(opened.getDocument());
@@ -82,6 +85,8 @@ public class TextDocumentSyncServerCapabilityHandler {
 
                 if (server == null)
                     return ; //ignore
+
+                doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
 
                 String uri = Utils.toURI(file);
                 String[] text = new String[1];
@@ -121,32 +126,51 @@ public class TextDocumentSyncServerCapabilityHandler {
                 private void fireEvent(int start, String newText, String oldText) {
                     try {
                         Position startPos = Utils.createPosition(doc, start);
-                        int additionalLines = 0;
-                        int additionalChars = 0;
-                        for (char c : oldText.toCharArray()) {
-                            if (c == '\n') {
-                                additionalLines++;
-                                additionalChars = 0;
-                            } else {
-                                additionalChars++;
-                            }
-                        }
-                        Position endPos = new Position(startPos.getLine() + additionalLines,
-                                                       startPos.getCharacter() + additionalChars);
-                        TextDocumentContentChangeEvent event;
-                        event = new TextDocumentContentChangeEvent(new Range(startPos,
+                        Position endPos = Utils.computeEndPositionForRemovedText(startPos, oldText);
+                        TextDocumentContentChangeEvent[] event = new TextDocumentContentChangeEvent[1];
+                        event[0] = new TextDocumentContentChangeEvent(new Range(startPos,
                                                                              endPos),
                                                                    oldText.length(),
                                                                    newText);
-                        VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
-                        di.setUri(org.netbeans.modules.lsp.client.Utils.toURI(file));
-                        DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
 
                         WORKER.post(() -> {
                             LSPBindings server = LSPBindings.getBindings(file);
 
                             if (server == null)
                                 return ; //ignore
+
+                            TextDocumentSyncKind syncKind = TextDocumentSyncKind.None;
+                            Either<TextDocumentSyncKind, TextDocumentSyncOptions> sync = server.getInitResult().getCapabilities().getTextDocumentSync();
+                            if (sync != null) {
+                                if (sync.isLeft()) {
+                                    syncKind = sync.getLeft();
+                                } else {
+                                    TextDocumentSyncKind change = sync.getRight().getChange();
+                                    if (change != null)
+                                        syncKind = change;
+                                }
+                            }
+                            switch (syncKind) {
+                                case None:
+                                    return ;
+                                case Full:
+                                    doc.render(() -> {
+                                        try {
+                                            event[0] = new TextDocumentContentChangeEvent(doc.getText(0, doc.getLength()));
+                                        } catch (BadLocationException ex) {
+                                            Exceptions.printStackTrace(ex);
+                                            event[0] = new TextDocumentContentChangeEvent("");
+                                        }
+                                    });
+                                    break;
+                                case Incremental:
+                                    //event already filled
+                                    break;
+                            }
+
+                            VersionedTextDocumentIdentifier di = new VersionedTextDocumentIdentifier(++version);
+                            di.setUri(org.netbeans.modules.lsp.client.Utils.toURI(file));
+                            DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
 
                             server.getTextDocumentService().didChange(params);
                             server.scheduleBackgroundTasks(file);

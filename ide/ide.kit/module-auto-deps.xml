@@ -29,7 +29,7 @@
             </trigger-dependency>
             <implies>
                 <result>
-                    <module-dependency codenamebase="com.jcraft.jzlib" spec="1.0.7"/>
+                    <module-dependency codenamebase="com.jcraft.jzlib" spec="1.1.3"/>
                 </result>
             </implies>
         </transformation>
@@ -39,7 +39,7 @@
             </trigger-dependency>
             <implies>
                 <result>
-                    <module-dependency codenamebase="com.jcraft.jsch" spec="0.1.43"/>
+                    <module-dependency codenamebase="com.jcraft.jsch" spec="0.1.55"/>
                 </result>
             </implies>
         </transformation>

@@ -19,13 +19,22 @@
 package org.openide.util;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.function.Function;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import junit.framework.*;
+import static org.openide.util.ImageUtilities.icon2Image;
+import static org.openide.util.ImageUtilities.image2Icon;
 
 /**
  *
@@ -233,24 +242,237 @@ public class ImageUtilitiesTest extends TestCase {
         assertEquals("Tool tip text should be empty, but it is " + str, expected, str);
     }
 
+    public void testLoadImageCached() {
+        Image image1 = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
+        Image image2 = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
+        assertSame("Expected same instance", image1, image2);
+    }
+
+    public void testLoadImageIconCached() {
+        ImageIcon icon1 = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        ImageIcon icon2 = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        assertSame("Expected same instance", icon1, icon2);
+    }
+
     public void testConversions() {
-        Image image = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
-        Icon icon = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+        /* Note: these are rather implementation-oriented tests. Implementation changes in
+        ImageUtilities (addition or removal of caches etc.) might require this test to be
+        updated, even when the API is unchanged. */
 
-        assertNotNull("Should not be null", icon);
-        assertNotNull("Should not be null", image);
+        for (boolean useExternalImage : new boolean[] {false, true}) {
+            Object urlProperty;
+            Image image;
+            ImageIcon imageIcon;
+            if (useExternalImage) {
+                // Test an Image and ImageIcon instance that did not originate from ImageUtilities.
+                urlProperty = null;
+                image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+                imageIcon = new ImageIcon(image);
+            } else {
+                urlProperty = getClass().getResource("/org/openide/util/testimage.png");
+                image = ImageUtilities.loadImage("org/openide/util/testimage.png", false);
+                imageIcon = ImageUtilities.loadImageIcon("org/openide/util/testimage.png", false);
+                assertNotNull("URL found", urlProperty);
+                assertNotNull("Should not be null", imageIcon);
+                assertNotNull("Should not be null", image);
+                assertEquals("URL obtained", urlProperty, image.getProperty("url", null));
+            }
 
-        URL u = getClass().getResource("/org/openide/util/testimage.png");
-        assertNotNull("URL found", u);
-        assertEquals("URL obtained", u, image.getProperty("url", null));
+            /* These instances will no longer be the same; loadImage will now return a ToolTipImage,
+            while loadImageIcon will return a IconImageIcon. (Implementation detail only; could be
+            changed in the future.) */
+            assertNotSame("Expected different instances in current implementation",
+                    imageIcon,
+                    image2Icon(image));
 
-        Icon icon2 = ImageUtilities.image2Icon(image);
-        Image image2 = ImageUtilities.icon2Image(icon);
+            /* An Icon/Image loaded via loadImage can be freely passed through icon2Image/image2Icon
+            without a new instance being created. */
+            assertSame("Should be same instance",
+                    image,
+                    icon2Image(imageIcon));
 
-        assertEquals("Should be same instance", icon, icon2);
-        assertEquals("Should be same instance", image, image2);
+            assertSame("Should be same instance",
+                    icon2Image(imageIcon),
+                    icon2Image(imageIcon));
 
-        assertEquals("Url is still there", u, image2.getProperty("url", null));
+            if (!useExternalImage) {
+              /* In the useExternalImage case, the original instance will be converted to a
+              ToolTipImage, so we won't have the same instance here. */
+              assertSame("Should be same instance",
+                      image,
+                      icon2Image(image2Icon(image)));
+            }
+
+            /* Again, loadImageIcon has to wrap its result in an IconImageIcon, so the instances below
+            won't be the same. (Implementation detail only; could be changed in the future.) */
+            assertNotSame("Expected different instances in current implementation",
+                    imageIcon,
+                    image2Icon(icon2Image(imageIcon)));
+
+            Icon iconFromImage2Icon = image2Icon(image);
+            assertSame("Should be same instance",
+                    iconFromImage2Icon,
+                    image2Icon(icon2Image(iconFromImage2Icon)));
+
+            Icon iconFromImageIconRoundabout = image2Icon(icon2Image(imageIcon));
+            assertSame("Should be same instance",
+                    iconFromImageIconRoundabout,
+                    image2Icon(icon2Image(iconFromImageIconRoundabout)));
+
+            // An actual BufferedImage will return Image.UndefinedProperty rather than null.
+            assertEquals("Url is still there",
+                    urlProperty != null ? urlProperty : Image.UndefinedProperty,
+                    icon2Image(imageIcon).getProperty("url", null));
+            assertEquals("Url is still there", urlProperty, icon2Image(iconFromImage2Icon).getProperty("url", null));
+            assertEquals("Url is still there", urlProperty, icon2Image(iconFromImageIconRoundabout).getProperty("url", null));
+        }
+    }
+
+    public void testConvertNullImageIcon() {
+        // A corner case which occured during development.
+        ImageIcon imageIcon = new ImageIcon();
+        Image image = ImageUtilities.icon2Image(imageIcon);
+        if (image == null) {
+            throw new AssertionError(
+                    "icon2Image should work even with an ImageIcon for which the image is null");
+        }
+        // Just ensure there are no NPEs.
+        image.getProperty("url", null);
+    }
+
+    /**
+     * @param expectZeroedXY if the implementation is expected to paint the icon at (0,0) rather
+     *        than on the supplied coordinates (e.g. because the paint happens on a cached
+     *        backbuffer rather than directly on the original Graphics2D).
+     */
+    private static void testLosslessCustomIconTransformations(
+            Function<CustomIcon, Icon> transformation, boolean expectZeroedXY)
+    {
+        /* Make sure that a custom Icon implementation that is passed through
+        the transformation is stilled called on to paint after the icon/image conversions. */
+        final CustomIcon origIcon = new CustomIcon();
+        Icon iconAgain = transformation.apply(origIcon);
+        origIcon.clear();
+        BufferedImage img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = img.createGraphics();
+        final int TEST_X = 45;
+        final int TEST_Y = 23;
+        // Also check that we don't unnecessarily crash if the Component parameter is null.
+        iconAgain.paintIcon(null, g, TEST_X, TEST_Y);
+        g.dispose();
+        assertTrue(origIcon.wasPaintCalled);
+        assertNull(origIcon.lastObservedComponent);
+        if (expectZeroedXY) {
+            assertEquals(0.0, origIcon.lastSeenX);
+            assertEquals(0.0, origIcon.lastSeenY);
+        } else {
+            assertEquals((double) TEST_X, origIcon.lastSeenX);
+            assertEquals((double) TEST_Y, origIcon.lastSeenY);
+        }
+    }
+
+    public void testCustomIconImplementationRetained() {
+        testLosslessCustomIconTransformations(new Function<CustomIcon, Icon>() {
+            @Override
+            public Icon apply(CustomIcon origIcon) {
+                Image image = ImageUtilities.icon2Image(origIcon);
+                assertTrue(origIcon.wasPaintCalled);
+                origIcon.clear();
+                Icon iconAgain = ImageUtilities.image2Icon(image);
+                assertFalse(origIcon.wasPaintCalled);
+                return iconAgain;
+            }
+        }, false);
+        testLosslessCustomIconTransformations(new Function<CustomIcon, Icon>() {
+            @Override
+            public Icon apply(CustomIcon origIcon) {
+                return ImageUtilities.createDisabledIcon(origIcon);
+            }
+        }, true);
+        testLosslessCustomIconTransformations(new Function<CustomIcon, Icon>() {
+            @Override
+            public Icon apply(CustomIcon origIcon) {
+                BufferedImage otherImage =
+                        new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+                // The offset is for otherImage, so should not cause the test to fail.
+                return image2Icon(
+                        ImageUtilities.mergeImages(icon2Image(origIcon), otherImage, 4, 12));
+            }
+        }, true);
+        testLosslessCustomIconTransformations(new Function<CustomIcon, Icon>() {
+            @Override
+            public Icon apply(CustomIcon origIcon) {
+                BufferedImage otherImage =
+                        new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+                return image2Icon(
+                        ImageUtilities.mergeImages(otherImage, icon2Image(origIcon), 0, 0));
+            }
+        }, true);
+    }
+
+    public void testCustomIconImplementationGetsValidComponent()
+            throws InterruptedException, InvocationTargetException
+    {
+        final CustomIcon origIcon = new CustomIcon();
+        /* The dummy Component parameter that is fed to Icon.paintIcon is only guaranteed to be
+        initialized once the Event Dispatch Thread has had a chance to run. */
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertFalse(origIcon.wasPaintCalled);
+                assertNull(origIcon.lastObservedComponent);
+                ImageUtilities.icon2Image(origIcon);
+                assertTrue(origIcon.wasPaintCalled);
+                assertNotNull(origIcon.lastObservedComponent);
+            }
+        });
+        /* Once ImageUtilities has initialized its dummy Component, paintIcon should keep receiving
+        a valid instance no matter which thread it is running on. */
+        final CustomIcon origIcon2 = new CustomIcon();
+        ImageUtilities.icon2Image(origIcon2);
+        assertTrue(origIcon2.wasPaintCalled);
+        assertNotNull(origIcon2.lastObservedComponent);
+    }
+
+    private static final class CustomIcon implements Icon {
+        public volatile Component lastObservedComponent;
+        public volatile boolean wasPaintCalled;
+        public volatile double lastSeenX;
+        public volatile double lastSeenY;
+
+        private void clear() {
+            lastObservedComponent = null;
+            wasPaintCalled = false;
+            lastSeenX = Double.NaN;
+            lastSeenY = Double.NaN;
+        }
+
+        public CustomIcon() {
+            clear();
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g0, int x, int y) {
+            this.lastObservedComponent = c;
+            wasPaintCalled = true;
+            Graphics2D g = (Graphics2D) g0;
+            g.translate(x, y);
+            AffineTransform tx = g.getTransform();
+            final int txType = tx.getType();
+            assertTrue(txType == 0 || txType == AffineTransform.TYPE_TRANSLATION);
+            lastSeenX = tx.getTranslateX();
+            lastSeenY = tx.getTranslateY();
+        }
+
+        @Override
+        public int getIconWidth() {
+          return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+          return 16;
+        }
     }
 
     public void testLoadingNonExisting() {

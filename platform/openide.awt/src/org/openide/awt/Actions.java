@@ -274,8 +274,7 @@ public class Actions {
         Bridge b;
         if (action instanceof BooleanStateAction) {
             b = new BooleanButtonBridge(button, (BooleanStateAction)action);
-        }
-        if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
+        } else if (action.getValue(Actions.ACTION_VALUE_TOGGLE) != null) {
             b = new BooleanButtonBridge(button, action);
         } else {
             b = new ButtonBridge(button, action);
@@ -1694,6 +1693,7 @@ public class Actions {
         * @deprecated use {@link #CheckboxMenuItem(javax.swing.Action, boolean)}. 
         * Have your action to implement properly {@link Action#getValue} for {@link Action#SELECTED_KEY}
         */
+        @Deprecated
         public CheckboxMenuItem(BooleanStateAction aAction, boolean useMnemonic) {
             Actions.connect(this, aAction, !useMnemonic);
         }

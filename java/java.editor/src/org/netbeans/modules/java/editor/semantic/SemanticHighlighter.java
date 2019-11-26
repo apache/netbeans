@@ -23,12 +23,14 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.settings.AttributesUtilities;
 
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -41,6 +43,7 @@ import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.Er
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.openide.loaders.DataObject;
+import org.openide.util.Pair;
 
 /**
  *
@@ -60,15 +63,20 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
         
         public void setErrors(Document doc, List<ErrorDescription> errors, List<TreePathHandle> allUnusedImports) {}
         
-        public void setHighlights(final Document doc, final Collection<int[]> highlights) {
+        public void setHighlights(final Document doc, final Collection<Pair<int[], Coloring>> highlights, Map<int[], String> preText) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     OffsetsBag bag = new OffsetsBag(doc);
-                    Coloring unused = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.UNUSED);
-                    for (int[] highlight : highlights) {
-                        bag.addHighlight(highlight[0], highlight[1], ColoringManager.getColoringImpl(unused));
+                    for (Pair<int[], Coloring> highlight : highlights) {
+                        bag.addHighlight(highlight.first()[0], highlight.first()[1], ColoringManager.getColoringImpl(highlight.second()));
                     }
                     getImportHighlightsBag(doc).setHighlights(bag);
+                    
+                    OffsetsBag preTextBag = new OffsetsBag(doc);
+                    for (Entry<int[], String> e : preText.entrySet()) {
+                        preTextBag.addHighlight(e.getKey()[0], e.getKey()[1], AttributesUtilities.createImmutable("virtual-text-prepend", e.getValue()));
+                    }
+                    getPreTextBag(doc).setHighlights(preTextBag);
                 }
             });
         }
@@ -98,6 +106,23 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
         
         if (bag == null) {
             doc.putProperty(KEY_UNUSED_IMPORTS, bag = new OffsetsBag(doc));
+            
+            Object stream = doc.getProperty(Document.StreamDescriptionProperty);
+            
+            if (stream instanceof DataObject) {
+//                TimesCollector.getDefault().reportReference(((DataObject) stream).getPrimaryFile(), "ImportsHighlightsBag", "[M] Imports Highlights Bag", bag);
+            }
+        }
+        
+        return bag;
+    }
+
+    private static final Object KEY_PRE_TEXT = new Object();
+    static OffsetsBag getPreTextBag(Document doc) {
+        OffsetsBag bag = (OffsetsBag) doc.getProperty(KEY_PRE_TEXT);
+        
+        if (bag == null) {
+            doc.putProperty(KEY_PRE_TEXT, bag = new OffsetsBag(doc));
             
             Object stream = doc.getProperty(Document.StreamDescriptionProperty);
             

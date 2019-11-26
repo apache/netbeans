@@ -32,6 +32,24 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="splash.screen.version.option">
+          <summary>
+              An optional version string can be added to the splash screen.
+          </summary>
+          <version major="1" minor="61"/>
+          <date day="11" month="5" year="2019"/>
+          <author login="ebakke"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  Branding bundles may now include the SplashVersionTextBounds,
+                  SplashVersionTextFontSize, SplashVersionTextFontType,
+                  SplashVersionTextColor, and SplashVersionTextHorizontalAlignment
+                  properties in order to display the application's product version
+                  and build number in the startup splash screen.
+              </p>
+          </description>
+      </change>
       <change id="core.base.split">
           <api name="bridge"/>
           <summary>

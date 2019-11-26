@@ -39,6 +39,7 @@ import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.LifecycleManager;
@@ -48,6 +49,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 
 @OptionsPanelController.Keywords(keywords={"#KW_LafOptions"}, location="Appearance", tabTitle="#Laf_DisplayName")
 public class LafPanel extends javax.swing.JPanel {
@@ -57,7 +59,7 @@ public class LafPanel extends javax.swing.JPanel {
     private final Preferences prefs = NbPreferences.forModule(LafPanel.class);
     
     private final boolean isAquaLaF = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-
+    private static final boolean NO_RESTART_ON_LAF_CHANGE = Boolean.getBoolean("nb.laf.norestart"); //NOI18N
     private int defaultLookAndFeelIndex;
     private final ArrayList<LookAndFeelInfo> lafs = new ArrayList<LookAndFeelInfo>( 10 );
     
@@ -73,6 +75,7 @@ public class LafPanel extends javax.swing.JPanel {
             }
         });
         initLookAndFeel();
+        lblRestart.setVisible(!NO_RESTART_ON_LAF_CHANGE);
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for( LookAndFeelInfo li : lafs ) {
             model.addElement( li.getName() );
@@ -165,7 +168,17 @@ public class LafPanel extends javax.swing.JPanel {
         if( selLaFIndex != defaultLookAndFeelIndex && !isForcedLaF() ) {
             LookAndFeelInfo li = lafs.get( comboLaf.getSelectedIndex() );
             NbPreferences.root().node( "laf" ).put( "laf", li.getClassName() ); //NOI18N
-            askForRestart();
+            if (NO_RESTART_ON_LAF_CHANGE) {
+                try {
+                    UIManager.setLookAndFeel(li.getClassName());
+                    WindowManager wmgr = Lookup.getDefault().lookup(WindowManager.class);
+                    wmgr.updateUI();
+                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
+                    askForRestart();
+                }
+            } else {
+                askForRestart();
+            }
         }
 
         return false;

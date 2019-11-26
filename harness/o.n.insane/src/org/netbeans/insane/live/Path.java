@@ -97,6 +97,8 @@ public final class Path {
             //         at org.netbeans.junit.NbTestCase.assertGC(NbTestCase.java:1171)
             //         at org.netbeans.modules.projectapi.AuxiliaryConfigBasedPreferencesProviderTest.testReclaimable(AuxiliaryConfigBasedPreferencesProviderTest.java:256)
             return "null";
+        } else if (obj instanceof Class) {
+            return obj.toString() + "@" + Integer.toHexString(System.identityHashCode(obj));
         }
         return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
     }

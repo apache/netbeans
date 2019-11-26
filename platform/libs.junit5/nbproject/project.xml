@@ -43,16 +43,16 @@
                 <package>org.junit.jupiter.engine.script</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/junit-jupiter-api-5.3.1.jar</runtime-relative-path>
-                <binary-origin>external/junit-jupiter-api-5.3.1.jar</binary-origin>
+                <runtime-relative-path>ext/junit-jupiter-api-5.5.2.jar</runtime-relative-path>
+                <binary-origin>external/junit-jupiter-api-5.5.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/junit-jupiter-params-5.3.1.jar</runtime-relative-path>
-                <binary-origin>external/junit-jupiter-params-5.3.1.jar</binary-origin>
+                <runtime-relative-path>ext/junit-jupiter-params-5.5.2.jar</runtime-relative-path>
+                <binary-origin>external/junit-jupiter-params-5.5.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/junit-jupiter-engine-5.3.1.jar</runtime-relative-path>
-                <binary-origin>external/junit-jupiter-engine-5.3.1.jar</binary-origin>
+                <runtime-relative-path>ext/junit-jupiter-engine-5.5.2.jar</runtime-relative-path>
+                <binary-origin>external/junit-jupiter-engine-5.5.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

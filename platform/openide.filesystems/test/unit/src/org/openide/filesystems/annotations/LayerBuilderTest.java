@@ -261,10 +261,42 @@ public class LayerBuilderTest extends NbTestCase {
         assertTrue(AnnotationProcessorTestUtils.runJavac(src, "C2.java", dest, null, null));
     }
 
+    /**
+     * Checks behaviour of annotations on {@link LayerGeneratingProcessor} subclasses.
+     * When not annnotated, the compilation should not produce a warning, as the base class
+     * report {@link SourceVersion#latest}. VP processor is annotated by an obsolete version,
+     * so a warning will be printed for it.
+     * 
+     * @throws Exception 
+     */
+    public void testWarningsFromProcessors() throws Exception {
+        AnnotationProcessorTestUtils.makeSource(src, "p.C", "@" + A.class.getCanonicalName() + "(displayName=\"#k\") @org.openide.util.NbBundle.Messages(\"k=v\") public class C {}");
+        File j = TestFileUtils.writeZipFile(new File(getWorkDir(), "cp.jar"), "other/x1:x1");
+        TestFileUtils.writeFile(new File(src, "p/resources/x2"), "x2");
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        AnnotationProcessorTestUtils.runJavac(src, null, dest, 
+                new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, 
+                err,
+                "8");
+        String msgs = err.toString();
+        boolean vpProcessorWarned = false;
+        for (String m : msgs.split("\n")) {
+            if (m.startsWith("warning: Supported source version ")) {
+                int procIndex = m.indexOf("LayerBuilderTest$");
+                if (procIndex == -1) {
+                    // perhaps some other processor
+                    continue;
+                }
+                assertTrue("Unexpected warning: " + m, m.contains("LayerBuilderTest$VP'"));
+                vpProcessorWarned = true;
+            }
+        }
+        assertTrue(vpProcessorWarned);
+    }
+
     public @interface A {String displayName();}
 
     @ServiceProvider(service=Processor.class)
-    @SupportedSourceVersion(SourceVersion.RELEASE_7)
     public static class AP extends LayerGeneratingProcessor {
         public @Override Set<String> getSupportedAnnotationTypes() {
             return Collections.singleton(A.class.getCanonicalName());
@@ -322,6 +354,7 @@ public class LayerBuilderTest extends NbTestCase {
         /** relative, must be in sourcepath */ String r2();
     }
     @ServiceProvider(service=Processor.class)
+    // this processor has deliberately @SupportedSourceVersion left and obsolete, a test checks this
     @SupportedSourceVersion(SourceVersion.RELEASE_7)
     public static class VP extends LayerGeneratingProcessor {
         public @Override Set<String> getSupportedAnnotationTypes() {
@@ -389,7 +422,6 @@ public class LayerBuilderTest extends NbTestCase {
 
     public @interface I {}
     @ServiceProvider(service=Processor.class)
-    @SupportedSourceVersion(SourceVersion.RELEASE_7)
     public static class IP extends LayerGeneratingProcessor {
         public @Override Set<String> getSupportedAnnotationTypes() {
             return Collections.singleton(I.class.getCanonicalName());

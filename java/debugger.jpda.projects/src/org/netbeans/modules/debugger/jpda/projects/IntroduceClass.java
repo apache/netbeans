@@ -236,7 +236,7 @@ class IntroduceClass {
                 if (Tree.Kind.EXPRESSION_STATEMENT.equals(first.getKind())) {
                     statements = Collections.singletonList((StatementTree) firstLeaf.getLeaf());
                 } else {
-                    statements = Collections.EMPTY_LIST;
+                    statements = Collections.emptyList();
                 }
         }
         int s = statements.size();

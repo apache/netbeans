@@ -550,7 +550,7 @@ public class BeanNode<T> extends AbstractNode {
         // Should not introspect on a private class, because then the method objects
         // used for the property descriptors will not be callable without an
         // IllegalAccessException, even if overriding a public method from a public superclass.
-        Class clazz = bean.getClass();
+        Class<?> clazz = bean.getClass();
 
         while (!Modifier.isPublic(clazz.getModifiers()) && !hasExplicitBeanInfo(clazz)) {
             clazz = clazz.getSuperclass();

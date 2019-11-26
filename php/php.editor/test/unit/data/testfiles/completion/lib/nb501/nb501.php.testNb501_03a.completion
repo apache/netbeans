@@ -1,0 +1,4 @@
+Code completion result for source line:
+(clone Example::getDefault())::|getDefault()->testMethod(); // test3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     getDefault()                    [STATIC]   Example

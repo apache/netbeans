@@ -63,6 +63,19 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
 
     public abstract Type getType();
 
+    static final String[] gavSplit(String gav) {
+        int firstColon = gav.indexOf(':');
+        int lastColon = gav.lastIndexOf(':');
+        if (firstColon == -1 || firstColon == lastColon) {
+            throw new IllegalArgumentException("Invalig GAV format: " + gav);
+        }
+        return new String[] {
+            gav.substring(0, firstColon),
+            gav.substring(firstColon + 1, lastColon),
+            gav.substring(lastColon + 1)
+        };
+    }
+
     /**
      * Dependency for modules usually downloaded from a remote repository.
      * @since 1.0
@@ -79,7 +92,7 @@ public abstract class GradleDependency implements Serializable, Comparable<Gradl
         ModuleDependency(String id, Set<File> artifacts) {
             super(id);
             this.artifacts = artifacts;
-            String[] parts = id.split(":");
+            String[] parts = gavSplit(id);
             group = parts[0];
             name = parts[1];
             version = parts[2];

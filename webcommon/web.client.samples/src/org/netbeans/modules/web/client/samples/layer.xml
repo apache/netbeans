@@ -27,14 +27,6 @@
                 <folder name="HTML5">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.web.client.samples.wizard.ui.Bundle"/>
                     <attr name="position" intvalue="210"/>
-                    <file name="ResponsiveRabbits" url="Easel.zip">
-                        <attr name="displayName" bundlevalue="org.netbeans.modules.web.client.samples.wizard.ui.Bundle#Templates/Project/Samples/HTML5/ResponsiveRabbits"/>
-                        <attr name="position" intvalue="100"/>
-                        <attr name="iconBase" stringvalue="org/netbeans/modules/web/client/samples/resources/HTML5_project_icon.png"/>
-                        <attr name="instantiatingIterator" newvalue="org.netbeans.modules.web.client.samples.wizard.iterator.SampleWizardIterator"/>
-                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/web/client/samples/resources/ResponsiveRabbits.html"/>
-                        <attr name="template" boolvalue="true"/>
-                    </file>
                  </folder>
             </folder>
         </folder>

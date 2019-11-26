@@ -50,7 +50,7 @@ public abstract class AbstractProjectLookupProvider implements LookupProvider {
                 }
 
                 public List<FileObject> getDataFiles() {
-                    return Collections.EMPTY_LIST;
+                    return Collections.emptyList();
                 }
             };
     }

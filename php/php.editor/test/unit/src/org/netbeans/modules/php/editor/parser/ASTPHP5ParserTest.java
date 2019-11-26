@@ -310,6 +310,35 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/magicMethod07");
     }
 
+    // NETBEANS-1861
+    public void testMagicMethodStatic01() throws Exception {
+        performTest("parser/magicMethodStatic01");
+    }
+
+    public void testMagicMethodStatic02() throws Exception {
+        performTest("parser/magicMethodStatic02");
+    }
+
+    public void testMagicMethodStatic03() throws Exception {
+        performTest("parser/magicMethodStatic03");
+    }
+
+    public void testMagicMethodStatic04() throws Exception {
+        performTest("parser/magicMethodStatic04");
+    }
+
+    public void testMagicMethodStatic05() throws Exception {
+        performTest("parser/magicMethodStatic05");
+    }
+
+    public void testMagicMethodStatic06() throws Exception {
+        performTest("parser/magicMethodStatic06");
+    }
+
+    public void testMagicMethodStatic07() throws Exception {
+        performTest("parser/magicMethodStatic07");
+    }
+
     public void testTraits_01() throws Exception {
         performTest("parser/traits_01");
     }
@@ -1009,6 +1038,92 @@ public class ASTPHP5ParserTest extends ParserTestBase {
     public void testFlexibleNowdocMixed_03() throws Exception {
         // no new line at EOF
         performTest("parser/php73/nowdoc_mixed_03");
+    }
+
+    // PHP 7.4
+    public void testNullCoalescingAssignmentOperator_01() throws Exception {
+        // "??="
+        performTest("parser/php74/nullCoalescingAssignmentOperator_01");
+    }
+
+    public void testTypedProperties20Class() throws Exception {
+        performTest("parser/php74/typedPropertiesClass");
+    }
+
+    public void testTypedProperties20Trait() throws Exception {
+        performTest("parser/php74/typedPropertiesTrait");
+    }
+
+    public void testSpreadOperatorInArrayExpression_01() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_01");
+    }
+
+    public void testSpreadOperatorInArrayExpression_02() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_02");
+    }
+
+    public void testSpreadOperatorInArrayExpression_03() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_03");
+    }
+
+    public void testSpreadOperatorInArrayExpression_04() throws Exception {
+        performTest("parser/php74/spreadOperatorInArrayExpression_04");
+    }
+
+    public void testNumericLiteralSeparator_01() throws Exception {
+        performTest("parser/php74/numericLiteralSeparator_01");
+    }
+
+    public void testNumericLiteralSeparatorParseError_01() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_01");
+    }
+
+    public void testNumericLiteralSeparatorParseError_02() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_02");
+    }
+
+    public void testNumericLiteralSeparatorParseError_03() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_03");
+    }
+
+    public void testNumericLiteralSeparatorParseError_04() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_04");
+    }
+
+    public void testNumericLiteralSeparatorParseError_05() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_05");
+    }
+
+    public void testNumericLiteralSeparatorParseError_06() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_06");
+    }
+
+    public void testNumericLiteralSeparatorParseError_07() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_07");
+    }
+
+    public void testNumericLiteralSeparatorParseError_08() throws Exception {
+        performTest("parser/php74/numericLiteralSeparatorParseError_08");
+    }
+
+    public void testArrowFunctions_01() throws Exception {
+        performTest("parser/php74/arrowFunctions_01");
+    }
+
+    public void testArrowFunctionsParseError_01() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_01");
+    }
+
+    public void testArrowFunctionsParseError_02() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_02");
+    }
+
+    public void testArrowFunctionsParseError_03() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_03");
+    }
+
+    public void testArrowFunctionsParseError_04() throws Exception {
+        performTest("parser/php74/arrowFunctionsParseError_04");
     }
 
     @Override

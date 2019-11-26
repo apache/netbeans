@@ -1,6 +1,6 @@
 Name: OSGi
 Version: 7.0
-Files: osgi.core-7.0.0.jar org.osgi.compendium-5.0.0.jar
+Files: osgi.core-7.0.0.jar osgi.cmpn-7.0.0.jar
 Description: OSGi specification (core & compendium).
 License: Apache-2.0
 Origin: OSGi

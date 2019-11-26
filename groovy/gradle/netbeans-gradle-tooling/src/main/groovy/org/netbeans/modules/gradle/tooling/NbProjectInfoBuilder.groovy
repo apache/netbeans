@@ -105,10 +105,10 @@ class NbProjectInfoBuilder {
 
         Map<String, File> sp = new HashMap<>();
         for(Project p: project.subprojects) {
-            sp.put(p.name, p.projectDir);
+            sp.put(p.path, p.projectDir);
         }
         model.info.project_subProjects = sp;
-        
+
         Map<String, File> ib = new HashMap<>();
         println "Gradle Version: $gradleVersion"
         if (gradleVersion.compareTo(VersionNumber.parse('3.1')) >= 0) {
@@ -118,7 +118,10 @@ class NbProjectInfoBuilder {
             }
         }
         model.info.project_includedBuilds = ib;
-        
+
+        if (gradleVersion.compareTo(VersionNumber.parse('3.3')) >= 0) {
+            model.info.project_display_name = project.displayName;
+        }
         try {
             model.info.buildClassPath = storeSet(project.buildscript.configurations.classpath.files)
         } catch (Exception e) {
@@ -140,6 +143,9 @@ class NbProjectInfoBuilder {
             'scala-base', 'scala', 'groovy-base', 'groovy',\
             'distribution', 'application', 'maven', 'osgi', \
             'jacoco', 'checkstyle', 'pmd', 'findbugs', 'ear', \
+            'play', 'java-library-distribution', 'maven-publish',
+            'ivy-publish', 'antlr', \
+            'org.springframework.boot', \
             'com.github.lkishalmi.gatling', \
             'com.android.library', 'com.android.application']) {
             if (project.plugins.hasPlugin(plugin)) {
@@ -188,7 +194,6 @@ class NbProjectInfoBuilder {
         Map<String, File> outputs = new HashMap<>()
         Map<String, Map<String, Set<File>>> classpaths = new HashMap<>()
 
-        boolean hasAndroid = project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')
         boolean hasJava = project.plugins.hasPlugin('java-base')
         boolean hasGroovy = project.plugins.hasPlugin('groovy-base')
         boolean hasScala = project.plugins.hasPlugin('scala-base')
@@ -197,10 +202,19 @@ class NbProjectInfoBuilder {
             if (project.sourceSets != null) {
                 model.info.sourcesets = storeSet(project.sourceSets.names);
                 project.sourceSets.each() { sourceSet ->
-                    def compileTask =['java', 'groovy', 'scala'].collect { sourceSet.getCompileTaskName(it) }.findResult { project.tasks.findByName(it) }
-                    if (compileTask != null) {
-                        model.info["sourceset_${sourceSet.name}_source_compatibility"] = compileTask.sourceCompatibility
-                        model.info["sourceset_${sourceSet.name}_target_compatibility"] = compileTask.targetCompatibility
+                    ['JAVA', 'GROOVY', 'SCALA'].each() { lang ->
+                        def compileTask = project.tasks.findByName(sourceSet.getCompileTaskName(lang.toLowerCase()))
+                        if (compileTask != null) {
+                            model.info["sourceset_${sourceSet.name}_${lang}_source_compatibility"] = compileTask.sourceCompatibility
+                            model.info["sourceset_${sourceSet.name}_${lang}_target_compatibility"] = compileTask.targetCompatibility
+                            List<String> compilerArgs = []
+                            try {
+                                compilerArgs = compileTask.options.allCompilerArgs
+                            } catch (Throwable ex) {
+                                compilerArgs = compileTask.options.compilerArgs
+                            }
+                            model.info["sourceset_${sourceSet.name}_${lang}_compiler_args"] = new ArrayList<String>(compilerArgs)
+                        }
                     }
                     model.info["sourceset_${sourceSet.name}_JAVA"] = storeSet(sourceSet.java.srcDirs);
                     model.info["sourceset_${sourceSet.name}_RESOURCES"] = storeSet(sourceSet.resources.srcDirs);
@@ -231,26 +245,6 @@ class NbProjectInfoBuilder {
             } else {
                 model.info.sourcesets = Collections.emptySet();
                 model.noteProblem('No sourceSets found on this project. This project mightbe a Model/Rule based one which is not supported at the moment.')
-            }
-        }
-        if (hasAndroid) {
-            model.info.sourcesets = storeSet(project.android.sourceSets.names);
-            project.android.sourceSets.each() {
-                model.info["sourceset_${it.name}_JAVA"] = storeSet(it.java.srcDirs);
-                model.info["sourceset_${it.name}_RESOURCES"] = storeSet(it.resources.srcDirs);
-                model.info["sourceset_${it.name}_RES"] = storeSet(it.res.srcDirs);
-                model.info["sourceset_${it.name}_ASSETS"] = storeSet(it.assets.srcDirs);
-                model.info["sourceset_${it.name}_MANIFEST"] = it.manifest.srcFile;
-                model.info["sourceset_${it.name}_AIDL"] = storeSet(it.aidl.srcDirs);
-                model.info["sourceset_${it.name}_RS"] =  storeSet(it.renderscript.srcDirs);
-                model.info["sourceset_${it.name}_JNI"] = storeSet(it.jni.srcDirs);
-                try {
-                    model.info["sourceset_${it.name}_classpath_compile"] = storeSet(project.configurations[it.compileConfigurationName].files);
-                } catch(Exception e) {
-                    model.noteProblem(e)
-                }
-                model.info["sourceset_${it.name}_configuration_compile"] = it.compileConfigurationName;
-                model.info["sourceset_${it.name}_configuration_package"] = it.packageConfigurationName;
             }
         }
         model.ext.perf.sources = System.currentTimeMillis() - time

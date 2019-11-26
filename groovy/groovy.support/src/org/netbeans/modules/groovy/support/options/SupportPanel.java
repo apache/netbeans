@@ -196,7 +196,7 @@ private void chooseDocButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     private void jLabel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MousePressed
         try {
-            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL("http://groovy.codehaus.org")); // NOI18N
+            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL("https://groovy.apache.org/download.html")); // NOI18N
         } catch (MalformedURLException murle) {
             Exceptions.printStackTrace(murle);
         }

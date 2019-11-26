@@ -38,6 +38,8 @@ import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2_5;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4_0_1;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5_0_1;
 import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -56,8 +58,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_3(NbBundle.getMessage(ServerDetails.class,"STR_3_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6", // NOI18N
         300,
-        "http://download.java.net/glassfish/v3/release/glassfish-v3.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post701v3.txt" // NOI18N
+        "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
+        "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.0/3.0.x
@@ -65,8 +68,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_3_0_1(NbBundle.getMessage(ServerDetails.class,"STR_301_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6", // NOI18N
         301,
-        "http://download.java.net/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post701v3-0-1.txt" // NOI18N
+        "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.1
@@ -74,8 +78,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_3_1(NbBundle.getMessage(ServerDetails.class, "STR_31_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         310,
-        "http://download.java.net/glassfish/3.1/release/glassfish-3.1-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post701v3-1.txt" // NOI18N
+        "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     /**
      * details for an instance of GlassFish Server 3.1.1
@@ -83,17 +88,19 @@ public enum ServerDetails {
     GLASSFISH_SERVER_3_1_1(NbBundle.getMessage(ServerDetails.class, "STR_311_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         311,
-        "http://download.java.net/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post701v3-1-1.txt" // NOI18N
-            ),
+        "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
     /**
      * details for an instance of GlassFish Server 3.1.2
      */
     GLASSFISH_SERVER_3_1_2(NbBundle.getMessage(ServerDetails.class, "STR_312_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         312,
-        "http://download.java.net/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v3-1-2.txt" // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -102,8 +109,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_3_1_2_2(NbBundle.getMessage(ServerDetails.class, "STR_3122_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         312,
-        "http://download.java.net/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v3-1-2.txt" // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -112,8 +120,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_4_0(NbBundle.getMessage(ServerDetails.class, "STR_40_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         400,
-        "http://download.java.net/glassfish/4.0/release/glassfish-4.0-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v4-0.txt" // NOI18N
+        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -122,8 +131,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_4_0_1(NbBundle.getMessage(ServerDetails.class, "STR_401_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         401,
-        "http://download.java.net/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v4-0-1.txt" // NOI18N
+        "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
+        "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N"
     ),
     
     /**
@@ -132,8 +142,9 @@ public enum ServerDetails {
     GLASSFISH_SERVER_4_1(NbBundle.getMessage(ServerDetails.class, "STR_41_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         410,
-        "http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v4-1.txt" // NOI18N
+        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
+        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
     /**
@@ -142,18 +153,53 @@ public enum ServerDetails {
     GLASSFISH_SERVER_4_1_1(NbBundle.getMessage(ServerDetails.class, "STR_411_SERVER_NAME", new Object[]{}), // NOI18N
         "deployer:gfv3ee6wc", // NOI18N
         411,
-        "http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v4-1-1.txt" // NOI18N
+        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
+        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 4.1.2
+     */
+    GLASSFISH_SERVER_4_1_2(NbBundle.getMessage(ServerDetails.class, "STR_412_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv3ee6wc", // NOI18N
+        412,
+        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
+        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
     
     /**
      * details for an instance of GlassFish Server 5
      */
     GLASSFISH_SERVER_5_0(NbBundle.getMessage(ServerDetails.class, "STR_50_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
+        "deployer:gfv5ee8", // NOI18N
         500,
-        "http://download.java.net/glassfish/5.0/release/glassfish-5.0.zip?nbretriever=fallback", // NOI18N
-        "http://serverplugins.netbeans.org/glassfishv3/post71v5-0.txt" // NOI18N
+        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
+        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 5
+     */
+    GLASSFISH_SERVER_5_0_1(NbBundle.getMessage(ServerDetails.class, "STR_501_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv5ee8", // NOI18N
+        501,
+        "https://download.oracle.com/glassfish/5.0.1/release/glassfish-5.0.1.zip", // NOI18N
+        "https://download.oracle.com/glassfish/5.0.1/release/glassfish-5.0.1.zip", // NOI18N
+        "https://javaee.github.io/glassfish/LICENSE" //NOI18N
+    ),
+
+    /**
+     * details for an instance of GlassFish Server 5
+     */
+    GLASSFISH_SERVER_5_1_0(NbBundle.getMessage(ServerDetails.class, "STR_510_SERVER_NAME", new Object[]{}), // NOI18N
+        "deployer:gfv5ee8", // NOI18N
+        510,
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
 
     /**
@@ -165,7 +211,10 @@ public enum ServerDetails {
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(new ServerDetails[]{
+                    GLASSFISH_SERVER_5_1_0,
+                    GLASSFISH_SERVER_5_0_1,
                     GLASSFISH_SERVER_5_0,
+                    GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
                     GLASSFISH_SERVER_4_1,
                     GLASSFISH_SERVER_4_0_1,
@@ -175,10 +224,12 @@ public enum ServerDetails {
                     GLASSFISH_SERVER_3_1_1,
                     GLASSFISH_SERVER_3_1,
                     GLASSFISH_SERVER_3_0_1,
-                    GLASSFISH_SERVER_3,},
+                    GLASSFISH_SERVER_3},
                 new ServerDetails[]{
-                    // not yet
-                    //GLASSFISH_SERVER_5_0, 
+                    GLASSFISH_SERVER_5_1_0,
+                    GLASSFISH_SERVER_5_0_1,
+                    GLASSFISH_SERVER_5_0,
+                    GLASSFISH_SERVER_4_1_2,
                     GLASSFISH_SERVER_4_1_1,
                     GLASSFISH_SERVER_4_1,
                     GLASSFISH_SERVER_4_0,
@@ -213,7 +264,10 @@ public enum ServerDetails {
                 case GF_4_0_1:   return GLASSFISH_SERVER_4_0_1.getVersion();
                 case GF_4_1:     return GLASSFISH_SERVER_4_1.getVersion();
                 case GF_4_1_1:   return GLASSFISH_SERVER_4_1_1.getVersion();
+                case GF_4_1_2:   return GLASSFISH_SERVER_4_1_2.getVersion();
                 case GF_5:       return GLASSFISH_SERVER_5_0.getVersion();
+                case GF_5_0_1:   return GLASSFISH_SERVER_5_0_1.getVersion();
+                case GF_5_1_0:   return GLASSFISH_SERVER_5_1_0.getVersion();
                 default:         return -1;
             }
         }
@@ -247,16 +301,18 @@ public enum ServerDetails {
     private String uriFragment;
     private String indirectUrl;
     private String directUrl;
+    private String licenseUrl;
     private int versionInt;
     
 
     ServerDetails(String displayName, String uriFragment, int versionInt,
-            String directUrl, String indirectUrl) {
+            String directUrl, String indirectUrl, String licenseUrl) {
             this.displayName = displayName;
             this.uriFragment = uriFragment;
             this.indirectUrl = indirectUrl;
             this.directUrl = directUrl;
             this.versionInt = versionInt;
+            this.licenseUrl = licenseUrl;
     }
     
     @Override 
@@ -307,4 +363,7 @@ public enum ServerDetails {
         return indirectUrl;
     }
 
+    public String getLicenseUrl() {
+        return licenseUrl;
+    }
 }

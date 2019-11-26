@@ -47,6 +47,7 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery.Result;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.TestUtil;
+import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.RunWhenScanFinishedSupport;
@@ -612,7 +613,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
             for (int i = 0; i < fqns.length; i++) {
                 String fqn = fqns[i];
                 String expected = names[i];
-                String got = SourceUtils.generateReadableParameterName(fqn, used);
+                String got = ParameterNameProviderImpl.generateReadableParameterName(fqn, used);
                 String msg = "For " + Arrays.asList(fqns) + " expected " + Arrays.asList(names);
                 assertEquals (msg, expected, got);
             }

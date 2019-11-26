@@ -23,7 +23,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
-
+            <folder name="AntJava">
             <folder name="J2EE">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.earproject.ui.wizards.Bundle"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/earproject/ui/resources/ear.html"/>
@@ -44,6 +44,7 @@
                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/earproject/ui/resources/projectIcon.gif"/>
                    <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/earproject/ui/resources/ear-importProject.html"/>
                 </file>
+            </folder>
             </folder>
         </folder>
     </folder>

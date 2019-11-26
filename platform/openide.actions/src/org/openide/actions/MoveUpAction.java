@@ -148,7 +148,7 @@ public final class MoveUpAction extends NodeAction {
             return null;
         }
 
-        return (Index) parent.getCookie(Index.class);
+        return parent.getCookie(Index.class);
     }
 
     /** Listens to the ordering changes and enables/disables the

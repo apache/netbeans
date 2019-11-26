@@ -174,6 +174,45 @@ public class FileObjSymlinkTest extends NbTestCase {
         assertTrue(linkFO.readSymbolicLinkPath().endsWith("data.dat"));
     }
 
+    public void ignoreBrokenSymbolicLink1() throws IOException {
+        if (!checkSymlinksSupported()) {
+            return;
+        }
+        File dir = getWorkDir();
+        File data = new File(dir, "data.dat");
+        File link = new File(dir, "link.lnk");
+        Files.createSymbolicLink(link.toPath(), data.toPath());
+        FileObject linkFO = FileUtil.toFileObject(link);
+        assertNull(linkFO);
+    }
+
+    public void ignoreBrokenSymbolicLink2() throws IOException {
+        if (!checkSymlinksSupported()) {
+            return;
+        }
+        File dir = getWorkDir();
+        File data = new File(dir, "data.dat");
+        File link = new File(dir, "link.lnk");
+        Files.createSymbolicLink(link.toPath(), data.toPath());
+        FileObject dirFO = FileUtil.toFileObject(dir);
+        FileObject[] children = dirFO.getChildren();
+        assertEquals(children.length, 0);
+    }
+
+    public void ignoreBrokenSymbolicLink3() throws IOException {
+        if (!checkSymlinksSupported()) {
+            return;
+        }
+        File dir = getWorkDir();
+        File data = new File(dir, "data.dat");
+        File link = new File(dir, "link.lnk");
+        Files.createSymbolicLink(link.toPath(), data.toPath());
+        FileObject dirFO = FileUtil.toFileObject(dir);
+        dirFO.getChildren(); //Cache children
+        FileObject linkFO = FileUtil.toFileObject(link);
+        assertNull(linkFO);
+    }
+
     /**
      * Test getCanonicalFileObject method.
      *

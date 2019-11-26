@@ -58,7 +58,7 @@ public class ProxyAutoConfig {
             try {
                 instance = new ProxyAutoConfig(pacFile);
             } catch (URISyntaxException ex) {
-                Logger.getLogger(ProxyAutoConfig.class.getName()).warning("Parsing " + pacFile + " to URI throws " + ex);
+                LOGGER.warning("Parsing " + pacFile + " to URI throws " + ex);
             } finally {
                 file2pac.put(pacFile, instance);
             }
@@ -88,7 +88,7 @@ public class ProxyAutoConfig {
         return pacURI;
     }
 
-    private void initEngine() {
+    final void initEngine() {
         String pacSource = null;
         if (pacURI.isAbsolute()) {
             try (InputStream is = downloadPAC(pacURI.toURL())) {
@@ -137,6 +137,9 @@ public class ProxyAutoConfig {
                     LOGGER.log(Level.FINEST, ex.getMessage(), ex);
                 }
             }
+        }
+        if (evaluator == null) {
+            return Collections.singletonList(Proxy.NO_PROXY);
         }
         try {
             return evaluator.findProxyForURL(u);

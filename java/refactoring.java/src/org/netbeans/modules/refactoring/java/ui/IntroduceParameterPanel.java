@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.refactoring.java.ui;
 
-import com.sun.javadoc.Doc;
+import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
@@ -140,8 +140,8 @@ public class IntroduceParameterPanel extends JPanel implements CustomRefactoring
                         final String tm = typeMirror == null ? "Object" : typeMirror.toString();
                         
                         Element methodElement = info.getTrees().getElement(methodPath);
-                        Doc javadocDoc = info.getElementUtilities().javaDocFor(methodElement);
-                        if(javadocDoc != null && javadocDoc.commentText() == null || javadocDoc.getRawCommentText().equals("")) {
+                        DocCommentTree javadocDoc = info.getDocTrees().getDocCommentTree(methodElement);
+                        if(javadocDoc != null && !javadocDoc.getFullBody().isEmpty()) {
                             chkGenJavadoc.setEnabled(true);
                             chkGenJavadoc.setVisible(true);
                             chkUpdateJavadoc.setVisible(false);

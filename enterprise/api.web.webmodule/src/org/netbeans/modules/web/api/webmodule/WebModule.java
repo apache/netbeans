@@ -181,6 +181,7 @@ public final class WebModule {
      * @return J2EE platform version; never null.
      * @deprecated use {@link #getJ2eeProfile()}
      */
+    @Deprecated
     public String getJ2eePlatformVersion () {
         if (impl2 != null) {
             return impl2.getJ2eeProfile().toPropertiesString();

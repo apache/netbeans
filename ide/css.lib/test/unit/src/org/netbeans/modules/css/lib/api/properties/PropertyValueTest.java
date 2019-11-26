@@ -124,7 +124,8 @@ public class PropertyValueTest extends CssTestBase {
         String text = "italic small-caps 30px";
 
         assertAlternatives(p.getGrammar(), text,
-                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", "!identifier", "cursive", "initial");
+                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", 
+                "!identifier", "cursive", "initial", "var");
 
     }
 
@@ -137,7 +138,7 @@ public class PropertyValueTest extends CssTestBase {
 //    }
     public void testPaddingAlternatives() {
         PropertyDefinition p = Properties.getPropertyDefinition( "padding");
-        assertAlternatives(p.getGrammar(), "", "auto", "!percentage", "!length", "-", "calc", "inherit", "initial");
+        assertAlternatives(p.getGrammar(), "", "auto", "!percentage", "!length", "-", "calc", "inherit", "initial", "var");
 
     }
 
@@ -159,11 +160,11 @@ public class PropertyValueTest extends CssTestBase {
     public void testFontThoroughly() {
         PropertyDefinition p = Properties.getPropertyDefinition( "font");
         assertAlternatives(p.getGrammar(), "20px",
-                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", "!identifier", "cursive", "initial");
+                "fantasy", "serif", "!string", "sans-serif", "monospace", "/", "!identifier", "cursive", "initial", "var");
         assertAlternatives(p.getGrammar(), "20px /",
-                "initial", "normal", "none", "!number", "!length", "!percentage", "-", "calc");
+                "initial", "normal", "none", "!number", "!length", "!percentage", "-", "calc", "var");
         assertAlternatives(p.getGrammar(), "20px / 5pt","initial",
-                "fantasy","serif","!string","sans-serif","monospace","!identifier","cursive");
+                "fantasy","serif","!string","sans-serif","monospace","!identifier","cursive", "var");
         assertAlternatives(p.getGrammar(), "20px / 5pt cursive", 
                 ",", "!identifier");
     }
@@ -174,24 +175,25 @@ public class PropertyValueTest extends CssTestBase {
                 "small-caps", "800", "normal", "lighter", "smaller", "600", "bold",
                 "700", "!length", "-", "xx-small", "bolder", "100", "300", "!percentage",
                 "200", "larger", "medium", "500", "x-large", "x-small", "400",
-                "xx-large", "900", "small", "large", "calc",  "fantasy","monospace","!identifier","!string","/","cursive","serif","sans-serif", "initial");
+                "xx-large", "900", "small", "large", "calc",  "fantasy","monospace",
+                "!identifier","!string","/","cursive","serif","sans-serif", "initial", "var");
 
         assertAlternatives(p.getGrammar(), "italic large",
-                "fantasy", "serif", "sans-serif", "monospace", "/", "cursive", "!string", "!identifier","initial");
+                "fantasy", "serif", "sans-serif", "monospace", "/", "cursive", "!string", "!identifier","initial", "var");
 
         assertAlternatives(p.getGrammar(), "italic large / ",
-                "!percentage", "initial", "normal", "!length", "-", "none", "!number", "calc");
+                "!percentage", "initial", "normal", "!length", "-", "none", "!number", "calc", "var");
 
         assertAlternatives(p.getGrammar(), "italic large / normal",
-                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier","initial");
+                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier","initial", "var");
     }
 
     public void testBackgroundRGBAlternatives() {
         PropertyDefinition p = Properties.getPropertyDefinition( "background");
         assertAlternatives(p.getGrammar(), "rgb", "(");
-        assertAlternatives(p.getGrammar(), "rgb(", "!percentage", "!number", "-", "calc");
+        assertAlternatives(p.getGrammar(), "rgb(", "!percentage", "!number", "-", "calc", "var");
         assertAlternatives(p.getGrammar(), "rgb(10%", ",");
-        assertAlternatives(p.getGrammar(), "rgb(", "!percentage", "!number", "-", "calc");
+        assertAlternatives(p.getGrammar(), "rgb(", "!percentage", "!number", "-", "calc", "var");
         assertAlternatives(p.getGrammar(), "rgb(10%, 20", ",");
         assertAlternatives(p.getGrammar(), "rgb(10%, 20, 6%", ")");
     }
@@ -217,7 +219,8 @@ public class PropertyValueTest extends CssTestBase {
         PropertyDefinition p = Properties.getPropertyDefinition( "font-family");
 
         assertAlternatives(p.getGrammar(), "",
-                "fantasy", "serif", "sans-serif", "inherit", "monospace", "cursive", "!string", "!identifier","initial");
+                "fantasy", "serif", "sans-serif", "inherit", "monospace", 
+                "cursive", "!string", "!identifier","initial", "var");
 
     }
 
@@ -251,7 +254,7 @@ public class PropertyValueTest extends CssTestBase {
     public void testTheBorderCase() {
         PropertyDefinition p = Properties.getPropertyDefinition( "border");
         assertAlternatives(p.getGrammar(), "red dashed",
-                "thick", "thin", "!length", "-", "medium", "calc");
+                "thick", "thin", "!length", "-", "medium", "calc", "var");
 
         assertAlternatives(p.getGrammar(), "red dashed 20px");
     }
@@ -264,7 +267,8 @@ public class PropertyValueTest extends CssTestBase {
                 "repeat", "!length", "-", "repeating-radial-gradient", "space", "!percentage",
                 "fixed", "border-box", "center", "no-repeat", "none", "left", "right",
                 "top", "element", "scroll", "repeat-y", "linear-gradient", "repeat-x",
-                "image", "!uri", "cross-fade", "radial-gradient", "bottom", "local", "calc","initial");
+                "image", "!uri", "cross-fade", "radial-gradient", "bottom", "local", 
+                "calc", "initial", "var");
     }
 
     public void testTheBackgroundCase2() {
@@ -275,7 +279,8 @@ public class PropertyValueTest extends CssTestBase {
                 + "content-box", "repeat-y", "linear-gradient", "repeat-x", "image",
                 "round", "!length", "-", "repeat", "repeating-radial-gradient", "space",
                 "fixed", "!percentage", "!uri", "border-box", "cross-fade",
-                "radial-gradient", "no-repeat", "auto", "none", "local", "calc","initial");
+                "radial-gradient", "no-repeat", "auto", "none", "local", "calc",
+                "initial", "var");
 
 
     }
@@ -311,13 +316,13 @@ public class PropertyValueTest extends CssTestBase {
         assertAlternatives(p.getGrammar(), "fantasy", ",", "!identifier");
 
         assertAlternatives(p.getGrammar(), "fantasy, ", 
-                "fantasy","serif","sans-serif","monospace","cursive", "!string","!identifier");
+                "fantasy","serif","sans-serif","monospace","cursive", "!string","!identifier","var");
         
         assertAlternatives(p.getGrammar(), "fantasy, monospace", 
                 ",", "!identifier");
 
         assertAlternatives(p.getGrammar(), "fantasy, monospace, ",
-                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier");
+                "fantasy", "serif", "sans-serif", "monospace", "cursive", "!string", "!identifier","var");
 
     }
 
@@ -325,7 +330,8 @@ public class PropertyValueTest extends CssTestBase {
         PropertyDefinition p = Properties.getPropertyDefinition( "animation");
 //        assertResolve(p.getGrammar(), "fantasy");
         assertAlternatives(p.getGrammar(), "cubic-bezier",
-                "alternate", "linear", "cubic-bezier", "normal", "ease", "(", "!time", "ease-in", ",", "ease-in-out", "ease-out", "infinite", "!number");
+                "alternate", "linear", "cubic-bezier", "normal", "ease", "(", "!time", "ease-in", ",", "ease-in-out", "ease-out", "infinite", 
+                "var", "calc", "!number");
 
     }
 

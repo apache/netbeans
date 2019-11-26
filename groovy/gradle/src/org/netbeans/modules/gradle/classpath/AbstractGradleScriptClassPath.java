@@ -19,8 +19,8 @@
 
 package org.netbeans.modules.gradle.classpath;
 
-import org.netbeans.modules.gradle.options.GradleDistributionManager;
-import org.netbeans.modules.gradle.options.GradleDistributionManager.NbGradleVersion;
+import org.netbeans.modules.gradle.GradleDistributionManager;
+import org.netbeans.modules.gradle.GradleDistributionManager.NbGradleVersion;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -52,7 +53,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     File distDir;
 
     public AbstractGradleScriptClassPath() {
-        distDir = GradleDistributionManager.evaluateGradleDistribution();
+        distDir = RunUtils.evaluateGradleDistribution(null, false);
 
         prefListener = new PreferenceChangeListener() {
 
@@ -67,8 +68,9 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
                                 watchedVersion.removePropertyChangeListener(propListener);
                                 watchedVersion = null;
                             }
-                            NbGradleVersion version = settings.getGradleVersion();
-                            if (!version.isAvailable(settings.getGradleUserHome())) {
+                            GradleDistributionManager gdm = GradleDistributionManager.get(settings.getGradleUserHome());
+                            NbGradleVersion version = gdm.createVersion(settings.getGradleVersion());
+                            if (!version.isAvailable()) {
                                 watchedVersion = version;
                                 watchedVersion.addPropertyChangeListener(propListener);
                             }
@@ -102,7 +104,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     public final List<? extends PathResourceImplementation> getResources() {
         if (resources == null) {
             resources = new ArrayList<>();
-            if (distDir.isDirectory()) {
+            if ((distDir !=null) && distDir.isDirectory()) {
                 for (FileObject fo : createPath()) {
                     resources.add(ClassPathSupport.createResource(fo.toURL()));
                 }
@@ -128,7 +130,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     }
 
     private void changeDistDir() {
-        File newDistDir = GradleDistributionManager.evaluateGradleDistribution();
+        File newDistDir = RunUtils.evaluateGradleDistribution(null, false);
         if (!distDir.equals(newDistDir)) {
             distDir = newDistDir;
             resources = null;

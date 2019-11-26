@@ -50,6 +50,7 @@ public abstract class TokenAcceptor {
         ACCEPTORS.add(new NonNegativeInteger("non-negative-integer"));
         ACCEPTORS.add(new Integer("integer"));
         ACCEPTORS.add(new Number("number"));
+        ACCEPTORS.add(new Variable("variable"));
         ACCEPTORS.add(new Identifier("identifier"));
         ACCEPTORS.add(new Time("time"));
         ACCEPTORS.add(new Date("date"));
@@ -218,6 +219,19 @@ public abstract class TokenAcceptor {
             return token.tokenId() == CssTokenId.IDENT 
                     && !LexerUtils.equals("inherit",token.image(), true, true); //hack! XXX fix!!!
         }
+    }
+
+    public static class Variable extends TokenAcceptor {
+
+        public Variable(String id) {
+            super(id);
+        }
+
+        @Override
+        public boolean accepts(Token token) {
+            return token.tokenId() == CssTokenId.VARIABLE;
+        }
+
     }
 
     public static class Integer extends TokenImageAcceptor {

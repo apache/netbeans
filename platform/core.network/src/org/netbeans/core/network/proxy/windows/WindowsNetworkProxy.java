@@ -57,7 +57,7 @@ public class WindowsNetworkProxy implements NetworkProxyResolver {
 
             Pointer pacFilePointer = prxCnf.pacFile;
             if (pacFilePointer != null) {
-                String pacFileUrl = pacFilePointer.getString(0L, true);
+                String pacFileUrl = pacFilePointer.getWideString(0);
                 
                 LOGGER.log(Level.INFO, "Windows system proxy resolver: auto - PAC ({0})", pacFileUrl); //NOI18N                
                 return new NetworkProxySettings(pacFileUrl);
@@ -66,7 +66,7 @@ public class WindowsNetworkProxy implements NetworkProxyResolver {
             Pointer proxyPointer = prxCnf.proxy;
             Pointer proxyBypassPointer = prxCnf.proxyBypass;
             if (proxyPointer != null) {
-                String proxyString = proxyPointer.getString(0L, true);
+                String proxyString = proxyPointer.getWideString(0);
                 
                 LOGGER.log(Level.INFO, "Windows system proxy resolver: manual ({0})", proxyString); //NOI18N
                 
@@ -107,7 +107,7 @@ public class WindowsNetworkProxy implements NetworkProxyResolver {
                 }
 
                 if (proxyBypassPointer != null) {
-                    String proxyBypass = proxyBypassPointer.getString(0L, true);
+                    String proxyBypass = proxyBypassPointer.getWideString(0);
                     
                     LOGGER.log(Level.INFO, "Windows system proxy resolver: manual - no proxy hosts ({0})", proxyBypass); //NOI18N
                     

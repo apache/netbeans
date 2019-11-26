@@ -170,7 +170,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                             }
                             List<TypeUsage> types = functionCalls.get(call.getCallOffset());
                             if (types == null) {
-                                types = new ArrayList();
+                                types = new ArrayList<>();
                                 functionCalls.put(new Integer(call.getCallOffset()), types);
                             }
                             for (TypeUsage type: returnTypes) {

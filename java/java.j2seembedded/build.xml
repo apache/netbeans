@@ -25,7 +25,7 @@
 
     <target name="probe" depends="init">
         <mkdir dir="build/probe/classes"/>
-        <javac srcdir="jreprobe" destdir="build/probe/classes" source="1.3" debug="true" deprecation="true" target="1.1"/>
+        <javac srcdir="jreprobe" destdir="build/probe/classes" source="${javac.source}" debug="true" deprecation="true" target="${javac.target}"/>
         <mkdir dir="${cluster}/modules/ext"/>
         <nb-ext-jar jarfile="${cluster}/modules/ext/org-netbeans-modules-java-j2seembedded-probe.jar">
             <manifest>

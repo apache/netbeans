@@ -66,5 +66,10 @@ groovy/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
 nb/ide.launcher/external/launchers-10.0.zip
 
 # webcommon/libs.oracle.jsparser builds a test-only binaries into build/webcommon. Not distributed.
-webcommon/libs.oracle.jsparser/build/webcommon/**
+contrib/libs.oracle.jsparser/build/webcommon/**
 
+#only used to build installers
+nbbuild/installer/mac/newbuild/dmg/template.sparseimage.bz2
+
+# Used in a pure ant project (installer), so not identified as a project
+nbbuild/installer/jnlp/external/*

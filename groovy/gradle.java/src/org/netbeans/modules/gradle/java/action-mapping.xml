@@ -23,7 +23,7 @@
 <actions>
     <apply-for plugins="java">
         <action name="test.single">
-            <args>--rerun-tasks test --tests ${selectedMethod}</args>
+            <args>--rerun-tasks test --tests ${selectedClass}</args>
         </action>
         <action name="run.single.method">
             <args>--rerun-tasks test --tests ${selectedMethod}</args>
@@ -32,7 +32,7 @@
             <args>--rerun-tasks test --debug-jvm --tests ${selectedMethod}</args>
         </action>
         <action name="debug.test.single">
-            <args>--rerun-tasks test --debug-jvm --tests ${selectedMethod}</args>
+            <args>--rerun-tasks test --debug-jvm --tests ${selectedClass}</args>
         </action>
 
         <action name="javadoc">
@@ -40,12 +40,12 @@
         </action>
 
         <action name="debug.fix" repeatable="false">
-            <args>--offline --no-rebuild ${affectedBuildTasks}</args>
+            <args>--offline ${affectedBuildTasks}</args>
             <reload rule="NEVER"/>
         </action>
 
         <action name="compile.single" repetable="false">
-            <args>--offline --no-rebuild ${affectedBuildTasks}</args>
+            <args>--offline ${affectedBuildTasks}</args>
             <reload rule="NEVER"/>
         </action>
 

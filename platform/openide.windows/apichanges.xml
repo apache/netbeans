@@ -26,6 +26,23 @@
 <apidef name="winsys">Window System API</apidef>
 </apidefs>
 <changes>
+    <change id="ModeCreation">
+        <api name="winsys"/>
+        <summary>Allow Modes to be created directly from ModeConfig XML</summary>
+        <version major="6" minor="6.81"/>
+        <date day="18" month="3" year="2019"/>
+        <author login="phipma"/>
+        <compatibility addition="yes" modification="yes"/>
+        <description>
+            <p>
+                Plugin implementors can save and restore individual Modes providing
+                scope for custom TopComponent layouts.
+            </p>
+        </description>
+        <class package="org.openide.windows" name="Mode"/>
+        <class package="org.openide.windows" name="ModeUtilities"/>
+        <class package="org.openide.windows" name="WindowManager"/>
+    </change>
     <change id="ModeSelector">
         <api name="winsys"/>
         <summary>Allow to select Mode for opening a TopComponent instance</summary>

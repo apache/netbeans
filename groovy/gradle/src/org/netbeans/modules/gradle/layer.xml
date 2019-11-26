@@ -24,7 +24,8 @@
     <folder name="Templates">
         <folder name="Project">
             <folder name="Gradle">
-                <attr name="position" intvalue="500"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.gradle.Bundle#Templates/Project/Gradle"/>
+                <attr name="position" intvalue="150"/>
             </folder>
         </folder>
     </folder>

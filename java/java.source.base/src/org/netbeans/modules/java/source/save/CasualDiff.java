@@ -125,6 +125,7 @@ import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
 import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Position;
@@ -167,6 +168,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
+import org.netbeans.modules.java.source.TreeShims;
 
 public class CasualDiff {
 
@@ -1874,6 +1876,31 @@ public class CasualDiff {
         return bounds[1];
     }
 
+    protected int diffSwitchExpression(Tree oldT, Tree newT, int[] bounds) {
+        int localPointer = bounds[0];
+
+        // rename in switch
+        int[] selectorBounds = getBounds((JCTree)TreeShims.getExpressions(oldT).get(0));
+        copyTo(localPointer, selectorBounds[0]);
+        localPointer = diffTree((JCTree)TreeShims.getExpressions(oldT).get(0), (JCTree)TreeShims.getExpressions(newT).get(0), selectorBounds);
+
+        tokenSequence.move(selectorBounds[1]);
+        do { } while (tokenSequence.moveNext() && JavaTokenId.LBRACE != tokenSequence.token().id());
+        tokenSequence.moveNext();
+        copyTo(localPointer, localPointer = tokenSequence.offset());
+        PositionEstimator est = EstimatorFactory.cases(TreeShims.getCases(oldT), TreeShims.getCases(newT), diffContext);
+        ListBuffer<JCTree.JCCase> oldTcases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : TreeShims.getCases(oldT))
+            oldTcases.append((JCTree.JCCase)t);
+        ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
+        for (CaseTree t : TreeShims.getCases(newT))
+            newTcases.append((JCTree.JCCase)t);
+        localPointer = diffList(oldTcases.toList(), newTcases.toList(), localPointer, est, Measure.MEMBER, printer);
+
+        copyTo(localPointer, bounds[1]);
+        return bounds[1];
+    }
+
     protected int diffCase(JCCase oldT, JCCase newT, int[] bounds) {
         int localPointer = bounds[0];
         List<JCExpression> oldPatterns = getCasePatterns(oldT);
@@ -2162,8 +2189,8 @@ public class CasualDiff {
     }
 
     protected int diffBreak(JCBreak oldT, JCBreak newT, int[] bounds) {
-        final Name oldTLabel = oldT.label;
-        final Name newTlabel = newT.label;
+        final Name oldTLabel = oldT.getLabel();
+        final Name newTlabel = newT.getLabel();
         return printBreakContinueTree(bounds, oldTLabel, newTlabel, oldT);
     }
 
@@ -5583,6 +5610,10 @@ public class CasualDiff {
                   if (oldT instanceof FieldGroupTree) {
                       return diffFieldGroup((FieldGroupTree) oldT, (FieldGroupTree) newT, elementBounds);
                   }
+                  break;
+              }
+              if(oldT.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)){
+                  retVal = diffSwitchExpression(oldT, newT, elementBounds);
                   break;
               }
               String msg = "Diff not implemented: " +

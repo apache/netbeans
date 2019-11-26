@@ -68,7 +68,7 @@ public class JDBCDriverConvertor implements Environment.Provider, InstanceCookie
     /**
      * The reference to the instance of Environment.Provider
      */
-    private static Reference/*<JDBCDriverConvertor>*/ providerRef;
+    private static Reference<JDBCDriverConvertor> providerRef;
     
     /**
      * The path where the drivers are registered in the SystemFileSystem.

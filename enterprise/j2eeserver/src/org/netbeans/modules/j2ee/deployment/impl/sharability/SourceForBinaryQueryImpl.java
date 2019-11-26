@@ -104,12 +104,8 @@ public class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementat
         if (normalizedURL == null) {
             FileObject fo = URLMapper.findFileObject(url);
             if (fo != null) {
-                try {
-                    normalizedURL = fo.getURL();
-                    this.normalizedURLCache.put (url, normalizedURL);
-                } catch (FileStateInvalidException e) {
-                    ErrorManager.getDefault().notify(e);
-                }
+                normalizedURL = fo.toURL();
+                this.normalizedURLCache.put (url, normalizedURL);
             }
         }
         return normalizedURL;

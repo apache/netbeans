@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.37.1
+#Version 2.43.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -51,6 +51,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -62,6 +64,8 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.sourc
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
+ anno 0 java.lang.Deprecated()
 
 CLSS public com.sun.source.util.TreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -126,6 +130,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -137,6 +143,8 @@ meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.Us
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public java.io.IOException
@@ -956,8 +964,6 @@ meth public boolean isMemberOf(javax.lang.model.element.Element,javax.lang.model
 meth public boolean isOpen(javax.lang.model.element.ModuleElement)
 meth public boolean isSynthetic(javax.lang.model.element.Element)
 meth public boolean overridesMethod(javax.lang.model.element.ExecutableElement)
-meth public com.sun.javadoc.Doc javaDocFor(javax.lang.model.element.Element)
- anno 0 java.lang.Deprecated()
 meth public java.lang.CharSequence getElementName(javax.lang.model.element.Element,boolean)
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLocalMembersAndVars(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
 meth public java.lang.Iterable<? extends javax.lang.model.element.Element> getLocalVars(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
@@ -969,8 +975,6 @@ meth public java.util.List<? extends javax.lang.model.element.ExecutableElement>
 meth public java.util.Map<? extends javax.lang.model.element.Element,com.sun.source.tree.Scope> findElementsAndOrigins(com.sun.source.tree.Scope,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public javax.lang.model.element.Element elementFor(com.sun.javadoc.Doc)
- anno 0 java.lang.Deprecated()
 meth public javax.lang.model.element.Element findElement(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1258,7 +1262,7 @@ meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.e
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
 supr java.lang.Object
-hfds LOG,MAX_LEN,VOWELS
+hfds LOG
 hcls CaseInsensitiveMatch,CaseSensitiveMatch,Match
 
 CLSS public abstract interface org.netbeans.api.java.source.Task<%0 extends java.lang.Object>
@@ -1324,6 +1328,8 @@ meth public com.sun.source.tree.BlockTree removeBlockStatement(com.sun.source.tr
 meth public com.sun.source.tree.BlockTree removeBlockStatement(com.sun.source.tree.BlockTree,int)
 meth public com.sun.source.tree.BreakTree Break(java.lang.CharSequence)
 meth public com.sun.source.tree.CaseTree Case(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.StatementTree>)
+meth public com.sun.source.tree.CaseTree Case(java.util.List<? extends com.sun.source.tree.ExpressionTree>,com.sun.source.tree.Tree)
+meth public com.sun.source.tree.CaseTree CaseMultipleLabels(java.util.List<? extends com.sun.source.tree.ExpressionTree>,java.util.List<? extends com.sun.source.tree.StatementTree>)
 meth public com.sun.source.tree.CaseTree addCaseStatement(com.sun.source.tree.CaseTree,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.CaseTree insertCaseStatement(com.sun.source.tree.CaseTree,int,com.sun.source.tree.StatementTree)
 meth public com.sun.source.tree.CaseTree removeCaseStatement(com.sun.source.tree.CaseTree,com.sun.source.tree.StatementTree)
@@ -1484,6 +1490,7 @@ meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.
 meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.SwitchTree,int)
 meth public com.sun.source.tree.SynchronizedTree Synchronized(com.sun.source.tree.ExpressionTree,com.sun.source.tree.BlockTree)
 meth public com.sun.source.tree.ThrowTree Throw(com.sun.source.tree.ExpressionTree)
+meth public com.sun.source.tree.Tree SwitchExpression(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public com.sun.source.tree.Tree Type(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1577,8 +1584,8 @@ meth public com.sun.source.tree.Scope reattributeTreeTo(com.sun.source.tree.Tree
 meth public com.sun.source.tree.Scope scopeFor(int)
 meth public com.sun.source.tree.Scope toScopeWithDisabledAccessibilityChecks(com.sun.source.tree.Scope)
 meth public com.sun.source.tree.StatementTree getBreakContinueTarget(com.sun.source.util.TreePath)
-meth public com.sun.source.tree.Tree getBreakContinueTargetTree(com.sun.source.util.TreePath)
 meth public com.sun.source.tree.StatementTree parseStatement(java.lang.String,com.sun.source.util.SourcePositions[])
+meth public com.sun.source.tree.Tree getBreakContinueTargetTree(com.sun.source.util.TreePath)
 meth public com.sun.source.tree.Tree translate(com.sun.source.tree.Tree,java.util.Map<? extends com.sun.source.tree.Tree,? extends com.sun.source.tree.Tree>)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1712,6 +1719,8 @@ meth public java.util.Collection<? extends org.netbeans.api.java.source.matching
 meth public org.netbeans.api.java.source.matching.Matcher setCancel(java.util.concurrent.atomic.AtomicBoolean)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.java.source.matching.Matcher setKeepSyntheticTrees()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.api.java.source.matching.Matcher setPresetVariable(java.util.Map<java.lang.String,com.sun.source.util.TreePath>,java.util.Map<java.lang.String,java.util.Collection<? extends com.sun.source.util.TreePath>>,java.util.Map<java.lang.String,java.lang.String>)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()

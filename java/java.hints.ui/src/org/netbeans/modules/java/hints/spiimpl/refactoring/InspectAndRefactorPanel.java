@@ -413,13 +413,13 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                 todo.addAll(Arrays.asList(source.getRoots()));
             }
 
-            customScope = org.netbeans.modules.refactoring.api.Scope.create(todo, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+            customScope = org.netbeans.modules.refactoring.api.Scope.create(todo, Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         } else if (selectedItem == currentProject) {
-            ArrayList<FileObject> roots = new ArrayList();
+            List<FileObject> roots = new ArrayList<>();
             for (SourceGroup gr:ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 roots.add(gr.getRootFolder());
             }
-            customScope = org.netbeans.modules.refactoring.api.Scope.create(roots, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+            customScope = org.netbeans.modules.refactoring.api.Scope.create(roots, Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         } else if (selectedItem == currentPackage) {
             //current package
             if (fileObject != null) {
@@ -430,15 +430,15 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                         return fileObject.isFolder()?fileObject:fileObject.getParent();
                     }
                 });
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, col, Collections.EMPTY_LIST);
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), col, Collections.<FileObject>emptyList());
             }
         } else if (selectedItem == currentFile) {
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.singleton(fileObject));
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), Collections.<NonRecursiveFolder>emptyList(), Collections.singleton(fileObject));
         } else {
             //custom
             customScope = readScope();
             if (customScope==null)
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         }
         org.netbeans.modules.refactoring.api.Scope s = JavaScopeBuilder.open(NbBundle.getMessage(InspectAndRefactorPanel.class, "CTL_CustomScope"), customScope);
         if (s != null) {

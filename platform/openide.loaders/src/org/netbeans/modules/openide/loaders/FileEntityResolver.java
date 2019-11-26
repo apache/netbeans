@@ -19,8 +19,9 @@
 
 package org.netbeans.modules.openide.loaders;
 
-import java.io.IOException;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.lang.ref.Reference;
@@ -79,7 +80,7 @@ public final class FileEntityResolver extends EntityCatalog implements Environme
     
     /** Tries to find the entity on system file system.
      */
-    public InputSource resolveEntity(String publicID, String systemID) throws IOException, SAXException {
+    public InputSource resolveEntity(String publicID, String systemID) throws FileNotFoundException, SAXException {
         if (publicID == null) {
             return null;
         }
@@ -94,19 +95,14 @@ public final class FileEntityResolver extends EntityCatalog implements Environme
         FileObject fo = FileUtil.getConfigFile (sb.toString ());
         if (fo != null) {
             
-            // fill in InputSource instance
-            
-            InputSource in = new InputSource (fo.getInputStream ());
-            try {
-                Object myPublicID = fo.getAttribute("hint.originalPublicID");  //NOI18N
-                if (myPublicID instanceof String) {
-                    in.setPublicId((String)myPublicID);
-                }                
-                URL url = fo.getURL();
-                in.setSystemId(url.toString());  // we get nasty nbfs: instead nbres: but it is enough                
-            } catch (IOException ex) {
-                // do no care just no system id
-            }
+            // fill in InputSource instance, could possibly throw an error..
+            InputSource in = new InputSource (fo.getInputStream());
+            Object myPublicID = fo.getAttribute("hint.originalPublicID");  //NOI18N
+            if (myPublicID instanceof String) {
+                in.setPublicId((String)myPublicID);
+            }                
+            URL url = fo.toURL();
+            in.setSystemId(url.toString());  // we get nasty nbfs: instead nbres: but it is enough                
             return in;
         } else {
             return null;

@@ -99,7 +99,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider( service = ProfilerOptionsPanel.class, position = 15 )
 public final class FiltersOptionsPanel extends ProfilerOptionsPanel {
     
-    private final List<ColoredFilter> colors = new ArrayList();
+    private final List<ColoredFilter> colors = new ArrayList<ColoredFilter>();
     private final ColorsTableModel colorsModel = new ColorsTableModel();
     
     private JCheckBox coloringChoice;

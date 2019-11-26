@@ -100,7 +100,7 @@ public class TaskList {
         if( null != removed && !removed.isEmpty() )
             fireTasksRemoved( removed );
         if( null != tasksToAdd && !tasksToAdd.isEmpty() )
-            fireTasksAdded(new ArrayList(tasksToAdd));
+            fireTasksAdded(new ArrayList<Task>(tasksToAdd));
     }
     
     void clear( PushTaskScanner scanner ) {

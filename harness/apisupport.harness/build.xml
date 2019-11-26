@@ -32,6 +32,20 @@
             <zipfileset src="${nbantext.jar}" includes="${bundled.tasks}"/>
             <zipfileset file="taskdefs.properties" fullpath="org/netbeans/nbbuild/taskdefs.properties"/>
         </nb-ext-jar>
+        
+        <!-- verify that the DownloadBinaries task is properly functional -->
+        <taskdef name="TestDownload" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries">
+            <classpath>
+                <pathelement location="${cluster}/tasks.jar"></pathelement>
+            </classpath>
+        </taskdef>
+        <echo file="build/binaries-list">FA637EB67EB7628C915D73762B681AE7FF0B9731 org.ow2.asm:asm:7.2</echo>
+        <TestDownload>
+            <manifest dir="build">
+                <include name="binaries-list"/>
+            </manifest>
+        </TestDownload>
+        <delete file="build/asm-7.2.jar"/>
     </target>
 
     <target name="compile-jnlp-launcher" depends="init,compile">

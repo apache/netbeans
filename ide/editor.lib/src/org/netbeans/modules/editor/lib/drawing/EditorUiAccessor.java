@@ -43,7 +43,7 @@ public abstract class EditorUiAccessor {
     public static synchronized EditorUiAccessor get() {
         // Trying to wake up EditorUI ...
         try {
-            Class clazz = Class.forName(EditorUI.class.getName());
+            Class<?> clazz = Class.forName(EditorUI.class.getName());
         } catch (ClassNotFoundException e) {
             // ignore
         }

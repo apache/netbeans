@@ -97,7 +97,7 @@ public class TestServer {
 
     private static class ServerThread extends Thread {
 
-        private static final Pattern HTTP_PATTERN = Pattern.compile("GET (/[^\\s]*) HTTP/1\\.[01]");
+        private static final Pattern HTTP_PATTERN = Pattern.compile("(GET|HEAD) (/[^\\s]*) HTTP/1\\.[01]");
         private final Socket socket;
 
         public ServerThread(Socket socket) {
@@ -118,20 +118,19 @@ public class TestServer {
                                     break;
                                 }
                             }
-                            String resource = matcher.group(1);
-                            if (resource.endsWith(".txt")) {
+                            String httpVerb = matcher.group(1);
+                            String resource = matcher.group(2);
+                            if (resource.endsWith("moved.zip")) {
                                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                                 try {
-                                    out.print("HTTP/1.0 200 OK\r\n");
-                                    out.print("Content-Type: text/plain\r\n");
-                                    out.print("Connection: close\r\n");
+                                    out.print("HTTP/1.0 301 Moved Permanently\r\n");
+                                    out.print("Location: http://localhost:4444/glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip\r\n");
                                     out.print("\r\n");
-                                    out.print("glassfish/v3-prelude/release/glassfish-v3-prelude-ml.zip\r\n");
                                     out.flush();
                                 } finally {
                                     out.close();
                                 }
-                            } else if (resource.endsWith(".zip")) {
+                            } else if (resource.endsWith("prelude-ml.zip")) {
                                 OutputStream rawOut = new BufferedOutputStream(socket.getOutputStream());
                                 try {
                                     PrintWriter out = new PrintWriter(rawOut, true);
@@ -141,15 +140,17 @@ public class TestServer {
                                         out.print("Connection: close\r\n");
                                         out.print("\r\n");
                                         out.flush();
-                                        ZipOutputStream zip = new ZipOutputStream(rawOut);
-                                        try {
-                                            writeFile(zip, "gf_fake.jar", 1024 * 1024 * 10);
-                                            writeFile(zip, "test/gf_fake_lib.jar", 1024 * 1024 * 5);
-                                            zip.flush();
-                                            zip.finish();
-                                        } finally {
-                                            zip.close();
-                                        }
+                                        if(httpVerb.equals("GET")) {
+                                            ZipOutputStream zip = new ZipOutputStream(rawOut);
+                                            try {
+                                                writeFile(zip, "gf_fake.jar", 1024 * 1024 * 10);
+                                                writeFile(zip, "test/gf_fake_lib.jar", 1024 * 1024 * 5);
+                                                zip.flush();
+                                                zip.finish();
+                                            } finally {
+                                                zip.close();
+                                            }
+                                        }   
                                     } finally {
                                         out.close();
                                     }
@@ -174,8 +175,8 @@ public class TestServer {
                         in.close();
                     } finally {
                         socket.close();
-                    }
-                }
+                        }    
+                      }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

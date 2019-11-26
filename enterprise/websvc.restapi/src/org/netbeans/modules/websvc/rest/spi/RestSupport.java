@@ -495,8 +495,23 @@ public abstract class RestSupport {
                 Profile.JAVA_EE_6_FULL.equals(profile);
         boolean isJee7 = Profile.JAVA_EE_7_WEB.equals(profile) ||
                         Profile.JAVA_EE_7_FULL.equals(profile);
+        boolean isJee8 = Profile.JAVA_EE_8_WEB.equals(profile) ||
+                        Profile.JAVA_EE_8_FULL.equals(profile);
         // Fix for BZ#216345: JAVA_EE_6_WEB profile doesn't contain JAX-RS API
         return (isJee6 && MiscPrivateUtilities.supportsTargetProfile(project, Profile.JAVA_EE_6_FULL)) || isJee7;
+    }
+
+    /**
+     * Is this EE8 profile project?
+     */
+    public boolean isEE8(){
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if ( webModule == null ){
+            return false;
+        }
+        Profile profile = webModule.getJ2eeProfile();
+        return Profile.JAVA_EE_8_WEB.equals(profile) ||
+                        Profile.JAVA_EE_8_FULL.equals(profile);
     }
 
     /**

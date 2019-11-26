@@ -24,6 +24,7 @@
 
     <folder name="Templates">
         <folder name="Project">
+            <folder name="AntJava">
             <folder name="J2EE">
                 <attr name="position" intvalue="400"/>
                 <file name="emptyCar.xml">
@@ -43,6 +44,7 @@
                     <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/appclient.gif"/>
                     <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-importProject.html"/>
                 </file>                
+            </folder>
             </folder>
         </folder>
     </folder>

@@ -30,7 +30,7 @@ import org.openide.filesystems.FileObject;
 
 
 /**
- * Maven2 Implementation of 
+ * Gradle Implementation of 
  * <CODE>org.netbeans.modules.j2ee.persistence.spi.PersistenceScopeProvider</CODE> 
  * @author Daniel Mohni
  */

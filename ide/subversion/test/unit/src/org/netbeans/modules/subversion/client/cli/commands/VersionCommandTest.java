@@ -30,6 +30,36 @@ public class VersionCommandTest {
         assertNotNull(Version.parse("1.2"));
         assertNotNull(Version.parse("1.10.0 (r1827917)"));
     }
+    
+    @Test
+    public void testSplitting() {
+        assertFalse(Version.parse("1.2.3").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("0-dev").lowerThan(Version.parse("0")));
+        assertFalse(Version.parse("0-dev").greaterThan(Version.parse("0")));
+        
+        assertFalse(Version.parse("1.2.3-dev").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3-dev").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("1.2.3-SNAPSHOT").lowerThan(Version.parse("1.2.3")));
+        assertFalse(Version.parse("1.2.3-SNAPSHOT").greaterThan(Version.parse("1.2.3")));
+        
+        assertFalse(Version.parse("1.2-SNAPSHOT").lowerThan(Version.parse("1.2")));
+        assertFalse(Version.parse("1.2-SNAPSHOT").greaterThan(Version.parse("1.2")));
+        
+        assertFalse(Version.parse("1-SNAPSHOT").lowerThan(Version.parse("1")));
+        assertFalse(Version.parse("1-SNAPSHOT").greaterThan(Version.parse("1")));
+        
+        assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)").lowerThan(Version.parse("1.9.7")));
+        assertFalse(Version.parse("1.9.7-SlikSvn (SlikSvn/1.9.7)").greaterThan(Version.parse("1.9.7")));
+
+        assertFalse(Version.parse("1.10.0 (r1827917)").lowerThan(Version.parse("1.10.0")));
+        assertFalse(Version.parse("1.10.0 (r1827917)").greaterThan(Version.parse("1.10.0")));
+
+        assertFalse(Version.parse("1.9.7 (r1800392)").lowerThan(Version.parse("1.9.7")));
+        assertFalse(Version.parse("1.9.7 (r1800392)").greaterThan(Version.parse("1.9.7")));
+    }
 
     @Test
     public void testComparison() {
@@ -50,7 +80,7 @@ public class VersionCommandTest {
     @Test
     public void testRemainder() {
         assertEquals("(r1827917)", Version.parse("1.10.0 (r1827917)").remainder);
-        assertEquals("SNAPSHOT", Version.parse("1.1.1-SNAPSHOT", "-").remainder);
+        assertEquals("SNAPSHOT", Version.parse("1.1.1-SNAPSHOT").remainder);
     }
 
     @Test
@@ -61,12 +91,7 @@ public class VersionCommandTest {
         } catch (IllegalArgumentException ex) {
         }
         try {
-            Version.parse(null, null);
-            fail("Null argument should not be accepted");
-        } catch (IllegalArgumentException ex) {
-        }
-        try {
-            Version.parse("1.1.1", null);
+            Version.parse(null);
             fail("Null argument should not be accepted");
         } catch (IllegalArgumentException ex) {
         }

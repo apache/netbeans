@@ -52,6 +52,22 @@ public class ContextActionNonAWTTest extends ContextActionTest {
         SwingUtilities.invokeAndWait(run);
         return run.is;
     }
+
+    @Override
+    protected boolean getIsChecked(final Action a1) throws InterruptedException, InvocationTargetException {
+        assertFalse("Not in AWT", EventQueue.isDispatchThread());
+        
+        class R implements Runnable {
+            boolean is;
+            public void run() {
+                is = Boolean.TRUE.equals(a1.getValue(Action.SELECTED_KEY));
+            }
+        }
+        R run = new R();
+        SwingUtilities.invokeAndWait(run);
+        return run.is;
+    }
+
     protected void doActionPerformed(final Action a1, final ActionEvent ev) throws InterruptedException, InvocationTargetException {
         assertFalse("Not in AWT", EventQueue.isDispatchThread());
         

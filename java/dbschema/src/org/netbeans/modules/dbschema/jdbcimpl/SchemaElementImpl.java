@@ -247,7 +247,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                         String tableTmp;
                         if (bridge != null)
-                            tableTmp = (String) bridge.getDriverSpecification().getRow().get(new Integer(3));
+                            tableTmp = bridge.getDriverSpecification().getRow().get(new Integer(3));
                         else
                             tableTmp = rs.getString("TABLE_NAME").trim(); //NOI18N
                         
@@ -276,7 +276,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         }
 
                         if (bridge != null)
-                            viewsTmp.add((String) bridge.getDriverSpecification().getRow().get(new Integer(3)));
+                            viewsTmp.add(bridge.getDriverSpecification().getRow().get(new Integer(3)));
                         else
                             viewsTmp.add(rs.getString("TABLE_NAME").trim()); //NOI18N
                     }
@@ -545,7 +545,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                             IndexElement[] indexes = new IndexElement[keys.length];
                             for (int k = 0; k < keys.length; k++)
-                                indexes[k] = ((UniqueKeyElement) keys[k]).getAssociatedIndex();
+                                indexes[k] = keys[k].getAssociatedIndex();
                             te.setIndexes(indexes);
                         }
 

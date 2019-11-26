@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.semantic;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.java.source.CompilationController;
@@ -252,6 +253,53 @@ public class DetectorTest extends TestBase {
         performTest("GenericBoundIsClassUse");
     }
 
+    public void testParameterNames() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "package test;" +
+                    "public class Test {" +
+                    "    public void api(String param1, int param2, int param3, float param4, Object... param5) {" +
+                    "    }" +
+                    "    private int getValue() {" +
+                    "        return -1;" +
+                    "    }" +
+                    "    private void test() {" +
+                    "        api(\"\", 2, getValue(), 1.0f);" +
+                    "        api(\"\", 2, getValue(), 1.0f, null);" +
+                    "        api(\"\", 2, getValue(), 1.0f, null, null);" +
+                    "    }" +
+                    "}",
+                    "[PUBLIC, CLASS, DECLARATION], 0:26-0:30\n" +
+                    "[PUBLIC, METHOD, DECLARATION], 0:48-0:51\n" +
+                    "[PUBLIC, CLASS], 0:52-0:58\n" +
+                    "[PARAMETER, DECLARATION], 0:59-0:65\n" +
+                    "[PARAMETER, DECLARATION], 0:71-0:77\n" +
+                    "[PARAMETER, DECLARATION], 0:83-0:89\n" +
+                    "[PARAMETER, DECLARATION], 0:97-0:103\n" +
+                    "[PUBLIC, CLASS], 0:105-0:111\n" +
+                    "[PARAMETER, DECLARATION], 0:115-0:121\n" +
+                    "[PRIVATE, METHOD, DECLARATION], 0:145-0:153\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 0:197-0:201\n" +
+                    "[PUBLIC, METHOD], 0:213-0:216\n" +
+                    "[param1:], 0:217-0:218\n" +
+                    "[param2:], 0:221-0:222\n" +
+                    "[PRIVATE, METHOD], 0:224-0:232\n" +
+                    "[param4:], 0:236-0:237\n" +
+                    "[PUBLIC, METHOD], 0:250-0:253\n" +
+                    "[param1:], 0:254-0:255\n" +
+                    "[param2:], 0:258-0:259\n" +
+                    "[PRIVATE, METHOD], 0:261-0:269\n" +
+                    "[param4:], 0:273-0:274\n" +
+                    "[param5:], 0:279-0:280\n" +
+                    "[PUBLIC, METHOD], 0:293-0:296\n" +
+                    "[param1:], 0:297-0:298\n" +
+                    "[param2:], 0:301-0:302\n" +
+                    "[PRIVATE, METHOD], 0:304-0:312\n" +
+                    "[param4:], 0:316-0:317\n" +
+                    "[param5:], 0:322-0:323\n" +
+                    "[param5:], 0:328-0:329\n");
+    }
+
     @RandomlyFails
     public void testBLE91246() throws Exception {
         final boolean wasThrown[] = new boolean[1];
@@ -398,6 +446,50 @@ public class DetectorTest extends TestBase {
         performTest("IncDecReading230408");
     }
 
+    public void testYield() throws Exception {
+        enablePreview();
+        performTest("YieldTest.java",
+                    "public class YieldTest {\n" +
+                    "    private int map(int i) {\n" +
+                    "        return switch (i) { default -> { yield 0; } };\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:22\n" +
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 1:16-1:19\n" +
+                    "[PARAMETER, DECLARATION], 1:24-1:25\n" +
+                    "[PARAMETER], 2:23-2:24\n" +
+                    "[KEYWORD], 2:41-2:46\n");
+    }
+
+    public void testRawStringLiteral() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException iae) {
+            //OK, presumably no support for raw string literals
+        }
+        setSourceLevel("13");
+        performTest("RawStringLiteral",
+                    "public class RawStringLiteral {\n" +
+                    "    String s1 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "                  int i2 = 2;\n" +
+                    "             \"\"\";\n" +
+                    "    String s2 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "                  int i2 = 2;\n" +
+                    "                      \"\"\";\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
+                    "[PUBLIC, CLASS], 1:4-1:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
+                    "[UNINDENTED_TEXT_BLOCK], 3:13-3:29",
+                    "[PUBLIC, CLASS], 5:4-5:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 5:11-5:13",
+                    "[UNINDENTED_TEXT_BLOCK], 6:16-6:27",
+                    "[UNINDENTED_TEXT_BLOCK], 7:16-7:29");
+    }
+
     private void performTest(String fileName) throws Exception {
         performTest(fileName, new Performer() {
             public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
@@ -411,6 +503,32 @@ public class DetectorTest extends TestBase {
         });
     }
     
+    private void performTest(String fileName, String content, String expected) throws Exception {
+        performTest(fileName, content, new Performer() {
+            public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
+                new SemanticHighlighterBase() {
+                    @Override
+                    protected boolean process(CompilationInfo info, Document doc) {
+                        return process(info, doc, setter);
+                    }
+                }.process(parameter, doc);
+            }
+        }, false, expected);
+    }
+
+    private void performTest(String fileName, String code, String... expected) throws Exception {
+        performTest(fileName, code, new Performer() {
+            public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
+                new SemanticHighlighterBase() {
+                    @Override
+                    protected boolean process(CompilationInfo info, Document doc) {
+                        return process(info, doc, setter);
+                    }
+                }.process(parameter, doc);
+            }
+        }, expected);
+    }
+
     private FileObject testSourceFO;
     
     static {

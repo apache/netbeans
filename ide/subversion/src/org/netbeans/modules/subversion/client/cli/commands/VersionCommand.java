@@ -143,24 +143,8 @@ public class VersionCommand extends SvnCommand {
          * @throws IllegalArgumentException if one of parameters was null
          */
         public static Version parse(String version) throws NumberFormatException, IllegalArgumentException {
-            return parse(version, " ");
-        }
-
-        /**
-         * Parse version string into container. String must be in
-         * "MAJOR.MINOR.PATCH-reminder" format. Reminder part is optional.
-         *
-         * @param version non null string with version, say 1.1.1-SNAPSHOT
-         * @param remainderDelimiter a symbol to separate semantic version from
-         * reminder, say "-" for "1.1.1-SNAPSHOT"
-         * @return non null version
-         * @throws NumberFormatException should parse error occur
-         * @throws IllegalArgumentException if one of parameters was null
-         */
-        public static Version parse(String version, String remainderDelimiter) throws NumberFormatException, IllegalArgumentException {
             assertNotNullArg(version, "Version parameter must not be null");
-            assertNotNullArg(remainderDelimiter, "reminderDelimiter parameter must not be null");
-            String[] versionMajorParts = version.split(Pattern.quote(remainderDelimiter), 2);
+            String[] versionMajorParts = version.split("[^\\d.]", 2);
 
             String[] stringParts = versionMajorParts[0].split("\\.");
             int[] parts = new int[stringParts.length];

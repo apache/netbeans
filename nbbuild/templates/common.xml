@@ -78,10 +78,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-7.2.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-7.2.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-all-5.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-7.2.jar"/>
     </target>
 
     <target name="-release.dir">
@@ -322,8 +322,8 @@
     <target name="-validate-layers" depends="init">
         <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Layer" property="layer.file"/>
         <!-- DTD from sources -->
-        <available file="${nb_all}/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
-                   property="dtd.cp" value="${nb_all}/openide.filesystems/src"/>
+        <available file="${nb_all}/platform/openide.filesystems/src/org/openide/filesystems/filesystem.dtd" type="file"
+                   property="dtd.cp" value="${nb_all}/platform/openide.filesystems/src"/>
         <!-- DTD from platform -->
         <pathconvert property="dtd.cp">
             <pathfileset>
@@ -435,7 +435,7 @@
         <mkdir dir="${build.dir}"/>
         <property name="nbm.target.cluster" value=""/> <!-- fallback -->
         <property name="license.file.override" value="${license.file}"/>
-        <property name="use.pack200" value="true"/>
+        <property name="use.pack200" value="false"/>
         <property name="pack200.excludes" value=""/>
         <property name="nbm.locales" value="${locales}"/>
         <makenbm file="${build.dir}/${nbm}"

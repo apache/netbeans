@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="IDE" basedir="." default="build-pkg">
+
+
+    <property name="builddir" value="${basedir}/build"/>
+    <property name="appdir" value="${builddir}/app/${appname}.app"/>
+    <property name="scriptsdir" value="${builddir}/scripts"/>
+
+    <target name="clean">
+        <delete dir="${builddir}"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${appdir}/Contents/MacOS"/>
+        <mkdir dir="${appdir}/Contents/Resources"/>
+        <mkdir dir="${scriptsdir}"/>
+    </target>
+
+    <target name="build-app" depends="do-build-app"/>
+    
+    <target name="do-build-app" description="Builds Mac OS X application bundle">
+        <echo>Creating ${appname}.app bundle using build/netbeans as master</echo>
+               
+        <echo message="Copying netbeans home dir to ${appdir}/Contents/Resources/NetBeans"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="cp -RPp ${builddir}/netbeans '${appdir}/Contents/Resources/NetBeans'"/>
+        </exec>
+        
+        <echo message="Generating Info.plist for top-level Contents directory" />
+        <copy file="Info.plist" filtering="true" tofile="${appdir}/Contents/Info.plist">
+            <filterset>
+                <filter token="APPNAME" value="${appname}"/>
+                <filter token="APPVERSION" value="${appversion}"/>
+                <filter token="VERSION" value="${nbide.version}"/>
+                <filter token="EXENAME" value="netbeans"/>
+                <filter token="ICONFILENAME" value="netbeans.icns"/>
+                <filter token="NB_ID" value="${nb.id}"/>
+            </filterset>
+        </copy>
+        
+        <echo message="Delete launchers for another platforms"/>
+        <delete>
+            <fileset dir="${appdir}/Contents/Resources/NetBeans/netbeans/bin" includes="*.exe"/>
+        </delete>
+        
+        <echo message="Copying the icon into the correct place" />
+        <copy file="${appdir}/Contents/Resources/NetBeans/netbeans/${nbClusterDir}/netbeans.icns" todir="${appdir}/Contents/Resources"/>
+        
+        <echo message="Creating launch script symlink ${appdir}/Contents/MacOS/netbeans"/>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="ln -s '../Resources/NetBeans/netbeans/bin/netbeans' '${appdir}/Contents/MacOS/netbeans'"/>
+        </exec>
+    </target>
+    
+    <target name="build-pkg" depends="init, build-app">
+        <echo file="${scriptsdir}/env.sh"><![CDATA[
+NETBEANS_INSTALL_DIR="${app.name}"
+NETBEANS_BUILDNUMBER="${buildnumber}"
+NETBEANS_CHECK_BUILDNUMBER=${nb.check.build.number}
+TOMCAT_INSTALL_DIR="${tomcat.install.dir}"
+NB_CLUSTER_DIR="${nbClusterDir}"
+#GLASSFISH_INSTALL_DIR="${glassfish.install.dir}"
+#DEFAULT_JDK_HOME="${default.jdk.home}"
+NB_ID="${nb.id}"
+#GLASSFISH_ID="${glassfish.id}"
+#TOMCAT_ID="${tomcat.id}"
+]]></echo>
+
+        <copy file="pkg/Info.plist" filtering="true" tofile="${builddir}/Info.plist">
+            <filterset>
+                <filter token="APPVERSION" value="${nbide.version}"/> 
+                <filter token="INSTALLDIR" value="${install.dir}"/>
+                <filter token="BASEVERSION" value="${nbide.version}"/>
+                <filter token="NB_ID" value="${nb.id}"/>
+            </filterset>
+        </copy>        
+
+        <copy todir="${scriptsdir}" verbose="yes">
+            <fileset dir="${basedir}/pkg/scripts"/>
+        </copy>
+        
+        <copy file="${basedir}/../../commonfiles/get_current_jdk.sh" tofile="${scriptsdir}/get_current_jdk.sh"/>
+        <copy file="${basedir}/../../commonfiles/postupgrade_generic" tofile="${scriptsdir}/postupgrade" overwrite="false"/>
+        <copy file="${basedir}/../../commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall" overwrite="false"/>
+        <copy file="${basedir}/../../commonfiles/postinstall_generic" tofile="${scriptsdir}/postinstall_generic" overwrite="false"/>
+        
+        <chmod dir="${scriptsdir}" perm="ugo+x" includes="**/*"/>
+
+        <echo message="Building ide.pkg into ${basedir}/../../build/nbide.pkg"/>
+        
+        <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}">
+            <filterchain>
+               <striplinebreaks/>
+            </filterchain>
+        </loadfile>
+        <exec executable="sh" failonerror="yes">
+            <arg value="-c"/>
+            <arg value="pkgbuild --root ${builddir}/app --scripts ${scriptsdir} --identifier org.netbeans.ide.nbide.${nb.id} --install-location ${install.dir} --sign '${sign_iden_name}' ${basedir}/../../build/nbide-${nb.id}.pkg"/>
+        </exec>
+        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
+            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign ${basedir}/../../build/nbide-${nb.id}.pkg -signed_location /${basedir}/../../build/ -sign_method mac_pkg -server UK" />
+        </java-->
+    </target>
+    
+    
+</project>

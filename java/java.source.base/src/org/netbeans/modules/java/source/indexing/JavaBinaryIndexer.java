@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.source.indexing;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.model.JavacElements;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +49,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.base.Module;
@@ -82,7 +83,11 @@ public class JavaBinaryIndexer extends BinaryIndexer {
 
     @Override
     protected void index(final Context context) {
-        LOG.log(Level.FINE, "index({0})", context.getRootURI());
+        doIndex(context, context.getRootURI(), null);
+    }
+
+    static void doIndex(final Context context, URL rootURI, Predicate<ClassFile> accept) {
+        LOG.log(Level.FINE, "index({0})", rootURI);
         try {
             final ClassIndexManager cim = ClassIndexManager.getDefault();
             ClassIndexImpl uq = cim.createUsagesQuery(context.getRootURI(), false);
@@ -93,12 +98,12 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             if (context.isAllFilesIndexing()) {
                 final BinaryAnalyser ba = uq.getBinaryAnalyser();
                 if (ba != null) { //ba == null => IDE is exiting, indexing will be done on IDE restart
-                    final BinaryAnalyser.Changes changes = ba.analyse(context);
+                    final BinaryAnalyser.Changes changes = ba.analyse(context, rootURI, accept);
                     if (changes.done) {
                         final Map<URL, List<URL>> binDeps = IndexingController.getDefault().getBinaryRootDependencies();
                         final Map<URL, List<URL>> srcDeps = IndexingController.getDefault().getRootDependencies();
                         final Map<URL, List<URL>> peers = IndexingController.getDefault().getRootPeers();
-                        final List<ElementHandle<TypeElement>> changed = new ArrayList<ElementHandle<TypeElement>>(changes.changed.size()+changes.removed.size());
+                        final List<ElementHandle<TypeElement>> changed = new ArrayList<>(changes.changed.size()+changes.removed.size());
                         changed.addAll(changes.changed);
                         changed.addAll(changes.removed);
                         if (!changes.changed.isEmpty() || !changes.added.isEmpty() || !changes.removed.isEmpty()) {

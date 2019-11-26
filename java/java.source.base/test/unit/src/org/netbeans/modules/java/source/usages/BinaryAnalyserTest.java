@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,14 +47,17 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClassIndex.NameKind;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
-import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser.Changes;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl.UsageType;
+import org.netbeans.modules.parsing.impl.indexing.SPIAccessor;
+import org.netbeans.modules.parsing.impl.indexing.SuspendSupport;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexManager;
 import org.netbeans.modules.parsing.lucene.support.LowMemoryWatcherAccessor;
 import org.netbeans.modules.parsing.lucene.support.Queries;
+import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
@@ -97,28 +101,62 @@ public class BinaryAnalyserTest extends NbTestCase {
         requireFullIndex(true);
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         FileObject indexDir = workDir.createFolder("index");
-        File binaryAnalyzerDataDir = new File(getDataDir(), "Annotations.jar");
+        File binaryAnalyzerDataDir = annotationsJar();
 
         final Index index = IndexManager.createIndex(FileUtil.toFile(indexDir), DocumentUtil.createAnalyzer());
         BinaryAnalyser a = new BinaryAnalyser(new IndexWriter(index), getWorkDir());
 
-        assertTrue(a.analyse(FileUtil.getArchiveRoot(Utilities.toURI(binaryAnalyzerDataDir).toURL())).done);
+        assertTrue(a.analyse(Utilities.toURI(binaryAnalyzerDataDir).toURL()).done);
         assertReference(index, "annotations.NoArgAnnotation", "usages.ClassAnnotations", "usages.MethodAnnotations", "usages.FieldAnnotations");
         assertReference(index, "annotations.ArrayOfStringArgAnnotation", "usages.ClassAnnotations", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
         assertReference(index, "annotations.TestEnum", "usages.ClassAnnotations", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
         assertReference(index, "java.util.List", "usages.ClassAnnotations", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
     }
 
+    public void testFilterOutClasses() throws Exception {
+        requireFullIndex(true);
+        FileObject workDir = FileUtil.toFileObject(getWorkDir());
+        FileObject indexDir = workDir.createFolder("index");
+        File binaryAnalyzerDataDir = annotationsJar();
+
+        final Index index = IndexManager.createIndex(FileUtil.toFile(indexDir), DocumentUtil.createAnalyzer());
+        BinaryAnalyser a = new BinaryAnalyser(new IndexWriter(index), getWorkDir());
+        
+        final URL url = Utilities.toURI(binaryAnalyzerDataDir).toURL();
+        Context ctx = SPIAccessor.getInstance().createContext(
+            FileUtil.createMemoryFileSystem().getRoot(),
+            url,
+            JavaIndex.NAME,
+            JavaIndex.VERSION,
+            null,
+            false,
+            false,
+            false,
+            SuspendSupport.NOP,
+            null,
+            null
+        );
+        Changes res = a.analyse(ctx, url, (cf) -> {
+            final String name = cf.getSourceFileName();
+            return "TestEnum.java".equals(name) || "ClassAnnotations.java".equals(name);
+        });
+
+        assertTrue("Parsed OK", res.done);
+        assertNoReference(index, "annotations.NoArgAnnotation", "usages.MethodAnnotations", "usages.FieldAnnotations");
+        assertNoReference(index, "annotations.ArrayOfStringArgAnnotation", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
+        assertReference(index, "annotations.ArrayOfStringArgAnnotation", "usages.ClassAnnotations");
+        assertReference(index, "annotations.TestEnum", "usages.ClassAnnotations");
+        assertNoReference(index, "annotations.TestEnum", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
+        assertNoReference(index, "java.util.List", "usages.ClassArrayAnnotations", "usages.MethodAnnotations", "usages.MethodArrayAnnotations", "usages.FieldAnnotations", "usages.FieldArrayAnnotations");
+        assertReference(index, "java.util.List", "usages.ClassAnnotations");
+    }
+
     public void testDeleteClassFolderContent() throws Exception {
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         FileObject indexDir = workDir.createFolder("index");
-        File jar = new File(getDataDir(), "Annotations.jar");
-        FileObject classFolderFO = workDir.createFolder("classes");
-        File classFolder = FileUtil.toFile(classFolderFO);
-
-        assertNotNull(classFolder);
-
-        unzip(jar, classFolder);
+        File jar = annotationsJar();
+        File classFolder = jar;
+        assertTrue("it is a dir", classFolder.isDirectory());
 
         final Index index = IndexManager.createIndex(FileUtil.toFile(indexDir), DocumentUtil.createAnalyzer());
         BinaryAnalyser a = new BinaryAnalyser(new IndexWriter(index), getWorkDir());
@@ -151,13 +189,9 @@ public class BinaryAnalyserTest extends NbTestCase {
     public void testDeleteClassFolder() throws Exception {
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         FileObject indexDir = workDir.createFolder("index");
-        File jar = new File(getDataDir(), "Annotations.jar");
-        FileObject classFolderFO = workDir.createFolder("classes");
-        File classFolder = FileUtil.toFile(classFolderFO);
-
-        assertNotNull(classFolder);
-
-        unzip(jar, classFolder);
+        File jar = annotationsJar();
+        File classFolder = jar;
+        assertTrue("it is a dir", classFolder.isDirectory());
 
         final Index index = IndexManager.createIndex(FileUtil.toFile(indexDir), DocumentUtil.createAnalyzer());
         BinaryAnalyser a = new BinaryAnalyser(new IndexWriter(index), getWorkDir());
@@ -189,7 +223,7 @@ public class BinaryAnalyserTest extends NbTestCase {
         requireFullIndex(true);
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         FileObject indexDir = workDir.createFolder("index");
-        File binaryAnalyzerDataDir = new File(getDataDir(), "Annotations.jar");
+        File binaryAnalyzerDataDir = annotationsJar();
 
         final Index index = IndexManager.createIndex(FileUtil.toFile(indexDir), DocumentUtil.createAnalyzer());
         BinaryAnalyser a = new BinaryAnalyser(
@@ -207,7 +241,7 @@ public class BinaryAnalyserTest extends NbTestCase {
         );
 
         LowMemoryWatcherAccessor.setLowMemory(true);
-        assertTrue(a.analyse(FileUtil.getArchiveRoot(Utilities.toURI(binaryAnalyzerDataDir).toURL())).done);
+        assertTrue(a.analyse(Utilities.toURI(binaryAnalyzerDataDir).toURL()).done);
         // at least one flush occured.
         assertFalse(flushCount == 0);
 
@@ -245,6 +279,17 @@ public class BinaryAnalyserTest extends NbTestCase {
         flushCount++;
     }
 
+    private File annotationsJar() throws URISyntaxException, IOException {
+        URL url = annotations.AnnotationArgAnnotation.class.getProtectionDomain().getCodeSource().getLocation();
+        File orig = Utilities.toFile(url.toURI());
+        assertTrue("File exists " + url, orig.exists());
+        FileObject origClasses = FileUtil.toFileObject(orig);
+        FileObject to = FileUtil.toFileObject(getWorkDir());
+        FileObject classes = to.createFolder("classes");
+        origClasses.getFileObject("annotations").copy(classes, "annotations", "");
+        origClasses.getFileObject("usages").copy(classes, "usages", "");
+        return FileUtil.toFile(classes);
+    }
 
     private static class IndexWriter implements ClassIndexImpl.Writer {
         Index index;
@@ -367,14 +412,29 @@ public class BinaryAnalyserTest extends NbTestCase {
     }
 
     private void assertReference(Index index, String refered, String... in) throws IOException, InterruptedException {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         index.query(
                 result,
                 DocumentUtil.binaryNameConvertor(),
                 DocumentUtil.declaredTypesFieldSelector(false, false),
                 null,
                 QueryUtil.createUsagesQuery(refered, EnumSet.of(UsageType.TYPE_REFERENCE), Occur.SHOULD));
-        assertTrue(result.containsAll(Arrays.asList(in)));
+        for (String item : in) {
+            assertTrue("Item " + item + " found in index", result.contains(item));
+        }
+    }
+
+    private void assertNoReference(Index index, String refered, String... in) throws IOException, InterruptedException {
+        final Set<String> result = new HashSet<>();
+        index.query(
+                result,
+                DocumentUtil.binaryNameConvertor(),
+                DocumentUtil.declaredTypesFieldSelector(false, false),
+                null,
+                QueryUtil.createUsagesQuery(refered, EnumSet.of(UsageType.TYPE_REFERENCE), Occur.SHOULD));
+        for (String item : in) {
+            assertFalse("Shouldn't find " + item, result.contains(item));
+        }
     }
 
     private void unzip(File what, File where) throws IOException {

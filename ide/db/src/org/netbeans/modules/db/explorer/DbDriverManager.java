@@ -64,12 +64,12 @@ public class DbDriverManager {
     /**
      * Maps each connection to the driver used to create that connection.
      */
-    private Map/*<Connection, Driver>*/ conn2Driver = new WeakHashMap();
+    private Map<Connection, Driver> conn2Driver = new WeakHashMap<>();
     
     /**
      * Maps each driver to the class loader for that driver.
      */
-    private Map/*<JDBCDriver, ClassLoader>*/ driver2Loader = new WeakHashMap();
+    private Map<JDBCDriver, ClassLoader> driver2Loader = new WeakHashMap<>();
     
     private DbDriverManager() {
     }
@@ -99,7 +99,9 @@ public class DbDriverManager {
         if (driver != null) {
             // Issue XXXX - If this is MySQL, set up the connection to be
             // a Unicode/utf8 connection
-            if ( driver.getClass().getName().equals("com.mysql.jdbc.Driver") ) { // NOI18N
+            String driverClassName = driver.getClass().getName();
+            if ("com.mysql.jdbc.Driver".equals(driverClassName) ||  // NOI18N
+                    "com.mysql.cj.jdbc.Driver".equals(driverClassName)) { // NOI18N
                 props.put("useUnicode", "true");
                 props.put("characterEncoding", "utf8");
             }

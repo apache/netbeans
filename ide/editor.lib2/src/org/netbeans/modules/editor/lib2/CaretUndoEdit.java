@@ -294,7 +294,7 @@ class CaretUndoEdit extends AbstractUndoableEdit {
             } else { // one or more complex positions markOffsetAndBias contains the marker value
                 int splitOffset = extraOffsets[0];
                 int i = 1;
-                dotAndMarkPosPairs = new ArrayList((extraOffsets.length + 1) >> 1);
+                dotAndMarkPosPairs = new ArrayList<>((extraOffsets.length + 1) >> 1);
                 Position pos = dotPos;
                 while (true) {
                     pos = ComplexPositions.create(pos, splitOffset);

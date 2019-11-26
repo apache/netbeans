@@ -18,6 +18,8 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.comp.MemberEnter;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCImport;
@@ -31,19 +33,23 @@ import com.sun.tools.javac.util.Context;
  */
 public class NBMemberEnter extends MemberEnter {
 
-    public static void preRegister(Context context) {
+    public static void preRegister(Context context, boolean backgroundScan) {
         context.put(MemberEnter.class, new Context.Factory<MemberEnter>() {
             public MemberEnter make(Context c) {
-                return new NBMemberEnter(c);
+                return new NBMemberEnter(c, backgroundScan);
             }
         });
     }
 
     private final CancelService cancelService;
+    private final JavacTrees trees;
+    private final boolean backgroundScan;
 
-    public NBMemberEnter(Context context) {
+    public NBMemberEnter(Context context, boolean backgroundScan) {
         super(context);
         cancelService = CancelService.instance(context);
+        trees = NBJavacTrees.instance(context);
+        this.backgroundScan = backgroundScan;
     }
 
     @Override
@@ -62,6 +68,12 @@ public class NBMemberEnter extends MemberEnter {
     public void visitMethodDef(JCMethodDecl tree) {
         cancelService.abortIfCanceled();
         super.visitMethodDef(tree);
+        if (!backgroundScan && trees instanceof NBJavacTrees && !env.enclClass.defs.contains(tree)) {
+            TreePath path = trees.getPath(env.toplevel, env.enclClass);
+            if (path != null) {
+                ((NBJavacTrees)trees).addPathForElement(tree.sym, new TreePath(path, tree));
+            }
+        }
     }
 
     @Override

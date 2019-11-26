@@ -205,7 +205,6 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         }
 
         Iterator it = now.iterator();
-
         while (it.hasNext()) {
             FileObject fo = (FileObject) it.next();
             fo.removeFileChangeListener(weakL);
@@ -1757,10 +1756,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         }
 
         private void releaseLockForDelegates() {
-            Iterator it = map.values().iterator();
-
-            while (it.hasNext()) {
-                FileLock l = (FileLock) it.next();
+            for (FileLock l : map.values()) {
                 l.releaseLock();
             }
 

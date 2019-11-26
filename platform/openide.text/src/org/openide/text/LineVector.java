@@ -72,7 +72,7 @@ final class LineVector {
     /**
      * Line updater that should update lines once the current request completes.
      */
-    private List<LineUpdater> pendingLineUpdaters = new ArrayList(2);
+    private List<LineUpdater> pendingLineUpdaters = new ArrayList<LineUpdater>(2);
     
     LineVector() {
         this.refArray = new Ref[4];
@@ -163,7 +163,7 @@ final class LineVector {
         List<LineUpdater> lineUpdaters;
         synchronized (this) {
             if (pendingLineUpdaters.size() > 0) {
-                lineUpdaters = new ArrayList(pendingLineUpdaters);
+                lineUpdaters = new ArrayList<LineUpdater>(pendingLineUpdaters);
                 pendingLineUpdaters.clear();
             } else {
                 lineUpdaters = null;

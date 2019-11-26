@@ -70,7 +70,7 @@ public interface PacScriptEvaluator {
     
     /**
      * Gets relevant information about the engine, typically the name
-     * of the JavaScript engine (e.g. 'Nashorn'), version number, etc.
+     * of the JavaScript engine, version number, etc.
      * @return info
      */
     public String getEngineInfo();

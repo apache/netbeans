@@ -452,7 +452,18 @@ public enum NodeType {
     , sass_selector_interpolation_exp
     , sass_error
     , less_selector_interpolation_exp
+    
+    
+    /**
+     * @supports rule
+     */
+    , supportsAtRule
+    , supportsCondition
+    , supportsInParens
+    , supportsFeature
+    , supportsDecl
+    , supportsWithOperator
+    , supportsConjunction
+    , supportsDisjunction
     ;
-    
-    
 }

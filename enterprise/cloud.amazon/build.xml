@@ -22,14 +22,4 @@
 <project basedir="." default="build" name="enterprise/cloud.amazon">
     <description>Builds, tests, and runs the project org.netbeans.modules.cloud.amazon</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <property name="resourcesdir" value="./src/org/netbeans/modules/cloud/amazon/resources/"/>
-
-    <war destfile = "${resourcesdir}/empty.war" webxml = "${resourcesdir}/web.xml">
-        <fileset dir="${resourcesdir}/">
-            <include name="welcome.jsp"/>
-        </fileset>
-        <classes dir="${resourcesdir}/">
-            <exclude name="**/*"/>
-        </classes>
-    </war>
 </project>

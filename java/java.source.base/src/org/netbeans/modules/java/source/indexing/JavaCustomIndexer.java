@@ -20,11 +20,15 @@
 package org.netbeans.modules.java.source.indexing;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -36,6 +40,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -77,6 +82,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
@@ -147,6 +153,86 @@ public class JavaCustomIndexer extends CustomIndexer {
                 JavaIndex.LOG.fine("Ignoring request with no root"); //NOI18N
                 return;
             }
+            BinaryForSourceQuery.Result2 binRes = BinaryForSourceQuery.findBinaryRoots2(root.toURL());
+            if (binRes.preferBinaries()) {
+                final URL[] binaryRoots = binRes.getRoots();
+                final FileObject[] binaryRootsFo = new FileObject[binaryRoots.length];
+                Long newestFile = null;
+                int at = 0;
+                for (URL u : binaryRoots) {
+                    FileObject ufo = URLMapper.findFileObject(u);
+                    if (ufo == null) {
+                        newestFile = null;
+                        break;
+                    }
+                    binaryRootsFo[at++] = ufo;
+                    Enumeration<? extends FileObject> en = ufo.getChildren(true);
+                    while (en.hasMoreElements()) {
+                        FileObject ch = en.nextElement();
+                        long modified = ch.lastModified().getTime();
+                        if (newestFile == null || newestFile < modified) {
+                            newestFile = modified;
+                        }
+                    }
+                }
+
+                Set<String> shortNames = new HashSet<>();
+                boolean binariesAreNewer = true;
+                for (Indexable index : files) {
+                    FileObject fo = context.getRoot().getFileObject(index.getRelativePath());
+                    if (newestFile == null || fo == null || fo.lastModified().getTime() > newestFile) {
+                        binariesAreNewer = false;
+                        break;
+                    }
+                    shortNames.add(fo.getNameExt());
+                }
+
+                if (binariesAreNewer) {
+                    JavaIndex.LOG.log(Level.FINE, "Using binaries for {0}", FileUtil.getFileDisplayName(root)); // NOI18N
+                    File copyTo = JavaIndex.getClassFolder(context);
+                    at = 0;
+                    for (URL singleBinaryRoot : binaryRoots) {
+                        FileObject singleBinaryRootFo = binaryRootsFo[at++];
+                       JavaBinaryIndexer.doIndex(context, singleBinaryRoot, (cf) -> {
+                            String src = cf.getSourceFileName();
+                            if (src != null) {
+                                String srcName = src.substring(src.lastIndexOf(File.separatorChar) + 1);
+                                if (!shortNames.contains(srcName)) {
+                                    return false;
+                                }
+                            }
+                            return true;
+                       });
+
+                        JavaIndex.LOG.log(Level.FINE, "  copying from {0} to {1}", new Object[] { FileUtil.getFileDisplayName(singleBinaryRootFo), copyTo }); // NOI18N
+                        Enumeration<? extends FileObject> en = singleBinaryRootFo.getChildren(true);
+                        while (en.hasMoreElements()) {
+                            FileObject ch = en.nextElement();
+                            if (!ch.isData()) {
+                                continue;
+                            }
+                            String path = FileUtil.getRelativePath(singleBinaryRootFo, ch.getParent());
+                            if (path == null) {
+                                continue;
+                            }
+                            String name = ch.getNameExt();
+                            if (ch.hasExt("class")) {
+                                name = ch.getName() + ".sig";
+                            }
+                            File toDir = new File(copyTo, path.replace('/', File.separatorChar));
+                            toDir.mkdirs();
+                            File to = new File(toDir, name);
+                            try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
+                                FileUtil.copy(is, os);
+                            }
+                        }
+                    }
+                    APTUtils.sourceRootRegistered(context.getRoot(), context.getRootURI());
+                    JavaIndex.LOG.log(Level.FINE, "Binaries copied for {0}", FileUtil.getFileDisplayName(root)); // NOI18N
+                    return;
+                }
+            }
+
             APTUtils.sourceRootRegistered(context.getRoot(), context.getRootURI());
             final ClassPath sourcePath = ClassPath.getClassPath(root, ClassPath.SOURCE);
             final ClassPath moduleSourcePath = ClassPath.getClassPath(root, JavaClassPathConstants.MODULE_SOURCE_PATH);
@@ -974,7 +1060,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
                 final Set<URL> urls = new HashSet<URL>();
                 for (FileObject file : files)
-                    urls.add(file.getURL());
+                    urls.add(file.toURL());
 
                 if (includeFilesInError) {
                     final Collection<? extends URL> errUrls = ErrorsCache.getAllFilesInError(depRoot);

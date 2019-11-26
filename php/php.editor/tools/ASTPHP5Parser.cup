@@ -212,14 +212,13 @@ parser code {:
         }
      }
 
-     /**
+    /**
      * Report a fatal error.  This method takes a message string and an additional object
      * (to be used by specializations implemented in subclasses).
      * The super class reports the error then throws an exception.
      * @param message an error message.
      * @param info    an extra object reserved for use by specialized subclasses.
      */
-
     public void report_fatal_error(String message, Object info) throws Exception {
         if (errorHandler != null) {
             errorHandler.handleError(ParserErrorHandler.Type.FATAL_PARSER_ERROR, null, cur_token, null);
@@ -265,6 +264,7 @@ terminal String T_DEFAULT;
 terminal String T_BREAK;
 terminal String T_CONTINUE;
 terminal String T_GOTO;
+terminal String T_FN;
 terminal String T_FUNCTION;
 terminal String T_CONST;
 terminal String T_RETURN;
@@ -354,6 +354,7 @@ terminal T_POW;
 terminal T_POW_EQUAL;
 terminal T_ELLIPSIS;
 terminal T_COALESCE;
+terminal T_COALESCE_EQUAL;
 
 /* Non terminals */
 
@@ -421,6 +422,7 @@ non terminal possible_comma;
 non terminal List non_empty_static_array_pair_list;
 non terminal Expression expr;
 non terminal Expression expr_with_yields;
+non terminal Expression expr_with_yields_and_error;
 non terminal Expression expr_without_class_instance;
 non terminal Expression yield_expr;
 non terminal Expression yield_from_expr;
@@ -544,7 +546,7 @@ precedence right T_PRINT;
 precedence right T_YIELD;
 precedence right T_DOUBLE_ARROW;
 precedence right T_YIELD_FROM;
-precedence left T_EQUAL, T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL,T_POW_EQUAL;
+precedence left T_EQUAL, T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL,T_POW_EQUAL,T_COALESCE_EQUAL;
 precedence right T_POW;
 precedence left T_QUESTION_MARK,T_SEMICOLON;
 precedence left T_BOOLEAN_OR;
@@ -821,6 +823,12 @@ T_INCLUDE:reserved
 
 | T_GOTO:reserved
 {:
+    RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FN:reserved
+{:
+    // PHP 7.4
     RESULT = new Identifier(reservedleft, reservedright, reserved, true);
 :}
 
@@ -1779,9 +1787,9 @@ trait_statement_list:list trait_statement:traitStatement
 ;
 
 trait_statement ::=
-variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
 {:
-    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), decList);
+    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;
 :}
 
@@ -2416,9 +2424,9 @@ class_statement_list:list class_statement:classStatement
 ;
 
 class_statement ::=
-variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
 {:
-    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), decList);
+    FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;
 :}
 
@@ -3037,6 +3045,13 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
     RESULT = new Assignment(varleft, exprright, var , Assignment.Type.SR_EQUAL, expr);
 :}
 
+| variable:var T_COALESCE_EQUAL expr:expr
+{:
+    // PHP 7.4 Null Coalescing Assignment Operator
+    // https://wiki.php.net/rfc/null_coalesce_equal_operator
+    RESULT = new Assignment(varleft, exprright, var , Assignment.Type.COALESCE_EQUAL, expr);
+:}
+
 | rw_variable:var T_INC:token
 {:
     RESULT = new PostfixExpression(varleft, tokenright, var , PostfixExpression.Operator.INC);
@@ -3336,6 +3351,18 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
     RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, returnType, varsList,
         new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), true);
+:}
+
+| T_FN:s is_reference:isReference T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE optional_return_type:returnType T_DOUBLE_ARROW expr_with_yields_and_error:expr
+{:
+    // PHP 7.4
+    RESULT = new ArrowFunctionDeclaration(sleft, exprright, paramList, returnType, expr, isReference.booleanValue(), false);
+:}
+
+| T_STATIC:st T_FN:s is_reference:isReference T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE optional_return_type:returnType T_DOUBLE_ARROW expr_with_yields_and_error:expr
+{:
+    // PHP 7.4
+    RESULT = new ArrowFunctionDeclaration(stleft, exprright, paramList, returnType, expr, isReference.booleanValue(), true);
 :}
 
 | expression_array_access:eaa
@@ -4152,10 +4179,27 @@ non_empty_static_array_pair_list:list T_COMMA static_scalar:key T_DOUBLE_ARROW s
     RESULT = list;
 :}
 
+| non_empty_static_array_pair_list:list T_COMMA T_ELLIPSIS:ell static_scalar:value
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    UnpackableArrayElement element = new UnpackableArrayElement(ellleft, valueright, value);
+    list.add(element);
+    RESULT = list;
+:}
+
 | static_scalar:key T_DOUBLE_ARROW static_scalar:value
 {:
     List list = new LinkedList();
     ArrayElement element = new ArrayElement(keyleft, valueright, key, value);
+    list.add(element);
+    RESULT = list;
+:}
+
+| T_ELLIPSIS:ell static_scalar:value
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    List list = new LinkedList();
+    UnpackableArrayElement element = new UnpackableArrayElement(ellleft, valueright, value);
     list.add(element);
     RESULT = list;
 :}
@@ -4253,6 +4297,18 @@ expr:expr
 | yield_from_expr:expr
 {:
     RESULT = expr;
+:}
+;
+
+expr_with_yields_and_error ::=
+expr_with_yields:expr
+{:
+    RESULT = expr;
+:}
+
+| error:expr
+{:
+    RESULT = new ASTErrorExpression(exprleft, exprright);
 :}
 ;
 
@@ -4726,6 +4782,14 @@ expr:key T_DOUBLE_ARROW expr:value
 {:
     ArrayElement element = new ArrayElement(exprleft, exprright, expr);
     RESULT = element;
+:}
+
+| T_ELLIPSIS:ell expr:expr
+{:
+    // PHP 7.4 Spread Operator In Array Expression
+    // https://wiki.php.net/rfc/spread_operator_for_array
+    UnpackableArrayElement unpack = new UnpackableArrayElement(ellleft, exprright, expr);
+    RESULT = unpack;
 :}
 
 | expr:expr T_DOUBLE_ARROW T_REFERENCE:start w_variable:var

@@ -51,8 +51,6 @@ import org.openide.util.NbBundle.Messages;
 @Messages("TXT_CUSTOM=Custom...")
 public class BuildActionsCustomizer extends javax.swing.JPanel {
 
-    private static final String NB_ACTIONS = "nb-actions.xml"; //NOI18N
-
     private final static String CUSTOM_ACTION = Bundle.TXT_CUSTOM();
     private static final String CARD_NOSELECT = "empty"; //NOI18N
     private static final String CARD_DETAILS = "details"; //NOI18N
@@ -115,7 +113,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
 
         // Add those actions to the combo box which were not customized yet.
         for (String action : allAvailableActions) {
-            if (actionRegistry.getCustomAction(action) != null) {
+            if (actionRegistry.getCustomAction(action) == null) {
                 availableActionsModel.addElement(action);
             }
         }
@@ -373,7 +371,7 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
             mapping.setArgs(taArgs.getText());
             mapping.setReloadRule(ActionMapping.ReloadRule.valueOf(cbReloadRule.getSelectedItem().toString()));
             mapping.setRepeatable(cbRepeatable.isSelected());
-            
+
             actionRegistry.registerCustomAction(mapping);
             lsActions.repaint();
         }

@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
-
 import static org.netbeans.modules.php.editor.codegen.CGSGenerator.NEW_LINE;
+import org.netbeans.modules.php.editor.model.impl.Type;
 
 /**
  *
@@ -129,8 +129,9 @@ public interface SinglePropertyMethodCreator<T extends Property> {
     final class SingleSetterCreator extends SinglePropertyMethodCreatorImpl {
         private static final String PARAM_TYPE = "${PARAM_TYPE}"; //NOI18N
         private static final String FLUENT_SETTER = "${FluentSetter}"; //NOI18N
+        private static final String RETURN_TYPE = "${ReturnType}"; // NOI18N
         private static final String SETTER_TEMPLATE
-            = CGSGenerator.ACCESS_MODIFIER + FUNCTION_MODIFIER + " function " + TEMPLATE_NAME + "(" + PARAM_TYPE + "$$" + CGSGenerator.PARAM_NAME + ") {"
+            = CGSGenerator.ACCESS_MODIFIER + FUNCTION_MODIFIER + " function " + TEMPLATE_NAME + "(" + PARAM_TYPE + "$$" + CGSGenerator.PARAM_NAME + ")" + RETURN_TYPE + "{"
             + CGSGenerator.ASSIGNMENT_TEMPLATE + CGSGenerator.NEW_LINE + FLUENT_SETTER + "}" + CGSGenerator.NEW_LINE; //NOI18N
 
         private final FluentSetterReturnPartCreator fluentSetterCreator;
@@ -155,12 +156,20 @@ public interface SinglePropertyMethodCreator<T extends Property> {
                     .replace(CGSGenerator.ACCESSOR, property.getAccessor())
                     .replace(CGSGenerator.PROPERTY, property.getAccessedName())
                     .replace(FLUENT_SETTER, fluentSetterCreator.create(property))
+                    .replace(RETURN_TYPE, getReturnType())
                     .replace(CGSGenerator.PARAM_NAME, paramName)
                     .replace(CGSGenerator.UP_FIRST_LETTER_PROPERTY, methodName)
                     .replace(CGSGenerator.UP_FIRST_LETTER_PROPERTY_WITHOUT_UNDERSCORE, methodName)
                     .replace(PARAM_TYPE, type.isEmpty() ? type : property.getTypeForTemplate()));
             setter.append(CGSGenerator.NEW_LINE);
             return setter.toString();
+        }
+
+        private String getReturnType() {
+            if (!cgsInfo.isFluentSetter() && cgsInfo.getPhpVersion().hasVoidReturnType()) {
+                return String.format(": %s ", Type.VOID); // NOI18N
+            }
+            return " "; // NOI18N
         }
 
         private static final class FluentSetterReturnPartCreator {

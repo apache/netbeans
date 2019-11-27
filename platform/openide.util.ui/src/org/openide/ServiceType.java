@@ -258,13 +258,13 @@ public abstract class ServiceType extends Object implements Serializable, HelpCt
         */
         @Deprecated
         public ServiceType find(Class clazz) {
-            Enumeration en = services();
+            Enumeration<ServiceType> en = services();
 
             while (en.hasMoreElements()) {
-                Object o = en.nextElement();
+                ServiceType o = en.nextElement();
 
                 if (o.getClass() == clazz) {
-                    return (ServiceType) o;
+                    return o;
                 }
             }
 
@@ -281,10 +281,10 @@ public abstract class ServiceType extends Object implements Serializable, HelpCt
         * @return the desired type or <code>null</code> if it does not exist
         */
         public ServiceType find(String name) {
-            Enumeration en = services();
+            Enumeration<ServiceType> en = services();
 
             while (en.hasMoreElements()) {
-                ServiceType o = (ServiceType) en.nextElement();
+                ServiceType o = en.nextElement();
 
                 if (name.equals(o.getName())) {
                     return o;
@@ -356,11 +356,11 @@ public abstract class ServiceType extends Object implements Serializable, HelpCt
 
                 // try to find the executor by name
                 ServiceType.Registry r = Lookup.getDefault().lookup(ServiceType.Registry.class);
-                Enumeration en = r.services(clazz);
+                Enumeration<? extends ServiceType> en = r.services(clazz);
                 ServiceType some = r.find(clazz);
 
                 while (en.hasMoreElements()) {
-                    ServiceType t = (ServiceType) en.nextElement();
+                    ServiceType t = en.nextElement();
 
                     if (!serviceTypeClass.isInstance(t)) {
                         // ignore non instances

@@ -188,7 +188,7 @@ implements Cloneable, Stamps.Updater {
 
     /** contributed by Alex Bowen (trajar@netbeans.org) */
     private void injectSystemProperties(Map configProps) {
-        for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements(); ) {
+        for (Enumeration<?> e = System.getProperties().propertyNames(); e.hasMoreElements(); ) {
             String key = e.nextElement().toString();
             if (key.startsWith("felix.") || key.startsWith("org.osgi.framework.")) { // NOI18N
                 configProps.put(key, System.getProperty(key));
@@ -275,12 +275,12 @@ implements Cloneable, Stamps.Updater {
                 try {
                     SELF_QUERY.set(true);
                     if (findCoveredPkgs(exported)) {
-                        Enumeration en = b.findEntries("", null, true);
+                        Enumeration<URL> en = b.findEntries("", null, true);
                         if (en == null) {
                             LOG.log(Level.INFO, "Bundle {0}: {1} is empty", new Object[] { b.getBundleId(), b.getSymbolicName() });
                         } else {
                             while (en.hasMoreElements()) {
-                                URL url = (URL) en.nextElement();
+                                URL url = en.nextElement();
                                 if (url.getFile().startsWith("/META-INF")) {
                                     pkgs.add(url.getFile().substring(9));
                                     continue;

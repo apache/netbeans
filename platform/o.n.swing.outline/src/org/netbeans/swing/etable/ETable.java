@@ -1449,11 +1449,10 @@ public class ETable extends JTable {
         }
 
         if (modelColumn != TableModelEvent.ALL_COLUMNS) {
-            Enumeration enumeration = getColumnModel().getColumns();
+            Enumeration<TableColumn> enumeration = getColumnModel().getColumns();
             TableColumn aColumn;
-            int index = 0;
             while (enumeration.hasMoreElements()) {
-                aColumn = (TableColumn)enumeration.nextElement();
+                aColumn = enumeration.nextElement();
                 if (aColumn.getModelIndex() == modelColumn) {
                     ETableColumn etc = (ETableColumn)aColumn;
                     if ((! etc.isSorted()) && (quickFilterColumn != modelColumn)){
@@ -1951,9 +1950,9 @@ public class ETable extends JTable {
      * Compute the preferredVidths of all columns.
      */
     void updatePreferredWidths() {
-        Enumeration en = getColumnModel().getColumns();
+        Enumeration<TableColumn> en = getColumnModel().getColumns();
         while (en.hasMoreElements()) {
-            Object obj = en.nextElement();
+            TableColumn obj = en.nextElement();
             if (obj instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn) obj;
                 etc.updatePreferredWidth(this, false);
@@ -2285,8 +2284,8 @@ public class ETable extends JTable {
         @Override
         public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
             Object selItem = searchCombo.getSelectedItem();
-            for (Enumeration en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
-                Object column = en.nextElement();
+            for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
+                TableColumn column = en.nextElement();
                 if (column instanceof ETableColumn) {
                     ETableColumn etc = (ETableColumn)column;
                     Object value = etc.getHeaderValue();
@@ -2366,8 +2365,8 @@ public class ETable extends JTable {
     
     private ComboBoxModel getSearchComboModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        for (Enumeration en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
-            Object column = en.nextElement();
+        for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
+            TableColumn column = en.nextElement();
             if (column instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn)column;
                 Object value = etc.getHeaderValue();

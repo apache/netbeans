@@ -478,9 +478,9 @@ public class BaseFileObjectTestHid extends TestBaseHid{
             public void fileDeleted(FileEvent fe) {
                 fe.getFile().getChildren();
                 fe.getFile().getParent().getChildren();
-                Enumeration en =  fe.getFile().getParent().getChildren(true);
+                Enumeration<? extends FileObject> en =  fe.getFile().getParent().getChildren(true);
                 while(en.hasMoreElements()) {
-                    if (fe.getFile().equals((FileObject)en.nextElement())) {
+                    if (fe.getFile().equals(en.nextElement())) {
                         fail(fe.getFile().getPath());
                     }
                 }

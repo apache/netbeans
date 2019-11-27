@@ -70,7 +70,7 @@ public final class Support {
         Set<Object> visited = new HashSet<Object>(queue);
         while (!queue.isEmpty()) {
             PathElement act = queue.remove(0);
-            Enumeration en = act.getItem().incomming();
+            Enumeration<Object> en = act.getItem().incomming();
             while(en.hasMoreElements()) {
                 Object o = en.nextElement();
                 if (o instanceof String) {

@@ -67,7 +67,7 @@ final class NetigsoLoader extends ProxyClassLoader {
             LOG.log(Level.WARNING, "Trying to load resource before initialization finished {0}", name);
             return Enumerations.empty();
         }
-        Enumeration ret = null;
+        Enumeration<URL> ret = null;
         try {
             if (b.getState() != Bundle.UNINSTALLED) {
                 ret = b.getResources(name);

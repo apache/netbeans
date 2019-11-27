@@ -231,7 +231,7 @@ public class WebServiceListModel {
              * it and the set is modified.
              * - David Botterill 5/6/2004.
              */
-            String[] webserviceIds = (String[]) getWebServiceGroup(groupId).getWebServiceIds().toArray(new String[0]);
+            String[] webserviceIds = getWebServiceGroup(groupId).getWebServiceIds().toArray(new String[0]);
             for (int ii = 0; null != webserviceIds && ii < webserviceIds.length; ii++) {
                 WebServiceManager.getInstance().removeWebService(getWebService(webserviceIds[ii]));
             }

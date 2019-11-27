@@ -164,7 +164,7 @@ public class TransformPerformer {
                     TransformableCookie transformable = null;
                     boolean xslt = TransformUtil.isXSLTransformation(dataObject);
                     if ( xslt == false ) {
-                        transformable = (TransformableCookie) nodes[i].getCookie(TransformableCookie.class);
+                        transformable = nodes[i].getCookie(TransformableCookie.class);
                     }
                     SinglePerformer performer = new SinglePerformer(transformable, dataObject, xslt);
                     performer.setLastInBatch(i == (nodes.length -1));

@@ -66,7 +66,7 @@ public abstract class AbstractDesignEditor extends TopComponent implements Explo
             KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0), ACTION_INVOKE_HELP);
         map.put(ACTION_INVOKE_HELP, helpAction);
         
-        SaveAction act = (SaveAction) org.openide.util.actions.SystemAction.get(SaveAction.class);
+        SaveAction act = org.openide.util.actions.SystemAction.get(SaveAction.class);
         KeyStroke stroke = KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S,
                 java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
 
@@ -161,7 +161,7 @@ public abstract class AbstractDesignEditor extends TopComponent implements Explo
      */
     public void open(){
         if (contentView!=null)
-            ((PanelView)contentView).open();
+            contentView.open();
     }
     
     /**

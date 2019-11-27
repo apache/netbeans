@@ -395,7 +395,7 @@ final class Asm {
                 targetMethod.access & (~Opcodes.ACC_STATIC), CONSTRUCTOR_NAME,
                 desc,
                 targetMethod.signature,
-                (String[])targetMethod.exceptions.toArray(new String[targetMethod.exceptions.size()]));
+                targetMethod.exceptions.toArray(new String[targetMethod.exceptions.size()]));
 
         mn.visibleAnnotations = targetMethod.visibleAnnotations;
         mn.visibleParameterAnnotations = targetMethod.visibleParameterAnnotations;

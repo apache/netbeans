@@ -116,7 +116,7 @@ public class MaximizeWindowAction extends Action {
             public void run() {
                 WindowManager wm = WindowManager.getDefault();
                 TopComponent tc = (TopComponent) tco.getSource();
-                Mode mode = (Mode) wm.findMode(tc);
+                Mode mode = wm.findMode(tc);
                 if (mode == null) {
                     throw new JemmyException("Mode not found for " + tc);
                 }

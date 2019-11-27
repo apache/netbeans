@@ -48,7 +48,7 @@ class MacrosNamePanel extends javax.swing.JPanel {
     public MacrosNamePanel() {
         initComponents();
         regularColor = nameField.getForeground();
-        errColor = (Color)UIManager.getDefaults().getColor("nb.errorForeground"); // NOI18N
+        errColor = UIManager.getDefaults().getColor("nb.errorForeground"); // NOI18N
         setErrorMessage(null);
     }
 

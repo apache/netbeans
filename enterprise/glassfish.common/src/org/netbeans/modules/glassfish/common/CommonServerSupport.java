@@ -457,8 +457,7 @@ public class CommonServerSupport
         VMIntrospector vmi = Lookups.forPath(Util.GF_LOOKUP_PATH).lookup(VMIntrospector.class);
         FutureTask<TaskState> task = new FutureTask<TaskState>(
                 new StartTask(this, getRecognizers(), vmi,
-                (String[]) (endState == ServerState.STOPPED_JVM_PROFILER
-                ? new String[]{""} : null),
+                endState == ServerState.STOPPED_JVM_PROFILER ? new String[]{""} : null,
                 startServerListener, stateListener));
         startTask = task;
         RP.post(task);

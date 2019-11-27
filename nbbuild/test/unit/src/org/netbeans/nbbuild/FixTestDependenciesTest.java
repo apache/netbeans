@@ -191,7 +191,7 @@ public class FixTestDependenciesTest extends TestBase {
             new String[]{"org.openide.modules","org.openide.util"},
             Collections.<String,String[]>emptyMap(), nonexistent));
         entries.add(new ModuleListParser.Entry("org.netbeans.libs.xerces",new File("extra/modules/org-netbeans-libs-xerces.jar"),
-            new File[]{new File("nonsence:/home/pzajac/cvss/freshtrunk/libs/external/xerces-2.8.0.jar"),new File("nonsence:/home/pzajac/cvss/freshtrunk/libs/external/xml-commons-dom-ranges-1.0.b2.jar")},
+            new File[]{new File("nonsence:/home/pzajac/cvss/freshtrunk/libs/external/xerces-2.12.0.jar"),new File("nonsence:/home/pzajac/cvss/freshtrunk/libs/external/xml-commons-dom-ranges-1.0.b2.jar")},
             null,"libs/xerces","libs/xerces",
            new String[0],
             "extra",

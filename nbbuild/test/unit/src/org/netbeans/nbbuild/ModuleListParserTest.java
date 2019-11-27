@@ -98,7 +98,7 @@ public class ModuleListParserTest extends TestBase {
         assertEquals("unknown module put in extra cluster by default", file(build, "extra/modules/org-netbeans-libs-xerces.jar"), e.getJar());
         assertEquals("single classpath extension", 1, e.getClassPathExtensions().length);
         assertTrue("correct CP extensions (using <binary-origin> and relative paths)",
-            e.getClassPathExtensions()[0].getPath().endsWith("libs.xerces/external/xercesImpl-2.8.0.jar"));
+            e.getClassPathExtensions()[0].getPath().endsWith("libs.xerces/external/xercesImpl-2.12.0.jar"));
         e = p.findByCodeNameBase("org.netbeans.swing.tabcontrol");
         assertNotNull("found module in a subsubdir", e);
         e = p.findByCodeNameBase("org.netbeans.core.startup");
@@ -162,7 +162,7 @@ public class ModuleListParserTest extends TestBase {
         assertEquals("org.netbeans.libs.xerces", e.getCnb());
         assertEquals(jar, e.getJar());
         assertEquals("correct CP extensions (using Class-Path header in manifest)",
-                Collections.singletonList(file(nball, "nbbuild/netbeans/ide/modules/ext/xerces-2.8.0.jar")),
+                Collections.singletonList(file(nball, "nbbuild/netbeans/ide/modules/ext/xerces-2.12.0.jar")),
                 Arrays.asList(e.getClassPathExtensions()));
         e = p.findByCodeNameBase("org.openide.loaders");
         assertNotNull(e);

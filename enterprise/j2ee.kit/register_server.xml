@@ -57,7 +57,7 @@
                     <include name="platform/lib/org-openide-util-lookup.jar"/>
                     <include name="enterprise/modules/org-netbeans-modules-j2eeapis.jar"/>
                     <include name="enterprise/modules/org-netbeans-modules-j2eeserver.jar"/>
-                    <include name="ide/modules/ext/xerces-2.8.0.jar"/>
+                    <include name="ide/modules/ext/xerces-2.12.0.jar"/>
                     <include name="ide/modules/org-netbeans-modules-glassfish-common.jar"/>
                 </fileset>
             </classpath>
@@ -81,7 +81,7 @@
                     <include name="platform/lib/org-openide-util-lookup.jar"/>
                     <include name="enterprise/modules/org-netbeans-modules-j2eeapis.jar"/>
                     <include name="enterprise/modules/org-netbeans-modules-j2eeserver.jar"/>
-                    <include name="ide/modules/ext/xerces-2.8.0.jar"/>
+                    <include name="ide/modules/ext/xerces-2.12.0.jar"/>
                     <include name="enterprise/modules/org-netbeans-modules-tomcat5.jar"/>
                 </fileset>
             </classpath>

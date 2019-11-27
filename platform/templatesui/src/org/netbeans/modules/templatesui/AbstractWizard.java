@@ -121,7 +121,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
             name(tw.getTargetName()).
             withParameters(params).build();
                     
-            Set<DataObject> objs = new LinkedHashSet(result.size() * 2);
+            Set<DataObject> objs = new LinkedHashSet<>(result.size() * 2);
             for (FileObject fileObject : result) {
                 objs.add(DataObject.find(fileObject));
             }

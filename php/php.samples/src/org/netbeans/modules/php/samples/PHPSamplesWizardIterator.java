@@ -79,7 +79,7 @@ public class PHPSamplesWizardIterator implements WizardDescriptor./*Progress*/In
     }
 
     public Set/*<FileObject>*/ instantiate(/*ProgressHandle handle*/) throws IOException {
-        Set resultSet = new LinkedHashSet();
+        Set<FileObject> resultSet = new LinkedHashSet<>();
         File dirF = FileUtil.normalizeFile((File) wiz.getProperty(WizardProperties.PROJ_DIR));
         createFolder(dirF);
 

@@ -608,7 +608,8 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
         try {
             return new Color ((int) Long.parseLong (color, 16), (color.length() != 6)); // formats: #AARRGGBB or #RRGGBB (Alpha is defaulted to 255)
         } catch (NumberFormatException ex) {
-            throw new Exception ();
+            LOG.log(Level.WARNING, "Can''t parse ''{0}'' to a Color. Using RED as a replacement.", color);
+            return Color.red;
         }
     }
 }

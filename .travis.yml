@@ -311,6 +311,25 @@ matrix:
           script:
             - ant $OPTS -f profiler/profiler.oql test
 
+        - name: Test webcommon modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
+            - hide-logs.sh ant $OPTS -f webcommon/libs.graaljs test
+            - hide-logs.sh ant $OPTS -f webcommon/libs.truffleapi test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/web.clientproject test-unit
+            - hide-logs.sh ant $OPTS -f webcommon/web.clientproject.api test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
+
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
           env:

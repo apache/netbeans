@@ -51,7 +51,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
         
         if (result == null) {
             result = new FontColorSettingsImpl(mimePath);
-            INSTANCES.put(mimePath, new WeakReference<FontColorSettingsImpl>(result));
+            INSTANCES.put(mimePath, new WeakReference<>(result));
         }
         
         return result;
@@ -94,6 +94,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
      * @return AttributeSet describing the font and colors or null, if 
      *                      profile does not exists
      */
+    @Override
     public Collection<AttributeSet> getAllFontColors (String profile) {
         profile = getInternalFontColorProfile(profile);
 	Map<String, AttributeSet> m = getColorings(profile);
@@ -109,6 +110,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
      * @return AttributeSet describing the font and colors or null, if 
      *                      profile does not exists
      */
+    @Override
     public Collection<AttributeSet> getAllFontColorDefaults(String profile) {
         profile = getInternalFontColorProfile(profile);
         Map<String, AttributeSet> profileColorings = getDefaultColorings(profile);
@@ -121,7 +123,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
         // the profileColorings. They are normally the same, but when
         // imported from previous version some colorings can be missing.
         // See #119709
-        Map<String, AttributeSet> m = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> m = new HashMap<>();
         if (defaultProfileColorings != null) {
             m.putAll(defaultProfileColorings);
         }
@@ -138,6 +140,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
      * @param profile the name of profile
      * @param fontColors new colorings
      */
+    @Override
     public void setAllFontColors (
         String profile,
         Collection<AttributeSet> fontColors
@@ -201,7 +204,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
     // private implementation
     //-----------------------------------------------------------------------
     
-    private final Map<String, Map<String, AttributeSet>> colorings = new HashMap<String, Map<String, AttributeSet>>();
+    private final Map<String, Map<String, AttributeSet>> colorings = new HashMap<>();
     
     /* package */ Map<String, AttributeSet> getColorings (String profile) {
 	if (!colorings.containsKey (profile)) {
@@ -236,7 +239,7 @@ public final class FontColorSettingsImpl extends FontColorSettingsFactory {
             // the profileColorings. They are normally the same, but when
             // imported from previous version some colorings can be missing.
             // See #119709
-            Map<String, AttributeSet> m = new HashMap<String, AttributeSet>();
+            Map<String, AttributeSet> m = new HashMap<>();
             if (defaultProfileColorings != null) {
                 m.putAll(defaultProfileColorings);
             }

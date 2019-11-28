@@ -103,7 +103,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - hide-logs.sh ant $OPTS -f platform/api.htmlui test
+            - hide-logs.sh ant -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -f platform/api.htmlui test
             - hide-logs.sh ant $OPTS -f platform/api.intent test
             - hide-logs.sh ant $OPTS -f platform/api.io test
             - hide-logs.sh ant $OPTS -f platform/api.progress test

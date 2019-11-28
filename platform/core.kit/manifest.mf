@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.core.kit
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/core/kit/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 AutoUpdate-Essential-Module: true

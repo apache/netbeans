@@ -41,6 +41,11 @@ public final class JDKVersion {
      * Update version number.
      */
     private final Optional<Short> update;
+    
+    /**
+     * JDK vendor
+     */
+    private final Optional<String> vendor;
 
     public static JDKVersion IDE_JDK_VERSION;
 
@@ -54,19 +59,27 @@ public final class JDKVersion {
 
     private static final Short DEFAULT_VALUE = 0;
 
-    private JDKVersion(String string) {
-        String[] split = string.split(VERSION_SPLITTER);
+    private JDKVersion(String version) {
+        if (version.contains("-")) { // NOI18N
+            String[] versionSplit = version.split("-"); // NOI18N
+            vendor = versionSplit.length > 0 ? Optional.of(versionSplit[0]) : Optional.empty();
+            version = versionSplit.length > 1 ? versionSplit[1] : ""; // NOI18N
+        } else {
+            vendor = Optional.empty();
+        }
+        String[] split = version.split(VERSION_SPLITTER);
         major = split.length > 0 ? Short.parseShort(split[0]) : 0;
         minor = split.length > 1 ? Optional.of(Short.parseShort(split[1])) : Optional.empty();
         subminor = split.length > 2 ? Optional.of(Short.parseShort(split[2])) : Optional.empty();
         update = split.length > 3 ? Optional.of(Short.parseShort(split[3])) : Optional.empty();
     }
 
-    private JDKVersion(Short major, Short minor, Short subminor, Short update) {
+    private JDKVersion(Short major, Short minor, Short subminor, Short update, String vendor) {
         this.major = major;
         this.minor = Optional.of(minor);
         this.subminor = Optional.of(subminor);
         this.update = Optional.of(update);
+        this.vendor = Optional.of(vendor);
     }
 
     /**
@@ -103,6 +116,15 @@ public final class JDKVersion {
      */
     public Optional<Short> getUpdate() {
         return update;
+    }
+    
+     /**
+     * Get JDK Vendor.
+     *
+     * @return JDK vendor.
+     */
+    public Optional<String> getVendor() {
+        return vendor;
     }
 
     public boolean gt(JDKVersion version) {
@@ -235,11 +257,15 @@ public final class JDKVersion {
         return IDE_JDK_VERSION;
     }
 
-    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
+    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<String> vendor, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
         boolean correctJDK = true;
-        if (minVersion.isPresent()) {
-            correctJDK = jdkVersion.ge(minVersion.get());
+        
+        if (vendor.isPresent()) {             
+            correctJDK = jdkVersion.vendor.get().contains(vendor.get());
         }
+        if (correctJDK && minVersion.isPresent()) {
+            correctJDK = jdkVersion.ge(minVersion.get());
+        }       
         if (correctJDK && maxVersion.isPresent()) {
             correctJDK = jdkVersion.le(maxVersion.get());
         }
@@ -247,7 +273,7 @@ public final class JDKVersion {
     }
 
     public static boolean isCorrectJDK(Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
-        return isCorrectJDK(IDE_JDK_VERSION, minVersion, maxVersion);
+        return isCorrectJDK(IDE_JDK_VERSION, Optional.empty(), minVersion, maxVersion);
     }
 
     static {
@@ -259,6 +285,7 @@ public final class JDKVersion {
         short minor = 0;
         short subminor = 0;
         short update = 0;
+        String vendor = System.getProperty("java.vendor"); // NOI18N
         try {
             /*
             In JEP 223 java.specification.version will be a single number versioning , not a dotted versioning . 
@@ -272,14 +299,14 @@ public final class JDKVersion {
                 java.specification.version  11
                 java.version                11.0.3
              */
-            String javaSpecVersion = System.getProperty("java.specification.version");
-            String javaVersion = System.getProperty("java.version");
-            String[] javaSpecVersionSplit = javaSpecVersion.split("\\.");
+            String javaSpecVersion = System.getProperty("java.specification.version"); // NOI18N
+            String javaVersion = System.getProperty("java.version"); // NOI18N
+            String[] javaSpecVersionSplit = javaSpecVersion.split("\\."); // NOI18N
             if (javaSpecVersionSplit.length == 1) {
                 // Handle Early Access build. e.g: 13-ea
-                String[] javaVersionSplit = javaVersion.split("-");
+                String[] javaVersionSplit = javaVersion.split("-"); // NOI18N
                 String javaVersionCategory = javaVersionSplit[0];
-                String[] split = javaVersionCategory.split("[\\.]+");
+                String[] split = javaVersionCategory.split("[\\.]+"); // NOI18N
 
                 if (split.length > 0) {
                     if (split.length > 0) {
@@ -323,6 +350,6 @@ public final class JDKVersion {
             // ignore
         }
 
-        IDE_JDK_VERSION = new JDKVersion(major, minor, subminor, update);
+        IDE_JDK_VERSION = new JDKVersion(major, minor, subminor, update, vendor);
     }
 }

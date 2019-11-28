@@ -164,11 +164,11 @@ public class ServerTasks {
             }
         }
 
-        JDKVersion javaVersion = args.getJavaVersion() != null ? args.getJavaVersion() : IDE_JDK_VERSION;
+        JDKVersion javaVersion = IDE_JDK_VERSION != null ? IDE_JDK_VERSION : args.getJavaVersion() ;
         List<String> optList
                 = jvmConfigReader.getJvmOptions()
                         .stream()
-                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.minVersion, fullOption.maxVersion))
+                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.vendor, fullOption.minVersion, fullOption.maxVersion))
                         .map(fullOption -> fullOption.option)
                         .collect(toList());
 

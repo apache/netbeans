@@ -44,18 +44,4 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/gradle/resources/empty.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-badge_dark.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-large-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-large-badge_dark.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle_dark.png</file>
-        <license ref="Apache-2.0" />
-        <comment type="COMMENT_UNSUPPORTED">
-            Icons are based based on artwork available on the https://gradle.org/brand/ .
-            More specificly: https://gradle.com/brand_assets/Gradle_Elephant_Icon_Assets.zip
-        </comment>
-    </fileset>
 </licenseinfo>

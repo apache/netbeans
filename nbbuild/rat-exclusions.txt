@@ -197,3 +197,15 @@ java/spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.te
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 ide/xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 ide/properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample
+
+###### Gradle icons, See: https://issues.apache.org/jira/browse/LEGAL-495
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle-badge.png
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle-badge_dark.png
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle-large-badge.png
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle-large-badge_dark.png
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle.png
+groovy/gradle/src/org/netbeans/modules/gradle/resources/gradle_dark.png
+groovy/gradle.java/src/org/netbeans/modules/gradle/java/resources/javaseProjectIcon.png
+groovy/gradle.java/src/org/netbeans/modules/gradle/java/resources/javaseProjectIcon_dark.png
+groovy/gradle.javaee/src/org/netbeans/modules/gradle/javaee/resources/javaeeProjectIcon.png
+groovy/gradle.javaee/src/org/netbeans/modules/gradle/javaee/resources/javaeeProjectIcon_dark.png

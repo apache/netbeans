@@ -16,23 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.swing.flatlaf;
+package org.netbeans.swing.laf.flatlaf;
 
-import javax.swing.UIManager;
-import org.openide.modules.ModuleInstall;
-import org.openide.util.*;
+import com.formdev.flatlaf.FlatDarkLaf;
+import javax.swing.UIDefaults;
 
-@NbBundle.Messages({
-    "LBL_FLATLAF_DARK=FlatLaf Dark (experimental)"
-})
-public class Installer extends ModuleInstall {
+/**
+ *
+ * @author lkishalmi
+ */
+public class NbFlatDarkLaf extends FlatDarkLaf {
 
     @Override
-    public void validate() throws IllegalStateException {
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), NbFlatDarkLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Light", FlatLightLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat IntelliJ", FlatIntelliJLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Darcula", FlatDarculaLaf.class.getName()));
+    public UIDefaults getDefaults() {
+        UIDefaults ret = super.getDefaults();
+        ret.put( "nb.dark.theme", Boolean.TRUE );
+        return ret;
     }
+
+
 
 }

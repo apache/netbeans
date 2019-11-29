@@ -46,7 +46,7 @@ public class HtmlComponentTest {
     public HtmlComponentTest() {
     }
 
-    @BeforeClass(timeOut = 9000)
+    @BeforeClass
     public static void initializeContext() throws Exception {
         final HtmlComponent tc = new HtmlComponent();
         final URL u = HtmlComponent.class.getResource("/org/netbeans/api/htmlui/empty.html");
@@ -66,7 +66,7 @@ public class HtmlComponentTest {
         return cc;
     }
     
-    @Test(timeOut = 9000)
+    @Test
     public void updateContext() throws Exception {
         CheckContext cc = assertContext();
         
@@ -79,7 +79,7 @@ public class HtmlComponentTest {
         assertNull(lkp.lookup(DefCnstr.class), "Disappeared again");
     }
 
-    @Test(timeOut = 9000)
+    @Test
     public void closedWhenRemoved() throws Exception {
         CheckContext cc = assertContext();
         
@@ -94,7 +94,7 @@ public class HtmlComponentTest {
         assertTrue(inst.closed, "Close has been called on removal");
     }
 
-    @Test(timeOut = 9000)
+    @Test
     public void updateContextWithNonDefaultCnstr() throws Exception {
         CheckContext cc = assertContext();
         

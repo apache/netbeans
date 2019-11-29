@@ -103,7 +103,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - travis_retry hide-logs.sh ant $OPTS -f platform/api.htmlui test
+            - hide-logs.sh ant $OPTS -f platform/api.htmlui test
             - hide-logs.sh ant $OPTS -f platform/api.intent test
             - hide-logs.sh ant $OPTS -f platform/api.io test
             - hide-logs.sh ant $OPTS -f platform/api.progress test

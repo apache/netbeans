@@ -351,7 +351,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
             for (int i = 0; i<activatedNodes.length; i++) {
                 try {
                     Node me = activatedNodes[i];
-                    CatalogNode self = (CatalogNode) me.getCookie(CatalogNode.class);
+                    CatalogNode self = me.getCookie(CatalogNode.class);
                     self.destroy();
                 } catch (IOException ex) {
                     //Util.THIS.debug("Cannot unmount XML entity catalog!", ex);

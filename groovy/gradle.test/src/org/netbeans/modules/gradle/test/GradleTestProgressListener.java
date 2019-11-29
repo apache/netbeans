@@ -85,7 +85,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
     }
 
     private void processTestProgress(TestProgressEvent evt) {
-        TestOperationDescriptor desc = (TestOperationDescriptor) evt.getDescriptor();
+        TestOperationDescriptor desc = evt.getDescriptor();
         if (evt instanceof TestStartEvent) {
             TestStartEvent start = (TestStartEvent) evt;
             if (desc.getParent() == null) {

@@ -97,7 +97,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
             indexerFirstRun = indexerThisStartTime;
         }
 
-        GroovyParserResult r = (GroovyParserResult) ASTUtils.getParseResult(parserResult);
+        GroovyParserResult r = ASTUtils.getParseResult(parserResult);
         ASTNode root = ASTUtils.getRoot(r);
 
         if (root == null) {

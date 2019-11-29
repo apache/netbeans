@@ -60,7 +60,7 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
     @Override
     public List<Provider> getSupportedProviders() {
         try {
-            J2eeModuleProvider j2eeModuleProvider = (J2eeModuleProvider) project.getLookup().lookup(J2eeModuleProvider.class);
+            J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
             String serverInstanceId = j2eeModuleProvider.getServerInstanceID();
             ServerInstance si = serverInstanceId != null ? Deployment.getDefault().getServerInstance(serverInstanceId) : null;
             J2eePlatform platform = null;

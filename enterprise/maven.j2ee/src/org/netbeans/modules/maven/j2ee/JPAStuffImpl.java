@@ -96,7 +96,7 @@ public class JPAStuffImpl implements JPAModuleInfo, JPADataSourcePopulator,
 
     @Override
     public Boolean isJPAVersionSupported(String version) {
-        J2eeModuleProvider j2eeModuleProvider = (J2eeModuleProvider) project.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
         J2eePlatform platform  = Deployment.getDefault().getJ2eePlatform(j2eeModuleProvider.getServerInstanceID());
         
         if (platform == null) {

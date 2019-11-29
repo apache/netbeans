@@ -393,7 +393,7 @@ public class AddServerInstanceWizard extends WizardDescriptor {
                 return null;
             }
 
-            WizardDescriptor.InstantiatingIterator iterator = (WizardDescriptor.InstantiatingIterator)iterators.get(server);
+            WizardDescriptor.InstantiatingIterator iterator = iterators.get(server);
             if (iterator != null) {
                 return iterator;
             }

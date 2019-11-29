@@ -433,7 +433,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (stats == null || stats.isEmpty()) {
                 return null;
             }
-            Statement stat = (Statement) stats.get(0);
+            Statement stat = stats.get(0);
             if (!(stat instanceof ExpressionStatement)) {
                 return null;
             }

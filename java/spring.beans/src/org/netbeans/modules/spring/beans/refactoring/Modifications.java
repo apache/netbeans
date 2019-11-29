@@ -71,7 +71,7 @@ public final class Modifications implements org.netbeans.modules.refactoring.spi
 
     private void commit(final FileObject fileObject, final List<Difference> differences, Writer outWriter) throws IOException {
         DataObject dataObj = DataObject.find(fileObject);
-        EditorCookie editorCookie = dataObj != null ? (EditorCookie) dataObj.getCookie(EditorCookie.class) : null;
+        EditorCookie editorCookie = dataObj != null ? dataObj.getCookie(EditorCookie.class) : null;
         // if editor cookie was found and user does not provided his own
         // writer where he wants to see changes, commit the changes to
         // found document.

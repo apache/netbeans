@@ -911,7 +911,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         } else {
             JsObject property = fncParent.getProperty(modelBuilder.getFunctionName(functionNode));
             if (property == null && functionNode.isStrict()) {
-                property = ((DeclarationScopeImpl)modelBuilder.getCurrentDeclarationScope()).getProperty(modelBuilder.getFunctionName(functionNode));
+                property = modelBuilder.getCurrentDeclarationScope().getProperty(modelBuilder.getFunctionName(functionNode));
             }
             if(!(property instanceof JsFunction)) {
                 property = fncParent.getProperty(modelBuilder.getGlobal().getName() + modelBuilder.getFunctionName(functionNode));

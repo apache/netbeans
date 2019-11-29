@@ -49,12 +49,16 @@
                         <specification-version>9.15</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.flatlaf</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <public-packages/>
-            <class-path-extension>
-                <runtime-relative-path>ext/com-formdev-flatlaf.jar</runtime-relative-path>
-                <binary-origin>external/flatlaf-0.18.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="platform/o.n.swing.flatlaf" default="build" basedir=".">
+<project name="platform/o.n.swing.laf.flatlaf" default="build" basedir=".">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

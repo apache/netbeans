@@ -54,6 +54,7 @@ public class DarkMetalTheme extends MetalTheme {
     public void addCustomEntriesToTable( UIDefaults table ) {
         super.addCustomEntriesToTable( table );
         table.put( "nb.dark.theme", Boolean.TRUE );
+        table.put( "nb.preferred.color.profile", "Norway Today");
         table.put( "nb.imageicon.filter", new DarkIconFilter() ); //NOI18N
         table.put( "nb.errorForeground", new Color(255,71,71) ); //NOI18N
         table.put( "nb.warningForeground", new Color(255,216,0) ); //NOI18N

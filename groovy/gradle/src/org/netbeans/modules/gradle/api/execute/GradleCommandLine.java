@@ -450,7 +450,7 @@ public final class GradleCommandLine implements Serializable {
         while (it.hasNext()) {
             String arg = it.next();
             Argument parg = null;
-            for (ArgumentParser parser : PARSERS) {
+            for (ArgumentParser<? extends Argument> parser : PARSERS) {
                 parg = parser.parse(arg, it);
                 if (parg != null) {
                     arguments.add(parg);

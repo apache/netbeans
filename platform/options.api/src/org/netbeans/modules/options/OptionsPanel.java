@@ -965,7 +965,7 @@ public class OptionsPanel extends JPanel {
     }
 
     private static Color getTabPanelBackground() {
-        if( isMetal || isNimbus | isFlatLaf ) {
+        if( isNative() ) {
             Color res = UIManager.getColor( "Tree.background" ); //NOI18N
             if( null == res )
                 res = Color.white;
@@ -975,7 +975,7 @@ public class OptionsPanel extends JPanel {
     }
 
     private static Color getTabPanelForeground() {
-        if( isMetal || isNimbus | isFlatLaf ) {
+        if( isNative() ) {
             Color res = UIManager.getColor( "Tree.foreground" ); //NOI18N
             if( null == res )
                 res = Color.black;
@@ -985,7 +985,7 @@ public class OptionsPanel extends JPanel {
     }
 
     private static Color getSelectionBackground() {
-        if( isMetal || isNimbus | isFlatLaf ) {
+        if( isNative() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
                 if( null == res )
@@ -997,7 +997,7 @@ public class OptionsPanel extends JPanel {
     }
 
     private static Color getHighlightBackground() {
-        if( isMetal || isNimbus | isFlatLaf ) {
+        if( isNative() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
                 if( null == res )
@@ -1006,6 +1006,10 @@ public class OptionsPanel extends JPanel {
             }
         }
         return new Color (224, 232, 246);
+    }
+
+    private static boolean isNative() {
+        return isMetal || isNimbus | isFlatLaf;
     }
 
     // innerclasses ............................................................

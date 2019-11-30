@@ -259,7 +259,7 @@ public abstract class IssueNode<I> extends AbstractNode {
             return IssueNode.this.getSummary();
         }
         @Override
-        public int compareTo(IssueProperty p) {
+        public int compareTo(IssueProperty<String> p) {
             if(p == null) return 1;
             String s1 = IssueNode.this.getSummary();
             String s2 = p.getSummary();
@@ -282,7 +282,7 @@ public abstract class IssueNode<I> extends AbstractNode {
             return issueImpl.getStatus() == IssueStatusProvider.Status.SEEN;
         }
         @Override
-        public int compareTo(IssueProperty p) {
+        public int compareTo(IssueProperty<Boolean> p) {
             if(p == null) return 1;
             Boolean b1 = IssueNode.this.wasSeen();
             Boolean b2 = p.getStatus() == IssueStatusProvider.Status.SEEN;

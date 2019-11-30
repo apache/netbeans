@@ -122,7 +122,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         
         TableCellStyle style = null;
         if(value instanceof IssueNode.SeenProperty) {
-            IssueNode.SeenProperty ps = (IssueNode.SeenProperty) value;
+            IssueNode<?>.SeenProperty ps = (IssueNode<?>.SeenProperty) value;
             renderer.setIcon(!ps.getValue() ? seenValueIcon : null);
             renderer.setText("");                                               // NOI18N
         } 

@@ -59,10 +59,12 @@ public final class TreePathSupport {
     private List<TreeExpansionListener> eListeners = new ArrayList<TreeExpansionListener>();
     private List<TreeWillExpandListener> weListeners = new ArrayList<TreeWillExpandListener>();
     private AbstractLayoutCache layout;
+    private EventBroadcaster treeTableTranslator;
     
     /** Creates a new instance of TreePathSupport */
-    public TreePathSupport(OutlineModel mdl, AbstractLayoutCache layout) {
+    public TreePathSupport(OutlineModel mdl, AbstractLayoutCache layout, EventBroadcaster treeTableTranslator) {
         this.layout = layout;
+        this.treeTableTranslator = treeTableTranslator;
     }
     
     /** Clear all expanded path data.  This is called if the tree model fires
@@ -140,6 +142,13 @@ public final class TreePathSupport {
                 listeners[i].treeCollapsed(e);
             }
         }
+
+        // Translate the state of the tree (after other listeners have run which can modify the tree) into table events:
+        if (expanded) {
+            treeTableTranslator.treeExpanded(e);
+        } else {
+            treeTableTranslator.treeCollapsed(e);
+        }
     }
     
     private void fireTreeWillExpand (TreeExpansionEvent e, boolean expanded) throws ExpandVetoException {
@@ -156,6 +165,15 @@ public final class TreePathSupport {
                 listeners[i].treeWillCollapse(e);
             }
         }
+
+        // Translate the state of the tree (after other listeners have run which can modify the tree) into table events:
+        if (expanded) {
+            treeTableTranslator.treeWillExpand(e);
+        } else {
+            treeTableTranslator.treeWillCollapse(e);
+        }
+
+
     }
     
     private void fireTreeExpansionVetoed (TreeExpansionEvent e, ExpandVetoException ex) {
@@ -171,6 +189,9 @@ public final class TreePathSupport {
                     ex);
             }
         }
+
+        // Translate the state of the tree (after other listeners have run which can modify the tree) into table events:
+        treeTableTranslator.treeExpansionVetoed(e, ex);
     }
     
     /**

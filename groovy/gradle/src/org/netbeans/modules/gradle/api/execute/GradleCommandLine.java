@@ -861,7 +861,7 @@ public final class GradleCommandLine implements Serializable {
      * @param projectDir can be {@code null} if the project properties for JVM
      * arguments shall not be evaluated.
      */
-    public void configure(ConfigurableLauncher launcher, File projectDir) {
+    public void configure(ConfigurableLauncher<?> launcher, File projectDir) {
         List<String> jvmargs = getArgs(EnumSet.of(SYSTEM));
         addGradleSettingJvmargs(projectDir, jvmargs);
         launcher.setJvmArguments(jvmargs);
@@ -877,7 +877,7 @@ public final class GradleCommandLine implements Serializable {
      * @since 1.0
      * @param launcher the Launcher instance to configure.
      */
-    public void configure(ConfigurableLauncher launcher) {
+    public void configure(ConfigurableLauncher<?> launcher) {
         configure(launcher, null);
     }
 

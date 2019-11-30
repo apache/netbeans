@@ -122,9 +122,9 @@ public class OptionsPanel extends JPanel {
 
     private Map<String, CategoryButton> buttons = new LinkedHashMap<String, CategoryButton>();    
     private final boolean isMac = UIManager.getLookAndFeel ().getID ().equals ("Aqua");
-    private static final boolean isNimbus = UIManager.getLookAndFeel ().getID ().equals ("Nimbus");
-    private static final boolean isMetal = UIManager.getLookAndFeel() instanceof MetalLookAndFeel;
-    private static final boolean isFlatLaf = UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
+    private final boolean isNimbus = UIManager.getLookAndFeel ().getID ().equals ("Nimbus");
+    private final boolean isMetal = UIManager.getLookAndFeel() instanceof MetalLookAndFeel;
+    private final boolean isFlatLaf = UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
     private final boolean isGTK = UIManager.getLookAndFeel ().getID ().equals ("GTK");
     private final Color selected = isMac ? new Color(221, 221, 221) : getSelectionBackground();
     private final Color selectedB = isMac ? new Color(183, 183, 183) : (isFlatLaf ? selected : new Color (149, 106, 197));
@@ -964,7 +964,7 @@ public class OptionsPanel extends JPanel {
         return retval;
     }
 
-    private static Color getTabPanelBackground() {
+    private Color getTabPanelBackground() {
         if( useUIDefaultsColors() ) {
             Color res = UIManager.getColor( "Tree.background" ); //NOI18N
             if( null == res )
@@ -974,7 +974,7 @@ public class OptionsPanel extends JPanel {
         return Color.white;
     }
 
-    private static Color getTabPanelForeground() {
+    private Color getTabPanelForeground() {
         if( useUIDefaultsColors() ) {
             Color res = UIManager.getColor( "Tree.foreground" ); //NOI18N
             if( null == res )
@@ -984,7 +984,7 @@ public class OptionsPanel extends JPanel {
         return Color.black;
     }
 
-    private static Color getSelectionBackground() {
+    private Color getSelectionBackground() {
         if( useUIDefaultsColors() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
@@ -996,7 +996,7 @@ public class OptionsPanel extends JPanel {
         return new Color (193, 210, 238);
     }
 
-    private static Color getHighlightBackground() {
+    private Color getHighlightBackground() {
         if( useUIDefaultsColors() ) {
             if( !Color.white.equals( getTabPanelBackground() ) ) {
                 Color res = UIManager.getColor( "Tree.selectionBackground" ); //NOI18N
@@ -1008,7 +1008,7 @@ public class OptionsPanel extends JPanel {
         return new Color (224, 232, 246);
     }
 
-    private static boolean useUIDefaultsColors() {
+    private boolean useUIDefaultsColors() {
         return isMetal || isNimbus || isFlatLaf;
     }
 
@@ -1238,7 +1238,7 @@ public class OptionsPanel extends JPanel {
     private static final Color COL_OVER_GRADIENT2 = new Color(163,184,203,128);
     private static final Color COL_OVER_GRADIENT3 = new Color(206,227,246,128);
 
-    private static final boolean isDefaultTabBackground = Color.white.equals( getTabPanelBackground() );
+    private final boolean isDefaultTabBackground = Color.white.equals( getTabPanelBackground() );
 
     private class NimbusCategoryButton extends CategoryButton {
 

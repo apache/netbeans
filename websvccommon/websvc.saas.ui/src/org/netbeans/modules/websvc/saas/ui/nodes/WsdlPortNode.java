@@ -112,24 +112,24 @@ public class WsdlPortNode extends AbstractNode {
         }
         
         // Port name (from the wsdl)
-        ss.put( new PropertySupport.ReadOnly( "port", // NOI18N
+        ss.put( new PropertySupport.ReadOnly<String>( "port", // NOI18N
                 String.class,
                 NbBundle.getMessage(WsdlPortNode.class, "PORT_NAME_IN_WSDL"), // NOI18N
                 NbBundle.getMessage(WsdlPortNode.class, "PORT_NAME_IN_WSDL")) { // NOI18N
             @Override
-            public Object getValue() {
+            public String getValue() {
                 String portName = port.getName();
                 return portName;
             }
         });
         
         // URL for the wsdl file (entered by the user)
-        ss.put( new PropertySupport.ReadOnly( "URL", // NOI18N
+        ss.put( new PropertySupport.ReadOnly<String>( "URL", // NOI18N
                 String.class,
                 NbBundle.getMessage(WsdlPortNode.class, "WS_URL"), // NOI18N
                 NbBundle.getMessage(WsdlPortNode.class, "WS_URL")) { // NOI18N
             @Override
-            public Object getValue() {
+            public String getValue() {
                 return port.getParentSaas().getUrl();
             }
         });

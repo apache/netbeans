@@ -16,36 +16,45 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.javaee;
 
-package org.netbeans.modules.gradle.queries;
-
-import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.spi.ProjectIconProvider;
 import java.awt.Image;
+import java.util.Set;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.spi.ProjectIconProvider;
+import org.netbeans.spi.project.LookupProvider.Registration.ProjectType;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.ImageUtilities;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-@ProjectServiceProvider(service = ProjectIconProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class DefaultProjectIconProvider implements ProjectIconProvider {
+@ProjectServiceProvider(service = ProjectIconProvider.class, projectTypes = {
+    @ProjectType(id = NbGradleProject.GRADLE_PROJECT_TYPE, position = 900)
+})
+public final class JavaEEProjectIconProvider implements ProjectIconProvider {
 
     @StaticResource
-    private static final String GRADLE_ICON = "org/netbeans/modules/gradle/resources/gradle.png"; //NOI18
+    private static final String GRADLE_JAVAEE_ICON = "org/netbeans/modules/gradle/javaee/resources/javaeeProjectIcon.png"; //NOI18
 
     final Project project;
 
-    public DefaultProjectIconProvider(Project project) {
+    public JavaEEProjectIconProvider(Project project) {
         this.project = project;
     }
-    
+
     @Override
     public Image getIcon() {
-        return  ImageUtilities.loadImage(GRADLE_ICON);
+        Image ret = null;
+        Set<String> plugins = GradleBaseProject.get(project).getPlugins();
+        if (plugins.contains("war")) { //NOI18N
+            ret = ImageUtilities.loadImage(GRADLE_JAVAEE_ICON);
+        }
+        return  ret;
     }
 
     @Override
@@ -53,5 +62,4 @@ public class DefaultProjectIconProvider implements ProjectIconProvider {
         return false;
     }
 
-    
 }

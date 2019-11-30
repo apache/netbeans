@@ -58,7 +58,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.netbeans.modules.gradle.spi.Utils;
 import org.openide.ErrorManager;
-import org.openide.nodes.Children;
 
 /**
  *
@@ -68,7 +67,7 @@ public class SubProjectsNode extends AbstractNode {
 
     @StaticResource
     private static final String SP_BADGE
-            = "org/netbeans/modules/gradle/resources/gradle-badge.png";
+            = "org/netbeans/modules/gradle/resources/gradle-large-badge.png";
 
     @NbBundle.Messages("LBL_SubProjects=Sub Projects")
     public SubProjectsNode(NbGradleProjectImpl proj, String path) {
@@ -95,7 +94,7 @@ public class SubProjectsNode extends AbstractNode {
 
     private static Image getIcon(boolean opened) {
         Image badge = ImageUtilities.loadImage(SP_BADGE, true); //NOI18N
-        return ImageUtilities.mergeImages(NodeUtils.getTreeFolderIcon(opened), badge, 8, 8);
+        return ImageUtilities.mergeImages(NodeUtils.getTreeFolderIcon(opened), badge, 4, 4);
     }
 
     @Override

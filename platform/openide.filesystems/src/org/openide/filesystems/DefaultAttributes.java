@@ -447,7 +447,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             split(oldName, arr);
 
             Table t = loadTable(arr[0]);
-            Map v = (Map) t.remove(arr[1]);
+            XMLMapAttr v = t.remove(arr[1]);
 
             //      System.out.println ("ARg[0] = " + arr[0] + " arr[1] = " + arr[1] + " value: " + v); // NOI18N
             if (v == null) {
@@ -775,7 +775,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
     /** Table that hold mapping between files and attributes.
     * Hold mapping of type (String, Map (String, Object))
     */
-    final static class Table extends HashMap implements Externalizable {
+    final static class Table extends HashMap<String, XMLMapAttr> implements Externalizable {
         static final long serialVersionUID = 2353458763249746934L;
 
         /** name of folder we belong to */
@@ -812,7 +812,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @return attribute or null (if not found)
          */
         public Object getAttr(String fileName, String attrName) {
-            XMLMapAttr m = (XMLMapAttr) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m != null) {
                 Object o = null;
@@ -862,7 +862,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @param obj - attribute
          */
         final void setAttr(String fileName, String attrName, Object obj) {
-            XMLMapAttr m = (XMLMapAttr) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m == null) {
                 m = new XMLMapAttr(); //HashMap (7);//XMLMapAttr();
@@ -882,7 +882,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
         /** Enum of attributes for one file.
         */
         public Enumeration<String> attrs(String fileName) {
-            Map m = (Map) get(fileName);
+            XMLMapAttr m = get(fileName);
 
             if (m == null) {
                 return Enumerations.empty();
@@ -1035,12 +1035,12 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          */
         public void writeToXML(PrintWriter pw) /*throws IOException */ {
             // list of names
-            Iterator<String> it = new TreeSet(keySet()).iterator();
+            Iterator<String> it = new TreeSet<>(keySet()).iterator();
             XMLMapAttr.writeHeading(pw);
 
             while (it.hasNext()) {
                 String file = it.next();
-                XMLMapAttr attr = (XMLMapAttr) get(file);
+                XMLMapAttr attr = get(file);
 
                 if ((attr != null) && !attr.isEmpty()) {
                     attr.write(pw, file, "    "); // NOI18N
@@ -1086,7 +1086,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
 
             while (it.hasNext()) {
                 String file = it.next();
-                Map attr = (Map) get(file);
+                XMLMapAttr attr = get(file);
 
                 if ((attr != null) && !attr.isEmpty()) {
                     oo.writeObject(file);

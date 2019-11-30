@@ -79,9 +79,9 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
     // TODO: Is it necessary to use synchronizedMap? Should the list be synchronized?
     final private Map blacklist = Collections.synchronizedMap(new HashMap());
     final private Map<String, List<Exception>> whitelistViolators = Collections.synchronizedMap(new TreeMap<String, List<Exception>>());
-    final private Set whitelist = Collections.synchronizedSortedSet(new TreeSet());
-    final private Set previousWhitelist = Collections.synchronizedSortedSet(new TreeSet());
-    final private Set newWhitelist = Collections.synchronizedSortedSet(new TreeSet());
+    final private Set<String> whitelist = Collections.synchronizedSortedSet(new TreeSet<>());
+    final private Set<String> previousWhitelist = Collections.synchronizedSortedSet(new TreeSet<>());
+    final private Set<String> newWhitelist = Collections.synchronizedSortedSet(new TreeSet<>());
     private boolean whitelistEnabled = false;
     private boolean generatingWhitelist = false;
     private String whitelistFileName;
@@ -554,7 +554,7 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
     }
 
     public void reportDifference(PrintWriter out) {
-        Set list = whitelist;
+        Set<String> list = whitelist;
         String filename = whitelistFileName;
         if (previousWhitelistFileName != null) {
             list = previousWhitelist;
@@ -649,7 +649,7 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
         }
     }
 
-    private void loadWhiteList(String whitelistFileName, Set list) {
+    private void loadWhiteList(String whitelistFileName, Set<String> list) {
         try {
             if (whitelistFileName != null) {
                 readFile(new File(whitelistFileName), list);

@@ -182,23 +182,22 @@ public final class CatalogSettings implements Externalizable {
      * @return providers of given class or all if passed <code>null/code> argument.
      *         It never returns null.
      */
-    public final synchronized Iterator getCatalogs(Class[] providerClasses) {
-
+    public final synchronized Iterator<CatalogReader> getCatalogs(Class[] providerClasses) {
         // compose global registrations and local(project) registrations
-        IteratorIterator it = new IteratorIterator();                       
+        IteratorIterator it = new IteratorIterator();
         it.add(mountedCatalogs.iterator());
         
-        Lookup.Template template = new Lookup.Template(CatalogReader.class);
-        Lookup.Result result = getUserCatalogsLookup().lookup(template);
+        Lookup.Template<CatalogReader> template = new Lookup.Template(CatalogReader.class);
+        Lookup.Result<CatalogReader> result = getUserCatalogsLookup().lookup(template);
         it.add(result.allInstances().iterator());
         
         if (providerClasses == null)
             return it;
         
-        ArrayList list = new ArrayList();
+        List<CatalogReader> list = new ArrayList<>();
         
         while (it.hasNext()) {
-            Object next = it.next();
+            CatalogReader next = (CatalogReader) it.next();
             // provider test
             boolean add = true;
             for (int i=0; i<providerClasses.length; i++) {

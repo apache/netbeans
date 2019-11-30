@@ -44,7 +44,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     
     /** */
-    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap();
+    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap<>();
 
 
     //
@@ -82,7 +82,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     private final TreeNodeFilter filter;
     
     /** */
-    private final List nodeTypesList;
+    private final List<Class<?>> nodeTypesList;
 
     /** */
     private NodeTypesTableModel tableModel;
@@ -96,7 +96,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /** Creates new TreeNodeFilterEditor */
     public TreeNodeFilterCustomEditor (TreeNodeFilter filter) {
         this.filter = filter;
-        this.nodeTypesList = new LinkedList (Arrays.asList (filter.getNodeTypes()));
+        this.nodeTypesList = new LinkedList<>(Arrays.asList((Class<?>[]) filter.getNodeTypes()));
         
         initComponents();
         ownInitComponents();
@@ -132,7 +132,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 //          Arrays.sort (array, new NamedClassComparator());
 //          JComboBox cb = new JComboBox (array);
 
-        JComboBox cb = new JComboBox (getPublicNodeTypesInheritanceTree());
+        JComboBox<Item> cb = new JComboBox<>(getPublicNodeTypesInheritanceTree());
         cb.setEditable (false);
         DefaultCellEditor dce = new DefaultCellEditor (cb);
 //          dce.setClickCountToStart (2);
@@ -149,7 +149,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         short acceptPolicy = acceptRadioButton.isSelected() ?
             TreeNodeFilter.ACCEPT_TYPES :
             TreeNodeFilter.REJECT_TYPES;
-        Class[] nodeTypes = (Class[])nodeTypesList.toArray (new Class[0]);
+        Class<?>[] nodeTypes = nodeTypesList.toArray(new Class<?>[0]);
 
         return new TreeNodeFilter (nodeTypes, acceptPolicy);
     }
@@ -376,7 +376,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         }
 
         /** Returns the class for a model. */
-        public Class getColumnClass (int index) {
+        public Class<?> getColumnClass (int index) {
             return Class.class;
         }
 
@@ -405,7 +405,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
                 return;
             }
 
-            Class type = null;
+            Class<?> type = null;
 
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("--> setValue: " + val.getClass().getName() + " -- '" + val + "'"); // NOI18N
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("--> setValue: row    = " + row); // NOI18N
@@ -457,10 +457,10 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     private static class NamedClass {
 
         /** */
-        private final Class clazz;
+        private final Class<?> clazz;
         
         /** */
-        public NamedClass (Class clazz) {
+        public NamedClass (Class<?> clazz) {
             this.clazz = clazz;
         }
 
@@ -468,7 +468,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
         /**
          */
         public String toString () {
-            String name = (String)publicNodeTypeNamesMap.get (clazz);
+            String name = publicNodeTypeNamesMap.get (clazz);
 
             if ( name == null ) {
                 name = clazz.getName();
@@ -497,11 +497,11 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /**
      *
      */
-    private static class NamedClassComparator implements Comparator {
+    private static class NamedClassComparator implements Comparator<Item> {
 
         /**
          */
-        public int compare (Object obj1, Object obj2) throws ClassCastException {
+        public int compare (Item obj1, Item obj2) throws ClassCastException {
             return (obj1.toString().compareTo (obj2.toString()));
         }
 
@@ -520,12 +520,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     //
 
     /** */
-    private static Vector publicNodeTypesInheritanceTree;
+    private static Vector<Item> publicNodeTypesInheritanceTree;
 
 
     /**
      */
-    private static Vector getPublicNodeTypesInheritanceTree () {
+    private static Vector<Item> getPublicNodeTypesInheritanceTree () {
         if ( publicNodeTypesInheritanceTree == null ) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Init Set"); // NOI18N
             
@@ -542,7 +542,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
                 }
             }
             
-            publicNodeTypesInheritanceTree = new Vector();
+            publicNodeTypesInheritanceTree = new Vector<>();
             fillPublicNodeTypesInheritanceTree (rootItem.layer, ""); // NOI18N
 
             Item.itemMap.clear();
@@ -555,7 +555,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     
     /**
      */
-    private static void fillPublicNodeTypesInheritanceTree (Set layer, String prefix) {
+    private static void fillPublicNodeTypesInheritanceTree (Set<Item> layer, String prefix) {
         Iterator<Item> it = layer.iterator();
         while ( it.hasNext() ) {
             Item item = it.next();
@@ -593,17 +593,17 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
      */
     private static class Item {
         /** */
-        private static Map itemMap;
+        private static Map<Class<?>, Item> itemMap;
 
         /** */
         private final NamedClass clazz;
         /** */
-        private final Set        layer;
+        private final Set<Item>  layer;
         /** */
         private final String     prefix;
 
         /** */
-        private Item (NamedClass clazz, Set layer, String prefix) {
+        private Item (NamedClass clazz, Set<Item> layer, String prefix) {
             this.clazz  = clazz;
             this.layer  = layer;
             this.prefix = prefix;
@@ -616,7 +616,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
         /** */
         private Item (NamedClass clazz) {
-            this (clazz, new TreeSet (new NamedClassComparator()), new String());
+            this(clazz, new TreeSet<>(new NamedClassComparator()), new String());
         }
 
         /** */
@@ -649,12 +649,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
         /**
          */
-        private static Item getItem (Class clazz) {
+        private static Item getItem (Class<?> clazz) {
             if ( itemMap == null ) {
-                itemMap = new HashMap();
+                itemMap = new HashMap<>();
             }
             
-            Item item = (Item) itemMap.get (clazz);
+            Item item = itemMap.get (clazz);
             if ( item == null ) {
                 itemMap.put (clazz, item = new Item (new NamedClass (clazz)));
             }
@@ -663,15 +663,15 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
         /**
          */
-        private static void insertItemIntoLayer (Set layer, Item newItem) {
+        private static void insertItemIntoLayer (Set<Item> layer, Item newItem) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("\n\nInsert newItem : " + newItem); // NOI18N
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("       Item : set = " + layer); // NOI18N
 
             boolean inserted = false;
 
-            Object[] array = layer.toArray();
+            Item[] array = layer.toArray(new Item[0]);
             for (int i = 0; i < array.length; i++) {
-                Item item = (Item) array[i];
+                Item item = array[i];
             
                 if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("       Item : item [" + i + "] = " + item); // NOI18N
 
@@ -728,7 +728,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     // debug
     public static final void main (String[] args) throws Exception {
-        Vector vector = getPublicNodeTypesInheritanceTree();
+        Vector<Item> vector = getPublicNodeTypesInheritanceTree();
 
 //          Iterator it = vector.iterator();
 //          System.out.println ("+==================================="); // NOI18N

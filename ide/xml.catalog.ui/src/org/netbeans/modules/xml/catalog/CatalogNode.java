@@ -233,7 +233,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
         }
                 
         /** Contains public ID (String) instances. */
-        private final TreeSet keys = new TreeSet();
+        private final Set<String> keys = new TreeSet<>();
         
         public void addNotify() {            
             catalogListener = new Lis();

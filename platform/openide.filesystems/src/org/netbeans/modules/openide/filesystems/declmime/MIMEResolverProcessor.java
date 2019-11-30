@@ -186,7 +186,7 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         return unq(Arrays.asList(array));
     }
 
-    private Set<String> unq(Collection collection) {
+    private Set<String> unq(Collection<String> collection) {
         Set<String> s = new TreeSet<>();
         s.addAll(collection);
         return s;

@@ -307,10 +307,10 @@ public final class ClassNodeCache {
 
             @Override
             public URL loadGroovySource(final String filename) throws MalformedURLException {
-                URL file = (URL) AccessController.doPrivileged(new PrivilegedAction() {
+                URL file = AccessController.doPrivileged(new PrivilegedAction<URL>() {
 
                     @Override
-                    public Object run() {
+                    public URL run() {
                         return getSourceFile(filename);
                     }
                 });

@@ -158,7 +158,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/openide.dialogs test
             - hide-logs.sh ant $OPTS -f platform/openide.execution test
             - hide-logs.sh ant $OPTS -f platform/openide.execution.compat8 test
-            - hide-logs.sh ant $OPTS -f platform/openide.explorer test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.explorer test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.compat8 test
             - hide-logs.sh ant $OPTS -f platform/openide.filesystems.nb test

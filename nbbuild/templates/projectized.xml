@@ -810,8 +810,9 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <delete file="${report.file}" failonerror="false"/>
     </target>
 
-    <target name="patch-for-maven" depends="init" description="Patch local Maven repo's version of this module with one built from sources.">
+    <target name="patch-for-maven" depends="init" description="Patch local Maven repo's -DmavenVersion of this module with one built from sources.">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
+        <property name="mavenVersion" value="dev-SNAPSHOT"/>
         <delete dir="${maven.tmp}"/>
         <property name="maven.tmp.nbms" location="${maven.tmp}/nbms"/>
         <antcall target="nbm" inheritall="false">
@@ -835,15 +836,15 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
           <os family="windows"/>
         </condition>
         <exec executable="${maven.embedder.dir}/maven/bin/mvn${.cmd}" failonerror="true">
-            <arg value="-DforcedVersion=SNAPSHOT"/>
+            <arg value="-DforcedVersion=${mavenVersion}"/>
             <arg value="-DdefineCluster=false"/>
             <arg value="-DdependencyRepositoryId=netbeans-snapshot"/>
-            <arg value="-DdependencyRepositoryUrl=http://bits.netbeans.org/netbeans/trunk/maven-snapshot/"/>
+            <arg value="-DdependencyRepositoryUrl=https://repository.apache.org/content/groups/snapshots"/>
             <arg value="-DnetbeansInstallDirectory=${maven.tmp.install}"/>
             <arg value="-DnetbeansNbmDirectory=${maven.tmp.nbms}"/>
             <arg value="-DnetbeansSourcesDirectory=${maven.tmp.sources}"/>
             <arg value="-DnetbeansJavadocDirectory=${maven.tmp.javadoc}"/>
-            <arg value="org.codehaus.mojo:nb-repository-plugin:1.3:populate"/>
+            <arg value="org.apache.netbeans.utilities:nb-repository-plugin:1.5:populate"/>
         </exec>
     </target>
     

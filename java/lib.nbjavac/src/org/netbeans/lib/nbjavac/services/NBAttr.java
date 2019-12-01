@@ -109,8 +109,8 @@ public class NBAttr extends Attr {
             fullyAttribute = true;
 
             Env<AttrContext> result = tree instanceof JCExpression ?
-                    attribExprToTree((JCExpression) tree, env, (JCTree) to) :
-                    attribStatToTree((JCTree) tree, env, (JCTree) to);
+                    attribExprToTree((JCExpression) tree, env, to) :
+                    attribStatToTree(tree, env, to);
 
             return fullyAttributeResult != null ? fullyAttributeResult : result;
         } finally {

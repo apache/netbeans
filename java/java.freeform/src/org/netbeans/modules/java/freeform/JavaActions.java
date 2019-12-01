@@ -296,8 +296,7 @@ final class JavaActions implements ActionProvider {
             List<ProjectModel.CompilationUnitKey> cuKeys = pm.createCompilationUnitKeys();
             assert cuKeys != null;
             boolean hasOutputs = false;
-            for (Iterator it = cuKeys.iterator(); it.hasNext();) {
-                ProjectModel.CompilationUnitKey ck = (ProjectModel.CompilationUnitKey) it.next();
+            for (ProjectModel.CompilationUnitKey ck : cuKeys) {
                 JavaProjectGenerator.JavaCompilationUnit cu = pm.getCompilationUnit(ck,false);
                 if (cu.output != null && cu.output.size()>0) {
                     hasOutputs = true;
@@ -454,8 +453,7 @@ final class JavaActions implements ActionProvider {
             List<ProjectModel.CompilationUnitKey> cuKeys = pm.createCompilationUnitKeys();
             assert cuKeys != null;
             boolean hasOutputs = false;
-            for (Iterator it = cuKeys.iterator(); it.hasNext();) {
-                ProjectModel.CompilationUnitKey ck = (ProjectModel.CompilationUnitKey) it.next();
+            for (ProjectModel.CompilationUnitKey ck : cuKeys) {
                 JavaProjectGenerator.JavaCompilationUnit cu = pm.getCompilationUnit(ck,false);
                 if (cu.output != null && cu.output.size()>0) {
                     hasOutputs = true;

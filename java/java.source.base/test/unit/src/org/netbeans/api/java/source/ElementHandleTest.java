@@ -27,11 +27,13 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import junit.framework.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -41,13 +43,16 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -85,6 +90,7 @@ public class ElementHandleTest extends NbTestCase {
                     Lookups.metaInfServices(l),
                     Lookups.singleton(l),
                     Lookups.singleton(ClassPathProviderImpl.getDefault()),
+                    Lookups.singleton(SourceLevelQueryImpl.getDefault()),
             });
         }
         
@@ -607,6 +613,26 @@ public class ElementHandleTest extends NbTestCase {
         }, true);
     }
     
+    public void testHandleClassBasedCompilations() throws Exception {
+        ClassPath systemClasses = BootClassPathUtil.getModuleBootPath();
+        FileObject jlObject = systemClasses.findResource("java/lang/Object.class");
+        assertNotNull(jlObject);
+        ClasspathInfo cpInfo = new ClasspathInfo.Builder(BootClassPathUtil.getBootClassPath())
+                                                .setModuleBootPath(systemClasses)
+                                                .build();
+        JavaSource js = JavaSource.create(cpInfo, jlObject);
+        assertNotNull(js);
+        SourceLevelQueryImpl.getDefault().setSourceLevel(jlObject, "11");
+        js.runUserActionTask(cc -> {
+            cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+            ElementHandle.create(cc.getTopLevelElements().get(0)).resolve(cc);
+            Elements elements = cc.getElements();
+            TypeElement te = elements.getTypeElement("java.lang.String");
+            ElementHandle.create(te).resolve(cc);
+        }, true);
+        SourceLevelQueryImpl.getDefault().setSourceLevel(jlObject, null);
+    }
+
     private Element[] getStringElements (Element stringElement) {
         List<? extends Element> members = ((TypeElement)stringElement).getEnclosedElements();
         Element[] result = new Element[3];
@@ -690,6 +716,35 @@ public class ElementHandleTest extends NbTestCase {
         }
     }
     
+    private static class SourceLevelQueryImpl implements SourceLevelQueryImplementation {
+
+        private static SourceLevelQueryImpl instance;
+
+        private final Map<FileObject, String> sourceLevels = new HashMap<>();
+
+        private SourceLevelQueryImpl() {}
+
+        @Override
+        public synchronized String getSourceLevel(FileObject javaFile) {
+            return sourceLevels.get(javaFile);
+        }
+
+        public synchronized void setSourceLevel(FileObject file, String sourceLevel) {
+            if (sourceLevel != null) {
+                sourceLevels.put(file, sourceLevel);
+            } else {
+                sourceLevels.remove(file);
+            }
+        }
+
+        public static synchronized SourceLevelQueryImpl getDefault () {
+            if (instance == null) {
+                instance = new SourceLevelQueryImpl();
+            }
+            return instance;
+        }
+    }
+
     static {
         System.setProperty("CachingArchiveProvider.disableCtSym", "true");
     }

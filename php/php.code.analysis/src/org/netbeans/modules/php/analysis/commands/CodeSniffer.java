@@ -64,7 +64,8 @@ public final class CodeSniffer {
     static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-php-phpcs-log.xml"); // NOI18N
 
     // #270987 use --standard instead of --runtime-set default_standard
-    private static final String STANDARD_PARAM = "--standard=%s"; // NOI18N
+    private static final String STANDARD_PARAM = "--standard"; // NOI18N
+    private static final String STANDARD_PARAM_FORMAT = STANDARD_PARAM + "=%s"; // NOI18N
     private static final String RUNTIME_SET_PARAM = "--runtime-set"; // NOI18N
     private static final String DEFAULT_STANDARD_PARAM = "default_standard"; // NOI18N
     private static final String LIST_STANDARDS_PARAM = "-i"; // NOI18N
@@ -237,8 +238,12 @@ public final class CodeSniffer {
     private List<String> getParameters(String standard, FileObject file, boolean noRecursion) {
         Charset encoding = FileEncodingQuery.getEncoding(file);
         List<String> params = new ArrayList<>();
-        // #270987 use --standard
-        params.add(String.format(STANDARD_PARAM, standard));
+        // NETBEANS-3243 the path of Code Sniffer may have --standard parameter
+        if (!codeSnifferPath.contains(STANDARD_PARAM + "=") // NOI18N
+                && !codeSnifferPath.contains(STANDARD_PARAM + " ")) { // NOI18N
+            // #270987 use --standard
+            params.add(String.format(STANDARD_PARAM_FORMAT, standard));
+        }
         params.add(REPORT_PARAM);
         params.add(String.format(EXTENSIONS_PARAM, StringUtils.implode(FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE), ","))); // NOI18N
         params.add(String.format(ENCODING_PARAM, encoding.name()));

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43
+#Version 1.44
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -85,6 +85,7 @@ fld public final static java.lang.String JAVA_EE_5_LEVEL = "1.5"
  anno 0 java.lang.Deprecated()
 meth public java.lang.String getContextPath()
 meth public java.lang.String getJ2eePlatformVersion()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.j2ee.core.Profile getJ2eeProfile()
 meth public org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata> getMetadataModel()
 meth public org.openide.filesystems.FileObject getDeploymentDescriptor()
@@ -147,10 +148,12 @@ meth public abstract void save(org.netbeans.modules.web.api.webmodule.WebModule)
 
 CLSS public final org.netbeans.modules.web.spi.webmodule.WebModuleFactory
 meth public static org.netbeans.modules.web.api.webmodule.WebModule createWebModule(org.netbeans.modules.web.spi.webmodule.WebModuleImplementation)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.web.api.webmodule.WebModule createWebModule(org.netbeans.modules.web.spi.webmodule.WebModuleImplementation2)
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.web.spi.webmodule.WebModuleImplementation
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getContextPath()
 meth public abstract java.lang.String getJ2eePlatformVersion()
 meth public abstract org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata> getMetadataModel()

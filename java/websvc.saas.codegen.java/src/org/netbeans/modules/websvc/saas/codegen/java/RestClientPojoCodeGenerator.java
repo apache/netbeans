@@ -139,8 +139,8 @@ public class RestClientPojoCodeGenerator extends SaasClientCodeGenerator {
 
         if(getBean().getMethod().getSaas().getLibraryJars() == null) {
             WadlSaasEx ex = new WadlSaasEx(getBean().getMethod().getSaas());
-            ((WadlSaas)getBean().getMethod().getSaas()).setLibraryJars(ex.getLibraryJars());
-            ((WadlSaas)getBean().getMethod().getSaas()).setJaxbSourceJars(ex.getJaxbSourceJars());
+            getBean().getMethod().getSaas().setLibraryJars(ex.getLibraryJars());
+            getBean().getMethod().getSaas().setJaxbSourceJars(ex.getJaxbSourceJars());
         }
         if (getBean().getMethod().getSaas().getLibraryJars().size() > 0) {
             JavaUtil.addClientJars(getBean(), getProject(), null);

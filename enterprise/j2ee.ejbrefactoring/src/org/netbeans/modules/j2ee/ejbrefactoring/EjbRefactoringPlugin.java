@@ -233,8 +233,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
                     J2eeModuleProvider[] j2eeModules = j2eeApp.getChildModuleProviders();
 
                     if (j2eeModules != null) {
-                        J2eeModuleProvider affectedPrjProvider =
-                                (J2eeModuleProvider) affectedProject.getLookup().lookup(J2eeModuleProvider.class);
+                        J2eeModuleProvider affectedPrjProvider = affectedProject.getLookup().lookup(J2eeModuleProvider.class);
 
                         if (affectedPrjProvider != null) {
                             if (Arrays.asList(j2eeModules).contains(affectedPrjProvider)) {

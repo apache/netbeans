@@ -20,13 +20,14 @@
 package org.netbeans.modules.gradle.execute;
 
 import org.openide.execution.ExecutorTask;
+import org.openide.util.Cancellable;
 import org.openide.windows.InputOutput;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public interface GradleExecutor extends Runnable {
+public interface GradleExecutor extends Runnable, Cancellable {
     
     void setTask(ExecutorTask task);
     InputOutput getInputOutput();

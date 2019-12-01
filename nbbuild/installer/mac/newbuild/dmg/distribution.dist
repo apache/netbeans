@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<installer-gui-script minSpecVersion="1.0">
+    <title>netbeans-Title</title>
+    <welcome file="Welcome.html"></welcome>
+    <license file="License.txt"></license>
+    <background file="background.tif" scaling="none" alignment="bottomleft"></background>
+    <options allow-external-scripts="yes" customize="yes" rootVolumeOnly="false" hostArchitectures="i386"></options>
+    <installation-check script="checkSystem()"></installation-check>
+    <volume-check script="checkSystemversion()"></volume-check>
+    <script>
+/* js:pkmk:start */
+function checkSystem() {
+	var java_result = checkJavaVersion();
+        
+        if (!java_result) {
+            return java_result;
+        }
+        
+        var mem_result = checkMemsize();
+        
+        return mem_result;
+}
+/* js:pkmk:end */
+
+/* js:pkmk:start */
+function checkMemsize() {
+	var result = false;
+	try {
+		result = system.sysctl('hw.memsize') >= '536870912';
+	} catch (e) {}
+	
+	if(!result) {
+		my.result.type = 'Warn';
+		my.result.title = system.localizedStringWithFormat('MEMORY_WARNING_TITLE');
+		my.result.message = system.localizedStringWithFormat('MEMORY_WARNING_MSG');
+	}
+	return result;
+}
+/* js:pkmk:end */
+
+/* js:pkmk:start */
+function checkJavaVersion() {
+    var JDK_ENABLED = false;
+    var result = false;
+    var java8_or_newer = false;
+    var jdkFound = false;
+    var jreFound = false;
+    try {
+        if(system.files.fileExistsAtPath('/usr/libexec/java_home')) {
+           var res = system.run("/usr/libexec/java_home", "--version", "1.8+", "--failfast");                       
+           java8_or_newer = (0 == res);
+           if(!java8_or_newer) {
+               var res = system.run("/usr/libexec/java_home", "--version", "1.5", "--failfast");                       
+               jdkFound = (0 == res);
+           }
+        }
+    } catch (e) {}
+
+    if(system.files.fileExistsAtPath('/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home')) {
+        jreFound = true;
+    }
+
+    if (java8_or_newer || JDK_ENABLED &amp;&amp; jreFound) {
+        result = true;
+    } else {
+        if (jdkFound) {
+            my.result.type = 'Fatal';
+            my.result.title = system.localizedStringWithFormat('ERR_OLDER_JAVA8_TITLE');
+            my.result.message = system.localizedStringWithFormat('ERR_OLDER_JAVA8_TITLE');
+        } else if (jreFound) {
+            my.result.type = 'Fatal';
+            my.result.title = system.localizedStringWithFormat('ERR_NO_JDK_TITLE');
+            my.result.message = system.localizedStringWithFormat('ERR_NO_JDK_MSG');            
+        } else {
+            my.result.type = 'Fatal';
+            my.result.title = system.localizedStringWithFormat('ERR_NO_JAVA_TITLE');
+            my.result.message = system.localizedStringWithFormat('ERR_NO_JAVA_MSG');
+        }
+    }
+
+    return result;
+}
+/* js:pkmk:end */
+</script>
+
+<script>
+/* js:pkmk:start */
+function checkSystemversion() {
+    var result = false;
+    var version;	
+    try {
+            version = my.target.systemVersion.ProductVersion;
+            if(version == 'undefined') {
+                    result = ( -1 != system.compareVersions(system.version.ProductVersion, '10.5'));
+            } else {
+                    result = ( -1 != system.compareVersions(version, '10.5'));
+            }
+
+    } catch (e) {}
+
+    if(!result) {
+            my.result.type = 'Fatal';
+            my.result.title = system.localizedStringWithFormat('ERR_INVALID_VERSION_TITLE');
+            my.result.message = system.localizedStringWithFormat('ERR_INVALID_VERSION_MSG');
+    }
+
+    return result;
+}
+/* js:pkmk:end */
+</script>
+
+<choices-outline>
+        <line choice="netbeans">
+            <line choice="nbide"></line>            
+            <line choice="javase"></line>            
+            <line choice="javaee"></line>            
+            <line choice="webcommon"></line>            
+            <line choice="php"></line>            
+            <!--line choice="cpp"></line-->            
+        </line>
+        <line choice="postinstallscripts"></line>
+    </choices-outline>
+    <choice id="netbeans" title="netbeans-title" description="netbeans-description" start_selected="true" start_enabled="true" start_visible="true"></choice>
+    <choice id="nbide" title="nbide-title" description="nbide-description" start_selected="true" start_enabled="true" start_visible="true">
+        <pkg-ref id="ident.pkg.nbide"></pkg-ref>
+    </choice>
+    <choice id="javase" title="javase-title" description="javase-description" start_selected="true" start_enabled="true" start_visible="true" selected="choices.javase.selected &amp;&amp; choices.nbide.selected &amp;&amp; choices.webcommon.selected" enabled="choices.webcommon.selected">
+        <pkg-ref id="ident.pkg.javase"></pkg-ref>
+    </choice>   
+    <choice id="webcommon" title="webcommon-title" description="webcommon-description" start_selected="true" start_enabled="true" start_visible="true" selected="choices.webcommon.selected &amp;&amp; choices.nbide.selected" enabled="choices.nbide.selected">
+        <pkg-ref id="ident.pkg.webcommon"/>
+    </choice>
+    <choice id="javaee" title="javaee-title" description="javaee-description" start_selected="true" start_enabled="true" start_visible="true" selected="choices.javaee.selected &amp;&amp; choices.javase.selected" enabled="choices.javase.selected">
+        <pkg-ref id="ident.pkg.javaee"></pkg-ref>
+    </choice>
+    <choice id="php" title="php-title" description="php-description" start_selected="true" start_enabled="true" start_visible="true" selected="choices.php.selected &amp;&amp; choices.webcommon.selected" enabled="choices.webcommon.selected">
+        <pkg-ref id="ident.pkg.php"></pkg-ref>
+    </choice>
+    <choice id="postinstallscripts" title="postinstallscripts-title" description="postinstallscripts-description" start_selected="true" start_enabled="true" start_visible="false" selected="true" enabled="true" visible="false">
+        <pkg-ref id="ident.pkg.postinstallscripts"></pkg-ref>
+    </choice>
+    <pkg-ref id="ident.pkg.nbide" version="0.0.0.0.1" installKBytes="@SIZE_NBIDE@" auth="Root" onConclusion="None">nbide-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.javase" version="0.0.0.0.1" installKBytes="@SIZE_JAVASE@" auth="Root" onConclusion="None">javase-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.javaee" version="0.0.0.0.1" installKBytes="@SIZE_JAVAEE@" auth="Root" onConclusion="None">javaee-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.webcommon" version="0.0.0.0.1" installKBytes="@SIZE_WEBCOMMON@" auth="Root" onConclusion="None">webcommon-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.php" version="0.0.0.0.1" installKBytes="@SIZE_PHP@" auth="Root" onConclusion="None">php-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.cpp" version="0.0.0.0.1" installKBytes="@SIZE_CPP@" auth="Root" onConclusion="None">cpp-@NB_ID@.pkg</pkg-ref>
+    <pkg-ref id="ident.pkg.postinstallscripts" version="0.0.0.0.1" auth="Root" onConclusion="None">postinstallscripts.pkg</pkg-ref>
+</installer-gui-script>

@@ -97,7 +97,7 @@ public final class GradleProjectCache {
     private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 11;
+    private static final int COMPATIBLE_CACHE_VERSION = 12;
 
     /**
      * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using

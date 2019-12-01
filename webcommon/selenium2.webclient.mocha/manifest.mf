@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.selenium2.webclient.mocha
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/selenium2/webclient/mocha/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.12
+OpenIDE-Module-Specification-Version: 1.13
 

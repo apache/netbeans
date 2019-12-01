@@ -100,7 +100,7 @@ public class UndoableEditWrapperTest extends NbTestCase {
         /** if not null contains message why this document cannot be modified */
         private transient String cannotBeModified;
         private transient Date date = new Date ();
-        private transient List/*<PropertyChangeListener>*/ propL = new ArrayList ();
+        private transient List<PropertyChangeListener> propL = new ArrayList<>();
         private transient VetoableChangeListener vetoL;
 
         public CESEnv() {

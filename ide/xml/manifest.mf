@@ -4,4 +4,4 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/resources/Bundle.prop
 OpenIDE-Module-Install: org/netbeans/modules/xml/CoreModuleInstall.class
 OpenIDE-Module-Layer: org/netbeans/modules/xml/resources/mf-layer.xml
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 1.39
+OpenIDE-Module-Specification-Version: 1.40

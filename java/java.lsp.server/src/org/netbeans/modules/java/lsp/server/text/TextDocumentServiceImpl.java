@@ -18,9 +18,18 @@
  */
 package org.netbeans.modules.java.lsp.server.text;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.util.TreePath;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import com.vladsch.flexmark.parser.Parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,17 +38,25 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.prefs.Preferences;
@@ -81,6 +98,7 @@ import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
@@ -108,7 +126,9 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -118,6 +138,7 @@ import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
+import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
@@ -125,6 +146,7 @@ import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
+import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -136,16 +158,12 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
-import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
-import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.Places;
-import org.openide.text.Line;
 import org.openide.text.NbDocument;
-import org.openide.text.PositionRef;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
@@ -167,11 +185,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         try {
-            FileObject file = fromUri(params.getTextDocument().getUri());
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromUri(uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             int caret = getOffset(doc, params.getPosition());
-            JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(), EnumSet.noneOf(Options.class), () -> false);
+            JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(uri), EnumSet.noneOf(Options.class), () -> false);
             ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
             List<CompletionItem> result = task.getResults();
             for (Iterator<CompletionItem> it = result.iterator(); it.hasNext();) {
@@ -186,6 +205,27 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
+    public static final class CompletionData {
+        public String uri;
+        public String kind;
+        public String[] elementHandle;
+
+        public CompletionData() {
+        }
+
+        public CompletionData(String uri, String kind, String[] elementHandle) {
+            this.uri = uri;
+            this.kind = kind;
+            this.elementHandle = elementHandle;
+        }
+
+        @Override
+        public String toString() {
+            return "CompletionData{" + "uri=" + uri + ", kind=" + kind + ", elementHandle=" + elementHandle + '}';
+        }
+        
+    }
+
     @Override
     public void connect(LanguageClient client) {
         this.client = client;
@@ -193,7 +233,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
 
-        public ItemFactoryImpl() {
+        private final String uri;
+
+        public ItemFactoryImpl(String uri) {
+            this.uri = uri;
+        }
+
+        private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+        private void setCompletionData(CompletionItem ci, Element el) {
+            if (SUPPORTED_ELEMENT_KINDS.contains(el.getKind().name())) {
+                ci.setData(new CompletionData(uri, el.getKind().name(), SourceUtils.getJVMSignature(ElementHandle.create(el))));
+            }
         }
 
         @Override
@@ -212,6 +262,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            setCompletionData(item, elem);
             return item;
         }
 
@@ -236,6 +287,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            setCompletionData(item, elem);
             return item;
         }
 
@@ -248,28 +300,30 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
             Iterator<? extends VariableElement> it = elem.getParameters().iterator();
             Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
-            StringBuilder details = new StringBuilder();
+            StringBuilder label = new StringBuilder();
             String sep = "";
-            details.append("(");
+            label.append(elem.getSimpleName().toString());
+            label.append("(");
             while(it.hasNext() && tIt.hasNext()) {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
                     break;
                 }
-                details.append(sep);
-                details.append(Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString());
-                details.append(' ');
-                details.append(it.next().getSimpleName().toString());
+                label.append(sep);
+                label.append(Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString());
+                label.append(' ');
+                label.append(it.next().getSimpleName().toString());
                 sep = ", ";
             }
-            details.append(")");
+            label.append(") : ");
             TypeMirror retType = type.getReturnType();
-            details.append(Utilities.getTypeName(info, retType, false).toString());
-            item.setDetail(details.toString());
+            label.append(Utilities.getTypeName(info, retType, false).toString());
+            CompletionItem item = new CompletionItem(label.toString());
+            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            item.setInsertText(elem.getSimpleName().toString());
+            setCompletionData(item, elem);
             return item;
         }
 
@@ -277,6 +331,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
             CompletionItem item = new CompletionItem(name);
             item.setKind(CompletionItemKind.Field);
+            setCompletionData(item, elem);
             return item;
         }
 
@@ -284,6 +339,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString() + " - override");
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            setCompletionData(item, elem);
             return item;
         }
 
@@ -378,9 +434,57 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
+    private static final RequestProcessor JAVADOC_WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName() + ".javadoc", 1);
+
     @Override
-    public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem ci) {
+        JsonObject rawData = (JsonObject) ci.getData();
+        if (rawData == null) {
+            return CompletableFuture.completedFuture(ci);
+        }
+        CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
+        try {
+            FileObject file = fromUri(data.uri);
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
+            JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(-1, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+                @Override
+                public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
+                    return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                }
+            }, () -> false);
+            ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
+            Future<String> futureJavadoc = task.getDocumentation();
+            CompletableFuture<CompletionItem> result = new CompletableFuture<CompletionItem>() {
+                @Override
+                public boolean cancel(boolean mayInterruptIfRunning) {
+                    return futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
+                }
+            };
+
+            JAVADOC_WORKER.post(() -> {
+                try {
+                    String javadoc = futureJavadoc.get();
+                    MarkupContent markup = new MarkupContent();
+                    markup.setKind("markdown");
+                    markup.setValue(html2MD(javadoc));
+                    ci.setDocumentation(markup);
+                    result.complete(ci);
+                } catch (ExecutionException | InterruptedException ex) {
+                    result.completeExceptionally(ex);
+                }
+            });
+            return result;
+        } catch (IOException | ParseException ex) {
+            CompletableFuture<CompletionItem> result = new CompletableFuture<CompletionItem>();
+            result.completeExceptionally(ex);
+            return result;
+        }
+    }
+
+    public static String html2MD(String html) {
+        return FlexmarkHtmlConverter.builder().build().convert(html).replaceAll("<br />[ \n]*$", "");
     }
 
     @Override

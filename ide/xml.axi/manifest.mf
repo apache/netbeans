@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.xml.axi
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/xml/axi/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.39
+OpenIDE-Module-Specification-Version: 1.40

@@ -698,35 +698,71 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
     }
 
-    private void enableRawStringLiterals(InputAttributes attr) {
-        attr.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> {
-            return "13";
-        }, true);
-    }
-
     public void testMultilineLiteral() {
         String text = "\"\"\"\n2\"3\n4\\\"\"\"5\"\"\\\"6\n7\"\"\" \"\"\"wrong\"\"\" \"\"\"\nbla\n";
         InputAttributes attr = new InputAttributes();
-        enableRawStringLiterals(attr);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\"\n2\"3\n4\\\"\"\"5\"\"\\\"6\n7\"\"\"");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
-        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\"wrong\"\"\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"wrong\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\"");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\"\nbla\n");
         assertFalse(ts.moveNext());
     }
 
-    public void testTrailing() {
+    public void testTrailing1() {
         String text = "\"\"";
         InputAttributes attr = new InputAttributes();
-        enableRawStringLiterals(attr);
         TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
         TokenSequence<?> ts = hi.tokenSequence();
 
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\"");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTrailing2() {
+        String text = "\"\"\"";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTrailing3() {
+        String text = "\"\"\" ";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\" ");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTrailing4() {
+        String text = "\"\"\"\n";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\"\n");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTrailing5() {
+        String text = "\"\"\" \n";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\" \n");
         assertFalse(ts.moveNext());
     }
 

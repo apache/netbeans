@@ -810,7 +810,8 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <delete file="${report.file}" failonerror="false"/>
     </target>
 
-    <target name="patch-for-maven" depends="init" description="Patch local Maven repo's -DmavenVersion of this module with one built from sources.">
+    <target name="patch-for-maven" depends="maven-install"/> <!-- deprecated -->
+    <target name="maven-install" depends="init" description="Installs a -D{mavenVersion} of this module into local Maven repository">
         <property name="maven.tmp" location="${build.dir}/mvn"/>
         <property name="mavenVersion" value="dev-SNAPSHOT"/>
         <delete dir="${maven.tmp}"/>

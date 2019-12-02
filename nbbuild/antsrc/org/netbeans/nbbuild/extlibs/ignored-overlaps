@@ -61,6 +61,7 @@ groovy/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-2.0.0.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip ide/libs.xerces/external/xercesImpl-2.12.0.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar

@@ -49,7 +49,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     public static final String PROP_REVISIONS_ADDED = "propRevisionsAdded"; //NOI18N
     private final PropertyChangeListener list;
     private final ExpandCollapseGeneralAction expandCollapseAction;
-    private JList resultsList;
+    private JList<Item> resultsList;
     private JScrollPane scrollPane;
 
     private VCSHyperlinkSupport linkerSupport = new VCSHyperlinkSupport();
@@ -59,7 +59,7 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         this.master = master;
         list = WeakListeners.propertyChange(this, null);
 
-        resultsList = new JList(new DefaultListModel());
+        resultsList = new JList<>(new DefaultListModel<Item>());
         resultsList.setModel(new SummaryListModel(results, master.hasMoreResults()));
         resultsList.setCellRenderer(new SummaryCellRenderer(this, linkerSupport, kenaiUsersMap));
         resultsList.setFixedCellHeight(-1);
@@ -96,13 +96,13 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         resultsList.getActionMap().put("addToSelection", new AbstractAction() { //NOI18N
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[] selection = resultsList.getSelectedValues();
-                if (selection.length == 1) {
-                    if (selection[0] instanceof ShowAllEventsItem) {
-                        showRemainingFiles(((ShowAllEventsItem) selection[0]).getParent(), true);
-                    } else if (selection[0] instanceof ShowLessEventsItem) {
-                        showRemainingFiles(((ShowAllEventsItem) selection[0]).getParent(), false);
-                    } else if (selection[0] instanceof MoreRevisionsItem) {
+                List<?> selection = resultsList.getSelectedValuesList();
+                if (selection.size() == 1) {
+                    if (selection.get(0) instanceof ShowAllEventsItem) {
+                        showRemainingFiles(((ShowAllEventsItem) selection.get(0)).getParent(), true);
+                    } else if (selection.get(0) instanceof ShowLessEventsItem) {
+                        showRemainingFiles(((ShowLessEventsItem) selection.get(0)).getParent(), false);
+                    } else if (selection.get(0) instanceof MoreRevisionsItem) {
                         moreRevisions(10);
                     }
                 }
@@ -221,10 +221,10 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
     protected abstract void onPopup(JComponent invoker, Point p, Object[] selection);
 
     protected final Object[] getSelection () {
-        Object[] sel = resultsList.getSelectedValues();
-        Object[] selection = new Object[sel.length];
-        for (int i = 0; i < sel.length; ++i) {
-            Item item = (Item) sel[i];
+        List<Item> sel = resultsList.getSelectedValuesList();
+        Object[] selection = new Object[sel.size()];
+        for (int i = 0; i < sel.size(); ++i) {
+            Item item = sel.get(i);
             Object o = item.getUserData();
             if (o == null) {
                 // unallowed selection
@@ -328,8 +328,8 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         Mutex.EVENT.readAccess(new Runnable() {
             @Override
             public void run () {
-                Object[] selection = resultsList.getSelectedValues();
-                if (selection.length > 0 && selection[selection.length - 1] instanceof MoreRevisionsItem) {
+                List<Item> selection = resultsList.getSelectedValuesList();
+                if (selection.size() > 0 && selection.get(selection.size() - 1) instanceof MoreRevisionsItem) {
                     int lastIndex = ((SummaryListModel) resultsList.getModel()).getSize() - 1;
                     resultsList.getSelectionModel().removeIndexInterval(lastIndex, lastIndex);
                 }
@@ -652,9 +652,9 @@ public abstract class AbstractSummaryView implements MouseListener, MouseMotionL
         
         @Override
         public void actionPerformed (ActionEvent e) {
-            Object[] selection = resultsList.getSelectedValues();
-            if (selection.length == 1 && selection[0] instanceof RevisionItem) {
-                perform((RevisionItem) selection[0]);
+            List<Item> selection = resultsList.getSelectedValuesList();
+            if (selection.size() == 1 && selection.get(0) instanceof RevisionItem) {
+                perform((RevisionItem) selection.get(0));
             }
         }
 

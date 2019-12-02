@@ -92,7 +92,7 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         lblFontSize = new javax.swing.JLabel();
         spnFontSize = new javax.swing.JSpinner();
         btnSelectFont = new javax.swing.JButton();
-        cmbLinkStyle = new javax.swing.JComboBox();
+        cmbLinkStyle = new javax.swing.JComboBox<>();
         lblLinkStyle = new javax.swing.JLabel();
         fldFontFamily = new javax.swing.JTextField();
         cmbImportantLinkColor = new ColorComboBox();
@@ -502,7 +502,7 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         updateControlsByModel();
     }
 
-    private void selectColor(JComboBox combo, Color color) {
+    private void selectColor(JComboBox<?> combo, Color color) {
         ((ColorComboBox) combo).setSelectedColor(color);
     }
 
@@ -530,17 +530,17 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRestore;
     private javax.swing.JButton btnSelectFont;
-    private javax.swing.JComboBox cmbBackgroundColor;
-    private javax.swing.JComboBox cmbDebugColor;
-    private javax.swing.JComboBox cmbErrorColor;
-    private javax.swing.JComboBox cmbFailureColor;
-    private javax.swing.JComboBox cmbImportantLinkColor;
-    private javax.swing.JComboBox cmbInputColor;
-    private javax.swing.JComboBox cmbLinkColor;
-    private javax.swing.JComboBox cmbLinkStyle;
-    private javax.swing.JComboBox cmbStandardColor;
-    private javax.swing.JComboBox cmbSuccessColor;
-    private javax.swing.JComboBox cmbWarningColor;
+    private javax.swing.JComboBox<?> cmbBackgroundColor;
+    private javax.swing.JComboBox<?> cmbDebugColor;
+    private javax.swing.JComboBox<?> cmbErrorColor;
+    private javax.swing.JComboBox<?> cmbFailureColor;
+    private javax.swing.JComboBox<?> cmbImportantLinkColor;
+    private javax.swing.JComboBox<?> cmbInputColor;
+    private javax.swing.JComboBox<?> cmbLinkColor;
+    private javax.swing.JComboBox<Object> cmbLinkStyle;
+    private javax.swing.JComboBox<?> cmbStandardColor;
+    private javax.swing.JComboBox<?> cmbSuccessColor;
+    private javax.swing.JComboBox<?> cmbWarningColor;
     private javax.swing.JTextField fldFontFamily;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

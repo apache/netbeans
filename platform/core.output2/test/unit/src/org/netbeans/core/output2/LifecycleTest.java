@@ -490,25 +490,14 @@ public class LifecycleTest extends NbTestCase {
         IOContainer container = IOContainer.getDefault();
         JComponent comp = null;
         try {
-            try {
-                Field f = container.getClass().getDeclaredField("provider");
-                f.setAccessible(true);
-                IOContainer.Provider prov = (IOContainer.Provider) f.get(container);
-                Method m = prov.getClass().getDeclaredMethod("impl", new Class[0]);
-                m.setAccessible(true);
-                comp = (JComponent) m.invoke(prov);
-            } catch (InvocationTargetException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } catch (NoSuchFieldException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
+            Field f = container.getClass().getDeclaredField("provider");
+            f.setAccessible(true);
+            IOContainer.Provider prov = (IOContainer.Provider) f.get(container);
+            Method m = prov.getClass().getDeclaredMethod("impl", new Class<?>[0]);
+            m.setAccessible(true);
+            comp = (JComponent) m.invoke(prov);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalArgumentException
+                | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             Exceptions.printStackTrace(ex);
         }
         return comp;

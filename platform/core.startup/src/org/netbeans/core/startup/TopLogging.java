@@ -409,32 +409,36 @@ public final class TopLogging {
 
         public LookupDel() {
             handlers = Lookup.getDefault().lookupResult(Handler.class);
-            instances = handlers.allInstances();
-            instances.size(); // initialize
+            resultChanged(null);
+            assert instances != null;
             handlers.addLookupListener(this);
         }
 
 
+        @Override
         public void publish(LogRecord record) {
             for (Handler h : instances) {
                 h.publish(record);
             }
         }
 
+        @Override
         public void flush() {
             for (Handler h : instances) {
                 h.flush();
             }
         }
 
+        @Override
         public void close() throws SecurityException {
             for (Handler h : instances) {
                 h.close();
             }
         }
 
+        @Override
         public void resultChanged(LookupEvent ev) {
-            instances = handlers.allInstances();
+            instances = new ArrayList<>(handlers.allInstances());
         }
     } // end of LookupDel
 

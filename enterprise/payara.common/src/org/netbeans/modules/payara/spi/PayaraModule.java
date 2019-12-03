@@ -20,6 +20,7 @@
 package org.netbeans.modules.payara.spi;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import javax.swing.event.ChangeListener;
@@ -252,35 +253,40 @@ public interface PayaraModule {
             File application, String name, String contextRoot, Map<String,String> properties);
 
     /**
-     * Redeploy the named application onto the server.  The application must
-     * have previously been directory deployed.  If not, use deploy().
-     * 
-     * @param stateListener listener to listen message describing the redeploy 
-     *   process as it progresses.  Can be null.
+     * Redeploy the named application onto the server.The application must have
+     * previously been directory deployed.If not, use deploy().
+     *
+     * @param stateListener listener to listen message describing the redeploy
+     * process as it progresses. Can be null.
      * @param name name this application is deployed under.
-     * 
+     * @param resourcesChanged
+     * @param sniffers the list of containers e.g  which requires restart
+     *
      * @return Future instance that finishes when the redeploy command has been
-     *   completed.
+     * completed.
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
-            final String name, final boolean resourcesChanged);
+            final String name, final boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged);
        
     /**
      * Redeploy the named application onto the server with a new context root
-     * value.  The application must have previously been directory deployed.
-     * If not, use deploy().
+     * value.The application must have previously been directory deployed.If not, use deploy().
      * 
      * @param stateListener listener to listen message describing the redeploy 
      *   process as it progresses.  Can be null.
      * @param name name this application is deployed under.
      * @param contextRoot to use for this application on deploy (can be null to
      *   reuse existing contextRoot.)
+     * @param resourcesChanged Is application resource file modified.
+     * @param descriptorChanged Is application descriptor file modified.
+     * @param sourcesChanged the list of source file modified.
      * 
      * @return Future instance that finishes when the redeploy command has been
      *   completed.
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
-            final String name, final String contextRoot, final boolean resourcesChanged);
+            final String name, final String contextRoot,
+            final boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged);
     
     /**
      * Undeploy the named application.

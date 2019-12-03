@@ -21,10 +21,14 @@ package org.netbeans.modules.payara.jakartaee.ide;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import static java.util.stream.Collectors.toList;
 import javax.enterprise.deploy.shared.CommandType;
 import javax.enterprise.deploy.spi.Target;
 import javax.enterprise.deploy.spi.TargetModuleID;
@@ -56,6 +60,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.xml.sax.SAXException;
 
 /**
@@ -315,7 +320,9 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         }
         long currentTime = System.currentTimeMillis();
         long sinceLast = currentTime - lastDeployHack;
-        final boolean resourcesChanged = containsFileWithName("glassfish-resources.xml",appChangeDescriptor.getChangedFiles()); // NOI18N
+        final boolean resourcesChanged = containsFileWithName("payara-resources.xml",appChangeDescriptor.getChangedFiles()) // NOI18N
+                || containsFileWithName("glassfish-resources.xml",appChangeDescriptor.getChangedFiles()); // NOI18N
+
         final boolean hasChanges = appChangeDescriptor.classesChanged() ||
                 appChangeDescriptor.descriptorChanged() ||
                 appChangeDescriptor.ejbsChanged() ||
@@ -334,47 +341,57 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 //
                 sinceLast < 5000;
 
+        final boolean descriptorChanged
+                = appChangeDescriptor.descriptorChanged()
+                || appChangeDescriptor.serverDescriptorChanged()
+                || resourcesChanged;
+
+        File targetDir = getDirectoryForModule(targetModuleID);
+        URI targetURI = Utilities.toURI(targetDir);
+        final List<String> sourcesChanged = Arrays.stream(appChangeDescriptor.getChangedFiles())
+                .map(Utilities::toURI)
+                .map(targetURI::relativize)
+                .map(URI::getPath)
+                .collect(toList());
+
         lastDeployHack = currentTime;
 
         if(appChangeDescriptor instanceof DeploymentChangeDescriptor) {
             DeploymentChangeDescriptor dcd = (DeploymentChangeDescriptor)appChangeDescriptor;
             if (dcd.serverResourcesChanged()) {
-                File dir = getDirectoryForModule(targetModuleID);
-                if (null != dir) {
-                    ResourceRegistrationHelper.deployResources(dir, dm);
-                }
+                ResourceRegistrationHelper.deployResources(targetDir, dm);
             }
         }
-                
-        if (restart) {
-            restartObject.addProgressListener(new ProgressListener() {
 
-                @Override
-                public void handleProgressEvent(ProgressEvent event) {
-                    if (event.getDeploymentStatus().isCompleted()) {
-                        if (hasChanges) {
-                            if (commonSupport2 != null && requiredLibraries.length > 0) {
-                                commonSupport2.redeploy(
-                                        progressObject,
-                                        hk2TargetModuleID.getModuleID(),
-                                        hk2TargetModuleID.getContextRoot(),
-                                        requiredLibraries,
-                                        resourcesChanged
-                                );
-                            } else {
-                                commonSupport.redeploy(
-                                        progressObject,
-                                        hk2TargetModuleID.getModuleID(),
-                                        hk2TargetModuleID.getContextRoot(),
-                                        resourcesChanged
-                                );
-                            }
+        if (restart) {
+            restartObject.addProgressListener(event -> {
+                if (event.getDeploymentStatus().isCompleted()) {
+                    if (hasChanges) {
+                        if (commonSupport2 != null && requiredLibraries.length > 0) {
+                            commonSupport2.redeploy(
+                                    progressObject,
+                                    hk2TargetModuleID.getModuleID(),
+                                    hk2TargetModuleID.getContextRoot(),
+                                    requiredLibraries,
+                                    resourcesChanged,
+                                    descriptorChanged,
+                                    sourcesChanged
+                            );
                         } else {
-                            progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
+                            commonSupport.redeploy(
+                                    progressObject,
+                                    hk2TargetModuleID.getModuleID(),
+                                    hk2TargetModuleID.getContextRoot(),
+                                    resourcesChanged,
+                                    descriptorChanged,
+                                    sourcesChanged
+                            );
                         }
                     } else {
                         progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
                     }
+                } else {
+                    progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
                 }
             });
             commonSupport.restartServer(restartObject);
@@ -387,14 +404,18 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                             hk2TargetModuleID.getModuleID(),
                             hk2TargetModuleID.getContextRoot(),
                             requiredLibraries,
-                            resourcesChanged
+                            resourcesChanged,
+                            descriptorChanged,
+                            sourcesChanged
                     );
                 } else {
                     commonSupport.redeploy(
                             progressObject,
                             hk2TargetModuleID.getModuleID(),
                             hk2TargetModuleID.getContextRoot(),
-                            resourcesChanged
+                            resourcesChanged,
+                            descriptorChanged,
+                            sourcesChanged
                     );
                 }
             } else {

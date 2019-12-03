@@ -19,6 +19,7 @@
 package org.netbeans.modules.payara.tooling.admin;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +59,12 @@ public class CommandRedeploy extends CommandTargetName {
     /** Hot Deploy. */
     final boolean hotDeploy;
 
+    /** Descriptor changed. */
+    final boolean descriptorChanged;
+
+    /** List of modified files. */
+    final List<String> sourcesChanged;
+
     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
     ////////////////////////////////////////////////////////////////////////////
@@ -73,17 +80,22 @@ public class CommandRedeploy extends CommandTargetName {
      * @param libraries   Deployment libraries.
      * @param keepState   Keep state.
      * @param hotDeploy   Hot Deploy.
+     * @param descriptorChanged Is application descriptor modified.
+     * @param sourcesChanged the list of source file modified.
      */
     public CommandRedeploy(final String name, final String target,
             final String contextRoot, final Map<String,String> properties,
             final File[] libraries, final boolean keepState,
-            final boolean hotDeploy) {
+            final boolean hotDeploy, final boolean descriptorChanged,
+            final List<String> sourcesChanged) {
         super(COMMAND, name, target);
         this.contextRoot = contextRoot;
         this.properties = properties;
         this.libraries = libraries;
         this.keepState = keepState;
         this.hotDeploy = hotDeploy;
+        this.descriptorChanged = descriptorChanged;
+        this.sourcesChanged = sourcesChanged;
     }
 
 }

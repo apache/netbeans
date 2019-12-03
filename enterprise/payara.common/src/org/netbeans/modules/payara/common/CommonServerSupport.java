@@ -661,9 +661,11 @@ public class CommonServerSupport
             final File application, final String name, final String contextRoot,
             final Map<String, String> properties, final File[] libraries) {
         try {
+            boolean hotDeploy = Boolean.parseBoolean(instance.getProperty(PayaraModule.HOT_DEPLOY));
             return ServerAdmin.<ResultString>exec(instance, new CommandDeploy(
                     name, Util.computeTarget(instance.getProperties()),
-                    application, contextRoot, properties, libraries
+                    application, contextRoot, properties, libraries,
+                    hotDeploy
             ), null, new TaskStateListener[]{stateListener});
         } finally {
             refreshChildren();
@@ -673,26 +675,29 @@ public class CommonServerSupport
     @Override
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
-            final String name, boolean resourcesChanged) {
-        return redeploy(stateListener, name, null, resourcesChanged);
+            final String name, boolean resourcesChanged,
+            boolean descriptorChanged, List<String> sourcesChanged) {
+        return redeploy(stateListener, name, null,
+                resourcesChanged, descriptorChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
             final String name, final String contextRoot,
-            boolean resourcesChanged) {
+            boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged) {
         return redeploy(stateListener, name, contextRoot, new File[0],
-                resourcesChanged);
+                resourcesChanged, descriptorChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(TaskStateListener stateListener,
     String name, String contextRoot, File[] libraries,
-    boolean resourcesChanged) {
-        Map<String, String> properties = new HashMap<String, String>();
+    boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged) {
+
+        Map<String, String> properties = new HashMap<>();
         String url = instance.getProperty(PayaraModule.URL_ATTR);
-        String hotDeployFlag = instance.getProperty(PayaraModule.HOT_DEPLOY);
+        boolean hotDeploy = Boolean.parseBoolean(instance.getProperty(PayaraModule.HOT_DEPLOY));
 
         String sessionPreservationFlag = instance.getProperty(PayaraModule.SESSION_PRESERVATION_FLAG);
         if (sessionPreservationFlag == null) {
@@ -712,7 +717,7 @@ public class CommonServerSupport
                     name, Util.computeTarget(instance.getProperties()),
                     contextRoot, properties, libraries,
                     url != null && url.contains("deployer:pfv"),
-                    Boolean.parseBoolean(hotDeployFlag)
+                    hotDeploy, descriptorChanged, sourcesChanged
             ), stateListener);
         } finally {
             refreshChildren();

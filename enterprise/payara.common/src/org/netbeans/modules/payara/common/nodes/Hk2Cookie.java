@@ -454,11 +454,11 @@ public class Hk2Cookie {
 
             final File dir
                     = new File(chooser.getSelectedFile().getAbsolutePath());
-
+            boolean hotDeploy = Boolean.parseBoolean(instance.getProperty(PayaraModule.HOT_DEPLOY));
             Future<ResultString> future = ServerAdmin.<ResultString>exec(
                     instance, new CommandDeploy(dir.getParentFile().getName(),
                     Util.computeTarget(instance.getProperties()),
-                    dir, null, null, null));
+                    dir, null, null, null, hotDeploy));
             status = new WeakReference<Future<ResultString>>(future);
             return future;
         }

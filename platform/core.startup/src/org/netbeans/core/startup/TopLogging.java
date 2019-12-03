@@ -401,6 +401,11 @@ public final class TopLogging {
         TopSecurityManager.exit(exit);
     }
 
+    static void exit(int exit, Throwable t) {
+        t.printStackTrace(OLD_ERR);
+        exit(exit);
+    }
+
     private static final class LookupDel extends Handler {
         private final Lookup.Result<Handler> handlers;
         private Collection<? extends Handler> instances;

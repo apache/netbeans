@@ -63,14 +63,18 @@ matrix:
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
           jdk: openjdk8
 
-        - env: OPTS="-quiet" TARGET="build-platform"
+        - name: Compile all modules with OpenJDK11
           jdk: openjdk11
+          env:
+            - OPTS="-quiet -Dcluster.config=full -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+          script:
+            - ant $OPTS build
+            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
 
         - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
           jdk: openjdk8
-
-        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
-          jdk: openjdk11
 
         - env: SIGTEST=false COMPILETEST=false LICENSE=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           jdk: openjdk8

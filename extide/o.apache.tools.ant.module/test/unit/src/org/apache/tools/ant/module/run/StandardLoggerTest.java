@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
@@ -454,6 +455,14 @@ public class StandardLoggerTest extends NbTestCase {
                 return false;
             }
         }
+
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 29 * hash + Objects.hashCode(this.message);
+            hash = 29 * hash + (this.err ? 1 : 0);
+            return hash;
+        }
         
         @Override
         public String toString() {
@@ -492,6 +501,18 @@ public class StandardLoggerTest extends NbTestCase {
             } else {
                 return false;
             }
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 79 * hash + Objects.hashCode(this.url);
+            hash = 79 * hash + Objects.hashCode(this.message);
+            hash = 79 * hash + this.line1;
+            hash = 79 * hash + this.column1;
+            hash = 79 * hash + this.line2;
+            hash = 79 * hash + this.column2;
+            return hash;
         }
         
         @Override

@@ -88,12 +88,12 @@ public final class AntBridge {
         public final ClassLoader mainClassLoader;
         public final ClassLoader bridgeClassLoader;
         public final BridgeInterface bridge;
-        public final Map<String,Map<String,Class>> customDefs;
-        public final Map<String,ClassLoader> customDefClassLoaders;
+        public final Map<String, Map<String, Class<?>>> customDefs;
+        public final Map<String, ClassLoader> customDefClassLoaders;
         public AntInstance(String mainClassPath, ClassLoader mainClassLoader,
                 ClassLoader bridgeClassLoader, BridgeInterface bridge,
-                Map<String,Map<String,Class>> customDefs,
-                Map<String,ClassLoader> customDefClassLoaders) {
+                Map<String, Map<String, Class<?>>> customDefs,
+                Map<String, ClassLoader> customDefClassLoaders) {
             this.mainClassPath = mainClassPath;
             this.mainClassLoader = mainClassLoader;
             this.bridgeClassLoader = bridgeClassLoader;
@@ -201,20 +201,20 @@ public final class AntBridge {
      * only <code>&lt;taskdef&gt;</code> and <code>&lt;typedef&gt;</code>,
      * and only the <code>name</code> and <code>classname</code> attributes.
      */
-    public static Map<String,Map<String,Class>> getCustomDefsWithNamespace() {
+    public static Map<String, Map<String, Class<?>>> getCustomDefsWithNamespace() {
         return getAntInstance().customDefs;
     }
     
     /**
      * Same as {@link #getCustomDefsWithNamespace} but without any namespace prefixes.
      */
-    public static Map<String,Map<String,Class>> getCustomDefsNoNamespace() {
-        Map<String,Map<String,Class>> m = new HashMap<String,Map<String,Class>>();
-        for (Map.Entry<String,Map<String,Class>> entry : getCustomDefsWithNamespace().entrySet()) {
+    public static Map<String, Map<String, Class<?>>> getCustomDefsNoNamespace() {
+        Map<String, Map<String, Class<?>>> m = new HashMap<>();
+        for (Map.Entry<String, Map<String, Class<?>>> entry : getCustomDefsWithNamespace().entrySet()) {
             String type = entry.getKey();
-            Map<String,Class> defs = entry.getValue();
-            Map<String,Class> m2 = new HashMap<String,Class>();
-            for (Map.Entry<String,Class> entry2 : defs.entrySet()) {
+            Map<String,Class<?>> defs = entry.getValue();
+            Map<String,Class<?>> m2 = new HashMap<>();
+            for (Map.Entry<String, Class<?>> entry2 : defs.entrySet()) {
                 String fqn = entry2.getKey();
                 Class<?> clazz = entry2.getValue();
                 String name;
@@ -274,23 +274,23 @@ public final class AntBridge {
             // Ensures that the loader is functional, and that it is at least 1.5.x
             // so that our classes can link against it successfully, and that
             // we are really loading Ant from the right place:
-            Class ihClazz = Class.forName("org.apache.tools.ant.input.InputHandler", false, bridgeLoader); // NOI18N
+            Class<?> ihClazz = Class.forName("org.apache.tools.ant.input.InputHandler", false, bridgeLoader); // NOI18N
             Class<? extends BridgeInterface> impl = bridgeLoader.loadClass("org.apache.tools.ant.module.bridge.impl.BridgeImpl").asSubclass(BridgeInterface.class); // NOI18N
             if (AntSettings.getAntHome() != null) {
                 ClassLoader loaderUsedForAnt = ihClazz.getClassLoader();
                 if (loaderUsedForAnt != main) {
                     throw new IllegalStateException("Wrong class loader is finding Ant: " + loaderUsedForAnt); // NOI18N
                 }
-                Class ihClazz2 = Class.forName("org.apache.tools.ant.input.InputHandler", false, main); // NOI18N
+                Class<?> ihClazz2 = Class.forName("org.apache.tools.ant.input.InputHandler", false, main); // NOI18N
                 if (ihClazz2 != ihClazz) {
                     throw new IllegalStateException("Main and bridge class loaders do not agree on version of Ant: " + ihClazz2.getClassLoader()); // NOI18N
                 }
                 try {
-                    Class alClazz = Class.forName("org.apache.tools.ant.taskdefs.Antlib", false, bridgeLoader); // NOI18N
+                    Class<?> alClazz = Class.forName("org.apache.tools.ant.taskdefs.Antlib", false, bridgeLoader); // NOI18N
                     if (alClazz.getClassLoader() != main) {
                         throw new IllegalStateException("Bridge loader is loading stuff from elsewhere: " + alClazz.getClassLoader()); // NOI18N
                     }
-                    Class alClazz2 = Class.forName("org.apache.tools.ant.taskdefs.Antlib", false, main); // NOI18N
+                    Class<?> alClazz2 = Class.forName("org.apache.tools.ant.taskdefs.Antlib", false, main); // NOI18N
                     if (alClazz2 != alClazz) {
                         throw new IllegalStateException("Main and bridge class loaders do not agree on version of Ant: " + alClazz2.getClassLoader()); // NOI18N
                     }
@@ -312,9 +312,9 @@ public final class AntBridge {
     
     private static AntInstance fallback(Throwable e) {
         ClassLoader dummy = ClassLoader.getSystemClassLoader();
-        Map<String,Map<String,Class>> defs = new HashMap<String,Map<String,Class>>();
-        defs.put("task", new HashMap<String,Class>()); // NOI18N
-        defs.put("type", new HashMap<String,Class>()); // NOI18N
+        Map<String,Map<String,Class<?>>> defs = new HashMap<>();
+        defs.put("task", new HashMap<>()); // NOI18N
+        defs.put("type", new HashMap<>()); // NOI18N
         return new AntInstance("", dummy, dummy, new DummyBridgeImpl(e), defs, Collections.<String,ClassLoader>emptyMap());
     }
     
@@ -487,10 +487,10 @@ public final class AntBridge {
         return m;
     }
     
-    private static Map<String,Map<String,Class>> createCustomDefs(Map<String,ClassLoader> cDCLs) throws IOException {
-        Map<String,Map<String,Class>> m = new HashMap<String,Map<String,Class>>();
-        Map<String,Class> tasks = new HashMap<String,Class>();
-        Map<String,Class> types = new HashMap<String,Class>();
+    private static Map<String, Map<String, Class<?>>> createCustomDefs(Map<String, ClassLoader> cDCLs) throws IOException {
+        Map<String, Map<String, Class<?>>> m = new HashMap<>();
+        Map<String, Class<?>> tasks = new HashMap<>();
+        Map<String, Class<?>> types = new HashMap<>();
         // XXX #36776: should eventually support <macrodef>s here
         m.put("task", tasks); // NOI18N
         m.put("type", types); // NOI18N
@@ -552,7 +552,7 @@ public final class AntBridge {
         return m;
     }
     
-    private static void loadDefs(Map<String,String> p, Map<String,Class> defs, ClassLoader l) throws IOException {
+    private static void loadDefs(Map<String, String> p, Map<String, Class<?>> defs, ClassLoader l) throws IOException {
         // Similar to IntrospectedInfo.load, after having parsed the properties.
         for (Map.Entry<String,String> entry : p.entrySet()) {
             String name = entry.getKey();

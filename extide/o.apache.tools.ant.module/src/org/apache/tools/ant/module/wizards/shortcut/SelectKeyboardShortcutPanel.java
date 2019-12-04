@@ -107,7 +107,7 @@ final class SelectKeyboardShortcutPanel extends javax.swing.JPanel implements Ke
     private static final Method keyEvent_getExtendedKeyCode;
     
     static {
-        Class eventClass = KeyEvent.class;
+        Class<?> eventClass = KeyEvent.class;
         Method m = null;
         try {
             m = eventClass.getMethod("getExtendedKeyCode"); // NOI18N

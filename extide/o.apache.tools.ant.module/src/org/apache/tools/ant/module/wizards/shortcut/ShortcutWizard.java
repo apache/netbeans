@@ -84,7 +84,7 @@ public final class ShortcutWizard extends WizardDescriptor {
                 for (FileObject kid : build.getChildren()) {
                     if (isAntScript(kid)) {
                         try {
-                            Document doc = XMLUtil.parse(new InputSource(kid.getURL().toString()), false, false, /*XXX*/ null, null);
+                            Document doc = XMLUtil.parse(new InputSource(kid.toURL().toString()), false, false, /*XXX*/ null, null);
                             NodeList nl = doc.getElementsByTagName("ant"); // NOI18N
                             if (nl.getLength() == 1) {
                                 Element ael = (Element) nl.item(0);

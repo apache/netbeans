@@ -308,7 +308,7 @@ public final class StandardLogger extends AntLogger {
         event.consume();
     }
     private static boolean isBuildException(Throwable t) {
-        Class c = t.getClass();
+        Class<?> c = t.getClass();
         while (c != Throwable.class) {
             if (c.getName().equals("org.apache.tools.ant.BuildException")) { // NOI18N
                 return true;

@@ -313,9 +313,9 @@ public final class IntrospectedInfo {
         }
     }
     
-    private void loadNetBeansSpecificDefinitions0(Map<String,Map<String,Class>> defsByKind) {
-        for (Map.Entry<String,Map<String,Class>> kindE : defsByKind.entrySet()) {
-            for (Map.Entry<String,Class> defsE : kindE.getValue().entrySet()) {
+    private void loadNetBeansSpecificDefinitions0(Map<String, Map<String, Class<?>>> defsByKind) {
+        for (Map.Entry<String,Map<String,Class<?>>> kindE : defsByKind.entrySet()) {
+            for (Map.Entry<String,Class<?>> defsE : kindE.getValue().entrySet()) {
                 register(defsE.getKey(), defsE.getValue(), kindE.getKey());
             }
         }
@@ -332,16 +332,16 @@ public final class IntrospectedInfo {
      * @param kind the kind of definition to register (<code>task</code> or <code>type</code> currently)
      * @since 2.4
      */
-    public synchronized void register(String name, Class clazz, String kind) {
+    public synchronized void register(String name, Class<?> clazz, String kind) {
         register(name, clazz, kind, true);
     }
     
-    private void register(String name, Class clazz, String kind, boolean fire) {
+    private void register(String name, Class<?> clazz, String kind, boolean fire) {
         init();
         synchronized (namedefs) {
             Map<String,String> m = namedefs.get(kind);
             if (m == null) {
-                m = new TreeMap<String,String>();
+                m = new TreeMap<>();
                 namedefs.put(kind, m);
             }
             m.put(name, clazz.getName());
@@ -388,7 +388,7 @@ public final class IntrospectedInfo {
      * @param isAttrType false for an element class, true for an attribute class
      * @return true if something changed
      */
-    private boolean analyze(Class clazz, Set<Class> skipReanalysis, boolean isAttrType) {
+    private boolean analyze(Class<?> clazz, Set<Class<?>> skipReanalysis, boolean isAttrType) {
         String n = clazz.getName();
         /*
         if (AntModule.err.isLoggable(ErrorManager.INFORMATIONAL)) {
@@ -426,14 +426,14 @@ public final class IntrospectedInfo {
         IntrospectionHelperProxy helper = AntBridge.getInterface().getIntrospectionHelper(clazz);
         info.supportsText = helper.supportsCharacters ();
         Enumeration<String> e = helper.getAttributes();
-        Set<Class> nueAttrTypeClazzes = new HashSet<Class>();
+        Set<Class<?>> nueAttrTypeClazzes = new HashSet<>();
         //if (dbg) AntModule.err.log ("Analyzing <taskdef> attrs...");
         if (e.hasMoreElements ()) {
             while (e.hasMoreElements ()) {
                 String name = e.nextElement();
                 //if (dbg) AntModule.err.log ("\tname=" + name);
                 try {
-                    Class attrType = helper.getAttributeType(name);
+                    Class<?> attrType = helper.getAttributeType(name);
                     String type = attrType.getName();
                     //if (dbg) AntModule.err.log ("\ttype=" + type);
                     if (hasSuperclass(clazz, "org.apache.tools.ant.Task") && // NOI18N
@@ -460,7 +460,7 @@ public final class IntrospectedInfo {
         } else {
             info.attrs = null;
         }
-        Set<Class> nueClazzes = new HashSet<Class>();
+        Set<Class<?>> nueClazzes = new HashSet<>();
         e = helper.getNestedElements ();
         //if (dbg) AntModule.err.log ("Analyzing <taskdef> subels...");
         if (e.hasMoreElements ()) {
@@ -468,7 +468,7 @@ public final class IntrospectedInfo {
                 String name = e.nextElement();
                 //if (dbg) AntModule.err.log ("\tname=" + name);
                 try {
-                    Class subclazz = helper.getElementType (name);
+                    Class<?> subclazz = helper.getElementType(name);
                     //if (dbg) AntModule.err.log ("\ttype=" + subclazz.getName ());
                     if (info.subs == null) {
                         info.subs = new TreeMap<String,String>();
@@ -485,17 +485,17 @@ public final class IntrospectedInfo {
         boolean changed = !info.equals(clazzes.put(clazz.getName(), info));
         // And recursively analyze reachable classes for subelements...
         // (usually these will already be known, and analyze will return at once)
-        for (Class nueClazz : nueClazzes) {
+        for (Class<?> nueClazz : nueClazzes) {
             changed |= analyze(nueClazz, skipReanalysis, false);
         }
-        for (Class nueClazz : nueAttrTypeClazzes) {
+        for (Class<?> nueClazz : nueAttrTypeClazzes) {
             changed |= analyze(nueClazz, skipReanalysis, true);
         }
         return changed;
     }
     
-    private static boolean hasSuperclass(Class subclass, String superclass) {
-        for (Class c = subclass; c != null; c = c.getSuperclass()) {
+    private static boolean hasSuperclass(Class<?> subclass, String superclass) {
+        for (Class<?> c = subclass; c != null; c = c.getSuperclass()) {
             if (c.getName().equals(superclass)) {
                 return true;
             }
@@ -512,11 +512,11 @@ public final class IntrospectedInfo {
      * Will not try to define anything contained in the defaults list.
      * @param defs map from kinds to maps from names to classes
      */
-    public void scanProject(Map<String,Map<String,Class>> defs) {
+    public void scanProject(Map<String, Map<String, Class<?>>> defs) {
         init();
-        Set<Class> skipReanalysis = new HashSet<Class>();
+        Set<Class<?>> skipReanalysis = new HashSet<>();
         boolean changed = false;
-        for (Map.Entry<String,Map<String,Class>> e : defs.entrySet()) {
+        for (Map.Entry<String, Map<String, Class<?>>> e : defs.entrySet()) {
             changed |= scanMap(e.getValue(), e.getKey(), skipReanalysis);
         }
         if (AntModule.err.isLoggable(ErrorManager.INFORMATIONAL)) {
@@ -527,10 +527,10 @@ public final class IntrospectedInfo {
         }
     }
     
-    private boolean scanMap(Map<String,Class> m, String kind, Set<Class> skipReanalysis) {
+    private boolean scanMap(Map<String, Class<?>> m, String kind, Set<Class<?>> skipReanalysis) {
         if (kind == null) throw new IllegalArgumentException();
         boolean changed = false;
-        for (Map.Entry<String,Class> entry : m.entrySet()) {
+        for (Map.Entry<String, Class<?>> entry : m.entrySet()) {
             String name = entry.getKey();
             if (kind.equals("type") && name.equals("description")) { // NOI18N
                 // Not a real data type; handled specially.

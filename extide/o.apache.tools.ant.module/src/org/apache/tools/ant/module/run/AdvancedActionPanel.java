@@ -120,7 +120,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         FileObject script = project.getFileObject();
         assert script != null : "No file found for " + project;
         String initialTargets = (String) script.getAttribute(ATTR_TARGETS);
-        SortedSet<String> relevantTargets = new TreeSet<String>(Collator.getInstance());
+        SortedSet<String> relevantTargets = new TreeSet<>(Collator.getInstance());
         for (TargetLister.Target target : allTargets) {
             if (!target.isOverridden() && !target.isInternal()) {
                 relevantTargets.add(target.getName());
@@ -129,7 +129,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
                 }
             }
         }
-        targetComboBox.setModel(new DefaultComboBoxModel(relevantTargets.toArray()));
+        targetComboBox.setModel(new DefaultComboBoxModel<>(relevantTargets.toArray(new String[relevantTargets.size()])));
         if (initialTargets != null) {
             targetComboBox.setSelectedItem(initialTargets);
         } else {
@@ -153,7 +153,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         if (verbosity == null) {
             verbosity = AntSettings.getVerbosity();
         }
-        verbosityComboBox.setModel(new DefaultComboBoxModel(VERBOSITIES));
+        verbosityComboBox.setModel(new DefaultComboBoxModel<>(VERBOSITIES));
         setVerbosity(verbosity);
     }
 
@@ -224,20 +224,20 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         targetLabel = new javax.swing.JLabel();
-        targetComboBox = new javax.swing.JComboBox();
+        targetComboBox = new javax.swing.JComboBox<>();
         targetDescriptionLabel = new javax.swing.JLabel();
         targetDescriptionField = new javax.swing.JTextField();
         propertiesLabel = new javax.swing.JLabel();
         propertiesScrollPane = new javax.swing.JScrollPane();
         propertiesPane = new javax.swing.JEditorPane();
         verbosityLabel = new javax.swing.JLabel();
-        verbosityComboBox = new javax.swing.JComboBox();
+        verbosityComboBox = new javax.swing.JComboBox<>();
 
         targetLabel.setLabelFor(targetComboBox);
         targetLabel.setText("Select target(s) to run:");
 
         targetComboBox.setEditable(true);
-        targetComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "sampleTarget1", "sampleTarget2", "sampleTarget3" }));
+        targetComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "sampleTarget1", "sampleTarget2", "sampleTarget3" }));
         targetComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 targetComboBoxActionPerformed(evt);
@@ -256,13 +256,13 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         propertiesScrollPane.setMinimumSize(new java.awt.Dimension(400, 150));
         propertiesScrollPane.setPreferredSize(new java.awt.Dimension(400, 150));
 
-        propertiesPane.setContentType("text/x-properties");
+        propertiesPane.setContentType("text/x-properties"); // NOI18N
         propertiesScrollPane.setViewportView(propertiesPane);
 
         verbosityLabel.setLabelFor(verbosityComboBox);
         verbosityLabel.setText("Verbosity level:");
 
-        verbosityComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Errors only [SAMPLE]", "Normal [SAMPLE]", "Verbose [SAMPLE]" }));
+        verbosityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Errors only [SAMPLE]", "Normal [SAMPLE]", "Verbose [SAMPLE]" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -340,11 +340,11 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel propertiesLabel;
     private javax.swing.JEditorPane propertiesPane;
     private javax.swing.JScrollPane propertiesScrollPane;
-    private javax.swing.JComboBox targetComboBox;
+    private javax.swing.JComboBox<String> targetComboBox;
     private javax.swing.JTextField targetDescriptionField;
     private javax.swing.JLabel targetDescriptionLabel;
     private javax.swing.JLabel targetLabel;
-    private javax.swing.JComboBox verbosityComboBox;
+    private javax.swing.JComboBox<String> verbosityComboBox;
     private javax.swing.JLabel verbosityLabel;
     // End of variables declaration//GEN-END:variables
     

@@ -60,8 +60,8 @@ public class AntCustomizer extends JPanel implements ActionListener {
     private boolean         changed = false;
     private boolean         listen = false;
     private File            originalAntHome;
-    private final Node.Property classpathProperty;
-    private final Node.Property propertiesProperty;
+    private final Node.Property<NbClassPath> classpathProperty;
+    private final Node.Property<Properties> propertiesProperty;
 
     public AntCustomizer() {
         initComponents();
@@ -85,7 +85,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
                     // *@%!* NbClassPath.getClassPath semantics.
                     cp = cp.substring(1, cp.length() - 1);
                 }
-                classpath = new ArrayList<File>();
+                classpath = new ArrayList<>();
                 for (String f : cp.split(Pattern.quote(File.pathSeparator))) {
                     if(!f.trim().isEmpty()) {
                         classpath.add(new File(f));
@@ -253,7 +253,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
         cbSaveFiles = new javax.swing.JCheckBox();
         cbReuseOutput = new javax.swing.JCheckBox();
         cbAlwaysShowOutput = new javax.swing.JCheckBox();
-        cbVerbosity = new javax.swing.JComboBox();
+        cbVerbosity = new javax.swing.JComboBox<>();
         javax.swing.JLabel verbosityLabel = new javax.swing.JLabel();
         classpathLabel = new javax.swing.JLabel();
         classpathPanel = new javax.swing.JPanel();
@@ -284,7 +284,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
         org.openide.awt.Mnemonics.setLocalizedText(cbAlwaysShowOutput, NbBundle.getMessage(AntCustomizer.class, "Always_Show_Output")); // NOI18N
         cbAlwaysShowOutput.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        cbVerbosity.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Normal" }));
+        cbVerbosity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Normal" }));
 
         verbosityLabel.setLabelFor(cbVerbosity);
         org.openide.awt.Mnemonics.setLocalizedText(verbosityLabel, NbBundle.getMessage(AntCustomizer.class, "Verbosity")); // NOI18N
@@ -388,7 +388,7 @@ public class AntCustomizer extends JPanel implements ActionListener {
     private javax.swing.JCheckBox cbAlwaysShowOutput;
     private javax.swing.JCheckBox cbReuseOutput;
     private javax.swing.JCheckBox cbSaveFiles;
-    private javax.swing.JComboBox cbVerbosity;
+    private javax.swing.JComboBox<String> cbVerbosity;
     private javax.swing.JLabel classpathLabel;
     private javax.swing.JPanel classpathPanel;
     private javax.swing.JLabel lAntVersion;

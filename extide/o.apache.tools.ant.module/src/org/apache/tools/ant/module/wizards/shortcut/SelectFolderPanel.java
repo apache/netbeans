@@ -69,8 +69,8 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
         this.prop = prop;
         this.top = top;
         this.stripAmps = stripAmps;
-        DefaultListModel model = new DefaultListModel();
-        DataObject[] folders = findFolders(top);
+        DefaultListModel<DataFolder> model = new DefaultListModel<>();
+        DataFolder[] folders = findFolders(top);
         for (int i = 0; i < folders.length; i++) {
             model.addElement(folders[i]);
         }
@@ -79,7 +79,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
         displayNameField.getDocument().addDocumentListener(this);
     }
     
-    ListModel getModel() {
+    ListModel<DataFolder> getModel() {
         return folderList.getModel();
     }
     
@@ -109,7 +109,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
     }
     
     private DataFolder getFolder() {
-        return (DataFolder)folderList.getSelectedValue();
+        return folderList.getSelectedValue();
     }
     
     private void setFolder(DataFolder f) {
@@ -117,7 +117,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
     }
     
     private static DataFolder[] findFolders(DataFolder top) {
-        List<DataFolder> folders = new ArrayList<DataFolder>();
+        List<DataFolder> folders = new ArrayList<>();
         // Needs to be DFS, so children(true) is no good
         visit(folders, top);
         folders.remove(0);
@@ -139,8 +139,8 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
         public CellRenderer() {}
         
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            DataFolder f = (DataFolder)value;
+        public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            DataFolder f = (DataFolder) value;
             String display = getNestedDisplayName(f);
             return super.getListCellRendererComponent(list, display, index, isSelected, cellHasFocus);
         }
@@ -168,7 +168,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
 
         hintsArea = new javax.swing.JTextArea();
         folderScrollPane = new javax.swing.JScrollPane();
-        folderList = new javax.swing.JList();
+        folderList = new javax.swing.JList<>();
         displayNamePanel = new javax.swing.JPanel();
         displayNameLabel = new javax.swing.JLabel();
         displayNameField = new javax.swing.JTextField();
@@ -233,7 +233,7 @@ final class SelectFolderPanel extends JPanel implements DocumentListener {
     private javax.swing.JTextField displayNameField;
     private javax.swing.JLabel displayNameLabel;
     private javax.swing.JPanel displayNamePanel;
-    private javax.swing.JList folderList;
+    private javax.swing.JList<DataFolder> folderList;
     private javax.swing.JScrollPane folderScrollPane;
     private javax.swing.JTextArea hintsArea;
     // End of variables declaration//GEN-END:variables

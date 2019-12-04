@@ -59,7 +59,7 @@ final class DummyBridgeImpl implements BridgeInterface, IntrospectionHelperProxy
         return this;
     }
     
-    public Class getAttributeType(String name) {
+    public Class<?> getAttributeType(String name) {
         throw new IllegalStateException();
     }
     
@@ -67,7 +67,7 @@ final class DummyBridgeImpl implements BridgeInterface, IntrospectionHelperProxy
         return Enumerations.empty();
     }
     
-    public Class getElementType(String name) {
+    public Class<?> getElementType(String name) {
         throw new IllegalStateException();
     }
     

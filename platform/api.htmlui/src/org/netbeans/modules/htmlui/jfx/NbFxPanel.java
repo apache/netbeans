@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.jfx;
 
 import java.awt.im.InputMethodRequests;
 import javafx.embed.swing.JFXPanel;

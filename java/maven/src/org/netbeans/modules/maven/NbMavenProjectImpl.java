@@ -975,7 +975,7 @@ public final class NbMavenProjectImpl implements Project {
         }
 
         synchronized void attachAll() {
-            this.filesToWatch = new ArrayList(Arrays.asList(fileProvider.getFiles()));
+            this.filesToWatch = new ArrayList<>(Arrays.asList(fileProvider.getFiles()));
             
             filesToWatch.addAll(getParents()); 
             Collections.sort(filesToWatch);

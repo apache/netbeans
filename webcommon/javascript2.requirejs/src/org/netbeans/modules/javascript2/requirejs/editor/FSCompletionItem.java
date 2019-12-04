@@ -157,7 +157,7 @@ public class FSCompletionItem implements CompletionProposal {
 
         public FSElementHandle(FileObject fo) {
             this.fo = fo;
-            this.representedFiles = new HashSet(1);
+            this.representedFiles = new HashSet<>(1);
             representedFiles.add(fo);
         }
 

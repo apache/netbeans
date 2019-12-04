@@ -347,7 +347,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
     }
 
     private boolean implementsInterfaces(Element e, String classNames) {
-        Set<String> interfaces = new HashSet(Arrays.asList(classNames.split("[, ]+")));
+        Set<String> interfaces = new HashSet<>(Arrays.asList(classNames.split("[, ]+")));
         return implementsInterfaces(e, interfaces);
     }
 

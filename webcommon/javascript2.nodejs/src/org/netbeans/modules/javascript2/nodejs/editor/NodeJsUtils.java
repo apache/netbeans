@@ -219,8 +219,8 @@ public class NodeJsUtils {
                 return null;
             }
             final StyledDocument document = ec.openDocument();
-            final AtomicReference<String> docContentRef = new AtomicReference();
-            final AtomicReference<BadLocationException> bleRef = new AtomicReference();
+            final AtomicReference<String> docContentRef = new AtomicReference<>();
+            final AtomicReference<BadLocationException> bleRef = new AtomicReference<>();
             document.render(new Runnable() {
 
                 @Override

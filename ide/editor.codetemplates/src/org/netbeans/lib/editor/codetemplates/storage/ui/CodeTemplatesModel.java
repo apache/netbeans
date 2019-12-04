@@ -168,7 +168,7 @@ final class CodeTemplatesModel {
                     abbreviation,
                     tableModel.getDescription(idx),
                     tableModel.getText(idx),
-                    new ArrayList(tableModel.getContexts(idx)),
+                    new ArrayList<String>(tableModel.getContexts(idx)),
                     tableModel.getUniqueId(idx),
                     mimeType
                 );

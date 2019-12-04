@@ -571,7 +571,7 @@ public class DebuggingViewComponent extends TopComponent implements org.openide.
             if (currentThread != null) {
                 DVThread thread = threadMadeCurrentRef != null ? threadMadeCurrentRef.get() : null;
                 if (thread != currentThread) {
-                    threadToScrollRef = new WeakReference(currentThread);
+                    threadToScrollRef = new WeakReference<>(currentThread);
                 }
             }
             refreshView();
@@ -625,7 +625,7 @@ public class DebuggingViewComponent extends TopComponent implements org.openide.
     }
 
     void makeThreadCurrent(DVThread thread) {
-        threadMadeCurrentRef = new WeakReference(thread);
+        threadMadeCurrentRef = new WeakReference<>(thread);
         thread.makeCurrent();
     }
 

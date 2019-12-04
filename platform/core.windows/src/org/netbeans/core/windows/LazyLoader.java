@@ -41,7 +41,7 @@ final class LazyLoader {
     private static final boolean NO_LAZY_LOADING = Boolean.getBoolean( "nb.core.windows.no.lazy.loading" ); //NOI!8N
     private boolean isActive = false;
     private boolean isLoading = false;
-    private final Map<ModeImpl, LazyMode> lazyModes = new HashMap(15);
+    private final Map<ModeImpl, LazyMode> lazyModes = new HashMap<>(15);
 
     public LazyLoader() {
         WindowManagerImpl.getInstance().addWindowSystemListener( new WindowSystemListener() {
@@ -158,7 +158,7 @@ final class LazyLoader {
     private static class LazyMode implements Comparable<LazyMode> {
         private int selectedTCposition;
         private final ModeImpl mode;
-        private final Map<String, Integer> id2position = new HashMap(30);
+        private final Map<String, Integer> id2position = new HashMap<>(30);
 
         public LazyMode( ModeImpl mode ) {
             this.mode = mode;

@@ -992,7 +992,7 @@ public final class DebuggerManager implements ContextProvider {
                 initDebuggerManagerListeners ();
 
                 createdBreakpoints = new ArrayList<>();
-                originatingListeners = new HashMap();
+                originatingListeners = new HashMap<>();
 
                 Vector l = (Vector) listeners.clone ();
                 int i, k = l.size ();

@@ -134,7 +134,7 @@ public class ElementFactoryRegistry {
     
     public void addEmbeddedModelQNames(AbstractDocumentModel embeddedModel) {
         if (knownEmbeddedModelTypes == null) {
-            knownEmbeddedModelTypes = new HashSet();
+            knownEmbeddedModelTypes = new HashSet<>();
         }
         if (! knownEmbeddedModelTypes.contains(embeddedModel.getClass())) {
             knownQNames().addAll(embeddedModel.getQNames());

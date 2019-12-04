@@ -61,7 +61,7 @@ public abstract class SyntaxElement implements org.netbeans.modules.xml.text.api
         this.support = support;
         this.offset = first.getOffset();
         this.length = to-offset;
-        this.first = new WeakReference(first);
+        this.first = new WeakReference<>(first);
     }
     
     /** returns an instance of first TokenItem of this SyntaxElement.

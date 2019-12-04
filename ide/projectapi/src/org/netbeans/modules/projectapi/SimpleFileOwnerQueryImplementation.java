@@ -90,7 +90,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     
     private final Set<FileObject> warnedAboutBrokenProjects = new WeakSet<FileObject>();
         
-    private Map<FileObject, Reference<Project>> projectCache = new WeakHashMap();    
+    private Map<FileObject, Reference<Project>> projectCache = new WeakHashMap<>();    
     /**
      * 
      * #111892
@@ -143,7 +143,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
                     }
                     if (p != null) {
                         synchronized (cacheLock) {
-                            WeakReference<Project> rp = new WeakReference(p);
+                            WeakReference<Project> rp = new WeakReference<>(p);
                             for (FileObject fldr : folders) {
                                 projectCache.put(fldr, rp);
                             }

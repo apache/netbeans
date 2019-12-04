@@ -63,7 +63,9 @@ public final class GradleFiles implements Serializable {
     }
 
     public static final String SETTINGS_FILE_NAME     = "settings.gradle"; //NOI18N
+    public static final String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"; //NOI18N
     public static final String BUILD_FILE_NAME        = "build.gradle"; //NOI18N
+    public static final String BUILD_FILE_NAME_KTS    = "build.gradle.kts"; //NOI18N
     public static final String GRADLE_PROPERTIES_NAME = "gradle.properties"; //NOI18N
     public static final String WRAPPER_PROPERTIES     = "gradle/wrapper/gradle-wrapper.properties"; //NOI18N
 
@@ -105,10 +107,19 @@ public final class GradleFiles implements Serializable {
     }
 
     private void searchBuildScripts() {
-        File f1 = new File(projectDir, BUILD_FILE_NAME);
-        File f2 = new File(projectDir, projectDir.getName() + ".gradle");
+        File f1 = new File(projectDir, BUILD_FILE_NAME_KTS);
+        if (!f1.canRead()) {
+            f1 = new File(projectDir, BUILD_FILE_NAME);
+        }
+        File f2 = new File(projectDir, projectDir.getName() + ".gradle.kts");
+        if (!f2.canRead()) {
+            f2 = new File(projectDir, projectDir.getName() + ".gradle");
+        }
 
-        settingsScript = searchPathUp(projectDir, SETTINGS_FILE_NAME);
+        settingsScript = searchPathUp(projectDir, SETTINGS_FILE_NAME_KTS);
+        if (settingsScript == null) {
+            settingsScript = searchPathUp(projectDir, SETTINGS_FILE_NAME);
+        }
         File settingsDir = settingsScript != null ? settingsScript.getParentFile() : null;
         buildScript = f1.canRead() ? f1 : f2.canRead() ? f2 : null;
         if (settingsDir != null) {

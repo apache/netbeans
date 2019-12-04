@@ -83,8 +83,58 @@ public class GradleFilesTest {
     }
 
     @Test
+    public void testGetBuildScriptKotlin() throws IOException {
+        File build = root.newFile("build.gradle.kts");
+        GradleFiles gf = new GradleFiles(root.getRoot());
+        assertEquals(build, gf.getBuildScript());
+    }
+
+    @Test
+    public void testGetBuildScriptKotlin2() throws IOException {
+        File build = root.newFile("build.gradle.kts");
+        File settings = root.newFile("settings.gradle.kts");
+        File module = root.newFolder("module");
+        Files.write(settings.toPath(), Arrays.asList("include ':module'"));
+        GradleFiles gf = new GradleFiles(module);
+        assertEquals(null, gf.getBuildScript());
+    }
+
+    @Test
+    public void testGetBuildScriptKotlin3() throws IOException {
+        File build = root.newFile("build.gradle.kts");
+        File settings = root.newFile("settings.gradle.kts");
+        File module = root.newFolder("module");
+        Files.write(settings.toPath(), Arrays.asList("include(\":module\")"));
+        File subBuild = root.newFile("module/module.gradle.kts");
+        GradleFiles gf = new GradleFiles(module);
+        assertEquals("module.gradle.kts", gf.getBuildScript().getName());
+    }
+
+    @Test
+    public void testGetBuildScriptKotlin4() throws IOException {
+        File build = root.newFile("build.gradle.kts");
+        File settings = root.newFile("settings.gradle.kts");
+        File module = root.newFolder("module");
+        Files.write(settings.toPath(), Arrays.asList("include(\":module\")"));
+        File subBuild = root.newFile("module/module.gradle.kts");
+        File subBuild2 = root.newFile("module/build.gradle.kts");
+        GradleFiles gf = new GradleFiles(module);
+        assertEquals("build.gradle.kts", gf.getBuildScript().getName());
+    }
+
+    @Test
     public void testGetParentScript() throws IOException{
         File build = root.newFile("build.gradle");
+        File settings = root.newFile("settings.gradle");
+        File module = root.newFolder("module");
+        Files.write(settings.toPath(), Arrays.asList("include ':module'"));
+        GradleFiles gf = new GradleFiles(root.getRoot());
+        assertEquals(null, gf.getParentScript());
+    }
+
+    @Test
+    public void testGetParentScriptKotlin() throws IOException{
+        File build = root.newFile("build.gradle.kts");
         File settings = root.newFile("settings.gradle");
         File module = root.newFolder("module");
         Files.write(settings.toPath(), Arrays.asList("include ':module'"));

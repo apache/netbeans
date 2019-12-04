@@ -44,9 +44,9 @@ public class ConvertTextBlockToString {
     @Messages("ERR_ConvertTextBlockToString=Text block may not be supported")//NOI18N
     public static ErrorDescription computeWarning(HintContext ctx) {
         TokenSequence<?> ts = ctx.getInfo().getTokenHierarchy().tokenSequence();
+        if(ts==null)return null;
         ts.move((int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), ctx.getPath().getLeaf()));
-        boolean moveNext = ts.moveNext();
-        if (!moveNext || ts.token().id() != JavaTokenId.MULTILINE_STRING_LITERAL) {
+        if (!ts.moveNext() || ts.token().id() != JavaTokenId.MULTILINE_STRING_LITERAL) {
             return null;
         }
 
@@ -83,24 +83,24 @@ public class ConvertTextBlockToString {
 
         }
 
-        static private ExpressionTree buildTree(String arr[], int li, TransformationContext ctx) {
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = arr[i].replaceAll("\\Q\\\"\\E", "\""); // NOI18N
-                arr[i] = arr[i].replaceAll("\\Q\\\'\\E", "\'"); // NOI18N
+        static private ExpressionTree buildTree(String textBlockLines[], int currentLine, TransformationContext ctx) {
+            for (int i = 0; i < textBlockLines.length; i++) {
+                textBlockLines[i] = textBlockLines[i].replaceAll("\\Q\\\"\\E", "\""); // NOI18N
+                textBlockLines[i] = textBlockLines[i].replaceAll("\\Q\\\'\\E", "\'"); // NOI18N
             }
-            if (arr.length == 1) {
-                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(arr[0]), ctx.getWorkingCopy().getTreeMaker().Literal(""));
+            if (textBlockLines.length == 1) {
+                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[0]), ctx.getWorkingCopy().getTreeMaker().Literal(""));// NOI18N
             }
-            if (li == 1) {
-                if (li == arr.length - 1) {
-                    return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(arr[li - 1] + "\n"), ctx.getWorkingCopy().getTreeMaker().Literal(arr[li]));
+            if (currentLine == 1) {
+                if (currentLine == textBlockLines.length - 1) {
+                    return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine - 1] + "\n"), ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine]));// NOI18N
                 }
-                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(arr[li - 1] + "\n"), ctx.getWorkingCopy().getTreeMaker().Literal(arr[li] + "\n"));
+                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine - 1] + "\n"), ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine] + "\n"));// NOI18N
             }
-            if (li == arr.length - 1) {
-                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(arr, li - 1, ctx), ctx.getWorkingCopy().getTreeMaker().Literal(arr[li]));
+            if (currentLine == textBlockLines.length - 1) {
+                return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(textBlockLines, currentLine - 1, ctx), ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine]));
             }
-            return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(arr, li - 1, ctx), ctx.getWorkingCopy().getTreeMaker().Literal(arr[li] + "\n"));
+            return ctx.getWorkingCopy().getTreeMaker().Binary(Tree.Kind.PLUS, buildTree(textBlockLines, currentLine - 1, ctx), ctx.getWorkingCopy().getTreeMaker().Literal(textBlockLines[currentLine] + "\n"));// NOI18N
         }
     }
 }

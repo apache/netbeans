@@ -54,9 +54,6 @@ matrix:
         - env: SIGTEST=true
           jdk: openjdk8
 
-#        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
-#          jdk: openjdk8
-
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
           jdk: openjdk8
           
@@ -438,7 +435,7 @@ matrix:
           script:
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
             - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
-
+            
         - name: Test enterprise modules
           jdk: openjdk8
           env:
@@ -472,3 +469,13 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+
+        - name: GRAALVM Tests
+          jdk: openjdk8
+          env: 
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - nbbuild/travis/scripting.sh

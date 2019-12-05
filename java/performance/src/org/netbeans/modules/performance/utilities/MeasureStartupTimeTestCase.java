@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Measure startup time by org.netbeans.core.perftool.StartLog. Number of starts

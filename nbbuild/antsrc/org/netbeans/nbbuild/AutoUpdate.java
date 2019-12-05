@@ -22,8 +22,10 @@ package org.netbeans.nbbuild;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,9 +143,19 @@ public class AutoUpdate extends Task {
                     URL u = new URL("jar:" + nbm.toURI() + "!/Info/info.xml");
                     Map<String, ModuleItem> map;
                     final URL url = nbm.toURI().toURL();
-                    map = AutoUpdateCatalogParser.getUpdateItems(u, url, this);
+                    try {
+                        map = AutoUpdateCatalogParser.getUpdateItems(u, url, this);
+                    } catch (FileNotFoundException ex) {
+                        JarFile f = new JarFile(nbm);
+                        Document doc = XMLUtil.createDocument("module");
+                        MakeUpdateDesc.fakeOSGiInfoXml(f, nbm, doc);
+                        ByteArrayOutputStream os = new ByteArrayOutputStream();
+                        XMLUtil.write(doc, os);
+                        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+                        map = AutoUpdateCatalogParser.getUpdateItems(u, is, url, this);
+                    }
                     assert map.size() == 1;
-                    Map.Entry<String,ModuleItem> entry = map.entrySet().iterator().next();
+                    Map.Entry<String, ModuleItem> entry = map.entrySet().iterator().next();
                     units.put(entry.getKey(), entry.getValue().changeDistribution(url));
                 } catch (IOException ex) {
                     throw new BuildException(ex);

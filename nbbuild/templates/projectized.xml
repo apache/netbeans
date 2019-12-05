@@ -823,7 +823,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <mkdir dir="${maven.tmp.install}"/>
         <autoupdate installdir="${maven.tmp.install}">
             <modules includes=".*"/>
-            <nbms dir="${maven.tmp.nbms}" includes="*.nbm"/>
+            <nbms dir="${maven.tmp.nbms}" includes="*.nbm,*.jar"/>
         </autoupdate>
         <property name="maven.tmp.sources" location="${maven.tmp}/sources"/>
         <antcall target="sources-zip">

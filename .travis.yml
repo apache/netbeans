@@ -55,8 +55,8 @@ matrix:
         - env: SIGTEST=true COMPILETEST=false LICENSE=false
           jdk: openjdk8
 
-#        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
-#          jdk: openjdk8
+        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
+          jdk: openjdk8
 
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
           jdk: openjdk8

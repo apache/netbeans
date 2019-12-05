@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="projectized" basedir=".">
+<project name="projectized" basedir="." xmlns:if="ant:if">
 
     <import file="../default.xml"/>
     <import file="common.xml"/>
@@ -378,8 +378,8 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     <target name="check-sources-exist" depends="build-init">
         <available file="${src.dir}" property="sources.exist"/>
     </target>
-    
-    <target name="sources-zip" depends="build-init, check-sources-exist" if="sources.exist" description="Simple sources zip creation intended for use in maven repository.">
+
+    <target name="sources-zip" depends="build-init, check-sources-exist" description="Simple sources zip creation intended for use in maven repository.">
 
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
         <property name="module.name.temp" location="." />
@@ -396,7 +396,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
 
         <mkdir dir="${netbeans.zipped.sources.dir}"/>
         <zip zipfile="${netbeans.zipped.sources.dir}/${code.name.base.dashes}.zip">
-            <zipfileset dir="${src.dir}" />
+            <zipfileset dir="${src.dir}" if:set="sources.exist"/>
             <zipfileset dir="${build.dir}" prefix="META-INF" includes="LICENSE NOTICE" />
         </zip>
     </target>

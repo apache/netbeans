@@ -269,6 +269,9 @@ cause it to fail.
             <or>
                 <isset property="javadoc.files.provided"/>
                 <isset property="javadoc.should.not.be.generated"/>
+                <not>
+                    <available file="${javadoc.src}"/>
+                </not>
             </or>
         </condition>
     </target>

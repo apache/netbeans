@@ -451,9 +451,9 @@ public class NbCollections {
      *               if true, {@link ClassCastException} may be thrown from an enumeration operation
      * @return an enumeration guaranteed to contain only objects of the requested type (or null)
      */
-    public static <E> Enumeration<E> checkedEnumerationByFilter(Enumeration rawEnum, final Class<E> type, final boolean strict) {
+    public static <E> Enumeration<E> checkedEnumerationByFilter(Enumeration<?> rawEnum, final Class<E> type, final boolean strict) {
         @SuppressWarnings("unchecked")
-        Enumeration<Object> _rawEnum = rawEnum;
+        Enumeration<?> _rawEnum = rawEnum;
         return Enumerations.<Object,E>filter(_rawEnum, new Enumerations.Processor<Object,E>() {
             public E process(Object o, Collection<Object> ignore) {
                 if (o == null) {

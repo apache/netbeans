@@ -394,7 +394,7 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedEnumerationByFilter() throws Exception {
-        Enumeration raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
+        Enumeration<?> raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
         Enumeration<String> strings = NbCollections.checkedEnumerationByFilter(raw, String.class, false);
         assertTrue(strings.hasMoreElements());
         assertEquals("one", strings.nextElement());
@@ -404,7 +404,7 @@ public class NbCollectionsTest extends NbTestCase {
     }
 
     public void testCheckedEnumerationByFilterStrict() throws Exception {
-        Enumeration raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
+        Enumeration<?> raw = Collections.enumeration(Arrays.asList("one", 2, "three"));
         Enumeration<String> strings = NbCollections.checkedEnumerationByFilter(raw, String.class, true);
         try {
             Collections.list(strings);

@@ -192,7 +192,7 @@ public class NetigsoOSGiActivationVisibleTest extends SetupHid {
     }
     
     public void testResourcesFromBundle() throws Exception {
-        Enumeration res = toEnable.getResources("org/foo/Something.txt");
+        Enumeration<URL> res = toEnable.getResources("org/foo/Something.txt");
         assertEnumeration("Bundle can get its own resources", res);
     }
 
@@ -203,19 +203,19 @@ public class NetigsoOSGiActivationVisibleTest extends SetupHid {
 
     public void testResourcesDirectFromBundle() throws Exception {
         Method loadResource = directBundle.getMethod("loadResources", String.class, ClassLoader.class);
-        Enumeration res = (Enumeration) loadResource.invoke(null, "org/foo/Something.txt", null);
+        Enumeration<URL> res = (Enumeration<URL>) loadResource.invoke(null, "org/foo/Something.txt", null);
         assertEnumeration("Bundle knows how to own resource from its classloader", res);
     }
 
     public void testResourcesDirectViaModuleClassLoader() throws Exception {
         Method loadResource = directBundle.getMethod("loadResources", String.class, ClassLoader.class);
-        Enumeration res = (Enumeration) loadResource.invoke(null, "org/foo/Something.txt", someModule.getClassLoader());
+        Enumeration<URL> res = (Enumeration<URL>) loadResource.invoke(null, "org/foo/Something.txt", someModule.getClassLoader());
         assertEnumeration("Module knows how to own resource from its classloader", res);
     }
 
     public void testResourcesFromContextClassLoader() throws Exception {
         Method loadResource = directBundle.getMethod("loadResources", String.class, ClassLoader.class);
-        Enumeration res = (Enumeration) loadResource.invoke(null, "org/foo/Something.txt", Thread.currentThread().getContextClassLoader());
+        Enumeration<URL> res = (Enumeration<URL>) loadResource.invoke(null, "org/foo/Something.txt", Thread.currentThread().getContextClassLoader());
         assertEnumeration("Contxt class loader loads resource from disabled modules too", res);
     }
 

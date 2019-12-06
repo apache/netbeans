@@ -18,22 +18,13 @@
  */
 package org.netbeans.modules.netbinox;
 
-import java.util.Enumeration;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
 import org.netbeans.core.startup.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Locale;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.framework.adaptor.BundleData;
-import org.eclipse.osgi.framework.internal.core.AbstractBundle;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.SetupHid;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 /**
  * Is loading of libraries OK?
@@ -65,8 +56,6 @@ public class NetbinoxLibraryTest extends SetupHid {
         ModuleSystem ms = Main.getModuleSystem();
         mgr = ms.getManager();
         mgr.mutexPrivileged().enterWriteAccess();
-        Enumeration en;
-        int checks = 0;
         try {
             System.setProperty("activated.library", "does.not.exist");
             

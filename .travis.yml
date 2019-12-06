@@ -129,7 +129,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/keyring.impl test
             - hide-logs.sh ant $OPTS -f platform/lib.uihandler test
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
-            - hide-logs.sh ant $OPTS -f platform/masterfs test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
             #- hide-logs.sh ant $OPTS -f platform/netbinox test
             - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test

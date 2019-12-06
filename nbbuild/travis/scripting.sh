@@ -28,24 +28,14 @@ if [ -z "$GRAALVM" ]; then
   GRAALVM=`pwd`/$BASE
 fi
 
-# test on regular VM
-
-ant -f platform/api.scripting/build.xml test
-ant -f ide/libs.graalsdk/build.xml test
-ant -f webcommon/libs.graaljs/build.xml test
-ant -f platform/core.network/build.xml test
-ant -f profiler/profiler.oql/build.xml test
-ant -f platform/api.htmlui/build.xml test
-
 $GRAALVM/bin/gu install python
 $GRAALVM/bin/gu install R
 
-# test on GraalVM
+# Test on GraalVM
 
 JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
-JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
+#JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
-

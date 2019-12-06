@@ -263,7 +263,7 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
             try {
                 pingResult = action.pingWithExceptions();
             } catch (Exception ex) {
-                LOGGER.log(Level.FINE, "docker connection ping failed", ex); // NOI18N
+                LOGGER.log(Level.INFO, "docker connection ping failed", ex); // NOI18N
                 throw new WizardValidationException(component, 
                         Bundle.MSG_CannotConnectWithDetails(ex.getMessage()), 
                         Bundle.MSG_CannotConnectWithDetails(ex.getLocalizedMessage()));

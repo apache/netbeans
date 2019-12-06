@@ -65,7 +65,7 @@ committed to the repository for legal reasons. You need to download it:
     <xsl:output method="html"/>
 
     <!-- Overridable parameters: -->
-    <xsl:param name="issue-url-base" select="'https://netbeans.org/bugzilla/show_bug.cgi?id='"/>
+    <xsl:param name="issue-url-base" select="'https://bz.apache.org/netbeans/show_bug.cgi?id='"/>
     <xsl:param name="apache-issue-url-base" select="'https://issues.apache.org/jira/browse/'"/>
     <xsl:param name="javadoc-url-base" select="'???'"/>
 

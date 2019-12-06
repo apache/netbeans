@@ -26,6 +26,10 @@
     <fontcolor default="keyword" name="mod-method">
         <font style="bold" />
     </fontcolor>
+    <fontcolor name="mustache-delimiter" foreColor="black" bgColor="ffe3f2e1" default="default">
+        <font style="bold"/>
+    </fontcolor>
+    <fontcolor name="mustache" bgColor="ffe3f2e1" default="default"/>
     <fontcolor name="ruby-delimiter" foreColor="black" bgColor="ffe3f2e1" default="default">
         <font style="bold"/>
     </fontcolor>

@@ -165,7 +165,7 @@ public class TopSecurityManager extends SecurityManager {
     }
     
     static boolean officialExit = false;
-    static Class[] getStack() {
+    static Class<?>[] getStack() {
         SecurityManager s = System.getSecurityManager();
         TopSecurityManager t;
         if (s instanceof TopSecurityManager) {
@@ -197,6 +197,7 @@ public class TopSecurityManager extends SecurityManager {
         super.checkExit(status);
     }
 
+    @SuppressWarnings("deprecation")
     public boolean checkTopLevelWindow(Object window) {
         return checkTopLevelWindow(new AWTPermission("showWindowWithoutWarningBanner"), window); // NOI18N
     }
@@ -387,6 +388,7 @@ public class TopSecurityManager extends SecurityManager {
 
     private final Set<Class<?>> warnedSunMisc = new WeakSet<>();
     private final Set<String> callerWhiteList = createCallerWhiteList();
+    @SuppressWarnings("deprecation")
     public void checkMemberAccess(Class<?> clazz, int which) {
         final String n = clazz.getName();
         if (n.startsWith("sun.misc")) { // NOI18N
@@ -570,7 +572,7 @@ public class TopSecurityManager extends SecurityManager {
 //        }
 //    }
 //
-    private Class getInsecureClass() {
+    private Class<?> getInsecureClass() {
 
         Class<?>[] ctx = getClassContext();
         boolean firstACClass = false;
@@ -607,7 +609,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
     }
 
     /** Checks if the class is loaded through the nbfs URL */
-    static boolean isSecureClass(final Class clazz) {
+    static boolean isSecureClass(final Class<?> clazz) {
         URL source = getClassURL(clazz);
         if (source != null) {
             return isSecureProtocol(source.getProtocol());
@@ -618,7 +620,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
     
     /** @return a protocol through which was the class loaded (file://...) or null
     */
-    static URL getClassURL(Class clazz) {
+    static URL getClassURL(Class<?> clazz) {
         java.security.CodeSource cs = clazz.getProtectionDomain().getCodeSource();                                                     
         if (cs != null) {
             URL url = cs.getLocation();
@@ -628,7 +630,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
         }
     }
 
-    static Field getUrlField(Class clazz) {
+    static Field getUrlField(Class<?> clazz) {
         if (urlField == null) {
             try {
                 Field[] fds = clazz.getDeclaredFields();

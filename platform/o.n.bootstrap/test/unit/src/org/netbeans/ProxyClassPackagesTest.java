@@ -25,9 +25,6 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.test.TestFileUtils;
 

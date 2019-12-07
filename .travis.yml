@@ -196,7 +196,7 @@ matrix:
           script:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
-            - ant $OPTS -f ide/bugtracking test
+            - travis_retry ant $OPTS -f ide/bugtracking test
             #- ant $OPTS -f ide/bugtracking.bridge test
             - ant $OPTS -f ide/bugtracking.commons test
             #- ant $OPTS -f ide/bugzilla test

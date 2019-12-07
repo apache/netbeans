@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN" "http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd">
+
+<fontscolors>
+    <colordef name="bg0_hard" color="1d2021"/>
+    <colordef name="bg1" color="3c3836"/>
+    <colordef name="bg2" color="504945"/>
+    <colordef name="bg3" color="665c54"/>
+    <colordef name="bg4" color="7c6f64"/>
+
+    <colordef name="gray" color="928374"/>
+
+    <colordef name="fg1" color="ebdbb2"/>
+    <colordef name="fg2" color="d5c4a1"/>
+    <colordef name="fg3" color="bdae93"/>
+    <colordef name="fg4" color="a89984"/>
+
+    <colordef name="purple" color="d3869b"/>
+    <!-- defined -->
+    <colordef name="bg0" color="2b2b2b"/>
+
+    <colordef name="fg0" color="a9b7c6"/>
+
+    <colordef name="red" color="9e2927"/>
+    <colordef name="green" color="6a8759"/>
+    <colordef name="blue" color="6897bb"/>
+    <colordef name="yellow" color="e8bf6a"/>
+    <colordef name="orange" color="cc7832"/>
+    <colordef name="levander" color="9876aa"/>
+
+    <fontcolor name="default" foreColor="fg0" bgColor="bg0"/>
+
+    <!-- syntax colorings -->
+
+    <fontcolor name="char" foreColor="green"/>
+    <fontcolor name="comment" foreColor="gray">
+        <font style="italic"/>
+    </fontcolor>
+    <fontcolor name="error" waveUnderlined="red"/>
+    <fontcolor name="identifier"/>
+    <fontcolor name="keyword" foreColor="orange"/>
+    <fontcolor name="number" foreColor="purple"/>
+    <fontcolor name="operator" foreColor="fg1"/>
+    <fontcolor name="string" foreColor="green"/>
+    <fontcolor name="whitespace"/>
+
+    <fontcolor name="markup-element"/>
+    <fontcolor name="markup-attribute" foreColor="aqua"/>
+    <fontcolor name="markup-attribute-value" foreColor="green"/>
+    <fontcolor name="entity-reference" foreColor="cyan"/>
+    <fontcolor name="mark-occurrences" bgColor="bg3"/>
+
+    <!-- semantic colorings -->
+
+    <fontcolor name="constructor" foreColor="aqua">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="method" foreColor="aqua">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="field" foreColor="blue">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="local-variable" />
+    <fontcolor name="method-parameter"/>
+
+    <fontcolor name="class" foreColor="orange"/>
+    <fontcolor name="interface" foreColor="orange" />
+    <fontcolor name="enum" foreColor="orange" />
+
+    <fontcolor name="unused" foreColor="gray"/>
+    <fontcolor name="deprecated" strikeThrough="gray" />
+    <fontcolor name="abstract" />
+    <fontcolor name="static" foreColor="orange"/>
+    <fontcolor name="private" foreColor="red"/>
+    <fontcolor name="protected" foreColor="red"/>
+    <fontcolor name="public" />
+    
+</fontscolors>

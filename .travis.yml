@@ -27,12 +27,6 @@ install:
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
-script:
-  - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
-  - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
-  - ant $OPTS clean
-  - ant $OPTS $TARGET
-  - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
 
 matrix:
     include:
@@ -60,8 +54,10 @@ matrix:
             - ant $OPTS check-sigtests -Dfail.on.error=true
             - ant $OPTS gen-sigtests-release
 
-        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+        - name: Run gen-sigtests-release for platform cluster
           jdk: openjdk8
+          script:
+            - nbbuild/travis/gensigtest.sh
           
         - name: Compile all modules with OpenJDK8
           jdk: openjdk8

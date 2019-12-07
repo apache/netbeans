@@ -61,7 +61,9 @@ public enum YamlTokenId implements TokenId {
      * <% or %>
      */
     DELIMITER("ruby-delimiter"),
-    PHP("php");
+    PHP("php"),
+    MUSTACHE("mustache"),
+    MUSTACHE_DELIMITER("mustache-delimiter");
     private final String primaryCategory;
 
     YamlTokenId(String primaryCategory) {

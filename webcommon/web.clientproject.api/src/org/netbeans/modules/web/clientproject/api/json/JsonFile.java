@@ -70,7 +70,7 @@ public final class JsonFile {
     private static final ContainerFactory CONTAINER_FACTORY = new ContainerFactory() {
 
         @Override
-        public Map<Object, Object> createObjectContainer() {
+        public Map<String, Object> createObjectContainer() {
             return new LinkedHashMap<>();
         }
 

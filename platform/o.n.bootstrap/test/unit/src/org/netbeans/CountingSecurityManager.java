@@ -23,7 +23,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.Permission;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  *

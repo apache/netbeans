@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.Completion;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -42,7 +40,6 @@ import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 import org.openide.util.lookup.implspi.AbstractServiceProviderProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ServiceProviderProcessor extends AbstractServiceProviderProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {

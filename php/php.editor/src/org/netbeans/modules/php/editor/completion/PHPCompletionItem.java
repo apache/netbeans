@@ -42,6 +42,7 @@ import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.lexer.Token;
@@ -122,6 +123,7 @@ import org.openide.util.WeakListeners;
  */
 public abstract class PHPCompletionItem implements CompletionProposal {
 
+    @StaticResource
     private static final String PHP_KEYWORD_ICON = "org/netbeans/modules/php/editor/resources/php16Key.png"; //NOI18N
     protected static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_KEYWORD_ICON));
     final CompletionRequest request;
@@ -487,20 +489,44 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     public static class MethodElementItem extends FunctionElementItem {
 
+        private final boolean completeAccessPrefix;
+
         /**
          * @return more than one instance in case if optional parameters exists
          */
         static List<MethodElementItem> getItems(final MethodElement methodElement, CompletionRequest request) {
+            return getItems(methodElement, request, false);
+        }
+
+        /**
+         * @return more than one instance in case if optional parameters exists
+         */
+        static List<MethodElementItem> getItems(final MethodElement methodElement, CompletionRequest request, boolean completeAccessPrefix) {
             final List<MethodElementItem> retval = new ArrayList<>();
             List<FunctionElementItem> items = FunctionElementItem.getItems(methodElement, request);
             for (FunctionElementItem functionElementItem : items) {
-                retval.add(new MethodElementItem(functionElementItem));
+                retval.add(new MethodElementItem(functionElementItem, completeAccessPrefix));
             }
             return retval;
         }
 
         MethodElementItem(FunctionElementItem function) {
+            this(function, false);
+        }
+
+        MethodElementItem(FunctionElementItem function, boolean completeAccessPrefix) {
             super(function.getBaseFunctionElement(), function.request, function.parameters);
+            this.completeAccessPrefix = completeAccessPrefix;
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            String prefix = ""; // NOI18N
+            if (completeAccessPrefix) {
+                Set<Modifier> modifiers = getModifiers();
+                prefix = modifiers.contains(Modifier.STATIC) ? "self::" : "$this->"; // NOI18N
+            }
+            return prefix + super.getCustomInsertTemplate();
         }
     }
 
@@ -822,18 +848,24 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     static class FieldItem extends BasicFieldItem {
         private final boolean forceDollared;
+        private final boolean completeAccessPrefix;
 
         public static FieldItem getItem(FieldElement field, CompletionRequest request) {
             return getItem(field, request, false);
         }
 
         public static FieldItem getItem(FieldElement field, CompletionRequest request, boolean forceDollared) {
-            return new FieldItem(field, request, forceDollared);
+            return new FieldItem(field, request, forceDollared, false);
         }
 
-        private FieldItem(FieldElement field, CompletionRequest request, boolean forceDollared) {
+        public static FieldItem getItem(FieldElement field, CompletionRequest request, boolean forceDollared, boolean completeAccessPrefix) {
+            return new FieldItem(field, request, forceDollared, completeAccessPrefix);
+        }
+
+        private FieldItem(FieldElement field, CompletionRequest request, boolean forceDollared, boolean completeAccessPrefix) {
             super(field, null, request);
             this.forceDollared = forceDollared;
+            this.completeAccessPrefix = completeAccessPrefix;
         }
 
         FieldElement getField() {
@@ -861,16 +893,33 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             }
             return typeName;
         }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (completeAccessPrefix) {
+                Set<Modifier> modifiers = getModifiers();
+                String prefix = modifiers.contains(Modifier.STATIC) ? "self::" : "$this->"; // NOI18N
+                return prefix + getName();
+            }
+            return super.getCustomInsertTemplate();
+        }
     }
 
     static class TypeConstantItem extends PHPCompletionItem {
 
+        private final boolean completeAccessPrefix;
+
         public static TypeConstantItem getItem(TypeConstantElement constant, CompletionRequest request) {
-            return new TypeConstantItem(constant, request);
+            return getItem(constant, request, false);
         }
 
-        private TypeConstantItem(TypeConstantElement constant, CompletionRequest request) {
+        public static TypeConstantItem getItem(TypeConstantElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            return new TypeConstantItem(constant, request, completeAccessPrefix);
+        }
+
+        private TypeConstantItem(TypeConstantElement constant, CompletionRequest request, boolean completeAccessPrefix) {
             super(constant, request);
+            this.completeAccessPrefix = completeAccessPrefix;
         }
 
         TypeConstantElement getConstant() {
@@ -921,6 +970,14 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 return formatter.getText();
             }
             return super.getRhsHtml(formatter);
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (completeAccessPrefix) {
+                return "self::" + getName(); // NOI18N
+            }
+            return super.getCustomInsertTemplate();
         }
     }
 

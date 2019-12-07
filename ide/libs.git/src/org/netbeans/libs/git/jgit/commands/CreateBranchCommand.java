@@ -92,7 +92,7 @@ public class CreateBranchCommand extends GitCommand {
     }
 
     private void setupRebaseFlag (Repository repository) throws IOException {
-        Ref baseRef = repository.getRef(revision);
+        Ref baseRef = repository.findRef(revision);
         if (baseRef != null && baseRef.getName().startsWith(Constants.R_REMOTES)) {
             StoredConfig config = repository.getConfig();
             String autosetupRebase = config.getString(ConfigConstants.CONFIG_BRANCH_SECTION,

@@ -1,0 +1,128 @@
+Code completion result for source line:
+| // test1
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Class1855                       [PUBLIC]   nb1855.php
+CLASS      ParentClass                     [PUBLIC]   nb1855.php
+METHOD     privateMethod($param)           [PRIVATE]  Class1855
+METHOD     privateStaticMethod($param, $p  [PRIVATE,  Class1855
+METHOD     privateTraitMethod($param)      [PRIVATE]  Trait1855
+METHOD     privateTraitStaticMethod($para  [PRIVATE,  Trait1855
+METHOD     protectedMethod($param)         [PROTECTE  Class1855
+METHOD     protectedParentMethod($param)   [PROTECTE  ParentClass
+METHOD     protectedParentStaticMethod($p  [PROTECTE  ParentClass
+METHOD     protectedStaticMethod($param,   [PROTECTE  Class1855
+METHOD     protectedTraitMethod($param)    [PROTECTE  Trait1855
+METHOD     protectedTraitStaticMethod($pa  [PROTECTE  Trait1855
+METHOD     publicMethod($param)            [PUBLIC]   Class1855
+METHOD     publicParentMethod($param)      [PUBLIC]   ParentClass
+METHOD     publicParentStaticMethod($para  [STATIC]   ParentClass
+METHOD     publicStaticMethod($param, $pa  [STATIC]   Class1855
+METHOD     publicTraitMethod($param)       [PUBLIC]   Trait1855
+METHOD     publicTraitStaticMethod($param  [STATIC]   Trait1855
+METHOD     test()                          [PUBLIC]   Class1855
+VARIABLE   ? $privateStaticProperty        [PRIVATE,  Class1855
+VARIABLE   ? $privateTraitStaticProperty   [PRIVATE,  Trait1855
+VARIABLE   ? $protectedParentStaticProper  [PROTECTE  ParentClass
+VARIABLE   ? $protectedStaticProperty      [PROTECTE  Class1855
+VARIABLE   ? $protectedTraitStaticPropert  [PROTECTE  Trait1855
+VARIABLE   ? $publicStaticParentProperty   [STATIC]   ParentClass
+VARIABLE   ? $publicStaticProperty         [STATIC]   Class1855
+VARIABLE   ? $publicStaticTraitProperty    [STATIC]   Trait1855
+VARIABLE   ? privateProperty               [PRIVATE]  Class1855
+VARIABLE   ? privateTraitProperty          [PRIVATE]  Trait1855
+VARIABLE   ? protectedParentProperty       [PROTECTE  ParentClass
+VARIABLE   ? protectedProperty             [PROTECTE  Class1855
+VARIABLE   ? protectedTraitProperty        [PROTECTE  Trait1855
+VARIABLE   ? publicParentProperty          [PUBLIC]   ParentClass
+VARIABLE   ? publicProperty                [PUBLIC]   Class1855
+VARIABLE   ? publicTraitProperty           [PUBLIC]   Trait1855
+CONSTANT   PRIVATE_CONSTANT "private cons  [PRIVATE]  Class1855
+CONSTANT   PROTECTED_CONSTANT "protected   [PROTECTE  Class1855
+CONSTANT   PROTECTED_PARENT_CONSTANT "pro  [PROTECTE  ParentClass
+CONSTANT   PUBLIC_CONSTANT "pubic constan  [PUBLIC]   Class1855
+CONSTANT   PUBLIC_PARENT_CONSTANT "pubic   [PUBLIC]   ParentClass
+CONSTANT   TEST2 ?                         [PUBLIC]   Class1855
+KEYWORD    Class1855 $this->                          null
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+KEYWORD    abstract                                   null
+KEYWORD    and                                        null
+KEYWORD    array                                      null
+KEYWORD    as                                         null
+KEYWORD    break                                      null
+KEYWORD    case                                       null
+KEYWORD    catch                                      null
+KEYWORD    class                                      null
+KEYWORD    clone                                      null
+KEYWORD    const                                      null
+KEYWORD    continue                                   null
+KEYWORD    declare                                    null
+KEYWORD    default                                    null
+KEYWORD    die()                                      Language Construct
+KEYWORD    do                                         null
+KEYWORD    echo '';                                   Language Construct
+KEYWORD    else                                       null
+KEYWORD    elseif                                     null
+KEYWORD    empty()                                    Language Construct
+KEYWORD    enddeclare                                 null
+KEYWORD    endfor                                     null
+KEYWORD    endforeach                                 null
+KEYWORD    endif                                      null
+KEYWORD    endswitch                                  null
+KEYWORD    endwhile                                   null
+KEYWORD    eval()                                     Language Construct
+KEYWORD    exit()                                     Language Construct
+KEYWORD    extends                                    null
+KEYWORD    final                                      null
+KEYWORD    finally                                    null
+KEYWORD    fn                                         null
+KEYWORD    for                                        null
+KEYWORD    foreach                                    null
+KEYWORD    function                                   null
+KEYWORD    global                                     null
+KEYWORD    goto                                       null
+KEYWORD    if                                         null
+KEYWORD    implements                                 null
+KEYWORD    include '';                                Language Construct
+KEYWORD    include_once '';                           Language Construct
+KEYWORD    instanceof                                 null
+KEYWORD    interface                                  null
+KEYWORD    isset()                                    Language Construct
+KEYWORD    list()                                     Language Construct
+KEYWORD    namespace                                  null
+KEYWORD    new                                        null
+KEYWORD    or                                         null
+KEYWORD    print '';                                  Language Construct
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    require '';                                Language Construct
+KEYWORD    require_once '';                           Language Construct
+KEYWORD    return ;                                   Language Construct
+KEYWORD    static                                     null
+KEYWORD    switch                                     null
+KEYWORD    throw                                      null
+KEYWORD    try                                        null
+KEYWORD    unset()                                    Language Construct
+KEYWORD    use                                        null
+KEYWORD    var                                        null
+KEYWORD    while                                      null
+KEYWORD    xor                                        null
+KEYWORD    yield                                      null
+KEYWORD    yield from                                 null

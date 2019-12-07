@@ -39,7 +39,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.ImageUtilities;
-import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
 /**
@@ -52,15 +51,11 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
     @StaticResource
     private static final String GRADLE_BADGE = "org/netbeans/modules/gradle/resources/gradle-large-badge.png"; //NOI18
 
-    private static final RequestProcessor RP = new RequestProcessor(Info.class.getName(), 10);
     private final Project project;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private final PreferenceChangeListener preferenceChangeListener = new PreferenceChangeListener() {
-        @Override
-        public void preferenceChange(PreferenceChangeEvent evt) {
-            if (GradleSettings.PROP_DISPLAY_DESCRIPTION.equals(evt.getKey())) {
-                pcs.firePropertyChange(ProjectInformation.PROP_DISPLAY_NAME, null, null);
-            }
+    private final PreferenceChangeListener preferenceChangeListener = (PreferenceChangeEvent evt) -> {
+        if (GradleSettings.PROP_DISPLAY_DESCRIPTION.equals(evt.getKey())) {
+            pcs.firePropertyChange(ProjectInformation.PROP_DISPLAY_NAME, null, null);
         }
     };
     private final AtomicBoolean prefChangeListenerSet = new AtomicBoolean(false);

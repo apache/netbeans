@@ -285,7 +285,7 @@ final class RequireJsPanel extends JPanel implements HelpCtx.Provider {
     }
     
     private Map<String, String> getPathMappings() {
-        Map<String, String> mappings = new TreeMap();
+        Map<String, String> mappings = new TreeMap<>();
         for (int i = 0; i < pathMappingTableModel.getRowCount(); ++i) {
             String mapping = (String) pathMappingTableModel.getValueAt(i, COLUMN_MAPPING_PATH);
             String localPath = ((LocalPathCell) pathMappingTableModel.getValueAt(i, COLUMN_LOCAL_PATH)).getPath();

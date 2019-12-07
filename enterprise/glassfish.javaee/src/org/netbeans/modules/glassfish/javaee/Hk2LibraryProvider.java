@@ -95,7 +95,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     /** Internal {@see GlassFishServer} to {@see Hk2LibraryProvider}
      *  mapping. */
     private static final Map <GlassFishServer, Hk2LibraryProvider> providers
-            = new HashMap();
+            = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //

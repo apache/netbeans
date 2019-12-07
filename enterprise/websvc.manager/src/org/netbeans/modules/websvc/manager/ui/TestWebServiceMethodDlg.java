@@ -151,7 +151,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
                     }
                 }
 
-                URL[] urls = (URL[]) urlList.toArray(new URL[0]);
+                URL[] urls = urlList.toArray(new URL[0]);
                 /**
                  * Delegate to the module's classloader since core/startup/NbInstaller
                  * overrides the JAX-WS 2.0 jars present in JDK 6

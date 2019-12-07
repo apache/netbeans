@@ -197,7 +197,7 @@ public abstract class IssueNode<I> extends AbstractNode {
     /**
      * An IssueNode Property
      */
-    public abstract class IssueProperty<T> extends org.openide.nodes.PropertySupport.ReadOnly implements Comparable<IssueNode<I>.IssueProperty<T>> {
+    public abstract class IssueProperty<T> extends org.openide.nodes.PropertySupport.ReadOnly<T> implements Comparable<IssueNode<I>.IssueProperty<T>> {
         protected IssueProperty(String name, Class<T> type, String displayName, String shortDescription) {
             super(name, type, displayName, shortDescription);
         }

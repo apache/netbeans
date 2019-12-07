@@ -672,8 +672,8 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             final List<Component> initiallyOpened;
             final Set<Component> initiallyOpenedMinimized;
             if (componentsInitiallyOpened.isEmpty()) {
-                initiallyOpened = Collections.EMPTY_LIST;
-                initiallyOpenedMinimized = Collections.EMPTY_SET;
+                initiallyOpened = Collections.emptyList();
+                initiallyOpenedMinimized = Collections.emptySet();
             } else {
                 initiallyOpened = new ArrayList<Component>();
                 initiallyOpenedMinimized = new HashSet<>();

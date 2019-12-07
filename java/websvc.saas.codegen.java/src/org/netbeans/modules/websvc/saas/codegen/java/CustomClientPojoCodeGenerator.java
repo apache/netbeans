@@ -169,7 +169,7 @@ public class CustomClientPojoCodeGenerator extends SaasClientCodeGenerator {
         
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.EMPTY_LIST);
+        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
     }
     
     private void setJaxbWrapper() {

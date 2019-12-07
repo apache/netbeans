@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.payara.micro/0
 OpenIDE-Module-Layer: org/netbeans/modules/fish/payara/micro/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/fish/payara/micro/Bundle.properties
-OpenIDE-Module-Specification-Version: 2.1
+OpenIDE-Module-Specification-Version: 2.2

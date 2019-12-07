@@ -51,7 +51,7 @@
  <answer id="arch-time">
   <p>
    The module has been around since 1997 and is still improved
-   from time to time.
+   from time to time. Support for HiDPI screens and SVG image loading was added in 2019.
   </p>
  </answer>
 
@@ -123,7 +123,10 @@
    a class that is looked up in <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>
    and if registered can provide better UI elements for <a href="@JDK@/javax/swing/Action.html">Action</a>s.
    </api>
-   
+  </p>
+
+  <p>Support for SVG image loading can be enabled by including the optional
+     <a href="@org-openide-util-ui-svg@/overview-summary.html">SVG Loader</a> module.
   </p>
  </answer>
 

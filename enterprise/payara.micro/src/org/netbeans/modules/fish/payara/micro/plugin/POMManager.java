@@ -449,7 +449,7 @@ public class POMManager {
                                 .stream()
                                 .map(Repository::getId)
                                 .collect(toSet()) 
-                        : Collections.EMPTY_SET;
+                        : Collections.emptySet();
                 for (org.apache.maven.model.Repository repository : sourceModel.getRepositories()) {
                     if (!existingRepositories.contains(repository.getId())) {
                         Repository repo = pomModel.getFactory().createRepository();

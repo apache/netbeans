@@ -573,12 +573,12 @@ public abstract class Properties {
                     props = new HashMap(properties);
                 }
                 Set s = props.keySet ();
-                ArrayList l = new ArrayList (s);
+                List<String> l = new ArrayList<>(s);
                 Collections.sort (l);
                 int i, k = l.size ();
                 for (i = 0; i < k; i++) {
-                    String key = (String) l.get (i);
-                    Object value = props.get (key);
+                    String key = l.get(i);
+                    Object value = props.get(key);
                     if (value != null) {
                         // Do not write null values
                         value = translateMultiLineStringToSingleLine(value.toString());

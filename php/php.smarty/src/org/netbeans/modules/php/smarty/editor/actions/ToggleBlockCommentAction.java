@@ -65,7 +65,7 @@ public class ToggleBlockCommentAction extends BaseAction {
                 @Override
                 public void run() {
                     final AtomicBoolean commentIt = new AtomicBoolean(true);
-                    final TokenSequence<TplTopTokenId> ts = (TokenSequence<TplTopTokenId>) LexerUtils.getTplTopTokenSequence(doc, caretOffset);
+                    final TokenSequence<TplTopTokenId> ts = LexerUtils.getTplTopTokenSequence(doc, caretOffset);
                     final TplMetaData tplMetaData = TplUtils.getProjectPropertiesForFileObject(Source.create(doc).getFileObject());
 
                     // XXX - clean up needed

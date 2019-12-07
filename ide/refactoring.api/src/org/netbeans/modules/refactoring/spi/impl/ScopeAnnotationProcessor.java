@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -41,7 +39,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes({"org.netbeans.modules.refactoring.spi.ui.ScopeDescription",
 "org.netbeans.modules.refactoring.spi.ui.ScopeReference",
 "org.netbeans.modules.refactoring.spi.ui.ScopeReferences"})

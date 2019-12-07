@@ -300,7 +300,7 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider, L
         
         @Override
         protected void removeNotify() {
-            setKeys( Collections.EMPTY_SET );
+            setKeys( Collections.emptySet());
             super.removeNotify();
         }
         
@@ -413,8 +413,7 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider, L
                 Node selection[] = browsePanel.getExplorerManager().getSelectedNodes();
                 
                 if ( selection != null && selection.length > 0 ) {
-                    DataObject dobj = (DataObject)selection[0].getLookup().
-                        lookup( DataObject.class );
+                    DataObject dobj = selection[0].getLookup().lookup(DataObject.class);
                     if (dobj!=null && dobj.getClass().isAssignableFrom(target)) {
                         result = dobj.getPrimaryFile();
                     }

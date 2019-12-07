@@ -110,7 +110,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     protected Node createNodeDelegate () {
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("--> DTDDataObject.createNodeDelegate: this = " + this);
 
-        DataNodeCreator dataNodeCreator = (DataNodeCreator) Lookup.getDefault().lookup (DataNodeCreator.class);
+        DataNodeCreator dataNodeCreator = Lookup.getDefault().lookup (DataNodeCreator.class);
         DataNode dataNode = null;
 
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("-*- DTDD   O     .createNodeDelegate: dataNodeCreator = " + dataNodeCreator);

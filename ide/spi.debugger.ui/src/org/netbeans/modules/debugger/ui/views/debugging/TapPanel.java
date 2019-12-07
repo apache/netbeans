@@ -81,7 +81,7 @@ public final class TapPanel extends javax.swing.JPanel {
     private static Adap getAdapter () {
         Adap result = null;
         if ( adapRef != null ) {
-            result = (Adap) adapRef.get ();
+            result = adapRef.get ();
         }
         if ( result == null ) {
             result = new Adap ();

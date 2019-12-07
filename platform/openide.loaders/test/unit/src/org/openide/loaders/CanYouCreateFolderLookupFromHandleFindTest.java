@@ -69,7 +69,7 @@ public class CanYouCreateFolderLookupFromHandleFindTest extends NbTestCase {
      * and that one does not check META-INF/services.
      */
     public static final class Pool extends DataLoaderPool {
-        protected Enumeration loaders() {
+        protected Enumeration<? extends DataLoader> loaders() {
             return Enumerations.singleton(SharedClassObject.findObject(MyLoader.class, true));
         }
     }

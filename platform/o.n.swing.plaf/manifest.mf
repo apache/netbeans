@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/swing/plaf/Bundle.properties
 OpenIDE-Module: org.netbeans.swing.plaf
-OpenIDE-Module-Specification-Version: 1.47
+OpenIDE-Module-Specification-Version: 1.48
 AutoUpdate-Show-In-Client: false
 

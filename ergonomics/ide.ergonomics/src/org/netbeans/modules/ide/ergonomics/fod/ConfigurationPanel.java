@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.awt.BorderLayout;
@@ -27,13 +26,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -47,31 +49,38 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.awt.Mnemonics;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.TaskListener;
+import org.openide.modules.ModuleInfo;
+import org.openide.modules.SpecificationVersion;
+import org.openide.util.Lookup;
 
 /**
- * Provider for fake web module extenders. Able to download and enable the proper module
- * as well as delegate to the proper configuration panel.
+ * Provider for fake web module extenders. Able to download and enable the
+ * proper module as well as delegate to the proper configuration panel.
  *
  * @author Tomas Mysik
  * @author Pavel Flaska
  */
 public class ConfigurationPanel extends JPanel implements Runnable {
+
     private static final long serialVersionUID = 27938464212508L;
-    
+
     final DownloadProgressMonitor progressMonitor = new DownloadProgressMonitor();
     private FeatureInfo featureInfo;
     private Callable<JComponent> callable;
     private Collection<UpdateElement> featureInstall;
+    private final SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
+    private HashSet<FeatureInfo.ExtraModuleInfo> extrasFilter;
 
     public ConfigurationPanel(String displayName, final Callable<JComponent> callable, FeatureInfo info) {
         this(callable);
         setInfo(info, displayName, Collections.<UpdateElement>emptyList(), Collections.emptyList(), Collections.emptyMap(), false);
     }
-    
+
     public ConfigurationPanel(final Callable<JComponent> callable) {
         assert EventQueue.isDispatchThread();
         initComponents();
@@ -81,12 +90,46 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         setError(" "); // NOI18N
     }
 
-    public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall, 
-            Collection<FeatureInfo.ExtraModuleInfo> missingModules, 
+    public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall,
+            Collection<FeatureInfo.ExtraModuleInfo> missingModules,
             Map<FeatureInfo.ExtraModuleInfo, FeatureInfo> extrasMap, boolean required) {
+        this.extrasFilter = new HashSet<FeatureInfo.ExtraModuleInfo>();
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
+        Set<FeatureInfo.ExtraModuleInfo> extraModules = featureInfo.getExtraModules();
+        Collection<? extends ModuleInfo> lookupAll = Lookup.getDefault().lookupAll(ModuleInfo.class);
+        FindComponentModules findModules = new FindComponentModules(info);
+        Collection<UpdateElement> modulesToInstall = findModules.getModulesForInstall();
+        selectionsPanel.removeAll();
+        for (FeatureInfo.ExtraModuleInfo extraModule : extraModules) {
+            JCheckBox jCheckBox = new JCheckBox(extraModule.displayName());
+            for (ModuleInfo moduleInfo : lookupAll) {
+                if (extraModule.matches(moduleInfo.getCodeName())) {
+                    jCheckBox.setText(moduleInfo.getDisplayName());
+                }
+            }
+            
+            for (UpdateElement updateElement : modulesToInstall) {
+                if (extraModule.matches(updateElement.getCodeName())){
+                    jCheckBox.setText(updateElement.getDisplayName());
+                }
+            }
+            
+            if (extraModule.isRequiredFor(jdk)) {
+                jCheckBox.setSelected(true);
+                jCheckBox.setEnabled(false);
+                extrasFilter.add(extraModule);
+            }
+            jCheckBox.addActionListener(e -> {
+                if (jCheckBox.isSelected()) {
+                    extrasFilter.add(extraModule);
+                } else {
+                    extrasFilter.remove(extraModule);
+                }
+            });
+            selectionsPanel.add(jCheckBox);
+        }
         if (activateNow) {
             infoLabel.setVisible(false);
             downloadLabel.setVisible(false);
@@ -103,9 +146,9 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
             // collect descriptions from features contributing installed extras
             for (FeatureInfo fi : extrasMap.values()) {
-                String s = required ? 
-                        fi.getExtraModulesRequiredText() : 
-                        fi.getExtraModulesRecommendedText();
+                String s = required
+                        ? fi.getExtraModulesRequiredText()
+                        : fi.getExtraModulesRecommendedText();
                 if (s != null) {
                     if (sbDownload.length() > 0) {
                         sbDownload.append("\n");
@@ -118,7 +161,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             } else {
                 activateButton.setEnabled(true);
             }
-            
+
             String lblDownloadMsg = sbDownload.toString();
 
             String list = "";
@@ -151,13 +194,13 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             org.openide.awt.Mnemonics.setLocalizedText(downloadButton, btnDownloadMsg);
         }
     }
-    
+
     @Override
     public void removeNotify() {
         super.removeNotify();
         FeatureManager.logUI("ERGO_CLOSE");
     }
-    
+
     public void setUpdateErrors(Collection<IOException> errors) {
         if (errors.isEmpty()) {
             return;
@@ -181,13 +224,13 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     }
 
     void setError(String msg) {
-        assert SwingUtilities.isEventDispatchThread ();
+        assert SwingUtilities.isEventDispatchThread();
         errorLabel.setText(msg);
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
--     * WARNING: Do NOT modify this code. The content of this method is
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * - * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
@@ -200,6 +243,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         progressPanel = new JPanel();
         downloadLabel = new JLabel();
         downloadButton = new JButton();
+        selectionsPanel = new JPanel();
 
         Mnemonics.setLocalizedText(infoLabel, "dummy"); // NOI18N
 
@@ -221,6 +265,8 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             }
         });
 
+        selectionsPanel.setLayout(new BoxLayout(selectionsPanel, BoxLayout.PAGE_AXIS));
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -236,7 +282,8 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addComponent(activateButton))
                             .addComponent(downloadLabel)
-                            .addComponent(infoLabel))
+                            .addComponent(infoLabel)
+                            .addComponent(selectionsPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -247,18 +294,20 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                 .addComponent(infoLabel)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(downloadLabel)
-                .addGap(18, 18, 18)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(selectionsPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(activateButton)
                     .addComponent(downloadButton))
                 .addGap(19, 19, 19)
-                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     public void run() {
-        ModulesInstaller.installModules(progressMonitor, featureInfo, featureInstall);
+        ModulesInstaller.installModules(progressMonitor, featureInfo, featureInstall, extrasFilter);
     }
 
     private void activateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_activateButtonActionPerformed
@@ -318,9 +367,11 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     private JEditorPane errorLabel;
     private JLabel infoLabel;
     private JPanel progressPanel;
+    private JPanel selectionsPanel;
     // End of variables declaration//GEN-END:variables
 
     private final class DownloadProgressMonitor implements ProgressMonitor {
+
         private boolean error = false;
 
         public void onDownload(ProgressHandle progressHandle) {

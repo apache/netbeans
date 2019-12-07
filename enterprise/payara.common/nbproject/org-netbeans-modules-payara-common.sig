@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.0
+#Version 2.1
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1820,9 +1820,12 @@ hfds LOGGER
 CLSS public org.netbeans.modules.payara.common.ui.IpComboBox
 cons public init(boolean)
 cons public init(java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 cons public init(java.util.Set<? extends java.net.InetAddress>,boolean)
 cons public init(java.util.Vector<?>)
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.ComboBoxModel)
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String IP_4_127_0_0_1_NAME = "localhost"
 innr public static InetAddr
 innr public static InetAddrComparator
@@ -2249,7 +2252,7 @@ meth public static org.netbeans.modules.payara.spi.ServerUtilities getEe7Utiliti
 meth public static org.netbeans.modules.payara.spi.ServerUtilities getEe8Utilities()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Object
-hfds gwp,pip
+hfds pip,pwp
 
 CLSS public org.netbeans.modules.payara.spi.Utils
 cons public init()
@@ -2306,7 +2309,6 @@ meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getV
 CLSS public abstract interface org.netbeans.spi.server.ServerInstanceImplementation
 meth public abstract boolean isRemovable()
 meth public abstract java.lang.String getDisplayName()
-meth public abstract java.lang.String getProperty(java.lang.String)
 meth public abstract java.lang.String getServerDisplayName()
 meth public abstract javax.swing.JComponent getCustomizer()
 meth public abstract org.openide.nodes.Node getBasicNode()

@@ -194,7 +194,7 @@ public class Utilities {
     private static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION";
     
 
-    public static <E> Iterable<E> checkedIterableByFilter(final Iterable raw, final Class<E> type, final boolean strict) {
+    public static <E> Iterable<E> checkedIterableByFilter(final Iterable<?> raw, final Class<E> type, final boolean strict) {
         return new Iterable<E>() {
             public Iterator<E> iterator() {
                 return NbCollections.checkedIteratorByFilter(raw.iterator(), type, strict);

@@ -43,7 +43,7 @@ final class RecentViewList implements PropertyChangeListener {
 
     /** List of TopComponent IDs. First is most recently
      * activated. */
-    private List<String> tcIdList = new ArrayList(20);
+    private List<String> tcIdList = new ArrayList<>(20);
     private Map<String, Reference<TopComponent>> tcCache = new HashMap<String, Reference<TopComponent>>(20);
 
     public RecentViewList (WindowManager wm) {

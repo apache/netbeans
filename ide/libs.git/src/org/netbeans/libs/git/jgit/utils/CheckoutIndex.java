@@ -64,38 +64,34 @@ public class CheckoutIndex {
         this.recursively = recursively;
     }
 
-    public void checkout () throws IOException, GitException {
-        TreeWalk treeWalk = new TreeWalk(repository);
-        Collection<String> relativePaths = Utils.getRelativePaths(repository.getWorkTree(), roots);
-        if (!relativePaths.isEmpty()) {
-            treeWalk.setFilter(PathFilterGroup.createFromStrings(relativePaths));
-        }
-        treeWalk.setRecursive(true);
-        treeWalk.reset();
-        treeWalk.addTree(new DirCacheIterator(cache));
-        treeWalk.addTree(new FileTreeIterator(repository));
-        String lastAddedPath = null;
-        ObjectReader od = repository.newObjectReader();
-        try {
-        while (treeWalk.next() && !monitor.isCanceled()) {
-            File path = new File(repository.getWorkTree(), treeWalk.getPathString());
-            if (treeWalk.getPathString().equals(lastAddedPath)) {
-                // skip conflicts
-                continue;
-            } else {
-                lastAddedPath = treeWalk.getPathString();
+    public void checkout() throws IOException, GitException {
+        try (ObjectReader od = repository.newObjectReader();
+            TreeWalk treeWalk = new TreeWalk(repository);) {
+            Collection<String> relativePaths = Utils.getRelativePaths(repository.getWorkTree(), roots);
+            if (!relativePaths.isEmpty()) {
+                treeWalk.setFilter(PathFilterGroup.createFromStrings(relativePaths));
             }
-            DirCacheIterator dit = treeWalk.getTree(0, DirCacheIterator.class);
-            FileTreeIterator fit = treeWalk.getTree(1, FileTreeIterator.class);
-            if (dit != null && (recursively || directChild(roots, repository.getWorkTree(), path)) && (fit == null || fit.isModified(dit.getDirCacheEntry(), checkContent, od))) {
-                // update entry
-                listener.notifyFile(path, treeWalk.getPathString());
-                checkoutEntry(repository, path, dit.getDirCacheEntry(), od);
+            treeWalk.setRecursive(true);
+            treeWalk.reset();
+            treeWalk.addTree(new DirCacheIterator(cache));
+            treeWalk.addTree(new FileTreeIterator(repository));
+            String lastAddedPath = null;
+            while (treeWalk.next() && !monitor.isCanceled()) {
+                File path = new File(repository.getWorkTree(), treeWalk.getPathString());
+                if (treeWalk.getPathString().equals(lastAddedPath)) {
+                    // skip conflicts
+                    continue;
+                } else {
+                    lastAddedPath = treeWalk.getPathString();
+                }
+                DirCacheIterator dit = treeWalk.getTree(0, DirCacheIterator.class);
+                FileTreeIterator fit = treeWalk.getTree(1, FileTreeIterator.class);
+                if (dit != null && (recursively || directChild(roots, repository.getWorkTree(), path)) && (fit == null || fit.isModified(dit.getDirCacheEntry(), checkContent, od))) {
+                    // update entry
+                    listener.notifyFile(path, treeWalk.getPathString());
+                    checkoutEntry(repository, path, dit.getDirCacheEntry(), od);
+                }
             }
-        }
-        } finally {
-            od.release();
-            treeWalk.release();
         }
     }
 
@@ -122,7 +118,7 @@ public class CheckoutIndex {
             }
             file.createNewFile();
             if (file.isFile()) {
-                DirCacheCheckout.checkoutEntry(repository, file, e, od);
+                DirCacheCheckout.checkoutEntry(repository, e, od);
             } else {
                 monitor.notifyError(MessageFormat.format(Utils.getBundle(CheckoutIndex.class).getString("MSG_Warning_CannotCreateFile"), file.getAbsolutePath())); //NOI18N
             }

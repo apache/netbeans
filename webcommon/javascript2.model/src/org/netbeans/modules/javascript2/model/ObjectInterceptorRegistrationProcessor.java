@@ -23,8 +23,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.javascript2.model.spi.ObjectInterceptor;
@@ -38,7 +36,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.javascript2.model.spi.ObjectInterceptor.Registration") //NOI18N
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ObjectInterceptorRegistrationProcessor extends LayerGeneratingProcessor {
 
     public ObjectInterceptorRegistrationProcessor() {

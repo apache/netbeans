@@ -65,7 +65,6 @@ public class NetigsoActivationTest extends SetupHid {
         ModuleSystem ms = Main.getModuleSystem();
         mgr = ms.getManager();
         mgr.mutexPrivileged().enterWriteAccess();
-        Enumeration en;
         int checks = 0;
         try {
             File simpleModule = new File(jars, "activate.jar");
@@ -92,13 +91,13 @@ public class NetigsoActivationTest extends SetupHid {
                 }
                 assertNotNull("All our bundles have BundleFile", bFile);
                 
-                en = b.findEntries("/", null, true);
+                Enumeration<URL> en = b.findEntries("/", null, true);
                 if (en == null) {
                     sb.append("No entries for ").append(b.getSymbolicName()).append("\n");
                     continue;
                 }
                 while (en.hasMoreElements()) {
-                    URL u = (URL) en.nextElement();
+                    URL u = en.nextElement();
                     final String ef = u.toExternalForm();
                     int pref = ef.indexOf("/org/");
                     int last = ef.lastIndexOf("/");

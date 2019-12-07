@@ -620,8 +620,8 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
     }
 
     private static <T> List<T> getMultiValue(Map<String, ?> properties, String name, Class<T> type) {
-        Iterable v = (Iterable) properties.remove(name);
-        List<T>  result = new LinkedList<T>();
+        Iterable<?> v = (Iterable<?>) properties.remove(name);
+        List<T> result = new LinkedList<>();
 
         if (v == null) {
             return Collections.emptyList();

@@ -946,4 +946,12 @@ public class JavaCompletionTaskAdvancedTest extends CompletionTestBase {
     public void testOnVarInitInInitializerBlockBody() throws Exception {
         performTest("Initializers", 1109, null, "initBlockContentStartingWithB.pass");
     }
+
+    public void testGenericMethod1() throws Exception {
+        performTest("GenericMethodInvocation", 1231, "run1(\"\", arg", "GenericMethodInvocation1.pass");
+    }
+
+    public void testGenericMethod2() throws Exception {
+        performTest("GenericMethodInvocation", 1231, "run2(\"\", arg", "GenericMethodInvocation2.pass");
+    }
 }

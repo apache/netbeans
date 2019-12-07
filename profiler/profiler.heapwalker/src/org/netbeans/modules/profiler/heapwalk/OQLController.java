@@ -256,7 +256,7 @@ public class OQLController extends AbstractTopLevelController
                 rc = rc.getNext();
             }
         } else if (o instanceof Map) {
-            Set<Map.Entry> entries = ((Map)o).entrySet();
+            Set<Map.Entry> entries = ((Map)o).<Map.Entry>entrySet();
             sb.append("<span><b>{</b><br/>"); // NOI18N
             boolean first = true;
             for(Map.Entry entry : entries) {

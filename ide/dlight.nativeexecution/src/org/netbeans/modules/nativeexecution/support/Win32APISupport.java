@@ -29,7 +29,7 @@ import com.sun.jna.win32.W32APIOptions;
 
 public interface Win32APISupport extends StdCallLibrary {
 
-    final Win32APISupport INSTANCE = (Win32APISupport) Native.load("kernel32", Win32APISupport.class, W32APIOptions.UNICODE_OPTIONS); // NOI18N
+    final Win32APISupport INSTANCE = Native.load("kernel32", Win32APISupport.class, W32APIOptions.UNICODE_OPTIONS); // NOI18N
 
     /* http://msdn.microsoft.com/en-us/library/ms683179(VS.85).aspx */
     HANDLE GetCurrentProcess();

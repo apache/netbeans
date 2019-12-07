@@ -248,7 +248,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
                 }
 
                 // searching in server registered JSF libraries
-                J2eeModuleProvider j2eeModuleProvider = (J2eeModuleProvider) project.getLookup().lookup(J2eeModuleProvider.class);
+                J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
                 Set<ServerLibraryDependency> deps = getServerDependencies(j2eeModuleProvider);
                 for (ServerLibraryDependency serverLibraryDependency : deps) {
                     if (serverLibraryDependency.getName().startsWith("jsf")) { //NOI18N

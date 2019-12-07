@@ -45,7 +45,7 @@ public class AddCatalogEntryAction extends NodeAction {
     }
 
     public static void perform(org.openide.nodes.Node[] activatedNodes) {
-        CatalogNode node = (CatalogNode) activatedNodes[0].getCookie(CatalogNode.class);
+        CatalogNode node = activatedNodes[0].getCookie(CatalogNode.class);
         CatalogWriter catalog = (CatalogWriter)node.getCatalogReader();
         CatalogEntryPanel panel = new CatalogEntryPanel();
         DialogDescriptor dd = new DialogDescriptor(panel,

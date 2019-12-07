@@ -482,7 +482,7 @@ public class ExplorerActions {
 
     /** If our clipboard is not found return the default system clipboard. */
     private static Clipboard getClipboard() {
-        Clipboard c = (java.awt.datatransfer.Clipboard) org.openide.util.Lookup.getDefault().lookup(
+        Clipboard c = org.openide.util.Lookup.getDefault().lookup(
                 java.awt.datatransfer.Clipboard.class
             );
 

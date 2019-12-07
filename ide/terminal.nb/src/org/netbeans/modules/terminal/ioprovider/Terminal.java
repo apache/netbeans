@@ -1125,7 +1125,7 @@ public final class Terminal extends JComponent {
     }
 
     public void setHyperlinkListener(final HyperlinkListener hyperlinkListener) {
-	((ActiveTerm) term).setActionListener(new ActiveTermListener() {
+	term.setActionListener(new ActiveTermListener() {
 	    public void action(ActiveRegion r, InputEvent e) {
 		if (r.isLink()) {
 		    String url = (String) r.getUserObject();

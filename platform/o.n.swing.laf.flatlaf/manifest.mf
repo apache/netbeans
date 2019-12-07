@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/netbeans/swing/laf/flatlaf/Installer.class
+OpenIDE-Module-Localizing-Bundle: org/netbeans/swing/laf/flatlaf/Bundle.properties
+OpenIDE-Module: org.netbeans.swing.laf.flatlaf
+OpenIDE-Module-Specification-Version: 1.0
+AutoUpdate-Show-In-Client: false
+

@@ -115,7 +115,7 @@ public class Utilities {
         if (c == null || c.isEmpty ()) {
             return Collections.emptyList ();
         }
-        List<KeyStore> kss = new ArrayList ();
+        List<KeyStore> kss = new ArrayList<>();
         
         for (KeyStoreProvider provider : c) {
             KeyStore ks = provider.getKeyStore ();
@@ -132,11 +132,11 @@ public class Utilities {
             return N_A;
         }       
         if (!archiveCertificates.isEmpty()) {
-            Collection<Certificate> c = new HashSet(trustedCertificates);
+            Collection<Certificate> c = new HashSet<>(trustedCertificates);
             c.retainAll(archiveCertificates);
             if (c.isEmpty()) {                
-                Map<Principal, X509Certificate> certSubjectsMap = new HashMap();               
-                Set<Principal> certIssuersSet = new HashSet();
+                Map<Principal, X509Certificate> certSubjectsMap = new HashMap<>();               
+                Set<Principal> certIssuersSet = new HashSet<>();
                 for (Certificate cert : archiveCertificates) {
                     if (cert != null) {
                         X509Certificate x509Cert = (X509Certificate) cert;
@@ -147,7 +147,7 @@ public class Utilities {
                     }
                 }
                 
-                Map<X509Certificate, X509Certificate> candidates = new HashMap();
+                Map<X509Certificate, X509Certificate> candidates = new HashMap<>();
                     
                 for (Principal p : certSubjectsMap.keySet()) {
                     // cert chain may not be ordered - trust anchor could before certificate itself

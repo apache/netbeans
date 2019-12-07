@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
@@ -43,13 +45,18 @@ import org.openide.util.Utilities;
 @NbBundle.Messages({
     "MSG_ConnectionPassed=Connection successful.",
     "MSG_CannotConnect=Cannot establish connection.",
+    "# {0} - detailed error message",
+    "MSG_CannotConnectWithDetails=Cannot establish connection, details: {0}",
     "MSG_InaccessibleSocket=Socket is not accessible."
 })
 public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchronousValidatingPanel<WizardDescriptor>, ChangeListener {
 
+    private static final Logger LOGGER = Logger.getLogger(DockerConnectionPanel.class.getName());
+
     private static final Pattern REMOTE_HOST_PATTERN = Pattern.compile("^(tcp://)[^/:](:\\d+)($|/.*)"); // NOI18N
 
     private static final String CONNECTION_TEST = "connection_test";
+    private static final String CONNECTION_EXCEPTION_MSG = "connection_exception_msg";
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -102,6 +109,8 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
         // process the connection test validation
         Boolean connectioTest = (Boolean) wizard.getProperty(CONNECTION_TEST);
         wizard.putProperty(CONNECTION_TEST, null);
+        String connectionExceptionMessage = (String) wizard.getProperty(CONNECTION_EXCEPTION_MSG);
+        wizard.putProperty(CONNECTION_EXCEPTION_MSG, null);
 
         Configuration panel = component.getConfiguration();
         String displayName = panel.getDisplayName();
@@ -185,7 +194,10 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
         if (connectioTest != null) {
             if (connectioTest) {
                 wizard.putProperty(WizardDescriptor.PROP_INFO_MESSAGE, Bundle.MSG_ConnectionPassed());
+            } else if (connectionExceptionMessage != null) {
+                wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, connectionExceptionMessage);
             } else {
+                //fallback to generic message
                 wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, Bundle.MSG_CannotConnect());
             }
             return connectioTest;
@@ -246,14 +258,24 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
             }
 
             DockerAction action = new DockerAction(instance);
-            if (!action.ping()) {
+            boolean pingResult = false;
+            
+            try {
+                pingResult = action.pingWithExceptions();
+            } catch (Exception ex) {
+                LOGGER.log(Level.INFO, "docker connection ping failed", ex); // NOI18N
+                throw new WizardValidationException(component, 
+                        Bundle.MSG_CannotConnectWithDetails(ex.getMessage()), 
+                        Bundle.MSG_CannotConnectWithDetails(ex.getLocalizedMessage()));
+            }
+            
+            if (!pingResult) {
                 String error = Bundle.MSG_CannotConnect();
                 throw new WizardValidationException(component, error, error);
             }
         // runtime exception may happen
         } catch (Exception ex) {
-            String error = Bundle.MSG_CannotConnect();
-            throw new WizardValidationException(component, error, error);
+            throw new WizardValidationException(component, ex.getMessage(), ex.getLocalizedMessage());
         }
     }
 
@@ -346,7 +368,8 @@ public class DockerConnectionPanel implements WizardDescriptor.ExtendedAsynchron
                         public void run() {
                             finishValidation();
                             Exception ex = ref.get();
-                            if (ex != null) {
+                            if (ex != null) {                                                  
+                                wizard.putProperty(CONNECTION_EXCEPTION_MSG, ex.getLocalizedMessage());
                                 wizard.putProperty(CONNECTION_TEST, false);
                             } else {
                                 wizard.putProperty(CONNECTION_TEST, true);

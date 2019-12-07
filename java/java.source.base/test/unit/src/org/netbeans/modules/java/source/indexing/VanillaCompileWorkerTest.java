@@ -24,6 +24,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import junit.framework.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -270,7 +274,95 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         //TODO: check file content!!!
     }
 
+    public void testTypeParameter() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.*; public class Test4 { <T extends Undef> T test() { return null; } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testDuplicate() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java",
+                                                                      "package test;\n" +
+                                                                      "@interface Test4 { private int t(int i) { return i; } }\n" +
+                                                                      "@interface Test4 { private int t(int i) { return i; } }\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testAnnotationMethodWithBody() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java",
+                                                                      "package test;\n" +
+                                                                      "@interface Test4 { private int t(int i) { return i; } }\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
     public static void noop() {}
+
+    @Override
+    public void runTest() throws Throwable {
+        AtomicBoolean wasException = new AtomicBoolean();
+        Handler logHandler = new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                if (record.getThrown() != null) {
+                    wasException.set(true);
+                }
+            }
+
+            @Override
+            public void flush() {}
+
+            @Override
+            public void close() throws SecurityException {}
+        };
+        Level origLevel = JavaIndex.LOG.getLevel();
+        JavaIndex.LOG.setLevel(Level.WARNING);
+        JavaIndex.LOG.addHandler(logHandler);
+        try {
+            super.runTest();
+            assertFalse(wasException.get());
+        } finally {
+            JavaIndex.LOG.setLevel(origLevel);
+            JavaIndex.LOG.removeHandler(logHandler);
+        }
+    }
 
     public static Test suite() {
         if (NoJavacHelper.hasNbJavac()) {

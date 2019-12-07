@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.groovy.support
 OpenIDE-Module-Layer: org/netbeans/modules/groovy/support/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/groovy/support/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.45
+OpenIDE-Module-Specification-Version: 1.46
 OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker

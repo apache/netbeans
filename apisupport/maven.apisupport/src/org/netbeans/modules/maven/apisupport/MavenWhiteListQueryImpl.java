@@ -330,7 +330,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
         assert Thread.holdsLock(LOCK);
         final Set<MavenWhiteListImplementation> set;
         synchronized (results) {
-            set = new HashSet(results);
+            set = new HashSet<>(results);
         }
         RP.post(new Runnable() {
             @Override

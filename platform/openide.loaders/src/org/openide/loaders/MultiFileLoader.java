@@ -160,9 +160,9 @@ public abstract class MultiFileLoader extends DataLoader {
                     if (loaderPrimary != null && dataObject.getPrimaryFile() != loaderPrimary) {
                         ERR.log(Level.FINE, "Which is different than primary of found: {0}", dataObject); // NOI18N
 
-                        Enumeration before = DataLoaderPool.getDefault().allLoaders(fo);
+                        Enumeration<DataObject.Factory> before = DataLoaderPool.getDefault().allLoaders(fo);
                         while (before.hasMoreElements()) {
-                            Object o = before.nextElement();
+                            DataObject.Factory o = before.nextElement();
                             if (o == mfl) {
                                 ERR.log(Level.FINE, "Returning null"); // NOI18N
                                 return null;

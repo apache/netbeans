@@ -706,7 +706,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
             public void run() {
                 handle.start();
                 try {
-                    openIssue((BugzillaIssue)repository.getIssue(id));
+                    openIssue(repository.getIssue(id));
                 } finally {
                     handle.finish();
                 }
@@ -828,7 +828,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
             public void run() {
                 Collection<BugzillaIssue> issues = query.getIssues();
                 for (BugzillaIssue issue : issues) {
-                    ((BugzillaIssue) issue).setUpToDate(true);
+                    issue.setUpToDate(true);
                 }
             }
         });

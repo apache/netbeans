@@ -24,7 +24,7 @@ import javax.swing.text.AttributeSet;
 
 /**
  * Getters and setters for font & color editor profiles. Instances of this 
- * class should be registerred in <code>MimeLookup</code> for particular mime types.
+ * class should be registered in <code>MimeLookup</code> for particular mime types.
  *
  * @author Jan Jancura
  */

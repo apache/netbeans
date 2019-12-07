@@ -100,9 +100,8 @@ class J2eePlatformNode extends AbstractNode implements PropertyChangeListener, I
         this.platformPropName = platformPropName;
         evaluator.addPropertyChangeListener(WeakListeners.propertyChange(this, evaluator));
         
-        J2eeModuleProvider moduleProvider = (J2eeModuleProvider)project.getLookup().lookup(J2eeModuleProvider.class);
-        moduleProvider.addInstanceListener(
-                (InstanceListener)WeakListeners.create(InstanceListener.class, this, moduleProvider));
+        J2eeModuleProvider moduleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
+        moduleProvider.addInstanceListener(WeakListeners.create(InstanceListener.class, this, moduleProvider));
     }
     
     public static J2eePlatformNode create(Project project, PropertyEvaluator evaluator, String platformPropName, ClassPathSupport cs) {

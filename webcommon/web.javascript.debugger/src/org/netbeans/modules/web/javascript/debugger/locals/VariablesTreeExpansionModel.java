@@ -44,8 +44,8 @@ public class VariablesTreeExpansionModel implements TreeExpansionModel {
     
     private static final Logger LOGGER = Logger.getLogger(VariablesTreeExpansionModel.class.getName());
 
-    private Set expandedNodes = new WeakSet();
-    private Set collapsedNodes = new WeakSet();
+    private Set<Object> expandedNodes = new WeakSet<>();
+    private Set<Object> collapsedNodes = new WeakSet<>();
 
     /**
      * Defines default state (collapsed, expanded) of given node.

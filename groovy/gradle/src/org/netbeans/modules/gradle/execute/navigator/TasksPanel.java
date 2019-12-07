@@ -145,12 +145,8 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
             GradleBaseProject prj = GradleBaseProject.get(currentP);
             if (prj != null) {
                 final Children ch = new Children.Array();
-                ArrayList<String> glist = new ArrayList<>();
-                for (String group : prj.getTaskGroups()) {
-                    if (!GradleBaseProject.PRIVATE_TASK_GROUP.equals(group)) {
-                        glist.add(group);
-                    }
-                }
+                ArrayList<String> glist = new ArrayList<>(prj.getTaskGroups());
+                glist.remove(GradleBaseProject.PRIVATE_TASK_GROUP);
                 Collections.sort(glist, String.CASE_INSENSITIVE_ORDER);
 
                 for (String group : glist) {
@@ -179,12 +175,9 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
         }
         current = null;
         currentP = null;
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                treeView.setRootVisible(false);
-                manager.setRootContext(createEmptyNode());
-            }
+        SwingUtilities.invokeLater(() -> {
+            treeView.setRootVisible(false);
+            manager.setRootContext(createEmptyNode());
         });
     }
 
@@ -192,12 +185,9 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
      *
      */
     public void showWaitNode() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                treeView.setRootVisible(true);
-                manager.setRootContext(createWaitNode());
-            }
+        SwingUtilities.invokeLater(() -> {
+            treeView.setRootVisible(true);
+            manager.setRootContext(createWaitNode());
         });
     }
 
@@ -213,7 +203,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
     private static final String WAIT_GIF = "org/netbeans/modules/gradle/resources/wait.gif";
 
     @StaticResource
-    private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.png";
+    private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.gif";
 
     private static Node createEmptyNode() {
         return new AbstractNode(Children.LEAF);
@@ -307,13 +297,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
         @Override
         protected boolean createKeys(List<GradleTask> list) {
             ArrayList<GradleTask> ret = new ArrayList<>(project.getTasks(group));
-            Collections.sort(ret, new Comparator<GradleTask>() {
-
-                @Override
-                public int compare(GradleTask o1, GradleTask o2) {
-                    return o1.getName().compareToIgnoreCase(o2.getName());
-                }
-            });
+            Collections.sort(ret, Comparator.comparing(GradleTask::getName, String.CASE_INSENSITIVE_ORDER));
             list.addAll(ret);
             return true;
         }

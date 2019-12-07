@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.web.el
 OpenIDE-Module-Layer: org/netbeans/modules/web/el/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/el/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.58
+OpenIDE-Module-Specification-Version: 1.59

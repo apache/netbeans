@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.windows.IOColors;
 import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
@@ -58,16 +59,21 @@ public class JDPAProcessorFactory implements OutputProcessorFactory {
         public boolean processLine(OutputDisplayer out, String line) {
             Matcher m = JDPA_LISTEN.matcher(line);
             if (m.matches()) {
-                String portStr = m.group(1);
-                GradleJavaDebugger dbg = cfg.getProject().getLookup().lookup(GradleJavaDebugger.class);
-                if (dbg != null) {
-                    try {
-                        dbg.attachDebugger(cfg.getTaskDisplayName() , "dt_socket", "localhost", portStr);
-                    } catch (Exception ex) {
-                        out.print(ex.getCause().getMessage(), null, IOColors.OutputType.ERROR);
-                    } 
+                if (!activated) {
+                    String portStr = m.group(1);
+                    GradleJavaDebugger dbg = cfg.getProject().getLookup().lookup(GradleJavaDebugger.class);
+                    if (dbg != null) {
+                        try {
+                            dbg.attachDebugger(cfg.getTaskDisplayName() , "dt_socket", "localhost", portStr);
+                            activated = true;
+                        } catch (Exception ex) {
+                            out.print(ex.getCause().getMessage(), null, IOColors.OutputType.ERROR);
+                        }
+                    }
+                    out.print(line, null, IOColors.OutputType.LOG_DEBUG);
+                } else {
+                    RunUtils.cancelGradle(cfg);
                 }
-                out.print(line, null, IOColors.OutputType.LOG_DEBUG);
                 return true;
             }
             return false;

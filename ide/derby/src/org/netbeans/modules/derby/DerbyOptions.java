@@ -64,7 +64,7 @@ public class DerbyOptions {
     static final String PROP_DERBY_LOCATION = "location"; // NOI18N
     static final String PROP_DERBY_SYSTEM_HOME = "systemHome"; // NOI18N
 
-    static final String INST_DIR = "db-derby-10.1.1.0"; // NOI18N
+    static final String INST_DIR = "db-derby-10.14.2.0"; // NOI18N
 
     public static final String DRIVER_CLASS_NET = "org.apache.derby.jdbc.ClientDriver"; // NOI18N
     public static final String DRIVER_CLASS_EMBEDDED = "org.apache.derby.jdbc.EmbeddedDriver"; // NOI18N
@@ -397,9 +397,9 @@ public class DerbyOptions {
                     outd.write("<properties>\n<property>\n"); //NOI18N
                     outd.write("<name>maven-dependencies</name>\n"); //NOI18N
                     outd.write("<value>\n"); //NOI18N
-                    outd.write("org.apache.derby:derby:10.11.1.1:jar\n"); //NOI18N
-                    outd.write("org.apache.derby:derbyclient:10.11.1.1:jar\n"); //NOI18N
-                    outd.write("org.apache.derby:derbynet:10.11.1.1:jar\n"); //NOI18N
+                    outd.write("org.apache.derby:derby:10.14.2.0:jar\n"); //NOI18N
+                    outd.write("org.apache.derby:derbyclient:10.14.2.0:jar\n"); //NOI18N
+                    outd.write("org.apache.derby:derbynet:10.14.2.0:jar\n"); //NOI18N
                     outd.write("</value>\n"); //NOI18N
                     outd.write("</property>\n</properties>\n"); //NOI18N
                     outd.write("</library>\n"); //NOI18N

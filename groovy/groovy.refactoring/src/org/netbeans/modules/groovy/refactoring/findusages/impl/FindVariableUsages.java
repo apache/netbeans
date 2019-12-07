@@ -113,7 +113,7 @@ public class FindVariableUsages extends AbstractFindUsages {
 
         @Override
         public void visitVariableExpression(VariableExpression expression) {
-            final VariableExpression variableExpression = ((VariableExpression) expression);
+            final VariableExpression variableExpression = expression;
             final Variable variable = variableExpression.getAccessedVariable();
 
             if (variable != null) {

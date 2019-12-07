@@ -144,7 +144,7 @@ public class SnippetClassGenerator implements Runnable {
     }
     
     private boolean declarationsDependsOn(Snippet snip) {
-        Deque<Snippet> candidates = new ArrayDeque();
+        Deque<Snippet> candidates = new ArrayDeque<>();
         candidates.add(snip);
         while (!candidates.isEmpty()) {
             Snippet c = candidates.poll();

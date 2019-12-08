@@ -26,8 +26,15 @@
             <code-name-base>org.netbeans.api.annotations.common</code-name-base>
             <module-dependencies/>
             <public-packages>
+                <package>javax.annotation</package>
+                <package>javax.annotation.concurrent</package>
+                <package>javax.annotation.meta</package>
                 <package>org.netbeans.api.annotations.common</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/jsr305-3.0.2.jar</runtime-relative-path>
+                <binary-origin>external/jsr305-3.0.2.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

@@ -67,7 +67,7 @@ class OSGiClassLoader extends ClassLoader {
             // Sort framework last so since in Felix 4 its loadClass will search app classpath, causing test failures.
             // (Tried to disable this using various framework config properties without success.)
             return NbCollections.iterable(Enumerations.concat(Enumerations.filter(Enumerations.array(bundles), new Enumerations.Processor<Bundle,Bundle>() {
-                public @Override Bundle process(Bundle b, Collection<Bundle> _) {
+                public @Override Bundle process(Bundle b, Collection<Bundle> c) {
                     if (b.getBundleId() == 0) {
                         return null;
                     }

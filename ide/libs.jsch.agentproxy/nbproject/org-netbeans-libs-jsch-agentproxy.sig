@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.19
+#Version 0.20
 
 CLSS public com.jcraft.jsch.agentproxy.AgentProxy
 cons public init(com.jcraft.jsch.agentproxy.Connector)
@@ -147,12 +147,10 @@ fld public final static int ALIGN_GNUC = 2
 fld public final static int ALIGN_MSVC = 3
 fld public final static int ALIGN_NONE = 1
 innr protected static StructField
+innr public abstract interface static !annotation FieldOrder
 innr public abstract interface static ByReference
 innr public abstract interface static ByValue
-meth protected abstract java.util.List<java.lang.String> getFieldOrder()
 meth protected com.sun.jna.Memory autoAllocate(int)
-meth protected final void setFieldOrder(java.lang.String[])
- anno 0 java.lang.Deprecated()
 meth protected int calculateSize(boolean)
 meth protected int fieldOffset(java.lang.String)
 meth protected int getNativeAlignment(java.lang.Class<?>,java.lang.Object,boolean)
@@ -161,6 +159,7 @@ meth protected int getNativeSize(java.lang.Class<?>,java.lang.Object)
 meth protected int getStructAlignment()
 meth protected java.lang.Object readField(com.sun.jna.Structure$StructField)
 meth protected java.lang.String getStringEncoding()
+meth protected java.util.List<java.lang.String> getFieldOrder()
 meth protected java.util.List<java.lang.reflect.Field> getFieldList()
 meth protected java.util.List<java.lang.reflect.Field> getFields(boolean)
 meth protected void allocateMemory()
@@ -188,8 +187,8 @@ meth public int size()
 meth public java.lang.Object readField(java.lang.String)
 meth public java.lang.String toString()
 meth public java.lang.String toString(boolean)
-meth public static com.sun.jna.Structure newInstance(java.lang.Class<?>)
-meth public static com.sun.jna.Structure newInstance(java.lang.Class<?>,com.sun.jna.Pointer)
+meth public static <%0 extends com.sun.jna.Structure> {%%0} newInstance(java.lang.Class<{%%0}>)
+meth public static <%0 extends com.sun.jna.Structure> {%%0} newInstance(java.lang.Class<{%%0}>,com.sun.jna.Pointer)
 meth public static java.util.List<java.lang.String> createFieldsOrder(java.lang.String)
 meth public static java.util.List<java.lang.String> createFieldsOrder(java.util.List<java.lang.String>,java.util.List<java.lang.String>)
 meth public static void autoRead(com.sun.jna.Structure[])
@@ -205,7 +204,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
 hcls AutoAllocated,FFIType,LayoutInfo,StructureSet
 
 CLSS public abstract interface com.sun.jna.platform.win32.BaseTSD
@@ -241,6 +240,7 @@ meth public abstract boolean GetClientRect(com.sun.jna.platform.win32.WinDef$HWN
 meth public abstract boolean GetCursorPos(com.sun.jna.platform.win32.WinDef$POINT)
 meth public abstract boolean GetGUIThreadInfo(int,com.sun.jna.platform.win32.WinUser$GUITHREADINFO)
 meth public abstract boolean GetIconInfo(com.sun.jna.platform.win32.WinDef$HICON,com.sun.jna.platform.win32.WinGDI$ICONINFO)
+meth public abstract boolean GetKeyboardLayoutName(char[])
 meth public abstract boolean GetKeyboardState(byte[])
 meth public abstract boolean GetLastInputInfo(com.sun.jna.platform.win32.WinUser$LASTINPUTINFO)
 meth public abstract boolean GetLayeredWindowAttributes(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.ByteByReference,com.sun.jna.ptr.IntByReference)
@@ -286,9 +286,11 @@ meth public abstract com.sun.jna.platform.win32.WinDef$DWORD WaitForInputIdle(co
 meth public abstract com.sun.jna.platform.win32.WinDef$HDC GetDC(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract com.sun.jna.platform.win32.WinDef$HICON CopyIcon(com.sun.jna.platform.win32.WinDef$HICON)
 meth public abstract com.sun.jna.platform.win32.WinDef$HICON LoadIcon(com.sun.jna.platform.win32.WinDef$HINSTANCE,java.lang.String)
+meth public abstract com.sun.jna.platform.win32.WinDef$HKL GetKeyboardLayout(int)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND CreateWindowEx(int,java.lang.String,java.lang.String,int,int,int,int,int,com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$HMENU,com.sun.jna.platform.win32.WinDef$HINSTANCE,com.sun.jna.platform.win32.WinDef$LPVOID)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND FindWindow(java.lang.String,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND FindWindowEx(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$HWND,java.lang.String,java.lang.String)
+meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetActiveWindow()
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetAncestor(com.sun.jna.platform.win32.WinDef$HWND,int)
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetDesktopWindow()
 meth public abstract com.sun.jna.platform.win32.WinDef$HWND GetForegroundWindow()
@@ -298,16 +300,18 @@ meth public abstract com.sun.jna.platform.win32.WinDef$HWND SetParent(com.sun.jn
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT CallNextHookEx(com.sun.jna.platform.win32.WinUser$HHOOK,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT DefWindowProc(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT DispatchMessage(com.sun.jna.platform.win32.WinUser$MSG)
+meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT SendMessage(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract com.sun.jna.platform.win32.WinDef$LRESULT SendMessageTimeout(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM,int,int,com.sun.jna.platform.win32.WinDef$DWORDByReference)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE LoadImage(com.sun.jna.platform.win32.WinDef$HINSTANCE,java.lang.String,int,int,int,int)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE SetWinEventHook(int,int,com.sun.jna.platform.win32.WinDef$HMODULE,com.sun.jna.platform.win32.WinUser$WinEventProc,int,int,int)
 meth public abstract com.sun.jna.platform.win32.WinUser$HDEVNOTIFY RegisterDeviceNotification(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Structure,int)
 meth public abstract com.sun.jna.platform.win32.WinUser$HHOOK SetWindowsHookEx(int,com.sun.jna.platform.win32.WinUser$HOOKPROC,com.sun.jna.platform.win32.WinDef$HINSTANCE,int)
-meth public abstract com.sun.jna.platform.win32.WinUser$HMONITOR MonitorFromPoint(com.sun.jna.platform.win32.WinDef$POINT,int)
+meth public abstract com.sun.jna.platform.win32.WinUser$HMONITOR MonitorFromPoint(com.sun.jna.platform.win32.WinDef$POINT$ByValue,int)
 meth public abstract com.sun.jna.platform.win32.WinUser$HMONITOR MonitorFromRect(com.sun.jna.platform.win32.WinDef$RECT,int)
 meth public abstract com.sun.jna.platform.win32.WinUser$HMONITOR MonitorFromWindow(com.sun.jna.platform.win32.WinDef$HWND,int)
 meth public abstract int GetClassLong(com.sun.jna.platform.win32.WinDef$HWND,int)
 meth public abstract int GetClassName(com.sun.jna.platform.win32.WinDef$HWND,char[],int)
+meth public abstract int GetKeyboardLayoutList(int,com.sun.jna.platform.win32.WinDef$HKL[])
 meth public abstract int GetMessage(com.sun.jna.platform.win32.WinUser$MSG,com.sun.jna.platform.win32.WinDef$HWND,int,int)
 meth public abstract int GetRawInputDeviceList(com.sun.jna.platform.win32.WinUser$RAWINPUTDEVICELIST[],com.sun.jna.ptr.IntByReference,int)
 meth public abstract int GetSystemMetrics(int)
@@ -316,13 +320,18 @@ meth public abstract int GetWindowModuleFileName(com.sun.jna.platform.win32.WinD
 meth public abstract int GetWindowText(com.sun.jna.platform.win32.WinDef$HWND,char[],int)
 meth public abstract int GetWindowTextLength(com.sun.jna.platform.win32.WinDef$HWND)
 meth public abstract int GetWindowThreadProcessId(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.ptr.IntByReference)
+meth public abstract int LoadString(com.sun.jna.platform.win32.WinDef$HINSTANCE,int,com.sun.jna.Pointer,int)
+meth public abstract int MapVirtualKeyEx(int,int,com.sun.jna.platform.win32.WinDef$HKL)
 meth public abstract int PostThreadMessage(int,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract int RegisterClipboardFormat(java.lang.String)
 meth public abstract int RegisterWindowMessage(java.lang.String)
 meth public abstract int ReleaseDC(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$HDC)
 meth public abstract int SetWindowLong(com.sun.jna.platform.win32.WinDef$HWND,int,int)
 meth public abstract int SetWindowRgn(com.sun.jna.platform.win32.WinDef$HWND,com.sun.jna.platform.win32.WinDef$HRGN,boolean)
+meth public abstract int ToUnicodeEx(int,int,byte[],char[],int,int,com.sun.jna.platform.win32.WinDef$HKL)
 meth public abstract short GetAsyncKeyState(int)
+meth public abstract short VkKeyScanExA(byte,com.sun.jna.platform.win32.WinDef$HKL)
+meth public abstract short VkKeyScanExW(char,com.sun.jna.platform.win32.WinDef$HKL)
 meth public abstract void PostMessage(com.sun.jna.platform.win32.WinDef$HWND,int,com.sun.jna.platform.win32.WinDef$WPARAM,com.sun.jna.platform.win32.WinDef$LPARAM)
 meth public abstract void PostQuitMessage(int)
 
@@ -457,6 +466,8 @@ fld public final static int MOVEFILE_DELAY_UNTIL_REBOOT = 4
 fld public final static int MOVEFILE_FAIL_IF_NOT_TRACKABLE = 32
 fld public final static int MOVEFILE_REPLACE_EXISTING = 1
 fld public final static int MOVEFILE_WRITE_THROUGH = 8
+fld public final static int MUTEX_ALL_ACCESS = 2031617
+fld public final static int MUTEX_MODIFY_STATE = 1
 fld public final static int NMPWAIT_NOWAIT = 1
 fld public final static int NMPWAIT_USE_DEFAULT_WAIT = 0
 fld public final static int NMPWAIT_WAIT_FOREVER = -1
@@ -547,6 +558,7 @@ innr public static HGLRC
 innr public static HGLRCByReference
 innr public static HICON
 innr public static HINSTANCE
+innr public static HKL
 innr public static HMENU
 innr public static HMODULE
 innr public static HPALETTE
@@ -4962,6 +4974,10 @@ fld public final static byte SYSTEM_AUDIT_CALLBACK_OBJECT_ACE_TYPE = 15
 fld public final static byte SYSTEM_AUDIT_OBJECT_ACE_TYPE = 7
 fld public final static byte SYSTEM_MANDATORY_LABEL_ACE_TYPE = 17
 fld public final static byte VALID_INHERIT_FLAGS = 31
+fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_INVARIANT
+fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_NEUTRAL
+fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_SYSTEM_DEFAULT
+fld public final static com.sun.jna.platform.win32.WinDef$LCID LOCALE_USER_DEFAULT
 fld public final static int ACCESS_SYSTEM_SECURITY = 16777216
 fld public final static int ACL_REVISION = 2
 fld public final static int ACL_REVISION1 = 1
@@ -4995,6 +5011,8 @@ fld public final static int EVENTLOG_SEEK_READ = 2
 fld public final static int EVENTLOG_SEQUENTIAL_READ = 1
 fld public final static int EVENTLOG_SUCCESS = 0
 fld public final static int EVENTLOG_WARNING_TYPE = 2
+fld public final static int EVENT_ALL_ACCESS = 2031619
+fld public final static int EVENT_MODIFY_STATE = 2
 fld public final static int FILE_ACTION_ADDED = 1
 fld public final static int FILE_ACTION_MODIFIED = 3
 fld public final static int FILE_ACTION_REMOVED = 2
@@ -5108,6 +5126,86 @@ fld public final static int KEY_WOW64_64KEY = 256
 fld public final static int KEY_WOW64_RES = 768
 fld public final static int KEY_WRITE = 131078
 fld public final static int LABEL_SECURITY_INFORMATION = 16
+fld public final static int LANG_AFRIKAANS = 54
+fld public final static int LANG_ALBANIAN = 28
+fld public final static int LANG_ARABIC = 1
+fld public final static int LANG_ARMENIAN = 43
+fld public final static int LANG_ASSAMESE = 77
+fld public final static int LANG_AZERI = 44
+fld public final static int LANG_BASQUE = 45
+fld public final static int LANG_BELARUSIAN = 35
+fld public final static int LANG_BENGALI = 69
+fld public final static int LANG_BULGARIAN = 2
+fld public final static int LANG_CATALAN = 3
+fld public final static int LANG_CHINESE = 4
+fld public final static int LANG_CROATIAN = 26
+fld public final static int LANG_CZECH = 5
+fld public final static int LANG_DANISH = 6
+fld public final static int LANG_DIVEHI = 101
+fld public final static int LANG_DUTCH = 19
+fld public final static int LANG_ENGLISH = 9
+fld public final static int LANG_ESTONIAN = 37
+fld public final static int LANG_FAEROESE = 56
+fld public final static int LANG_FARSI = 41
+fld public final static int LANG_FINNISH = 11
+fld public final static int LANG_FRENCH = 12
+fld public final static int LANG_GALICIAN = 86
+fld public final static int LANG_GEORGIAN = 55
+fld public final static int LANG_GERMAN = 7
+fld public final static int LANG_GREEK = 8
+fld public final static int LANG_GUJARATI = 71
+fld public final static int LANG_HEBREW = 13
+fld public final static int LANG_HINDI = 57
+fld public final static int LANG_HUNGARIAN = 14
+fld public final static int LANG_ICELANDIC = 15
+fld public final static int LANG_INDONESIAN = 33
+fld public final static int LANG_INVARIANT = 127
+fld public final static int LANG_ITALIAN = 16
+fld public final static int LANG_JAPANESE = 17
+fld public final static int LANG_KANNADA = 75
+fld public final static int LANG_KASHMIRI = 96
+fld public final static int LANG_KAZAK = 63
+fld public final static int LANG_KONKANI = 87
+fld public final static int LANG_KOREAN = 18
+fld public final static int LANG_KYRGYZ = 64
+fld public final static int LANG_LATVIAN = 38
+fld public final static int LANG_LITHUANIAN = 39
+fld public final static int LANG_MACEDONIAN = 47
+fld public final static int LANG_MALAY = 62
+fld public final static int LANG_MALAYALAM = 76
+fld public final static int LANG_MANIPURI = 88
+fld public final static int LANG_MARATHI = 78
+fld public final static int LANG_MONGOLIAN = 80
+fld public final static int LANG_NEPALI = 97
+fld public final static int LANG_NEUTRAL = 0
+fld public final static int LANG_NORWEGIAN = 20
+fld public final static int LANG_ORIYA = 72
+fld public final static int LANG_POLISH = 21
+fld public final static int LANG_PORTUGUESE = 22
+fld public final static int LANG_PUNJABI = 70
+fld public final static int LANG_ROMANIAN = 24
+fld public final static int LANG_RUSSIAN = 25
+fld public final static int LANG_SANSKRIT = 79
+fld public final static int LANG_SERBIAN = 26
+fld public final static int LANG_SINDHI = 89
+fld public final static int LANG_SLOVAK = 27
+fld public final static int LANG_SLOVENIAN = 36
+fld public final static int LANG_SPANISH = 10
+fld public final static int LANG_SWAHILI = 65
+fld public final static int LANG_SWEDISH = 29
+fld public final static int LANG_SYRIAC = 90
+fld public final static int LANG_SYSTEM_DEFAULT
+fld public final static int LANG_TAMIL = 73
+fld public final static int LANG_TATAR = 68
+fld public final static int LANG_TELUGU = 74
+fld public final static int LANG_THAI = 30
+fld public final static int LANG_TURKISH = 31
+fld public final static int LANG_UKRAINIAN = 34
+fld public final static int LANG_URDU = 32
+fld public final static int LANG_USER_DEFAULT
+fld public final static int LANG_UZBEK = 67
+fld public final static int LANG_VIETNAMESE = 42
+fld public final static int LTP_PC_SMT = 1
 fld public final static int MAXBYTE = 255
 fld public final static int MAXCHAR = 127
 fld public final static int MAXDWORD = -1
@@ -5125,6 +5223,10 @@ fld public final static int MINCHAR = 128
 fld public final static int MINLONG = -2147483648
 fld public final static int MINSHORT = 32768
 fld public final static int MIN_ACL_REVISION = 2
+fld public final static int MUTANT_ALL_ACCESS = 2031617
+fld public final static int MUTANT_QUERY_STATE = 1
+fld public final static int NLS_VALID_LOCALE_MASK = 1048575
+fld public final static int NUM_DISCHARGE_POLICIES = 4
 fld public final static int OPEN_ALWAYS = 4
 fld public final static int OPEN_EXISTING = 3
 fld public final static int OWNER_SECURITY_INFORMATION = 1
@@ -5244,6 +5346,21 @@ fld public final static int SE_SELF_RELATIVE = 32768
 fld public final static int SID_MAX_SUB_AUTHORITIES = 15
 fld public final static int SID_RECOMMENDED_SUB_AUTHORITIES = 1
 fld public final static int SID_REVISION = 1
+fld public final static int SORT_CHINESE_BIG5 = 0
+fld public final static int SORT_CHINESE_BOPOMOFO = 3
+fld public final static int SORT_CHINESE_PRC = 2
+fld public final static int SORT_CHINESE_PRCP = 0
+fld public final static int SORT_CHINESE_UNICODE = 1
+fld public final static int SORT_DEFAULT = 0
+fld public final static int SORT_GEORGIAN_MODERN = 1
+fld public final static int SORT_GEORGIAN_TRADITIONAL = 0
+fld public final static int SORT_GERMAN_PHONE_BOOK = 1
+fld public final static int SORT_HUNGARIAN_DEFAULT = 0
+fld public final static int SORT_HUNGARIAN_TECHNICAL = 1
+fld public final static int SORT_JAPANESE_UNICODE = 1
+fld public final static int SORT_JAPANESE_XJIS = 0
+fld public final static int SORT_KOREAN_KSC = 0
+fld public final static int SORT_KOREAN_UNICODE = 1
 fld public final static int SPECIFIC_RIGHTS_ALL = 65535
 fld public final static int STANDARD_RIGHTS_ALL = 2031616
 fld public final static int STANDARD_RIGHTS_EXECUTE = 131072
@@ -5251,6 +5368,99 @@ fld public final static int STANDARD_RIGHTS_READ = 131072
 fld public final static int STANDARD_RIGHTS_REQUIRED = 983040
 fld public final static int STANDARD_RIGHTS_WRITE = 131072
 fld public final static int STATUS_PENDING = 259
+fld public final static int SUBLANG_ARABIC_ALGERIA = 5
+fld public final static int SUBLANG_ARABIC_BAHRAIN = 15
+fld public final static int SUBLANG_ARABIC_EGYPT = 3
+fld public final static int SUBLANG_ARABIC_IRAQ = 2
+fld public final static int SUBLANG_ARABIC_JORDAN = 11
+fld public final static int SUBLANG_ARABIC_KUWAIT = 13
+fld public final static int SUBLANG_ARABIC_LEBANON = 12
+fld public final static int SUBLANG_ARABIC_LIBYA = 4
+fld public final static int SUBLANG_ARABIC_MOROCCO = 6
+fld public final static int SUBLANG_ARABIC_OMAN = 8
+fld public final static int SUBLANG_ARABIC_QATAR = 16
+fld public final static int SUBLANG_ARABIC_SAUDI_ARABIA = 1
+fld public final static int SUBLANG_ARABIC_SYRIA = 10
+fld public final static int SUBLANG_ARABIC_TUNISIA = 7
+fld public final static int SUBLANG_ARABIC_UAE = 14
+fld public final static int SUBLANG_ARABIC_YEMEN = 9
+fld public final static int SUBLANG_AZERI_CYRILLIC = 2
+fld public final static int SUBLANG_AZERI_LATIN = 1
+fld public final static int SUBLANG_CHINESE_HONGKONG = 3
+fld public final static int SUBLANG_CHINESE_MACAU = 5
+fld public final static int SUBLANG_CHINESE_SIMPLIFIED = 2
+fld public final static int SUBLANG_CHINESE_SINGAPORE = 4
+fld public final static int SUBLANG_CHINESE_TRADITIONAL = 1
+fld public final static int SUBLANG_DEFAULT = 1
+fld public final static int SUBLANG_DUTCH = 1
+fld public final static int SUBLANG_DUTCH_BELGIAN = 2
+fld public final static int SUBLANG_ENGLISH_AUS = 3
+fld public final static int SUBLANG_ENGLISH_BELIZE = 10
+fld public final static int SUBLANG_ENGLISH_CAN = 4
+fld public final static int SUBLANG_ENGLISH_CARIBBEAN = 9
+fld public final static int SUBLANG_ENGLISH_EIRE = 6
+fld public final static int SUBLANG_ENGLISH_JAMAICA = 8
+fld public final static int SUBLANG_ENGLISH_NZ = 5
+fld public final static int SUBLANG_ENGLISH_PHILIPPINES = 13
+fld public final static int SUBLANG_ENGLISH_SOUTH_AFRICA = 7
+fld public final static int SUBLANG_ENGLISH_TRINIDAD = 11
+fld public final static int SUBLANG_ENGLISH_UK = 2
+fld public final static int SUBLANG_ENGLISH_US = 1
+fld public final static int SUBLANG_ENGLISH_ZIMBABWE = 12
+fld public final static int SUBLANG_FRENCH = 1
+fld public final static int SUBLANG_FRENCH_BELGIAN = 2
+fld public final static int SUBLANG_FRENCH_CANADIAN = 3
+fld public final static int SUBLANG_FRENCH_LUXEMBOURG = 5
+fld public final static int SUBLANG_FRENCH_MONACO = 6
+fld public final static int SUBLANG_FRENCH_SWISS = 4
+fld public final static int SUBLANG_GERMAN = 1
+fld public final static int SUBLANG_GERMAN_AUSTRIAN = 3
+fld public final static int SUBLANG_GERMAN_LIECHTENSTEIN = 5
+fld public final static int SUBLANG_GERMAN_LUXEMBOURG = 4
+fld public final static int SUBLANG_GERMAN_SWISS = 2
+fld public final static int SUBLANG_ITALIAN = 1
+fld public final static int SUBLANG_ITALIAN_SWISS = 2
+fld public final static int SUBLANG_KASHMIRI_INDIA = 2
+fld public final static int SUBLANG_KASHMIRI_SASIA = 2
+fld public final static int SUBLANG_KOREAN = 1
+fld public final static int SUBLANG_LITHUANIAN = 1
+fld public final static int SUBLANG_MALAY_BRUNEI_DARUSSALAM = 2
+fld public final static int SUBLANG_MALAY_MALAYSIA = 1
+fld public final static int SUBLANG_NEPALI_INDIA = 2
+fld public final static int SUBLANG_NEUTRAL = 0
+fld public final static int SUBLANG_NORWEGIAN_BOKMAL = 1
+fld public final static int SUBLANG_NORWEGIAN_NYNORSK = 2
+fld public final static int SUBLANG_PORTUGUESE = 2
+fld public final static int SUBLANG_PORTUGUESE_BRAZILIAN = 1
+fld public final static int SUBLANG_SERBIAN_CYRILLIC = 3
+fld public final static int SUBLANG_SERBIAN_LATIN = 2
+fld public final static int SUBLANG_SPANISH = 1
+fld public final static int SUBLANG_SPANISH_ARGENTINA = 11
+fld public final static int SUBLANG_SPANISH_BOLIVIA = 16
+fld public final static int SUBLANG_SPANISH_CHILE = 13
+fld public final static int SUBLANG_SPANISH_COLOMBIA = 9
+fld public final static int SUBLANG_SPANISH_COSTA_RICA = 5
+fld public final static int SUBLANG_SPANISH_DOMINICAN_REPUBLIC = 7
+fld public final static int SUBLANG_SPANISH_ECUADOR = 12
+fld public final static int SUBLANG_SPANISH_EL_SALVADOR = 17
+fld public final static int SUBLANG_SPANISH_GUATEMALA = 4
+fld public final static int SUBLANG_SPANISH_HONDURAS = 18
+fld public final static int SUBLANG_SPANISH_MEXICAN = 2
+fld public final static int SUBLANG_SPANISH_MODERN = 3
+fld public final static int SUBLANG_SPANISH_NICARAGUA = 19
+fld public final static int SUBLANG_SPANISH_PANAMA = 6
+fld public final static int SUBLANG_SPANISH_PARAGUAY = 15
+fld public final static int SUBLANG_SPANISH_PERU = 10
+fld public final static int SUBLANG_SPANISH_PUERTO_RICO = 20
+fld public final static int SUBLANG_SPANISH_URUGUAY = 14
+fld public final static int SUBLANG_SPANISH_VENEZUELA = 8
+fld public final static int SUBLANG_SWEDISH = 1
+fld public final static int SUBLANG_SWEDISH_FINLAND = 2
+fld public final static int SUBLANG_SYS_DEFAULT = 2
+fld public final static int SUBLANG_URDU_INDIA = 2
+fld public final static int SUBLANG_URDU_PAKISTAN = 1
+fld public final static int SUBLANG_UZBEK_CYRILLIC = 2
+fld public final static int SUBLANG_UZBEK_LATIN = 1
 fld public final static int SYNCHRONIZE = 1048576
 fld public final static int THREAD_ALL_ACCESS = 2032639
 fld public final static int THREAD_DIRECT_IMPERSONATION = 512
@@ -5336,42 +5546,73 @@ fld public final static java.lang.String SE_TAKE_OWNERSHIP_NAME = "SeTakeOwnersh
 fld public final static java.lang.String SE_TCB_NAME = "SeTcbPrivilege"
 fld public final static java.lang.String SE_UNDOCK_NAME = "SeUndockPrivilege"
 fld public final static java.lang.String SE_UNSOLICITED_INPUT_NAME = "SeUnsolicitedInputPrivilege"
+fld public final static short WIN32_WINNT_LONGHORN = 1536
+fld public final static short WIN32_WINNT_NT4 = 1024
+fld public final static short WIN32_WINNT_VISTA = 1536
+fld public final static short WIN32_WINNT_WIN10 = 2560
+fld public final static short WIN32_WINNT_WIN2K = 1280
+fld public final static short WIN32_WINNT_WIN6 = 1536
+fld public final static short WIN32_WINNT_WIN7 = 1537
+fld public final static short WIN32_WINNT_WIN8 = 1538
+fld public final static short WIN32_WINNT_WINBLUE = 1539
+fld public final static short WIN32_WINNT_WINTHRESHOLD = 2560
+fld public final static short WIN32_WINNT_WINXP = 1281
+fld public final static short WIN32_WINNT_WS03 = 1282
+fld public final static short WIN32_WINNT_WS08 = 1536
 innr public abstract interface static LOGICAL_PROCESSOR_RELATIONSHIP
 innr public abstract interface static OVERLAPPED_COMPLETION_ROUTINE
+innr public abstract interface static POWER_ACTION
+innr public abstract interface static SYSTEM_POWER_STATE
 innr public abstract static ACCESS_ACEStructure
-innr public abstract static ACEStructure
 innr public abstract static PROCESSOR_CACHE_TYPE
 innr public abstract static SECURITY_IMPERSONATION_LEVEL
 innr public abstract static SID_NAME_USE
+innr public abstract static SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX
 innr public abstract static TOKEN_INFORMATION_CLASS
 innr public abstract static TOKEN_TYPE
 innr public abstract static WELL_KNOWN_SID_TYPE
+innr public final static LocaleMacros
 innr public static ACCESS_ALLOWED_ACE
 innr public static ACCESS_DENIED_ACE
 innr public static ACE_HEADER
 innr public static ACL
+innr public static BATTERY_REPORTING_SCALE
 innr public static CACHE_DESCRIPTOR
+innr public static CACHE_RELATIONSHIP
 innr public static EVENTLOGRECORD
 innr public static FILE_NOTIFY_INFORMATION
 innr public static GENERIC_MAPPING
+innr public static GROUP_AFFINITY
+innr public static GROUP_RELATIONSHIP
 innr public static HANDLE
 innr public static HANDLEByReference
 innr public static HRESULT
+innr public static IO_COUNTERS
 innr public static LARGE_INTEGER
 innr public static LUID
 innr public static LUID_AND_ATTRIBUTES
 innr public static MEMORY_BASIC_INFORMATION
+innr public static NUMA_NODE_RELATIONSHIP
 innr public static OSVERSIONINFO
 innr public static OSVERSIONINFOEX
 innr public static PACLByReference
+innr public static POWER_ACTION_POLICY
 innr public static PRIVILEGE_SET
+innr public static PROCESSOR_GROUP_INFO
+innr public static PROCESSOR_POWER_INFORMATION
+innr public static PROCESSOR_RELATIONSHIP
 innr public static PSID
 innr public static PSIDByReference
 innr public static SECURITY_DESCRIPTOR
 innr public static SECURITY_DESCRIPTOR_RELATIVE
 innr public static SECURITY_QUALITY_OF_SERVICE
 innr public static SID_AND_ATTRIBUTES
+innr public static SYSTEM_BATTERY_STATE
 innr public static SYSTEM_LOGICAL_PROCESSOR_INFORMATION
+innr public static SYSTEM_POWER_CAPABILITIES
+innr public static SYSTEM_POWER_INFORMATION
+innr public static SYSTEM_POWER_LEVEL
+innr public static SYSTEM_POWER_POLICY
 innr public static TOKEN_GROUPS
 innr public static TOKEN_OWNER
 innr public static TOKEN_PRIVILEGES
@@ -5503,6 +5744,7 @@ fld public final static int IMAGE_BITMAP = 0
 fld public final static int IMAGE_CURSOR = 2
 fld public final static int IMAGE_ENHMETAFILE = 3
 fld public final static int IMAGE_ICON = 1
+fld public final static int KL_NAMELENGTH = 9
 fld public final static int LR_COLOR = 2
 fld public final static int LR_COPYDELETEORG = 8
 fld public final static int LR_COPYFROMRESOURCE = 16384
@@ -5518,6 +5760,17 @@ fld public final static int LR_SHARED = 32768
 fld public final static int LR_VGACOLOR = 128
 fld public final static int LWA_ALPHA = 2
 fld public final static int LWA_COLORKEY = 1
+fld public final static int MAPVK_VK_TO_CHAR = 2
+fld public final static int MAPVK_VK_TO_VSC = 0
+fld public final static int MAPVK_VK_TO_VSC_EX = 4
+fld public final static int MAPVK_VSC_TO_VK = 1
+fld public final static int MAPVK_VSC_TO_VK_EX = 3
+fld public final static int MODIFIER_ALT_MASK = 4
+fld public final static int MODIFIER_CTRL_MASK = 2
+fld public final static int MODIFIER_HANKAKU_MASK = 8
+fld public final static int MODIFIER_RESERVED1_MASK = 16
+fld public final static int MODIFIER_RESERVED2_MASK = 32
+fld public final static int MODIFIER_SHIFT_MASK = 1
 fld public final static int MOD_ALT = 1
 fld public final static int MOD_CONTROL = 2
 fld public final static int MOD_NOREPEAT = 16384
@@ -5645,8 +5898,21 @@ fld public final static int SM_SWAPBUTTON = 23
 fld public final static int SM_TABLETPC = 86
 fld public final static int SM_XVIRTUALSCREEN = 76
 fld public final static int SM_YVIRTUALSCREEN = 77
+fld public final static int SWP_ASYNCWINDOWPOS = 16384
+fld public final static int SWP_DEFERERASE = 8192
+fld public final static int SWP_DRAWFRAME = 32
+fld public final static int SWP_FRAMECHANGED = 32
+fld public final static int SWP_HIDEWINDOW = 128
+fld public final static int SWP_NOACTIVATE = 16
+fld public final static int SWP_NOCOPYBITS = 256
+fld public final static int SWP_NOMOVE = 2
+fld public final static int SWP_NOOWNERZORDER = 512
+fld public final static int SWP_NOREDRAW = 8
+fld public final static int SWP_NOREPOSITION = 512
 fld public final static int SWP_NOSENDCHANGING = 1024
+fld public final static int SWP_NOSIZE = 1
 fld public final static int SWP_NOZORDER = 4
+fld public final static int SWP_SHOWWINDOW = 64
 fld public final static int SW_FORCEMINIMIZE = 11
 fld public final static int SW_HIDE = 0
 fld public final static int SW_MAX = 11
@@ -5674,12 +5940,14 @@ fld public final static int VK_RCONTROL = 163
 fld public final static int VK_RMENU = 165
 fld public final static int VK_RSHIFT = 161
 fld public final static int VK_SHIFT = 16
+fld public final static int WH_CALLWNDPROC = 4
 fld public final static int WH_KEYBOARD = 2
 fld public final static int WH_KEYBOARD_LL = 13
 fld public final static int WH_MOUSE = 7
 fld public final static int WH_MOUSE_LL = 14
 fld public final static int WM_CHAR = 258
 fld public final static int WM_CLOSE = 16
+fld public final static int WM_COPYDATA = 74
 fld public final static int WM_CREATE = 1
 fld public final static int WM_DESTROY = 2
 fld public final static int WM_DEVICECHANGE = 537
@@ -5735,6 +6003,8 @@ innr public abstract interface static WNDENUMPROC
 innr public abstract interface static WinEventProc
 innr public abstract interface static WindowProc
 innr public static BLENDFUNCTION
+innr public static COPYDATASTRUCT
+innr public static CWPSTRUCT
 innr public static FLASHWINFO
 innr public static GUITHREADINFO
 innr public static HARDWAREINPUT

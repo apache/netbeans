@@ -64,13 +64,10 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.db</friend>
-                <friend>org.netbeans.modules.db.sql.editor</friend>
-                <friend>org.netbeans.modules.dbapi</friend>
+            <public-packages>
                 <package>org.netbeans.modules.db.metadata.model.api</package>
                 <package>org.netbeans.modules.db.metadata.model.spi</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

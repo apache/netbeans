@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>com-jcraft-jzlib.jar</runtime-relative-path>
-		<binary-origin>external/jzlib-1.0.7.jar</binary-origin>
+                <binary-origin>external/jzlib-1.1.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

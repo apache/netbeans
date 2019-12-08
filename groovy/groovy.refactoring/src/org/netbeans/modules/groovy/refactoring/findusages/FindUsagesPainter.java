@@ -136,7 +136,7 @@ public class FindUsagesPainter {
         FontColorSettings settings = lookup.lookup(FontColorSettings.class);
         TokenSequence tok = tokenH.tokenSequence();
         while (tok.moveNext()) {
-            Token<GroovyTokenId> token = (Token) tok.token();
+            Token<GroovyTokenId> token = tok.token();
             String category = token.id().primaryCategory();
             if (category == null) {
                 category = "whitespace"; //NOI18N

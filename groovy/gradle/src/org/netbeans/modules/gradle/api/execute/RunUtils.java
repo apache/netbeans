@@ -47,6 +47,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.prefs.Preferences;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -77,6 +78,7 @@ public final class RunUtils {
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
     private RunUtils() {}
+    private static final Map<RunConfig, GradleExecutor> GRADLE_TASKS = new WeakHashMap<>();
 
     public static FileObject extractFileObjectfromLookup(Lookup lookup) {
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
@@ -99,15 +101,37 @@ public final class RunUtils {
         return files.toArray(new FileObject[files.size()]);
     }
 
+    /**
+     * Executes a Gradle build with the given configuration. It can also take an
+     * initial message, which is printed to the output tab before the actual
+     * execution takes over the output handling.
+     *
+     * @param config the configuration of the Gradle execution
+     * @param initialOutput the initial message to be displayed,
+     *        can be {@code null} for no message.
+     * @return The Gradle Execution task
+     */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
 
         GradleExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
+        GRADLE_TASKS.put(config, exec);
 
         return task;
     }
 
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line.
+     *
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     */
     public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
@@ -127,6 +151,20 @@ public final class RunUtils {
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
         RunConfig ret = new RunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), cmd);
         return ret;
+    }
+
+    /**
+     * Enable plugins to Cancel a currently running Gradle execution.
+     * 
+     * @param config the RunConfig with which the Gradle execution has been started.
+     * @return {@code true} if the current execution was cancelled successfully,
+     *         {@code false} if the execution was already cancelled or it cannot
+     *         be cancelled for some reason.
+     * @since 1.4
+     */
+    public static boolean cancelGradle(RunConfig config) {
+        GradleExecutor exec = GRADLE_TASKS.get(config);
+        return exec != null ? exec.cancel() : false;
     }
 
     private static ExecutorTask executeGradleImpl(String runtimeName, final GradleExecutor exec, String initialOutput) {

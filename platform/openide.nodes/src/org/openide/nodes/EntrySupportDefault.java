@@ -735,7 +735,7 @@ class EntrySupportDefault extends EntrySupport {
 
     /** Finalized.
      */
-    final void finalizedChildrenArray(Reference caller) {
+    final void finalizedChildrenArray(Reference<ChildrenArray> caller) {
         assert caller.get() == null : "Should be null";
         // usually in removeNotify setKeys is called => better require write access
         try {

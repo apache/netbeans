@@ -57,7 +57,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 
@@ -77,35 +76,13 @@ public final class TopLogging {
     public TopLogging() {
         AWTHandler.install();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(os);
-
-        Collection<Logger> keep = new LinkedList<Logger>();
         Properties properties = System.getProperties();
-        for (String key : properties.stringPropertyNames()) {
-            
-            if ("sun.os.patch.level".equals(key)) { // NOI18N
-                // skip this property as it does not mean level of logging
-                continue;
-            }
-
-            String v = properties.getProperty(key);
-            if (v == null) {
-                continue;
-            }
-
-            if (key.endsWith(".level")) {
-                ps.print(key);
-                ps.print('=');
-                ps.println(v);
-                keep.add(Logger.getLogger(key.substring(0, key.length() - 6)));
-            }
-        }
-        ps.close();
+        configureFromProperties(os, properties);
         try {
             StartLog.unregister();
             LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(os.toByteArray()));
         } catch (IOException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(OLD_ERR);
         } finally {
             StartLog.register();
         }
@@ -122,6 +99,29 @@ public final class TopLogging {
             logger.addHandler (streamHandler ());
         }
         logger.addHandler(new LookupDel());
+    }
+
+    private Collection<Logger> configureFromProperties(ByteArrayOutputStream os, Properties properties) {
+        try (PrintStream ps = new PrintStream(os)) {
+            Collection<Logger> keep = new LinkedList<>();
+            for (String key : properties.stringPropertyNames()) {
+                if ("sun.os.patch.level".equals(key)) { // NOI18N
+                    // skip this property as it does not mean level of logging
+                    continue;
+                }
+                String v = properties.getProperty(key);
+                if (v == null) {
+                    continue;
+                }
+                if (key.endsWith(".level")) {
+                    ps.print(key);
+                    ps.print('=');
+                    ps.println(v);
+                    keep.add(Logger.getLogger(key.substring(0, key.length() - 6)));
+                }
+            }
+            return keep;
+        }
     }
 
     /**
@@ -168,15 +168,15 @@ public final class TopLogging {
         }
 
         // initializes the properties
-        new TopLogging();
+        TopLogging logging = new TopLogging();
         // next time invoke the constructor of TopLogging itself please
         System.setProperty("java.util.logging.config.class", p);
 
         if (verbose) {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            PrintStream ps = new PrintStream(os);
-            printSystemInfo(ps);
-            ps.close();
+            try (PrintStream ps = new PrintStream(os)) {
+                logging.printSystemInfo(ps);
+            }
             try {
                 Logger logger = Logger.getLogger(TopLogging.class.getName()); // NOI18N
                 logger.log(Level.INFO, os.toString("utf-8"));
@@ -197,7 +197,7 @@ public final class TopLogging {
     }
 
 
-    private static void printSystemInfo(PrintStream ps) {
+    private void printSystemInfo(PrintStream ps) {
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US);
         Date date = new Date();
 
@@ -205,7 +205,7 @@ public final class TopLogging {
         ps.println(">Log Session: "+df.format (date)); // NOI18N
         ps.println(">System Info: "); // NOI18N
 
-        List<File> clusters = new ArrayList<File>();
+        List<File> clusters = new ArrayList<>();
         String nbdirs = System.getProperty("netbeans.dirs");
         if (nbdirs != null) { // noted in #67862: should show all clusters here.
             StringTokenizer tok = new StringTokenizer(nbdirs, File.pathSeparator);
@@ -225,20 +225,20 @@ public final class TopLogging {
             File buildInfo = new File(cluster, "build_info"); // NOI18N
             if (buildInfo.isFile()) {
                 try {
-                    Reader r = new FileReader(buildInfo);
-                    try {
+                    try (Reader r = new FileReader(buildInfo)) {
                         BufferedReader b = new BufferedReader(r);
-                        String line;
                         Pattern p = Pattern.compile("Hg ID:    ([0-9a-f]{12})"); // NOI18N
-                        while ((line = b.readLine()) != null) {
+                        for (;;) {
+                            String line = b.readLine();
+                            if (line == null) {
+                                break;
+                            }
                             Matcher m = p.matcher(line);
                             if (m.matches()) {
                                 ps.print(" (#" + m.group(1) + ")"); // NOI18N
                                 break;
                             }
                         }
-                    } finally {
-                        r.close();
                     }
                 } catch (IOException x) {
                     x.printStackTrace(ps);
@@ -401,40 +401,46 @@ public final class TopLogging {
         TopSecurityManager.exit(exit);
     }
 
-    private static final class LookupDel extends Handler
-    implements LookupListener {
-        private Lookup.Result<Handler> handlers;
+    static void exit(int exit, Throwable t) {
+        t.printStackTrace(OLD_ERR);
+        exit(exit);
+    }
+
+    private static final class LookupDel extends Handler {
+        private final Lookup.Result<Handler> handlers;
         private Collection<? extends Handler> instances;
 
 
-        public LookupDel() {
+        LookupDel() {
             handlers = Lookup.getDefault().lookupResult(Handler.class);
-            instances = handlers.allInstances();
-            instances.size(); // initialize
-            handlers.addLookupListener(this);
+            LookupListener onChange = (__) -> {
+                instances = new ArrayList<>(handlers.allInstances());
+            };
+            onChange.resultChanged(null);
+            assert instances != null;
+            handlers.addLookupListener(onChange);
         }
 
 
+        @Override
         public void publish(LogRecord record) {
             for (Handler h : instances) {
                 h.publish(record);
             }
         }
 
+        @Override
         public void flush() {
             for (Handler h : instances) {
                 h.flush();
             }
         }
 
+        @Override
         public void close() throws SecurityException {
             for (Handler h : instances) {
                 h.close();
             }
-        }
-
-        public void resultChanged(LookupEvent ev) {
-            instances = handlers.allInstances();
         }
     } // end of LookupDel
 

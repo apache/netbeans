@@ -124,7 +124,7 @@ public class CompletionHandler implements CodeCompletionHandler {
 
             // if we are above a package statement or inside a comment there's no completion at all.
             if (context.location == CaretLocation.ABOVE_PACKAGE || context.location == CaretLocation.INSIDE_COMMENT) {
-                return new DefaultCompletionResult(Collections.EMPTY_LIST, false);
+                return new DefaultCompletionResult(Collections.<CompletionProposal>emptyList(), false);
             }
             
             ProposalsCollector proposalsCollector = new ProposalsCollector(context);

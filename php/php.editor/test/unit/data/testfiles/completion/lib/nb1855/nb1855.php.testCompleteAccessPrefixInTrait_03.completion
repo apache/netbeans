@@ -1,0 +1,9 @@
+Code completion result for source line:
+protected|TraitMethod($param); // trait 3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedTraitMethod($param)    [PROTECTE  Trait1855
+METHOD     protectedTraitStaticMethod($pa  [PROTECTE  Trait1855
+VARIABLE   ? $protectedTraitStaticPropert  [PROTECTE  Trait1855
+VARIABLE   ? protectedTraitProperty        [PROTECTE  Trait1855
+------------------------------------
+KEYWORD    protected                                  null

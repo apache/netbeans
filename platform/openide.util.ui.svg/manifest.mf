@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.openide.util.ui.svg
+OpenIDE-Module-Localizing-Bundle: org/openide/util/svg/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0

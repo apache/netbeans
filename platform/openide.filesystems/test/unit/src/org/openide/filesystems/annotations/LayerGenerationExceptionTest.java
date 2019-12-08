@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
@@ -79,7 +77,6 @@ public class LayerGenerationExceptionTest extends NbTestCase {
     }
 
     @ServiceProvider(service=Processor.class)
-    @SupportedSourceVersion(SourceVersion.RELEASE_7)
     public static class AP extends LayerGeneratingProcessor {
         public @Override Set<String> getSupportedAnnotationTypes() {
             return new HashSet<String>(Arrays.asList(A.class.getCanonicalName(), AS.class.getCanonicalName()));

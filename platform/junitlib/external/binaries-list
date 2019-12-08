@@ -16,9 +16,9 @@
 # under the License.
 A6C32B40BF3D76ECA54E3C601E5D1470C86FCDFA junit:junit:4.12:sources
 941A8BE4506C65F0A9001C08812FB7DA1E505E21 junit:junit:4.12:javadoc
-B03F607C0822A283C972E37EAEACB00DC3A3C2E7 org.junit.jupiter:junit-jupiter-api:5.3.1:sources
-0E681A5388FC994AC6723CD47D39A56434B83033 org.junit.jupiter:junit-jupiter-api:5.3.1:javadoc
-BC4EB2EF307286FCD45551D4DA397518C2E15394 org.junit.jupiter:junit-jupiter-params:5.3.1:sources
-BEEF0CAAD29594979FE211DC52FAE71D8C1FAB4F org.junit.jupiter:junit-jupiter-params:5.3.1:javadoc
-C769957170B2240854D6DA6C6706DCC2A281542F org.junit.jupiter:junit-jupiter-engine:5.3.1:sources
-C76435286A702682BEAC767CE5148D8EE59DF8B7 org.junit.jupiter:junit-jupiter-engine:5.3.1:javadoc
+22B57242E953BF2DE96FD5A122BD697F18B2FCD2 org.junit.jupiter:junit-jupiter-api:5.5.2:sources
+D24A5A6853030EBB11DACE58BD5FA49F0BCE4D58 org.junit.jupiter:junit-jupiter-api:5.5.2:javadoc
+F68669855D3DCFD6F6087FAF53A5A503DEF5D09B org.junit.jupiter:junit-jupiter-params:5.5.2:sources
+E94D6EA9D7460B9460114A009857D5588F8DC1BA org.junit.jupiter:junit-jupiter-params:5.5.2:javadoc
+44D1543A802A072D87CC146D9D96223D61683617 org.junit.jupiter:junit-jupiter-engine:5.5.2:sources
+EEAA786F518DDE7B0298A08426A349B55728D7D9 org.junit.jupiter:junit-jupiter-engine:5.5.2:javadoc

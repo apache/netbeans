@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.0
+#Version 2.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1538,12 +1538,17 @@ meth public boolean isLoggable(java.util.logging.Level)
 meth public java.lang.String buildKey(java.lang.String,java.lang.String)
 meth public java.lang.String excMsg(java.lang.String,java.lang.String)
 meth public static boolean loggable(java.util.logging.Level)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String excMsg(java.lang.Class,java.lang.String)
 meth public static java.lang.String logMsg(java.lang.Class,java.lang.String)
 meth public static java.util.logging.Logger getLogger()
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
 meth public void exception(java.util.logging.Level,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.Object)

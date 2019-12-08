@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.9
+#Version 1.10
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})

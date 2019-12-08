@@ -206,7 +206,7 @@ public final class UpdateTracking {
         
         String dirs = System.getProperty("netbeans.dirs"); // NOI18N
         if (dirs != null) {
-            Enumeration en = new StringTokenizer (dirs, File.pathSeparator);
+            Enumeration<Object> en = new StringTokenizer (dirs, File.pathSeparator);
             while (en.hasMoreElements ()) {
                 File f = new File ((String)en.nextElement ());
                 // this prevents autoupdate from accessing this 

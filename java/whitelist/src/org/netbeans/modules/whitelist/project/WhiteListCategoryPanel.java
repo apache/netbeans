@@ -175,7 +175,7 @@ public class WhiteListCategoryPanel extends javax.swing.JPanel implements Action
 
         public WhiteListsModel(List<Desc> whitelists) {
             assert whitelists.size() > 0;
-            this.whitelists = new ArrayList(whitelists);
+            this.whitelists = new ArrayList<>(whitelists);
         }
         
         @Override

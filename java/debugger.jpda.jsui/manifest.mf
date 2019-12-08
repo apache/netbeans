@@ -3,7 +3,7 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.debugger.jpda.jsui/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/jsui/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/debugger/jpda/jsui/layer.xml
-OpenIDE-Module-Specification-Version: 1.6
+OpenIDE-Module-Specification-Version: 1.7
 OpenIDE-Module-Requires: org.netbeans.spi.debugger.ui
 OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]
 

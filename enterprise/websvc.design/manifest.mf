@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.design
 OpenIDE-Module-Layer: org/netbeans/modules/websvc/design/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/design/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.31
+OpenIDE-Module-Specification-Version: 1.32
 AutoUpdate-Show-In-Client: false

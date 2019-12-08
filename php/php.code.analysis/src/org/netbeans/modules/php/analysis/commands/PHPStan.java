@@ -102,19 +102,21 @@ public final class PHPStan {
 
     @NbBundle.Messages({
         "# {0} - counter",
-        "PHPStan.analyze=PHPStan (analyze #{0})",})
+        "PHPStan.analyze=PHPStan (analyze #{0})"
+    })
     @CheckForNull
     public List<Result> analyze(PHPStanParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
-            Integer result = getExecutable(Bundle.PHPStan_analyze(analyzeGroupCounter++), findWorkDir(file))
+            FileObject workDir = findWorkDir(file);
+            Integer result = getExecutable(Bundle.PHPStan_analyze(analyzeGroupCounter++), workDir == null ? null : FileUtil.toFile(workDir))
                     .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running phpstan..."); // NOI18N
             if (result == null) {
                 return null;
             }
 
-            return PHPStanReportParser.parse(XML_LOG, file);
+            return PHPStanReportParser.parse(XML_LOG, file, workDir);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();
@@ -133,17 +135,22 @@ public final class PHPStan {
      * @return project directory or {@code null}
      */
     @CheckForNull
-    private File findWorkDir(FileObject file) {
+    private FileObject findWorkDir(FileObject file) {
         assert file != null;
         Project project = FileOwnerQuery.getOwner(file);
+        FileObject workDir = null;
         if (project != null) {
-            File projectDir = FileUtil.toFile(project.getProjectDirectory());
+            workDir = project.getProjectDirectory();
             if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(Level.FINE, "Project directory for {0} found in {1}", new Object[]{FileUtil.toFile(file), projectDir});
+                if (workDir != null) {
+                    LOGGER.log(Level.FINE, "Project directory for {0} is found in {1}", new Object[]{FileUtil.toFile(file), workDir}); // NOI18N
+                } else {
+                    // the file/directory may not be in a PHP project
+                    LOGGER.log(Level.FINE, "Project directory for {0} is not found", FileUtil.toFile(file)); // NOI18N
+                }
             }
-            return projectDir;
         }
-        return null;
+        return workDir;
     }
 
     private PhpExecutable getExecutable(String title, @NullAllowed File workDir) {

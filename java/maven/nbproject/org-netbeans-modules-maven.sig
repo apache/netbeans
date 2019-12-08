@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.133
+#Version 2.135
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1010,6 +1010,7 @@ fld public final static java.lang.String PLUGIN_COMPILER = "maven-compiler-plugi
 fld public final static java.lang.String PLUGIN_COMPILER_VERSION_SUPPORTING_JDK9 = "3.6"
 fld public final static java.lang.String PLUGIN_EAR = "maven-ear-plugin"
 fld public final static java.lang.String PLUGIN_EJB = "maven-ejb-plugin"
+fld public final static java.lang.String PLUGIN_FAILSAFE = "maven-failsafe-plugin"
 fld public final static java.lang.String PLUGIN_JAR = "maven-jar-plugin"
 fld public final static java.lang.String PLUGIN_RESOURCES = "maven-resources-plugin"
 fld public final static java.lang.String PLUGIN_SITE = "maven-site-plugin"

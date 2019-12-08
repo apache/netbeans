@@ -68,7 +68,7 @@ public class SimpleHandle implements ElementHandle {
 
     @Override
     public Set<Modifier> getModifiers() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override

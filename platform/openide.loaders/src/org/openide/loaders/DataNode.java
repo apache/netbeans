@@ -914,11 +914,11 @@ public class DataNode extends AbstractNode {
             // refresh current nodes display name
             Map<RequestProcessor, List<DataObject>> mapping
                     = new HashMap<RequestProcessor, List<DataObject>>();
-            Iterator it = DataObjectPool.getPOOL().getActiveDataObjects();
+            Iterator<DataObjectPool.Item> it = DataObjectPool.getPOOL().getActiveDataObjects();
 
             // Assign DataNodes to RequestProcessors. See bug 252073 comment 17.
             while (it.hasNext()) {
-                DataObject obj = ((DataObjectPool.Item) it.next()).getDataObjectOrNull();
+                DataObject obj = it.next().getDataObjectOrNull();
                 if (obj != null && obj.getNodeDelegate() instanceof DataNode) {
                     RequestProcessor rp = DataNodeUtils.reqProcessor(obj.getPrimaryFile());
                     List<DataObject> list = mapping.get(rp);
@@ -944,7 +944,7 @@ public class DataNode extends AbstractNode {
         }
     }
 
-    private static Class defaultLookup;
+    private static Class<?> defaultLookup;
     /** Returns true if this node is using own lookup and not the standard one.
      */
     private boolean ownLookup() {

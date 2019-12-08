@@ -42,8 +42,7 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel {
     
     
     public VariablesModel (ContextProvider contextProvider) {
-        debugger = (AntDebugger) contextProvider.lookupFirst 
-            (null, AntDebugger.class);
+        debugger = contextProvider.lookupFirst(null, AntDebugger.class);
         debugger.setVariablesModel(this);
     }
     

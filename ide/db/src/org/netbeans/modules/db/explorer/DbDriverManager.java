@@ -64,12 +64,12 @@ public class DbDriverManager {
     /**
      * Maps each connection to the driver used to create that connection.
      */
-    private Map/*<Connection, Driver>*/ conn2Driver = new WeakHashMap();
+    private Map<Connection, Driver> conn2Driver = new WeakHashMap<>();
     
     /**
      * Maps each driver to the class loader for that driver.
      */
-    private Map/*<JDBCDriver, ClassLoader>*/ driver2Loader = new WeakHashMap();
+    private Map<JDBCDriver, ClassLoader> driver2Loader = new WeakHashMap<>();
     
     private DbDriverManager() {
     }
@@ -144,7 +144,7 @@ public class DbDriverManager {
             if (!conn2Driver.containsKey(existingConn)) {
                 throw new IllegalArgumentException("A connection not obtained through DbDriverManager was passed."); // NOI18N
             }
-            driver = (Driver)conn2Driver.get(existingConn);
+            driver = conn2Driver.get(existingConn);
         }
         if (driver != null) {
             Connection newConn = driver.connect(databaseURL, props);
@@ -259,7 +259,7 @@ public class DbDriverManager {
     private ClassLoader getClassLoader(JDBCDriver driver) {
         ClassLoader loader = null;
         synchronized (driver2Loader) {
-            loader = (ClassLoader)driver2Loader.get(driver);
+            loader = driver2Loader.get(driver);
             if (loader == null) {
                 loader = new DbURLClassLoader(driver.getURLs());
                 if (LOG) {

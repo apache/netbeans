@@ -98,7 +98,7 @@ public class CssCompletion implements CodeCompletionHandler {
     /**
      * Units which shouldn't appear in the code completion.
      */
-    private static final Collection<String> HIDDEN_UNITS = new HashSet(Arrays.asList(new String[]{"!hash_color_code"}));
+    private static final Collection<String> HIDDEN_UNITS = new HashSet<>(Arrays.asList(new String[]{"!hash_color_code"}));
 
     //unit testing support
     static String[] TEST_USED_COLORS;

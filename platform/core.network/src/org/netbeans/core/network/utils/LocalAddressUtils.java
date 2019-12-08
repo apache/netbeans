@@ -100,13 +100,13 @@ public class LocalAddressUtils {
     private static Future<InetAddress[]> fut2;
     private static Future<List<InetAddress>> fut3;
 
-    private static final Callable<InetAddress> C1 = new Callable(){
+    private static final Callable<InetAddress> C1 = new Callable<InetAddress>(){
         @Override
         public InetAddress call() throws UnknownHostException  {
             return InetAddress.getLocalHost();
         }
     };
-    private static final Callable<InetAddress[]> C2 = new Callable(){
+    private static final Callable<InetAddress[]> C2 = new Callable<InetAddress[]>(){
         @Override
         public InetAddress[] call() throws UnknownHostException  {
             try {
@@ -117,7 +117,7 @@ public class LocalAddressUtils {
             }
         }
     };
-    private static final Callable<List<InetAddress>> C3 = new Callable(){
+    private static final Callable<List<InetAddress>> C3 = new Callable<List<InetAddress>>(){
         @Override
         public List<InetAddress> call() {
             return getLocalNetworkInterfaceAddr();

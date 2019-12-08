@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.59
 
 CLSS public abstract interface java.io.Serializable
 
@@ -81,6 +81,7 @@ meth public boolean isTrusted(org.netbeans.api.autoupdate.InstallSupport$Install
 meth public java.lang.String getCertificate(org.netbeans.api.autoupdate.InstallSupport$Installer,org.netbeans.api.autoupdate.UpdateElement)
 meth public org.netbeans.api.autoupdate.InstallSupport$Installer doValidate(org.netbeans.api.autoupdate.InstallSupport$Validator,org.netbeans.api.progress.ProgressHandle) throws org.netbeans.api.autoupdate.OperationException
 meth public org.netbeans.api.autoupdate.InstallSupport$Validator doDownload(org.netbeans.api.progress.ProgressHandle,boolean) throws org.netbeans.api.autoupdate.OperationException
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.autoupdate.InstallSupport$Validator doDownload(org.netbeans.api.progress.ProgressHandle,java.lang.Boolean,boolean) throws org.netbeans.api.autoupdate.OperationException
 meth public org.netbeans.api.autoupdate.OperationContainer<org.netbeans.api.autoupdate.InstallSupport> getContainer()
 meth public org.netbeans.api.autoupdate.OperationSupport$Restarter doInstall(org.netbeans.api.autoupdate.InstallSupport$Installer,org.netbeans.api.progress.ProgressHandle) throws org.netbeans.api.autoupdate.OperationException

@@ -29,7 +29,7 @@ description: |
 
 icon: ../../../platform/core.startup/src/org/netbeans/core/startup/frame512.png
 confinement: classic
-grade: devel
+grade: stable
 architectures: [ amd64 ]
 adopt-info: netbeans-version
 

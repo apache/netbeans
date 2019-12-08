@@ -284,7 +284,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                     }
                 }
 
-                Map<String, String> mappings = new HashMap();
+                Map<String, String> mappings = new HashMap<>();
                 if (rIndex != null) {
                     mappings.putAll(rIndex.getPathMappings(writtenPath));
                 }

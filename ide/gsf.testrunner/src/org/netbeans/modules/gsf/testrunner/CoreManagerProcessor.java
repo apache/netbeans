@@ -23,8 +23,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.gsf.testrunner.api.CoreManager;
@@ -39,7 +37,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.gsf.testrunner.api.CoreManager.Registration")
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class CoreManagerProcessor extends LayerGeneratingProcessor {
 
     @Override

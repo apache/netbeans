@@ -60,7 +60,7 @@ class ClassDumpSegment extends TagBounds {
     ClassDump java_lang_Class;
     boolean newSize;
     Map /*<JavaClass,List<Field>>*/ fieldsCache;
-    private List /*<JavaClass>*/ classes;
+    private List<JavaClass> classes;
     private Map /*<Byte,JavaClass>*/ primitiveArrayMap;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
@@ -319,7 +319,7 @@ class ClassDumpSegment extends TagBounds {
         this(heap, start, end);
         int classesSize = dis.readInt();
         if (classesSize != 0) {
-            List cls = new ArrayList /*<JavaClass>*/(classesSize);
+            List<JavaClass> cls = new ArrayList<>(classesSize);
             arrayMap = new HashMap(classesSize / 15);
             
             for (int i=0; i<classesSize; i++) {

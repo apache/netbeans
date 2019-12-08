@@ -547,6 +547,13 @@ class TypingCompletion {
         return posWithinQuotes(doc, caretOffset, JavaTokenId.STRING_LITERAL);
     }
     
+ static boolean posWithinTextBlock(Document doc, int caretOffset) {
+        TokenSequence<JavaTokenId> javaTS=javaTokenSequence(doc,caretOffset, false);
+        if(javaTS == null)return false;
+        boolean movePrevious = javaTS.movePrevious();
+        if(!movePrevious)return false;
+        return posWithinQuotes(doc, caretOffset, JavaTokenId.STRING_LITERAL) && javaTS.token().text().toString().equals("\"\"");
+    }
     private static boolean posWithinQuotes(Document doc, int caretOffset, JavaTokenId tokenId) {
         TokenSequence<JavaTokenId> javaTS = javaTokenSequence(doc, caretOffset, false);
         if (javaTS != null) {

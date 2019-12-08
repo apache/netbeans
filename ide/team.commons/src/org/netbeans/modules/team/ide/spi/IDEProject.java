@@ -37,7 +37,7 @@ public abstract class IDEProject {
     private final Icon icon;
     private final URL url;
 
-    private final List<DeleteListener> deleteListeners = new CopyOnWriteArrayList();
+    private final List<DeleteListener> deleteListeners = new CopyOnWriteArrayList<>();
 
     protected IDEProject(String displayName, Icon icon, URL url) {
         this.displayName = displayName;

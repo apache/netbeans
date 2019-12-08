@@ -170,7 +170,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                             }
                             List<TypeUsage> types = functionCalls.get(call.getCallOffset());
                             if (types == null) {
-                                types = new ArrayList();
+                                types = new ArrayList<>();
                                 functionCalls.put(new Integer(call.getCallOffset()), types);
                             }
                             for (TypeUsage type: returnTypes) {
@@ -911,7 +911,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         } else {
             JsObject property = fncParent.getProperty(modelBuilder.getFunctionName(functionNode));
             if (property == null && functionNode.isStrict()) {
-                property = ((DeclarationScopeImpl)modelBuilder.getCurrentDeclarationScope()).getProperty(modelBuilder.getFunctionName(functionNode));
+                property = modelBuilder.getCurrentDeclarationScope().getProperty(modelBuilder.getFunctionName(functionNode));
             }
             if(!(property instanceof JsFunction)) {
                 property = fncParent.getProperty(modelBuilder.getGlobal().getName() + modelBuilder.getFunctionName(functionNode));

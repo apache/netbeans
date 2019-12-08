@@ -50,7 +50,7 @@ public class GroovyToggleBreakpointActionProvider extends ActionsProviderSupport
     }
     
     public GroovyToggleBreakpointActionProvider (ContextProvider contextProvider) {
-        debugger = (JPDADebugger) contextProvider.lookupFirst(null, JPDADebugger.class);
+        debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
         debugger.addPropertyChangeListener (JPDADebugger.PROP_STATE, this);
         Context.addPropertyChangeListener (this);
         setEnabled (ActionsManager.ACTION_TOGGLE_BREAKPOINT, false);

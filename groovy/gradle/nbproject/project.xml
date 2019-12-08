@@ -322,6 +322,14 @@
                         <specification-version>6.70.1</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.jdk14</code-name-base>
+                    <run-dependency/>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -338,40 +346,40 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.gradle.tooling</package>
+                <package>org.gradle.tooling.events</package>
+                <package>org.gradle.tooling.events.configuration</package>
+                <package>org.gradle.tooling.events.configuration.internal</package>
+                <package>org.gradle.tooling.events.task</package>
+                <package>org.gradle.tooling.events.task.java</package>
+                <package>org.gradle.tooling.events.test</package>
+                <package>org.gradle.tooling.events.transform</package>
+                <package>org.gradle.tooling.events.work</package>
+                <package>org.gradle.tooling.exceptions</package>
+                <package>org.gradle.tooling.model</package>
+                <package>org.gradle.tooling.model.build</package>
+                <package>org.gradle.tooling.model.cpp</package>
+                <package>org.gradle.tooling.model.eclipse</package>
+                <package>org.gradle.tooling.model.gradle</package>
+                <package>org.gradle.tooling.model.idea</package>
+                <package>org.gradle.tooling.model.java</package>
+                <package>org.gradle.tooling.model.kotlin.dsl</package>
                 <package>org.netbeans.modules.gradle.api</package>
                 <package>org.netbeans.modules.gradle.api.execute</package>
                 <package>org.netbeans.modules.gradle.api.output</package>
                 <package>org.netbeans.modules.gradle.spi</package>
                 <package>org.netbeans.modules.gradle.spi.actions</package>
                 <package>org.netbeans.modules.gradle.spi.customizer.support</package>
-                <package>org.netbeans.modules.gradle.spi.execute</package>
                 <package>org.netbeans.modules.gradle.spi.newproject</package>
                 <package>org.netbeans.modules.gradle.spi.nodes</package>
-                <package>org.gradle.tooling</package>
-                <package>org.gradle.tooling.events</package>
-                <package>org.gradle.tooling.events.test</package>
-                <package>org.gradle.tooling.exceptions</package>
-                <package>org.gradle.tooling.model</package>
-                <package>org.gradle.tooling.model.build</package>
-                <package>org.gradle.tooling.model.eclipse</package>
-                <package>org.gradle.tooling.model.gradle</package>
-                <package>org.gradle.tooling.model.idea</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>gradle/slf4j-jdk14.jar</runtime-relative-path>
-                <binary-origin>external/slf4j-jdk14-1.7.25.jar</binary-origin>
-            </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/netbeans-gradle-tooling.jar</runtime-relative-path>
                 <binary-origin>build/tooling/netbeans-gradle-tooling.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>gradle/gradle-tooling-api.jar</runtime-relative-path>
-                <binary-origin>external/gradle-tooling-api-4.10.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>gradle/slf4j-api.jar</runtime-relative-path>
-                <binary-origin>external/slf4j-api-1.7.25.jar</binary-origin>
+                <binary-origin>external/gradle-tooling-api-6.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -18,7 +18,6 @@
  */
 package org.netbeans.api.htmlui;
 
-import java.io.IOException;
 import java.util.Locale;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;

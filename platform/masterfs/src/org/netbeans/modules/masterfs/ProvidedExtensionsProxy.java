@@ -263,7 +263,7 @@ public class ProvidedExtensionsProxy extends ProvidedExtensions {
 
     @Override
     public Object getAttribute(final File file, final String attrName) {
-        final AtomicReference<Object> value = new AtomicReference();
+        final AtomicReference<Object> value = new AtomicReference<>();
         for (BaseAnnotationProvider provider : annotationProviders) {
             final InterceptionListener iListener = (provider != null) ? provider.getInterceptionListener() : null;
             if (iListener instanceof ProvidedExtensions) {

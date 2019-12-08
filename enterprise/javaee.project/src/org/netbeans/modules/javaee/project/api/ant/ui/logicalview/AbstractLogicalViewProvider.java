@@ -175,11 +175,10 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
             }
         };
         evaluator.addPropertyChangeListener(pcl);
-        j2eeModuleProvider.addInstanceListener((InstanceListener)WeakListeners.create(
-                    InstanceListener.class, il, j2eeModuleProvider));
+        j2eeModuleProvider.addInstanceListener(WeakListeners.create(InstanceListener.class, il, j2eeModuleProvider));
 //        j2eeModuleProvider.addConfigurationFilesListener((ConfigurationFilesListener)WeakListeners.create(
 //                    ConfigurationFilesListener.class, cfl, j2eeModuleProvider));
-        ConnectionManager.getDefault().addConnectionListener((ConnectionListener)WeakListeners.create(
+        ConnectionManager.getDefault().addConnectionListener(WeakListeners.create(
                 ConnectionListener.class, cl, ConnectionManager.getDefault()));
     }
 
@@ -689,7 +688,7 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
             if (p == null) {
                 return this;
             }
-            J2eeModuleProvider provider = (J2eeModuleProvider) p.getLookup().lookup(J2eeModuleProvider.class);
+            J2eeModuleProvider provider = p.getLookup().lookup(J2eeModuleProvider.class);
             if (provider == null) {
                 return this;
             }

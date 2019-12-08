@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -38,11 +37,15 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import org.netbeans.api.annotations.common.StaticResource;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class StaticResourceProcessor extends AbstractProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(StaticResource.class.getCanonicalName());
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

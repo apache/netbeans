@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+    Created on : November 24, 2019, 12:15 PM
+    Author     : vstejskal, lkishalmi
+    Description:
+        The vocabulary for an editor fonts and colors settings file.
+
+    PUBLIC ID  : -//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN
+    SYSTEM ID  : http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd
+-->
+
+<!ELEMENT fontscolors ( colordef*, fontcolor* ) >
+<!ATTLIST fontscolors >
+
+<!ELEMENT colordef EMPTY >
+<!ATTLIST colordef
+          name              CDATA #REQUIRED
+          color             CDATA #REQUIRED
+>
+
+<!ELEMENT fontcolor ( font? ) >
+<!ATTLIST fontcolor
+          name              CDATA #REQUIRED
+          bgColor           CDATA #IMPLIED
+          foreColor         CDATA #IMPLIED
+          underline         CDATA #IMPLIED
+          strikeThrough     CDATA #IMPLIED
+          waveUnderlined    CDATA #IMPLIED
+          default           CDATA #IMPLIED
+>
+
+
+<!--
+    The style attribute can be 'plain', 'bold', 'italic' or 'bold+italic'.
+-->
+<!ELEMENT font EMPTY>
+<!ATTLIST font
+          name          CDATA #IMPLIED
+          size          CDATA #IMPLIED
+          style         CDATA "plain"
+>

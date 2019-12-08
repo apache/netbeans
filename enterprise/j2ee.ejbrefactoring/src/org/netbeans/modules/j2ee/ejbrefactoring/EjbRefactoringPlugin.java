@@ -224,7 +224,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
             if (emod != null) {
                 projects.add(affectedProject);
             } else {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             for (Project project : OpenProjects.getDefault().getOpenProjects()) {
                 Object isJ2eeApp = project.getLookup().lookup(J2eeApplicationProvider.class);
@@ -233,8 +233,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
                     J2eeModuleProvider[] j2eeModules = j2eeApp.getChildModuleProviders();
 
                     if (j2eeModules != null) {
-                        J2eeModuleProvider affectedPrjProvider =
-                                (J2eeModuleProvider) affectedProject.getLookup().lookup(J2eeModuleProvider.class);
+                        J2eeModuleProvider affectedPrjProvider = affectedProject.getLookup().lookup(J2eeModuleProvider.class);
 
                         if (affectedPrjProvider != null) {
                             if (Arrays.asList(j2eeModules).contains(affectedPrjProvider)) {

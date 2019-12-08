@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.javascript2.editor.spi.CompletionProvider;
@@ -37,7 +35,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.javascript2.editor.spi.CompletionProvider.Registration") //NOI18N
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class CompletionInterceptorRegistrationProcessor extends LayerGeneratingProcessor {
 
     public CompletionInterceptorRegistrationProcessor() {

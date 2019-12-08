@@ -82,7 +82,7 @@ public class BootClassPathUtil {
                     urls.add(fo.toURL());
                 }
             }
-            return ClassPathSupport.createClassPath((URL[])urls.toArray(new URL[0]));
+            return ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
         } else {
             try {
                 Class.forName("org.netbeans.ProxyURLStreamHandlerFactory").getMethod("register")

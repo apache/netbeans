@@ -119,7 +119,7 @@ public class EditorLocatorFactory implements LocatorFactory {
                 if (f != null) {
                     List<Object []> pair = files.get(profileId);
                     if (pair == null) {
-                        pair = new ArrayList<Object[]>();
+                        pair = new ArrayList<>();
                         files.put(profileId, pair);
                     }
                     pair.add(new Object [] { profileHome, f, moduleFiles, null, true });

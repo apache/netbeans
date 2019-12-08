@@ -71,7 +71,8 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
     /** mapping from ExplorerManagers to the ExplorerPanels they are associated
      * with. ExplorerManager -> Reference (ExplorerPanel)
      */
-    private static java.util.WeakHashMap panels = new java.util.WeakHashMap();
+    private static java.util.WeakHashMap<ExplorerManager, java.lang.ref.Reference<ExplorerPanel>> panels
+            = new java.util.WeakHashMap<>();
 
     /** the instance of the explorer manager*/
     private ExplorerManager manager;
@@ -109,7 +110,7 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
         }
 
         this.manager = manager;
-        panels.put(manager, new java.lang.ref.WeakReference(this));
+        panels.put(manager, new java.lang.ref.WeakReference<ExplorerPanel>(this));
 
         setLayout(new java.awt.BorderLayout());
         initActionMap(confirm);
@@ -138,8 +139,8 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
      * @param em the manager
      */
     static void associateActions(ExplorerActions actions, ExplorerManager em) {
-        java.lang.ref.Reference ref = (java.lang.ref.Reference) panels.get(em);
-        ExplorerPanel p = (ref == null) ? null : (ExplorerPanel) ref.get();
+        java.lang.ref.Reference<ExplorerPanel> ref = panels.get(em);
+        ExplorerPanel p = (ref == null) ? null : ref.get();
 
         if (p != null) {
             p.getActionMap().put(javax.swing.text.DefaultEditorKit.copyAction, actions.copyAction());
@@ -279,7 +280,7 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
 
         if (anObj instanceof ExplorerManager) {
             manager = (ExplorerManager) anObj;
-            panels.put(manager, new java.lang.ref.WeakReference(this));
+            panels.put(manager, new java.lang.ref.WeakReference<ExplorerPanel>(this));
             initActionMap(null);
             initListening();
 
@@ -291,7 +292,7 @@ public class ExplorerPanel extends TopComponent implements ExplorerManager.Provi
         // --- read all data from main stream, it is OK now ---
         try {
             manager = (ExplorerManager) obj.get();
-            panels.put(manager, new java.lang.ref.WeakReference(this));
+            panels.put(manager, new java.lang.ref.WeakReference<ExplorerPanel>(this));
             initActionMap(null);
             initListening();
         } catch (SafeException se) {

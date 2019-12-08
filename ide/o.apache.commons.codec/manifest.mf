@@ -1,2 +1,2 @@
 OpenIDE-Module: org.apache.commons.codec
-OpenIDE-Module-Specification-Version: 1.13
+OpenIDE-Module-Specification-Version: 1.14

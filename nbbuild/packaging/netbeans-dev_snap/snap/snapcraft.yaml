@@ -60,7 +60,7 @@ parts:
         netbeans: [ netbeans/*, -netbeans/*.built ]
     override-build: |
         export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-        ant -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+        ant -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dbuildnumber=$(date +%Y%m%d)
         mv nbbuild/netbeans $SNAPCRAFT_PART_INSTALL/netbeans
         # Make the default cache and data directory relative to Snap user directory
         sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans

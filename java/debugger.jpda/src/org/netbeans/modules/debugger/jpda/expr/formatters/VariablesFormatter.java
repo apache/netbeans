@@ -327,7 +327,7 @@ public final class VariablesFormatter implements Cloneable {
         mapEntry.setClassTypes("java.util.Map$Entry");
         mapEntry.setIncludeSubTypes(true);
         mapEntry.setUseChildrenVariables(true);
-        Map childrenMap = new LinkedHashMap();
+        Map<String, String> childrenMap = new LinkedHashMap<>();
         childrenMap.put("key", "getKey()");
         childrenMap.put("value", "getValue()");
         mapEntry.setChildrenVariables(childrenMap);

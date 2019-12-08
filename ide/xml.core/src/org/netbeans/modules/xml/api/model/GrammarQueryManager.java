@@ -48,7 +48,7 @@ import org.openide.util.lookup.Lookups;
 public abstract class GrammarQueryManager {
 
     // default instance
-    private static Reference instance;
+    private static Reference<GrammarQueryManager> instance;
     
     /**
      * Can this manager provide a grammar for given context?
@@ -92,12 +92,12 @@ public abstract class GrammarQueryManager {
      * @return Best effort instance.
      */
     public static synchronized GrammarQueryManager getDefault() {
-        Object cached = instance != null ? instance.get() : null;
+        GrammarQueryManager cached = instance != null ? instance.get() : null;
         if (cached == null) {
             cached = new DefaultQueryManager();
-            instance = new WeakReference(cached);
+            instance = new WeakReference<GrammarQueryManager>(cached);
         }
-        return (GrammarQueryManager) cached;        
+        return cached;
     }
 
     /**

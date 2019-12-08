@@ -70,10 +70,8 @@ public class ExportCommitCommand extends GitCommand {
         if (commit.getParentCount() > 1) {
             throw new GitException("Unable to export a merge commit");
         }
-        DiffFormatter formatter = null;
-        try {
+        try (DiffFormatter formatter = new DiffFormatter(out)) {
             out.write(Constants.encode(formatCommitInfo(commit)));
-            formatter = new DiffFormatter(out);
             formatter.setRepository(repository);
             List<DiffEntry> diffEntries;
             if (commit.getParentCount() > 0) {
@@ -98,10 +96,6 @@ public class ExportCommitCommand extends GitCommand {
             formatter.flush();
         } catch (IOException ex) {
             throw new GitException(ex);
-        } finally {
-            if (formatter != null) {
-                formatter.release();
-            }
         }
     }
 

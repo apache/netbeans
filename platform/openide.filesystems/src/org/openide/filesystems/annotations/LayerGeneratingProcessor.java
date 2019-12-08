@@ -37,6 +37,8 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
@@ -57,6 +59,9 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Convenience base class for an annotation processor which creates XML layer entries.
+ * From version 9.17, it is not necessary (and is not recommended) to declare @{@link SupportedSourceVersion}
+ * on subclasses: the default implementation declares support for {@link SourceVersion#latest()}. Declare
+ * specific {@link SourceVersion} limits only when necessary.
  * @see XMLFileSystem
  * @since org.openide.filesystems 7.15
  */
@@ -233,4 +238,20 @@ public abstract class LayerGeneratingProcessor extends AbstractProcessor {
         return doc;
     }
 
+    /**
+     * If the subclass itself does not define SupportedSourceVersion, assume latest(). If it does
+     * (was recommended prior to 9.17), returns the subclass' value for compatibility.
+     * @return max supported source version.
+     * @since 9.17
+     */
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        SupportedSourceVersion ssv = this.getClass().getAnnotation(SupportedSourceVersion.class);
+        SourceVersion sv;
+        if (ssv == null) {
+            sv = SourceVersion.latest();
+        } else
+            sv = ssv.value();
+        return sv;
+    }
 }

@@ -74,7 +74,6 @@ public class ExternalDirectoryTest extends SetupHid {
         ModuleSystem ms = Main.getModuleSystem();
         mgr = ms.getManager();
         mgr.mutexPrivileged().enterWriteAccess();
-        Enumeration en;
         int checks = 0;
         
         System.setProperty("activated.checkentries", "/org/test/x.txt");
@@ -94,13 +93,13 @@ public class ExternalDirectoryTest extends SetupHid {
                     sb.append("No root URL for ").append(b.getSymbolicName()).append("\n");
                 }
                 
-                en = b.findEntries("/", null, true);
+                Enumeration<URL> en = b.findEntries("/", null, true);
                 if (en == null) {
                     sb.append("No entries for ").append(b.getSymbolicName()).append("\n");
                     continue;
                 }
                 while (en.hasMoreElements()) {
-                    URL u = (URL) en.nextElement();
+                    URL u = en.nextElement();
                     final String ef = u.toExternalForm();
                     int pref = ef.indexOf("/org/");
                     int last = ef.lastIndexOf("/");

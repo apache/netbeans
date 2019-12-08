@@ -181,13 +181,13 @@ public class LocationAwareMavenXpp3Writer {
             writeValue(serializer, "jdk", activation.getJdk(), activation);
         }
         if (activation.getOs() != null) {
-            writeActivationOS((ActivationOS) activation.getOs(), "os", serializer);
+            writeActivationOS(activation.getOs(), "os", serializer);
         }
         if (activation.getProperty() != null) {
-            writeActivationProperty((ActivationProperty) activation.getProperty(), "property", serializer);
+            writeActivationProperty(activation.getProperty(), "property", serializer);
         }
         if (activation.getFile() != null) {
-            writeActivationFile((ActivationFile) activation.getFile(), "file", serializer);
+            writeActivationFile(activation.getFile(), "file", serializer);
         }
         serializer.endTag(NAMESPACE, tagName).flush();
         logLocation(activation, "", start, b.length());
@@ -316,7 +316,7 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(build, "filters", start2, b.length());
         }
         if (build.getPluginManagement() != null) {
-            writePluginManagement((PluginManagement) build.getPluginManagement(), "pluginManagement", serializer);
+            writePluginManagement(build.getPluginManagement(), "pluginManagement", serializer);
         }
         if ((build.getPlugins() != null) && (build.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");
@@ -376,7 +376,7 @@ public class LocationAwareMavenXpp3Writer {
             logLocation(buildBase, "filters", start2, b.length());
         }
         if (buildBase.getPluginManagement() != null) {
-            writePluginManagement((PluginManagement) buildBase.getPluginManagement(), "pluginManagement", serializer);
+            writePluginManagement(buildBase.getPluginManagement(), "pluginManagement", serializer);
         }
         if ((buildBase.getPlugins() != null) && (buildBase.getPlugins().size() > 0)) {
             serializer.startTag(NAMESPACE, "plugins");

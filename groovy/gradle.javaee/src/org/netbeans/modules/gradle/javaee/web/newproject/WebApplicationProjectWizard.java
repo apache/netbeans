@@ -40,7 +40,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Laszlo Kishalmi
  */
-@TemplateRegistration(folder="Project/Gradle", position=200, displayName="#template.webAppProject", iconBase="org/netbeans/modules/gradle/javaee/resources/webProjectIcon.png", description="WebApplicationDescription.html")
+@TemplateRegistration(folder="Project/Gradle", position=200, displayName="#template.webAppProject", iconBase="org/netbeans/modules/gradle/javaee/resources/javaeeProjectIcon.png", description="WebApplicationDescription.html")
 @Messages("template.webAppProject=Web Application")
 public class WebApplicationProjectWizard extends SimpleGradleWizardIterator {
 

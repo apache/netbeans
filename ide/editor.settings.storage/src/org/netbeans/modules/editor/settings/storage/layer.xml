@@ -31,6 +31,9 @@
                 <file name="DTD_Editor_Fonts_and_Colors_settings_1_1" url="nbres:/org/netbeans/modules/editor/settings/storage/fontscolors/EditorFontsColors-1_1.dtd">
                     <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN"/>
                 </file>
+                <file name="DTD_Editor_Fonts_and_Colors_settings_1_2" url="nbres:/org/netbeans/modules/editor/settings/storage/fontscolors/EditorFontsColors-1_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN"/>
+                </file>
 
                 <!-- Keybindings Setting files -->
                 <file name="DTD_Editor_KeyBindings_settings_1_0" url="nbres:/org/netbeans/modules/editor/settings/storage/keybindings/EditorKeyBindings-1_0.dtd">

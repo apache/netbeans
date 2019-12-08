@@ -82,7 +82,7 @@ public class JSFConfigDataObject extends MultiDataObject implements org.openide.
         cookies.add(JSFConfigEditorSupport.class, this);
 
         //Lookup JSFConfigEditorContext for Page Flow Editor multiview
-        cookies.assign(JSFConfigEditorContext.class, new JSFConfigEditorContextImpl((JSFConfigDataObject)this));
+        cookies.assign(JSFConfigEditorContext.class, new JSFConfigEditorContextImpl(this));
 
         // Creates Check XML and Validate XML context actions
         InputSource in = DataObjectAdapters.inputSource(this);

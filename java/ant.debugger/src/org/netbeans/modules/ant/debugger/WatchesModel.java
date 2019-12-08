@@ -46,7 +46,7 @@ public class WatchesModel implements NodeModelFilter, TableModel {
     
     
     public WatchesModel (ContextProvider contextProvider) {
-        debugger = (AntDebugger) contextProvider.lookupFirst 
+        debugger = contextProvider.lookupFirst 
             (null, AntDebugger.class);
         debugger.setWatchesModel(this);
     }

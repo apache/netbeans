@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.gradle.persistence
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/persistence/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.2
+OpenIDE-Module-Specification-Version: 1.3

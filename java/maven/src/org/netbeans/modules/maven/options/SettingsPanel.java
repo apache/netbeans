@@ -41,6 +41,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.modules.maven.TextValueCompleter;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.customizer.ActionMappings;
@@ -85,6 +88,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final List<String>       userDefinedMavenRuntimesStored = new ArrayList<String>();
     private final List<String>       predefinedRuntimes = new ArrayList<String>();
     private final DefaultComboBoxModel mavenHomeDataModel = new DefaultComboBoxModel();
+    private final DefaultComboBoxModel jdkHomeDataModel = new DefaultComboBoxModel();
     private String             mavenRuntimeHome = null;
     private int                lastSelected = -1;
     private final static RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
@@ -124,6 +128,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         comJavadoc.setModel(new DefaultComboBoxModel(downloads));
         comSource.setModel(new DefaultComboBoxModel(downloads));
         comMavenHome.setModel(mavenHomeDataModel);
+        comJdkHome.setModel(jdkHomeDataModel);
 
         ListCellRenderer rend = new DefaultListCellRenderer() {
             @Override
@@ -384,6 +389,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         rbOutputTabId = new javax.swing.JRadioButton();
         cbOutputTabShowConfig = new javax.swing.JCheckBox();
         cbShowInfoLevel = new javax.swing.JCheckBox();
+        lblJdkHome = new javax.swing.JLabel();
+        comJdkHome = new javax.swing.JComboBox();
+        comManageJdks = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCategory = new javax.swing.JList();
         lblCategory = new javax.swing.JLabel();
@@ -503,7 +511,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(comSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(218, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlDependencies, "dependencies");
@@ -563,7 +571,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbDisableIndex)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(290, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlIndex, "index");
@@ -619,7 +627,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(lblDirectory)
                     .addComponent(txtDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDirectory))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(180, Short.MAX_VALUE))
         );
 
         pnlCards.add(plnExperimental, "experimental");
@@ -665,6 +673,16 @@ public class SettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbShowInfoLevel, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbShowInfoLevel.text")); // NOI18N
         cbShowInfoLevel.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbShowInfoLevel.toolTipText")); // NOI18N
 
+        lblCommandLine.setLabelFor(comMavenHome);
+        org.openide.awt.Mnemonics.setLocalizedText(lblJdkHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblJdkHome.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(comManageJdks, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.comManageJdks.text")); // NOI18N
+        comManageJdks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comManageJdksActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
@@ -672,14 +690,6 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlExecutionLayout.createSequentialGroup()
-                        .addComponent(lblCommandLine)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblExternalVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(pnlExecutionLayout.createSequentialGroup()
-                                .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())))
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlExecutionLayout.createSequentialGroup()
@@ -702,12 +712,28 @@ public class SettingsPanel extends javax.swing.JPanel {
                             .addComponent(cbSkipTests, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(0, 45, Short.MAX_VALUE))
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
-                        .addComponent(lblOptions)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtOptions)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnOptions)
+                        .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCommandLine)
+                                    .addComponent(lblJdkHome))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                        .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comManageJdks))))
+                            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                                .addComponent(lblOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtOptions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnOptions)))
                         .addContainerGap())))
+            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addComponent(lblExternalVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlExecutionLayout.setVerticalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -718,7 +744,12 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(comMavenHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblExternalVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblJdkHome)
+                    .addComponent(comJdkHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comManageJdks))
+                .addGap(31, 31, 31)
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblOptions)
                     .addComponent(txtOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -876,6 +907,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     
     }//GEN-LAST:event_btnDirectoryActionPerformed
+
+    private void comManageJdksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comManageJdksActionPerformed
+        PlatformsCustomizer.showCustomizer(findSelectedJdk(new String[1]));
+    }//GEN-LAST:event_comManageJdksActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -897,6 +932,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comBinaries;
     private javax.swing.JComboBox comIndex;
     private javax.swing.JComboBox comJavadoc;
+    private javax.swing.JComboBox comJdkHome;
+    private javax.swing.JButton comManageJdks;
     private javax.swing.JComboBox comMavenHome;
     private javax.swing.JComboBox comSource;
     private javax.swing.JLabel jLabel1;
@@ -913,6 +950,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblHint;
     private javax.swing.JLabel lblIndex;
     private javax.swing.JLabel lblJavadoc;
+    private javax.swing.JLabel lblJdkHome;
     private javax.swing.JLabel lblOptions;
     private javax.swing.JLabel lblOutputTab;
     private javax.swing.JLabel lblSource;
@@ -1023,6 +1061,20 @@ public class SettingsPanel extends javax.swing.JPanel {
                             mavenHomeDataModel.addElement(desc);
                         }
 
+                        jdkHomeDataModel.removeAllElements();
+                        JavaPlatform def = JavaPlatformManager.getDefault().getDefaultPlatform();
+                        String defJdkName = MavenSettings.getDefault().getDefaultJdk();
+                        if (defJdkName.isEmpty()) {
+                            defJdkName = def.getDisplayName();
+                        }
+                        for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                            jdkHomeDataModel.addElement(p.getDisplayName());
+                            String antName = p.getProperties().get("platform.ant.name"); // NOI18N
+                            if (defJdkName.equals(p.getDisplayName()) || defJdkName.equals(antName)) {
+                                jdkHomeDataModel.setSelectedItem(p.getDisplayName());
+                            }
+                        }
+
                         if (!userDefinedMavenRuntimes.isEmpty()) {
                             mavenHomeDataModel.addElement(SEPARATOR);
                             for (String runtime : userDefinedMavenRuntimes) {
@@ -1096,7 +1148,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     
     public void applyValues() {
         MavenSettings.getDefault().setDefaultOptions(txtOptions.getText().trim());
-        
+        MavenSettings.getDefault().setDefaultJdk(findSelectedJdkName());
         // remember only user-defined runtimes of RUNTIME_COUNT_LIMIT count at the most
         List<String> runtimes = new ArrayList<String>();
         for (int i = 0; i < userDefinedMavenRuntimes.size() && i < RUNTIME_COUNT_LIMIT; ++i) {
@@ -1177,6 +1229,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             runtimes.add(0, predefinedRuntimes.get(1));
         }
         isChanged |= !userDefinedMavenRuntimesStored.equals(runtimes);
+        isChanged |= !findSelectedJdkName().equals(MavenSettings.getDefault().getDefaultJdk());
         String cl = mavenRuntimeHome;
         //MEVENIDE-553
         File command = (cl == null || cl.isEmpty()) ? null : new File(cl);
@@ -1215,6 +1268,36 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         }
         changed = isChanged;
+    }
+
+    final String findSelectedJdkName() {
+        String[] name = { null };
+        findSelectedJdk(name);
+        return name[0];
+    }
+
+    private final JavaPlatform findSelectedJdk(String[] name) {
+        if (jdkHomeDataModel == null) {
+            name[0] = "";
+            return null;
+        }
+        String jdk = (String) jdkHomeDataModel.getSelectedItem();
+        final JavaPlatform def = JavaPlatformManager.getDefault().getDefaultPlatform();
+        if (jdk == null || jdk.equals(def.getDisplayName())) {
+            name[0] = "";
+            return def;
+        }
+        for (JavaPlatform p : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+            if (jdk.equals(p.getDisplayName())) {
+                String antName = p.getProperties().get("platform.ant.name");
+                if (antName != null) {
+                    name[0] = antName;
+                    return p;
+                }
+            }
+        }
+        name[0] = jdk;
+        return null;
     }
     
     private class ActionListenerImpl implements ActionListener {

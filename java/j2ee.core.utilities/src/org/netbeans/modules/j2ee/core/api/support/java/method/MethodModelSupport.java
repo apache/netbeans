@@ -228,7 +228,7 @@ public final class MethodModelSupport {
             }
         }
 
-        return (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(result);
+        return GeneratorUtilities.get(workingCopy).importFQNs(result);
     }
     
     /**

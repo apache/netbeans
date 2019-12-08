@@ -80,7 +80,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     }
 
     private JsFunctionImpl(FileObject file, Identifier name, String mimeType, String sourceLabel) {
-        this(null, null, name, Collections.EMPTY_LIST, name.getOffsetRange(), mimeType, sourceLabel);
+        this(null, null, name, Collections.emptyList(), name.getOffsetRange(), mimeType, sourceLabel);
         this.setFileObject(file);
     }
     
@@ -160,7 +160,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     @Override
     public Collection<? extends TypeUsage> getReturnTypes() {
         if (areReturnTypesResolved) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<TypeUsage> returns = new HashSet();
         HashSet<String> nameReturnTypes = new HashSet<String>();
@@ -246,7 +246,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         super.resolveTypes(docHolder);
         if (!(returnTypes.size() == 1 && Type.UNDEFINED.equals(returnTypes.iterator().next().getType()))) {
             HashSet<String> nameReturnTypes = new HashSet<String>();
-            Collection<TypeUsage> resolved = new ArrayList();
+            Collection<TypeUsage> resolved = new ArrayList<>();
             for (TypeUsage type : returnTypes) {
                 if (!(type.getType().equals(Type.UNRESOLVED) && returnTypes.size() > 1)) {
                     if (!type.isResolved()) {
@@ -341,7 +341,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
                     }
                 }
             }
-            List<JsObject> paramProperties = new ArrayList(param.getProperties().values());
+            List<JsObject> paramProperties = new ArrayList<>(param.getProperties().values());
             for(JsObject paramProperty: paramProperties) {
                ((JsObjectImpl)paramProperty).resolveTypes(docHolder);
             }

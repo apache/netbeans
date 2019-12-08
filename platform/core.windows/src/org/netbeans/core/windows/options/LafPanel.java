@@ -40,7 +40,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.LifecycleManager;
 import org.openide.awt.Notification;
@@ -266,10 +265,10 @@ public class LafPanel extends javax.swing.JPanel {
 
     //Use reflection to instantiate ColorModel class and get/set the current profile
     private static final String COLOR_MODEL_CLASS_NAME = "org.netbeans.modules.options.colors.ColorModel"; //NOI18N
-    private static final String DARK_COLOR_THEME_NAME = "Norway Today"; //NOI18N
 
     private boolean isChangeEditorColorsPossible() {
-        if( !isDarkLookAndFeel() )
+        String preferredProfile = getPreferredColorProfile();
+        if( preferredProfile == null )
             return false;
         ClassLoader cl = Lookup.getDefault().lookup( ClassLoader.class );
         if( null == cl )
@@ -279,7 +278,7 @@ public class LafPanel extends javax.swing.JPanel {
             Object colorModel = klz.newInstance();
             Method m = klz.getDeclaredMethod( "getCurrentProfile", new Class[0] ); //NOI18N
             Object res = m.invoke( colorModel, new Object[0] );
-            return res != null && !DARK_COLOR_THEME_NAME.equals( res );
+            return res != null && !preferredProfile.equals( res );
         } catch( Exception ex ) {
             //ignore
         }
@@ -289,6 +288,7 @@ public class LafPanel extends javax.swing.JPanel {
     private void switchEditorColorsProfile() {
         if( !isChangeEditorColorsPossible() )
             return;
+        String preferredProfile = getPreferredColorProfile();
 
         ClassLoader cl = Lookup.getDefault().lookup( ClassLoader.class );
         if( null == cl )
@@ -297,7 +297,7 @@ public class LafPanel extends javax.swing.JPanel {
             Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
             Object colorModel = klz.newInstance();
             Method m = klz.getDeclaredMethod( "setCurrentProfile", String.class ); //NOI18N
-            m.invoke( colorModel, DARK_COLOR_THEME_NAME );
+            m.invoke( colorModel, preferredProfile );
         } catch( Exception ex ) {
             //ignore
             Logger.getLogger( LafPanel.class.getName() ).log( Level.INFO, "Cannot change editor colors profile.", ex ); //NOI18N
@@ -333,10 +333,10 @@ public class LafPanel extends javax.swing.JPanel {
         return res;
     }
 
-    private boolean isDarkLookAndFeel() {
+    private String getPreferredColorProfile() {
         String className = NbPreferences.root().node( "laf" ).get( "laf", null );
         if( null == className )
-            return false;
+            return null;
 
         ClassLoader loader = Lookup.getDefault().lookup( ClassLoader.class );
         if( null == loader )
@@ -345,10 +345,10 @@ public class LafPanel extends javax.swing.JPanel {
         try {
             Class klazz = loader.loadClass( className );
             LookAndFeel laf = ( LookAndFeel ) klazz.newInstance();
-            return laf.getDefaults().getBoolean( "nb.dark.theme" ); //NOI18N
+            return laf.getDefaults().getString( "nb.preferred.color.profile" ); //NOI18N
         } catch( Exception e ) {
             //ignore
         }
-        return false;
+        return null;
     }
 }

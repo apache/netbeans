@@ -96,7 +96,7 @@ public final class OpenInEditorAction implements Runnable {
                 if (lineNumber == -1) {
                     ed.open();
                 } else {
-                    lc = (LineCookie) dobj.getLookup().lookup(LineCookie.class);
+                    lc = dobj.getLookup().lookup(LineCookie.class);
                     SwingUtilities.invokeLater(this);
                 }
             } else {

@@ -82,7 +82,7 @@ public abstract class CacheIndex {
             values.addAll(c);
         }
 
-        Set<File> ret = new HashSet();
+        Set<File> ret = new HashSet<>();
         for (Set<File> valuesSet : values) {
             synchronized(this) {
                 ret.addAll(valuesSet);

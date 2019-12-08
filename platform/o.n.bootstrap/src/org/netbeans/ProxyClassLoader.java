@@ -122,12 +122,24 @@ public class ProxyClassLoader extends ClassLoader {
     @Override
     protected synchronized Class loadClass(String name, boolean resolve)
                                             throws ClassNotFoundException {
+        final Class cls = doFindClass(name);
+        if (resolve) resolveClass(cls); 
+        return cls; 
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        LOGGER.log(Level.FINEST, "{0} finding class {1}", new Object[] {this, name});
+        return doFindClass(name);
+    }
+    
+    private Class<?> doFindClass(String name) throws ClassNotFoundException {
         if (LOG_LOADING && !name.startsWith("java.")) {
             LOGGER.log(Level.FINEST, "{0} initiated loading of {1}",
                     new Object[] {this, name});
         }
         
-        Class cls = null;
+        Class<?> cls = null;
 
         int last = name.lastIndexOf('.');
         if (last == -1) {
@@ -168,7 +180,7 @@ public class ProxyClassLoader extends ClassLoader {
             // multicovered package, search in order
             for (ProxyClassLoader pcl : parents.loaders()) { // all our accessible parents
                 if (del.contains(pcl) && shouldDelegateResource(path, pcl)) { // that cover given package
-                    Class _cls = pcl.selfLoadClass(pkg, name);
+                    Class<?> _cls = pcl.selfLoadClass(pkg, name);
                     if (_cls != null) {
                         if (cls == null) {
                             cls = _cls;
@@ -202,9 +214,9 @@ public class ProxyClassLoader extends ClassLoader {
         if (cls == null) {
             throw new ClassNotFoundException(diagnosticCNFEMessage(name, del));
         }
-        if (resolve) resolveClass(cls); 
-        return cls; 
+        return cls;
     }
+    
     private String diagnosticCNFEMessage(String base, Set<ProxyClassLoader> del) {
         String parentSetS;
         int size = parents.size();
@@ -228,7 +240,7 @@ public class ProxyClassLoader extends ClassLoader {
 
     /** May return null */ 
     private synchronized Class selfLoadClass(String pkg, String name) { 
-        Class cls = findLoadedClass(name); 
+        Class<?> cls = findLoadedClass(name); 
         if (cls == null) {
             try {
                 cls = doLoadClass(pkg, name);

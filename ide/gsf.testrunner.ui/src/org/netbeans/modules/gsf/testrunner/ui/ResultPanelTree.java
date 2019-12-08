@@ -299,7 +299,7 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
     }
 
     Set<Testcase> getFailedTests(){
-        Set<Testcase> failedTests = new HashSet();
+        Set<Testcase> failedTests = new HashSet<>();
         for(Testcase tc:displayHandler.getSession().getAllTestCases()){
             if (Status.isFailureOrError(tc.getStatus())){
                 failedTests.add(tc);

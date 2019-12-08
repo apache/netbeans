@@ -26,10 +26,10 @@
             <folder name="FlatLafDark">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
                 <folder name="Defaults">
-                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="fontcolors/FlatLaf-fontsColorsDefaults.xml">
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="fontscolors/FlatLafDark-fontsColorsDefaults.xml">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
                     </file>
-                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="FlatLafDark-editor.xml">
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="fontcolors/FlatLafDark-editor.xml">
                         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
                         <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
                     </file>
@@ -41,7 +41,7 @@
                 <folder name="FontsColors">
                     <folder name="FlatLafDark">
                         <folder name="Defaults">
-                            <file name="org-netbeans-modules-properties-syntax-token-colorings.xml" url="fontcolors/FlatLaf-Properties-fontsColors.xml">
+                            <file name="org-netbeans-modules-properties-syntax-token-colorings.xml" url="fontscolors/FlatLaf-Properties-fontsColors.xml">
                                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
                             </file>
                         </folder>
@@ -52,7 +52,7 @@
                 <folder name="FontsColors">
                     <folder name="FlatLafDark">
                         <folder name="Defaults">
-                            <file name="org-netbeans-modules-editor-java-token-colorings.xml" url="fontcolors/FlatLafDark-Java-fontsColors.xml">
+                            <file name="org-netbeans-modules-editor-java-token-colorings.xml" url="fontscolors/FlatLafDark-Java-fontsColors.xml">
                                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
                             </file>
                         </folder>

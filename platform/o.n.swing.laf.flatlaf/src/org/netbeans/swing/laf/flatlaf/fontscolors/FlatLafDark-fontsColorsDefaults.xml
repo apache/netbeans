@@ -24,23 +24,22 @@
 
 <fontscolors>
     <colordef name="bg0_hard" color="1d2021"/>
-    <colordef name="bg1" color="3c3836"/>
-    <colordef name="bg2" color="504945"/>
-    <colordef name="bg3" color="665c54"/>
-    <colordef name="bg4" color="7c6f64"/>
 
-    <colordef name="gray" color="928374"/>
 
     <colordef name="fg1" color="ebdbb2"/>
     <colordef name="fg2" color="d5c4a1"/>
     <colordef name="fg3" color="bdae93"/>
-    <colordef name="fg4" color="a89984"/>
 
     <colordef name="purple" color="d3869b"/>
     <!-- defined -->
     <colordef name="bg0" color="2b2b2b"/>
+    <colordef name="bg1" color="323232"/>
+    <colordef name="bg2" color="888888"/>
+    <colordef name="bg3" color="214283"/>
+    <colordef name="bg4" color="3b514d"/>
 
     <colordef name="fg0" color="a9b7c6"/>
+    <colordef name="fg4" color="888888"/>
 
     <colordef name="red" color="9e2927"/>
     <colordef name="green" color="6a8759"/>
@@ -66,17 +65,17 @@
     <fontcolor name="whitespace"/>
 
     <fontcolor name="markup-element"/>
-    <fontcolor name="markup-attribute" foreColor="aqua"/>
+    <fontcolor name="markup-attribute" foreColor="levander"/>
     <fontcolor name="markup-attribute-value" foreColor="green"/>
     <fontcolor name="entity-reference" foreColor="cyan"/>
     <fontcolor name="mark-occurrences" bgColor="bg3"/>
 
     <!-- semantic colorings -->
 
-    <fontcolor name="constructor" foreColor="aqua">
+    <fontcolor name="constructor" foreColor="levander">
         <font style="bold" />
     </fontcolor>
-    <fontcolor name="method" foreColor="aqua">
+    <fontcolor name="method" foreColor="levander">
         <font style="bold" />
     </fontcolor>
     <fontcolor name="field" foreColor="blue">

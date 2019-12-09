@@ -95,6 +95,7 @@ public final class CodeceptionLogParser extends DefaultHandler {
                 processTestCase(attributes);
                 break;
             case "failure": // NOI18N
+            case "warning": // NOI18N
                 startTestFailure(attributes);
                 break;
             case "error": // NOI18N
@@ -117,6 +118,7 @@ public final class CodeceptionLogParser extends DefaultHandler {
                 testCase = null;
                 break;
             case "failure": // NOI18N
+            case "warning": // NOI18N
             case "error": // NOI18N
                 endTestContent();
                 break;

@@ -19,21 +19,11 @@
 package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import javax.swing.UIDefaults;
 
 /**
  *
  * @author lkishalmi
  */
 public class NbFlatDarkLaf extends FlatDarkLaf {
-
-    @Override
-    public UIDefaults getDefaults() {
-        UIDefaults ret = super.getDefaults();
-        ret.put( "nb.dark.theme", Boolean.TRUE );
-        return ret;
-    }
-
-
 
 }

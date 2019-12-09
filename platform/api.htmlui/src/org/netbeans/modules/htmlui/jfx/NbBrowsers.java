@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.htmlui;
+package org.netbeans.modules.htmlui.jfx;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,7 +47,7 @@ final class NbBrowsers {
     static {
         Platform.setImplicitExit(false);
     }
-    public static void load(WebView view, URL page, final Runnable onPageLoad, ClassLoader loader, Object... args) {
+    static void load(WebView view, URL page, final Runnable onPageLoad, ClassLoader loader, Object... args) {
         class ApplySkin implements Runnable {
             @Override
             public void run() {

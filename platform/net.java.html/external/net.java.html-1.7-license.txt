@@ -1,6 +1,6 @@
-Name: Html4J JSON Model in Java
-Version: 1.6.1
-Description: Html4j JSON Model in Java
+Name: Html4J
+Version: 1.7
+Description: Html4j
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: http://incubator.apache.org/projects/netbeans.html

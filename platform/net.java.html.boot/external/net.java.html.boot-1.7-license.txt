@@ -1,5 +1,5 @@
 Name: Html4J
-Version: 1.6.1
+Version: 1.7
 Description: Html4j Boot
 License: Apache-2.0
 Origin: Apache Software Foundation

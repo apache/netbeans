@@ -55,7 +55,7 @@ public class DialogsTest {
                 WebView v = new WebView();
                 Scene s = new Scene(v);
                 p.setScene(s);
-                NbBrowsers.load(v, u, new Runnable() {
+                HtmlToolkit.getDefault().load(v, u, new Runnable() {
                     @Override
                     public void run() {
                         ctx = BrwsrCtx.findDefault(DialogsTest.class);

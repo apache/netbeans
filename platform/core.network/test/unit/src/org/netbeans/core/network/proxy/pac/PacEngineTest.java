@@ -15,6 +15,7 @@ package org.netbeans.core.network.proxy.pac;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +29,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.core.network.proxy.pac.impl.NbPacScriptEvaluatorFactory;
+import org.netbeans.core.network.utils.IpAddressUtils;
+import org.netbeans.core.network.utils.LocalAddressUtils;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -101,8 +104,9 @@ public class PacEngineTest extends NbTestCase {
 
         URI testURL = new URI("http://netbeans.apache.org");  // doesn't actually matter which URL we use
         List<Proxy> proxies = pacEvaluator.findProxyForURL(testURL);
-
-        assertEquals(Collections.singletonList(Proxy.NO_PROXY), proxies);
+        
+        String host = LocalAddressUtils.getMostLikelyLocalInetAddress(IpAddressUtils.IpTypePreference.IPV4_ONLY).getHostAddress();
+        assertEquals("No proxy when accessing " + testURL + " with " + InetAddress.getLocalHost() + " host: " + host, Collections.singletonList(Proxy.NO_PROXY), proxies);
     }
     
     private void testPacFileMalicious(String pacFileName, PacScriptEvaluatorFactory factory ) throws IOException, PacParsingException, URISyntaxException, PacValidationException {

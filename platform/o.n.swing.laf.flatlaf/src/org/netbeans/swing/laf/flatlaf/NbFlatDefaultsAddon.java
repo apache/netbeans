@@ -18,23 +18,23 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
-import com.formdev.flatlaf.FlatLightLaf;
-import javax.swing.UIManager;
-import org.openide.modules.ModuleInstall;
-import org.openide.util.*;
+import com.formdev.flatlaf.FlatDefaultsAddon;
+import java.io.InputStream;
 
-@NbBundle.Messages({
-    "LBL_FLATLAF_LIGHT=FlatLaf Light (experimental)",
-    "LBL_FLATLAF_DARK=FlatLaf Dark (experimental)"
-})
-public class Installer extends ModuleInstall {
+/**
+ * NetBeans addon for FlatLaf.
+ */
+public class NbFlatDefaultsAddon extends FlatDefaultsAddon {
 
+    /**
+     * Finds NetBeans addon .properties file for the given LaF class in the same
+     * package as this class.
+     */
     @Override
-    public void validate() throws IllegalStateException {
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_LIGHT(), FlatLightLaf.class.getName()));
-        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), NbFlatDarkLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat IntelliJ", FlatIntelliJLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Darcula", FlatDarculaLaf.class.getName()));
+    public InputStream getDefaults(Class<?> lafClass) {
+        Class<?> addonClass = this.getClass();
+        String propertiesName = '/' + addonClass.getPackage().getName().replace('.', '/')
+                + '/' + lafClass.getSimpleName() + ".properties"; //NOI18N
+        return addonClass.getResourceAsStream(propertiesName);
     }
-
 }

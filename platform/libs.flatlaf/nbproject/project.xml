@@ -27,6 +27,9 @@
             <module-dependencies/>
             <public-packages>
                 <package>com.formdev.flatlaf</package>
+                <package>com.formdev.flatlaf.icons</package>
+                <package>com.formdev.flatlaf.ui</package>
+                <package>com.formdev.flatlaf.util</package>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/flatlaf-0.21.jar</runtime-relative-path>

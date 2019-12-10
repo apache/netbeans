@@ -1,9 +1,8 @@
-Name: JavaEE API 8.0
-Version: 8.0
+Name: Javax Concurrent API
+Version: 1.1
 License: CDDL-1.1
-Description: JavaEE API 8.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/8.0)
-
+Description: Javax Concurrent API 1.1
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api/1.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

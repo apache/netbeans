@@ -1,8 +1,8 @@
-Name: Javax Resource API
-Version: 1.7
+Name: Javax Management J2EE API
+Version: 1.1.2
 License: CDDL-1.1
-Description: Javax Resource API 1.7
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.resource/javax.resource-api/1.7)
+Description: Javax Management J2EE API 1.1.2
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.management.j2ee/javax.management.j2ee-api/1.1.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

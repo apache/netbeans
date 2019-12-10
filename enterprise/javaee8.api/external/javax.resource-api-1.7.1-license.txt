@@ -1,8 +1,8 @@
-Name: Javax XML Registry API
-Version: 1.0.7
+Name: Javax Resource API
+Version: 1.7.1
 License: CDDL-1.1
-Description: Javax XML Registry API 1.0.7
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml.registry/javax.xml.registry-api/1.0.7)
+Description: Javax Resource API 1.7.1
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.resource/javax.resource-api/1.7.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

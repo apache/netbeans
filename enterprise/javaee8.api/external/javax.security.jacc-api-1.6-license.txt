@@ -1,8 +1,8 @@
-Name: Javax XML RPC API
-Version: 1.1.1
+Name: Java Authorization Contract For Containers API
+Version: 1.6
 License: CDDL-1.1
-Description: Javax XML RPC API 1.1.1
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml.rpc/javax.xml.rpc-api/1.1.1)
+Description: Java Authorization Contract For Containers API 1.6
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.security.jacc/javax.security.jacc-api/1.6)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

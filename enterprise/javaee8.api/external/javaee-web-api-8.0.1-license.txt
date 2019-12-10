@@ -1,8 +1,8 @@
-Name: Javax Annotation API
-Version: 1.2
+Name: JavaEE Web API 8.0.1
+Version: 8.0.1
 License: CDDL-1.1
-Description: Javax Annotation API 1.2
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.2)
+Description: JavaEE Web API 8.0.1
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-web-api/8.0.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

@@ -1,8 +1,8 @@
-Name: Javax Concurrent API
-Version: 1.0
+Name: JavaMail API
+Version: 1.6.2
 License: CDDL-1.1
-Description: Javax Concurrent API 1.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api/1.0)
+Description: JavaMail API 1.6.2
+Origin: GlassFish Community (https://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.6.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

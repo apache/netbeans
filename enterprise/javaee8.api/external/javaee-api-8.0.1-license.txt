@@ -1,8 +1,9 @@
-Name: JavaEE Web API 8.0
-Version: 8.0
+Name: JavaEE API 8.0.1
+Version: 8.0.1
 License: CDDL-1.1
-Description: JavaEE Web API 8.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-web-api/8.0)
+Description: JavaEE API 8.0.1
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax/javaee-api/8.0.1)
+
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

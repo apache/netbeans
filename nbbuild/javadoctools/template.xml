@@ -444,7 +444,7 @@ cause it to fail.
             <exclude name="**/**/architecture-summary.html,**/**/apichanges.html"/>
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@" value="">
-            <include name="*.html"/>         
+            <include name="*.html"/>
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@" value="../">
             <include name="*/*.html"/>

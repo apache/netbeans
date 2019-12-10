@@ -105,7 +105,12 @@ public class LanguageStorage {
                     if (syntax != null) {
                         syntax.delete();
                     }
-                    syntax = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/syntax.json");
+                    syntax = FileUtil.getConfigFile("Editors/" + description.mimeType + "/syntax.xml");
+                    if (syntax != null) {
+                        syntax.delete();
+                    }
+                    String ext = description.syntaxGrammar.substring(Math.max(0, description.syntaxGrammar.length() - ".json".length())).equalsIgnoreCase(".json") ? "json" : "xml";
+                    syntax = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/syntax." + ext);
                     File grammar = new File(description.syntaxGrammar);
                     syntax.setAttribute("textmate-grammar", findScope(grammar));
                     try (InputStream in = new FileInputStream(grammar);

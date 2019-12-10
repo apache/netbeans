@@ -28,13 +28,14 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.security.CodeSigner;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
+import java.security.cert.TrustAnchor;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -48,10 +49,12 @@ import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParser;
+import org.netbeans.modules.autoupdate.updateprovider.MessageDigestValue;
 import org.netbeans.modules.autoupdate.updateprovider.ModuleItem;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess.Task;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
+import org.netbeans.spi.autoupdate.KeyStoreProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.updater.ModuleDeactivator;
 import org.netbeans.updater.ModuleUpdater;
@@ -65,6 +68,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.xml.sax.SAXException;
+
+import static org.netbeans.modules.autoupdate.services.Utilities.VERIFICATION_RESULT_COMPARATOR;
 
 /**
  *
@@ -924,9 +929,10 @@ public class InstallSupportImpl {
             String label) throws MalformedURLException, IOException {
         
         OpenConnectionListener listener = new OpenConnectionListener(source);
-        final Task task = NetworkAccess.createNetworkAcessTask(source,
+        final Task task = NetworkAccess.createNetworkAccessTask(source,
                 AutoupdateSettings.getOpenConnectionTimeout(),
-                listener);
+                listener,
+                false);
         new Thread(new Runnable() {
             @SuppressWarnings("SleepWhileInLoop")
             @Override
@@ -1010,7 +1016,7 @@ public class InstallSupportImpl {
             //        + ") of is equal to estimatedSize (" + estimatedSize + ").";
             if (estimatedSize != increment) {
                 LOG.log (Level.FINEST, "Increment (" + increment + ") of is not equal to estimatedSize (" + estimatedSize + ").");
-            }            
+            }
         } catch (IOException ioe) {
             LOG.log (Level.INFO, "Writing content of URL " + source + " failed.", ioe);
         } finally {
@@ -1022,6 +1028,7 @@ public class InstallSupportImpl {
                 LOG.log (Level.INFO, ioe.getMessage (), ioe);
             }
         }
+
         if (contentLength != -1 && increment != contentLength) {
             if(canceled) {
                 LOG.log(Level.INFO, "Download of " + source + " was cancelled");
@@ -1049,29 +1056,98 @@ public class InstallSupportImpl {
     }
     
     private int verifyNbm (UpdateElement el, File nbmFile, ProgressHandle progress, int verified) throws OperationException {
-        String res;
+        UpdateElementImpl impl = Trampoline.API.impl(el);
+
+        modified.remove(impl);
+        trusted.remove(impl);
+        signedVerified.remove(impl);
+        signedUnverified.remove(impl);
+
+        String res = null;
         try {
             // get trusted certificates
-            List<Certificate> trustedCerts = new ArrayList<Certificate> ();
-            for (KeyStore ks : Utilities.getKeyStore ()) {
-                trustedCerts.addAll (Utilities.getCertificates (ks));
+            Set<Certificate> trustedCerts = new HashSet<> ();
+            Set<Certificate> validationCerts = new HashSet<>();
+            Set<TrustAnchor> trustedCACerts = new HashSet<>();
+            Set<TrustAnchor> validationCACerts = new HashSet<>();
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.TRUST)) {
+                trustedCerts.addAll(Utilities.getCertificates(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.VALIDATE)) {
+                validationCerts.addAll(Utilities.getCertificates(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.TRUST_CA)) {
+                trustedCACerts.addAll(Utilities.getTrustAnchor(ks));
+            }
+            for (KeyStore ks : Utilities.getKeyStore (KeyStoreProvider.TrustLevel.VALIDATE_CA)) {
+                validationCACerts.addAll(Utilities.getTrustAnchor(ks));
             }
             // load user certificates
             KeyStore ks = Utilities.loadKeyStore ();
             if (ks != null) {
-                trustedCerts.addAll (Utilities.getCertificates (ks));
+                trustedCerts.addAll(Utilities.getCertificates(ks));
             }
-            
+
             verified += el.getDownloadSize ();
             if (progress != null) {
                 progress.progress (el.getDisplayName (), verified < wasDownloaded ? verified : wasDownloaded);
             }
-            Collection<Certificate> nbmCerts = Utilities.getNbmCertificates (nbmFile);
-            if (nbmCerts != null && nbmCerts.size () > 0) {
-                certs.put (el, nbmCerts);
+
+            {
+                MessageDigestChecker mdChecker = new MessageDigestChecker(impl.getMessageDigests());
+                byte[] buffer = new byte[102400];
+                int read;
+                try(FileInputStream fis = new FileInputStream(nbmFile)) {
+                    while((read = fis.read(buffer)) > 0) {
+                        mdChecker.update(buffer, 0, read);
+                    }
+                }
+                if(!mdChecker.validate()) {
+                    for (String algorithm : mdChecker.getFailingHashes()) {
+                        LOG.log(Level.INFO,
+                            "Failed to validate message digest for ''{0}'' expected ''{1}'' got ''{2}''",
+                            new Object[]{
+                                nbmFile.getAbsolutePath(),
+                                mdChecker.getExpectedHashAsString(algorithm),
+                                mdChecker.getCalculatedHashAsString(algorithm)
+                            });
+                    }
+                    res = Utilities.MODIFIED;
+                } else if (mdChecker.isDigestAvailable() && impl.isCatalogTrusted()) {
+                    res = Utilities.TRUSTED;
+                }
             }
-            res = Utilities.verifyCertificates(nbmCerts, trustedCerts);
-            UpdateElementImpl impl = Trampoline.API.impl(el);
+
+            if(res == null) {
+                try {
+                    Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
+                    if (nbmCerts == null) {
+                        res = Utilities.N_A;
+                    } else if (nbmCerts.isEmpty()) {
+                        res = Utilities.UNSIGNED;
+                    } else {
+                        // Iterate all certpaths that can be considered for the NBM
+                        // choose the certpath, that has the highest trust level
+                        // TRUSTED -> SIGNATURE_VERIFIED -> SIGNATURE_UNVERIFIED
+                        // or comes first
+                        for (CodeSigner cs : nbmCerts) {
+                            String localRes = Utilities.verifyCertificates(cs, trustedCerts, trustedCACerts, validationCerts, validationCACerts);
+                            // If there is no previous result or if the local
+                            // verification yielded a better result than the
+                            // previous result, replace it
+                            if (res == null
+                                || VERIFICATION_RESULT_COMPARATOR.compare(res, localRes) > 0) {
+                                res = localRes;
+                                certs.put(el, (List<Certificate>) cs.getSignerCertPath().getCertificates());
+                            }
+                        }
+                    }
+                } catch (SecurityException ex) {
+                    LOG.log(Level.INFO, "The content of the jar/nbm has been modified or certificate paths were inconsistent - " + ex.getMessage(), ex);
+                    res = Utilities.MODIFIED;
+                }
+            }
+
             if (res != null) {
                 switch (res) {
                     case Utilities.MODIFIED:

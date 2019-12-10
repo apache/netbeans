@@ -28,6 +28,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.DirectoryScanner;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,17 +37,22 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -55,8 +61,11 @@ import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
@@ -104,6 +113,19 @@ public class MakeUpdateDesc extends MatchingTask {
     private List<Entityinclude> entityincludes = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
     private List<FileSet> filesets = new ArrayList<>();
+
+    private List<String> includeMessageDigests = Arrays.asList("SHA-512");
+
+    public String getIncludeMessageDigests() {
+        return includeMessageDigests.stream().collect(Collectors.joining(" "));
+    }
+
+    public void setIncludeMessageDigests(String includeMessageDigests) {
+        if(includeMessageDigests == null) {
+            includeMessageDigests = "";
+        }
+        this.includeMessageDigests = Arrays.asList(includeMessageDigests.split(" "));
+    }
 
     private File desc;
 
@@ -301,7 +323,9 @@ public class MakeUpdateDesc extends MatchingTask {
                     }
                     File desc_ent = new File(ent_name);
                     desc_ent.delete();
-                    if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
+                    if (includeMessageDigests != null && (! includeMessageDigests.isEmpty())) {
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_8.dtd\" [");
+                    } else if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
                         pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_7.dtd\" [");
                     } else if (useLicenseUrl) {
                         pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd\" [");
@@ -339,7 +363,9 @@ public class MakeUpdateDesc extends MatchingTask {
                     pw.println ();
                     
                 } else {
-                    if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
+                    if (includeMessageDigests != null && (! includeMessageDigests.isEmpty())) {
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_8.dtd\">");
+                    } else if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
                         pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_7.dtd\">");
                     } else if (useLicenseUrl) {
                         pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd\">");
@@ -642,6 +668,15 @@ public class MakeUpdateDesc extends MatchingTask {
                                     }
                                 }
                             }
+
+                            Map<String,String> messageDigests = createMessageDigests(n_file);
+                            for(Entry<String,String> messageDigest: messageDigests.entrySet()) {
+                                Element messageDigestElement = m.xml.getOwnerDocument().createElement("message_digest");
+                                messageDigestElement.setAttribute("algorithm", messageDigest.getKey());
+                                messageDigestElement.setAttribute("value", messageDigest.getValue());
+                                m.xml.appendChild(messageDigestElement);
+                            }
+
                             moduleCollection.add(m);
                         }
                     } catch (BuildException x) {
@@ -882,4 +917,57 @@ public class MakeUpdateDesc extends MatchingTask {
         return sb;
     }
 
+    private Map<String,String> createMessageDigests(File targetFile) {
+        if(includeMessageDigests.isEmpty()) {
+            return Collections.<String,String>emptyMap();
+        }
+
+        Map<String,MessageDigest> digests = new HashMap<>(includeMessageDigests.size());
+
+        for(String messageDigest: includeMessageDigests) {
+            try {
+                digests.put(messageDigest, MessageDigest.getInstance(messageDigest));
+            } catch (NoSuchAlgorithmException ex) {
+                throw new BuildException("Failed to load requested messageDigest: " + messageDigest, ex);
+            }
+        }
+
+        try(FileInputStream fis = new FileInputStream(targetFile)) {
+            byte[] buffer = new byte[102400];
+            int read;
+            while((read = fis.read(buffer)) >= 0) {
+                for(MessageDigest md: digests.values()) {
+                    md.update(buffer, 0, read);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(MakeUpdateDesc.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Map<String,String> result = new HashMap<>();
+        for(Entry<String,MessageDigest> md: digests.entrySet()) {
+            result.put(md.getKey(), hexEncode(md.getValue().digest()));
+        }
+        return result;
+    }
+
+    private static String hexEncode(byte[] input) {
+        StringBuilder sb = new StringBuilder(input.length * 2);
+        for(byte b: input) {
+            sb.append(Character.forDigit((b & 0xF0) >> 4, 16));
+            sb.append(Character.forDigit((b & 0x0F), 16));
+        }
+        return sb.toString();
+    }
+
+    private static byte[] hexDecode(String input) {
+        int length = input.length() / 2;
+        byte[] result = new byte[length];
+        for(int i = 0; i < length; i++) {
+            int b = Character.digit(input.charAt(i * 2), 16) << 4;
+            b |= Character.digit(input.charAt(i * 2 + 1), 16);
+            result[i] = (byte) (b & 0xFF);
+        }
+        return result;
+    }
 }

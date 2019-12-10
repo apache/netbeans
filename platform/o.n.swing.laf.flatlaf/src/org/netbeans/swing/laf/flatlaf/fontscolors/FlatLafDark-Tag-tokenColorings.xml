@@ -20,12 +20,16 @@
 
 -->
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
-
 <fontscolors>
-    <fontcolor name="properties-line-comment" default="comment"/>
-    <fontcolor name="properties-equal-sign" default="operator"/>
-    <fontcolor name="properties-key" default="field">
-        <font style="bold"/>
-    </fontcolor>
-    <fontcolor name="properties-value" default="string"/>
+    <fontcolor name="attribute-name" default="default"/>
+    <fontcolor name="attribute-value" default="default" foreColor="ffa5c261"/>
+    <fontcolor name="comment" default="default" foreColor="gray"><font style="bold"/></fontcolor>
+    <fontcolor name="endtag" default="default" foreColor="ffcc6932"><font style="bold"/></fontcolor>
+    <fontcolor name="error" default="default" foreColor="red"><font style="bold"/></fontcolor>
+    <fontcolor name="expression-language" default="default" bgColor="ff232525"/>
+    <fontcolor name="jsp-whitespace" default="default"><font style="bold"/></fontcolor>
+    <fontcolor name="scriptlet-delimiter" default="default" bgColor="ff303232"/>
+    <fontcolor name="scriptlet" default="default" bgColor="ff303232"/>
+    <fontcolor name="symbol" default="default"><font style="bold"/></fontcolor>
+    <fontcolor name="tag-directive" default="default" foreColor="ffcc6932"><font style="bold"/></fontcolor>
 </fontscolors>

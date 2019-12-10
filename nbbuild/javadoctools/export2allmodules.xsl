@@ -33,19 +33,6 @@
                 </li>
             </xsl:for-each>
         </ul>
-        <!--<TABLE BORDER="0" WIDTH="100%" SUMMARY="">
-            <TR>
-                <TD NOWRAP="">
-                    <FONT CLASS="FrameItemFont">
-                        <xsl:for-each select="//module[not (@name = '_no module_')]" >
-                            <xsl:sort order="ascending" select="@name" />
-                            <xsl:call-template name="module" />
-                        </xsl:for-each>
-                    </FONT>
-                </TD>
-            </TR>
-        </TABLE>-->
-
     </xsl:template>
     <xsl:template name="modulewithclass">
         <xsl:attribute name="style">
@@ -58,8 +45,6 @@
             </xsl:choose>
         </xsl:attribute>
         <span class="modules">
-            <!--<xsl:attribute name="href">
-                <xsl:value-of select="substring-before(@target,'/')" />/allclasses-frame.html</xsl:attribute>-->
             <xsl:value-of select="@name" />
         </span>
         (<a><xsl:attribute name="href"><xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>javadoc</a>)
@@ -71,9 +56,8 @@
                     <xsl:attribute name="class">
                         <xsl:if test="@interface='false'">class</xsl:if>
                         <xsl:if test="@interface='true'">interface</xsl:if>
-                    </xsl:attribute>                
+                    </xsl:attribute>
                     <xsl:call-template name="class" />
-                    
                 </xsl:element>
             </xsl:for-each>
         </ul>
@@ -99,7 +83,6 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="substring-before(@target,'/')" />/allclasses-frame.html</xsl:attribute>
                 <xsl:attribute name="target">packageFrame</xsl:attribute>
-
                 <xsl:value-of select="@name" />
             </a>
             (<a>
@@ -109,7 +92,6 @@
         </span>
         <br/>
     </xsl:template>
-    
 </xsl:stylesheet>
 
 

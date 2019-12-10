@@ -40,7 +40,6 @@
                 </xsl:element>
                 <link rel="stylesheet" href="org-openide-util/javadoc.css" type="text/css" title="style" />
             </head>
-
             <body>
                 <font size="+1" CLASS="FrameHeadingFont">
                     <xsl:element name="title">
@@ -53,33 +52,27 @@
                         <xsl:text>API Classes</xsl:text>
                     </xsl:element>
                 </font>
-        
                 <TABLE BORDER="0" WIDTH="100%" SUMMARY="">
                     <TR>
                         <TD NOWRAP="">
                             <FONT CLASS="FrameItemFont">
-        
                                 <xsl:for-each select="//class" >
                                     <xsl:sort order="ascending" select="@name" />
                                     <xsl:call-template name="class" />
                                 </xsl:for-each>
-            
                             </FONT>
                         </TD>
                     </TR>
                 </TABLE>
-            
             </body>
         </html>
     </xsl:template>
-    
     <xsl:template name="class">
         <a>
             <xsl:attribute name="href">
                 <xsl:value-of select="@url" />
             </xsl:attribute>
             <xsl:attribute name="target">classFrame</xsl:attribute>
-            
             <xsl:choose>
                 <xsl:when test="@interface = 'true'" >
                     <i>
@@ -93,7 +86,6 @@
         </a>
         <br/>
     </xsl:template>
-    
 </xsl:stylesheet>
 
 

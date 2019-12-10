@@ -83,7 +83,7 @@ public class StatusCommand extends GitCommand {
         this.monitor = monitor;
         this.listener = listener;
         this.revision = revision;
-        statuses = new LinkedHashMap<File, GitStatus>();
+        statuses = new LinkedHashMap<>();
     }
 
     @Override
@@ -110,8 +110,7 @@ public class StatusCommand extends GitCommand {
         Repository repository = getRepository();
         try {
             DirCache cache = repository.readDirCache();
-            ObjectReader od = repository.newObjectReader();
-            try {
+            try(ObjectReader od = repository.newObjectReader();) {
                 String workTreePath = repository.getWorkTree().getAbsolutePath();
                 Collection<PathFilter> pathFilters = Utils.getPathFilters(repository.getWorkTree(), roots);
                 ObjectId commitId = Utils.parseObjectId(repository, revision);
@@ -130,13 +129,15 @@ public class StatusCommand extends GitCommand {
                 // Index
                 treeWalk.addTree(new DirCacheIterator(cache));
                 // Working directory
-                treeWalk.addTree(new FileTreeIterator(repository));
+                FileTreeIterator workingDirectoryIterator = new FileTreeIterator(repository);
+                workingDirectoryIterator.setWalkIgnoredDirectories(true); // we also need to walk ignored entries
+                treeWalk.addTree(workingDirectoryIterator);
                 final int T_COMMIT = 0;
                 final int T_INDEX = 1;
                 final int T_WORKSPACE = 2;
                 String lastPath = null;
                 GitStatus[] conflicts = new GitStatus[3];
-                List<GitStatus> symLinks = new LinkedList<GitStatus>();
+                List<GitStatus> symLinks = new LinkedList<>();
                 boolean checkExecutable = Utils.checkExecutable(repository);
                 while (treeWalk.next() && !monitor.isCanceled()) {
                     String path = treeWalk.getPathString();
@@ -263,7 +264,6 @@ public class StatusCommand extends GitCommand {
                 handleConflict(conflicts, workTreePath);
                 handleSymlink(symLinks, workTreePath);
             } finally {
-                od.release();
                 cache.unlock();
             }
         } catch (CorruptObjectException ex) {
@@ -279,8 +279,7 @@ public class StatusCommand extends GitCommand {
 
     private Map<String, DiffEntry> detectRenames (Repository repository, DirCache cache, ObjectId commitId) {
         List<DiffEntry> entries;
-        TreeWalk treeWalk = new TreeWalk(repository);
-        try {
+        try(TreeWalk treeWalk = new TreeWalk(repository);) {
             treeWalk.setRecursive(true);
             treeWalk.reset();
             if (commitId != null) {
@@ -297,10 +296,8 @@ public class StatusCommand extends GitCommand {
             entries = d.compute();
         } catch (IOException ex) {
             entries = Collections.<DiffEntry>emptyList();
-        } finally {
-            treeWalk.release();
         }
-        Map<String, DiffEntry> renames = new HashMap<String, DiffEntry>();
+        Map<String, DiffEntry> renames = new HashMap<>();
         for (DiffEntry e : entries) {
             if (e.getChangeType().equals(DiffEntry.ChangeType.COPY) || e.getChangeType().equals(DiffEntry.ChangeType.RENAME)) {
                 renames.put(e.getNewPath(), e);
@@ -370,7 +367,7 @@ public class StatusCommand extends GitCommand {
     }
 
     private static Collection<TreeFilter> getSubtreeFilters(Collection<PathFilter> filters, String path) {
-        List<TreeFilter> subtreeFilters = new LinkedList<TreeFilter>();
+        List<TreeFilter> subtreeFilters = new LinkedList<>();
         for (PathFilter filter : filters) {
             if (filter.getPath().startsWith(path + "/")) { //NOI18N
                 subtreeFilters.add(filter);

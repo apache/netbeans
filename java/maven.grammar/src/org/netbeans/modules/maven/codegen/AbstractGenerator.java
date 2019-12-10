@@ -37,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author mkleint
  */
-public abstract class AbstractGenerator<T extends AbstractDocumentModel> implements CodeGenerator {
+public abstract class AbstractGenerator<T extends AbstractDocumentModel<? extends DocumentComponent<?>>> implements CodeGenerator {
     protected final JTextComponent component;
     protected final T model;
 

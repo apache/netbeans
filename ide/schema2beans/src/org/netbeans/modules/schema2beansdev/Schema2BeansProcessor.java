@@ -34,7 +34,6 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.FilerException;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -42,20 +41,23 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
-import org.apache.tools.ant.util.FileUtils;
 import org.netbeans.modules.schema2beans.Schema2Beans;
 import org.netbeans.modules.schema2beans.Schema2Beans.Multiple;
 import org.netbeans.modules.schema2beansdev.GenBeans.Config;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class Schema2BeansProcessor extends AbstractProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
         return new HashSet<String>(Arrays.asList(
                 Schema2Beans.class.getCanonicalName(),
                 Multiple.class.getCanonicalName()));
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

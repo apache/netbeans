@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42.0
+#Version 1.43.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1281,6 +1281,7 @@ fld public final static org.netbeans.modules.glassfish.eecommon.api.config.Servl
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_2_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_2_5
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_3_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion SERVLET_4_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.glassfish.eecommon.api.config.ServletVersion getServletVersion(java.lang.String)
 supr org.netbeans.modules.glassfish.eecommon.api.config.J2EEBaseVersion

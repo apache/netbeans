@@ -454,14 +454,14 @@ public class MainWindowOperator extends JFrameOperator {
             synchronized (this) {
                 if(removeCompared) {
                     while(!statusTextHistory.isEmpty()) {
-                        String status = (String)statusTextHistory.remove(0);
+                        String status = statusTextHistory.remove(0);
                         if(comparator.equals(status, text)) {
                             return true;
                         }
                     }
                 } else {
                     for (int i = 0; i < statusTextHistory.size(); i ++) {
-                        if(comparator.equals((String)statusTextHistory.get(i), text)) {
+                        if(comparator.equals(statusTextHistory.get(i), text)) {
                             return true;
                         }
                     }

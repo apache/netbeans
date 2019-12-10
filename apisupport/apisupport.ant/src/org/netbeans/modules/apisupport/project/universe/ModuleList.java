@@ -408,11 +408,11 @@ public final class ModuleList {
         // since those modules contribute sources for JARs which are used in unit test classpaths for stable modules.
         String clusterList = clusterProps.get("clusters.list"); // NOI18N
         if (clusterList == null) {
-            String config = clusterProps.get("cluster.config"); // NOI18N
-            if (config != null) {
-                clusterList = clusterProps.get("clusters.config." + config + ".list"); // NOI18N
+                String config = clusterProps.get("cluster.config"); // NOI18N
+                if (config != null) {
+                    clusterList = clusterProps.get("clusters.config." + config + ".list"); // NOI18N
+                }
             }
-        }
         if (clusterList == null) {
             throw new IOException("Neither ${clusters.list} nor ${cluster.config} + ${clusters.config.<cfg>.list} found in "    // NOI18N
                     + getClusterPropertiesFile(home));
@@ -429,9 +429,10 @@ public final class ModuleList {
             if (moduleList == null) {
                 throw new IOException("No ${" + clusterName + "} found in " + home); // NOI18N
             }
+            final String clusterDir = clusterProps.get(clusterName + ".dir");
             StringTokenizer tok2 = new StringTokenizer(moduleList, ", "); // NOI18N
             while (tok2.hasMoreTokens()) {
-                String module = tok2.nextToken();
+                final String module = clusterDir + "/" + tok2.nextToken(); //NETBEANS-3330
                 File basedir = new File(home, module.replace('/', File.separatorChar));
                 if (!knownProjects.contains(basedir)) { // we may already have scanned some
                     scanPossibleProject(basedir, _entries, NbModuleType.NETBEANS_ORG, home, nbdestdir, module);

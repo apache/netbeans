@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.projectimport.eclipse.core/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/projectimport/eclipse/core/resources/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/projectimport/eclipse/core/resources/layer.xml
-OpenIDE-Module-Specification-Version: 2.36
+OpenIDE-Module-Specification-Version: 2.37
 

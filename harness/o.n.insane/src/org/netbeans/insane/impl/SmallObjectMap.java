@@ -19,7 +19,6 @@
 
 package org.netbeans.insane.impl;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import org.netbeans.insane.scanner.*;

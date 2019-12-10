@@ -226,7 +226,8 @@ public final class OptionsExportModel {
             String time = (hours != null && minutes != null) ? hours.concat(minutes) : "2359";  // NOI18N
             return year.concat(month).concat(day).concat(time);
         }
-        return null;
+        // FIX NETBEANS-3198 : build number no longer contains a date
+        return "201910010000";
     }
 
     /**

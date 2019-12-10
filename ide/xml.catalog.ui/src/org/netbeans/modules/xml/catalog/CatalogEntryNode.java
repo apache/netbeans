@@ -90,7 +90,7 @@ final class CatalogEntryNode extends BeanNode implements EditCookie, Node.Cookie
             boolean editPossible=false;
             if (fo!=null) {
                 DataObject obj = DataObject.find(fo);
-                EditCookie editCookie = (EditCookie)obj.getCookie(EditCookie.class);
+                EditCookie editCookie = obj.getCookie(EditCookie.class);
                 if (editCookie!=null) {
                     editPossible=true;
                     editCookie.edit();

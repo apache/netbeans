@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.clientapi
-OpenIDE-Module-Specification-Version: 1.38
+OpenIDE-Module-Specification-Version: 1.39
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/client/Bundle.properties
 AutoUpdate-Show-In-Client: false
 

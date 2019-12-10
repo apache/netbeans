@@ -41,9 +41,9 @@ public class PatchByteCodeTest extends NbTestCase {
 
     public static class C {
         static final long x = 123L; // test CONSTANT_Long, tricky!
-        private C(boolean _) {}
+        private C(boolean doNotCare) {}
         @PatchedPublic
-        private C(int _) {}
+        private C(int doNotCare) {}
         private void m1() {}
         @PatchedPublic
         private void m2() {}
@@ -124,7 +124,7 @@ public class PatchByteCodeTest extends NbTestCase {
                 } catch (IOException x) {
                     throw new ClassNotFoundException(name, x);
                 }
-                Class c = defineClass(name, data, 0, data.length);
+                Class<?> c = defineClass(name, data, 0, data.length);
                 if (resolve) {
                     resolveClass(c);
                 }

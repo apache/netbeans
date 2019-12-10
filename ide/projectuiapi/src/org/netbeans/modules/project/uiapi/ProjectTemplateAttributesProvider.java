@@ -60,7 +60,7 @@ public final class ProjectTemplateAttributesProvider implements CreateFromTempla
         FileObject targetF = desc.getTarget();
         String name = desc.getProposedName();
         Project prj = FileOwnerQuery.getOwner(targetF);
-        Map<String, Object> all = new HashMap();
+        Map<String, Object> all = new HashMap<>();
         boolean needFill = true;
         if (prj != null) {
             // call old providers

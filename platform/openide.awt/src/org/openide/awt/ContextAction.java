@@ -276,10 +276,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
 
     @Override
     public int hashCode() {
-        int t = type.hashCode();
-        int m = selectMode.hashCode();
-        int p = performer.hashCode();
-        return (t << 2) + (m << 1) + p;
+        return Objects.hash(type, selectMode, performer, enableMonitor);
     }
 
     @Override
@@ -293,7 +290,8 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
             
             return type.equals(c.type) &&
                 selectMode.equals(c.selectMode) &&
-                performer.equals(c.performer);
+                performer.equals(c.performer) &&
+                Objects.equals(enableMonitor, c.enableMonitor);
         }
         return false;
     }
@@ -324,7 +322,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         
         void clear() {
             stopListeners();
-            Reference r = instDelegate;
+            Reference<Object> r = instDelegate;
             instDelegate = null;
             if (r != null) {
                 Object o = r.get();
@@ -460,7 +458,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 return true;
             }
             if (obj instanceof Performer) {
-                Performer l = (Performer)obj;
+                Performer<?> l = (Performer<?>) obj;
                 return delegate.equals(l.delegate);
             }
             return false;

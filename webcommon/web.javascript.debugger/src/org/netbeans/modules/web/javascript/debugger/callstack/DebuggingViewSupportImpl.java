@@ -94,7 +94,7 @@ public class DebuggingViewSupportImpl extends DebuggingView.DVSupport {
 
     @Override
     protected List<DebuggingView.DVFilter> getFilters() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
     
     private class ChangeListener implements Debugger.Listener {

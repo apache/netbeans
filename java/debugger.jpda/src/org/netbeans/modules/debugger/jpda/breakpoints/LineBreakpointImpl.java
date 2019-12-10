@@ -591,7 +591,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
             // We should indicate somehow that the breakpoint is invalid...
             reason[0] = iex.getLocalizedMessage();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
     
     private static List<Location> locationsOfLineInClass(

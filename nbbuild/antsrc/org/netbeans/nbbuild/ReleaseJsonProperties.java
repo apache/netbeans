@@ -117,7 +117,7 @@ public class ReleaseJsonProperties extends Task {
         // sort all information
         Collections.sort(ri);
         // build a sorted xml
-        
+
         for (ReleaseInfo releaseInfo : ri) {
             log(releaseInfo.toString());
             for (Object milestone : releaseInfo.milestones) {
@@ -191,7 +191,7 @@ public class ReleaseJsonProperties extends Task {
             throw new BuildException("Properties File for release cannot be created");
         }
 
-        log("Writing releasinfo file " + xmlFile );
+        log("Writing releasinfo file " + xmlFile);
 
         xmlFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(xmlFile)) {
@@ -385,11 +385,7 @@ public class ReleaseJsonProperties extends Task {
         }
 
         private void setVersion(String version) {
-            if (version.equals("-")) {
-                this.version = "dev";
-            } else {
-                this.version = version;
-            }
+            this.version = version;
         }
 
         private void setApidocurl(String apidocurl) {

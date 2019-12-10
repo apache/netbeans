@@ -53,7 +53,7 @@ import org.openide.nodes.Node;
 
 /**
  * This class is a useful base test class that provides initial setup
- * to get a connecxtion and also a number of utility routines
+ * to get a connection and also a number of utility routines
  * 
  * @author <a href="mailto:david@vancouvering.com">David Van Couvering</a>
  */
@@ -679,7 +679,7 @@ public abstract class DBTestBase extends TestBase {
         }
         username = System.getProperty(USERNAME_PROPERTY, "DBTESTS");
         password = System.getProperty(PASSWORD_PROPERTY, "DBTESTS");
-        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///ide/db/external/derby-10.2.2.0.jar");
+        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///ide/db/external/derby-10.14.2.0.jar");
 
         driverJar = convertPath(driverJar);
     }

@@ -262,7 +262,7 @@ public class Node {
      * @return shadow roots of this node.
      */
     public final synchronized List<Node> getShadowRoots() {
-        return (shadowRoots == null) ? Collections.EMPTY_LIST : shadowRoots;
+        return (shadowRoots == null) ? Collections.emptyList() : shadowRoots;
     }
 
     /**
@@ -343,7 +343,7 @@ public class Node {
      * an empty list is returned when there are no attributes).
      */
     public synchronized List<Attribute> getAttributes() {
-        return (attributes == null) ? Collections.EMPTY_LIST : attributes;
+        return (attributes == null) ? Collections.emptyList() : attributes;
     }
 
     /**

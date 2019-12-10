@@ -64,7 +64,7 @@ public final class OptionAnnotationProcessor implements Processor {
         if (delegate() != null) {
             return delegate().getSupportedSourceVersion();
         } else {
-            return SourceVersion.RELEASE_7;
+            return SourceVersion.latest();
         }
     }
 

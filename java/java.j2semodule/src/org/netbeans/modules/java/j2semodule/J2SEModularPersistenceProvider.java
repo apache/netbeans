@@ -182,7 +182,7 @@ public class J2SEModularPersistenceProvider implements PersistenceLocationProvid
         if (root != null) {
             return Collections.singletonList(root);                    
         }
-        final ArrayList<FileObject> roots = new ArrayList();
+        final ArrayList<FileObject> roots = new ArrayList<>();
         if (fo != null) {
             for (URL url : project.getSourceRoots().getRootURLs()) {
                 final FileObject r = URLMapper.findFileObject(url);

@@ -109,7 +109,7 @@ public class ProfilerOptionsContainer extends ProfilerOptionsPanel {
         
         scrollIncrement = new JCheckBox("XXX").getPreferredSize().height; // NOI18N
         
-        JList<ProfilerOptionsPanel> categoriesList = new JList(categoriesModel) {
+        JList<ProfilerOptionsPanel> categoriesList = new JList<ProfilerOptionsPanel>(categoriesModel) {
             public Dimension getPreferredSize() {
                 Dimension dim = super.getPreferredSize();
                 dim.width = Math.max(dim.width + 20, 140);

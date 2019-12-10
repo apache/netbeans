@@ -1472,9 +1472,11 @@ final class ModuleList implements Stamps.Updater {
                 }
             }
         }
-        private void stepCheckSer(Map/*<String,FileObject>*/ xmlfiles, Map/*<String,Map<String,Object>>*/ dirtyprops) {
+
+        private void stepCheckSer(Map<String,FileObject> xmlfiles, Map<String,Map<String,Object>> dirtyprops) {
             // There is NO step 7!
         }
+
         private void stepUpdateProps(Map<String,Map<String,Object>> dirtyprops) {
             LOG.fine("ModuleList: stepUpdateProps");
             for (Map.Entry<String,Map<String,Object>> entry: dirtyprops.entrySet()) {

@@ -3,7 +3,29 @@ echo |self::MY_CONST . PHP_EOL;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      A                               [PUBLIC]   issue247082.php
 CLASS      ParentA                         [PUBLIC]   issue247082.php
+METHOD     filter(array $values)           [PUBLIC]   A
+METHOD     myPrivateTestInstance()         [PRIVATE]  A
+METHOD     myPrivateTestStatic()           [PRIVATE,  A
+METHOD     myProtectedTestInstance()       [PROTECTE  A
+METHOD     myProtectedTestStatic()         [PROTECTE  A
+METHOD     myTestInstance()                [PUBLIC]   A
+METHOD     myTestStatic()                  [STATIC]   A
+METHOD     parentProtectedTestInstance()   [PROTECTE  ParentA
+METHOD     parentProtectedTestStatic()     [PROTECTE  ParentA
+METHOD     parentTestInstance()            [PUBLIC]   ParentA
+METHOD     parentTestStatic()              [STATIC]   ParentA
+METHOD     test()                          [PUBLIC]   A
+VARIABLE   ? $myFieldStatic                [STATIC]   A
+VARIABLE   ? $myPrivateFieldStatic         [PRIVATE,  A
+VARIABLE   ? $myProtectedFieldStatic       [PROTECTE  A
+VARIABLE   ? $parentFieldStatic            [STATIC]   ParentA
+VARIABLE   ? $parentProtectedFieldStatic   [PROTECTE  ParentA
 VARIABLE   ? $val                          [PUBLIC]   issue247082.php
+VARIABLE   ? myFieldInstance               [PUBLIC]   A
+VARIABLE   ? myPrivateFieldInstance        [PRIVATE]  A
+VARIABLE   ? myProtectedFieldInstance      [PROTECTE  A
+CONSTANT   MY_CONST 'MY_CONST'             [PUBLIC]   A
+CONSTANT   PARENT_CONST 'PARENT_CONST'     [PUBLIC]   ParentA
 KEYWORD    A $this->                                  null
 KEYWORD    parent::                                   null
 KEYWORD    self::                                     null

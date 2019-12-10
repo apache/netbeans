@@ -40,9 +40,16 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
+import java.nio.file.FileStore;
+import java.security.CodeSigner;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -55,6 +62,7 @@ public final class CachingArchiveClassLoader extends ClassLoader {
     //Todo: Performance Trie<File,ReentrantReadWriteLock>
     private static final ReentrantReadWriteLock LOCK = new ReentrantReadWriteLock();
 
+    private final Map<URL, ProtectionDomain> codeDomains = new HashMap<>();
     private final List<Pair<URL,Archive>> archives;
     private final Optional<Consumer<? super URL>> usedRoots;
     private byte[] buffer;
@@ -68,6 +76,19 @@ public final class CachingArchiveClassLoader extends ClassLoader {
         this.archives = archives;
         this.usedRoots = Optional.<Consumer<? super URL>>ofNullable(usedRoots);
     }
+    
+    /**
+     * Creates a ProtectionDomain for the location. Caches instances since more classes
+     * is likely to be loaded.
+     * @param location location
+     * @return ProtectionDomain object.
+     */
+    private ProtectionDomain createCodeDomain(URL location) {
+        return codeDomains.computeIfAbsent(location, 
+            (l) -> new ProtectionDomain(
+                new CodeSource(l, (CodeSigner[])null), null)
+        );
+    }
 
     @Override
     protected Class<?> findClass(final String name) throws ClassNotFoundException {
@@ -78,8 +99,9 @@ public final class CachingArchiveClassLoader extends ClassLoader {
             c = readAction(new Callable<Class<?>>() {
                 @Override
                 public Class<?> call() throws Exception {
-                    final FileObject file = findFileObject(sb.toString());
-                    if (file != null) {
+                    final Pair<URL, FileObject> locFile = findFileObject(sb.toString());
+                    if (locFile != null) {
+                        final FileObject file = locFile.second();
                         try {
                             final int len = readJavaFileObject(file);
                             int lastDot = name.lastIndexOf('.');
@@ -96,7 +118,8 @@ public final class CachingArchiveClassLoader extends ClassLoader {
                                     //-buffer
                                     //+com.sun.tools.hc.LambdaMetafactory.translateClassFile(buffer,0,len),
                                     0,
-                                    len);
+                                    len, 
+                                    createCodeDomain(locFile.first()));
                         } catch (FileNotFoundException fnf) {
                             LOG.log(Level.FINE, "Resource: {0} does not exist.", file.toUri()); //NOI18N
                         } catch (IOException ioe) {
@@ -121,7 +144,8 @@ public final class CachingArchiveClassLoader extends ClassLoader {
             file = readAction(new Callable<FileObject>() {
                 @Override
                 public FileObject call() throws Exception {
-                    return findFileObject(name);
+                    Pair<URL, FileObject> p = findFileObject(name);
+                    return p == null ? null : p.second();
                 }
             });
         } catch (Exception e) {
@@ -190,7 +214,7 @@ public final class CachingArchiveClassLoader extends ClassLoader {
         return len;
     }
 
-    private FileObject findFileObject(final String resName) {
+    private Pair<URL, FileObject> findFileObject(final String resName) {
         assert LOCK.getReadLockCount() > 0;
         for (final Pair<URL,Archive> p : archives) {
             final Archive archive = p.second();
@@ -198,7 +222,11 @@ public final class CachingArchiveClassLoader extends ClassLoader {
                 final FileObject file = archive.getFile(resName);
                 if (file != null) {
                     usedRoots.ifPresent((c) -> c.accept(p.first()));
-                    return file;
+                    URL u = FileUtil.getArchiveFile(p.first());
+                    if (u == null) {
+                        u = p.first();
+                    }
+                    return Pair.of(u, file);
                 }
             } catch (IOException ex) {
                 LOG.log(

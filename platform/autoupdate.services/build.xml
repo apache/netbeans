@@ -52,7 +52,22 @@
     <target name="netbeans-extra" depends="jar-updater"/>
 
     <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <property name="validation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-validate-keystore.jks" />
+        <delete file="${validation-store}" />
+        <genkey
+            keystore="${validation-store}"
+            alias="demo-key" storepass="password"
+            dname="CN=Demo Key, OU=NetBeans, O=Apache.org, C=US"
+        />
+        <property name="unvalidation-store" value="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/test-unvalidate-keystore.jks" />
+        <delete file="${unvalidation-store}" />
+        <genkey
+            keystore="${unvalidation-store}"
+            alias="demo-key-unvalidated" storepass="password"
+            dname="CN=Demo Key (unvalidated), OU=NetBeans, O=Apache.org, C=US"
+        />
         <touch file="${build.dir}/Dummy.class" />
+        <touch file="${build.dir}/Dummy2.class" />
         <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-signed.jar">
             <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
         </jar>
@@ -71,6 +86,31 @@
                  keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
                  storepass="password"
                  alias="test-two" />
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar"
+                 keystore="${test.unit.src.dir}/org/netbeans/api/autoupdate/data/test-keystore.jks"
+                 storepass="password"
+                 alias="test-one" />
+        <zip destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-partial-signed.jar"
+             update="true">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy2.class" />
+        </zip>
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-validated.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-validated.jar"
+                 keystore="${validation-store}"
+                 storepass="password"
+                 alias="demo-key" />
+        <jar destfile="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-unvalidated.jar">
+            <zipfileset prefix="dummy/" file="${build.dir}/Dummy.class"/>
+        </jar>
+        <signjar jar="${build.test.unit.classes.dir}/org/netbeans/api/autoupdate/data/dummy-unvalidated.jar"
+                 keystore="${unvalidation-store}"
+                 storepass="password"
+                 alias="demo-key-unvalidated" />
     </target>
 
 </project>

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.java.source.compat8
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/source/compat8/Bundle.properties
-OpenIDE-Module-Specification-Version: 9.9
+OpenIDE-Module-Specification-Version: 9.10
 OpenIDE-Module-Fragment-Host: org.netbeans.modules.java.source.base

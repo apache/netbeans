@@ -27,7 +27,7 @@
             <file name="org-netbeans-lib-commons_compress-antlibrary.instance">
                 <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
                 <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>
-                <attr name="url" urlvalue="nbinst://org.netbeans.libs.commons_compress/modules/ext/commons-compress-1.8.1.jar"/>
+                <attr name="url" urlvalue="nbinst://org.netbeans.libs.commons_compress/modules/ext/commons-compress-1.19.jar"/>
             </file>
         </folder>
     </folder>

@@ -49,7 +49,7 @@ public class RequireJsIndex {
     private static final Logger LOGGER = Logger.getLogger(RequireJsIndex.class.getSimpleName());
 
     private final QuerySupport querySupport;
-    private static final Map<Project, RequireJsIndex> INDEXES = new WeakHashMap();
+    private static final Map<Project, RequireJsIndex> INDEXES = new WeakHashMap<>();
     private static boolean areProjectsOpen = false;
 
     public static RequireJsIndex get(Project project) throws IOException {
@@ -154,7 +154,7 @@ public class RequireJsIndex {
             Exceptions.printStackTrace(ex);
         }
         if (result != null && !result.isEmpty()) {
-            List<String> paths = new ArrayList();
+            List<String> paths = new ArrayList<>();
             for (IndexResult indexResult : result) {
                 paths.addAll(Arrays.asList(indexResult.getValues(RequireJsIndexer.FIELD_BASE_PATH)));
             }

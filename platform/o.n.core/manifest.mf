@@ -5,5 +5,5 @@ OpenIDE-Module-Layer: org/netbeans/core/resources/mf-layer.xml
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Recommends: org.netbeans.core.ProxySettings.Reloader 
-OpenIDE-Module-Specification-Version: 3.57
+OpenIDE-Module-Specification-Version: 3.58
 

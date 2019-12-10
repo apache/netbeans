@@ -78,10 +78,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-7.2.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-7.2.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-all-5.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-7.2.jar"/>
     </target>
 
     <target name="-release.dir">
@@ -189,7 +189,10 @@
         </autoupdate>
     </target>
 
-    <target name="compile" depends="init,up-to-date" unless="is.jar.uptodate">
+    <extension-point name="-pre-compile" depends="init,up-to-date"/>
+    <extension-point name="-post-compile" depends="-pre-compile,-do-compile"/>
+    <target name="compile" depends="-pre-compile,-do-compile,-post-compile"/>
+    <target name="-do-compile" depends="init,up-to-date,-pre-compile" unless="is.jar.uptodate">
         <mkdir dir="${build.classes.dir}"/>
         <depend srcdir="${src.dir}" destdir="${build.classes.dir}" cache="${build.dir}/depcache">
             <classpath refid="cp"/>
@@ -247,7 +250,10 @@
         </tstamp>
     </target>
 
-    <target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
+    <extension-point name="-pre-jar" depends="init,compile,jar-prep"/>
+    <extension-point name="-post-jar" depends="-pre-jar,-do-jar"/>
+    <target name="jar" depends="-pre-jar,-do-jar,-post-jar"/>
+    <target name="-do-jar" depends="init,compile,jar-prep,-pre-jar" unless="is.jar.uptodate">
         <!-- This task adds some or all of: -Public-Packages, -Friends, Class-Path, -IDE-Dependencies, -Module-Dependencies, -Specification-Version, -Implementation-Version, -Build-Version, AutoUpdate-Show-In-Client -->
         <jarwithmoduleattributes jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified">
             <fileset dir="${build.classes.dir}"/>
@@ -294,7 +300,10 @@
         <copy file="${module.auto.deps.xml}" tofile="${cluster}/config/ModuleAutoDeps/${code.name.base.dashes}.xml"/>
     </target>
 
-    <target name="release" depends="files-init" if="has.release.dir">
+    <extension-point name="-pre-release"/>
+    <extension-point name="-post-release" depends="-pre-release,-do-release"/>
+    <target name="release" depends="-pre-release,-do-release,-post-release"/>
+    <target name="-do-release" depends="files-init,-pre-release" if="has.release.dir">
         <mkdir dir="${cluster}"/>
         <copy todir="${cluster}" overwrite="true">
             <fileset dir="${release.dir}">
@@ -328,7 +337,7 @@
         <pathconvert property="dtd.cp">
             <pathfileset>
                 <path refid="cluster.path.id"/>
-                <filename name="platform/core/org-openide-filesystems.jar"/>
+                <filename name="core/org-openide-filesystems.jar"/>
             </pathfileset>
         </pathconvert>
 
@@ -431,11 +440,14 @@
         <zipfileset dir="${cluster}" id="extra.nbm.files" includes="[NOTHING]"/>
     </target>
 
-    <target name="nbm" depends="init,netbeans,-nbm-prompt-for-storepass,-init-executables,-init-extra.nbm.files" description="Build NBM archive.">
+    <extension-point name="-pre-nbm" depends="init,netbeans,-nbm-prompt-for-storepass,-init-executables,-init-extra.nbm.files"/>
+    <extension-point name="-post-nbm" depends="-pre-nbm,-do-nbm"/>
+    <target name="nbm" depends="-pre-nbm,-do-nbm,-post-nbm"/>
+    <target name="-do-nbm" depends="init,netbeans,-nbm-prompt-for-storepass,-init-executables,-init-extra.nbm.files,-pre-nbm" description="Build NBM archive.">
         <mkdir dir="${build.dir}"/>
         <property name="nbm.target.cluster" value=""/> <!-- fallback -->
         <property name="license.file.override" value="${license.file}"/>
-        <property name="use.pack200" value="true"/>
+        <property name="use.pack200" value="false"/>
         <property name="pack200.excludes" value=""/>
         <property name="nbm.locales" value="${locales}"/>
         <makenbm file="${build.dir}/${nbm}"

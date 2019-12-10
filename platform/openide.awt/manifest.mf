@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.openide.awt
 OpenIDE-Module-Localizing-Bundle: org/openide/awt/Bundle.properties
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 7.74
+OpenIDE-Module-Specification-Version: 7.75
 

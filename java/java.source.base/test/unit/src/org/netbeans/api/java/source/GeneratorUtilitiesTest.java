@@ -65,6 +65,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -576,6 +577,19 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 assertEquals(0, info.getDiagnostics().size());
                 List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
                 assertEquals(0, imports.size());
+            }
+        }, false);
+    }
+
+    public void testAddImportsIncrementallyWithStatic_JIRA3019() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        performTest("package test;\npublic class Test { public static final String CONST = null; }\n", "11", new AddImportsTask(true, "test.Test.CONST", "java.util.List"), new Validator() {
+            public void validate(CompilationInfo info) {
+                assertEquals(0, info.getDiagnostics().size());
+                List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                assertEquals(2, imports.size());
+                assertEquals("java.util.List", imports.get(0).getQualifiedIdentifier().toString());
+                assertEquals("test.Test.CONST", imports.get(1).getQualifiedIdentifier().toString());
             }
         }, false);
     }
@@ -1120,9 +1134,15 @@ public class GeneratorUtilitiesTest extends NbTestCase {
 
     private static class AddImportsTask implements CancellableTask<WorkingCopy> {
 
+        private final boolean incremental;
         private String[] toImport;
         
         public AddImportsTask(String... toImport) {
+            this(false, toImport);
+        }
+
+        public AddImportsTask(boolean incremental, String... toImport) {
+            this.incremental = incremental;
             this.toImport = toImport;
         }
 
@@ -1134,6 +1154,9 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             CompilationUnitTree cut = copy.getCompilationUnit();
             Elements elements = copy.getElements();
             Set<Element> imports = new HashSet<Element>();
+            GeneratorUtilities utilities = GeneratorUtilities.get(copy);
+            assertNotNull(utilities);
+            CompilationUnitTree newCut = cut;
             for (String imp : toImport) {
                 if (imp.endsWith(".*"))
                     imp = imp.substring(0, imp.length() - 2);
@@ -1156,11 +1179,15 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                     }
                 }
                 assertNotNull(el);
-                imports.add(el);
+                if (incremental) {
+                    newCut = utilities.addImports(newCut, Collections.singleton(el));
+                } else {
+                    imports.add(el);
+                }
             }
-            GeneratorUtilities utilities = GeneratorUtilities.get(copy);
-            assertNotNull(utilities);
-            CompilationUnitTree newCut = utilities.addImports(cut, imports);
+            if (!imports.isEmpty()) {
+                newCut = utilities.addImports(newCut, imports);
+            }
             copy.rewrite(cut, newCut);
         }
     }

@@ -56,7 +56,7 @@ public class DBElementsCollection implements DBElementProperties {
         if (_elms != null)
             return _elms;
         else
-            return (DBElement[]) Arrays.asList(_template).toArray(new DBElement[_template.length]);
+            return Arrays.asList(_template).toArray(new DBElement[_template.length]);
 
     }
     

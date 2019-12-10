@@ -19,11 +19,9 @@
 
 package org.netbeans.modules.gradle.queries;
 
-import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.ProjectIconProvider;
 import java.awt.Image;
-import java.util.Set;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -39,15 +37,6 @@ public class DefaultProjectIconProvider implements ProjectIconProvider {
     @StaticResource
     private static final String GRADLE_ICON = "org/netbeans/modules/gradle/resources/gradle.png"; //NOI18
 
-    @StaticResource
-    private static final String GRADLE_JAVASE_ICON = "org/netbeans/modules/gradle/resources/javaseProjectIcon.png"; //NOI18
-
-    @StaticResource
-    private static final String GRADLE_WEB_ICON = "org/netbeans/modules/gradle/resources/webProjectIcon.png"; //NOI18
-    
-    @StaticResource
-    private static final String APPLICATION_BADGE = "org/netbeans/modules/gradle/resources/application-badge.png"; //NOI18
-
     final Project project;
 
     public DefaultProjectIconProvider(Project project) {
@@ -56,16 +45,7 @@ public class DefaultProjectIconProvider implements ProjectIconProvider {
     
     @Override
     public Image getIcon() {
-        Set<String> plugins = GradleBaseProject.get(project).getPlugins();
-        String iconResource = plugins.contains("java") ? GRADLE_JAVASE_ICON: GRADLE_ICON;
-        iconResource = plugins.contains("war") ? GRADLE_WEB_ICON : iconResource;
-        Image ret = ImageUtilities.loadImage(iconResource);
-        
-        if (plugins.contains("application")) {
-            Image badge = ImageUtilities.loadImage(APPLICATION_BADGE);
-            ret = ImageUtilities.mergeImages(ret, badge, 8, 8);
-        }
-        return ret;
+        return  ImageUtilities.loadImage(GRADLE_ICON);
     }
 
     @Override

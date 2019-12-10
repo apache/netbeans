@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -28,6 +30,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.Position;
@@ -36,16 +39,19 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
@@ -126,23 +132,15 @@ public class TextDocumentSyncServerCapabilityHandler {
                 private void fireEvent(int start, String newText, String oldText) {
                     try {
                         Position startPos = Utils.createPosition(doc, start);
-                        int additionalLines = 0;
-                        int additionalChars = 0;
-                        for (char c : oldText.toCharArray()) {
-                            if (c == '\n') {
-                                additionalLines++;
-                                additionalChars = 0;
-                            } else {
-                                additionalChars++;
-                            }
-                        }
-                        Position endPos = new Position(startPos.getLine() + additionalLines,
-                                                       startPos.getCharacter() + additionalChars);
+                        Position endPos = Utils.computeEndPositionForRemovedText(startPos, oldText);
                         TextDocumentContentChangeEvent[] event = new TextDocumentContentChangeEvent[1];
                         event[0] = new TextDocumentContentChangeEvent(new Range(startPos,
                                                                              endPos),
                                                                    oldText.length(),
                                                                    newText);
+
+                        boolean typingModification = DocumentUtilities.isTypingModification(doc);
+                        long documentVersion = DocumentUtilities.getDocumentVersion(doc);
 
                         WORKER.post(() -> {
                             LSPBindings server = LSPBindings.getBindings(file);
@@ -184,6 +182,23 @@ public class TextDocumentSyncServerCapabilityHandler {
                             DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
 
                             server.getTextDocumentService().didChange(params);
+
+                            if (typingModification && oldText.isEmpty() && event.length == 1) {
+                                if (newText.equals("}") || newText.equals("\n")) {
+                                    System.err.println("going to compute indent:");
+                                    List<TextEdit> edits = new ArrayList<>();
+                                    doc.render(() -> {
+                                        if (documentVersion != DocumentUtilities.getDocumentVersion(doc))
+                                            return ;
+                                        edits.addAll(Utils.computeDefaultOnTypeIndent(doc, start, startPos, newText));
+                                    });
+                                    NbDocument.runAtomic((StyledDocument) doc, () -> {
+                                        if (documentVersion == DocumentUtilities.getDocumentVersion(doc)) {
+                                            Utils.applyEditsNoLock(doc, edits);
+                                        }
+                                    });
+                                }
+                            }
                             server.scheduleBackgroundTasks(file);
                         });
                     } catch (BadLocationException ex) {

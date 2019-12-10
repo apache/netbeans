@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 2.142
+OpenIDE-Module-Specification-Version: 2.143
 OpenIDE-Module: org.netbeans.modules.php.project
 OpenIDE-Module-Layer: org/netbeans/modules/php/project/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/project/resources/Bundle.properties

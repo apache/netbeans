@@ -186,27 +186,6 @@ public class FetchTest extends AbstractGitTestCase {
         assertUpdate(updates.get("origin/master"), "origin/master", "master", masterInfo.getRevision(), null, new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.NEW);
         assertUpdate(updates.get("origin/" + BRANCH_NAME), "origin/" + BRANCH_NAME, BRANCH_NAME, branch.getId(), null, new URIish(otherWT.toURI().toURL()).toString(), Type.BRANCH, GitRefUpdateResult.NEW);
     }
-    
-    public void testDeleteStaleReferencesFails () throws Exception {
-        setupRemoteSpec("origin", "+refs/heads/*:refs/remotes/origin/*");
-        GitClient client = getClient(workDir);
-        Map<String, GitBranch> branches = client.getBranches(true, NULL_PROGRESS_MONITOR);
-        assertEquals(0, branches.size());
-        Map<String, GitTransportUpdate> updates = client.fetch("origin", NULL_PROGRESS_MONITOR);
-        branches = client.getBranches(true, NULL_PROGRESS_MONITOR);
-        assertEquals(2, branches.size());
-        
-        new File(workDir, ".git/refs/remotes/origin").mkdirs();
-        write(new File(workDir, ".git/refs/remotes/origin/HEAD"), "ref: refs/remotes/origin/master");
-        branches = client.getBranches(true, NULL_PROGRESS_MONITOR);
-        assertEquals(2, branches.size());
-        // and now the master is deleted and HEAD points to nowhere :(
-        Transport transport = Transport.open(repository, "origin");
-        transport.setRemoveDeletedRefs(true);
-        transport.fetch(new DelegatingProgressMonitor(NULL_PROGRESS_MONITOR), new RemoteConfig(repository.getConfig(), "origin").getFetchRefSpecs());
-        branches = client.getBranches(true, NULL_PROGRESS_MONITOR);
-        assertEquals(1, branches.size());
-    }
 
 //    enable when the fixed in jgit - see the previous test
 //    public void testFetchDeleteBranch () throws Exception {
@@ -294,7 +273,6 @@ public class FetchTest extends AbstractGitTestCase {
         assertTrue(messages, messages.contains("START: remote: Getting sizes - "));
         assertTrue(messages, messages.contains("START: remote: Compressing objects - "));
         assertTrue(messages, messages.contains("START: Receiving objects - "));
-        assertTrue(messages, messages.contains("START: Updating references - "));
     }
 
     private void setupRemoteSpec (String remote, String fetchSpec) throws URISyntaxException, IOException {

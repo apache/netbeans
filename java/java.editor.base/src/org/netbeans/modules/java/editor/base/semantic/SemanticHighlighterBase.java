@@ -335,9 +335,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     }
     
         
-    private boolean hasAllTypes(List<Use> uses, Collection<UseTypes> types) {
-        EnumSet e = EnumSet.copyOf(types);
-        
+    private boolean hasAllTypes(List<Use> uses, EnumSet<UseTypes> types) {
         for (Use u : uses) {
             if (types.isEmpty()) {
                 return true;

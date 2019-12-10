@@ -264,7 +264,7 @@ public class EditorOperator extends TopComponentOperator {
     private Object getLine(int lineNumber) {
         Document doc = txtEditorPane().getDocument();
         DataObject od = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
-        Set set = ((LineCookie) od.getCookie(LineCookie.class)).getLineSet();
+        Set set = (od.getCookie(LineCookie.class)).getLineSet();
         try {
             return set.getCurrent(lineNumber - 1);
         } catch (IndexOutOfBoundsException e) {
@@ -752,7 +752,7 @@ public class EditorOperator extends TopComponentOperator {
         if (combo != null) {
             index++;
         }
-        return new AbstractButtonOperator(AbstractButtonOperator.waitAbstractButton((Container) toolbar,
+        return new AbstractButtonOperator(AbstractButtonOperator.waitAbstractButton(toolbar,
                 ComponentSearcher.getTrueChooser("AbstractButton"), index));
     }
 

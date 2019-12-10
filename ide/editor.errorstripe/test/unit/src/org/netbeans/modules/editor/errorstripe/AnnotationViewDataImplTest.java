@@ -218,10 +218,10 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         TestMark mark2 = new TestMark(Status.STATUS_OK, null, null, new int[] {2, 2});
         TestMark mark3 = new TestMark(Status.STATUS_OK, null, null, new int[] {4, 6});
         
-        List marks = Arrays.asList(new Mark[]{mark1, mark2});
-        List marksOnlyFirst = Arrays.asList(new Mark[]{mark1});
-        List marksOnlySecond = Arrays.asList(new Mark[]{mark2});
-        List marksFirstAndThird = Arrays.asList(new Mark[]{mark1, mark3});
+        List<Mark> marks = Arrays.asList(new Mark[]{mark1, mark2});
+        List<Mark> marksOnlyFirst = Arrays.asList(new Mark[]{mark1});
+        List<Mark> marksOnlySecond = Arrays.asList(new Mark[]{mark2});
+        List<Mark> marksFirstAndThird = Arrays.asList(new Mark[]{mark1, mark3});
         
         TestMarkProvider provider = new TestMarkProvider(marks, UpToDateStatus.UP_TO_DATE_OK);
         TestMarkProviderCreator creator = TestMarkProviderCreator.getDefault();
@@ -231,12 +231,12 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         AnnotationView aView = new AnnotationView(editor);
         AnnotationViewDataImpl data = (AnnotationViewDataImpl) aView.getData();
         
-        Collection mergedMarks;
-        SortedMap map;
+        Collection<Mark> mergedMarks;
+        SortedMap<Integer, List<Mark>> map;
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marks), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marks), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -247,7 +247,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksOnlyFirst), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksOnlyFirst), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -258,7 +258,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksFirstAndThird), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksFirstAndThird), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -283,7 +283,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksFirstAndThird), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksFirstAndThird), mergedMarks);
         
         map = data.getMarkMap();
         

@@ -144,9 +144,9 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
 	FileObject fo = null;
         
         if (x != null) {
-            Reference ref = findReference(n);
+            Reference<? extends FileObject> ref = findReference(n);
             if (ref != null) {
-                fo = (FileObject)ref.get();
+                fo = ref.get();
                 retval = (fo != null) ? fo.isValid() : true;
             }   
         }

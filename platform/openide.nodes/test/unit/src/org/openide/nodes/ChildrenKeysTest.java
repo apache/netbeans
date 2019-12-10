@@ -816,7 +816,7 @@ public class ChildrenKeysTest extends NbTestCase {
             int counterDestroy = 0;
             Object key;
             
-            Reference createdNode;
+            Reference<Node> createdNode;
             
             K(boolean lazy, Object keyObject) {
                 super(lazy);
@@ -845,7 +845,7 @@ public class ChildrenKeysTest extends NbTestCase {
             protected Node[] createNodes(Object k) {
                 Node n = Node.EMPTY.cloneNode();
                 assertNull ("Just one created node", createdNode);
-                createdNode = new WeakReference (n);
+                createdNode = new WeakReference<>(n);
                 return new Node[] { n };
             }
         }

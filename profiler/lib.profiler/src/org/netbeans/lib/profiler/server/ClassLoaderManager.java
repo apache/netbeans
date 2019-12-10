@@ -51,8 +51,8 @@ class ClassLoaderManager implements CommonConstants {
     // TODO [release]: change value to TRUE to remove the print code below entirely by compiler
     private static final boolean DEBUG = System.getProperty("org.netbeans.lib.profiler.server.ClassLoaderManager") != null; // NOI18N
     private static ProfilerServer profilerServer;
-    private static WeakHashMap /*<ClassLoader, ClassLoaderManager>*/ manMap;
-    private static Vector /*<ClassLoaderManager>*/ manVec;
+    private static WeakHashMap<ClassLoader, ClassLoaderManager> manMap;
+    private static Vector<ClassLoaderManager> manVec;
     private static ReferenceQueue rq;
     private static boolean notifyToolAboutUnloadedClasses;
     private static Method findLoadedClassMethod;

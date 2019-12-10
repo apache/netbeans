@@ -84,7 +84,7 @@ public class CaptureSchemaAction extends CallableSystemAction {
                             wizard.setTitle(bundle.getString("WizardTitleName"));
                             
                             if(nId >= 0) {
-                                wizard.setTargetFolder((DataFolder) n[nId].getCookie(DataFolder.class));
+                                wizard.setTargetFolder(n[nId].getCookie(DataFolder.class));
                                 wizard.instantiate(templates[j]);
                             } else
                                 wizard.instantiate(templates[j]);

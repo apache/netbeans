@@ -158,7 +158,7 @@ public final class J2EEProjectProperties {
         String instanceId = null;
         String instance = eval.getProperty(J2EE_SERVER_INSTANCE);
         if (instance != null) {
-            J2eeModuleProvider jmp = (J2eeModuleProvider) project.getLookup().lookup(J2eeModuleProvider.class);
+            J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
             String sdi = jmp.getServerInstanceID();
             if (sdi != null) {
                 String id = Deployment.getDefault().getServerID(sdi);

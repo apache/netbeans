@@ -36,8 +36,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -45,12 +43,10 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import org.openide.util.lookup.NamedServiceDefinition;
 import org.openide.util.lookup.implspi.AbstractServiceProviderProcessor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public final class NamedServiceProcessor extends AbstractServiceProviderProcessor {
     private static final String PATH = "META-INF/namedservices.index"; // NOI18N
     private static Pattern reference = Pattern.compile("@([^/]+)\\(\\)"); // NOI18N

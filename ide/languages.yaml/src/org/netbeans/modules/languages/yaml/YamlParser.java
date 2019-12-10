@@ -137,6 +137,34 @@ public class YamlParser extends Parser {
         return result.toString();
     }
 
+    static String replaceMustache(String source) {
+        // this is a hack. The right solution would be to create a toplevel language, which
+        // will have embeded yaml and something.
+        // This code replaces mouthstache fragments with space.
+        int startReplace = source.indexOf("{{");
+        if (startReplace == -1) {
+            return source;
+        }
+
+        StringBuilder result = new StringBuilder(source);
+
+        while (startReplace > -1) {
+            int endReplace = result.indexOf("}}", startReplace);
+            if (endReplace > -1) {
+                endReplace = endReplace + 1;
+                StringBuilder spaces = new StringBuilder(endReplace - startReplace);
+                for (int i = 0; i <= endReplace - startReplace; i++) {
+                    spaces.append(' ');
+                }
+                result.replace(startReplace, endReplace + 1, spaces.toString());
+                startReplace = result.indexOf("{{", endReplace);
+            } else {
+                startReplace = -1;
+            }
+        }
+        return result.toString();
+    }
+
     private static String replaceCommonSpecialCharacters(String source) {
         source = source.replace('@', '_'); //NOI18N
         source = source.replace('?', '_'); //NOI18N
@@ -162,6 +190,7 @@ public class YamlParser extends Parser {
     YamlParserResult parse(String source, Snapshot snapshot) {
 
         source = replacePhpFragments(source);
+        source = replaceMustache(source);
         source = replaceCommonSpecialCharacters(source);
         source = replaceInlineRegexBrackets(source);
 

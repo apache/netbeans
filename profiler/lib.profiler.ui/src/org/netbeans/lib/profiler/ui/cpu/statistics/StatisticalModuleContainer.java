@@ -38,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class StatisticalModuleContainer implements CPUCCTProvider.Listener {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private final Set /*<StatisticalModule>*/ modules = new HashSet();
+    private final Set<StatisticalModule> modules = new HashSet<>();
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 

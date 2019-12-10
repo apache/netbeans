@@ -23,8 +23,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.web.WebView;
 import java.awt.event.ActionEvent;
 import net.java.html.json.Model;
 import net.java.html.json.Property;
@@ -189,12 +187,12 @@ public @interface HTMLDialog {
         }
         
         /** Obtains the component from the builder. The parameter
-         * can either be {@link JFXPanel}.<b>class</b> or
-         * {@link WebView}.<b>class</b>. After calling this
+         * can either be {@link javafx.embed.swing.JFXPanel}.<b>class</b> or
+         * {@link javafx.scene.web.WebView}.<b>class</b>. After calling this
          * method the builder becomes useless.
          * 
          * @param <C> requested component type
-         * @param type either {@link JFXPanel} or {@link WebView} class
+         * @param type either {@link javafx.embed.swing.JFXPanel} or {@link javafx.scene.web.WebView} class
          * @return instance of the requested component
          */
         public <C> C component(Class<C> type) {

@@ -68,8 +68,8 @@ class SamplesOutputStream {
         outStream = os;
         writeHeader(os);
 //        out = new ObjectOutputStream(os);
-        lastThreadInfos = new HashMap();
-        steCache = new WeakHashMap(8*1024);
+        lastThreadInfos = new HashMap<>();
+        steCache = new WeakHashMap<>(8*1024);
         samples = new ArrayList<Sample>(1024);
     }
 
@@ -106,7 +106,7 @@ class SamplesOutputStream {
         }
         addSample(new Sample(time, sameT, newT));
         // remove dead threads
-        Set<Long> ids = new HashSet(lastThreadInfos.keySet());
+        Set<Long> ids = new HashSet<>(lastThreadInfos.keySet());
         ids.removeAll(tids);
         lastThreadInfos.keySet().removeAll(ids);
     }

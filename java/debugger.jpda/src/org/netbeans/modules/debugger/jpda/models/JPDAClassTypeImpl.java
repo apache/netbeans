@@ -166,7 +166,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
                 return Collections.unmodifiableList(subClasses);
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -199,7 +199,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
                 // Nothing to return
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
                 // Nothing to return
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private List<JPDAClassType> getTypes(Collection<? extends ReferenceType> types) {
@@ -231,7 +231,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
             }
             return Collections.unmodifiableList(interfaces);
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 

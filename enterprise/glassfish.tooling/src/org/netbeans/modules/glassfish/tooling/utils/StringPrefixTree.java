@@ -69,7 +69,7 @@ public class StringPrefixTree<Type> {
          */
         Node() {
             this.finalState = false;
-            this.next = new TreeMap();
+            this.next = new TreeMap<>();
         }
 
         /**
@@ -80,7 +80,7 @@ public class StringPrefixTree<Type> {
          */
         Node(Type value) {
             this.finalState = true;
-            this.next = new TreeMap();
+            this.next = new TreeMap<>();
             this.value = value;
         }
 
@@ -320,7 +320,7 @@ public class StringPrefixTree<Type> {
         while((item = stack.getLast())!= null) {
             // Tree step down.
             if (item.child.hasNext()) {
-                stack.addLast(new StackItem((Node)item.child.next()));
+                stack.addLast(new StackItem(item.child.next()));
             // Current node processing and tree setep up.
             } else {
                 item.node.destroy();

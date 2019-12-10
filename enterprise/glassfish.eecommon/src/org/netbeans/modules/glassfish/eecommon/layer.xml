@@ -27,7 +27,7 @@
             <attr name="displayName" bundlevalue="org.netbeans.modules.glassfish.eecommon.Bundle#SunResourcesFolder"/>
         </folder>
     </folder>
-<!--    <folder name="org-netbeans-modules-glassfish-eecommon-ddtemplates-j2ee_1_3">
+    <!--    <folder name="org-netbeans-modules-glassfish-eecommon-ddtemplates-j2ee_1_3">
         <file name="sun-web.xml" url="api/ddtemplates/j2ee13/sun-web.xml"/>
         <file name="sun-ejb-jar.xml" url="api/ddtemplates/j2ee13/sun-ejb-jar.xml"/>
         <file name="sun-cmp-mappings.xml" url="api/ddtemplates/j2ee13/sun-cmp-mappings.xml"/>
@@ -71,20 +71,8 @@
         <file name="weblogic-application-client.xml" url="api/ddtemplates/javaee5/weblogic-application-client.xml"/>
         <file name="weblogic-application.xml" url="api/ddtemplates/javaee5/weblogic-application.xml"/>
         <file name="weblogic-ejb-jar.xml" url="api/ddtemplates/javaee5/weblogic-ejb-jar.xml"/>
+    </folder-->
+    <folder name="org-netbeans-modules-glassfish-eecommon-ddtemplates-java_ee">
+        <file name="glassfish-web.xml" url="api/ddtemplates/javaee/glassfish-web.xml"/>
     </folder>
-    <folder name="org-netbeans-modules-glassfish-eecommon-ddtemplates-java_ee_6">
-        <file name="sun-web.xml" url="api/ddtemplates/javaee6/sun-web.xml"/>
-        <file name="sun-ejb-jar.xml" url="api/ddtemplates/javaee6/sun-ejb-jar.xml"/>
-        <file name="sun-cmp-mappings.xml" url="api/ddtemplates/javaee6/sun-cmp-mappings.xml"/>
-        <file name="sun-application.xml" url="api/ddtemplates/javaee6/sun-application.xml"/>
-        <file name="sun-application-client.xml" url="api/ddtemplates/javaee6/sun-application-client.xml"/>
-        <file name="glassfish-web.xml" url="api/ddtemplates/javaee6/glassfish-web.xml"/>
-        <file name="glassfish-ejb-jar.xml" url="api/ddtemplates/javaee6/glassfish-ejb-jar.xml"/>
-        <file name="glassfish-application.xml" url="api/ddtemplates/javaee6/glassfish-application.xml"/>
-        <file name="glassfish-application-client.xml" url="api/ddtemplates/javaee6/glassfish-application-client.xml"/>
-        <file name="weblogic.xml" url="api/ddtemplates/javaee6/weblogic.xml"/>
-        <file name="weblogic-application-client.xml" url="api/ddtemplates/javaee6/weblogic-application-client.xml"/>
-        <file name="weblogic-application.xml" url="api/ddtemplates/javaee6/weblogic-application.xml"/>
-        <file name="weblogic-ejb-jar.xml" url="api/ddtemplates/javaee6/weblogic-ejb-jar.xml"/>
-    </folder>-->
 </filesystem>

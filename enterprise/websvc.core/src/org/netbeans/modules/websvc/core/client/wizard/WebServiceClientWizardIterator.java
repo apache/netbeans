@@ -46,7 +46,7 @@ import org.openide.loaders.TemplateWizard;
 public class WebServiceClientWizardIterator implements TemplateWizard.Iterator {
 
     private int index = 0;
-    private WizardDescriptor.Panel [] panels;
+    private WizardDescriptor.Panel<WizardDescriptor>[] panels;
 
     private TemplateWizard wiz;
     // !PW FIXME How to handle freeform???

@@ -29,7 +29,6 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Cancellable;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -39,7 +38,6 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.actions.CustomActionRegistrationSupport;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -49,7 +47,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Laszlo Kishalmi
  */
-public abstract class AbstractGradleExecutor extends OutputTabMaintainer<AbstractGradleExecutor.TabContext> implements GradleExecutor, Cancellable {
+public abstract class AbstractGradleExecutor extends OutputTabMaintainer<AbstractGradleExecutor.TabContext> implements GradleExecutor {
 
     public static final class TabContext {
 

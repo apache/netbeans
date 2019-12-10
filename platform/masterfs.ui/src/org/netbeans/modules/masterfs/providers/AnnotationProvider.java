@@ -62,6 +62,6 @@ public abstract class AnnotationProvider extends BaseAnnotationProvider {
     @Override
     public Lookup findExtrasFor(Set<? extends FileObject> files) {
         Object[] arr = actions(files);
-        return arr == null ? null : Lookups.fixed((Object[]) arr);
+        return arr == null ? null : Lookups.fixed(arr);
     }
 }

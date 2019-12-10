@@ -21,32 +21,37 @@ addons:
       - ant
       - ant-optional
       - xvfb
+      - openjfx
 install:
+  - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
 script:
-  - if [ "x$RAT" == "xtrue" ]; then (ant -quiet build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/release-src* && ant -quiet rat -Drat-report.haltonfailure=true && cd .. && rm -rf scratch); fi
   - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
   - ant $OPTS clean
   - ant $OPTS $TARGET
-  - if [ "x$COMPILETEST" == "xtrue" ]; then ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild; fi
   - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
-  - if [ "x$EOL" == "xtrue" ]; then ./nbbuild/travis/check-line-endings.sh; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
-  - if [ "x$CV" == "xtrue" ]; then ant -quiet -f ergonomics/ide.ergonomics/ test -Dtest.config=commit; fi
-  - if [ "x$RUN_TESTS_JDK8" == "xtrue" ]; then for MODULE in $TEST_MODULES; do cd $MODULE; ant test; done; fi
-  - if [ "x$RUN_TESTS_JDK9PLUS" == "xtrue" ]; then wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh && export TEST_JDK=`bash install-jdk.sh $TEST_JDK_VERSION --emit-java-home --silent | tail -1` && for MODULE in $TEST_MODULES; do cd $MODULE; ant "-Dtest.nbjdk.home=$TEST_JDK" $TEST_RUN_OPTIONS test; done; fi
 
 matrix:
     include:
-        - env: SIGTEST=false COMPILETEST=true RAT=true EOL=false LICENSE=true CV=false RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+        - name: Check line endings and verify RAT report
+          script: 
+            - nbbuild/travis/check-line-endings.sh
+            - ant -quiet build-source-config
+            - mkdir scratch
+            - cd scratch
+            - unzip -qq ../nbbuild/build/release-src*
+            - ant -quiet rat -Drat-report.haltonfailure=true
+          
+        - env: SIGTEST=false LICENSE=true
           jdk: openjdk8
 
-        - env: SIGTEST=true COMPILETEST=false RAT=false EOL=true LICENSE=false CV=true RUN_TESTS_JDK8=false RUN_JAVA_TESTS=false
+        - env: SIGTEST=true LICENSE=false
           jdk: openjdk8
 
 #        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
@@ -54,131 +59,312 @@ matrix:
 
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
           jdk: openjdk8
-
-        - env: OPTS="-quiet" TARGET="build-platform"
-          jdk: openjdk11
-
-        - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
-          jdk: openjdk8
-
-        - env: OPTS="-Dcluster.config=standard -quiet -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build"
-          jdk: openjdk11
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK9PLUS=false RUN_TESTS_JDK8=true TEST_MODULES="java/java.completion java/spi.java.hints java/java.hints.declarative" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          jdk: openjdk8
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 11 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          jdk: openjdk8
-
-        - env: SIGTEST=false COMPILETEST=false RAT=false EOL=false LICENSE=false CV=false RUN_TESTS_JDK8=false RUN_TESTS_JDK9PLUS=true TEST_JDK_VERSION="--feature 12 --license GPL" TEST_RUN_OPTIONS='-Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true' TEST_MODULES="java/java.completion" OPTS="-Dcluster.config=java -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          jdk: openjdk8
           
-        - env: > 
-            SIGTEST=false 
-            COMPILETEST=false 
-            RAT=false 
-            EOL=false 
-            LICENSE=false 
-            CV=false 
-            RUN_TESTS_JDK9PLUS=false 
-            RUN_TESTS_JDK8=true 
-            OPTS="-Dcluster.config=minimal -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-            TEST_MODULES="ide/api.xml
-             ide/api.xml.ui
-             ide/bugtracking
-             ide/bugtracking.bridge
-             ide/bugtracking.commons
-             ide/bugzilla
-             ide/code.analysis
-             ide/core.ide
-             ide/csl.api
-             ide/csl.types
-             ide/css.editor
-             ide/css.lib
-             ide/css.model
-             ide/db
-             ide/db.dataview
-             ide/db.sql.editor
-             ide/docker.api
-             ide/docker.ui
-             ide/editor.bookmarks
-             ide/editor.bracesmatching
-             ide/editor.document
-             ide/editor.fold
-             ide/editor.fold.nbui
-             ide/editor.guards
-             ide/editor.indent
-             ide/editor.indent.project
-             ide/editor.macros
-             ide/editor.search
-             ide/editor.settings
-             ide/editor.settings.storage
-             ide/editor.structure
-             ide/editor.tools.storage
-             ide/editor.util
-             ide/extbrowser
-             ide/extexecution.base
-             ide/gsf.testrunner.ui
-             ide/html
-             ide/html.custom
-             ide/html.editor
-             ide/html.lexer
-             ide/html.parser
-             ide/html.validation
-             ide/hudson
-             ide/hudson.git
-             ide/hudson.mercurial
-             ide/hudson.subversion
-             ide/hudson.tasklist
-             ide/hudson.ui
-             ide/javascript2.debug
-             ide/languages.yaml
-             ide/lexer
-             ide/lib.terminalemulator
-             ide/libs.freemarker
-             ide/libs.git
-             ide/libs.graalsdk
-             ide/localhistory
-             ide/o.openidex.util
-             ide/parsing.api
-             ide/parsing.indexing
-             ide/parsing.lucene
-             ide/project.ant
-             ide/project.ant.compat8
-             ide/project.ant.ui
-             ide/project.libraries
-             ide/project.libraries.ui
-             ide/projectapi
-             ide/projectapi.nb
-             ide/projectuiapi.base
-             ide/refactoring.api
-             ide/schema2beans
-             ide/server
-             ide/spellchecker
-             ide/spi.editor.hints
-             ide/spi.palette
-             ide/spi.tasklist
-             ide/tasklist.ui
-             ide/team.commons
-             ide/terminal.nb
-             ide/utilities
-             ide/versioning.masterfs
-             ide/versioning.ui
-             ide/versioning.util
-             ide/web.common
-             ide/web.common.ui
-             ide/web.webkit.debugging
-             ide/xml
-             ide/xml.axi
-             ide/xml.core
-             ide/xml.lexer
-             ide/xml.multiview
-             ide/xml.text
-             ide/xml.text.obsolete90
-             ide/xml.xam
-             ide/xml.xdm
-             ide/xsl"
+        - name: Compile all modules with OpenJDK8
           jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+          script:
+            - ant $OPTS build
+            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+
+        - name: Compile all modules with OpenJDK11
+          jdk: openjdk11
+          env:
+            - OPTS="-quiet -Dcluster.config=full -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+          script:
+            - ant $OPTS build
+            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+
+        - name: Test harness modules
+          jdk: openjdk8
+          env:
+            - OPTS="-silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - OPTS="-quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+            - ant $OPTS -f harness/o.n.insane test
+            - ant $OPTS -f harness/apisupport.harness test
+            - ant $OPTS -f harness/nbjunit test
+            # - ant $OPTS -f harness/jellytools.platform test
+
+        - name: Test platform modules, Batch 1
+          jdk: openjdk8
+          env:
+            - OPTS="-silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - travis_retry hide-logs.sh ant $OPTS -f platform/api.htmlui test
+            - hide-logs.sh ant $OPTS -f platform/api.intent test
+            - hide-logs.sh ant $OPTS -f platform/api.io test
+            - hide-logs.sh ant $OPTS -f platform/api.progress test
+            - hide-logs.sh ant $OPTS -f platform/api.progress.nb test
+            - hide-logs.sh ant $OPTS -f platform/api.scripting test
+            - hide-logs.sh ant $OPTS -f platform/api.search test
+            - hide-logs.sh ant $OPTS -f platform/api.templates test
+            - hide-logs.sh ant $OPTS -f platform/api.visual test
+            - hide-logs.sh ant $OPTS -f platform/applemenu test
+            - hide-logs.sh ant $OPTS -f platform/autoupdate.cli test
+            - hide-logs.sh ant $OPTS -f platform/autoupdate.services test
+            - hide-logs.sh ant $OPTS -f platform/autoupdate.ui test
+            - hide-logs.sh ant $OPTS -f platform/core.execution test
+            - hide-logs.sh ant $OPTS -f platform/core.io.ui test
+            - hide-logs.sh ant $OPTS -f platform/core.kit test
+            - hide-logs.sh ant $OPTS -f platform/core.multiview test
+            - hide-logs.sh ant $OPTS -f platform/core.netigso test
+            #- hide-logs.sh ant $OPTS -f platform/core.network test
+            #- hide-logs.sh ant $OPTS -f platform/core.osgi test
+            - hide-logs.sh ant $OPTS -f platform/core.output2 test
+            - hide-logs.sh ant $OPTS -f platform/core.startup test
+            - hide-logs.sh ant $OPTS -f platform/core.startup.base test
+            - hide-logs.sh ant $OPTS -f platform/core.ui test
+            #- hide-logs.sh ant $OPTS -f platform/core.windows test
+            - hide-logs.sh ant $OPTS -f platform/editor.mimelookup test
+            - hide-logs.sh ant $OPTS -f platform/editor.mimelookup.impl test
+            - hide-logs.sh ant $OPTS -f platform/favorites test
+            - hide-logs.sh ant $OPTS -f platform/javahelp test-unit
+            - hide-logs.sh ant $OPTS -f platform/keyring.fallback test
+            - hide-logs.sh ant $OPTS -f platform/keyring.impl test
+            - hide-logs.sh ant $OPTS -f platform/lib.uihandler test
+            - hide-logs.sh ant $OPTS -f platform/libs.javafx test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
+            - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
+            #- hide-logs.sh ant $OPTS -f platform/netbinox test
+            - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
+            - hide-logs.sh ant $OPTS -f platform/o.n.core test-unit
+            - hide-logs.sh ant $OPTS -f platform/o.n.swing.outline test
+            - hide-logs.sh ant $OPTS -f platform/o.n.swing.tabcontrol test
+            
+        - name: Test platform modules, Batch 2
+          jdk: openjdk8
+          env:
+            - OPTS="-silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - hide-logs.sh ant $OPTS -f platform/openide.actions test
+            - hide-logs.sh ant $OPTS -f platform/openide.awt test
+            - hide-logs.sh ant $OPTS -f platform/openide.compat test
+            - hide-logs.sh ant $OPTS -f platform/openide.dialogs test
+            - hide-logs.sh ant $OPTS -f platform/openide.execution test
+            - hide-logs.sh ant $OPTS -f platform/openide.execution.compat8 test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.explorer test
+            - hide-logs.sh ant $OPTS -f platform/openide.filesystems test
+            - hide-logs.sh ant $OPTS -f platform/openide.filesystems.compat8 test
+            - hide-logs.sh ant $OPTS -f platform/openide.filesystems.nb test
+            - hide-logs.sh ant $OPTS -f platform/openide.io test
+            - travis_wait hide-logs.sh ant $OPTS -f platform/openide.loaders test
+            - hide-logs.sh ant $OPTS -f platform/openide.modules test
+            - hide-logs.sh ant $OPTS -f platform/openide.nodes test
+            - hide-logs.sh ant $OPTS -f platform/openide.options test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/openide.text test
+            - hide-logs.sh ant $OPTS -f platform/openide.util test
+            - hide-logs.sh ant $OPTS -f platform/openide.util.enumerations test
+            - hide-logs.sh ant $OPTS -f platform/openide.util.lookup test
+            - hide-logs.sh ant $OPTS -f platform/openide.util.ui test
+            - hide-logs.sh ant $OPTS -f platform/openide.windows test
+            - hide-logs.sh ant $OPTS -f platform/options.api test-unit
+            - hide-logs.sh ant $OPTS -f platform/options.keymap test
+            - hide-logs.sh ant $OPTS -f platform/print test
+            - hide-logs.sh ant $OPTS -f platform/progress.ui test
+            - hide-logs.sh ant $OPTS -f platform/queries test
+            - hide-logs.sh ant $OPTS -f platform/sampler test
+            - hide-logs.sh ant $OPTS -f platform/sendopts test
+            - hide-logs.sh ant $OPTS -f platform/settings test
+            - hide-logs.sh ant $OPTS -f platform/spi.actions test
+            - hide-logs.sh ant $OPTS -f platform/spi.quicksearch test
+            - hide-logs.sh ant $OPTS -f platform/templates test
+            - hide-logs.sh ant $OPTS -f platform/templatesui test
+            - hide-logs.sh ant $OPTS -f platform/uihandler test
+          
+        - name: Test ide modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f ide/api.xml test
+            - ant $OPTS -f ide/api.xml.ui test
+            - travis_retry ant $OPTS -f ide/bugtracking test
+            #- ant $OPTS -f ide/bugtracking.bridge test
+            - ant $OPTS -f ide/bugtracking.commons test
+            #- ant $OPTS -f ide/bugzilla test
+            - ant $OPTS -f ide/code.analysis test
+            - ant $OPTS -f ide/core.ide test
+            - ant $OPTS -f ide/csl.api test
+            - ant $OPTS -f ide/csl.types test
+            - ant $OPTS -f ide/css.editor test
+            - ant $OPTS -f ide/css.lib test
+            - ant $OPTS -f ide/css.model test
+            - ant $OPTS -f ide/db test
+            - ant $OPTS -f ide/db.dataview test
+            - ant $OPTS -f ide/db.sql.editor test
+            - ant $OPTS -f ide/docker.api test
+            - ant $OPTS -f ide/docker.ui test
+            - ant $OPTS -f ide/editor.bookmarks test
+            #- ant $OPTS -f ide/editor.bracesmatching test
+            - ant $OPTS -f ide/editor.document test
+            - ant $OPTS -f ide/editor.fold test
+            - ant $OPTS -f ide/editor.fold.nbui test
+            - ant $OPTS -f ide/editor.guards test
+            - ant $OPTS -f ide/editor.indent test
+            - ant $OPTS -f ide/editor.indent.project test
+            - ant $OPTS -f ide/editor.macros test
+            - ant $OPTS -f ide/editor.search test
+            - ant $OPTS -f ide/editor.settings test
+            - ant $OPTS -f ide/editor.settings.storage test
+            - ant $OPTS -f ide/editor.structure test
+            - ant $OPTS -f ide/editor.tools.storage test
+            - ant $OPTS -f ide/editor.util test
+            - ant $OPTS -f ide/extbrowser test
+            - ant $OPTS -f ide/extexecution.base test
+            - ant $OPTS -f ide/gsf.testrunner.ui test
+            - travis_retry ant $OPTS -f ide/html test
+            - ant $OPTS -f ide/html.custom test
+            #- ant $OPTS -f ide/html.editor test
+            #- ant $OPTS -f ide/html.lexer test
+            - ant $OPTS -f ide/html.parser test
+            - ant $OPTS -f ide/html.validation test
+            - ant $OPTS -f ide/hudson test
+            - ant $OPTS -f ide/hudson.git test
+            - ant $OPTS -f ide/hudson.mercurial test
+            - ant $OPTS -f ide/hudson.subversion test
+            - ant $OPTS -f ide/hudson.tasklist test
+            - ant $OPTS -f ide/hudson.ui test
+            - ant $OPTS -f ide/javascript2.debug test
+            - ant $OPTS -f ide/languages.yaml test
+            - ant $OPTS -f ide/lexer test
+            - ant $OPTS -f ide/lib.terminalemulator test
+            - ant $OPTS -f ide/libs.freemarker test
+            #- ant $OPTS -f ide/libs.git test
+            - ant $OPTS -f ide/libs.graalsdk test
+            #- ant $OPTS -f ide/localhistory test
+            - ant $OPTS -f ide/o.openidex.util test
+            #- ant $OPTS -f ide/parsing.api test
+            #- ant $OPTS -f ide/parsing.indexing test
+            - ant $OPTS -f ide/parsing.lucene test
+            - ant $OPTS -f ide/project.ant test
+            - ant $OPTS -f ide/project.ant.compat8 test
+            - ant $OPTS -f ide/project.ant.ui test
+            - ant $OPTS -f ide/project.libraries test
+            - ant $OPTS -f ide/project.libraries.ui test
+            - ant $OPTS -f ide/projectapi test
+            - ant $OPTS -f ide/projectapi.nb test
+            - ant $OPTS -f ide/projectuiapi.base test
+            - ant $OPTS -f ide/refactoring.api test
+            - ant $OPTS -f ide/schema2beans test
+            - ant $OPTS -f ide/server test
+            - ant $OPTS -f ide/spellchecker test
+            - ant $OPTS -f ide/spi.editor.hints test
+            #- ant $OPTS -f ide/spi.palette test
+            - ant $OPTS -f ide/spi.tasklist test
+            - ant $OPTS -f ide/tasklist.ui test
+            - ant $OPTS -f ide/team.commons test
+            - ant $OPTS -f ide/terminal.nb test
+            - ant $OPTS -f ide/utilities test
+            - ant $OPTS -f ide/versioning.masterfs test
+            - ant $OPTS -f ide/versioning.ui test
+            - ant $OPTS -f ide/versioning.util test
+            - ant $OPTS -f ide/web.common test
+            - ant $OPTS -f ide/web.common.ui test
+            - ant $OPTS -f ide/web.webkit.debugging test
+            - ant $OPTS -f ide/xml test
+            - ant $OPTS -f ide/xml.axi test
+            - ant $OPTS -f ide/xml.core test
+            - ant $OPTS -f ide/xml.lexer test
+            - ant $OPTS -f ide/xml.multiview test
+            - ant $OPTS -f ide/xml.text test
+            - ant $OPTS -f ide/xml.text.obsolete90 test
+            - ant $OPTS -f ide/xml.xam test
+            - ant $OPTS -f ide/xml.xdm test
+            - ant $OPTS -f ide/xsl test
+            
+        - name: Test Java modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f java/java.completion test
+            #- ant $OPTS -f java/spi.java.hints test
+            - ant $OPTS -f java/java.hints.declarative test
+            - ant $OPTS -f java/spring.beans test
+            
+        - name: Test Java completion with Java 11
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f java/java.completion -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true test
+
+        - name: Test Java completion with Java 12
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 12 --license GPL --emit-java-home --silent | tail -1`
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f java/java.completion -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true test
+
+        - name: Test ergonomics modules
+          jdk: openjdk8
+          env: 
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
+
+        - name: Test profiler modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f profiler/profiler.oql test
+
+        - name: Test webcommon modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
+            - hide-logs.sh ant $OPTS -f webcommon/libs.graaljs test
+            - hide-logs.sh ant $OPTS -f webcommon/libs.truffleapi test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/web.clientproject test-unit
+            - hide-logs.sh ant $OPTS -f webcommon/web.clientproject.api test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
 
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
@@ -213,13 +399,22 @@ matrix:
           services:
             - mysql
           env:
-            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
             - OPTS_TEST="-Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true -Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=password"
           before_script:
             - echo "ALTER USER root@'localhost' IDENTIFIED BY 'password';\nFLUSH PRIVILEGES;\n" | mysql -u root
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
-            - ant $OPTS $OPTS_TEST -f ide/db.mysql test
+            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+            - travis_retry ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
+        - name: Test enterprise modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=enterprise -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f enterprise/spring.webmvc test

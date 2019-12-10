@@ -18,11 +18,10 @@
  */
 package org.netbeans.spi.search;
 
-import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.netbeans.api.search.provider.SearchInfo;
 import org.openide.util.Exceptions;

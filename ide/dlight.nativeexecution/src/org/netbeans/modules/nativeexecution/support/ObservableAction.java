@@ -147,7 +147,7 @@ public abstract class ObservableAction<T>
         List<ObservableActionListener<T>> ll =
                 new ArrayList<>(listeners);
 
-        for (ObservableActionListener l : ll) {
+        for (ObservableActionListener<T> l : ll) {
             l.actionStarted(this);
         }
     }

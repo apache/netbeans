@@ -27,6 +27,33 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="SVGLoader">
+      <api name="util"/>
+      <summary>Support loading of SVG icons for scalable rendering on HiDPI displays.</summary>
+      <version major="9" minor="15"/>
+      <date year="2019" month="11" day="24"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible"/>
+      <description>
+        <p>
+            As a part of the effort to make NetBeans look better on HiDPI displays, the
+            ImageUtilities class has now been completely updated to support scalable implementations
+            of the java.awt.Icon interface, and to support loading of icons and images from SVG
+            files. If an SVG file resource exists with the same base name as an existing bitmap
+            icon, the SVG file will be loaded instead (e.g. "icon.svg" will be loaded instead of
+            "icon.png"). SVG file resources can also be loaded explicitly.
+        </p>
+        <p>
+            To avoid bloating the core platform modules with large JAR libraries, the actual loading
+            and parsing of SVG files is implemented in a separate, optional module, which is lazily
+            loaded the first time that an SVG file is encountered for loading. A new interface
+            SVGLoader has been added to serve as an SPI for said module to implement. Furthermore,
+            the CachedHiDPIIcon helper class has been made public to assist in the implementation of
+            this and other scalable Icon implementations.
+        </p>
+      </description>
+      <issue number="NETBEANS-2604"/>
+    </change>
     <change id="VectorIcon">
       <api name="util"/>
       <summary>Added abstract class VectorIcon to support creation of custom-painted HiDPI icons.</summary>

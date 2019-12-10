@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.44
+#Version 6.45
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener

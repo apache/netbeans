@@ -130,6 +130,9 @@ class AutoUpdateCatalogParser extends DefaultHandler {
     private static Map<String, ModuleItem> cache;
     private static URI cacheURI;
     synchronized static Map<String, ModuleItem> getUpdateItems (URL url, URL provider, Task task) throws IOException {
+        return getUpdateItems(url, null, provider, task);
+    }
+    synchronized static Map<String, ModuleItem> getUpdateItems (URL url, InputStream data, URL provider, Task task) throws IOException {
 
         Map<String, ModuleItem> items = new HashMap<> ();
         URI base;
@@ -149,7 +152,7 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 factory.setValidating(false);
                 SAXParser saxParser = factory.newSAXParser();
-                is = getInputSource(url, provider, base);
+                is = getInputSource(url, data, provider, base);
                 saxParser.parse(is, new AutoUpdateCatalogParser(items, provider, base));
                 cacheURI = base;
                 cache = items;
@@ -182,8 +185,10 @@ class AutoUpdateCatalogParser extends DefaultHandler {
         return res;
     }
     
-    private static InputSource getInputSource(URL toParse, URL p, URI base) throws IOException {
-        InputStream is = toParse.openStream ();
+    private static InputSource getInputSource(URL toParse, InputStream is, URL p, URI base) throws IOException {
+        if (is == null) {
+            is = toParse.openStream();
+        }
         if (isGzip (p)) {
             try {
                 is = new GZIPInputStream(is);

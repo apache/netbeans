@@ -74,9 +74,9 @@ public class ProcessesImpl implements ProcessesImplementation {
 
         try {
             Object handle = PROCESS_TO_HANDLE.invoke(process, (Object[]) null);
-            try (Stream s = (Stream) PROCESS_HANDLE_DESCENDANTS.invoke(handle, (Object[]) null)) {
+            try (Stream<?> s = (Stream<?>) PROCESS_HANDLE_DESCENDANTS.invoke(handle, (Object[]) null)) {
                 destroy(handle);
-                s.forEach(ch ->  destroy(ch));
+                s.forEach(ch -> destroy(ch));
             }
         } catch (IllegalAccessException | IllegalArgumentException |InvocationTargetException ex) {
             throw new UnsupportedOperationException("The JDK 9 way of killing process tree has failed", ex); // NOI18N

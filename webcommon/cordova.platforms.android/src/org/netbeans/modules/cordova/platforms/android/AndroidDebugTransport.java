@@ -117,7 +117,7 @@ public class AndroidDebugTransport extends MobileDebugTransport implements WebSo
     public boolean attach() {
         try {
             String s = ProcessUtilities.callProcess(
-                    ((AndroidPlatform) AndroidPlatform.getDefault()).getAdbCommand(), 
+                    AndroidPlatform.getDefault().getAdbCommand(), 
                     true, 
                     AndroidPlatform.DEFAULT_TIMEOUT, 
                     "forward", // NOI18N

@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.core.network
 OpenIDE-Module-Localizing-Bundle: org/netbeans/core/network/proxy/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.core.ProxySettings.Reloader
-OpenIDE-Module-Specification-Version: 1.18
+OpenIDE-Module-Specification-Version: 1.19
 OpenIDE-Module-Recommends: javax.script.ScriptEngine.js

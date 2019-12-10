@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -45,10 +46,10 @@ import org.openide.util.Exceptions;
 public class AVD implements Device {
 
     private String name;
-    private HashMap<String, String> props;
+    private Map<String, String> props;
 
     private AVD() {
-        this.props = new HashMap();
+        this.props = new HashMap<>();
     }
     
     public static Collection<Device> parse(String output) throws IOException {

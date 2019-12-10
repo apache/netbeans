@@ -24,17 +24,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import org.eclipse.tm4e.core.registry.IRegistryOptions;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
+import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataLoaderPool;
@@ -184,6 +187,17 @@ public class LanguageStorage {
             fireChangeEvent.invoke(DataLoaderPool.getDefault(), new ChangeEvent(DataLoaderPool.getDefault()));
 
             TextmateTokenId.LanguageHierarchyImpl.refreshGrammars();
+
+            Class<?> providerRegistry = Class.forName("org.netbeans.modules.navigator.ProviderRegistry", false, NavigatorPanel.class.getClassLoader());
+            Method getInstance = providerRegistry.getDeclaredMethod("getInstance");
+            getInstance.setAccessible(true);
+            Object providerRegistryInstance = getInstance.invoke(null);
+
+            if (providerRegistryInstance != null) {
+                Field file2Providers = providerRegistry.getDeclaredField("file2Providers");
+                file2Providers.setAccessible(true);
+                ((Map) file2Providers.get(providerRegistryInstance)).clear();
+            }
         } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }

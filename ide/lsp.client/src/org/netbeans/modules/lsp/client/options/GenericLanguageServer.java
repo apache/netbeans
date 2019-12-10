@@ -42,6 +42,7 @@ import org.openide.util.RequestProcessor;
 public class GenericLanguageServer implements LanguageServerProvider {
 
     private final RequestProcessor WORKER = new RequestProcessor(GenericLanguageServer.class.getName(), Integer.MAX_VALUE, false, false);
+    private static final long STARTUP_DELAY = 10000;
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
@@ -103,8 +104,10 @@ public class GenericLanguageServer implements LanguageServerProvider {
 
         try {
             InputOutput io = InputOutput.get("Language Server for " + name + " for project " + (prj != null ? ProjectUtils.getInformation(prj).getDisplayName() : "<unknown>"), false);
+            io.reset();
             Process process = new ProcessBuilder(command).start();
             WORKER.post(() -> {
+                long start = System.currentTimeMillis();
                 try (Reader r = new InputStreamReader(process.getErrorStream())) {
                     int read;
                     while ((read = r.read()) != (-1)) {
@@ -121,7 +124,8 @@ public class GenericLanguageServer implements LanguageServerProvider {
                         Exceptions.printStackTrace(ex);
                     }
                 }
-                if (!process.isAlive() && process.exitValue() != 0) {
+                long end = System.currentTimeMillis();
+                if (!process.isAlive() && (process.exitValue() != 0 || (end - start) < STARTUP_DELAY)) {
                     io.show();
                 }
             });

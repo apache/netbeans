@@ -30,7 +30,8 @@ public class NbFlatDarkLaf extends FlatDarkLaf {
     @Override
     public UIDefaults getDefaults() {
         UIDefaults ret = super.getDefaults();
-        ret.put( "nb.dark.theme", Boolean.TRUE );
+        ret.put( "nb.dark.theme", Boolean.TRUE ); //NOI18N
+        ret.put( "nb.preferred.color.profile", "FlatLaf Dark"); //NOI18N
         return ret;
     }
 

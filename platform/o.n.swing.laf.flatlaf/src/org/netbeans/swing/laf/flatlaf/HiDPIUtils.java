@@ -82,8 +82,9 @@ public class HiDPIUtils {
      * UIScale.scale() rounds up and would return 2px at 150% and 175%.
      */
     public static int deviceBorderWidth(double scale, int logical) {
-        if (logical <= 0)
+        if (logical <= 0) {
             return 0;
+        }
         return Math.max(1, (int) (scale * logical));
     }
 }

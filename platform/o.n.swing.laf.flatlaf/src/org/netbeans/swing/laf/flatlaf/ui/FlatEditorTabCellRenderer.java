@@ -74,8 +74,9 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
     @Override
     public Dimension getPadding() {
         Dimension d = super.getPadding();
-        if (isShowCloseButton() && !Boolean.getBoolean("nb.tabs.suppressCloseButton"))
+        if (isShowCloseButton() && !Boolean.getBoolean("nb.tabs.suppressCloseButton")) { // NOI18N
             d.width += findCloseIcon().getIconWidth() + UIScale.scale(CLOSE_ICON_RIGHT_PAD);
+        }
         return d;
     }
 

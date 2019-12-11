@@ -80,25 +80,25 @@ final class FlatTabControlIcon extends VectorIcon {
         // The string keys of these maps aren't currently used, but are useful for debugging.
         Map<String, Integer> buttonIDs = new LinkedHashMap<String, Integer>();
         // ViewTabDisplayerUI
-        buttonIDs.put("close", TabControlButton.ID_CLOSE_BUTTON);
+        buttonIDs.put("close", TabControlButton.ID_CLOSE_BUTTON); // NOI18N
         // These don't seem to be in use anymore.
-        //buttonIDs.put("slide_right", TabControlButton.ID_SLIDE_RIGHT_BUTTON);
-        //buttonIDs.put("slide_left", TabControlButton.ID_SLIDE_LEFT_BUTTON);
-        //buttonIDs.put("slide_down", TabControlButton.ID_SLIDE_DOWN_BUTTON);
-        buttonIDs.put("pin", TabControlButton.ID_PIN_BUTTON);
-        buttonIDs.put("restore_group", TabControlButton.ID_RESTORE_GROUP_BUTTON);
-        buttonIDs.put("slide_group", TabControlButton.ID_SLIDE_GROUP_BUTTON);
+        //buttonIDs.put("slide_right", TabControlButton.ID_SLIDE_RIGHT_BUTTON); // NOI18N
+        //buttonIDs.put("slide_left", TabControlButton.ID_SLIDE_LEFT_BUTTON); // NOI18N
+        //buttonIDs.put("slide_down", TabControlButton.ID_SLIDE_DOWN_BUTTON); // NOI18N
+        buttonIDs.put("pin", TabControlButton.ID_PIN_BUTTON); // NOI18N
+        buttonIDs.put("restore_group", TabControlButton.ID_RESTORE_GROUP_BUTTON); // NOI18N
+        buttonIDs.put("slide_group", TabControlButton.ID_SLIDE_GROUP_BUTTON); // NOI18N
         // EditorTabDisplayerUI
-        buttonIDs.put("scroll_left", TabControlButton.ID_SCROLL_LEFT_BUTTON);
-        buttonIDs.put("scroll_right", TabControlButton.ID_SCROLL_RIGHT_BUTTON);
-        buttonIDs.put("drop_down", TabControlButton.ID_DROP_DOWN_BUTTON);
-        buttonIDs.put("maximize", TabControlButton.ID_MAXIMIZE_BUTTON);
-        buttonIDs.put("restore", TabControlButton.ID_RESTORE_BUTTON);
+        buttonIDs.put("scroll_left", TabControlButton.ID_SCROLL_LEFT_BUTTON); // NOI18N
+        buttonIDs.put("scroll_right", TabControlButton.ID_SCROLL_RIGHT_BUTTON); // NOI18N
+        buttonIDs.put("drop_down", TabControlButton.ID_DROP_DOWN_BUTTON); // NOI18N
+        buttonIDs.put("maximize", TabControlButton.ID_MAXIMIZE_BUTTON); // NOI18N
+        buttonIDs.put("restore", TabControlButton.ID_RESTORE_BUTTON); // NOI18N
         Map<String, Integer> buttonStates = new LinkedHashMap<String, Integer>();
-        buttonStates.put("default", TabControlButton.STATE_DEFAULT);
-        buttonStates.put("pressed", TabControlButton.STATE_PRESSED);
-        buttonStates.put("disabled", TabControlButton.STATE_DISABLED);
-        buttonStates.put("rollover", TabControlButton.STATE_ROLLOVER);
+        buttonStates.put("default", TabControlButton.STATE_DEFAULT); // NOI18N
+        buttonStates.put("pressed", TabControlButton.STATE_PRESSED); // NOI18N
+        buttonStates.put("disabled", TabControlButton.STATE_DISABLED); // NOI18N
+        buttonStates.put("rollover", TabControlButton.STATE_ROLLOVER); // NOI18N
         Map<Entry<Integer,Integer>,Icon> ret = new LinkedHashMap<Entry<Integer,Integer>,Icon>();
         for (Entry<String,Integer> buttonID : buttonIDs.entrySet()) {
           for (Entry<String,Integer> buttonState : buttonStates.entrySet()) {
@@ -137,12 +137,14 @@ final class FlatTabControlIcon extends VectorIcon {
                 fgColor = disabledForeground;
             } else if (buttonState == TabControlButton.STATE_PRESSED) {
                 bgColor = closeColor != null ? closeColor : pressedBackground;
-                if (closeColor != null && closeRolloverForeground != null)
+                if (closeColor != null && closeRolloverForeground != null) {
                     fgColor = closeRolloverForeground;
+                }
             } else if (buttonState == TabControlButton.STATE_ROLLOVER) {
                 bgColor = closeColor != null ? closeColor : rolloverBackground;
-                if (closeColor != null && closeRolloverForeground != null)
+                if (closeColor != null && closeRolloverForeground != null) {
                     fgColor = closeRolloverForeground;
+                }
             }
         }
         if (bgColor.getAlpha() > 0) {
@@ -228,8 +230,9 @@ final class FlatTabControlIcon extends VectorIcon {
                 // shift the triangle a half pixel gives a nice 1px bottom edge
                 arrowMidX -= 0.5;
                 // fix vertical alignment of left and right scroll buttons
-                if (buttonId == TabControlButton.ID_SCROLL_LEFT_BUTTON)
+                if (buttonId == TabControlButton.ID_SCROLL_LEFT_BUTTON) {
                     arrowMidX += 1.0;
+                }
             }
             Path2D.Double arrowPath = new Path2D.Double();
             arrowPath.moveTo(arrowMidX - arrowWidth / 2.0, y);

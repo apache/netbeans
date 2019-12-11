@@ -120,14 +120,14 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         if (isSelected(index)) {
             // layout buttons
             Component buttons = getControlButtons();
-            if( null != buttons ) {
+            if (null != buttons) {
                 Dimension buttonsSize = buttons.getPreferredSize();
-                if( width < buttonsSize.width + ICON_X_PAD ) {
-                    buttons.setVisible( false );
+                if (width < buttonsSize.width + ICON_X_PAD) {
+                    buttons.setVisible(false);
                 } else {
-                    buttons.setVisible( true );
+                    buttons.setVisible(true);
                     txtWidth = width - (buttonsSize.width + ICON_X_PAD + txtLeftPad + txtRightPad);
-                    buttons.setLocation( x + width - buttonsSize.width - ICON_X_PAD, y + (height - buttonsSize.height) / 2 );
+                    buttons.setLocation(x + width - buttonsSize.width - ICON_X_PAD, y + (height - buttonsSize.height) / 2);
                 }
             }
         } else {
@@ -135,10 +135,10 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         }
 
         // paint busy icon
-        if( isTabBusy( index ) ) {
-            Icon busyIcon = BusyTabsSupport.getDefault().getBusyIcon( isSelected( index ) );
+        if (isTabBusy(index)) {
+            Icon busyIcon = BusyTabsSupport.getDefault().getBusyIcon(isSelected(index));
             txtWidth -= busyIcon.getIconWidth() - UIScale.scale(3) - txtLeftPad;
-            busyIcon.paintIcon( displayer, g, x + txtLeftPad, y + (height - busyIcon.getIconHeight()) / 2 );
+            busyIcon.paintIcon(displayer, g, x + txtLeftPad, y + (height - busyIcon.getIconHeight()) / 2);
             x += busyIcon.getIconWidth() + UIScale.scale(3);
         }
 
@@ -150,8 +150,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         int txtX = x + tabInsets.left;
         int txtY = y + tabInsets.top + fm.getAscent();
         int availH = height - tabInsets.top - tabInsets.bottom;
-        if (availH > fm.getHeight())
+        if (availH > fm.getHeight()) {
             txtY += (availH - fm.getHeight()) / 2;
+        }
         HtmlRenderer.renderString(text, g, txtX, txtY, txtWidth, height,
                 getTxtFont(), c, HtmlRenderer.STYLE_TRUNCATE, true);
     }
@@ -182,10 +183,11 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             // paint underline if tab is selected
             int underlineHeight = (int) Math.round(this.underlineHeight * scale);
             g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
-            if (underlineAtTop)
+            if (underlineAtTop) {
                 g.fillRect(0, 0, width, underlineHeight);
-            else
+            } else {
                 g.fillRect(0, height - underlineHeight, width, underlineHeight);
+            }
         } else {
             // paint bottom border
             int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
@@ -213,9 +215,10 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     @Override
     protected Font getTxtFont() {
         if (font == null) {
-            font = UIManager.getFont("ViewTab.font");
-            if (font == null)
-                font = UIManager.getFont("Label.font");
+            font = UIManager.getFont("ViewTab.font"); // NOI18N
+            if (font == null) {
+                font = UIManager.getFont("Label.font"); // NOI18N
+            }
         }
         return font;
     }
@@ -224,8 +227,9 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
      * @return true if tab with given index has mouse cursor above, false otherwise.
      */
     boolean isMouseOver(int index) {
-        if( index < 0 )
+        if (index < 0) {
             return false;
+        }
         return ((OwnController) getController()).getMouseIndex() == index;
     }
 
@@ -233,7 +237,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
      * Initialization of colors
      */
     private static void initColors() {
-        if( !colorsReady ) {
+        if (!colorsReady) {
             background = UIManager.getColor("ViewTab.background"); // NOI18N
             activeBackground = FlatUIUtils.getUIColor("ViewTab.activeBackground", background); // NOI18N
             selectedBackground = FlatUIUtils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
@@ -271,8 +275,8 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     @Override
     public void postTabAction(TabActionEvent e) {
         super.postTabAction(e);
-        if( TabDisplayer.COMMAND_MAXIMIZE.equals( e.getActionCommand() ) ) {
-            ((OwnController)getController()).updateHighlight( -1 );
+        if (TabDisplayer.COMMAND_MAXIMIZE.equals(e.getActionCommand())) {
+            ((OwnController) getController()).updateHighlight(-1);
         }
     }
 
@@ -312,7 +316,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         @Override
         public void mouseExited(MouseEvent e) {
             super.mouseExited(e);
-            if( !inControlButtonsRect(e.getPoint())) {
+            if (!inControlButtonsRect(e.getPoint())) {
                 updateHighlight(-1);
             }
         }
@@ -329,21 +333,20 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
             int x, y, w, h;
             Rectangle repaintRect = null;
             if (curIndex != -1) {
-                x = tlm.getX(curIndex)-1;
+                x = tlm.getX(curIndex) - 1;
                 y = tlm.getY(curIndex);
-                w = tlm.getW(curIndex)+2;
+                w = tlm.getW(curIndex) + 2;
                 h = tlm.getH(curIndex);
                 repaintRect = new Rectangle(x, y, w, h);
             }
             // due to model changes, lastIndex may become invalid, so check
             if ((lastIndex != -1) && (lastIndex < getDataModel().size())) {
-                x = tlm.getX(lastIndex)-1;
+                x = tlm.getX(lastIndex) - 1;
                 y = tlm.getY(lastIndex);
-                w = tlm.getW(lastIndex)+2;
+                w = tlm.getW(lastIndex) + 2;
                 h = tlm.getH(lastIndex);
                 if (repaintRect != null) {
-                    repaintRect =
-                            repaintRect.union(new Rectangle(x, y, w, h));
+                    repaintRect = repaintRect.union(new Rectangle(x, y, w, h));
                 } else {
                     repaintRect = new Rectangle(x, y, w, h);
                 }

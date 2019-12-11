@@ -1,6 +1,7 @@
 Name: Java Server Faces API documentation
-Version: 2.0
+Version: 2.3
 License: CDDL-1.1
+Type: generated
 Description: Java Server Faces API documentation
 Origin: Oracle
 

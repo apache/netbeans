@@ -32,8 +32,10 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 
 /**
@@ -43,9 +45,10 @@ import org.openide.util.Parameters;
  * @since 6.11
  */
 class DropDownToggleButton extends JToggleButton {
-    
+
     private boolean mouseInButton = false;
     private boolean mouseInArrowArea = false;
+    private boolean popupClosingInProgress = false;
     
     private Map<String,Icon> regIcons = new HashMap<String,Icon>( 5 );
     private Map<String,Icon> arrowIcons = new HashMap<String,Icon>( 5 );
@@ -66,10 +69,11 @@ class DropDownToggleButton extends JToggleButton {
     /** Creates a new instance of DropDownToggleButton */
     public DropDownToggleButton( Icon icon, JPopupMenu popup ) {
         Parameters.notNull("icon", icon); //NOI18N
-        
+
         putClientProperty( DropDownButtonFactory.PROP_DROP_DOWN_MENU, popup );
         
         setIcon( icon );
+        setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
         
         resetIcons();
         
@@ -95,12 +99,17 @@ class DropDownToggleButton extends JToggleButton {
             
             @Override
             public void mousePressed( MouseEvent e ) {
+                if (popupClosingInProgress) {
+                    return;
+                }
                 popupMenuOperation = false;
                 JPopupMenu menu = getPopupMenu();
                 if ( menu != null && getModel() instanceof Model ) {
                     Model model = (Model) getModel();
                     if ( !model._isPressed() ) {
-                        if( isInArrowArea( e.getPoint() ) && menu.getComponentCount() > 0 ) {
+                        if( isInArrowArea( e.getPoint() ) && menu.getComponentCount() > 0 &&
+                            model.isEnabled() )
+                        {
                             model._press();
                             menu.addPopupMenuListener( getMenuListener() );
                             menu.show( DropDownToggleButton.this, 0, getHeight() );
@@ -155,18 +164,24 @@ class DropDownToggleButton extends JToggleButton {
 
                 @Override
                 public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    // If inside the button let the button's mouse listener
-                    // deal with the state. The popup menu will be hidden and
-                    // we should not show it again.
-                    if ( !mouseInButton ) {
-                        if( getModel() instanceof Model ) {
-                            ((Model)getModel())._release();
-                        }
-                        JPopupMenu menu = getPopupMenu();
-                        if( null != menu ) {
-                            menu.removePopupMenuListener( this );
-                        }
+                    if( getModel() instanceof Model ) {
+                        ((Model)getModel())._release();
                     }
+                    JPopupMenu menu = getPopupMenu();
+                    if( null != menu ) {
+                        menu.removePopupMenuListener( this );
+                    }
+                    /* If the popup was closed by a mouse click inside the button area, the button
+                    may also receive a mousePressed event, although this seems not to be guaranteed.
+                    Ignore any such button press while the popup is closing, to avoid interpreting
+                    the press as a click to open the menu again. */
+                    popupClosingInProgress = true;
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            popupClosingInProgress = false;
+                        }
+                    });
                 }
 
                 @Override
@@ -265,6 +280,7 @@ class DropDownToggleButton extends JToggleButton {
         arrowIcons.remove( ICON_ROLLOVER );
         arrowIcons.remove( ICON_ROLLOVER_SELECTED );
         super.setIcon( hasPopupMenu() ? arrow : icon );
+        updateRollover( _getRolloverIcon(), _getRolloverSelectedIcon() );
     }
 
     private Icon updateIcons( Icon orig, String iconType ) {
@@ -342,7 +358,7 @@ class DropDownToggleButton extends JToggleButton {
         }
     
         public void _press() {
-            if((isPressed()) || !isEnabled()) {
+            if((_pressed && isPressed()) || !isEnabled()) {
                 return;
             }
 
@@ -354,7 +370,6 @@ class DropDownToggleButton extends JToggleButton {
         
         public void _release() {
             _pressed = false;
-            mouseInArrowArea = false;
             setArmed( false );
             setPressed( false );
             setRollover( false );

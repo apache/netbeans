@@ -1,8 +1,9 @@
-Name: Java(TM) Enterprise Edition 7 API Documentation
-Version: 7.0
+Name: Java(TM) Enterprise Edition 8 API Documentation
+Version: 8.0.1
 Description: Java(TM) Enterprise Edition 7 API Documentation
 License: CDDL-1.0
-Origin: Oracle (http://glassfish.dev.java.net)
+Origin: Generated from javaee-api-8.0.1-javadoc.jar
+Type: generated
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

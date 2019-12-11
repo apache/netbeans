@@ -56,16 +56,16 @@ final class DPISafeBorder implements Border {
     }
 
     @Override
-    public void paintBorder(Component c, Graphics g0, int x, int y, int width, int height) {
-        HiDPIUtils.paintAtDeviceScale((Graphics2D) g0, x, y, width, height, this::paintBorder);
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        HiDPIUtils.paintAtScale1x(g, x, y, width, height, this::paintBorderAtScale1x);
     }
 
-    private void paintBorder(Graphics2D g, int deviceWidth, int deviceHeight, double scale) {
+    private void paintBorderAtScale1x(Graphics2D g, int deviceWidth, int deviceHeight, double scale) {
         final Color oldColor = g.getColor();
-        final int deviceLeft   = deviceBorderWidth(scale, insets.left);
-        final int deviceRight  = deviceBorderWidth(scale, insets.right);
-        final int deviceTop    = deviceBorderWidth(scale, insets.top);
-        final int deviceBottom = deviceBorderWidth(scale, insets.bottom);
+        final int deviceLeft   = HiDPIUtils.deviceBorderWidth(scale, insets.left);
+        final int deviceRight  = HiDPIUtils.deviceBorderWidth(scale, insets.right);
+        final int deviceTop    = HiDPIUtils.deviceBorderWidth(scale, insets.top);
+        final int deviceBottom = HiDPIUtils.deviceBorderWidth(scale, insets.bottom);
 
         g.setColor(color);
 
@@ -79,12 +79,6 @@ final class DPISafeBorder implements Border {
         g.fillRect(deviceWidth - deviceRight, 0, deviceRight, deviceHeight - deviceBottom);
 
         g.setColor(oldColor);
-    }
-
-    private int deviceBorderWidth(double scale, int logical) {
-        if (logical <= 0)
-            return 0;
-        return Math.max(1, (int) (scale * logical));
     }
 
     @Override

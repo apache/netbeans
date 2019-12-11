@@ -93,16 +93,21 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         int width = displayer.getWidth();
         int height = displayer.getHeight();
 
+        // Paint the whole tab background at scale 1x (on HiDPI screens).
+        // Necessary so that it aligns nicely at bottom left and right edges
+        // with the content border, which is also painted at scale 1x.
+        HiDPIUtils.paintAtScale1x(g, 0, 0, width, height, this::paintBackgroundAtScale1x);
+    }
+
+    private void paintBackgroundAtScale1x(Graphics2D g, int width, int height, double scale) {
         // fill background
         g.setColor (displayer.isActive() ? activeBackground : background);
         g.fillRect (0, 0, width, height);
 
         // paint bottom border
+        int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
         g.setColor(contentBorderColor);
-        HiDPIUtils.paintAtDeviceScale((Graphics2D) g, 0, height - 1, width, 1,
-                (gd, deviceWidth, deviceHeight, scale) -> {
-                    gd.fillRect(0, 0, deviceWidth, deviceHeight);
-                });
+        g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
     }
 
     @Override

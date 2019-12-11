@@ -18,18 +18,18 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 public class HiDPIUtils {
 
     public interface HiDPIPainter {
-        void paint(Graphics2D g, int deviceWidth, int deviceHeight, double scale);
+        void paint(Graphics2D g, int width, int height, double scale);
     }
 
     /**
-     * Paint at device scale factor
-     * to avoid rounding issues at 125%, 150% and 175% scaling.
+     * Paint at scale factor 1x to avoid rounding issues at 125%, 150% and 175% scaling.
      * <p>
      * Scales the given Graphics2D down to 100% and invokes the
      * given painter passing scaled deviceWidth and deviceHeight.
@@ -37,7 +37,8 @@ public class HiDPIUtils {
      * Transformation to device pixels borrowed from class
      * {@link org.netbeans.swing.plaf.windows8.DPISafeBorder}.
      */
-    public static void paintAtDeviceScale( Graphics2D g, int x, int y, int width, int height, HiDPIPainter painter) {
+    public static void paintAtScale1x(Graphics g0, int x, int y, int width, int height, HiDPIPainter painter) {
+        Graphics2D g = (Graphics2D) g0;
         final AffineTransform oldTransform = g.getTransform();
         g.translate(x, y);
         final AffineTransform tx = g.getTransform();
@@ -72,5 +73,17 @@ public class HiDPIUtils {
         }
 
         g.setTransform(oldTransform);
+    }
+
+    /**
+     * Calculates the width of a border in device pixels.
+     * The difference to com.formdev.flatlaf.util.UIScale.scale() is that this method
+     * always rounds down the result, which gives nice small 1px borders at 150% and 175%.
+     * UIScale.scale() rounds up and would return 2px at 150% and 175%.
+     */
+    public static int deviceBorderWidth(double scale, int logical) {
+        if (logical <= 0)
+            return 0;
+        return Math.max(1, (int) (scale * logical));
     }
 }

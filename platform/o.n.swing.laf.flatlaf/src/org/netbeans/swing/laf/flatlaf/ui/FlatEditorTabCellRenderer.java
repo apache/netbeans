@@ -180,9 +180,22 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
         @Override
         public void paintInterior(Graphics g, Component c) {
+            // Paint the whole tab background at scale 1x (on HiDPI screens).
+            // Necessary so that it aligns nicely at bottom left and right edges
+            // with the content border, which is also painted at scale 1x.
+            HiDPIUtils.paintAtScale1x(g, 0, 0, c.getWidth(), c.getHeight(),
+                (gd, width, height, scale) -> {
+                    paintInteriorAtScale1x(gd, c, width, height, scale);
+                });
+
+            // paint close button
             FlatEditorTabCellRenderer ren = (FlatEditorTabCellRenderer) c;
-            int width = c.getWidth();
-            int height = c.getHeight();
+            if (!ren.isClipLeft() && !ren.isClipRight())
+                paintCloseButton(g, ren);
+        }
+
+        private void paintInteriorAtScale1x(Graphics2D g, Component c, int width, int height, double scale) {
+            FlatEditorTabCellRenderer ren = (FlatEditorTabCellRenderer) c;
             boolean selected = ren.isSelected();
 
             // paint background
@@ -192,6 +205,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
             if (selected && underlineHeight > 0) {
                 // paint underline if tab is selected
+                int underlineHeight = (int) Math.round(FlatEditorTabCellRenderer.underlineHeight * scale);
                 g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
                 if (underlineAtTop)
                     g.fillRect(0, 0, width, underlineHeight);
@@ -199,15 +213,10 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
                     g.fillRect(0, height - underlineHeight, width, underlineHeight);
             } else {
                 // paint bottom border
+                int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
                 g.setColor(contentBorderColor);
-                HiDPIUtils.paintAtDeviceScale((Graphics2D) g, 0, height - 1, width, 1,
-                        (gd, deviceWidth, deviceHeight, scale) -> {
-                            gd.fillRect(0, 0, deviceWidth, deviceHeight);
-                        });
+                g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
             }
-
-            if (!ren.isClipLeft() && !ren.isClipRight())
-                paintCloseButton(g, ren);
         }
 
         private void paintCloseButton(Graphics g, FlatEditorTabCellRenderer ren) {

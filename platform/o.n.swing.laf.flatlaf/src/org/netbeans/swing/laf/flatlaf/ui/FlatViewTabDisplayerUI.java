@@ -163,26 +163,44 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
     @Override
     protected void paintTabBackground(Graphics g, int index, int x, int y, int width, int height) {
+        // Paint the whole tab background at scale 1x (on HiDPI screens).
+        // Necessary so that it aligns nicely at bottom left and right edges
+        // with the content border, which is also painted at scale 1x.
+        HiDPIUtils.paintAtScale1x(g, x, y, width, height,
+                (g1x, width1x, height1x, scale) -> {
+                    paintTabBackgroundAtScale1x(g1x, index, width1x, height1x, scale);
+                });
+    }
+
+    private void paintTabBackgroundAtScale1x(Graphics2D g, int index, int width, int height, double scale) {
         // paint background
         g.setColor(colorForState(index, background, activeBackground, selectedBackground,
                 hoverBackground, attentionBackground));
-        g.fillRect(x, y, width, height);
+        g.fillRect(0, 0, width, height);
 
         if (isSelected(index) && underlineHeight > 0) {
             // paint underline if tab is selected
+            int underlineHeight = (int) Math.round(this.underlineHeight * scale);
             g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
             if (underlineAtTop)
-                g.fillRect(x, y, width, underlineHeight);
+                g.fillRect(0, 0, width, underlineHeight);
             else
-                g.fillRect(x, y + height - underlineHeight, width, underlineHeight);
+                g.fillRect(0, height - underlineHeight, width, underlineHeight);
         } else {
             // paint bottom border
+            int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
             g.setColor(contentBorderColor);
-            HiDPIUtils.paintAtDeviceScale((Graphics2D) g, x, y + height - 1, width, 1,
-                    (gd, deviceWidth, deviceHeight, scale) -> {
-                        gd.fillRect(0, 0, deviceWidth, deviceHeight);
-                    });
+            g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
         }
+    }
+
+    @Override
+    protected void paintDisplayerBackground(Graphics g, JComponent c) {
+        // Fill the whole displayer background to avoid occasional 1px gaps
+        // between tabs on HiDPI screens at 125%, 150% or 175%.
+        paintTabBackground(g, -1, 0, 0, c.getWidth(), c.getHeight());
+
+        super.paintDisplayerBackground(g, c);
     }
 
     private Color colorForState(int index, Color normal, Color active, Color selected, Color hover, Color attention) {

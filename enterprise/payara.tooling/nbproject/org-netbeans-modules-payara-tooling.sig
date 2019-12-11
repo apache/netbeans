@@ -1227,7 +1227,6 @@ cons public init()
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.payara.tooling.data.JDKVersion
-fld public static org.netbeans.modules.payara.tooling.data.JDKVersion IDE_JDK_VERSION
 meth public boolean equals(java.lang.Object)
 meth public boolean ge(org.netbeans.modules.payara.tooling.data.JDKVersion)
 meth public boolean gt(org.netbeans.modules.payara.tooling.data.JDKVersion)
@@ -1240,7 +1239,7 @@ meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
-meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
+meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<java.lang.String>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
 supr java.lang.Object

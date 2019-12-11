@@ -213,12 +213,13 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
         // Ex: [|1.8]-XX:MyJvmOption (only max version present)
         // Ex: [1.7|]-XX:MyJvmOption (only min version present)
         // Gr1 or Gr2 can be null (optional)
-        private static final Pattern PATTERN = Pattern.compile("^\\[(.*)\\|(.*)\\](.*)");
+        private static final Pattern PATTERN = Pattern.compile("^\\[(.*)\\|(.*)\\](.*)");  // NOI18N
 
         public JvmOption(String option) {
             Matcher matcher = PATTERN.matcher(option);
             if (matcher.matches()) {
-                if (matcher.group(1).contains("-")) { // NOI18N
+                if (matcher.group(1).contains("-")  // NOI18N
+                        && Character.isLetter(matcher.group(1).charAt(0))) {
                     String[] parts = matcher.group(1).split("-"); // NOI18N
                     this.vendor = Optional.ofNullable(parts[0]);
                     this.minVersion = Optional.ofNullable(JDKVersion.toValue(parts[1]));
@@ -266,10 +267,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
                 return false;
             }
             final JvmOption other = (JvmOption) obj;
-            if (!Objects.equals(this.option, other.option)) {
-                return false;
-            }
-            return true;
+            return Objects.equals(this.option, other.option);
         }
 
         @Override

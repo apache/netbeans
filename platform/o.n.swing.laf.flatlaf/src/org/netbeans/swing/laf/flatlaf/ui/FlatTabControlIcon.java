@@ -218,7 +218,7 @@ final class FlatTabControlIcon extends VectorIcon {
                 // Rotate 90 degrees counterclockwise, with a small position adjustment.
                 g.rotate(-Math.PI / 2.0, width / 2.0, height / 2.0);
             }
-            /* Draw a simple arrowhead chevroin or triangle pointing downwards (before any rotations). Keep the
+            /* Draw a simple arrowhead chevron or triangle pointing downwards (before any rotations). Keep the
             top line pixel-aligned. No need to round the other positions. */
             final int y = round((height - 4.0 * scaling) / 2.0);
             final double arrowWidth = (chevron ? 8.0 : 9.0) * scaling;

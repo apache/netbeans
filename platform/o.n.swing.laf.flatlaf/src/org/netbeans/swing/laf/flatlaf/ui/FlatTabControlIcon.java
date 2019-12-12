@@ -18,7 +18,6 @@
  */
 package org.netbeans.swing.laf.flatlaf.ui;
 
-import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 import org.openide.util.VectorIcon;
 import java.awt.BasicStroke;
@@ -240,7 +239,7 @@ final class FlatTabControlIcon extends VectorIcon {
             arrowPath.lineTo(arrowMidX + arrowWidth / 2.0, y);
             if (chevron) {
                 // use same stroke control rendering hint as in FlatLaf
-                FlatUIUtils.setRenderingHints( g );
+                Utils.setRenderingHints( g );
 
                 g.setStroke(new BasicStroke((float) scaling));
                 g.draw(arrowPath);

@@ -18,7 +18,6 @@
  */
 package org.netbeans.swing.laf.flatlaf.ui;
 
-import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,7 +45,7 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     private static final int ICON_X_PAD = 4;
 
     private final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
-    private final Color activeBackground = FlatUIUtils.getUIColor("EditorTab.activeBackground", background); // NOI18N
+    private final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
     private final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
     private final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
 

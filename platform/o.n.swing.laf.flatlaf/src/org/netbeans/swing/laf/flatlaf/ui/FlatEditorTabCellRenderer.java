@@ -18,7 +18,6 @@
  */
 package org.netbeans.swing.laf.flatlaf.ui;
 
-import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,16 +45,16 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
     private static final int CLOSE_ICON_RIGHT_PAD = 2;
 
     private static final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
-    private static final Color activeBackground = FlatUIUtils.getUIColor("EditorTab.activeBackground", background); // NOI18N
-    private static final Color selectedBackground = FlatUIUtils.getUIColor("EditorTab.selectedBackground", activeBackground); // NOI18N
+    private static final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
+    private static final Color selectedBackground = Utils.getUIColor("EditorTab.selectedBackground", activeBackground); // NOI18N
     private static final Color hoverBackground = UIManager.getColor("EditorTab.hoverBackground"); // NOI18N
     private static final Color attentionBackground = UIManager.getColor("EditorTab.attentionBackground"); // NOI18N
 
-    private static final Color foreground = FlatUIUtils.getUIColor( "EditorTab.foreground", "TabbedPane.foreground" ); // NOI18N
-    private static final Color activeForeground = FlatUIUtils.getUIColor( "EditorTab.activeForeground", foreground ); // NOI18N
-    private static final Color selectedForeground = FlatUIUtils.getUIColor( "EditorTab.selectedForeground", activeForeground ); // NOI18N
-    private static final Color hoverForeground = FlatUIUtils.getUIColor( "EditorTab.hoverForeground", foreground ); // NOI18N
-    private static final Color attentionForeground = FlatUIUtils.getUIColor( "EditorTab.attentionForeground", foreground ); // NOI18N
+    private static final Color foreground = Utils.getUIColor( "EditorTab.foreground", "TabbedPane.foreground" ); // NOI18N
+    private static final Color activeForeground = Utils.getUIColor( "EditorTab.activeForeground", foreground ); // NOI18N
+    private static final Color selectedForeground = Utils.getUIColor( "EditorTab.selectedForeground", activeForeground ); // NOI18N
+    private static final Color hoverForeground = Utils.getUIColor( "EditorTab.hoverForeground", foreground ); // NOI18N
+    private static final Color attentionForeground = Utils.getUIColor( "EditorTab.attentionForeground", foreground ); // NOI18N
 
     private static final Color underlineColor = UIManager.getColor("EditorTab.underlineColor"); // NOI18N
     private static final Color inactiveUnderlineColor = UIManager.getColor("EditorTab.inactiveUnderlineColor"); // NOI18N

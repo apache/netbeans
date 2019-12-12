@@ -18,7 +18,6 @@
  */
 package org.netbeans.swing.laf.flatlaf.ui;
 
-import com.formdev.flatlaf.ui.FlatUIUtils;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
 import java.awt.Component;
@@ -239,16 +238,16 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     private static void initColors() {
         if (!colorsReady) {
             background = UIManager.getColor("ViewTab.background"); // NOI18N
-            activeBackground = FlatUIUtils.getUIColor("ViewTab.activeBackground", background); // NOI18N
-            selectedBackground = FlatUIUtils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
+            activeBackground = Utils.getUIColor("ViewTab.activeBackground", background); // NOI18N
+            selectedBackground = Utils.getUIColor("ViewTab.selectedBackground", activeBackground); // NOI18N
             hoverBackground = UIManager.getColor("ViewTab.hoverBackground"); // NOI18N
             attentionBackground = UIManager.getColor("ViewTab.attentionBackground"); // NOI18N
 
-            foreground = FlatUIUtils.getUIColor("ViewTab.foreground", "TabbedPane.foreground"); // NOI18N
-            activeForeground = FlatUIUtils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
-            selectedForeground = FlatUIUtils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
-            hoverForeground = FlatUIUtils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
-            attentionForeground = FlatUIUtils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
+            foreground = Utils.getUIColor("ViewTab.foreground", "TabbedPane.foreground"); // NOI18N
+            activeForeground = Utils.getUIColor("ViewTab.activeForeground", foreground); // NOI18N
+            selectedForeground = Utils.getUIColor("ViewTab.selectedForeground", activeForeground); // NOI18N
+            hoverForeground = Utils.getUIColor("ViewTab.hoverForeground", foreground); // NOI18N
+            attentionForeground = Utils.getUIColor("ViewTab.attentionForeground", foreground); // NOI18N
 
             underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N
             inactiveUnderlineColor = UIManager.getColor("ViewTab.inactiveUnderlineColor"); // NOI18N

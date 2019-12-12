@@ -59,7 +59,7 @@ public final class Startup {
     /** For debugging purposes, enable forcing the customizations for, i.e.,
      * Windows look and feel on a platform that doesn't support it */
     private static final String FORCED_CUSTOMS = System.getProperty("nb.forceui"); //NOI18N
-    
+
     /** Provides the ability to disable customizations for applications which, for example, provide their own
      * subclass of MetalLookAndFeel.  See issue XXX
      */
@@ -78,7 +78,7 @@ public final class Startup {
     private static URL themeURL = null;
     private static Class uiClass = null;
     private static ResourceBundle bundle;
-    
+
     private boolean installed = false;
 
     /** Starts handling of LF customizers. Called only from getInstance. */
@@ -142,7 +142,7 @@ public final class Startup {
                   "L&F Warning: Nimbus L&F is not supported L&F yet and system " +
                   "may exhibit various drawing problems. Please use for experimental purposes only.");
       }
-      
+
       if (uiClass == null) {
           ResourceBundle b = bundle != null ? bundle : ResourceBundle.getBundle("org.netbeans.swing.plaf.Bundle"); // NOI18N
           String uiClassName = b.getString("LookAndFeelClassName"); // NOI18N
@@ -235,14 +235,14 @@ public final class Startup {
 
     private void installPerLFDefaults() {
         boolean isLFChange = curCustoms != null;
-        
+
         curCustoms = findCustoms();
         if (curCustoms != null) {
             Integer in = (Integer) UIManager.get(LFCustoms.CUSTOM_FONT_SIZE); //NOI18N
             if (in == null && UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class) {
                 in = new Integer (11);
             }
-            
+
             //#161761: Do not want to use font size param for GTK L&F because it causes mixed font size
             if ((in != null) && !UIUtils.isGtkLF()) {
                 AllLFCustoms.initCustomFontSize (in.intValue());
@@ -265,7 +265,7 @@ public final class Startup {
       if ("javax.swing.plaf.basic.BasicScrollPaneUI".equals(existingValue))
         defaults.put(SCROLL_PANE_UI_CLASS_ID, "org.netbeans.swing.plaf.util.SmoothScrollPaneUI");
     }
-    
+
     private void loadAllLazyValues (LFCustoms customs) {
         if (globalCustoms != null) {
             loadLazy (globalCustoms.getApplicationSpecificKeysAndValues());
@@ -276,7 +276,7 @@ public final class Startup {
         loadLazy (customs.getGuaranteedKeysAndValues());
         loadLazy (customs.getLookAndFeelCustomizationKeysAndValues());
     }
-    
+
     private void loadLazy (Object[] o) {
         if (o.length > 0) {
             UIDefaults uidefaults = UIManager.getDefaults();
@@ -320,20 +320,20 @@ public final class Startup {
 
         // to make sure we always use system classloader
         defaults.put("ClassLoader", new CLValue()); // NOI18N
-        
+
         //Install values that some look and feels may leave out, which should
         //be included
         defaults.putDefaults (customs.getGuaranteedKeysAndValues());
         //Install entries for custom NetBeans components, such as borders and
         //colors
         defaults.putDefaults (customs.getApplicationSpecificKeysAndValues());
-        
+
         if (!NO_CUSTOMIZATIONS) {
             //See issue nnn - Nokia uses a custom metal-based look and feel,
             //and do not want fonts or other things customized
             defaults.putDefaults (customs.getLookAndFeelCustomizationKeysAndValues());
         }
-        
+
     }
 
     private void runPostInstall() {
@@ -352,7 +352,7 @@ public final class Startup {
             });
         }
     }
-    
+
     private static ClassLoader loader;
     /**
      * Set a class loader to be used in place of {@link Thread#getContextClassLoader}.
@@ -393,7 +393,7 @@ public final class Startup {
         }
         return null;
     }
-    
+
     private LFCustoms findDefaultCustoms() {
         if (FORCED_CUSTOMS != null) {
             System.err.println("Using explicitly set UI customizations: " + //NOI18N
@@ -421,28 +421,38 @@ public final class Startup {
                 }
             }
         }
-        
-        StringBuffer buf = new StringBuffer(40);
-        buf.append("Nb."); //NOI18N
-        buf.append(UIManager.getLookAndFeel().getID());
-        if (UIUtils.isXPLF()) {
-            if (isWindows8() || isWindows10()) {
-                buf.append("Windows8LFCustoms"); //NOI18N
-            } else if (isWindowsVista() || isWindows7()) {
-                buf.append("VistaLFCustoms"); //NOI18N
-            } else {
-                buf.append("XPLFCustoms"); //NOI18N
-            }
-        } else {
-            buf.append("LFCustoms"); //NOI18N
-        }
-        
+
         LFCustoms result = null;
         try {
-            result = (LFCustoms)UIManager.get(buf.toString());
+            // check whether the current look and feel specifies customs in its UI defaults
+            result = (LFCustoms)UIManager.getLookAndFeelDefaults().get("Nb.LFCustoms");
         } catch (ClassCastException cce) {
             //do nothing - the look and feel happens to have something matching
             //our generated key there
+        }
+
+        if (result == null) {
+            StringBuffer buf = new StringBuffer(40);
+            buf.append("Nb."); //NOI18N
+            buf.append(UIManager.getLookAndFeel().getID());
+            if (UIUtils.isXPLF()) {
+                if (isWindows8() || isWindows10()) {
+                    buf.append("Windows8LFCustoms"); //NOI18N
+                } else if (isWindowsVista() || isWindows7()) {
+                    buf.append("VistaLFCustoms"); //NOI18N
+                } else {
+                    buf.append("XPLFCustoms"); //NOI18N
+                }
+            } else {
+                buf.append("LFCustoms"); //NOI18N
+            }
+
+            try {
+                result = (LFCustoms)UIManager.get(buf.toString());
+            } catch (ClassCastException cce) {
+                //do nothing - the look and feel happens to have something matching
+                //our generated key there
+            }
         }
         if (result == null) {
             String[] knownLFs = new String[] {
@@ -495,7 +505,7 @@ public final class Startup {
         }
         return result;
     }
-    
+
     /**
      * Initialize values in UIDefaults which need to be there for NetBeans' components; apply customizations such
      * as setting up a custom font size and loading a theme. Basically delegates to
@@ -571,7 +581,7 @@ public final class Startup {
         boolean result = osName.startsWith ("Darwin") || "Mac OS X".equals(osName);
         return result;
     }
-    
+
     private static boolean isSolaris10 () {
         String osName = System.getProperty ("os.name");
         String osVersion = System.getProperty ("os.version");
@@ -581,10 +591,10 @@ public final class Startup {
 
     /** If it is solaris or linux, we can use GTK where supported by getting
      * the platform specific look and feel.
-     * 
+     *
      * Also check to make sure under no
      * circumstances do we use Motif look and feel.
-     * 
+     *
      * #97882: Use Metal on Solaris 10 as well, there is bug which crashes JDK with GTK L&F
      *
      * @return If metal L&F should be used

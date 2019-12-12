@@ -15,5 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-nb.dark.theme=true
-nb.preferred.color.profile=FlatLaf Dark
+org.netbeans.swing.laf.flatlaf.NbFlatDefaultsAddon

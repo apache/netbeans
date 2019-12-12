@@ -35,19 +35,82 @@
     <xsl:param name="arch.when"/>
 
     <xsl:template match="/">
-        <html>
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
+        <html lang="en">
             <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
                 <title><xsl:value-of select="api-answers/@module" /> - NetBeans Architecture Questions</title>
                 <xsl:if test="$arch.stylesheet">
                     <link rel="stylesheet" type="text/css" href="{$arch.stylesheet}"/>
                 </xsl:if>
             </head>
             <body>
-            
-                <xsl:if test="$arch.overviewlink">
+                <!-- ========= START OF TOP NAVBAR ======= -->
+                <div class="topNav">
+                    <a name="navbar.top">
+                        <!--   -->
+                    </a>
+                    <div class="skipNav">
+                        <a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a>
+                    </div>
+                    <a name="navbar.top.firstrow">
+                        <!--   -->
+                    </a>
+                    <ul class="navList noreplace" title="Navigation">
+                        <li>
+                            <a href="apichanges.html">API Changes</a>
+                        </li>
+                        <li class="navBarCell1Rev">Architecture Summary</li>
+                        <li><a href="overview-summary.html">Overview</a></li>
+                        <li>Package</li>
+                        <li>Class</li>
+                        <li>Use</li>
+                        <li>Tree</li>
+                        <li>
+                            <a href="deprecated-list.html">Deprecated</a>
+                        </li>
+                        <li>Index</li>
+                        <li>
+                            <a href="help-doc.html">Help</a>
+                        </li>
+                    </ul>
+                    <div class="aboutLanguage"> </div>
+                </div>
+                <div class="subNav">
+                    <ul class="navList">
+                        <li>
+                            <a href="index.html?overview-summary.html" target="_top">Frames</a>
+                        </li>
+                        <li>
+                            <a href="overview-summary.html" target="_top">No Frames</a>
+                        </li>
+                    </ul>
+                    <ul class="navList" id="allclasses_navbar_top">
+                        <li>
+                            <a href="allclasses-noframe.html">All Classes</a>
+                        </li>
+                    </ul>
+                    <div>
+                        <script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+                        </script>
+                    </div>
+                    <a name="skip.navbar.top">
+                        <!--   -->
+                    </a>
+                </div>
+                <!-- ========= END OF TOP NAVBAR ========= -->
+                <!--<xsl:if test="$arch.overviewlink">
                     <p class="overviewlink"><a href="{$arch.overviewlink}">Overview</a></p>
                 </xsl:if>
-            
+            -->
                 <h1>NetBeans Architecture Answers for <xsl:value-of select="api-answers/@module" /><xsl:text> module</xsl:text></h1>
                 
                 <xsl:variable name="qver" select="api-answers/api-questions/@version"/>
@@ -329,14 +392,15 @@
             <td> <!-- description -->
                 <!-- Put anchor here, since name is centered, and we want hyperlinks to scroll to top of table row: -->
                 <a>
-                    <xsl:attribute name="name">
+                    <xsl:attribute name="id">
                         <xsl:value-of select="$group" /><xsl:text>-</xsl:text><xsl:value-of select="$name"/>
                     </xsl:attribute>
+                </a>
                     <xsl:call-template name="describe">
                         <xsl:with-param name="name" select="$name"/>
                         <xsl:with-param name="group" select="$group"/>
                     </xsl:call-template>
-                </a>
+                
             </td>
         </tr>
     </xsl:template>  

@@ -22,11 +22,15 @@ addons:
       - ant-optional
       - xvfb
       - openjfx
+      - groovy
+
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
+  - sudo $TRAVIS_BUILD_DIR/nbbuild/travis/fix_hosts_file.groovy
+
 script:
   - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
@@ -120,7 +124,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/core.kit test
             - hide-logs.sh ant $OPTS -f platform/core.multiview test
             - hide-logs.sh ant $OPTS -f platform/core.netigso test
-            #- hide-logs.sh ant $OPTS -f platform/core.network test
+            - hide-logs.sh ant $OPTS -f platform/core.network test
             - hide-logs.sh ant $OPTS -f platform/core.osgi test
             - hide-logs.sh ant $OPTS -f platform/core.output2 test
             - hide-logs.sh ant $OPTS -f platform/core.startup test

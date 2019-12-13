@@ -58,6 +58,7 @@
                         <div class="apidocmaincontent">
                             <xsl:call-template name="build-docmenu" >
                                 <xsl:with-param name="menukey" >apichanges</xsl:with-param>
+                                <xsl:with-param name="date" select="$date"/>
                             </xsl:call-template>
                 
                             <div class="innercontent">
@@ -135,7 +136,6 @@
                                 <a href="http://bits.netbeans.org/11.0/javadoc/apichanges.html">release 11.0</a>.-->
                                 <xsl:call-template name="do-the-table" />
                             </div>
-                
                         </div>
                         <div class="apidocleft">
                             <div class="apidocleft">

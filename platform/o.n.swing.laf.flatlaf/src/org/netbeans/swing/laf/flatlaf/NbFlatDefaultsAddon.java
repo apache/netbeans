@@ -18,22 +18,23 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
-import com.formdev.flatlaf.FlatDarkLaf;
-import javax.swing.UIDefaults;
+import com.formdev.flatlaf.FlatDefaultsAddon;
+import java.io.InputStream;
 
 /**
- *
- * @author lkishalmi
+ * NetBeans addon for FlatLaf.
  */
-public class NbFlatDarkLaf extends FlatDarkLaf {
+public class NbFlatDefaultsAddon extends FlatDefaultsAddon {
 
+    /**
+     * Finds NetBeans addon .properties file for the given LaF class in the same
+     * package as this class.
+     */
     @Override
-    public UIDefaults getDefaults() {
-        UIDefaults ret = super.getDefaults();
-        ret.put( "nb.dark.theme", Boolean.TRUE );
-        return ret;
+    public InputStream getDefaults(Class<?> lafClass) {
+        Class<?> addonClass = this.getClass();
+        String propertiesName = '/' + addonClass.getPackage().getName().replace('.', '/')
+                + '/' + lafClass.getSimpleName() + ".properties"; //NOI18N
+        return addonClass.getResourceAsStream(propertiesName);
     }
-
-
-
 }

@@ -27,10 +27,11 @@
             <module-dependencies/>
             <public-packages>
                 <package>com.formdev.flatlaf</package>
+                <package>com.formdev.flatlaf.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/com-formdev-flatlaf.jar</runtime-relative-path>
-                <binary-origin>external/flatlaf-0.20.jar</binary-origin>
+                <runtime-relative-path>ext/flatlaf-0.21.jar</runtime-relative-path>
+                <binary-origin>external/flatlaf-0.21.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

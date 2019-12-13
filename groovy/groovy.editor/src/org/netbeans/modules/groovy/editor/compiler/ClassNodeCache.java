@@ -22,7 +22,6 @@ import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyResourceLoader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -303,20 +302,9 @@ public final class ClassNodeCache {
         
         private final ClassNodeCache cache;
 
-        private final GroovyResourceLoader resourceLoader = new GroovyResourceLoader() {
-
-            @Override
-            public URL loadGroovySource(final String filename) throws MalformedURLException {
-                URL file = (URL) AccessController.doPrivileged(new PrivilegedAction() {
-
-                    @Override
-                    public Object run() {
-                        return getSourceFile(filename);
-                    }
-                });
-                return file;
-            }
-        };
+        private final GroovyResourceLoader resourceLoader
+                = (String filename) -> AccessController.doPrivileged(
+                        (PrivilegedAction<URL>) () -> getSourceFile(filename));
 
         public ParsingClassLoader(
                 @NonNull ClassPath path,

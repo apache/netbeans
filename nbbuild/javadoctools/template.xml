@@ -269,6 +269,9 @@ cause it to fail.
             <or>
                 <isset property="javadoc.files.provided"/>
                 <isset property="javadoc.should.not.be.generated"/>
+                <not>
+                    <available file="${javadoc.src}"/>
+                </not>
             </or>
         </condition>
     </target>
@@ -436,6 +439,12 @@ cause it to fail.
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@/" value="@TOP@">
             <include name="**/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}">
+            <replacetoken><![CDATA[<ul class="navList" title="Navigation">]]></replacetoken>
+            <replacevalue><![CDATA[<ul class="navList" title="Navigation"><li><a href="@TOP@apichanges.html">API Changes</a></li><li><a href="@TOP@architecture-summary.html">Architecture Summary</a></li>]]></replacevalue>
+            <include name="**/*.html"/>
+            <exclude name="**/**/architecture-summary.html,**/**/apichanges.html"/>
         </replace>
         <replace dir="${javadoc.out.dir}" token="@TOP@" value="">
             <include name="*.html"/>

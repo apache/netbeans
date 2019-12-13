@@ -22,20 +22,18 @@ package org.netbeans.modules.autoupdate.services;
 import java.io.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.security.CodeSigner;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.security.Security;
-import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.PKIXCertPathValidatorResult;
 import java.security.cert.PKIXParameters;
+import java.security.cert.PKIXRevocationChecker;
+import java.security.cert.PKIXRevocationChecker.Option;
 import java.security.cert.TrustAnchor;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
@@ -46,6 +44,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.api.autoupdate.UpdateElement;
@@ -58,6 +57,7 @@ import org.netbeans.modules.autoupdate.updateprovider.DummyModuleInfo;
 import org.netbeans.modules.autoupdate.updateprovider.InstalledModuleProvider;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
 import org.netbeans.spi.autoupdate.KeyStoreProvider;
+import org.netbeans.spi.autoupdate.KeyStoreProvider.TrustLevel;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.updater.ModuleDeactivator;
 import org.netbeans.updater.ModuleUpdater;
@@ -102,135 +102,160 @@ public class Utilities {
     private static final String USER_KS_KEY = "userKS";
     private static final String USER_KS_FILE_NAME = "user.ks";
     private static final String KS_USER_PASSWORD = "open4user";
-    private static Lookup.Result<KeyStoreProvider> result;
+    private static Lookup.Result<KeyStoreProvider> keyStoreLookupResult;
+    private static Map<TrustLevel,List<KeyStore>> keystoreCache = Collections.synchronizedMap(new HashMap<>());
     private static final Logger err = Logger.getLogger(Utilities.class.getName ());
-    
-    
-    public static Collection<KeyStore> getKeyStore () {
-        if (result == null) {            
-            result = Lookup.getDefault ().lookupResult (KeyStoreProvider.class);
-            result.addLookupListener (new KeyStoreProviderListener ());
-        }
-        Collection<? extends KeyStoreProvider> c = result.allInstances ();
-        if (c == null || c.isEmpty ()) {
-            return Collections.emptyList ();
-        }
-        List<KeyStore> kss = new ArrayList<>();
-        
-        for (KeyStoreProvider provider : c) {
-            KeyStore ks = provider.getKeyStore ();
-            if (ks != null) {
-                kss.add (ks);
-            }
-        }
-        
-        return kss;
-    }
-    
-    public static String verifyCertificates(Collection<Certificate> archiveCertificates, Collection<Certificate> trustedCertificates) {
-        if (archiveCertificates == null) {
-            return N_A;
-        }       
-        if (!archiveCertificates.isEmpty()) {
-            Collection<Certificate> c = new HashSet<>(trustedCertificates);
-            c.retainAll(archiveCertificates);
-            if (c.isEmpty()) {                
-                Map<Principal, X509Certificate> certSubjectsMap = new HashMap<>();               
-                Set<Principal> certIssuersSet = new HashSet<>();
-                for (Certificate cert : archiveCertificates) {
-                    if (cert != null) {
-                        X509Certificate x509Cert = (X509Certificate) cert;
-                        certSubjectsMap.put(x509Cert.getSubjectDN(), x509Cert);
-                        if (x509Cert.getIssuerDN() != null) {
-                            certIssuersSet.add(x509Cert.getIssuerDN());
-                        }
-                    }
-                }
-                
-                Map<X509Certificate, X509Certificate> candidates = new HashMap<>();
-                    
-                for (Principal p : certSubjectsMap.keySet()) {
-                    // cert chain may not be ordered - trust anchor could before certificate itself
-                    if (certIssuersSet.contains(p)) {
-                        continue;
-                    }
-                    
-                    X509Certificate cert = certSubjectsMap.get(p);
-                
-                    Principal tap = cert.getIssuerDN();
-                    if (tap != null) {
-                        X509Certificate tempTrustAnchor = certSubjectsMap.get(tap);
-                        if (tempTrustAnchor != null) {
-                            candidates.put(cert, tempTrustAnchor);
-                        }
-                    }
-                }                                               
 
-                // TRUSTED = 2
-                // SIGNATURE_VERIFIED = 1
-                // SIGNATURE_UNVERIFIED = 0
-                int res = 0;                
-                for (X509Certificate cert : candidates.keySet()) {
-                    X509Certificate trustCert = candidates.get(cert);
-                    PKIXCertPathValidatorResult validResult = null;
-                    try {
-                        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-                        List certList = new ArrayList();
-                        certList.add(cert);
-                        CertPath cp = cf.generateCertPath(certList);
-                        TrustAnchor trustAnchor = new TrustAnchor(trustCert, null);
-                        PKIXParameters params = new PKIXParameters(Collections.singleton(trustAnchor));
-                        params.setRevocationEnabled(true);
-                        Security.setProperty("ocsp.enable", "true");
-                        System.setProperty("com.sun.security.enableCRLDP", "true"); // CRL fallback
-                        CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-                        validResult = (PKIXCertPathValidatorResult) cpv.validate(cp, params);
-                    } catch (CertificateException | InvalidAlgorithmParameterException | NoSuchAlgorithmException ex) {
-                        // CertificateException - Should not get here - "X.509" is proper certificate type
-                        // InvalidAlgorithmParameterException - Should not get here - trustAnchor cannot be null -> collection cannot be empty
-                        // NoSuchAlgorithmException - Should not get here - "PKIX" is proper algorythm
-                        err.log(Level.SEVERE, "Certificate verification failed - " + ex.getMessage(), ex);
-                        //SIGNATURE_UNVERIFIED - result = 0;
-                    } catch (CertPathValidatorException ex) {
-                        // CertPath cannot be validated
-                        err.log(Level.INFO, "Cannot validate certificate path - " + ex.getMessage(), ex);
-                        //SIGNATURE_UNVERIFIED - result = 0;
-                    } catch (SecurityException ex) {
-                        // When jar/nbm correctly signed, but content modified                    
-                        err.log(Level.INFO, "The content of the jar/nbm has been modified - " + ex.getMessage(), ex);
-                        return MODIFIED;                    
-                    }
-
-                    if (validResult != null) {
-                        String certDNName = cert.getSubjectDN().getName();
-                        if (certDNName.contains("CN=\"Oracle America, Inc.\"")
-                                && (certDNName.contains("OU=Software Engineering") || certDNName.contains("OU=Code Signing Bureau"))) {
-                            res = 2;
-                            break;
-                        } else {
-                            res = 1;
-                        }                        
-                    }
-                }
-                
-                switch (res) {
-                    case 2:
-                        return TRUSTED;
-                    case 1:
-                        return SIGNATURE_VERIFIED;
-                    default:
-                        return SIGNATURE_UNVERIFIED;                    
-                }
-            } else {
-                // signed by trusted certificate stored in user's keystore od ide.ks
-                return TRUSTED;
-            }
+    public static Collection<KeyStore> getKeyStore (TrustLevel trustLevel) {
+        if (keyStoreLookupResult == null) {
+            keyStoreLookupResult = Lookup.getDefault().lookupResult(KeyStoreProvider.class);
+            keyStoreLookupResult.addLookupListener(new KeyStoreProviderListener());
         }
-        return UNSIGNED;
+
+        List<KeyStore> result = keystoreCache.get(trustLevel);
+
+        if (result == null) {
+            Collection<? extends KeyStoreProvider> c = keyStoreLookupResult.allInstances();
+            if (c == null || c.isEmpty()) {
+                return Collections.emptyList();
+            }
+            List<KeyStore> kss = new ArrayList<>();
+
+            for (KeyStoreProvider provider : c) {
+                KeyStore ks = provider.getKeyStore();
+                if (ks != null) {
+                    kss.add(ks);
+                }
+            }
+
+            result = Collections.unmodifiableList(kss);
+
+            keystoreCache.put(trustLevel, result);
+        }
+
+        return result;
     }
-    
+
+    /**
+     *
+     * @param archiveCertPath
+     * @param trustedCertificates
+     * @return
+     */
+    public static String verifyCertificates(CodeSigner archiveCertPath,
+        Collection<Certificate> trustedCertificates,
+        Set<TrustAnchor> trustedCACertificates,
+        Collection<Certificate> validateCertificates,
+        Set<TrustAnchor> validationCACertificates) {
+        assert archiveCertPath != null;
+
+        List<? extends Certificate> archiveCertificates = archiveCertPath.getSignerCertPath().getCertificates();
+
+        if(archiveCertificates.isEmpty()) {
+            return UNSIGNED;
+        }
+
+        // Case 1: We have direct trust into one of the certificates of the
+        //         certificate chain
+        if(isChainTrusted(archiveCertificates, trustedCertificates)) {
+            return TRUSTED;
+        }
+
+        // Case 2: We trust the CA, that issued a certificate - do the
+        //         normal CertPathValidation
+        if(verifyCACertificatePath(trustedCACertificates, archiveCertPath)) {
+            return TRUSTED;
+        }
+
+        // Case 3: We have a list of certificates, that we directly mark as
+        //         valid
+        if(isChainTrusted(archiveCertificates, validateCertificates)) {
+            return SIGNATURE_VERIFIED;
+        }
+
+        // Case 4: We trust the CA to do validation
+        if (verifyCACertificatePath(validationCACertificates, archiveCertPath)) {
+            return SIGNATURE_VERIFIED;
+        }
+
+        // Case 5: File is not signed
+        return SIGNATURE_UNVERIFIED;
+    }
+
+    private static boolean verifyCACertificatePath(Set<TrustAnchor> trustedCACertificates, CodeSigner archiveCertPath) {
+        if(trustedCACertificates.isEmpty()) {
+            return false;
+        }
+        try {
+            CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
+            PKIXParameters verificationParameters = new PKIXParameters(trustedCACertificates);
+            PKIXRevocationChecker rc = (PKIXRevocationChecker) cpv.getRevocationChecker();
+            rc.setOptions(EnumSet.of(Option.SOFT_FAIL));
+            verificationParameters.addCertPathChecker(rc);
+            if (archiveCertPath.getTimestamp() != null) {
+                cpv.validate(archiveCertPath.getSignerCertPath(), verificationParameters);
+                verificationParameters.setDate(archiveCertPath.getTimestamp().getTimestamp());
+            }
+            // validate raises a CertPathValidatorException if validation failed
+            cpv.validate(archiveCertPath.getSignerCertPath(), verificationParameters);
+            return true;
+        } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException ex) {
+            // InvalidAlgorithmParameterException - Should not get here - trustAnchor cannot be null -> collection cannot be empty
+            // NoSuchAlgorithmException - Should not get here - "PKIX" is proper algorythm
+            err.log(Level.SEVERE, "Certificate verification failed - " + ex.getMessage(), ex);
+            //SIGNATURE_UNVERIFIED - result = 0;
+        } catch (CertPathValidatorException ex) {
+            // CertPath cannot be validated
+            err.log(Level.INFO, "Cannot validate certificate path - " + ex.getMessage(), ex);
+            //SIGNATURE_UNVERIFIED - result = 0;
+        }
+        return false;
+    }
+
+    private static boolean isChainTrusted(Collection<? extends Certificate> archiveCertificates, Collection<? extends Certificate> trustedCertificates) {
+        Collection<Certificate> c = new HashSet(trustedCertificates);
+        c.retainAll(archiveCertificates);
+        return ! c.isEmpty();
+    }
+
+    /**
+     * Establishes an order for verificication result strings. Only the values
+     * <ul>
+     * <li>{@code null}</li>
+     * <li>{@link #UNSIGNED}</li>
+     * <li>{@link #SIGNATURE_UNVERIFIED}</li>
+     * <li>{@link #SIGNATURE_VERIFIED}</li>
+     * <li>{@link #TRUSTED}</li>
+     * </ul>
+     *
+     * @param verificationResult1
+     * @param verificationResult2
+     * @return
+     */
+    public static final Comparator<String> VERIFICATION_RESULT_COMPARATOR = new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+            int i1 = mapVerificationResultToInt(o1);
+            int i2 = mapVerificationResultToInt(o2);
+            return i1 - i2;
+        }
+    };
+
+    private static int mapVerificationResultToInt(String input) {
+        if(input == null) {
+            return 0;
+        }
+        switch(input) {
+            case UNSIGNED: return 1;
+            case SIGNATURE_UNVERIFIED: return 2;
+            case SIGNATURE_VERIFIED: return 3;
+            case TRUSTED: return 4;
+            default: throw new IllegalArgumentException("Unmappable value: " + input);
+        }
+    }
+
     public static Collection<Certificate> getCertificates (KeyStore keyStore) throws KeyStoreException {
-        Set<Certificate> certs = new HashSet<Certificate> ();
+        Set<Certificate> certs = new HashSet<> ();
         for (String alias: Collections.list (keyStore.aliases ())) {
             Certificate[] certificateChain = keyStore.getCertificateChain(alias);
             if (certificateChain != null) {
@@ -240,33 +265,91 @@ public class Utilities {
         }
         return certs;
     }
-    
-    public static Collection<Certificate> getNbmCertificates (File nbmFile) throws IOException {
-        Set<Certificate> certs = new HashSet<Certificate>();
-        JarFile jf = new JarFile(nbmFile);
-        boolean empty = true;
-        try {
-            for (JarEntry entry : Collections.list(jf.entries())) {
-                verifyEntry(jf, entry);
-                if (!entry.getName().startsWith("META-INF/")) {
-                    empty = false;
-                    if (entry.getCertificates() != null) {
-                        certs.addAll(Arrays.asList(entry.getCertificates()));
+
+    public static Collection<TrustAnchor> getTrustAnchor (KeyStore keyStore) throws KeyStoreException {
+        Set<TrustAnchor> certs = new HashSet<> ();
+        for (String alias: Collections.list (keyStore.aliases ())) {
+            Certificate[] certificateChain = keyStore.getCertificateChain(alias);
+            if (certificateChain != null) {
+                for(Certificate cert: certificateChain) {
+                    if(cert instanceof X509Certificate) {
+                        certs.add(new TrustAnchor((X509Certificate) cert, null));
                     }
                 }
             }
-        } finally {
-            jf.close();
+            Certificate aliasCert = keyStore.getCertificate(alias);
+            if(aliasCert instanceof X509Certificate) {
+                certs.add(new TrustAnchor((X509Certificate) aliasCert, null));
+            }
+        }
+        return certs;
+    }
+
+    /**
+     * Get the certpaths that were used to sign the NBM content.
+     *
+     * @param nbmFile
+     * @return collection of CodeSigners, that were used to sign the non-signature
+     * entries of the NBM
+     * @throws IOException
+     * @throws SecurityException if JAR was tampered with or if the certificate
+     *         chains are not consistent
+     */
+    public static Collection<CodeSigner> getNbmCertificates (File nbmFile) throws IOException, SecurityException {
+        Set<CodeSigner> certs = null;
+
+        // Empty means only the MANIFEST.MF is present - special cased to be in
+        // line with established behaviour
+        boolean empty = true;
+
+        // The idea:
+        // - iterate over all JAR entries
+        // - read each entry (as required by the JarFile specificiation for verification)
+        // - extract the certificate paths, that were used to sign the
+        //   entry
+        // - compare it with the previously read entries. If they are not
+        //   identical, raise a SecurityException.
+        //
+        // Excluded from the above algorithm are:
+        // - directory entries
+        // - files that are part of the signature (each entry in META-INF, that
+        //   ends with .SF, .DSA, .RSA or .EC
+        try (JarFile jf = new JarFile(nbmFile)) {
+            for (JarEntry entry : Collections.list(jf.entries())) {
+                verifyEntry(jf, entry);
+                if ((! entry.isDirectory()) && (! isSignatureEntry(entry))) {
+                    if(! entry.getName().equals("META-INF/MANIFEST.MF")) {
+                        empty = false;
+                    }
+                    Set<CodeSigner> entryCerts = new HashSet<>();
+                    CodeSigner[] codeSigners = entry.getCodeSigners();
+                    if (codeSigners != null) {
+                        for (CodeSigner cs : entry.getCodeSigners()) {
+                            entryCerts.add(cs);
+                        }
+                    }
+                    if(certs == null) {
+                        certs = entryCerts;
+                    } else if (! certs.equals(entryCerts)) {
+                        throw new SecurityException("Inconsistent certificate paths used for signing");
+                    }
+                }
+            }
         }
 
         return empty ? null : certs;
     }
-    
+
+    private static final Pattern SIGNATURE_PATTERN = Pattern.compile("META-INF/([^/]+)\\.(SF|DSA|RSA|EC)");
+    private static boolean isSignatureEntry(JarEntry je) {
+	return SIGNATURE_PATTERN.matcher(je.getName()).matches();
+    }
+
     /**
      * @throws SecurityException
      */
     @SuppressWarnings("empty-statement")
-    private static void verifyEntry (JarFile jf, JarEntry je) throws IOException {
+    private static void verifyEntry (JarFile jf, JarEntry je) throws IOException, SecurityException {
         InputStream is = null;
         try {
             is = jf.getInputStream (je);
@@ -283,7 +366,7 @@ public class Utilities {
         
         @Override
         public void resultChanged (LookupEvent ev) {
-            result = null;
+            keystoreCache.clear();
         }
     }
     

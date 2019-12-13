@@ -1,6 +1,6 @@
-Name: Knockout4J
-Version: 1.6.1
-Description: Knockout4J
+Name: Html4J
+Version: 1.7
+Description: Html4j Boot Script
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: http://incubator.apache.org/projects/netbeans.html

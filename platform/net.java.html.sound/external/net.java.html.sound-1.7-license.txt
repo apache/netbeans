@@ -1,10 +1,9 @@
-Name: FlatLaf Look and Feel
-Description: FlatLaf Look and Feel
-Version: 0.20
-Files: flatlaf-0.20.jar
+Name: Html4J Sound API via HTML
+Version: 1.7
+Description: Html4j Sound API via HTML
 License: Apache-2.0
-Origin: FormDev Software GmbH.
-URL: https://www.formdev.com/flatlaf/
+Origin: Apache Software Foundation
+URL: http://incubator.apache.org/projects/netbeans.html
 
                                  Apache License
                            Version 2.0, January 2004

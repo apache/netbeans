@@ -1,9 +1,10 @@
-Name: XHR via Java
-Version: 1.6.1
-Description: XHR via Java
+Name: FlatLaf Look and Feel
+Description: FlatLaf Look and Feel
+Version: 0.21
+Files: flatlaf-0.21.jar
 License: Apache-2.0
-Origin: Apache Software Foundation
-URL: http://incubator.apache.org/projects/netbeans.html
+Origin: FormDev Software GmbH.
+URL: https://www.formdev.com/flatlaf/
 
                                  Apache License
                            Version 2.0, January 2004

@@ -61,6 +61,7 @@ public final class SearchHistoryTest extends NbTestCase {
         assertTrue(SearchHistory.getDefault().getSearchPatterns().size() == 10);
     }
     
+    @SuppressWarnings("deprecation") // tests deprecated APIs
     public void testLastSelectedListener() throws Exception{
         final boolean fired[] = new boolean[1];
         fired[0] = false;

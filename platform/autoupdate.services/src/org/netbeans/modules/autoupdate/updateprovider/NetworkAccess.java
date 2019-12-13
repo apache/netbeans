@@ -24,10 +24,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -40,12 +36,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -63,19 +53,20 @@ public class NetworkAccess {
 
     private NetworkAccess () {}
     
-    public static Task createNetworkAcessTask (URL url, int timeout, NetworkListener networkAcesssListener) {
-        return new Task (url, timeout, networkAcesssListener);
+    public static Task createNetworkAccessTask (URL url, int timeout, NetworkListener networkAccessListener, boolean disableInsecureRedirects) {
+        return new Task (url, timeout, networkAccessListener, disableInsecureRedirects);
     }
     
     public static class Task implements Cancellable {
+        private final ExecutorService es = Executors.newSingleThreadExecutor();
+        private final boolean disableInsecureRedirects;
         private URL url;
         private int timeout;
         private NetworkListener listener;
-        private final ExecutorService es = Executors.newSingleThreadExecutor ();
         private Future<InputStream> connect = null;
         private RequestProcessor.Task rpTask = null;
         
-        private Task (URL url, int timeout, NetworkListener listener) {
+        private Task (URL url, int timeout, NetworkListener listener, boolean disableInsecureRedirects) {
             if (url == null) {
                 throw new IllegalArgumentException ("URL cannot be null.");
             }
@@ -85,6 +76,7 @@ public class NetworkAccess {
             this.url = url;
             this.timeout = timeout;
             this.listener = listener;
+            this.disableInsecureRedirects = disableInsecureRedirects;
             postTask ();
         }
         
@@ -146,11 +138,7 @@ public class NetworkAccess {
                 @Override
                 public InputStream call () throws Exception {
                     URLConnection conn = url.openConnection ();
-                    conn.setConnectTimeout (timeout);
-                    conn.setReadTimeout(timeout);
-                    if(conn instanceof HttpsURLConnection){
-                        NetworkAccess.initSSL((HttpsURLConnection) conn);
-                    }
+                    configureConnection(conn, timeout);
 
                     // handle redirection here
                     int redirCount = 0;
@@ -181,13 +169,52 @@ public class NetworkAccess {
                 }
             };
         }
-        
+
         @Override
         public boolean cancel () {
-            return connect.cancel (true);
+            return connect.cancel(true);
         }
-        
+
+        private URLConnection checkRedirect(URLConnection conn, int timeout) throws IOException {
+            if (conn instanceof HttpURLConnection) {
+                conn.connect();
+                int code = ((HttpURLConnection) conn).getResponseCode();
+                boolean isInsecure = "http".equalsIgnoreCase(conn.getURL().getProtocol());
+                if (code == HttpURLConnection.HTTP_MOVED_TEMP
+                    || code == HttpURLConnection.HTTP_MOVED_PERM) {
+                    // in case of redirection, try to obtain new URL
+                    String redirUrl = conn.getHeaderField("Location"); //NOI18N
+                    if (null != redirUrl && !redirUrl.isEmpty()) {
+                        //create connection to redirected url and substitute original connection
+                        URL redirectedUrl = new URL(redirUrl);
+                        if (disableInsecureRedirects && (!isInsecure) && (!redirectedUrl.getProtocol().equalsIgnoreCase(conn.getURL().getProtocol()))) {
+                            throw new IOException(String.format(
+                                "Redirect from secure URL '%s' to '%s' blocked.",
+                                conn.getURL().toExternalForm(),
+                                redirectedUrl.toExternalForm()
+                            ));
+                        }
+                        URLConnection connRedir = redirectedUrl.openConnection();
+                        connRedir.setRequestProperty("User-Agent", "NetBeans"); // NOI18N
+                        connRedir.setConnectTimeout(timeout);
+                        connRedir.setReadTimeout(timeout);
+                        return connRedir;
+                    }
+                }
+            }
+            return conn;
+        }
+
+        private static void configureConnection(URLConnection conn, int timeout) {
+            if (conn instanceof HttpURLConnection) {
+                ((HttpURLConnection) conn).setInstanceFollowRedirects(false);
+            }
+            conn.setRequestProperty("User-Agent", "NetBeans");
+            conn.setConnectTimeout(timeout);
+            conn.setReadTimeout(timeout);
+        }
     }
+
     private interface SizedConnection extends Callable<InputStream> {
         public int getContentLength();
     }
@@ -196,68 +223,5 @@ public class NetworkAccess {
         public void accessCanceled ();
         public void accessTimeOut ();
         public void notifyException (Exception x);
-    }
-    
-    public static void initSSL(HttpURLConnection httpCon) throws IOException {
-        if (httpCon instanceof HttpsURLConnection) {
-            HttpsURLConnection https = (HttpsURLConnection) httpCon;
-
-            try {
-                TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return new X509Certificate[0];
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }};
-                SSLContext sslContext = SSLContext.getInstance("SSL"); // NOI18N
-                sslContext.init(null, trustAllCerts, new SecureRandom());
-                https.setHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String hostname, SSLSession session) {
-                        return true;
-                    }
-                });
-                https.setSSLSocketFactory(sslContext.getSocketFactory());
-            } catch (KeyManagementException ex) {
-                throw new IOException(ex);
-            } catch (NoSuchAlgorithmException ex) {
-                throw new IOException(ex);
-            }
-        }
-    }
-
-    private static URLConnection checkRedirect(URLConnection conn, int timeout) throws IOException {
-        if (conn instanceof HttpURLConnection) {
-            conn.connect();
-            int code = ((HttpURLConnection) conn).getResponseCode();
-            if (code == HttpURLConnection.HTTP_MOVED_TEMP
-                    || code == HttpURLConnection.HTTP_MOVED_PERM) {
-                // in case of redirection, try to obtain new URL
-                String redirUrl = conn.getHeaderField("Location"); //NOI18N
-                if (null != redirUrl && !redirUrl.isEmpty()) {
-                    //create connection to redirected url and substitute original conn
-                    URL redirectedUrl = new URL(redirUrl);
-                    URLConnection connRedir = redirectedUrl.openConnection();
-                    // XXX is this neede
-                    connRedir.setRequestProperty("User-Agent", "NetBeans"); // NOI18N
-                    connRedir.setConnectTimeout(timeout);
-                    connRedir.setReadTimeout(timeout);
-                    if (connRedir instanceof HttpsURLConnection) {
-                        NetworkAccess.initSSL((HttpsURLConnection) connRedir);
-                    }
-                    return connRedir;
-                }
-            }
-        }
-        return conn;
     }
 }

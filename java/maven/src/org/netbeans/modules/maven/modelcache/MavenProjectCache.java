@@ -150,10 +150,13 @@ public final class MavenProjectCache {
         M2Configuration active = config.getActiveConfiguration();
         MavenExecutionResult res = null;
         try {
-            FileObject mavenConfig = projectDir.getFileObject(".mvn/maven.config");
             List<String> mavenConfigOpts = Collections.emptyList();
-            if (mavenConfig != null && mavenConfig.isData()) {
-                mavenConfigOpts = Arrays.asList(mavenConfig.asText().split("\\s+"));
+            for (FileObject root = projectDir; root != null; root = root.getParent()) {
+                FileObject mavenConfig = root.getFileObject(".mvn/maven.config");
+                if (mavenConfig != null && mavenConfig.isData()) {
+                    mavenConfigOpts = Arrays.asList(mavenConfig.asText().split("\\s+"));
+                    break;
+                }
             }
             final MavenExecutionRequest req = projectEmbedder.createMavenExecutionRequest();
             req.addActiveProfiles(active.getActivatedProfiles());

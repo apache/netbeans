@@ -292,7 +292,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
 
     }
     
-    public static TableCellStyle getCellStyle(JTable table, IssueTable issueTable, IssueProperty p, boolean isSelected, int row) {
+    public static TableCellStyle getCellStyle(JTable table, IssueTable issueTable, IssueNode<?>.IssueProperty<?> p, boolean isSelected, int row) {
         TableCellStyle style = getDefaultCellStyle(table, issueTable, p, isSelected, row);
         try {
             // set text format and background depending on selection and issue status
@@ -343,7 +343,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         }
         return style;
     }
-    public static TableCellStyle getDefaultCellStyle(JTable table, IssueTable issueTable, IssueProperty p, boolean isSelected, int row) {
+    public static TableCellStyle getDefaultCellStyle(JTable table, IssueTable issueTable, IssueNode<?>.IssueProperty<?> p, boolean isSelected, int row) {
         // set default values
         return new TableCellStyle(
             null,                                                                       // format
@@ -354,7 +354,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         );
     }
 
-    private static Pattern getHightlightPattern(IssueTable issueTable, IssueProperty p) {
+    private static Pattern getHightlightPattern(IssueTable issueTable, IssueNode<?>.IssueProperty<?> p) {
         if(p instanceof IssueNode.SummaryProperty) {            
             SummaryTextFilter f = issueTable.getSummaryFilter();
             if(f != null && f.isHighLightingOn()) {

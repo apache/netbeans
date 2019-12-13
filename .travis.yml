@@ -121,7 +121,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/core.multiview test
             - hide-logs.sh ant $OPTS -f platform/core.netigso test
             #- hide-logs.sh ant $OPTS -f platform/core.network test
-            #- hide-logs.sh ant $OPTS -f platform/core.osgi test
+            - hide-logs.sh ant $OPTS -f platform/core.osgi test
             - hide-logs.sh ant $OPTS -f platform/core.output2 test
             - hide-logs.sh ant $OPTS -f platform/core.startup test
             - hide-logs.sh ant $OPTS -f platform/core.startup.base test

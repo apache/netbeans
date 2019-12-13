@@ -96,7 +96,9 @@ committed to the repository for legal reasons. You need to download it:
     </xsl:template>
     <xsl:template name="build-docmenu">
         <xsl:param name="menukey" />
+        <xsl:param name="date" />
         <div class="toc">
+            <span class="apidocdate">Apidoc release date: <xsl:value-of select="$date" /></span>
             <ul class="sectlevel1" data-responsive-menu="drilldown medium-dropdown">
                 <li>
                     <xsl:choose>    

@@ -67,6 +67,7 @@
                 <div class="apidocmaincontent">
                     <xsl:call-template name="build-docmenu" >
                         <xsl:with-param name="menukey" >index</xsl:with-param>
+                        <xsl:with-param name="date" select="$date"/>
                     </xsl:call-template>
                 
                     <div class="innercontent">
@@ -114,9 +115,7 @@
                         <xsl:call-template name="list-modules" />
                         <hr/>
                         <xsl:apply-templates select="/alldata/apis" />
-                    
                     </div>
-                
                 </div>
                 <div class="apidocleft">
                     <xsl:call-template name="listallmodules" />

@@ -28,7 +28,7 @@ code{font-size: 1em;}
     font-size: 11px;
     padding-top:15px;
     padding-left: 3px;
-    
+
 
 }
 .innercontent{
@@ -104,4 +104,10 @@ li.interface {
     background-color: #fafafb;
     box-shadow: 0 1px 0 rgba(12,13,14,0.1),0 1px 3px rgba(12,13,14,0.1),0 4px 20px rgba(12,13,14,0.035),0 1px 1px rgba(12,13,14,0.025);
     padding:10px;
+}
+.apidocdate {
+    background-color: #fafafb;
+    box-shadow: 0 1px 0 rgba(12,13,14,0.1),0 1px 3px rgba(12,13,14,0.1),0 4px 20px rgba(12,13,14,0.035),0 1px 1px rgba(12,13,14,0.025);
+    padding:0px;
+    font-size: 7pt;
 }

@@ -47,6 +47,7 @@
                 <div class="apidocmaincontent">
                     <xsl:call-template name="build-docmenu" >
                         <xsl:with-param name="menukey" >usecases</xsl:with-param>
+                        <xsl:with-param name="date" select="$date"/>
                     </xsl:call-template>
                 
                     <div class="innercontent">

@@ -418,3 +418,27 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
+            
+        - name: Test php modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f php/hudson.php test
+            #- ant $OPTS -f php/languages.neon test
+            - ant $OPTS -f php/php.api.annotation test
+            - ant $OPTS -f php/php.api.documentation test
+            - ant $OPTS -f php/php.api.executable test
+            - ant $OPTS -f php/php.api.framework test
+            - ant $OPTS -f php/php.api.phpmodule test
+            - ant $OPTS -f php/php.api.testing test
+            - ant $OPTS -f php/php.apigen test
+            - ant $OPTS -f php/php.atoum test
+            - ant $OPTS -f php/php.code.analysis test
+            - ant $OPTS -f php/php.codeception test
+            - ant $OPTS -f php/php.composer test
+            #- ant $OPTS -f php/php.dbgp test
+            - ant $OPTS -f php/php.doctrine2 test

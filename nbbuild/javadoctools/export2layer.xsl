@@ -47,6 +47,7 @@
                 <div class="apidocmaincontent">
                     <xsl:call-template name="build-docmenu" >
                         <xsl:with-param name="menukey" >layers</xsl:with-param>
+                        <xsl:with-param name="date" select="$date"/>
                     </xsl:call-template>
                 
                     <div class="innercontent">
@@ -99,9 +100,7 @@
                                 </li>
                             </xsl:for-each>
                         </ul>
-            
-                        
-                    </div> 
+                    </div>
                 </div>
                 <div class="apidocleft">
                     <xsl:call-template name="listallmodules" />

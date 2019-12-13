@@ -222,6 +222,7 @@
         
         <!-- at the end generate the index.html so people know where to start -->      
         <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
             <param name="maturity" expression="${json.maturity}" />
             <param name="version" expression="${json.uversion}" />
             <param name="releaseinfo" expression="${xmlrelease}" />

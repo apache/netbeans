@@ -19,6 +19,8 @@
 
 package org.netbeans.core.windows.awt;
 
+import java.net.URL;
+import java.util.ArrayList;
 import javax.swing.Box;
 import junit.framework.*;
 import org.netbeans.junit.*;
@@ -45,10 +47,11 @@ public class ValidateLayerMenuTest extends NbTestCase {
     }
 
     public static Test suite() {
-        return
-            NbModuleSuite.createConfiguration(ValidateLayerMenuTest.class)
-                .clusters(".*").enableModules(".*").gui(false)
-        .suite();
+        return NbModuleSuite.createConfiguration(ValidateLayerMenuTest.class)
+                .clusters(".*")
+                .enableModules(".*")
+                .gui(false)
+                .suite();
     }
 
     //
@@ -62,6 +65,8 @@ public class ValidateLayerMenuTest extends NbTestCase {
     /** Allowes to skip filest that are know to be broken */
     protected boolean skipFile (FileObject fo) {
         if (fo.getPath().equals("Menu/Help/org-netbeans-modules-usersguide-master.xml")) {
+            return true;
+        } else if(fo.getPath().equals("Menu/Help/master-help.xml")) {
             return true;
         }
         // ignore these files, there are helper for implementation of 
@@ -99,17 +104,19 @@ public class ValidateLayerMenuTest extends NbTestCase {
         // where xml layers live - uaah sometimes I think I just live in another world
         Lookup.getDefault().lookup(ModuleInfo.class);
         
-        java.util.ArrayList errors = new java.util.ArrayList ();
+        ArrayList<String> errors = new ArrayList<>();
+
+        DataFolder dataFolder = DataFolder.findFolder(FileUtil.getConfigFile(rootName()));
         
-        DataFolder df = DataFolder.findFolder (FileUtil.getConfigFile(rootName ()));
-        verifyMenu (df, errors);
+        assertNotNull(dataFolder);
+        verifyMenu (dataFolder, errors);
         
         if (!errors.isEmpty()) {
             fail ("Some files do not provide valid menu elements" + errors);
         }
     }
     
-    private void verifyMenu (DataFolder f, java.util.ArrayList errors) throws Exception {
+    private void verifyMenu (DataFolder f, ArrayList<String> errors) throws Exception {
         DataObject[] arr = f.getChildren();
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] instanceof DataFolder) {
@@ -117,12 +124,12 @@ public class ValidateLayerMenuTest extends NbTestCase {
                 continue;
             } 
             FileObject file = arr[i].getPrimaryFile ();
-            
+                                    
             if (skipFile (file)) {
                 continue;
             }
             
-            Object url = file.getURL();
+            URL url = file.toURL();
             
             InstanceCookie ic = (InstanceCookie)arr[i].getCookie(InstanceCookie.class);
             if (ic == null) {

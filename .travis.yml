@@ -92,7 +92,7 @@ matrix:
             - ant $OPTS -f harness/o.n.insane test
             - ant $OPTS -f harness/apisupport.harness test
             - ant $OPTS -f harness/nbjunit test
-            # - ant $OPTS -f harness/jellytools.platform test
+            - ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
 
         - name: Test platform modules, Batch 1
           jdk: openjdk8

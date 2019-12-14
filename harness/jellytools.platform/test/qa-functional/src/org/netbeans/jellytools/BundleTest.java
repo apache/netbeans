@@ -25,42 +25,57 @@ import org.netbeans.junit.NbModuleSuite;
 
 /**
  * Test of org.netbeans.jellytools.Bundle
+ *
  * @author Jiri Skrivanek
  */
 public class BundleTest extends JellyTestCase {
 
-    /** Method used for explicit testsuite definition
-     * @return  created suite
+    /**
+     * Method used for explicit testsuite definition
+     *
+     * @return created suite
      */
     public static Test suite() {
-        return NbModuleSuite.create(NbModuleSuite.createConfiguration(BundleTest.class).
-                addTest("testGetBundle",
-                "testGetString",
-                "testGetStringParams",
-                "testGetStringTrimmed",
-                "testGetStringTrimmedParams").gui(false).enableModules(".*").clusters(".*"));
+        return NbModuleSuite.createConfiguration(BundleTest.class)
+                .addTest("testGetBundle",
+                        "testGetString",
+                        "testGetStringParams",
+                        "testGetStringTrimmed",
+                        "testGetStringTrimmedParams")
+                .gui(false)
+                .enableModules(".*")
+                .clusters(".*")
+                .suite();
     }
 
-    /** Redirect output to log files, wait before each test case and
-     * show dialog to test. */
+    /**
+     * Redirect output to log files, wait before each test case and show dialog
+     * to test.
+     */
     @Override
     protected void setUp() {
         System.out.println("### " + getName() + " ###");
     }
 
-    /** Clean up after each test case. */
+    /**
+     * Clean up after each test case.
+     */
     @Override
     protected void tearDown() {
     }
 
-    /** Constructor required by JUnit.
+    /**
+     * Constructor required by JUnit.
+     *
      * @param testName method name to be used as testcase
      */
     public BundleTest(java.lang.String testName) {
         super(testName);
     }
 
-    /** Test of getBundle method. */
+    /**
+     * Test of getBundle method.
+     */
     public void testGetBundle() {
         try {
             ResourceBundle resBundle = Bundle.getBundle("org.netbeans.core.Bundle");
@@ -82,7 +97,9 @@ public class BundleTest extends JellyTestCase {
         }
     }
 
-    /** Test of getString method. Tests also negative cases */
+    /**
+     * Test of getString method. Tests also negative cases
+     */
     public void testGetString() {
         try {
             String value = Bundle.getString("org.netbeans.core.windows.services.Bundle", "OK_OPTION_CAPTION");
@@ -112,7 +129,9 @@ public class BundleTest extends JellyTestCase {
         }
     }
 
-    /** Test of getString method with parameter to format. */
+    /**
+     * Test of getString method with parameter to format.
+     */
     public void testGetStringParams() {
         String pattern = Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties");
         Object[] params = new Object[]{new Integer(1), "AnObject"};
@@ -121,7 +140,9 @@ public class BundleTest extends JellyTestCase {
         assertEquals("Parameters not properly formattted.", expected, value);
     }
 
-    /** Test of getStringTrimmed method. */
+    /**
+     * Test of getStringTrimmed method.
+     */
     public void testGetStringTrimmed() {
         //Saving {0} ...
         String valueRaw = Bundle.getString("org.netbeans.core.Bundle", "CTL_FMT_SavingMessage");
@@ -133,7 +154,9 @@ public class BundleTest extends JellyTestCase {
         assertTrue("Characters '&' should be removed from \"" + valueRaw + "\".", value.indexOf('&') == -1);
     }
 
-    /** Test of getStringTrimmed method with parameter to format. */
+    /**
+     * Test of getStringTrimmed method with parameter to format.
+     */
     public void testGetStringTrimmedParams() {
         String pattern = Bundle.getString("org.netbeans.core.windows.view.ui.Bundle", "CTL_FMT_LocalProperties");
         Object[] params = new Object[]{new Integer(1), "AnOb&ject"};

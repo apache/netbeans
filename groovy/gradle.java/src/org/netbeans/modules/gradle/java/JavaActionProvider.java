@@ -111,7 +111,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                             case COMMAND_DEBUG_TEST_SINGLE:
                             case COMMAND_RUN_SINGLE_METHOD:
                             case COMMAND_DEBUG_SINGLE_METHOD:
-                                if ("text/x-java".equals(fo.getMIMEType())) { //NOI18N
+                                if ("text/x-java".equals(fo.getMIMEType()) || "text/x-groovy".equals(fo.getMIMEType())) { //NOI18N
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
                                     ret = sourceSet != null && sourceSet.isTestSourceSet() && sourceSet.getSourceType(f) != RESOURCES;

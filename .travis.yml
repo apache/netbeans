@@ -250,6 +250,7 @@ matrix:
             #- ant $OPTS -f ide/libs.git test
             - ant $OPTS -f ide/libs.graalsdk test
             #- ant $OPTS -f ide/localhistory test
+            - ant $OPTS -f ide/notifications test
             - ant $OPTS -f ide/o.openidex.util test
             #- ant $OPTS -f ide/parsing.api test
             #- ant $OPTS -f ide/parsing.indexing test

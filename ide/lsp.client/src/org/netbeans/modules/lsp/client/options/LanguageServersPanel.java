@@ -19,16 +19,21 @@
 package org.netbeans.modules.lsp.client.options;
 
 import java.awt.Component;
+import java.beans.BeanInfo;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.JList;
 import org.netbeans.modules.lsp.client.options.LanguageStorage.LanguageDescription;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 final class LanguageServersPanel extends javax.swing.JPanel {
@@ -202,14 +207,23 @@ final class LanguageServersPanel extends javax.swing.JPanel {
     private javax.swing.JButton remove;
     // End of variables declaration//GEN-END:variables
 
+    @Messages({
+        "# {0} - the extensions",
+        "TXT_Files={0} files"
+    })
     private static final class ListRenderer extends DefaultListCellRenderer {
 
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            Icon icon = null;
             if (value instanceof LanguageDescription) {
-                value = ((LanguageDescription) value).name;
+                LanguageDescription ld = (LanguageDescription) value;
+                value = ld.name != null && !ld.name.isEmpty() ? ld.name : Bundle.TXT_Files(ld.extensions);
+                icon = ImageUtilities.image2Icon(Utils.loadIcon(ld.icon != null ? FileUtil.toFileObject(new File(ld.icon)) : null, BeanInfo.ICON_COLOR_16x16));
             }
-            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            setIcon(icon);
+            return this;
         }
         
     }

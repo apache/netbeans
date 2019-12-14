@@ -202,7 +202,7 @@ public class LanguageStorage {
                 Field file2Providers = providerRegistry.getDeclaredField("file2Providers");
                 file2Providers.setAccessible(true);
                 Map file2ProvidersInstance = (Map) file2Providers.get(providerRegistryInstance);
-                if (file2Providers != null) {
+                if (file2ProvidersInstance != null) {
                     file2ProvidersInstance.clear();
                 }
             }

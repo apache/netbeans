@@ -76,14 +76,7 @@ public class GenericDataObject extends MultiDataObject {
                 synchronized (mimeType2Icon) {
                     return mimeType2Icon.computeIfAbsent(mimeType, mt -> {
                         FileObject iconFile = FileUtil.getConfigFile("Loaders/" + mimeType + "/Factories/icon.png");
-                        if (iconFile != null) {
-                            try (InputStream in = iconFile.getInputStream()) {
-                                return ImageIO.read(in);
-                            } catch (IOException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        }
-                        return Node.EMPTY.getIcon(type);
+                        return Utils.loadIcon(iconFile, type);
                     });
                 }
             }

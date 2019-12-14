@@ -19,6 +19,7 @@
 package org.netbeans.modules.lsp.client.options;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -251,13 +252,16 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         add(browseIcon, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    @Messages("DESC_JSONFilter=Grammars (.json)")
+    @Messages("DESC_JSONFilter=Grammars (.json, .xml, .tmLanguage)")
     private void browseGrammarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseGrammarActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.isDirectory() || f.getName().endsWith(".json");
+                return f.isDirectory() ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".json") ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".xml") ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".tmlanguage");
             }
 
             @Override
@@ -278,7 +282,10 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         chooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.isDirectory() || f.getName().endsWith(".png") || f.getName().endsWith(".jpg") || f.getName().endsWith(".gif");
+                return f.isDirectory() ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".png") ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".jpg") ||
+                       f.getName().toLowerCase(Locale.ENGLISH).endsWith(".gif");
             }
 
             @Override

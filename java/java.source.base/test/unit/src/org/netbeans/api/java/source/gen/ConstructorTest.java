@@ -102,7 +102,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddConstructor.pass");
     }
 
@@ -141,7 +141,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddConstructor2.pass");
     }
 
@@ -178,7 +178,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -215,7 +215,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -258,7 +258,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -305,7 +305,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -350,7 +350,7 @@ public class ConstructorTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 

@@ -18,6 +18,6 @@
  */
 package test2;
 
-public class NoCompileTest {
+public class NoCompileTestData {
 
 }

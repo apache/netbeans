@@ -31,6 +31,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.usages.ClassFileUtil;
@@ -66,6 +67,7 @@ public class TreePathHandleTest extends NbTestCase {
         FileObject cache = workFO.createFolder("cache");
         
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
+        Main.initializeURLFactory();
     }
     
     private void writeIntoFile(FileObject file, String what) throws Exception {

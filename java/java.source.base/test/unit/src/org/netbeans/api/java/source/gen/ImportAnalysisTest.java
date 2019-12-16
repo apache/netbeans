@@ -767,7 +767,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod1.pass");
     }
 
@@ -792,7 +792,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod2.pass");
     }
 
@@ -818,7 +818,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod3.pass");
     }
 
@@ -842,7 +842,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod4.pass");
     }
 
@@ -866,7 +866,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod4.pass");
     }
 
@@ -992,7 +992,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod1.pass");
     }
     

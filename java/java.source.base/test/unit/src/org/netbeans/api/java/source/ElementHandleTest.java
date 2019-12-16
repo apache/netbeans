@@ -189,7 +189,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -269,7 +269,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertEquals (resolved, cadd);
                 resolved = annonClassHandle[0].resolve(parameter);
                 assertNotNull (resolved);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertEquals(resolved,annonClass);
                 
@@ -355,7 +355,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -399,7 +399,7 @@ public class ElementHandleTest extends NbTestCase {
                 Element cadd = getCollectionAdd(elements.getTypeElement(java.util.Collection.class.getName()));
                 assertNotNull(cadd);
                 assertTrue (collectionAddHandle[0].signatureEquals(cadd));
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertTrue(annonClassHandle[0].signatureEquals(annonClass));
             }
@@ -493,7 +493,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -607,7 +607,7 @@ public class ElementHandleTest extends NbTestCase {
 
             public void run(CompilationController parameter) throws Exception {
                 JavacElements elements = (JavacElements) parameter.getElements();
-                TypeElement te = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1");
+                TypeElement te = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1");
                 List<? extends Element> content = elements.getAllMembers(te);                
             }
         }, true);
@@ -615,9 +615,10 @@ public class ElementHandleTest extends NbTestCase {
     
     public void testHandleClassBasedCompilations() throws Exception {
         ClassPath systemClasses = BootClassPathUtil.getModuleBootPath();
-        FileObject jlObject = systemClasses.findResource("java/lang/Object.class");
+        ClassPath bcp = BootClassPathUtil.getBootClassPath();
+        FileObject jlObject = bcp.findResource("java/lang/Object.class");
         assertNotNull(jlObject);
-        ClasspathInfo cpInfo = new ClasspathInfo.Builder(BootClassPathUtil.getBootClassPath())
+        ClasspathInfo cpInfo = new ClasspathInfo.Builder(bcp)
                                                 .setModuleBootPath(systemClasses)
                                                 .build();
         JavaSource js = JavaSource.create(cpInfo, jlObject);

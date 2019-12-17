@@ -58,8 +58,8 @@ public class RunnerHttpRedeploy extends RunnerHttp {
     /** Redeploy command <code>hotDeploy</code> parameter name. */
     private static final String HOT_DEPLOY_PARAM = "hotDeploy";
 
-    /** Redeploy command <code>descriptorChanged</code> parameter name. */
-    private static final String DESCRIPTOR_CHANGED_PARAM = "descriptorChanged";
+    /** Redeploy command <code>metadataChanged</code> parameter name. */
+    private static final String METADATA_CHANGED_PARAM = "metadataChanged";
 
     /** Redeploy command <code>sourcesChanged</code> parameter name. */
     private static final String SOURCES_CHANGED_PARAM = "sourcesChanged";
@@ -91,7 +91,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
         String ctxRoot;
         String keepState;
         String hotDeploy;
-        String descriptorChanged;
+        String metadataChanged;
         List<String> sourcesChanged;
         CommandRedeploy redeploy;
         if (command instanceof CommandRedeploy) {
@@ -101,7 +101,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
             ctxRoot = redeploy.contextRoot;
             keepState = Boolean.toString(redeploy.keepState);
             hotDeploy = Boolean.toString(redeploy.hotDeploy);
-            descriptorChanged = Boolean.toString(redeploy.descriptorChanged);
+            metadataChanged = Boolean.toString(redeploy.metadataChanged);
             sourcesChanged = redeploy.sourcesChanged;
         }
         else {
@@ -145,10 +145,10 @@ public class RunnerHttpRedeploy extends RunnerHttp {
             sb.append(PARAM_SEPARATOR);
             sb.append(HOT_DEPLOY_PARAM);
             sb.append(PARAM_ASSIGN_VALUE).append(hotDeploy);
-            if (redeploy.descriptorChanged) {
+            if (redeploy.metadataChanged) {
                 sb.append(PARAM_SEPARATOR);
-                sb.append(DESCRIPTOR_CHANGED_PARAM);
-                sb.append(PARAM_ASSIGN_VALUE).append(descriptorChanged);
+                sb.append(METADATA_CHANGED_PARAM);
+                sb.append(PARAM_ASSIGN_VALUE).append(metadataChanged);
             }
             if (!sourcesChanged.isEmpty()) {
                 sb.append(PARAM_SEPARATOR);

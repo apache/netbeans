@@ -74,6 +74,7 @@ import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModule3;
 import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Payara server support API.
@@ -661,11 +662,10 @@ public class CommonServerSupport
             final File application, final String name, final String contextRoot,
             final Map<String, String> properties, final File[] libraries) {
         try {
-            boolean hotDeploy = Boolean.parseBoolean(instance.getProperty(PayaraModule.HOT_DEPLOY));
             return ServerAdmin.<ResultString>exec(instance, new CommandDeploy(
                     name, Util.computeTarget(instance.getProperties()),
                     application, contextRoot, properties, libraries,
-                    hotDeploy
+                    instance.isHotDeployEnabled()
             ), null, new TaskStateListener[]{stateListener});
         } finally {
             refreshChildren();
@@ -676,28 +676,27 @@ public class CommonServerSupport
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
             final String name, boolean resourcesChanged,
-            boolean descriptorChanged, List<String> sourcesChanged) {
+            boolean metadataChanged, List<String> sourcesChanged) {
         return redeploy(stateListener, name, null,
-                resourcesChanged, descriptorChanged, sourcesChanged);
+                resourcesChanged, metadataChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(
             final TaskStateListener stateListener,
             final String name, final String contextRoot,
-            boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged) {
+            boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged) {
         return redeploy(stateListener, name, contextRoot, new File[0],
-                resourcesChanged, descriptorChanged, sourcesChanged);
+                resourcesChanged, metadataChanged, sourcesChanged);
     }
 
     @Override
     public Future<ResultString> redeploy(TaskStateListener stateListener,
     String name, String contextRoot, File[] libraries,
-    boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged) {
+    boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged) {
 
         Map<String, String> properties = new HashMap<>();
         String url = instance.getProperty(PayaraModule.URL_ATTR);
-        boolean hotDeploy = Boolean.parseBoolean(instance.getProperty(PayaraModule.HOT_DEPLOY));
 
         String sessionPreservationFlag = instance.getProperty(PayaraModule.SESSION_PRESERVATION_FLAG);
         if (sessionPreservationFlag == null) {
@@ -717,7 +716,8 @@ public class CommonServerSupport
                     name, Util.computeTarget(instance.getProperties()),
                     contextRoot, properties, libraries,
                     url != null && url.contains("deployer:pfv"),
-                    hotDeploy, descriptorChanged, sourcesChanged
+                    instance.isHotDeployEnabled(),
+                    metadataChanged, sourcesChanged
             ), stateListener);
         } finally {
             refreshChildren();

@@ -266,7 +266,7 @@ public interface PayaraModule {
      * completed.
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
-            final String name, final boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged);
+            final String name, final boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
        
     /**
      * Redeploy the named application onto the server with a new context root
@@ -278,7 +278,7 @@ public interface PayaraModule {
      * @param contextRoot to use for this application on deploy (can be null to
      *   reuse existing contextRoot.)
      * @param resourcesChanged Is application resource file modified.
-     * @param descriptorChanged Is application descriptor file modified.
+     * @param metadataChanged Is application metadata files modified.
      * @param sourcesChanged the list of source file modified.
      * 
      * @return Future instance that finishes when the redeploy command has been
@@ -286,7 +286,7 @@ public interface PayaraModule {
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
             final String name, final String contextRoot,
-            final boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged);
+            final boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
     
     /**
      * Undeploy the named application.

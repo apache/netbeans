@@ -60,7 +60,7 @@ public class CommandRedeploy extends CommandTargetName {
     final boolean hotDeploy;
 
     /** Descriptor changed. */
-    final boolean descriptorChanged;
+    final boolean metadataChanged;
 
     /** List of modified files. */
     final List<String> sourcesChanged;
@@ -80,13 +80,13 @@ public class CommandRedeploy extends CommandTargetName {
      * @param libraries   Deployment libraries.
      * @param keepState   Keep state.
      * @param hotDeploy   Hot Deploy.
-     * @param descriptorChanged Is application descriptor modified.
+     * @param metadataChanged Is application descriptor modified.
      * @param sourcesChanged the list of source file modified.
      */
     public CommandRedeploy(final String name, final String target,
             final String contextRoot, final Map<String,String> properties,
             final File[] libraries, final boolean keepState,
-            final boolean hotDeploy, final boolean descriptorChanged,
+            final boolean hotDeploy, final boolean metadataChanged,
             final List<String> sourcesChanged) {
         super(COMMAND, name, target);
         this.contextRoot = contextRoot;
@@ -94,7 +94,7 @@ public class CommandRedeploy extends CommandTargetName {
         this.libraries = libraries;
         this.keepState = keepState;
         this.hotDeploy = hotDeploy;
-        this.descriptorChanged = descriptorChanged;
+        this.metadataChanged = metadataChanged;
         this.sourcesChanged = sourcesChanged;
     }
 

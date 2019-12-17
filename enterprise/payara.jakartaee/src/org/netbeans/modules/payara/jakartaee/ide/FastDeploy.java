@@ -341,9 +341,10 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 //
                 sinceLast < 5000;
 
-        final boolean descriptorChanged
+        final boolean metadataChanged
                 = appChangeDescriptor.descriptorChanged()
                 || appChangeDescriptor.serverDescriptorChanged()
+                || appChangeDescriptor.manifestChanged()
                 || resourcesChanged;
 
         File targetDir = getDirectoryForModule(targetModuleID);
@@ -374,7 +375,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                                     hk2TargetModuleID.getContextRoot(),
                                     requiredLibraries,
                                     resourcesChanged,
-                                    descriptorChanged,
+                                    metadataChanged,
                                     sourcesChanged
                             );
                         } else {
@@ -383,7 +384,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                                     hk2TargetModuleID.getModuleID(),
                                     hk2TargetModuleID.getContextRoot(),
                                     resourcesChanged,
-                                    descriptorChanged,
+                                    metadataChanged,
                                     sourcesChanged
                             );
                         }
@@ -405,7 +406,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                             hk2TargetModuleID.getContextRoot(),
                             requiredLibraries,
                             resourcesChanged,
-                            descriptorChanged,
+                            metadataChanged,
                             sourcesChanged
                     );
                 } else {
@@ -414,7 +415,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                             hk2TargetModuleID.getModuleID(),
                             hk2TargetModuleID.getContextRoot(),
                             resourcesChanged,
-                            descriptorChanged,
+                            metadataChanged,
                             sourcesChanged
                     );
                 }

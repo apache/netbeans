@@ -53,12 +53,12 @@ public interface PayaraModule2 extends PayaraModule {
      * @param libraries array of jar files on which standalone EE module depends
      *  and which need to be part of deployment
      * @param resourcesChanged Is application resource file modified.
-     * @param descriptorChanged Is application descriptor file modified.
+     * @param metadataChanged Is application metadata files modified.
      * @param sourcesChanged the list of source file modified.
      * @return
      */
     Future<ResultString> redeploy(final TaskStateListener stateListener, 
             final String name, final String contextRoot, File[] libraries,
-            boolean resourcesChanged, boolean descriptorChanged, List<String> sourcesChanged);
+            boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
     
 }

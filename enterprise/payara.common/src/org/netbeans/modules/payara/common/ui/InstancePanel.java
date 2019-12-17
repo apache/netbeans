@@ -29,6 +29,7 @@ import org.netbeans.modules.payara.common.PayaraSettings;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.payara.spi.PayaraModule;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Common instance properties editor.
@@ -401,7 +402,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         httpMonitor.setSelected(httpMonitorFlag);
         jdbcDriverDeployment.setSelected(jdbcDriverDeploymentFlag);
         showPassword.setSelected(showPasswordFlag);
-        hotDeploy.setSelected(hotDeployFlag);
+        hotDeploy.setSelected(PayaraVersion.ge(instance.getVersion(), PayaraVersion.PF_5_201)? hotDeployFlag : false);
         preserveSessions.setSelected(preserverSessionsFlag);
         startDerby.setSelected(startDerbyFlag);
         localIpCB.setSelected(loopbackFlag);
@@ -530,7 +531,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         commetSupport.setEnabled(true);
         httpMonitor.setEnabled(true);
         jdbcDriverDeployment.setEnabled(true);
-        hotDeploy.setEnabled(true);
+        hotDeploy.setEnabled(PayaraVersion.ge(instance.getVersion(), PayaraVersion.PF_5_201));
         showPassword.setEnabled(true);
         preserveSessions.setEnabled(true);
         startDerby.setEnabled(true);

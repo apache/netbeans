@@ -1231,6 +1231,11 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return properties.get(PayaraModule.USERNAME_ATTR);
     }
 
+    public boolean isHotDeployEnabled() {
+       return PayaraVersion.ge(this.getVersion(), PayaraVersion.PF_5_201) ?
+                    Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY)) : false;
+    }
+
     /**
      * Returns Java SE platform home configured for GlassFfish server.
      * <p/>

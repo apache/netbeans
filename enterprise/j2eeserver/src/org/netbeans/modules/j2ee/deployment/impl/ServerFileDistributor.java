@@ -443,6 +443,7 @@ public class ServerFileDistributor extends ServerProgress {
                 // the build target.
                 if (targetFO.equals(sourceFO) && targetFO.lastModified().after(ldDate)) {
                     mc.record(dest, relativePath);
+                    return;
                 }
 
                 //check timestamp

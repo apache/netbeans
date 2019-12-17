@@ -59,6 +59,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String[] getChangedEjbs() {
         return desc.getChangedEjbs();
     }
@@ -66,6 +67,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean ejbsChanged() {
         return desc.ejbsChanged();
     }
@@ -73,6 +75,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean serverDescriptorChanged() {
         return desc.serverDescriptorChanged();
     }
@@ -80,6 +83,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean manifestChanged() {
         return desc.manifestChanged();
     }
@@ -89,13 +93,26 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
      * 
      * Returns all changed files (locations where they are deployed).
      */
+    @Override
     public File[] getChangedFiles() {
         return desc.getChangedFiles();
     }
 
     /**
      * {@inheritDoc}
+     * <p>
+     *
+     * Returns all removed files (locations where they are deployed).
      */
+    @Override
+    public File[] getRemovedFiles() {
+        return desc.getRemovedFiles();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean descriptorChanged() {
         return desc.descriptorChanged();
     }
@@ -103,6 +120,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean classesChanged() {
         return desc.classesChanged();
     }
@@ -111,7 +129,7 @@ public final class DeploymentChangeDescriptor implements AppChangeDescriptor {
      * Returns <code>true</code> if the resources intended to be delivered to
      * server (such as connection pools) were changed.
      *
-     * @return <code>true</code> if server side reources were changed
+     * @return <code>true</code> if server side resources were changed
      * @since 1.63
      */
     public boolean serverResourcesChanged() {

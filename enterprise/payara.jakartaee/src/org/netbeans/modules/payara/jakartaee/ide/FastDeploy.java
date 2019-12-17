@@ -328,6 +328,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 appChangeDescriptor.ejbsChanged() ||
                 appChangeDescriptor.manifestChanged() ||
                 appChangeDescriptor.serverDescriptorChanged() ||
+                appChangeDescriptor.getRemovedFiles().length > 0 ||
                 resourcesChanged ||
                 // 
                 // this accounts for a feature/bug of Payara.
@@ -345,6 +346,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 = appChangeDescriptor.descriptorChanged()
                 || appChangeDescriptor.serverDescriptorChanged()
                 || appChangeDescriptor.manifestChanged()
+                || appChangeDescriptor.getRemovedFiles().length > 0
                 || resourcesChanged;
 
         File targetDir = getDirectoryForModule(targetModuleID);

@@ -1,8 +1,8 @@
-Name: Java Architecture for XML Binding
-Version: 2.2
+Name: Metro Web Services API OSGi Bundle 2.0.1
+Version: 2.0.1
 License: CDDL-1.1
-Description: JAXB (JSR 222) API bundled for OSGi distribution
-Origin: Oracle (https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi/2.2)
+Description: Metro Web Services API OSGi Bundle
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

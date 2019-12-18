@@ -3313,6 +3313,8 @@ public class Reformatter implements ReformatTask {
                             ? getIndent()
                             : after == 2 //after javadoc comment
                             ? getNewlines(1) + getIndent()
+                            : id == ARROW
+                            ? SPACE
                             : null;
                     if (lastWSToken != null) {
                         if (spaces == null || !spaces.contentEquals(lastWSToken.text()))

@@ -64,7 +64,7 @@ public enum GlassFishStatusCheck {
     /** Stored <code>String</code> values for backward <code>String</code>
      *  conversion. */
     private static final Map<String, GlassFishStatusCheck> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
     static {
         for (GlassFishStatusCheck state : GlassFishStatusCheck.values()) {
             stringValuesMap.put(state.toString().toUpperCase(), state);

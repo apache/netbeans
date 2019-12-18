@@ -39,7 +39,7 @@ import org.netbeans.api.debugger.jpda.LineBreakpoint;
  */
 public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
     
-    private HashMap breakpointToAnnotation = new HashMap ();
+    private HashMap<LineBreakpoint, Object> breakpointToAnnotation = new HashMap<>();
     private boolean listen = true;
     
     @Override

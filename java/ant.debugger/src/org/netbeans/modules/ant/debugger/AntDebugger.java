@@ -129,8 +129,8 @@ public class AntDebugger extends ActionsProviderSupport {
     
     // ActionsProvider .........................................................
     
-    private static final Set actions = new HashSet ();
-    private static final Set actionsToDisable = new HashSet ();
+    private static final Set<Object> actions = new HashSet<>();
+    private static final Set<Object> actionsToDisable = new HashSet<>();
     static {
         actions.add (ActionsManager.ACTION_KILL);
         actions.add (ActionsManager.ACTION_CONTINUE);
@@ -869,16 +869,16 @@ public class AntDebugger extends ActionsProviderSupport {
     /**
      * File as a script location is a key. Values are maps of name to Target.
      */
-    private Map nameToTargetByFiles = new HashMap();
+    private Map<File, Map<String, TargetLister.Target>> nameToTargetByFiles = new HashMap<>();
     /**
      * File as a script location is a key, values are project names.
      */
-    private Map projectNamesByFiles = new HashMap();
+    private Map<File, String> projectNamesByFiles = new HashMap<>();
     
     private synchronized TargetLister.Target findTarget(String name, File file) {
-        Map nameToTarget = (Map) nameToTargetByFiles.get(file);
+        Map<String, TargetLister.Target> nameToTarget = nameToTargetByFiles.get(file);
         if (nameToTarget == null) {
-            nameToTarget = new HashMap ();
+            nameToTarget = new HashMap<>();
             FileObject fo = FileUtil.toFileObject(file);
             DataObject dob;
             try {

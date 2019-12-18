@@ -55,13 +55,13 @@ public final class XSLGrammarQuery implements GrammarQuery{
      * allowed XSL children. Neither the element name keys nor the names in the
      * value set should contain the namespace prefix.
      */
-    private static Map elementDecls;
+    private static Map<String, Set> elementDecls;
 
     /** Contains a mapping from XSL namespace element names to set of names of
      * allowed XSL attributes for that element.  The element name keys should
      * not contain the namespace prefix.
      */
-    private static Map attrDecls;
+    private static Map<String, Set> attrDecls;
 
     /** A Set of XSL attributes which should be allowd for result elements*/
     private static Set resultElementAttr;
@@ -130,8 +130,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     private static Map getElementDecls() {
         if (elementDecls == null) {
-            elementDecls = new HashMap();
-            attrDecls = new HashMap();
+            elementDecls = new HashMap<>();
+            attrDecls = new HashMap<>();
 
             // Commonly used variables
             Set emptySet = new TreeSet();

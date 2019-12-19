@@ -45,7 +45,7 @@ import org.openide.util.Lookup;
 @ProjectServiceProvider(service = ReplaceTokenProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
-    private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet(Arrays.asList(
+    private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             "selectedClass",       //NOI18N
             "selectedMethod",      //NOI18N
             "affectedBuildTasks"   //NOI18N

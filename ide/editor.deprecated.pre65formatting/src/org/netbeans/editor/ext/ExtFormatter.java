@@ -85,7 +85,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     private static final Object NULL_VALUE = new Object();
 
     /** Map that contains the requested [setting-name, setting-value] pairs */
-    private final HashMap settingsMap = new HashMap();
+    private final HashMap<String, Object> settingsMap = new HashMap<>();
 
     private Acceptor indentHotCharsAcceptor;
     private boolean reindentWithTextBefore;

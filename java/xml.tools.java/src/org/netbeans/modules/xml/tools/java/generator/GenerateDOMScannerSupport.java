@@ -311,7 +311,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
     private String generateElementScanner(TreeElementDecl element) {
         
         Iterator it;
-        Set elements = new HashSet();
+        Set<String> elements = new HashSet<>();
         
         TreeElementDecl.ContentType type = element.getContentType();
         

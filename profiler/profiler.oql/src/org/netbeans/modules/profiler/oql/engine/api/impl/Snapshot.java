@@ -334,10 +334,10 @@ public class Snapshot {
                 this.path = path;
             }
         }
-        Deque<State> stack = new ArrayDeque<State>();
-        Set ignored = new HashSet();
+        Deque<State> stack = new ArrayDeque<>();
+        Set<Object> ignored = new HashSet<>();
         
-        List<ReferenceChain> result = new ArrayList<ReferenceChain>();
+        List<ReferenceChain> result = new ArrayList<>();
         
         Iterator toInspect = getRoots();
         ReferenceChain path = null;

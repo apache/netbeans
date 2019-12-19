@@ -474,7 +474,7 @@ public final class EditorContextDispatcher {
         pcs.removePropertyChangeListener(l);
         // Also remove the listener from all MIME types
         synchronized (pcsByMIMEType) {
-            Set<String> MIMETypes = new HashSet(pcsByMIMEType.keySet());
+            Set<String> MIMETypes = new HashSet<>(pcsByMIMEType.keySet());
             for (String MIMEType : MIMETypes) {
                 PropertyChangeSupport _pcs = pcsByMIMEType.get(MIMEType);
                 _pcs.removePropertyChangeListener(l);
@@ -567,7 +567,7 @@ public final class EditorContextDispatcher {
                 Map<String, Reference<Object>> lastEvents;
                 synchronized (this) {
                     lastMIMEType = lastFiredMIMEType;
-                    lastEvents = new HashMap(lastMIMETypeEvents);
+                    lastEvents = new HashMap<>(lastMIMETypeEvents);
                     if (lastMIMEType != null && lastMIMEType.equals(oldMIMEType)) {
                         lastFiredMIMEType = null;
                         lastMIMETypeEvents.clear();

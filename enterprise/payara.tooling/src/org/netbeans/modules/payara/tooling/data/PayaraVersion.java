@@ -199,7 +199,7 @@ public enum PayaraVersion {
      * conversion.
      */
     private static final Map<String, PayaraVersion> stringValuesMap
-            = new HashMap(2 * values().length);
+            = new HashMap<>(2 * values().length);
 
     // Initialize backward String conversion Map.
     static {

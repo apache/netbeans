@@ -43,7 +43,7 @@ class FormatTokenPositionSupport {
     private SaveSet lastSet;
 
     /** Map holding the [token, token-position-list] pairs. */
-    private final HashMap tokens2positionLists = new HashMap();
+    private final HashMap<TokenItem, ArrayList> tokens2positionLists = new HashMap<>();
 
     FormatTokenPositionSupport(FormatWriter formatWriter) {
         this.formatWriter = formatWriter;

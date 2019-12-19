@@ -41,7 +41,7 @@ public class AskForOrgOpenideUtilEnumClass extends TestCase {
             if (l == NbTestCase.class.getClassLoader()) {
                 fail("This test shall not be loaded by the same classloader!");
             }
-            Class<?> access = Class.forName("org.openide.util.enum.ArrayEnumeration");
+            Class<?> access = Class.forName("org.openide.util.enumeration.ArrayEnumeration");
             System.setProperty("en.one", "OK");
         } catch (Exception ex) {
             Logger.getLogger("testOne").log(Level.INFO, ex.getMessage(), ex);

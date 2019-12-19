@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.openide.util.enum;
+package org.openide.util.enummeration;
 
 import java.util.Collection;
 import java.util.Enumeration;

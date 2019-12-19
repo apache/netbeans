@@ -69,7 +69,7 @@ import org.netbeans.actions.spi.ProxyContextProvider;
 import org.netbeans.actions.simple.SimpleEngine;
 import org.netbeans.actions.spi.ContextProviderSupport;
 import org.openide.util.Utilities;
-import org.openide.util.enum.AlterEnumeration;
+import org.openide.util.enumeration.AlterEnumeration;
 import org.openide.util.enum.ArrayEnumeration;
 
 /**

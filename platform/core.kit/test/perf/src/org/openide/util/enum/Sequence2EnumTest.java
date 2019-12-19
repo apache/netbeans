@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.openide.util.enum;
+package org.openide.util.enummeration;
 
 public class Sequence2EnumTest extends EnumBenchmark {
 

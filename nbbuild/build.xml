@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="nbbuild" default="build-nozip" basedir=".">
+<project name="nbbuild" default="build-nozip" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
   <fail message="Please build using Ant 1.8.0 or higher.">
     <condition>
@@ -83,6 +83,8 @@
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
         <include name="platform/javahelp/external/jhall*.jar"/>
+        <!-- For json parsing -->
+        <include name="nbbuild/external/json-simple*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -101,8 +103,90 @@
       <zipfileset dir="${nb_all}" includes="DISCLAIMER" fullpath="META-INF/DISCLAIMER"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+    <!-- get all json info we have on apache gitbox  -->
+    <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+        <not>
+            <isset property="metabuild.jsonurl"/>
+        </not>
+    </condition>
+    <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
+    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
+    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    <!-- get branches and git information as previous not overrided this will take new-->
+    <antcall target="getgitinformation" />
+    <!-- javadoc content filtering -->
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
+    <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    <setjavadoc branch="${metabuild.branch}"/>
+    <echo message="Building branch: ${metabuild.branch}"/>
+    <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
+    <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
+        <classpath>
+            <pathelement location="${nbantext.jar}"/>
+            <fileset dir="${nb_all}/nbbuild/external">
+                <include name="json*.jar"/>
+            </fileset>
+        </classpath>
+    </taskdef>
+    <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
   </target>
-
+  <target name="-gitinfo.ispresent">
+      <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
+  </target>
+  <target name="-git.down" unless="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <!-- try to get information from jenkins apache multi branch build or travis -->
+      <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
+      <property environment="env"/>
+      <condition property="metabuild.branch" value="${env.GIT_BRANCH}" >
+          <isset property="env.GIT_BRANCH" />
+      </condition>
+      <condition property="metabuild.branch" value="${env.TRAVIS_BRANCH}" >
+          <isset property="env.TRAVIS_BRANCH" />
+      </condition>
+      <condition property="metabuild.branch" value="${metabuild.branch}" >
+          <isset property="metabuild.branch" />
+      </condition>
+      <condition property="metabuild.hash" value="${env.GIT_COMMIT}" >
+          <isset property="env.GIT_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${env.TRAVIS_COMMIT}" >
+          <isset property="env.TRAVIS_COMMIT" />
+      </condition>
+      <condition property="metabuild.hash" value="${metabuild.hash}" >
+          <isset property="metabuild.hash" />
+      </condition>
+      
+      <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
+      
+      <condition property="metabuild.branch" value="master" >
+          <not>
+              <isset property="metabuild.branch" />
+          </not>
+      </condition>
+      
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
+      <!-- if hash not present do not fail -->
+      <fail message="Branch not found use -Dmetabuild.branch=branchName " >
+          <condition>
+              <not>
+                  <isset property="metabuild.branch"/>
+              </not>
+          </condition>
+      </fail>
+      <echo unless:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}</echo>
+      <echo if:set="metabuild.hash" file="${nb_all}/nbbuild/build/gitinfo.properties" >metabuild.branch=${metabuild.branch}
+metabuild.hash=${metabuild.hash}</echo>
+  </target>
+  <target name="-git.up" if="${gitinfo.present}" depends="-gitinfo.ispresent">
+      <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+      <echo message="Processing build with branch ${metabuild.branch} and hash ${metabuild.hash}" />
+  </target>
+  <target name="getgitinformation" depends="-git.up,-git.down" />
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
@@ -277,8 +361,9 @@
       </verifyjnlp>
   </target>
   
-  <target name="build-javadoc">
-      <echo message="Deprecated, use nbbuild/javadoctools/build.xml directly"/>
+  <target name="build-javadoc" depends="javadoc"/>
+
+  <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
 

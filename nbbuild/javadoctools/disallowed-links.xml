@@ -28,6 +28,7 @@
     <filter pattern="http://www\.netbeans\.org/download/release41/javadoc/apichanges\.html" accept="true"/>
     <filter pattern="http://www\.netbeans\.org/download/[0-9]_[0-9]/javadoc/apichanges\.html" accept="true"/>
     <filter pattern="http://bits\.netbeans\.org/[0-9.]+/javadoc/apichanges\.html" accept="true"/>
+    <filter pattern="http://bits\.netbeans\.org/" accept="true"/>
     <!-- sources -->
     <filter pattern="http://www\.netbeans\.org/(unbranded-)?source/browse/.*" accept="true"/>
     <filter pattern="http://hg\.netbeans\.org.*" accept="true"/>

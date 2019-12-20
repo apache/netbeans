@@ -102,7 +102,8 @@
       <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
       <zipfileset dir="${nb_all}" includes="DISCLAIMER" fullpath="META-INF/DISCLAIMER"/>
     </jar>
-  <!-- get all json info we have on apache gitbox  -->
+    <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+   <!-- get all json info we have on apache gitbox  -->
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
         <not>

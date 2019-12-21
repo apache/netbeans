@@ -158,7 +158,7 @@ public class ClassPathTest extends NbTestCase {
         assertTrue (cp.findResource("org/me/None.txt")==null);
         
         //findAllResources
-        List res = cp.findAllResources ("org/me/Foo.txt");
+        List<FileObject> res = cp.findAllResources ("org/me/Foo.txt");
         assertTrue (res.size() == 2);
         assertTrue (res.contains(testFo_1));
         assertTrue (res.contains(testFo_2));
@@ -339,8 +339,8 @@ public class ClassPathTest extends NbTestCase {
         }
 
         public synchronized void removeResource (URL resource) {
-            for (Iterator it = this.resources.iterator(); it.hasNext();) {
-                PathResourceImplementation pr = (PathResourceImplementation) it.next ();
+            for (Iterator<PathResourceImplementation> it = this.resources.iterator(); it.hasNext();) {
+                PathResourceImplementation pr = it.next ();
                 if (Arrays.asList(pr.getRoots()).contains (resource)) {
                     this.resources.remove (pr);
                     this.support.firePropertyChange (ClassPathImplementation.PROP_RESOURCES,null,null);

@@ -35,10 +35,10 @@ public class SearchPatternControllerTest {
 
     @Test
     public void testBindComboBox() {
-        JComboBox cb = new JComboBox();
+        JComboBox<?> cb = new JComboBox<>();
         SearchPatternController controller =
                 ComponentUtils.adjustComboForSearchPattern(cb);
-        JComboBox matchTypeCb = new JComboBox(new Object[]{
+        JComboBox<MatchType> matchTypeCb = new JComboBox<>(new MatchType[]{
             MatchType.BASIC, MatchType.LITERAL, MatchType.REGEXP});
         assertEquals(MatchType.BASIC, matchTypeCb.getSelectedItem());
         controller.bindMatchTypeComboBox(matchTypeCb);
@@ -110,10 +110,10 @@ public class SearchPatternControllerTest {
     private void checkExceptionsWhenEnsuringItemsAreCorrect(
             boolean exceptionExpected, String message, Object... comboItems) {
 
-        JComboBox cb = new JComboBox();
+        JComboBox<?> cb = new JComboBox<>();
         SearchPatternController controller =
                 ComponentUtils.adjustComboForSearchPattern(cb);
-        JComboBox matchTypeCb = new JComboBox(comboItems);
+        JComboBox<?> matchTypeCb = new JComboBox<>(comboItems);
         boolean thrown = false;
         try {
             controller.bindMatchTypeComboBox(matchTypeCb);
@@ -125,11 +125,11 @@ public class SearchPatternControllerTest {
 
     @Test
     public void testMatchTypeComboBoxWithUnsupportedTypes() {
-        JComboBox cb = new JComboBox();
+        JComboBox<?> cb = new JComboBox<>();
         SearchPatternController controller =
                 ComponentUtils.adjustComboForSearchPattern(cb);
-        JComboBox matchTypeCb = new JComboBox(
-                new Object[]{MatchType.LITERAL, MatchType.REGEXP});
+        JComboBox<MatchType> matchTypeCb = new JComboBox<>(
+                new MatchType[]{MatchType.LITERAL, MatchType.REGEXP});
         controller.bindMatchTypeComboBox(matchTypeCb);
         assertEquals(MatchType.LITERAL, matchTypeCb.getSelectedItem());
         controller.setSearchPattern(SearchPattern.create("test", false, false,

@@ -188,7 +188,7 @@ public abstract class BasicTask<V> implements Callable<V> {
         ////////////////////////////////////////////////////////////////////////
 
         /** Command execution task. */
-        private final BasicTask task;
+        private final BasicTask<?> task;
 
         /** New state of current command execution. */
         private final TaskState result;
@@ -214,7 +214,7 @@ public abstract class BasicTask<V> implements Callable<V> {
          * @param event  Event that caused  state change.
          * @param msgKey Message bundle key.
          */
-        protected StateChange(final BasicTask task, final TaskState result,
+        protected StateChange(final BasicTask<?> task, final TaskState result,
                 final TaskEvent event, final String msgKey) {
             this.task = task;
             this.result = result;
@@ -232,7 +232,7 @@ public abstract class BasicTask<V> implements Callable<V> {
          * @param msgKey  Message bundle key.
          * @param msgArgs Message arguments.
          */
-        protected StateChange(final BasicTask task, final TaskState result,
+        protected StateChange(final BasicTask<?> task, final TaskState result,
                 final TaskEvent event, final String msgKey,
                 final String... msgArgs) {
             this.task = task;

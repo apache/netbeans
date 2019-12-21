@@ -88,6 +88,7 @@ public final class PatchByteCode {
             Properties props = new Properties();
             props.load(new InputStreamReader(istm, "UTF-8")); // NOI18N
             
+            @SuppressWarnings("unchecked")
             Enumeration<String> en = (Enumeration<String>)props.propertyNames();
             
             while (en.hasMoreElements()) {

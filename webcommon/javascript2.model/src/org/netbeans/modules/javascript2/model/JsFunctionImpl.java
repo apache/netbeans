@@ -162,8 +162,8 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         if (areReturnTypesResolved) {
             return Collections.emptyList();
         }
-        Collection<TypeUsage> returns = new HashSet();
-        HashSet<String> nameReturnTypes = new HashSet<String>();
+        Collection<TypeUsage> returns = new HashSet<>();
+        HashSet<String> nameReturnTypes = new HashSet<>();
         areReturnTypesResolved = true;
         for(TypeUsage type : returnTypes) {
              if (type.isResolved()) {

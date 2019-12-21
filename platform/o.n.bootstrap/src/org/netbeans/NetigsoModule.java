@@ -241,7 +241,7 @@ final class NetigsoModule extends Module {
         }
 
         @Override
-        protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             try {
                 return delegate().loadClass(name, resolve);
             } catch (IllegalStateException ex) {

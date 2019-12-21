@@ -64,7 +64,7 @@ public enum PayaraStatusCheck {
     /** Stored <code>String</code> values for backward <code>String</code>
      *  conversion. */
     private static final Map<String, PayaraStatusCheck> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
     static {
         for (PayaraStatusCheck state : PayaraStatusCheck.values()) {
             stringValuesMap.put(state.toString().toUpperCase(), state);

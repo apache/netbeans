@@ -112,6 +112,11 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                          text[0]);
 
                 server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+                if (opened.getClientProperty(MarkOccurrences.class) == null) {
+                    MarkOccurrences mo = new MarkOccurrences(opened);
+                    LSPBindings.addBackgroundTask(file, mo);
+                    opened.putClientProperty(MarkOccurrences.class, mo);
+                }
                 server.scheduleBackgroundTasks(file);
             });
 

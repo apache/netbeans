@@ -44,7 +44,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     
     /** */
-    private static final Map publicNodeTypeNamesMap = new HashMap();
+    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap();
 
 
     //

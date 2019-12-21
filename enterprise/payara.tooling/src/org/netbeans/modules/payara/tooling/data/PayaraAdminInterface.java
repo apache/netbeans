@@ -53,7 +53,7 @@ public enum PayaraAdminInterface {
      * conversion.
      */
     private static final Map<String, PayaraAdminInterface> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
 
     // Initialize backward String conversion <code>Map</code>.
     static {

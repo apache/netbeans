@@ -333,6 +333,79 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         //TODO: check file content!!!
     }
 
+    public void testArrayType() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { public void test(Undef[] undef1, Undef undef2) { undef1.invoke(undef2); } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testStaticInitializer() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { static { undef1.invoke(undef2); } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testJLObject() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("java/lang/Object.java", "package java.lang; public class Object { }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/java/lang/Object.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testFromOtherSourceRootBroken() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 extends extra.Extra { }")),
+                                           Arrays.asList(),
+                                           Arrays.asList(compileTuple("extra/Extra.java", "package extra; public class Extra { private void get() { undef(); } }")));
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
     public static void noop() {}
 
     @Override

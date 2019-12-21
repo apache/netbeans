@@ -33,6 +33,47 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="enable-trusted-update-centers">
+            <api name="general"/>
+            <summary>KeyStoreProviders can now report which trustlevel they intent to supply</summary>
+            <version major="1" minor="62"/>
+            <date day="4" month="11" year="2019"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    The UpdateUnitProvider can now be declared trusted. If
+                    UpdateItems are provided by a trusted UpdateUnitProvider
+                    and can be linked to it (for example because the provider provides
+                    checksums in the catalog), they are considered trusted by the Autoupdate
+                    mechanism and will not trigger certificate warnings.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+        </change>
+        <change id="keystores-for-validation">
+            <api name="general"/>
+            <summary>KeyStoreProviders can now report which trustlevel they intent to supply</summary>
+            <version major="1" minor="61"/>
+            <date day="4" month="11" year="2019"/>
+            <author login="matthiasblaesing"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    The validation of signatures of NBMs was done by checking if at least a partial certificate chain was present
+                    and if that chain was valid (i.e. not expired, not revoked). Instead of relying on this partial check this
+                    version bases the verification on a list of trusted certificates, similar to the existing KeyStoreProvider.
+                </p>
+                <p>
+                    The existing KeyStoreProviders provide Certificates, that are fully trusted. The new getTrustLevel method
+                    allows a KeyStoreProvider to provide certificate for the new, lower trusted level. In addition to the to
+                    levels TRUST and VALIDATE, two variants: TRUST_CA and VALIDATE_CA are introduced. Certificates provided with
+                    that level are expected to be CA certificates and they are only trusted if a `CertPathValidator` validates
+                    the chain.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+        </change>
         <change id="missing-elements">
             <api name="general"/>
             <summary>Report parts of a feature which is not installed yet</summary>

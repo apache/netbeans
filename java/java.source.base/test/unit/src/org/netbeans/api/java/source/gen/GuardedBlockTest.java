@@ -92,6 +92,7 @@ import org.openide.text.CloneableEditorSupport;
 import org.openide.text.DataEditorSupport;
 import org.openide.windows.CloneableOpenSupport;
 import static org.netbeans.api.java.source.JavaSource.Phase.*;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 
 /**
  * Regression tests for guarded exceptions.
@@ -136,7 +137,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
                     if (type.equals(ClassPath.COMPILE))
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     if (type.equals(ClassPath.BOOT))
-                        return createClassPath(System.getProperty("sun.boot.class.path"));
+                        return BootClassPathUtil.getBootClassPath();;
                     return null;
             }
         };
@@ -293,7 +294,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         editorCookie.saveDocument();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -352,7 +353,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         editorCookie.saveDocument();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -453,7 +454,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         editorCookie.saveDocument();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -772,7 +773,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         editorCookie.saveDocument();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -828,7 +829,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = doc.getText(0, doc.getLength());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -923,7 +924,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
         src.runModificationTask(task).commit();
         LifecycleManager.getDefault().saveAll();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 

@@ -279,10 +279,10 @@ public class DebuggerAntLogger extends AntLogger {
     }
     
     /** AntSession => AntDebugger */
-    private Map runningDebuggers = new HashMap ();
+    private Map<AntSession, AntDebugger> runningDebuggers  = new HashMap<>();
     /** AntDebugger => AntSession */
-    private Map runningDebuggers2 = new HashMap ();
-    private Set filesToDebug = new HashSet ();
+    private Map<AntDebugger, AntSession> runningDebuggers2 = new HashMap<>();
+    private Set<File> filesToDebug = new HashSet<>();
     /** File => WeakReference -> ExecutorTask */
     private Map fileExecutors = new HashMap();
     

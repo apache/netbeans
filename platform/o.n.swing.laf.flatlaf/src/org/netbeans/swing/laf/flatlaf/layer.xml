@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <!--  Base token colorings and annotation/highlight colors -->
+        <folder name="FontsColors">
+            <folder name="FlatLafDark">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.swing.laf.flatlaf.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="fontscolors/FlatLafDark-annotations.xml">
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="fontscolors/FlatLafDark-highlights.xml"> 
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                    <file name="org-netbeans-modules-defaults-token-colorings.xml" url="fontscolors/FlatLafDark-tokenColorings.xml">
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="token"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+        <!--  Language specific token colorings -->
+        <folder name="application">
+            <folder name="xml-dtd">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-defaults-xml-dtd-colorings.xml" url="fontscolors/FlatLafDark-DTD-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="text">
+            <folder name="css">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-java-token-colorings.xml" url="fontscolors/FlatLafDark-CSS-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="html">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-html-colorings.xml" url="fontscolors/FlatLafDark-HTML-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="javascript">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-web-core-syntax-token-colorings.xml" url="fontscolors/FlatLafDark-JavaScript-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-apache-conf">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-apache-conf-token-colorings.xml" url="fontscolors/FlatLafDark-ApacheConf-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-diff">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-diff-token-colorings.xml" url="fontscolors/FlatLafDark-Diff-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-el">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-el-lexer-token-colorings.xml" url="fontscolors/FlatLafDark-EL-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-java">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-java-token-colorings.xml" url="fontscolors/FlatLafDark-Java-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-json">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-json-token-colorings.xml" url="fontscolors/FlatLafDark-JSON-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-jsp">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-web-core-syntax-token-colorings.xml" url="fontscolors/FlatLafDark-JSP-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-php5">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-web-core-syntax-token-colorings.xml" url="fontscolors/FlatLafDark-PHP-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-properties">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-properties-syntax-token-colorings.xml" url="fontscolors/FlatLafDark-Properties-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-sql">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-db-sql-editor-token-colorings.xml" url="fontscolors/FlatLafDark-SQL-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="x-tag">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-web-core-syntax-token-colorings.xml" url="fontscolors/FlatLafDark-Tag-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>      
+            <folder name="x-tpl">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-tpl-editor-token-colorings.xml" url="fontscolors/FlatLafDark-TPL-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="xhtml">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-xhtml-colorings.xml" url="fontscolors/FlatLafDark-XHTML-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="xml">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-xml-text-token-colorings.xml" url="fontscolors/FlatLafDark-XML-tokenColorings.xml"/>
+                        </folder>
+                    </folder>                
+                </folder>
+            </folder>
+            <folder name="xml-external-parsed-entity">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-xml-external-parsed-entity-token-colorings.xml" url="fontscolors/FlatLafDark-XMLexternalentity-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-yaml">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-yaml-token-colorings.xml" url="fontscolors/FlatLafDark-YAML-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-markdown">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-markdown-token-colorings.xml" url="fontscolors/FlatLafDark-Markdown-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

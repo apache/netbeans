@@ -1,8 +1,8 @@
 Name: Servlet API
 License: Apache-2.0
-Version: 6.0.13
+Version: 6.0.53
 Description: Java API for Servlet
-Origin: http://tomcat.apache.org
+Origin: https://tomcat.apache.org/
 Type: compile-time
 
                                  Apache License

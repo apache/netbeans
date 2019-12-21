@@ -300,7 +300,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - extide/o.apache.tools.ant.module test
+            - ant $OPTS -f extide/o.apache.tools.ant.module test
             
         - name: Test Java modules with nb-javac on Java 8
           jdk: openjdk8

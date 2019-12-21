@@ -207,7 +207,7 @@ matrix:
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
             - ant $OPTS -f ide/css.model test
-            - ant $OPTS -f ide/db test
+            - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
             - ant $OPTS -f ide/docker.api test

@@ -572,7 +572,7 @@ implements AWTEventListener, DragSourceListener, DragSourceMotionListener {
                 @Override
                 public void run() {
                     SwingUtilities.invokeLater(createDropIntoFreeAreaTask(
-                            evt, evt.getLocation(), floatingFrames));
+                            evt, WindowDnDManager.getLocationWorkaround(evt), floatingFrames));
                 }},
                 350 // XXX #21918, Neccessary to skip after possible ESC key event.
             );
@@ -589,8 +589,7 @@ implements AWTEventListener, DragSourceListener, DragSourceMotionListener {
             return true;
         }
         
-        // Gets location.
-        Point location = evt.getLocation();
+        Point location = WindowDnDManager.getLocationWorkaround(evt);
         if(location == null) {
             return true;
         }

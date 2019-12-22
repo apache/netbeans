@@ -43,6 +43,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -336,7 +338,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
     }
 
     public void testConstructor134673a() throws Exception {
-        performTest("package test;\npublic class Test extends java.io.RandomAccessFile {\n}\n", new ConstructorTask(30, 2, 0), null);
+        performTest("package test;\npublic class Test extends java.io.RandomAccessFile {\n}\n", new ConstructorTask(30, actual -> { if (actual != 2 && actual != 3) throw new AssertionError("Wrong number of constructors: " + actual); }, 0), null);
     }
 
     public void testConstructor134673b() throws Exception {
@@ -939,7 +941,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
 
     private static class ConstructorTask implements CancellableTask<WorkingCopy> {
 
-        private final int numCtors;
+        private final IntConsumer numCtorsValidator;
         private final int ctorToUse;
         private final int offset;
 
@@ -948,8 +950,12 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         }
 
         public ConstructorTask(int offset, int numCtors, int ctorToUse) {
+            this(offset, actual -> assertEquals(numCtors, actual), ctorToUse);
+        }
+
+        public ConstructorTask(int offset, IntConsumer numCtorsValidator, int ctorToUse) {
             this.offset = offset;
-            this.numCtors = numCtors;
+            this.numCtorsValidator = numCtorsValidator;
             this.ctorToUse = ctorToUse;
         }
 
@@ -969,7 +975,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             List<? extends ExecutableElement> ctors = sup.getQualifiedName().contentEquals("java.lang.Object")
                     ? null : ElementFilter.constructorsIn(sup.getEnclosedElements());
             if (ctors != null)
-                assertEquals(numCtors, ctors.size());
+                numCtorsValidator.accept(ctors.size());
             GeneratorUtilities utilities = GeneratorUtilities.get(copy);
             assertNotNull(utilities);
             ClassTree newCt = utilities.insertClassMember(ct, utilities.createConstructor(te, vars, ctors != null ? ctors.get(ctorToUse) : null));

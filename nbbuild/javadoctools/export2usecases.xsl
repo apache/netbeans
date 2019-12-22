@@ -20,52 +20,73 @@
 
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:import href="jsonhelp.xsl" />  
+    <xsl:import href="export2allmodules.xsl" />  
     <xsl:output method="html"/>
     <xsl:param name="date" />
-
+    <xsl:param name="maturity" />
+    <xsl:param name="version" />
+    <xsl:param name="releaseinfo" />
     <xsl:template match="/" >
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <html>
-        <head>
-            <!-- projects.netbeans.org -->
-           <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-           <title>How to use certain Apache NetBeans (incubating) APIs</title>
-            <link rel="stylesheet" href="netbeans.css" type="text/css"/>
+            <xsl:call-template name="htmlheader" >
+                <xsl:with-param name="title" >APIs Usecases list</xsl:with-param>
+                <xsl:with-param name="maturity" select="$maturity" />
+                <xsl:with-param name="version" select="$version"/>
+            </xsl:call-template>
 
-          <link REL="icon" href="http://www.netbeans.org/favicon.ico" type="image/ico" />
-          <link REL="shortcut icon" href="http://www.netbeans.org/favicon.ico" />
+            <body>
+                <xsl:call-template name="htmlmainmenu" >
+                    <xsl:with-param name="title" >APIs Usecases list</xsl:with-param>
+                    <xsl:with-param name="maturity" select="$maturity" />
+                    <xsl:with-param name="version" select="$version"/> 
+                    <xsl:with-param name="releaseinfo" select="$releaseinfo"/>
+                    <xsl:with-param name="menukey" >usecases</xsl:with-param>
+                </xsl:call-template>
+                <div class="apidocmaincontent">
+                    <xsl:call-template name="build-docmenu" >
+                        <xsl:with-param name="menukey" >usecases</xsl:with-param>
+                        <xsl:with-param name="date" select="$date"/>
+                    </xsl:call-template>
+                
+                    <div class="innercontent">
+                        <div class="abstract">
+                            This page contains extracted usecases for some of the NetBeans modules
+                            that <a href="index.html">offer an API</a>. 
+                        </div>
 
-        </head>
-
-        <body>
-            <center><h1>How to use certain Apache NetBeans (incubating) APIs</h1></center>
-
-            This page contains extracted usecases for some of the NetBeans modules
-            that <a href="overview-summary.html">offer an API</a>. 
-
-
-            <xsl:for-each select="//module/arch-usecases[not(../@name='_no module_') and not(.='No answer')]" >
-                <hr/>
-                <h2><a>
-                        <xsl:attribute name="name">
-                            <xsl:text>usecase-</xsl:text>
-                            <xsl:value-of select="../@name"/>
-                        </xsl:attribute>
-                        <xsl:text>How to use </xsl:text>
-                    </a>
-                    <a>
-                        <xsl:attribute name="href" >
-                            <xsl:text>overview-summary.html#def-api-</xsl:text>
-                            <xsl:value-of select="../@name"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="../@name"/>
-                    </a>?
-                </h2>
-                <xsl:apply-templates select="../description" />
-                <p/>
-                <xsl:apply-templates />
-            </xsl:for-each>
-         </body>
-         </html>
+                        <xsl:for-each select="//module/arch-usecases[not(../@name='_no module_') and not(.='No answer')]" >
+                            <hr/>
+                            <h2>
+                                <a>
+                                    <xsl:attribute name="id">
+                                        <xsl:text>usecase-</xsl:text>
+                                        <xsl:value-of select="../@name"/>
+                                    </xsl:attribute>
+                                    <xsl:text>How to use </xsl:text>
+                                </a>
+                                <a>
+                                    <xsl:attribute name="href" >
+                                        <xsl:text>index.html#def-api-</xsl:text>
+                                        <xsl:value-of select="../@name"/>
+                                    </xsl:attribute>
+                                    <xsl:value-of select="../@name"/>
+                                ?</a>
+                            </h2>
+                            <xsl:apply-templates select="../description" />
+                            <p/>
+                            <xsl:apply-templates />
+                        </xsl:for-each>
+                    </div>
+                
+                </div>
+                <div class="apidocleft">
+                    <xsl:call-template name="listallmodules" />
+                </div>
+                <xsl:call-template name="htmlfooter" />
+            </body>
+        </html>
     </xsl:template>
     
     <xsl:template match="api-ref">
@@ -85,13 +106,13 @@
         <xsl:variable name="target" select="ancestor::module/@target"/>
         <xsl:variable name="top" select="substring-before($target,'/')" />
         
-          <xsl:call-template name="print-url" >
-            <xsl:with-param name="url" select="@href" />
-            <xsl:with-param name="base" select="$target" />
-            <xsl:with-param name="top" select="$top" />
-          </xsl:call-template>
-    </xsl:template>
--->    
+              <xsl:call-template name="print-url" >
+                <xsl:with-param name="url" select="@href" />
+                <xsl:with-param name="base" select="$target" />
+                <xsl:with-param name="top" select="$top" />
+              </xsl:call-template>
+        </xsl:template>
+    -->    
     <xsl:template name="print-url" >
         <xsl:param name="url" />
         <xsl:param name="base" />
@@ -139,9 +160,9 @@
     </xsl:template>
             
     <xsl:template match="@*|node()">
-       <xsl:copy  >
-          <xsl:apply-templates select="@*|node()"/>
-       </xsl:copy>
+        <xsl:copy  >
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
     </xsl:template>
         
 </xsl:stylesheet>

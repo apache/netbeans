@@ -46,8 +46,7 @@ public class WebLogicDDWizardPanel implements WizardDescriptor.Panel {
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-//    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1);
-    private final Set listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1);
     private WebLogicDDVisualPanel component = new WebLogicDDVisualPanel();
     private WizardDescriptor wizardDescriptor;
     private Project project;
@@ -129,16 +128,13 @@ public class WebLogicDDWizardPanel implements WizardDescriptor.Panel {
     }
     
     protected final void fireChangeEvent() {
-//        Iterator<ChangeListener> it;
-        Iterator it;
+        Iterator<ChangeListener> it;
         synchronized (listeners) {
-//            it = new HashSet<ChangeListener>(listeners).iterator();
-            it = new HashSet(listeners).iterator();
+            it = new HashSet<ChangeListener>(listeners).iterator();
         }
         ChangeEvent ev = new ChangeEvent(this);
         while (it.hasNext()) {
-//            it.next().stateChanged(ev);
-            ((ChangeListener)it.next()).stateChanged(ev);
+            it.next().stateChanged(ev);
         }
     }
     

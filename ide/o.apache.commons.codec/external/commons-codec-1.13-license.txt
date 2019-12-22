@@ -1,11 +1,9 @@
-Name: Apache Commons IO
-Description: Assist with developing IO functionality
+Name: Apache Commons Codec
 Origin: Apache Software Foundation
-Version: 1.4
+Version: 1.13
 License: Apache-2.0
-URL: http://commons.apache.org/io/
-
-
+Description: Provides implementations of common encoders and decoders.
+URL: https://commons.apache.org/proper/commons-codec/
 
                                  Apache License
                            Version 2.0, January 2004
@@ -208,4 +206,3 @@ URL: http://commons.apache.org/io/
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-

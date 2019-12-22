@@ -16,8 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test2;
+package org.netbeans.swing.laf.flatlaf;
 
-public class NoCompileTest {
+import com.formdev.flatlaf.FlatDefaultsAddon;
+import java.io.InputStream;
 
+/**
+ * NetBeans addon for FlatLaf.
+ */
+public class NbFlatDefaultsAddon extends FlatDefaultsAddon {
+
+    /**
+     * Finds NetBeans addon .properties file for the given LaF class in the same
+     * package as this class.
+     */
+    @Override
+    public InputStream getDefaults(Class<?> lafClass) {
+        Class<?> addonClass = this.getClass();
+        String propertiesName = '/' + addonClass.getPackage().getName().replace('.', '/')
+                + '/' + lafClass.getSimpleName() + ".properties"; //NOI18N
+        return addonClass.getResourceAsStream(propertiesName);
+    }
 }

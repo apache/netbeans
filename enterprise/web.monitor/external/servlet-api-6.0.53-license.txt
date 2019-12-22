@@ -1,9 +1,9 @@
-Name: Apache Jakarta Commons Logging
-Origin: Apache Software Foundation
-Version: 1.1.1
+Name: Servlet API
 License: Apache-2.0
-Description: Logging component
-URL: http://commons.apache.org/logging/
+Version: 6.0.53
+Description: Java API for Servlet
+Origin: https://tomcat.apache.org/
+Type: compile-time
 
                                  Apache License
                            Version 2.0, January 2004

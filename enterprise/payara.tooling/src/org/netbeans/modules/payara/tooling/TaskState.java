@@ -65,7 +65,7 @@ public enum TaskState {
      * conversion.
      */
     private static final Map<String, TaskState> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
 
     // Initialize backward String conversion <code>Map</code>.
     static {

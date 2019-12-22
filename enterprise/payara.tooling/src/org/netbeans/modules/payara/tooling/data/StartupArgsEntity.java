@@ -170,17 +170,30 @@ public class StartupArgsEntity implements StartupArgs {
     @Override
     public JDKVersion getJavaVersion() {
         if(javaVersion == null && javaHome != null) {
-            try (BufferedReader bufferedReader
-                    = new BufferedReader(new FileReader(new File(javaHome, "release")));) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.startsWith("JAVA_VERSION")) {
-                        javaVersion = JDKVersion.toValue(line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")));
-                        break;
+            if(javaHome.equals(System.getProperty("jdk.home"))){
+                javaVersion = JDKVersion.getDefaultPlatformVersion();
+            } else {
+                try (BufferedReader bufferedReader
+                        = new BufferedReader(new FileReader(new File(javaHome, "release")));) { // NOI18N
+                    String implementorLine = null;
+                    String javaVersionLine = null;
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        if (line.startsWith("JAVA_VERSION=")) { // NOI18N
+                            javaVersionLine = line;
+                        } else if (line.startsWith("IMPLEMENTOR=")) { // NOI18N
+                            implementorLine = line;
+                        }
                     }
+                    if (javaVersionLine != null) {
+                        javaVersion = JDKVersion.toValue(
+                                javaVersionLine.substring(javaVersionLine.indexOf("\"") + 1, javaVersionLine.lastIndexOf("\"")), // NOI18N
+                                implementorLine != null ? implementorLine.substring(implementorLine.indexOf("\"") + 1, implementorLine.lastIndexOf("\"")) : null // NOI18N
+                        );
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
             }
         }
         return javaVersion;

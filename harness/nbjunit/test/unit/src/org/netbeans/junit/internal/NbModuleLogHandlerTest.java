@@ -55,7 +55,7 @@ public class NbModuleLogHandlerTest extends NbTestCase {
                         Exceptions.printStackTrace(ex);
                     }
                     try {
-                        Object _ = new Object[999999];
+                        Object o = new Object[999999];
                     } catch (Throwable t) {
                         Logger.getLogger(NbModuleLogHandlerTest.class.getName()).log(Level.WARNING, null, t);
                     }
@@ -66,7 +66,7 @@ public class NbModuleLogHandlerTest extends NbTestCase {
             assertGC("this will fail", new WeakReference<Object>("interned"));
             throw new IllegalStateException("should not succeed");
         } catch (AssertionFailedError x) {
-            // expected
+            assertNotNull("Expected exception", x);
         }
     }
 

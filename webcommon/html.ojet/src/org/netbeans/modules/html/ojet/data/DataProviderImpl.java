@@ -45,7 +45,7 @@ public class DataProviderImpl extends DataProvider {
     private static final String ZIP_PREFIX = "ojetdocs-";
     private static final String ZIP_EXTENSION = ".zip";
     protected static final String DEFAULT_VERSION = "2.0.0";
-    private static final HashMap<String, DataItemImpl.DataItemComponent> data = new HashMap();
+    private static final HashMap<String, DataItemImpl.DataItemComponent> data = new HashMap<>();
     private static DataItemImpl.DataItemModule moduleData = null;
     private static FileObject docRoot = null;
     private static String currentVersion;

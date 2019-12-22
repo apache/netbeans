@@ -18,12 +18,17 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Pair;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.function.Consumer;
 
 /**
  *
@@ -40,6 +45,7 @@ public class NBJavaCompiler extends JavaCompiler {
     }
 
     private final CancelService cancelService;
+    private Consumer<Env<AttrContext>> desugarCallback;
 
     public NBJavaCompiler(Context context) {
         super(context);
@@ -63,4 +69,28 @@ public class NBJavaCompiler extends JavaCompiler {
     private void setOrigin(String origin) {
         fileManager.handleOption("apt-origin", Collections.singletonList(origin).iterator());
     }
+
+    public void setDesugarCallback(Consumer<Env<AttrContext>> callback) {
+        this.desugarCallback = callback;
+    }
+
+    private boolean desugaring;
+
+    @Override
+    protected void desugar(Env<AttrContext> env, Queue<Pair<Env<AttrContext>, JCTree.JCClassDecl>> results) {
+        boolean prevDesugaring = desugaring;
+        try {
+            desugaring = true;
+        super.desugar(env, results);
+        } finally {
+            desugaring = prevDesugaring;
+        }
+    }
+
+    void maybeInvokeDesugarCallback(Env<AttrContext> env) {
+        if (desugaring && desugarCallback != null) {
+            desugarCallback.accept(env);
+        }
+    }
+
 }

@@ -202,7 +202,7 @@ public class JPDAStart implements Runnable {
     private static class Listener extends DebuggerManagerAdapter {
         
         private MethodBreakpoint breakpoint;
-        private final Set debuggers = new HashSet();
+        private final Set<JPDADebugger> debuggers = new HashSet<>();
         
         
         Listener(MethodBreakpoint breakpoint) {

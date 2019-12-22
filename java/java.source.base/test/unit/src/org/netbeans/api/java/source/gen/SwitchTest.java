@@ -83,7 +83,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -139,7 +139,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -187,7 +187,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -234,7 +234,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -413,7 +413,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -463,7 +463,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -507,7 +507,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -557,7 +557,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -585,9 +585,8 @@ public class SwitchTest extends GeneratorTestBase {
                         "                    case 0 -> {\n" +
                         "                        break;\n" +
                         "                    }\n" +
-//                        "                }\n" +
-//                        "                break;\n" +
-                        "                }   break;\n" + //XXX
+                        "                }\n" +
+                        "                break;\n" +
                         "            }\n" +
                         "        }\n" +
                         "    }\n" +
@@ -611,7 +610,7 @@ public class SwitchTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     

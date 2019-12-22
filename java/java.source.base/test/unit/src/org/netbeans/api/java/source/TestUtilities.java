@@ -132,29 +132,6 @@ public final class TestUtilities {
     }
     
     /**
-     * Creates boot {@link ClassPath} for platform the test is running on,
-     * it uses the sun.boot.class.path property to find out the boot path roots.
-     * @return ClassPath
-     * @throws java.io.IOException when boot path property contains non valid path
-     */
-    public static ClassPath createBootClassPath () throws IOException {
-        String bootPath = System.getProperty ("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);            
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
-    }
-    /**
      * Returns a string which contains the contents of a file.
      *
      * @param f the file to be read

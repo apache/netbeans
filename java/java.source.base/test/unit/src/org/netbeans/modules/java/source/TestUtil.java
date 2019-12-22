@@ -36,9 +36,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -123,6 +127,45 @@ public class TestUtil {
         }
     }
     
+    public static File createRT_JAR(File destDir) throws IOException {
+        File src = new File( TestUtil.getJdkDir(), TestUtil.RT_JAR );
+
+        if ( src.canRead() ) {
+            TestUtil.copyFiles( TestUtil.getJdkDir(), destDir, TestUtil.RT_JAR );
+            return new File( destDir, TestUtil.RT_JAR );
+        }
+
+        File rtJar = new File(destDir, "rt.jar");
+        Set<String> seenPackages = new HashSet<>();
+
+        try (OutputStream binOut = new FileOutputStream(rtJar);
+             JarOutputStream out = new JarOutputStream(binOut)) {
+            for (FileObject root : BootClassPathUtil.getBootClassPath().getRoots()) {
+                Enumeration<? extends FileObject> en = root.getChildren(true);
+
+                while (en.hasMoreElements()) {
+                    FileObject f = en.nextElement();
+
+                    if (f.isFolder()) {
+                        String name = FileUtil.getRelativePath(root, f) + "/";
+                        if (seenPackages.add(name)) {
+                            out.putNextEntry(new ZipEntry(name));
+                        }
+                    } else {
+                        if (!f.getNameExt().equals("module-info.class")) {
+                            out.putNextEntry(new ZipEntry(FileUtil.getRelativePath(root, f)));
+                            try (InputStream in = f.getInputStream()) {
+                                FileUtil.copy(in, out);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return rtJar;
+    }
+
     public static void unzip( ZipFile zip, File dest ) throws IOException {
         
         for( Enumeration<? extends ZipEntry> e = zip.entries(); e.hasMoreElements(); ) {

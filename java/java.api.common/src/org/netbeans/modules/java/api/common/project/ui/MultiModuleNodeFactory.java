@@ -107,6 +107,10 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.*;
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
 
 /**
  * Multi Module logical view content.
@@ -557,11 +561,39 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                         null,
                         SystemAction.get(FileSystemAction.class ),
                         null,
-                        SystemAction.get(ToolsAction.class )
+                        SystemAction.get(ToolsAction.class ),
+                        //Added new action to delete module
+                        new DeleteAction("Delete") // NOI18N
                     };
                 }
                 return actions;
             }
+        }
+        
+        private class DeleteAction extends AbstractAction {
+            public DeleteAction(String name) {
+                super(name);
+            }
+            public void actionPerformed(ActionEvent e) {
+                Collection<? extends FileObject> res = getFileObjects();
+                StringBuffer modulesToDelete=new StringBuffer();
+                for(FileObject moduleObj:res){
+                    modulesToDelete.append(moduleObj.getNameExt()+",");
+                }
+                modulesToDelete.deleteCharAt(modulesToDelete.length()-1);
+                String warningMessage = "Delete module \""+modulesToDelete.toString()+"\" and its contents.";
+                int choice = JOptionPane.showConfirmDialog(null, warningMessage, "Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE); // NOI18N
+                if(choice!=JOptionPane.OK_OPTION){
+                    return;
+                }
+                for (FileObject source : res) {
+                    try {
+                        source.delete();
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            } 
         }
 
         @Override

@@ -32,7 +32,7 @@ public class NbLexerCharStream implements CharStream {
 
     private static final String STREAM_NAME = "NbLexerCharStream"; //NOI18N
     private final LexerInput li;
-    private final Stack<Integer> markers = new Stack();
+    private final Stack<Integer> markers = new Stack<>();
 
     public NbLexerCharStream(LexerRestartInfo lri) {
         this.li = lri.input();

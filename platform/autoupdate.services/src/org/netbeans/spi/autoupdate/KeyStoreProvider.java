@@ -29,9 +29,52 @@ import java.security.KeyStore;
  * @author Jiri Rechtacek
  */
 public interface KeyStoreProvider {
-    
+    /**
+     * TrustLevel describes the level of trust, that a {@link KeyStoreProvider}
+     * assigns to the provided keystore.
+     *
+     * @since 1.61
+     */
+    public enum TrustLevel {
+        /**
+         * Unlimited trust - modules signed with certificates in this store
+         * will be installed without further user requests. This level is by
+         * default used for the update centers of the IDE itself.
+         */
+        TRUST,
+        /**
+         * Unlimited trust - modules signed with certificates in this store
+         * will be installed without further user requests. This level is by
+         * default used for the update centers of the IDE itself. It differes
+         * from {@link TRUST} in that, these certificates are subject to a
+         * {@code CertPathValidator}
+         */
+        TRUST_CA,
+        /**
+         * Plugins signed with certificates from this store will show up as
+         * "Signed and valid".
+         */
+        VALIDATE,
+        /**
+         * Plugins signed with certificates created by these certificates
+         * will show up as "Signed and valid". While certificates provided by
+         * {@link VALIDATE} not subject to PKIX checking, these certificates
+         * are run through a {@code CertPathValidator}.
+         */
+        VALIDATE_CA
+    }
+
     /**
      * @return KeyStore
      */
     public KeyStore getKeyStore ();
+
+    /**
+     * @return TrustLevel that is provided by the keystore this
+     *         {@link KeyStoreProvider} provides
+     * @since 1.61
+     */
+    default TrustLevel getTrustLevel() {
+        return TrustLevel.TRUST;
+    }
 }

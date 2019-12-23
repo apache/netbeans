@@ -82,17 +82,13 @@ class GraphicalSearchListener extends SearchListener {
     }
 
     public void searchStarted() {
-
         progressHandle = ProgressHandleFactory.createHandle(
-                NbBundle.getMessage(ResultView.class,
-                "TEXT_SEARCHING___"), new Cancellable() {               //NOI18N
-
-            @Override
-            public boolean cancel() {
-                searchComposition.terminate();
-                return true;
-            }
-        });
+                NbBundle.getMessage(ResultView.class, "TEXT_SEARCHING___"), //NOI18N
+                () -> {
+                    searchComposition.terminate();
+                    return true;
+                },
+                null);
         progressHandle.start();
         resultViewPanel.searchStarted();
         searchComposition.getSearchResultsDisplayer().searchStarted();

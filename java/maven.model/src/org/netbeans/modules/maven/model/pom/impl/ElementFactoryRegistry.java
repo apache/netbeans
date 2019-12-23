@@ -132,7 +132,7 @@ public class ElementFactoryRegistry {
         return knownNames;
     }
     
-    public void addEmbeddedModelQNames(AbstractDocumentModel embeddedModel) {
+    public void addEmbeddedModelQNames(AbstractDocumentModel<?> embeddedModel) {
         if (knownEmbeddedModelTypes == null) {
             knownEmbeddedModelTypes = new HashSet<>();
         }

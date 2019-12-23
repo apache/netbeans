@@ -32,7 +32,6 @@ script:
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
   - ant $OPTS clean
   - ant $OPTS $TARGET
-  - if [ "x$COMPILETEST" == "xtrue" ]; then ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild; fi
   - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
@@ -49,14 +48,24 @@ matrix:
             - unzip -qq ../nbbuild/build/release-src*
             - ant -quiet rat -Drat-report.haltonfailure=true
           
-        - env: SIGTEST=false COMPILETEST=true LICENSE=true
+        - env: SIGTEST=false LICENSE=true
           jdk: openjdk8
 
-        - env: SIGTEST=true COMPILETEST=false LICENSE=false
+        - env: SIGTEST=true LICENSE=false
           jdk: openjdk8
 
         - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
           jdk: openjdk8
+          
+        - name: Compile all modules with OpenJDK8
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+          script:
+            - ant $OPTS build
+            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
 
         - name: Compile all modules with OpenJDK11
           jdk: openjdk11
@@ -67,9 +76,6 @@ matrix:
           script:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
-
-        - env: OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false" TARGET="build-basic"
-          jdk: openjdk8
 
         - name: Test harness modules
           jdk: openjdk8
@@ -83,7 +89,7 @@ matrix:
             - ant $OPTS -f harness/o.n.insane test
             - ant $OPTS -f harness/apisupport.harness test
             - ant $OPTS -f harness/nbjunit test
-            # - ant $OPTS -f harness/jellytools.platform test
+            - ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
 
         - name: Test platform modules, Batch 1
           jdk: openjdk8
@@ -112,7 +118,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/core.multiview test
             - hide-logs.sh ant $OPTS -f platform/core.netigso test
             #- hide-logs.sh ant $OPTS -f platform/core.network test
-            #- hide-logs.sh ant $OPTS -f platform/core.osgi test
+            - hide-logs.sh ant $OPTS -f platform/core.osgi test
             - hide-logs.sh ant $OPTS -f platform/core.output2 test
             - hide-logs.sh ant $OPTS -f platform/core.startup test
             - hide-logs.sh ant $OPTS -f platform/core.startup.base test
@@ -126,7 +132,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/keyring.impl test
             - hide-logs.sh ant $OPTS -f platform/lib.uihandler test
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
-            - hide-logs.sh ant $OPTS -f platform/masterfs test
+            - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
             #- hide-logs.sh ant $OPTS -f platform/netbinox test
             - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
@@ -187,7 +193,7 @@ matrix:
           script:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
-            - ant $OPTS -f ide/bugtracking test
+            - travis_retry ant $OPTS -f ide/bugtracking test
             #- ant $OPTS -f ide/bugtracking.bridge test
             - ant $OPTS -f ide/bugtracking.commons test
             #- ant $OPTS -f ide/bugzilla test
@@ -198,7 +204,7 @@ matrix:
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
             - ant $OPTS -f ide/css.model test
-            - ant $OPTS -f ide/db test
+            - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
             - ant $OPTS -f ide/docker.api test
@@ -241,6 +247,8 @@ matrix:
             #- ant $OPTS -f ide/libs.git test
             - ant $OPTS -f ide/libs.graalsdk test
             #- ant $OPTS -f ide/localhistory test
+            - ant $OPTS -f ide/lsp.client test
+            - ant $OPTS -f ide/notifications test
             - ant $OPTS -f ide/o.openidex.util test
             #- ant $OPTS -f ide/parsing.api test
             #- ant $OPTS -f ide/parsing.indexing test
@@ -281,7 +289,17 @@ matrix:
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
             
-        - name: Test Java modules
+        - name: Test extide modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f extide/o.apache.tools.ant.module test
+            
+        - name: Test Java modules with nb-javac on Java 8
           jdk: openjdk8
           env:
             - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
@@ -293,30 +311,48 @@ matrix:
             #- ant $OPTS -f java/spi.java.hints test
             - ant $OPTS -f java/java.hints.declarative test
             - ant $OPTS -f java/spring.beans test
-            
-        - name: Test Java completion with Java 11
+            - ant $OPTS -f java/java.source.base test
+
+        - name: Test Java modules with nb-javac on Java 11
           jdk: openjdk8
           env:
-            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
             - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -f java/java.completion -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument -Dtest.use.jdk.javac=true test
+            - ant $OPTS -f java/java.completion test
+            - ant $OPTS -f java/java.source.base test
 
-        - name: Test Java completion with Java 12
+        - name: Test Java modules with nb-javac on Java 13
           jdk: openjdk8
           env:
-            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
-            - export TEST_JDK=`bash install-jdk.sh --feature 12 --license GPL --emit-java-home --silent | tail -1`
+            - export TEST_JDK=`bash install-jdk.sh --feature 13 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -f java/java.completion -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--add-exports=jdk.javadoc/com.sun.tools.javadoc.main=ALL-UNNAMED -Dtest.use.jdk.javac=true test
+            - ant $OPTS -f java/java.completion test
+            - ant $OPTS -f java/java.source.base test
+
+        - name: Test Java modules without nb-javac on Java 13
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 13 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f java/java.completion test
 
         - name: Test ergonomics modules
           jdk: openjdk8
@@ -409,6 +445,30 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
+            
+        - name: Test php modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f php/hudson.php test
+            #- ant $OPTS -f php/languages.neon test
+            - ant $OPTS -f php/php.api.annotation test
+            - ant $OPTS -f php/php.api.documentation test
+            - ant $OPTS -f php/php.api.executable test
+            - ant $OPTS -f php/php.api.framework test
+            - ant $OPTS -f php/php.api.phpmodule test
+            - ant $OPTS -f php/php.api.testing test
+            - ant $OPTS -f php/php.apigen test
+            - ant $OPTS -f php/php.atoum test
+            - ant $OPTS -f php/php.code.analysis test
+            - ant $OPTS -f php/php.codeception test
+            - ant $OPTS -f php/php.composer test
+            #- ant $OPTS -f php/php.dbgp test
+            - ant $OPTS -f php/php.doctrine2 test
             
         - name: GRAALVM Tests
           jdk: openjdk8

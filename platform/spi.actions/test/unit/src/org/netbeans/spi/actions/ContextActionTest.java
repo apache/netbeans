@@ -729,8 +729,8 @@ public class ContextActionTest extends NbTestCase {
         assertNotNull(a.stub);
         assertNotNull(e.stub);
         setContent(node1);
-        Reference<ActionStub> outerStubRef = new WeakReference<ActionStub>(a.stub);
-        Reference<ActionStub> innerStubRef = new WeakReference<ActionStub>(e.stub);
+        Reference<ActionStub<?>> outerStubRef = new WeakReference<>(a.stub);
+        Reference<ActionStub<?>> innerStubRef = new WeakReference<>(e.stub);
         //Let the change get fired before we move on;  otherwise the runnable
         //on the event queue can hold a reference that causes this test to 
         //randomly fail
@@ -748,8 +748,8 @@ public class ContextActionTest extends NbTestCase {
         assertGC("Wrapped action's stub still exists after all listeners " +
                 "removed", innerStubRef, rootsHint);
 
-        aref = new WeakReference<IndirectAction>(a);
-        eref = new WeakReference<E>(e);
+        aref = new WeakReference<>(a);
+        eref = new WeakReference<>(e);
         a = null;
         e = null;
 
@@ -757,7 +757,7 @@ public class ContextActionTest extends NbTestCase {
         assertGC("Indirect action still referenced", aref, rootsHint);
 
         clearContent();
-        Reference<Thing> thingRef = new WeakReference<Thing>(thing1);
+        Reference<Thing> thingRef = new WeakReference<>(thing1);
         thing1 = null;
         proj1 = null;
         node1 = null;

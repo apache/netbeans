@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -233,6 +234,19 @@ public class LSPBindings {
 
     public void scheduleBackgroundTask(RequestProcessor.Task req) {
         WORKER.post(req, DELAY);
+    }
+
+    public static void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
+        LSPBindings bindings = getBindings(file);
+
+        if (bindings == null)
+            return ;
+
+        RequestProcessor.Task req = bindings.backgroundTasks.computeIfAbsent(file, f -> Collections.emptyMap()).get(task);
+
+        if (req != null) {
+            WORKER.post(req, DELAY);
+        }
     }
 
     public void scheduleBackgroundTasks(FileObject file) {

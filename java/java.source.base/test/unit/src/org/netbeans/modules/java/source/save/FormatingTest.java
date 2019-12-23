@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
@@ -43,6 +44,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -87,7 +89,7 @@ public class FormatingTest extends NbTestCase {
                     return ClassPathSupport.createClassPath(new FileObject[0]);
                 }
                 if (type.equals(ClassPath.BOOT)) {
-                    return createClassPath(System.getProperty("sun.boot.class.path"));
+                    return BootClassPathUtil.getBootClassPath();
                 }
                 return null;
             }
@@ -98,6 +100,7 @@ public class FormatingTest extends NbTestCase {
         File cacheFolder = new File(getWorkDir(), "var/cache/index");
         cacheFolder.mkdirs();
         IndexUtil.setCacheFolder(cacheFolder);
+        MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class).clear();
     }
 
     public void testClass() throws Exception {
@@ -2078,6 +2081,13 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", true);
     }
     public void testSwitchExpression() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
                 "package hierbas.del.litoral;\n\n"
@@ -2217,7 +2227,13 @@ public class FormatingTest extends NbTestCase {
         preferences.put("otherBracePlacement", CodeStyle.BracePlacement.SAME_LINE.name());
     }
     public void testSwitchExprWithRuleCase() throws Exception {
- testFile = new File(getWorkDir(), "Test.java");
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,
                 "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n"
@@ -5048,7 +5064,7 @@ public class FormatingTest extends NbTestCase {
                 "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
-                + "        for (int y : Arrays.asList(1, 2, 3)) synchronized(Test.class) {\n"
+                + "        for (int y : Arrays.asList(1, 2, 3)) synchronized (Test.class) {\n"
                 + "            int x = 3;\n"
                 + "        }\n"
                 + "    }\n"

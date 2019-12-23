@@ -19,7 +19,6 @@
 package org.netbeans.modules.htmlui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -31,15 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.web.WebView;
+import javax.swing.JComponent;
 import net.java.html.js.JavaScriptBody;
+import static org.netbeans.modules.htmlui.HtmlToolkit.LOG;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -54,9 +47,8 @@ import org.openide.windows.TopComponent;
     preferredID = "browser"
 )
 public final class HtmlComponent extends TopComponent  {
-    private static final Logger LOG = Logger.getLogger(HtmlComponent.class.getName());
-    private final NbFxPanel p = new NbFxPanel();
-    private /* final */ WebView v;
+    private final JComponent p = HtmlToolkit.getDefault().newPanel();
+    private /* final */ Object webView;
     private final InstanceContent ic;
     private Object value;
     private final Map<String,Object> cache = new HashMap<>();
@@ -68,17 +60,13 @@ public final class HtmlComponent extends TopComponent  {
         add(p, BorderLayout.CENTER);
     }
     
-    final WebView getWebView() {
-        return v;
-    }
-    
     public void loadFX(URL pageUrl, final Class<?> clazz, final String m, Object... ctx) {
-        initFX();
+        webView = HtmlToolkit.getDefault().initHtmlComponent(p, this::setDisplayName);
         ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
         if (loader == null) {
             loader = clazz.getClassLoader();
         }
-        NbBrowsers.load(v, pageUrl, new Runnable() {
+        HtmlToolkit.getDefault().load(webView, pageUrl, new Runnable() {
             @Override
             public void run() {
                 try {
@@ -97,40 +85,6 @@ public final class HtmlComponent extends TopComponent  {
         }, loader, ctx);
     }
     
-
-    private void initFX() {
-        Platform.setImplicitExit(false);
-        v = new WebView();
-        BorderPane bp = new BorderPane();
-        Scene scene = new Scene(bp, Color.ALICEBLUE);
-
-        class X implements ChangeListener<String>, Runnable {
-
-            private String title;
-
-            public X() {
-                super();
-            }
-
-            @Override
-            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                title = v.getEngine().getTitle();
-                EventQueue.invokeLater(this);
-            }
-
-            @Override
-            public void run() {
-                if (title != null) {
-                    HtmlComponent.this.setDisplayName(title);
-                }
-            }
-        }
-        final X x = new X();
-        v.getEngine().titleProperty().addListener(x);
-        Platform.runLater(x);
-        bp.setCenter(v);
-        p.setScene(scene);
-    }
 
     final void onChange(Object[] values) {
         List<Object> instances = new ArrayList<>();

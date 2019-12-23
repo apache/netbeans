@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javafx.application.Platform;
 import javax.swing.Action;
 import org.openide.awt.Actions;
 
@@ -71,7 +70,7 @@ public final class Pages {
                 tc.open();
                 tc.requestActive();
 
-                Platform.runLater(this);
+                HtmlToolkit.getDefault().execute(this);
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }

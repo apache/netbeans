@@ -21,6 +21,7 @@ package org.netbeans.modules.xml.multiview.ui;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.Hashtable;
 
 import org.openide.nodes.Node;
 import org.netbeans.modules.xml.multiview.cookies.SectionFocusCookie;
@@ -34,7 +35,7 @@ import org.netbeans.modules.xml.multiview.cookies.SectionFocusCookie;
 public class SectionView extends PanelView implements SectionFocusCookie, ContainerPanel {
     private JPanel scrollPanel, filler;
     javax.swing.JScrollPane scrollPane;
-    private java.util.Hashtable map;
+    private Hashtable<Node, NodeSectionPanel> map;
     private int sectionCount=0;
     private NodeSectionPanel activePanel;
     private InnerPanelFactory factory = null;
@@ -59,7 +60,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
     
     public void initComponents() {
         super.initComponents();
-        map = new java.util.Hashtable();
+        map = new Hashtable<>();
         setLayout(new java.awt.BorderLayout());
         scrollPanel = new JPanel();
         scrollPanel.setLayout(new java.awt.GridBagLayout());

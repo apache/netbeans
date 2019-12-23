@@ -52,7 +52,7 @@ public class LabelsTest extends GeneratorTestBase {
     protected void setUp() throws Exception {
         super.setUp();
         testFile = getFile(getSourceDir(), getSourcePckg() + "SetLabelTestClass.java");
-        System.err.println(testFile.getAbsoluteFile().toString());
+        //System.err.println(testFile.getAbsoluteFile().toString());
     }
     
     public void testIdentifiers() throws IOException {

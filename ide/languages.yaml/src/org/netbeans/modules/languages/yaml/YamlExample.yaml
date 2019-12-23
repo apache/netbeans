@@ -1,4 +1,4 @@
---- !clarkevans.com/^invoice
+---
 invoice: 34843
 date   : 2001-01-23
 bill-to: &id001

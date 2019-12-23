@@ -83,7 +83,7 @@ public class InvalidVarToExplicitArrayConversionTest extends TreeRewriteTestBase
 
         rewriteStatement("int");
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
 
     }
@@ -110,7 +110,7 @@ public class InvalidVarToExplicitArrayConversionTest extends TreeRewriteTestBase
 
         rewriteStatement("ArrayList");
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -134,7 +134,7 @@ public class InvalidVarToExplicitArrayConversionTest extends TreeRewriteTestBase
 
         rewriteStatement("String");
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -157,7 +157,7 @@ public class InvalidVarToExplicitArrayConversionTest extends TreeRewriteTestBase
 
         rewriteStatement("int");
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 

@@ -44,7 +44,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-apache-commons-io.jar</runtime-relative-path>
-                <binary-origin>external/commons-io-1.4.jar</binary-origin>
+                <binary-origin>external/commons-io-2.6.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

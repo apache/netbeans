@@ -1,1 +1,2 @@
 OpenIDE-Module: org.apache.commons.logging
+OpenIDE-Module-Specification-Version: 1.2

@@ -35,6 +35,7 @@ import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.core.startup.Main;
 import org.netbeans.modules.java.source.transform.Transformer;
 import org.netbeans.modules.editor.java.JavaKit;
 import org.netbeans.modules.java.JavaDataLoader;
@@ -109,7 +110,8 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
         SourceUtilsTestUtil.prepareTest(
                 new String[] {
                     "org/netbeans/modules/java/project/ui/layer.xml", 
-                    "org/netbeans/modules/project/ui/resources/layer.xml"
+                    "org/netbeans/modules/project/ui/resources/layer.xml",
+                    "META-INF/generated-layer.xml"
                 },
                 new Object[] {loader, cpp}
         );
@@ -120,6 +122,7 @@ public abstract class GeneratorTestBase extends ClassIndexTestCase {
         IndexUtil.setCacheFolder(cacheFolder);
         ensureRootValid(dataDir.getURL());
         TestUtil.setupEditorMockServices();
+        Main.initializeURLFactory();
     }
     
     public <R, P> void process(final Transformer<R, P> transformer) throws IOException {

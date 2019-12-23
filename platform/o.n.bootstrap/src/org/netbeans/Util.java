@@ -454,9 +454,8 @@ public final class Util {
         /** Fire changes to all result listeners. */
         public void changed() {
             synchronized (results) {
-                Iterator it = results.iterator();
-                while (it.hasNext()) {
-                    ((ModuleResult)it.next()).changed();
+                for (ModuleResult moduleResult : results) {
+                    moduleResult.changed();
                 }
             }
         }

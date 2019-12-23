@@ -59,7 +59,7 @@ public class DbDriverManager {
     
     private static final DbDriverManager DEFAULT = new DbDriverManager();
     
-    private Set registeredDrivers;
+    private Set<Driver> registeredDrivers;
     
     /**
      * Maps each connection to the driver used to create that connection.
@@ -165,7 +165,7 @@ public class DbDriverManager {
      */
     public synchronized void registerDriver(Driver driver) {
         if (registeredDrivers == null) {
-            registeredDrivers = new HashSet();
+            registeredDrivers = new HashSet<>();
         }
         registeredDrivers.add(driver);
     }

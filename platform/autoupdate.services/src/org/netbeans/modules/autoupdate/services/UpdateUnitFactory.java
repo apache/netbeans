@@ -113,7 +113,7 @@ public class UpdateUnitFactory {
 
         for (UpdateUnitProvider up : updates) {
             UpdateUnitProviderImpl impl = Trampoline.API.impl (up);
-            
+
             // append units from provider
             mappedImpl = appendUpdateItems (mappedImpl, impl.getUpdateProvider ());
             reportRunTime ("AppendUpdateItems for " + impl.getUpdateProvider ().getDisplayName ());
@@ -126,7 +126,7 @@ public class UpdateUnitFactory {
         //TODO: this call should be forced not to be called from AWT
         //assert !SwingUtilities.isEventDispatchThread();
         resetRunTime ("Measuring UpdateUnitFactory.getUpdateUnits (" + provider.getDisplayName () + ")"); // NOI18N
-        
+
         // append units from provider
         Map<String, UpdateUnit> temp = appendUpdateItems (new HashMap<String, UpdateUnit> (), provider);
         reportRunTime ("Get appendUpdateItems for " + provider.getDisplayName ());
@@ -143,6 +143,8 @@ public class UpdateUnitFactory {
     Map<String, UpdateUnit> appendUpdateItems (Map<String, UpdateUnit> originalUnits, UpdateProvider provider) {
         assert originalUnits != null : "Map of original UnitImpl cannot be null";
 
+        boolean trusted = UpdateUnitProviderImpl.loadTrusted(provider);
+
         Map<String, UpdateItem> items;
         try {
             items = provider.getUpdateItems ();
@@ -155,7 +157,7 @@ public class UpdateUnitFactory {
         
         // append updates
         for (String simpleItemId : items.keySet ()) {
-            
+
             UpdateElement updateEl = null;
             try {
 
@@ -204,6 +206,7 @@ public class UpdateUnitFactory {
 
             // add element to map
             if (updateEl != null) {
+                Trampoline.API.impl(updateEl).setCatalogTrusted(trusted);
                 addElement (originalUnits, updateEl, provider);
             }
         }
@@ -282,7 +285,7 @@ public class UpdateUnitFactory {
         
         // set UpdateUnit into element
         elImpl.setUpdateUnit (unit);
-        
+
     }
     
     private UpdateUnit mergeInstalledUpdateUnit (UpdateUnit uu) {

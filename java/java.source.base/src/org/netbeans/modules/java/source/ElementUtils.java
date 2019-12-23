@@ -25,6 +25,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.ModuleSymbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
@@ -90,8 +91,13 @@ public class ElementUtils {
         Context ctx = ((JavacTaskImpl) task).getContext();
         Names names = Names.instance(ctx);
         Symtab syms = Symtab.instance(ctx);
+        Check chk = Check.instance(ctx);
         final Name wrappedName = names.fromString(name);
-        ClassSymbol clazz = syms.enterClass((ModuleSymbol) mod, wrappedName);
+        ClassSymbol clazz = chk.getCompiled((ModuleSymbol) mod, wrappedName);
+        if (clazz != null) {
+            return clazz;
+        }
+        clazz = syms.enterClass((ModuleSymbol) mod, wrappedName);
         
         try {
             clazz.complete();

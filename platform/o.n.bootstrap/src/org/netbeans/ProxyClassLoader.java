@@ -120,9 +120,9 @@ public class ProxyClassLoader extends ClassLoader {
      * @exception ClassNotFoundException if the class could not be found
      */
     @Override
-    protected synchronized Class loadClass(String name, boolean resolve)
+    protected synchronized Class<?> loadClass(String name, boolean resolve)
                                             throws ClassNotFoundException {
-        final Class cls = doFindClass(name);
+        final Class<?> cls = doFindClass(name);
         if (resolve) resolveClass(cls); 
         return cls; 
     }
@@ -239,7 +239,7 @@ public class ProxyClassLoader extends ClassLoader {
     private static final Set<String> arbitraryLoadWarnings = Collections.synchronizedSet(new HashSet<String>());
 
     /** May return null */ 
-    private synchronized Class selfLoadClass(String pkg, String name) { 
+    private synchronized Class<?> selfLoadClass(String pkg, String name) { 
         Class<?> cls = findLoadedClass(name); 
         if (cls == null) {
             try {
@@ -265,7 +265,7 @@ public class ProxyClassLoader extends ClassLoader {
      * @param  name the name of the class
      * @return the resulting <code>Class</code> object or <code>null</code>
      */
-    protected Class doLoadClass(String pkg, String name) {
+    protected Class<?> doLoadClass(String pkg, String name) {
         return null;
     }
     

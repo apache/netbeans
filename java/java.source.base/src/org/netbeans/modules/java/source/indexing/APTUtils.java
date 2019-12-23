@@ -372,7 +372,6 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                 Object instance = clazz.newInstance();
                 if (instance instanceof Processor) {
                     result.add(new ErrorToleratingProcessor((Processor) instance));
-//                    result.add((Processor) instance);
                 }
             } catch (ThreadDeath td) {
                 throw td;

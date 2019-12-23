@@ -137,7 +137,7 @@ public class CrashingAPTest extends NbTestCase {
                                                  .map(d -> d.getMessage(null))
                                                  .map(m -> firstLine(m))
                                                  .collect(Collectors.toList());
-                List<String> expected = Arrays.asList("Annotation processor org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP failed with an exception: Crash");
+                List<String> expected = Arrays.asList(Bundle.ERR_ProcessorException("org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP", "Crash"));
                 assertEquals(expected, messages);
             }
         },true);

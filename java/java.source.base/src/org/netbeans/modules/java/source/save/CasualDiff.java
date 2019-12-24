@@ -2715,9 +2715,17 @@ public class CasualDiff {
     }
 
     protected int diffLiteral(JCLiteral oldT, JCLiteral newT, int[] bounds) {
-        if (oldT.typetag != newT.typetag ||
-           (oldT.value != null && !oldT.value.equals(newT.value)))
-        {
+        boolean doesMove=true;
+        if (tokenSequence.offset() != bounds[0] && oldT.getKind()==Tree.Kind.STRING_LITERAL) {//correcting bounds when old tree litral is text block
+            tokenSequence.move(bounds[0]);
+           doesMove= tokenSequence.moveNext();
+            while (doesMove  && tokenSequence.token().id() != JavaTokenId.MULTILINE_STRING_LITERAL) {
+                doesMove &= tokenSequence.moveNext();
+            }
+            bounds[0]=tokenSequence.offset();
+        }
+        if (oldT.typetag != newT.typetag
+                || (oldT.value != null && !oldT.value.equals(newT.value)) || (tokenSequence.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && newT.getKind()==Tree.Kind.STRING_LITERAL && doesMove)) {
             int localPointer = bounds[0];
             // literal
             int[] literalBounds = getBounds(oldT);

@@ -61,7 +61,7 @@ public class ConvertTextBlockToStringTest {
                 .assertOutput("package helloworld;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        String a =\"abc\\n\" + \"def\\n\" + \"hij\\n\" + \"\";\n"
+                        + "        String a =\"abc\\n\" + \"def\\n\" + \"hij\\n\";\n"
                         + "    }\n"
                         + "}");
     }
@@ -91,7 +91,7 @@ public class ConvertTextBlockToStringTest {
                 .assertOutput("package helloworld;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        String a =\"abc\" + \"\";\n"
+                        + "        String a =\"abc\";\n"
                         + "    }\n"
                         + "}");
     }
@@ -127,7 +127,7 @@ public class ConvertTextBlockToStringTest {
                 .assertOutput("package helloworld;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        String a =\"abc\\n\" + \"\\n\" + \"\\n\" + \"\\n\" + \"\\n\" + \"\\n\" + \"\";\n"
+                        + "        String a =\"abc\\n\" + \"\\n\" + \"\\n\" + \"\\n\" + \"\\n\" + \"\\n\";\n"
                         + "    }\n"
                         + "}");
     }
@@ -240,6 +240,69 @@ public class ConvertTextBlockToStringTest {
     }
 
     @Test
+    public void twoNewLines() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
+        HintTest.create()
+                .input("package helloworld;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        String a =\"\"\"\n"
+                        + "                 \n"
+                        + "                 \n"
+                        + "                 \"\"\";\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertTextBlockToString.class)
+                .findWarning("3:18-3:21:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package helloworld;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        String a =\"\\n\" + \"\\n\";\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+    @Test
+    public void slashConvert() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
+        HintTest.create()
+                .input("package helloworld;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        String a =\"\"\"\n"
+                        + "                 \\\\\"\"\";\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertTextBlockToString.class)
+                .findWarning("3:18-3:21:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package helloworld;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        String a =\"\\\\\";\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+   
+    @Test
     public void escapeCharTextBlock() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_13");
@@ -300,7 +363,7 @@ public class ConvertTextBlockToStringTest {
                 .assertOutput("package helloworld;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        String a =\"abc\\n\" + \"\\\"def\\n\" + \"ghi\\n\" + \"'lmn'\\n\" + \"opq\\n\" + \"\";\n"
+                        + "        String a =\"abc\\n\" + \"\\\"def\\n\" + \"ghi\\n\" + \"'lmn'\\n\" + \"opq\\n\";\n"
                         + "    }\n"
                         + "}");
     }

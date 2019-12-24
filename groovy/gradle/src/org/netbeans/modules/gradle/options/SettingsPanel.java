@@ -760,7 +760,9 @@ public class SettingsPanel extends javax.swing.JPanel {
     }
 
     private class VersionCellRenderer extends DefaultListCellRenderer {
+        @SuppressWarnings("rawtypes")
         final ListCellRenderer delegate;
+        @SuppressWarnings("rawtypes")
         public VersionCellRenderer(ListCellRenderer delegate) {
             this.delegate = delegate;
         }
@@ -771,6 +773,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             "NbGradleVersion.blacklist_TXT=<html>This version is known to have issues with NetBeans, hence usage is not recommended."
         })
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            @SuppressWarnings("unchecked")
             Component cmp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (cmp instanceof JLabel) {
                 JLabel label = (JLabel) cmp;

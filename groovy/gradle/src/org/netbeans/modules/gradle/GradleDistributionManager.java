@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -188,8 +189,8 @@ public class GradleDistributionManager {
         List<NbGradleVersion> ret = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
-            URL allVersions = new URL("http://services.gradle.org/versions/all"); //NOI18N
-            try (InputStreamReader is = new InputStreamReader(allVersions.openStream())) {
+            URL allVersions = new URL("https://services.gradle.org/versions/all"); //NOI18N
+            try (InputStreamReader is = new InputStreamReader(allVersions.openStream(), StandardCharsets.UTF_8)) {
                 JSONArray versions = (JSONArray) parser.parse(is);
                 for (Object o : versions) {
                     JSONObject v = (JSONObject) o;

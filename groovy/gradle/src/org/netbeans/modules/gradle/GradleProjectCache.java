@@ -171,6 +171,7 @@ public final class GradleProjectCache {
             return ctx.previous;
         }
         gconn.useInstallation(gradleInstall);
+        gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
 
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 

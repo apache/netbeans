@@ -131,8 +131,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 gconn.useBuildDistribution();
             }
 
+            gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
+
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
-            //TODO: GradleUserHome
             pconn = gconn.forProjectDirectory(projectDir).connect();
 
             BuildLauncher buildLauncher = pconn.newBuild();
@@ -225,6 +226,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private void printCommandLine() {
         StringBuilder commandLine = new StringBuilder(1024);
 
+        String userHome = GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
+        if (userHome != null) {
+            commandLine.append("GRADLE_USER_HOME=\"").append(userHome).append("\"\n"); //NOI18N
+        }
         JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
         if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
             File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());

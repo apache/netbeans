@@ -1,9 +1,9 @@
 Name: Apache Commons FileUpload
-Version: 1.3
+Version: 1.4
 License: Apache-2.0
 OSR: 2970
 Description: File upload component
-Origin: http://commons.apache.org/proper/commons-fileupload/
+Origin: https://commons.apache.org/proper/commons-fileupload/
 
 
                                  Apache License

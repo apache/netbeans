@@ -32,8 +32,6 @@ script:
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
   - ant $OPTS clean
   - ant $OPTS $TARGET
-  - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
-  - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
 
 matrix:
@@ -51,8 +49,16 @@ matrix:
           script:
             - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
 
-        - env: SIGTEST=true
+        - name: Run sigtests
           jdk: openjdk8
+          env:
+            - OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS check-sigtests -Dfail.on.error=true
+            - ant $OPTS gen-sigtests-release
 
 #        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
 #          jdk: openjdk8

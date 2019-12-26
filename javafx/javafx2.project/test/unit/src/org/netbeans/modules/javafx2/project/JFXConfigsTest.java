@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
@@ -369,7 +366,7 @@ public class JFXConfigsTest extends NbTestCase {
         assertTrue(ep.getProperty("javafx.param.0.value").equals("val2"));
         ep = JFXProjectUtils.readFromFile(projectDir.getFileObject(PRIVATE_PROPERTIES_FILE));
         assertTrue(ep.getProperty(JFXProjectProperties.RUN_AS).equals("dummy"));
-        assertTrue(ep.getProperty("application.args").equals("--par2=val2"));
+        assertTrue(ep.getProperty("application.args").equals("--'par2'='val2'"));
         ep = JFXProjectUtils.readFromFile(projectDir.getFileObject(NONDEF1_PROJECT_PROPERTIES_FILE));
         assertTrue(ep.size() == 3);
         assertTrue(ep.getProperty("javafx.param.1.name").equals("par4"));
@@ -377,13 +374,13 @@ public class JFXConfigsTest extends NbTestCase {
         assertTrue(ep.getProperty(PROP3).equals("dummy_1_3"));
         ep = JFXProjectUtils.readFromFile(projectDir.getFileObject(NONDEF1_PRIVATE_PROPERTIES_FILE));
         assertTrue(ep.size() == 1);
-        assertTrue(ep.getProperty("application.args").equals("--par2=val2 par4"));
+        assertTrue(ep.getProperty("application.args").equals("--'par2'='val2' 'par4'"));
         ep = JFXProjectUtils.readFromFile(projectDir.getFileObject(NONDEF2_PROJECT_PROPERTIES_FILE));
         assertTrue(ep.size() == 2);
         assertTrue(ep.getProperty(PROP2).equals("value2"));
         assertTrue(ep.getProperty(PROP3).equals("dummy_2_3"));
         ep = JFXProjectUtils.readFromFile(projectDir.getFileObject(NONDEF2_PRIVATE_PROPERTIES_FILE));
-        assertTrue(ep.size() == 0);
+        assertTrue(ep.isEmpty());
     }
     
     public void testEraseParamProperties() throws Exception {

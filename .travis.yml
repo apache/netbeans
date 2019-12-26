@@ -365,8 +365,8 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
-            - travis_wait  hide-logs.sh ant $OPTS -f javafx/javafx2.project test
+            - hide-logs.sh ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+            - travis_wait hide-logs.sh ant $OPTS -f javafx/javafx2.project test
 
         - name: Test ergonomics modules
           jdk: openjdk8

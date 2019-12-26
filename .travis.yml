@@ -32,7 +32,6 @@ script:
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
   - ant $OPTS clean
   - ant $OPTS $TARGET
-  - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
@@ -48,10 +47,11 @@ matrix:
             - unzip -qq ../nbbuild/build/release-src*
             - ant -quiet rat -Drat-report.haltonfailure=true
           
-        - env: SIGTEST=false LICENSE=true
-          jdk: openjdk8
+        - name: Verify libs and licenses
+          script:
+            - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
 
-        - env: SIGTEST=true LICENSE=false
+        - env: SIGTEST=true
           jdk: openjdk8
 
 #        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh

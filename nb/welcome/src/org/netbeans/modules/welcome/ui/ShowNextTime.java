@@ -50,7 +50,7 @@ class ShowNextTime extends JPanel
         button = new JCheckBox( BundleSupport.getLabel( "ShowOnStartup" ) ); // NOI18N
         button.setSelected( WelcomeOptions.getDefault().isShowOnStartup() );
         button.setOpaque( false );
-        button.setForeground( Color.white );
+        button.setForeground( Utils.getTopBarForeground() );
         button.setHorizontalTextPosition( SwingConstants.LEFT );
         BundleSupport.setAccessibilityProperties( button, "ShowOnStartup" ); //NOI18N
         add( button, BorderLayout.CENTER );

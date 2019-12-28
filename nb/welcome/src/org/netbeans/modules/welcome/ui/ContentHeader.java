@@ -67,7 +67,7 @@ public class ContentHeader extends JPanel implements Constants {
         setLayout( new BorderLayout() );
         lblTitle.setText( title );
         lblTitle.setFont( CONTENT_HEADER_FONT );
-        lblTitle.setForeground( Color.white );
+        lblTitle.setForeground( Utils.getTopBarForeground() );
         add( lblTitle, BorderLayout.WEST );
         setBorder( BorderFactory.createEmptyBorder( 12+18, 34, 15, 34 ) );
     }

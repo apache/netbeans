@@ -197,8 +197,8 @@
                 <binary-origin>external/joni-2.1.11.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jcodings-1.0.18.jar</runtime-relative-path>
-                <binary-origin>external/jcodings-1.0.18.jar</binary-origin>
+                <runtime-relative-path>ext/jcodings-1.0.46.jar</runtime-relative-path>
+                <binary-origin>external/jcodings-1.0.46.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.tm4e.core_0.2.0.201809031154.jar</runtime-relative-path>

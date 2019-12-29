@@ -69,7 +69,7 @@ enterprise/javaee7.api/external/jaxws-api-2.2.8.jar java/websvc.jaxws21api/exter
 enterprise/javaee7.api/external/jsr181-api-1.0-MR1.jar java/websvc.jaxws21api/external/jaxws-2.2.6-api.zip
 
 # the jcodings is used internally in two unrelated modules:
-ide/libs.bytelist/external/jcodings-1.0.18.jar ide/textmate.lexer/external/jcodings-1.0.18.jar
+ide/libs.bytelist/external/jcodings-1.0.46.jar ide/textmate.lexer/external/jcodings-1.0.46.jar
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
 ide/lsp.client/external/org.eclipse.xtend.lib-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.14.0.jar

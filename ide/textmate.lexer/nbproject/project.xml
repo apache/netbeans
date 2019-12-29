@@ -193,8 +193,8 @@
                 <package>org.netbeans.modules.textmate.lexer.api</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/joni-2.1.11.jar</runtime-relative-path>
-                <binary-origin>external/joni-2.1.11.jar</binary-origin>
+                <runtime-relative-path>ext/joni-2.1.30.jar</runtime-relative-path>
+                <binary-origin>external/joni-2.1.30.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jcodings-1.0.46.jar</runtime-relative-path>

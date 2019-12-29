@@ -28,15 +28,18 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
@@ -50,6 +53,7 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -210,7 +214,7 @@ public class GradleCliCompletionProvider implements CompletionProvider {
 
         @Override
         public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
-            CompletionUtilities.renderHtml(null, getValue(), null, g, defaultFont, (selected ? Color.white : Color.BLACK), width, height, selected);
+            CompletionUtilities.renderHtml(null, getValue(), null, g, defaultFont, defaultColor, width, height, selected);
         }
 
         @Override
@@ -246,6 +250,10 @@ public class GradleCliCompletionProvider implements CompletionProvider {
     
     private static class GradleTaskCompletionItem extends AbstractGradleCompletionItem {
 
+        @StaticResource
+        private static final String TASK_ICON = "org/netbeans/modules/gradle/resources/gradle-task.gif"; //NOI18N
+        private static final ImageIcon TASK_IMAGEICON = ImageUtilities.loadImageIcon(TASK_ICON, false);
+
         private final GradleTask task;
 
         public GradleTaskCompletionItem(GradleTask task, int startOffset, int caretOffset) {
@@ -277,6 +285,11 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         @Override
         protected String getValue() {
             return task.getName();
+        }
+
+        @Override
+        public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
+            CompletionUtilities.renderHtml(TASK_IMAGEICON, getValue(), null, g, defaultFont, defaultColor, width, height, selected);
         }
 
         private class GradleTaskCompletionDocumentation implements CompletionDocumentation {
@@ -334,12 +347,12 @@ public class GradleCliCompletionProvider implements CompletionProvider {
         
         @Override
         public void render(Graphics g, Font defaultFont, Color defaultColor, Color backgroundColor, int width, int height, boolean selected) {
-            Map attributes = defaultFont.getAttributes();
+            Map<TextAttribute, Object> attributes = new HashMap<>(defaultFont.getAttributes());
             if (!flag.isSupported()) {
                 attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
             }
             Font font = new Font(attributes);
-            CompletionUtilities.renderHtml(null, getValue(), null, g, font, (selected ? Color.white : Color.BLACK), width, height, selected);
+            CompletionUtilities.renderHtml(null, getValue(), null, g, font, defaultColor, width, height, selected);
         }
         
         @Override

@@ -1,10 +1,10 @@
-Name: Eclipse Language Server Protocol Library
+Name: Eclipse Xtend library
 Origin: Eclipse
-Version: 0.7.0
+Version: 2.18.0
 License: EPL-v10
 URL: http://www.eclipse.org/
-Description: Eclipse Language Server Protocol Library
-Files: org.eclipse.lsp4j-0.7.0.jar org.eclipse.lsp4j.generator-0.7.0.jar org.eclipse.lsp4j.jsonrpc-0.7.0.jar
+Description: Eclipse Xtend library
+Files: org.eclipse.xtend.lib-2.18.0.jar org.eclipse.xtend.lib.macro-2.18.0.jar org.eclipse.xtext.xbase.lib-2.18.0.jar
 
 Eclipse Public License - v 1.0
 

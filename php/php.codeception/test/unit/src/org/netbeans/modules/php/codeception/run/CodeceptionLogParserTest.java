@@ -184,6 +184,38 @@ public class CodeceptionLogParserTest extends NbTestCase {
         assertEquals("/home/junichi11/NetBeansProjects/codeception/tests/acceptance/WelcomeCept.php:6", testCase.getStackTrace()[2]);
     }
 
+
+    public void testParseLogWithWarningPhpUnitSuite() throws Exception {
+        Reader reader = createReader("codeception-log-warning-phpunit-suite.xml");
+        TestSessionVo testSession = new TestSessionVo();
+
+        CodeceptionLogParser.parse(reader, testSession);
+        assertEquals(20, testSession.getTime());
+        assertEquals(1, testSession.getTests());
+
+        // test suites & test cases
+        assertEquals(1, testSession.getTestSuites().size());
+
+        // 1st
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("unit", testSuite.getName());
+        assertEquals(null, testSuite.getLocation());
+        assertEquals(20, testSuite.getTime());
+        assertEquals(1, testSuite.getTestCases().size());
+
+        TestCaseVo testCase = testSuite.getTestCases().get(0);
+        assertEquals("ProjectX\\FooTest", testCase.getClassName());
+        assertEquals("testGetBar", testCase.getName());
+        assertEquals("/home/kacer/projectx/tests/unit/FooTest.php", testCase.getFile());
+        assertEquals(6, testCase.getLine());
+        assertEquals(20, testCase.getTime());
+        assertTrue(testCase.isFailure());
+        assertFalse(testCase.isError());
+        assertEquals(TestCase.Status.FAILED, testCase.getStatus());
+        assertEquals(1, testCase.getStackTrace().length);
+        assertEquals("Trying to configure method \"getBarAAA\" which cannot be configured because it does not exist, has not been specified, is final, or is static", testCase.getStackTrace()[0]);
+    }
+
     private Reader createReader(String filename) throws FileNotFoundException {
         return new BufferedReader(new FileReader(new File(getDataDir(), filename)));
     }

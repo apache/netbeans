@@ -166,7 +166,9 @@ final class NetigsoHandle {
         }
         List<Module> clone;
         synchronized (toEnable) {
-            clone = (List<Module>) toEnable.clone();
+            @SuppressWarnings("unchecked")
+            List<Module> cloneTmp = (List<Module>) toEnable.clone();
+            clone = cloneTmp;
             toEnable.clear();
         }
         if (!clone.isEmpty()) {
@@ -196,7 +198,7 @@ final class NetigsoHandle {
         
         ClassLoader frameworkLoader = f.findFrameworkClassLoader();
         
-        Class[] stack = TopSecurityManager.getStack();
+        Class<?>[] stack = TopSecurityManager.getStack();
         for (int i = 0; i < stack.length; i++) {
             ClassLoader sl = stack[i].getClassLoader();
             if (sl == null) {

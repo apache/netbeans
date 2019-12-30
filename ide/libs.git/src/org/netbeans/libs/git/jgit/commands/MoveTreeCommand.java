@@ -25,10 +25,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -72,12 +70,14 @@ abstract class MoveTreeCommand extends GitCommand {
 
     @Override
     protected void run() throws GitException {
+        File sourceFile = tryNormalizeSymlink(this.source);
+        File targetFile = tryNormalizeSymlink(this.target);
         if (!keepSourceTree && !after) {
             rename();
         }
+        sourceFile = tryNormalizeSymlink(sourceFile);
+        targetFile = tryNormalizeSymlink(targetFile);
         Repository repository = getRepository();
-        File sourceFile = this.source;
-        File targetFile = this.target;
         try {
             DirCache cache = repository.lockDirCache();
             try {
@@ -223,5 +223,32 @@ abstract class MoveTreeCommand extends GitCommand {
             }
         }
         return ignored;
+    }
+
+    /**
+     * Files inside symlinked folders need to be resolved to their correct
+     * location.
+     * <p>
+     * If the supplied {@code input} file exists, the "real path" according to
+     * the NIO implementation will be returned. In the case of an error or if
+     * the file does not exist or the input was null, the original object will
+     * be returned.
+     * </p>
+     *
+     * @param input file to normalize
+     * @return the normalized file
+     */
+    private File tryNormalizeSymlink(File input)  {
+        if(input == null) {
+            return input;
+        } else if (input.exists()) {
+            try {
+                return input.toPath().toRealPath().toFile();
+            } catch (IOException ex) {
+                return input;
+            }
+        } else {
+            return input;
+        }
     }
 }

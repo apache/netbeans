@@ -141,7 +141,7 @@ public final class Selenium2Support {
     
     public static ArrayList<FileObject> createTests(TestCreatorProvider.Context context) {
         FileObject[] activatedFOs = context.getActivatedFOs();
-        ArrayList<FileObject> createdFiles = new ArrayList();
+        ArrayList<FileObject> createdFiles = new ArrayList<>();
         if (activatedFOs[0] != null && activatedFOs.length != 0 && activatedFOs[0].isValid()) {
             Project p = FileOwnerQuery.getOwner(activatedFOs[0]);
             Selenium2SupportImpl selenium2Support = Selenium2Support.findSelenium2Support(p);
@@ -154,7 +154,7 @@ public final class Selenium2Support {
                         createdFiles.add(seleniumTestFile);
                     }
                 } else {
-                    ArrayList<FileObject> activatedFOs2 = new ArrayList();
+                    ArrayList<FileObject> activatedFOs2 = new ArrayList<>();
                     for (FileObject fo : activatedFOs) {
                         if (fo.isData()) {
                             if (!activatedFOs2.contains(fo)) {

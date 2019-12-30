@@ -102,6 +102,7 @@ public class EditorSettingsImpl extends EditorSettings {
         pcs.firePropertyChange(new PropertyChangeEvent(this, PROP_MIME_TYPES, old, nue));
     }
 
+    @Override
     public Set<String> getAllMimeTypes () {
         return MimeTypesTracker.get(null, EDITORS_FOLDER).getMimeTypes();
     }
@@ -112,6 +113,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @return set of mimetypes
      */
     // XXX: the API should actually use Collection<String>
+    @Override
     public Set<String> getMimeTypes() {
         return MimeTypesTracker.get(ColoringStorage.ID, EDITORS_FOLDER).getMimeTypes();
     }
@@ -121,6 +123,7 @@ public class EditorSettingsImpl extends EditorSettings {
      *
      * @return name of language for given mime type
      */
+    @Override
     public String getLanguageName (String mimeType) {
         return MimeTypesTracker.get(null, EDITORS_FOLDER).getMimeTypeDisplayName(mimeType);
     }
@@ -233,6 +236,8 @@ public class EditorSettingsImpl extends EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColors(profile) instead.
      */
+    @Deprecated
+    @Override
     public Collection<AttributeSet> getDefaultFontColors(String profile) {
         return getFontColorSettings(new String[0]).getAllFontColors(profile);
     }
@@ -246,6 +251,8 @@ public class EditorSettingsImpl extends EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColorsDefaults(profile) instead.
      */
+    @Deprecated
+    @Override
     public Collection<AttributeSet> getDefaultFontColorDefaults(String profile) {
         return getFontColorSettings(new String[0]).getAllFontColorDefaults(profile);
     }
@@ -258,12 +265,14 @@ public class EditorSettingsImpl extends EditorSettings {
      * 
      * @deprecated Use getFontColorSettings(new String[0]).setAllFontColors(profile, fontColors) instead.
      */
+    @Deprecated
+    @Override
     public void setDefaultFontColors(String profile, Collection<AttributeSet> fontColors) {
         getFontColorSettings(new String[0]).setAllFontColors(profile, fontColors);
     }
     
-    private final Map<String, Map<String, AttributeSet>> highlightings = new HashMap<String, Map<String, AttributeSet>>();
-    private final StorageImpl<String, AttributeSet> highlightingsStorage = new StorageImpl<String, AttributeSet>(new ColoringStorage(ColoringStorage.FAV_HIGHLIGHT), null);
+    private final Map<String, Map<String, AttributeSet>> highlightings = new HashMap<>();
+    private final StorageImpl<String, AttributeSet> highlightingsStorage = new StorageImpl<>(new ColoringStorage(ColoringStorage.FAV_HIGHLIGHT), null);
     
     /**
      * Returns highlighting properties for given profile or null, if the 
@@ -272,6 +281,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param profile a profile name
      * @return highlighting properties for given profile or null
      */
+    @Override
     public Map<String, AttributeSet> getHighlightings(String profile) {
         boolean specialProfile = profile.startsWith("test"); //NOI18N
         profile = FontColorSettingsImpl.get(MimePath.EMPTY).getInternalFontColorProfile(profile);
@@ -306,7 +316,7 @@ public class EditorSettingsImpl extends EditorSettings {
             // the profileColorings. They are normally the same, but when
             // imported from previous version some colorings can be missing.
             // See #119709
-            Map<String, AttributeSet> m = new HashMap<String, AttributeSet>();
+            Map<String, AttributeSet> m = new HashMap<>();
             if (defaultProfileColorings != null) {
                 m.putAll(defaultProfileColorings);
             }
@@ -329,6 +339,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param profile a profile name
      * @return highlighting properties for given profile or null
      */
+    @Override
     public Map<String, AttributeSet> getHighlightingDefaults(String profile) {
         profile = FontColorSettingsImpl.get(MimePath.EMPTY).getInternalFontColorProfile(profile);
         try {
@@ -345,6 +356,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param profile a profile name
      * @param highlighting a highlighting properties to be used
      */
+    @Override
     public void setHighlightings (
 	String  profile,
 	Map<String, AttributeSet> fontColors
@@ -487,6 +499,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @return set of font & colors profiles
      */
     // XXX: the API should actually use Collection<String>
+    @Override
     public Set<String> getKeyMapProfiles () {
 	return ProfilesTracker.get(KeyMapsStorage.ID, EDITORS_FOLDER).getProfilesDisplayNames();
     }
@@ -497,6 +510,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param profile a profile name
      * @return true for user defined profile
      */
+    @Override
     public boolean isCustomKeymapProfile (String profile) {
         ProfilesTracker tracker = ProfilesTracker.get(KeyMapsStorage.ID, EDITORS_FOLDER);
         ProfilesTracker.ProfileDescription pd = tracker.getProfileByDisplayName(profile);
@@ -510,6 +524,7 @@ public class EditorSettingsImpl extends EditorSettings {
      *
      * @return name of current keymap profile
      */
+    @Override
     public String getCurrentKeyMapProfile () {
         if (currentKeyMapProfile == null) {
             FileObject fo = FileUtil.getConfigFile (KEYMAPS_FOLDER);
@@ -578,6 +593,7 @@ public class EditorSettingsImpl extends EditorSettings {
      *
      * @param profile a profile name
      */
+    @Override
     public void setCurrentKeyMapProfile (String keyMapName) {
         /*
         String oldKeyMap = getCurrentKeyMapProfile ();
@@ -608,6 +624,7 @@ public class EditorSettingsImpl extends EditorSettings {
      *
      * @param l a PropertyChangeListener to be registerred
      */
+    @Override
     public void addPropertyChangeListener (
         PropertyChangeListener l
     ) {
@@ -619,6 +636,7 @@ public class EditorSettingsImpl extends EditorSettings {
      *
      * @param l a PropertyChangeListener to be unregisterred
      */
+    @Override
     public void removePropertyChangeListener (
         PropertyChangeListener l
     ) {
@@ -631,6 +649,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param propertyName  The name of the property to listen on.
      * @param l a PropertyChangeListener to be registerred
      */
+    @Override
     public void addPropertyChangeListener (
         String propertyName,
         PropertyChangeListener l
@@ -644,6 +663,7 @@ public class EditorSettingsImpl extends EditorSettings {
      * @param propertyName  The name of the property to listen on.
      * @param l a PropertyChangeListener to be unregisterred
      */
+    @Override
     public void removePropertyChangeListener (
         String propertyName,
         PropertyChangeListener l
@@ -655,11 +675,13 @@ public class EditorSettingsImpl extends EditorSettings {
         
     }
     
+    @Override
     public KeyBindingSettingsFactory getKeyBindingSettings (String[] mimeTypes) {
         mimeTypes = filter(mimeTypes);
         return KeyBindingSettingsImpl.get(Utils.mimeTypes2mimePath(mimeTypes));
     }
 
+    @Override
     public FontColorSettingsFactory getFontColorSettings (String[] mimeTypes) {
         mimeTypes = filter(mimeTypes);
         return FontColorSettingsImpl.get(Utils.mimeTypes2mimePath(mimeTypes));

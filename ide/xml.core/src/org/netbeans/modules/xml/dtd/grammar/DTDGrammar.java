@@ -85,7 +85,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     public Enumeration queryEntities(String prefix) {
         if (entities == null) return org.openide.util.Enumerations.empty();
         
-        LinkedList list = new LinkedList();
+        List list = new LinkedList();
         Iterator it = entities.iterator();
         while ( it.hasNext()) {
             String next = (String) it.next();

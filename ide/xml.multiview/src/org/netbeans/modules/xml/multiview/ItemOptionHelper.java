@@ -47,7 +47,7 @@ public abstract class ItemOptionHelper implements ActionListener, Refreshable {
     public ItemOptionHelper(XmlMultiViewDataSynchronizer synchronizer, ButtonGroup group) {
         
         this.synchronizer = synchronizer;
-        buttons = (AbstractButton[]) Collections.list(group.getElements()).toArray(new AbstractButton[0]);
+        buttons = Collections.list(group.getElements()).toArray(new AbstractButton[0]);
         AbstractButton unmatchedOpt = null;
         for (int i = 0; i < buttons.length; i++) {
             final AbstractButton button = buttons[i];

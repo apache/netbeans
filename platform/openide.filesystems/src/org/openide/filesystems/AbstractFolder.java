@@ -379,17 +379,14 @@ abstract class AbstractFolder extends FileObject {
             return EMPTY_ARRAY;
         }
 
-        Iterator it = map.values().iterator();
-        ArrayList<FileObject> ll = new ArrayList<FileObject>(map.size() + 2);
+        ArrayList<FileObject> ll = new ArrayList<>(map.size() + 2);
 
-        while (it.hasNext()) {
-            Reference r = (Reference) it.next();
-
+        for (Reference<AbstractFolder> r : map.values()) {
             if (r == null) {
                 continue;
             }
 
-            AbstractFolder fo = (AbstractFolder) r.get();
+            AbstractFolder fo = r.get();
 
             if (fo != null /*&& (!fo.isFolder () || fo.map != null)*/    ) {
                 // if the file object exists and either is not folder (then

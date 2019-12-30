@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.parsing;
 import java.io.File;
 import java.net.URL;
+import junit.framework.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
@@ -121,4 +122,15 @@ public class PerfJavacIntefaceGCTest extends NbTestCase {
 //        
 //    }
     
+    public static Test suite() {
+        return new NoopClass("noop");
+    }
+    public static class NoopClass extends NbTestCase {
+
+        public NoopClass(String name) {
+            super(name);
+        }
+
+        public void noop() {}
+    }
 }

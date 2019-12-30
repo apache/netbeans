@@ -548,7 +548,7 @@ public class KeymapModel {
             public void run() {
                 KL k = keymapData;
                 if (k != null) {
-                    Map newMap = new HashMap<String, Map<ShortcutAction,Set<String>>>();
+                    Map<String, Map<ShortcutAction,Set<String>>> newMap = new HashMap<>();
                     newMap.putAll(k.keyMaps);
                     newMap.put(profile, m);
                     k.keyMaps = newMap;
@@ -655,7 +655,7 @@ public class KeymapModel {
     static Collection<ShortcutAction> filterSameScope(Set<ShortcutAction> actions, ShortcutAction anchor) {
         KeymapManager mgr = findOriginator(anchor);
         if (mgr == null) {
-            return Collections.EMPTY_SET;
+            return Collections.emptyList();
         }
         Collection<ShortcutAction> sameActions = null;
         
@@ -668,7 +668,7 @@ public class KeymapModel {
                 sameActions.add(sa);
             }
         }
-        return sameActions == null ? Collections.EMPTY_LIST : sameActions;
+        return sameActions == null ? Collections.emptyList() : sameActions;
     }
 
     /**

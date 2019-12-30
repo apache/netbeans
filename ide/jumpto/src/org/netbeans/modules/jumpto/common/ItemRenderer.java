@@ -89,7 +89,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
 
         @NonNull
         public ItemRenderer<T> build() {
-            return new ItemRenderer(
+            return new ItemRenderer<T>(
                     list,
                     caseSensitive,
                     colorPrefered,
@@ -114,7 +114,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
             @NonNull final JList<T> list,
             @NonNull final ButtonModel caseSensitive,
             @NonNull final Convertor<T> convertor) {
-            return new Builder(list, caseSensitive, convertor);
+            return new Builder<T>(list, caseSensitive, convertor);
         }
     }
 

@@ -70,10 +70,9 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
         Set<String> patterns;
         if (options.getBoolean("UseStepFilters", true)) {
             patterns = (Set<String>) classFiltersProperties.getCollection (
-                    "enabled",
-                    Collections.EMPTY_SET);
+                    "enabled", Collections.emptySet());
         } else {
-            patterns = Collections.EMPTY_SET;
+            patterns = Collections.emptySet();
         }
         synchronized (filter) {
             filter.clear();

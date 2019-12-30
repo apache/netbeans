@@ -339,7 +339,7 @@ public final class LayeredDocumentIndex implements DocumentIndex2.Transactional 
         @Override
         public E next() {
             //xxx: Cast to workaround javac 1.6.0_29 bug
-            return (E) (base.hasNext() ? base.next() : overlay.next());
+            return (base.hasNext() ? base.next() : overlay.next());
         }
 
         @Override

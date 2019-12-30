@@ -27,6 +27,10 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.core.api.multiview.MultiViews;
+import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.cookies.CloseCookie;
 import org.openide.cookies.EditCookie;
 import org.openide.cookies.EditorCookie;
@@ -51,22 +55,132 @@ import org.openide.windows.CloneableOpenSupport;
     "LBL_GradleFile_LOADER=Gradle Script",
     "CTL_SourceTabCaption=&Source"
 })
-@MIMEResolver.ExtensionRegistration(
-        displayName = "#LBL_GradleFile_LOADER",
-        mimeType = GradleDataObject.MIME_TYPE,
-        extension = {"gradle"},
-        position = 290
+@MIMEResolver.Registration(
+        displayName="#LBL_GradleFile_LOADER",
+        resource="gradle-mime-resolver.xml",
+        position = 300
 )
-@DataObject.Registration(
+@ActionReferences({
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            position = 100,
+            separatorAfter = 300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            position = 400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            position = 500,
+            separatorAfter = 600
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            position = 700
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            position = 800,
+            separatorAfter = 900
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            position = 1000,
+            separatorAfter = 1100
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            position = 1200,
+            separatorAfter = 1300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-kotlin/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            position = 1500
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            position = 100,
+            separatorAfter = 300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            position = 400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            position = 500,
+            separatorAfter = 600
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            position = 700
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            position = 800,
+            separatorAfter = 900
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            position = 1000,
+            separatorAfter = 1100
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            position = 1200,
+            separatorAfter = 1300
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-gradle+x-groovy/Actions",
+            id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            position = 1500
+    )
+})
+
+@DataObject.Registrations({
+        @DataObject.Registration(
         mimeType = GradleDataObject.MIME_TYPE,
         iconBase = "org/netbeans/modules/gradle/resources/gradle.png",
         displayName = "#LBL_GradleFile_LOADER",
         position = 300
-)
+    ),
+    @DataObject.Registration(
+        mimeType = GradleDataObject.KOTLIN_MIME_TYPE,
+        iconBase = "org/netbeans/modules/gradle/resources/gradle.png",
+        displayName = "#LBL_GradleFile_LOADER",
+        position = 290
+    )
+})
 public class GradleDataObject extends MultiDataObject {
 
     public static final String MIME_TYPE = "text/x-gradle+x-groovy"; //NOI18N
-    private static final String BUILD_GRADLE = "build.gradle";       //NOI18N
+    public static final String KOTLIN_MIME_TYPE = "text/x-gradle+x-kotlin"; //NOI18N
 
     public GradleDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
@@ -161,7 +275,7 @@ public class GradleDataObject extends MultiDataObject {
     static String getFileOrProjectName(FileObject primaryFile) {
         String ret = primaryFile.getNameExt();
 
-        if (BUILD_GRADLE.equals(ret)) {
+        if (GradleFiles.BUILD_FILE_NAME.equals(ret) || GradleFiles.BUILD_FILE_NAME_KTS.equals(ret)) {
             try {
                 Project prj = ProjectManager.getDefault().findProject(primaryFile.getParent());
                 if (prj != null) {

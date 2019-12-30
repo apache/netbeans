@@ -221,7 +221,7 @@ public class ThreadsCache implements Executor {
     }
 
     public synchronized List<ThreadReference> getAllThreads() {
-        return Collections.unmodifiableList(new ArrayList(allThreads));
+        return Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(allThreads));
     }
     
     public synchronized List<ThreadGroupReference> getTopLevelThreadGroups() {
@@ -235,7 +235,7 @@ public class ThreadsCache implements Executor {
         List<ThreadGroupReference> topGroups = groupMap.get(null);
         if (topGroups == null) {
             if (vm == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             topGroups = new ArrayList<>(VirtualMachineWrapper.topLevelThreadGroups0(vm));
             groupMap.put(null, topGroups);
@@ -245,7 +245,7 @@ public class ThreadsCache implements Executor {
                 }
             }
         }
-        return Collections.unmodifiableList(new ArrayList(topGroups));
+        return Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(topGroups));
     }
     
     public synchronized List<ThreadReference> getThreads(ThreadGroupReference group) {
@@ -262,7 +262,7 @@ public class ThreadsCache implements Executor {
         if (threads == null) {
             threads = Collections.emptyList();
         } else {
-            threads = Collections.unmodifiableList(new ArrayList(threads));
+            threads = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(threads));
         }
         return threads;
     }
@@ -285,7 +285,7 @@ public class ThreadsCache implements Executor {
         if (groups == null) {
             groups = Collections.emptyList();
         } else {
-            groups = Collections.unmodifiableList(new ArrayList(groups));
+            groups = Collections.<List<ThreadReference>>unmodifiableList(new ArrayList(groups));
         }
         return groups;
     }
@@ -321,7 +321,7 @@ public class ThreadsCache implements Executor {
     
     private List<ThreadGroupReference> addGroups(ThreadGroupReference group) throws ObjectCollectedExceptionWrapper {
         if (threadMap != null && !threadMap.containsKey(group)) {
-            List<ThreadReference> threads = new ArrayList();
+            List<ThreadReference> threads = new ArrayList<>();
             threadMap.put(group, threads);
         }
         if (groupMap == null) {

@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.swing.event.ChangeListener;
 import static junit.framework.TestCase.assertEquals;
@@ -108,6 +109,12 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
     }
 
     public void testSwitchExpression() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
 
         String code = "package test; \n"
                 + "public class Test {\n"
@@ -140,7 +147,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
 
         rewriteSwitchExpression();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
 
     }

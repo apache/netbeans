@@ -887,7 +887,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             if (m == null) {
                 return Enumerations.empty();
             } else {
-                HashSet s = new HashSet(m.keySet());
+                HashSet<String> s = new HashSet<>(m.keySet());
 
                 return Collections.enumeration(s);
             }

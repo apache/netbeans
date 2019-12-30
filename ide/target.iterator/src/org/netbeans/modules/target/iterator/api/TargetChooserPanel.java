@@ -213,11 +213,11 @@ public final class TargetChooserPanel<T> implements WizardDescriptor.Panel {
     }
 
     private void loadProvider( ) {
-        Collection<? extends TargetPanelProvider> providers = 
-            Lookup.getDefault().lookupAll( TargetPanelProvider.class );
-        for (TargetPanelProvider targetPanelProvider : providers) {
-            if ( targetPanelProvider.isApplicable( myId)){
-                myProvider = (TargetPanelProvider<T>)targetPanelProvider;
+        Collection<? extends TargetPanelProvider<T>> providers
+                = (Collection<? extends TargetPanelProvider<T>>) Lookup.getDefault().lookupAll(TargetPanelProvider.class);
+        for (TargetPanelProvider<T> targetPanelProvider : providers) {
+            if (targetPanelProvider.isApplicable(myId)) {
+                myProvider = targetPanelProvider;
                 break;
             }
         }

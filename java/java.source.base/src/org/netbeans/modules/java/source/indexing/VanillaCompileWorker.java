@@ -88,6 +88,7 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -305,6 +306,12 @@ final class VanillaCompileWorker extends CompileWorker {
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             final JavacTaskImpl jtFin = jt;
+            ((NBJavaCompiler) NBJavaCompiler.instance(jt.getContext())).setDesugarCallback(env -> {
+                if (env == null) {
+                    return;
+                }
+                dropMethodsAndErrors(jtFin.getContext(), env.toplevel);
+            });
             final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
                 @Override
                 public void run() throws IOException {
@@ -547,15 +554,23 @@ final class VanillaCompileWorker extends CompileWorker {
                     return null;
                 }
                 Type.ClassType ct = (Type.ClassType) csym.type;
-                ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
-                ct.allparams_field = error2Object(ct.allparams_field);
-                ct.interfaces_field = error2Object(ct.interfaces_field);
-                ct.typarams_field = error2Object(ct.typarams_field);
-                ct.supertype_field = error2Object(ct.supertype_field);
+                if (csym == syms.objectType.tsym) {
+                    ct.all_interfaces_field = com.sun.tools.javac.util.List.nil();
+                    ct.allparams_field = com.sun.tools.javac.util.List.nil();
+                    ct.interfaces_field = com.sun.tools.javac.util.List.nil();
+                    ct.typarams_field = com.sun.tools.javac.util.List.nil();
+                    ct.supertype_field = Type.noType;
+                } else {
+                    ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
+                    ct.allparams_field = error2Object(ct.allparams_field);
+                    ct.interfaces_field = error2Object(ct.interfaces_field);
+                    ct.typarams_field = error2Object(ct.typarams_field);
+                    ct.supertype_field = error2Object(ct.supertype_field);
+                }
                 clearAnnotations(clazz.sym.getMetadata());
                 super.visitClass(node, p);
                 for (JCTree def : clazz.defs) {
-                    if (def.hasTag(JCTree.Tag.ERRONEOUS)) {
+                    if (def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }
@@ -618,7 +633,16 @@ final class VanillaCompileWorker extends CompileWorker {
                         clearTypeVar((Type.TypeVar) t);
                         break;
                     }
+                    case ARRAY: {
+                        Type.ArrayType at = (Type.ArrayType) t;
+                        Type component = error2Object(at.elemtype);
+                        if (component != at.elemtype) {
+                            at.elemtype = types.makeArrayType(component);
+                        }
+                        break;
+                    }
                 }
+
                 return t;
             }
 

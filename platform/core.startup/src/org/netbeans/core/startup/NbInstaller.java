@@ -602,9 +602,9 @@ final class NbInstaller extends ModuleInstaller {
                     continue;
                 }
             }
-            Enumeration e = m.findResources("META-INF/generated-layer.xml"); // NOI18N
+            Enumeration<URL> e = m.findResources("META-INF/generated-layer.xml"); // NOI18N
             while (e.hasMoreElements()) {
-                URL u = (URL)e.nextElement();
+                URL u = e.nextElement();
                 theseurls.add(u);
             }
         }

@@ -473,7 +473,7 @@ public class TreeElementAttributeListCustomizer extends JPanel implements Custom
          */
         public void addRow () {
             
-            TreeAttribute attr = (TreeAttribute) Lib.createAttributeDialog(true);
+            TreeAttribute attr = Lib.createAttributeDialog(true);
             if (attr != null) {
                 boolean toSet = true;
                 TreeAttribute oldAttribute = (TreeAttribute) peer.get (attr.getTreeName());

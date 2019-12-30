@@ -356,7 +356,7 @@ public class CheckoutTest extends AbstractGitTestCase {
         WindowCacheConfig cfg = new WindowCacheConfig();
         cfg.setStreamFileThreshold((int) large.length() - 1);
         cfg.install();
-        DirCacheCheckout.checkoutEntry(repository, large, e);
+        DirCacheCheckout.checkoutEntry(repository, e, repository.newObjectReader());
     }
     
     public void testCheckoutBranch () throws Exception {
@@ -529,7 +529,6 @@ public class CheckoutTest extends AbstractGitTestCase {
             assertTrue(branches.get(BRANCH).isActive());
         }
 
-        checkJGitFix(Constants.MASTER, file);
         client.reset(BRANCH, GitClient.ResetType.HARD, NULL_PROGRESS_MONITOR);
         write(file, "branch change");
         
@@ -541,25 +540,6 @@ public class CheckoutTest extends AbstractGitTestCase {
         Map<File, GitStatus> status = client.getStatus(files, NULL_PROGRESS_MONITOR);
         assertTrue(status.get(file).isConflict());
         assertEquals("<<<<<<< OURS\nbranch change\n=======\ninitial\n>>>>>>> THEIRS", read(file));
-    }
-    
-    private void checkJGitFix (String branch, File file) throws Exception {
-        ObjectId headTree = null;
-        try {
-            headTree = Utils.findCommit(repository, Constants.HEAD).getTree();
-        } catch (GitException.MissingObjectException ex) { }
-
-        DirCache cache = repository.lockDirCache();
-        RevCommit commit;
-        commit = Utils.findCommit(repository, branch);
-        DirCacheCheckout dco = new DirCacheCheckout(repository, headTree, cache, commit.getTree());
-        dco.setFailOnConflict(false);
-        dco.checkout();
-        if (file.exists()) {
-            // and do not forget to remove WA in checkout command when JGit is fixed.
-            fail("Hey, JGit is fixed, why don't you fix me as well?");
-        }
-        cache.unlock();
     }
 
     public void testCheckoutNoHeadYet () throws Exception {
@@ -658,17 +638,7 @@ public class CheckoutTest extends AbstractGitTestCase {
         statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
         assertEquals(1, statuses.size());
         assertStatus(statuses, workDir, f, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
-        
-        //jgit test, when starting to fail, remove the whole block and the WA
-        checkoutJGitTestNestedAddedRoot(repository, "master");
-        assertFalse(nested.isDirectory()); // when starting to fail, remove the workaround in CheckoutRevisionCommand
-        client.checkoutRevision(BRANCH, true, NULL_PROGRESS_MONITOR);
-        client.checkout(new File[] { nested }, "HEAD", true, NULL_PROGRESS_MONITOR);
-        assertFalse(nested.isDirectory());
-        statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
-        assertEquals(1, statuses.size());
-        assertStatus(statuses, workDir, f, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
-        
+
         // ours
         assertFalse(nested.isDirectory());
         client.checkoutRevision("master", true, NULL_PROGRESS_MONITOR);

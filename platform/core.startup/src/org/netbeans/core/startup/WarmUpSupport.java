@@ -70,8 +70,15 @@ final class WarmUpSupport implements Runnable {
         for (Lookup.Item<Runnable> warmer : warmObjects) {
             try {
                 Runnable r = warmer.getInstance();
-                r.run();
-                StartLog.logProgress("Warmup task executed " + warmer.getId()); // NOI18N
+                if (r == null) {
+                  err.log(Level.WARNING,
+                      "Got null warmup task from lookup: id={0}, displayName={1}, class={2}, type={3}",
+                      new Object[] {
+                      warmer.getId(), warmer.getDisplayName(), warmer.getClass(), warmer.getType() });
+                } else {
+                  r.run();
+                  StartLog.logProgress("Warmup task executed " + warmer.getId()); // NOI18N
+                }
             } catch (Exception ex) {
                 Logger.getLogger(WarmUpSupport.class.getName()).log(Level.WARNING, null, ex);
             }

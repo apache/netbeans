@@ -67,7 +67,7 @@
   <property name="test.dist.dir" location="${nb.build.dir}/testdist"/>
   
   <property name="binaries.cache" location="${user.home}/.hgexternalcache"/>
-  <property name="binaries.server" value="http://netbeans.osuosl.org/binaries/"/>
+  <property name="binaries.server" value="https://netbeans.osuosl.org/binaries/"/>
 
   <target name="-load-build-properties">
     <property file="${nb_all}/nbbuild/build.properties"/>

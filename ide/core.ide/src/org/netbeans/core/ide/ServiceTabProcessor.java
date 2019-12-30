@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.core.ide.ServicesTabNodeRegistration;
@@ -53,7 +51,6 @@ import org.openide.util.lookup.ServiceProvider;
     showInFileChooser={"#PlainResolver.FileChooserName", "#ResourceFiles"}
 )
 @ServiceProvider(service=Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ServiceTabProcessor extends LayerGeneratingProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {

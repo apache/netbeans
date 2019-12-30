@@ -20,6 +20,7 @@
 package org.netbeans.modules.maven.model;
 
 import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
+import org.netbeans.modules.xml.xam.dom.DocumentComponent;
 
 /**
  * A single model modifying operation unit. Used by the {@link org.netbeans.modules.maven.model.Utilities}
@@ -30,7 +31,7 @@ import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
  *
  * @author mkleint
  */
-public interface ModelOperation<T extends AbstractDocumentModel> {
+public interface ModelOperation<T extends AbstractDocumentModel<? extends DocumentComponent<?>>> {
 
     /**
      * perform modifications on the model passed as parameter.

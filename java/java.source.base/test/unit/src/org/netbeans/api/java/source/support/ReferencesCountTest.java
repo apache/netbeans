@@ -43,6 +43,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.java.source.usages.DocumentUtil;
@@ -288,7 +289,7 @@ public class ReferencesCountTest extends NbTestCase {
         private ClassPath getBootPath() {
             ClassPath res =  bootPath.get();
             if (res == null) {
-                res = ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));  //NOI18N
+                res = BootClassPathUtil.getBootClassPath();  //NOI18N
                 if (!bootPath.compareAndSet(null, res)) {
                     res = bootPath.get();
                 }

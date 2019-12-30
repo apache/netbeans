@@ -130,7 +130,7 @@ public enum TaskEvent {
      * conversion.
      */
     private static final Map<String, TaskEvent> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
 
     // Initialize backward String conversion <code>Map</code>.
     static {

@@ -1526,7 +1526,7 @@ public final class WebProject implements Project {
             if (isArchive) {
                 return TYPES_ARCHIVE;
             } else if (projectCap.isEjb31LiteSupported()) {
-                Set<String> set = new HashSet(Arrays.asList(TYPES));
+                Set<String> set = new HashSet<>(Arrays.asList(TYPES));
                 if (projectCap.isEjb31Supported() || serverSupportsEJB31) {
                     set.addAll(Arrays.asList(TYPES_EJB31));
                 }

@@ -73,7 +73,7 @@ public class JsWithObjectImpl extends JsObjectImpl implements JsWith {
     
     @Override
     public Collection<JsWith> getInnerWiths() {
-        Collection<JsWith> result = innerWith.isEmpty() ? Collections.EMPTY_LIST : new ArrayList<JsWith>(innerWith);
+        Collection<JsWith> result = innerWith.isEmpty() ? Collections.emptyList(): new ArrayList<JsWith>(innerWith);
         return result;
     }
     

@@ -190,7 +190,7 @@ public class AddTest extends AbstractGitTestCase {
         Monitor m = new Monitor();
         client.addNotificationListener(m);
         client.add(new File[] { subfolder1 }, m);
-        assertEquals(new HashSet<File>(Arrays.asList(file1_1_1, file1_1_2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1_1_1, file1_1_2)), m.notifiedFiles);
         assertDirCacheSize(2);
         assertDirCacheEntry(Arrays.asList(file1_1_1, file1_1_2));
         assertNullDirCacheEntry(Arrays.asList(file, file1_1, file1_2, file2_1, file2_2, file2_1_1, file2_1_2));
@@ -198,7 +198,7 @@ public class AddTest extends AbstractGitTestCase {
         m = new Monitor();
         client.addNotificationListener(m);
         client.add(new File[] { folder1 }, m);
-        assertEquals(new HashSet<File>(Arrays.asList(file1_1, file1_2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1_1, file1_2)), m.notifiedFiles);
         assertDirCacheSize(4);
         assertDirCacheEntry(Arrays.asList(file1_1, file1_2, file1_1_1, file1_1_2));
         assertNullDirCacheEntry(Arrays.asList(file, file2_1, file2_1_1, file2_1_2));
@@ -206,7 +206,7 @@ public class AddTest extends AbstractGitTestCase {
         m = new Monitor();
         client.addNotificationListener(m);
         client.add(new File[] { folder2 }, m);
-        assertEquals(new HashSet<File>(Arrays.asList(file2_1, file2_2, file2_1_1, file2_1_2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file2_1, file2_2, file2_1_1, file2_1_2)), m.notifiedFiles);
         assertDirCacheSize(8);
         assertDirCacheEntry(Arrays.asList(file1_1, file1_2, file1_1_1, file1_1_2, file2_1, file2_2, file2_1_1, file2_1_2));
     }
@@ -233,7 +233,7 @@ public class AddTest extends AbstractGitTestCase {
         Monitor m = new Monitor();
         client.addNotificationListener(m);
         client.add(new File[] { folder1, folder2 }, m);
-        assertEquals(new HashSet<File>(Arrays.asList(file1_2)), m.notifiedFiles);
+        assertEquals(new HashSet<>(Arrays.asList(file1_2)), m.notifiedFiles);
         assertDirCacheSize(1);
         assertDirCacheEntry(Arrays.asList(file1_2));
         assertNullDirCacheEntry(Arrays.asList(file1_1, file2_1, file2_2));
@@ -421,15 +421,13 @@ public class AddTest extends AbstractGitTestCase {
             String path = treeWalk.getPathString();
             assertEquals("f", path);
             WorkingTreeIterator fit = treeWalk.getTree(0, WorkingTreeIterator.class);
-            InputStream in = fit.openEntryStream();
-            try {
+            try (InputStream in = fit.openEntryStream()) {
                 inserter.insert(Constants.OBJ_BLOB, fit.getEntryLength(), in);
                 fail("this should fail, remove the work around");
             } catch (EOFException ex) {
-                assertEquals("Input did not match supplied length. 10000 bytes are missing.", ex.getMessage());
+                assertEquals("Input did not match supplied length. 10.000 bytes are missing.", ex.getMessage());
             } finally {
-                in.close();
-                inserter.release();
+                inserter.close();
             }
             break;
         }
@@ -528,26 +526,26 @@ public class AddTest extends AbstractGitTestCase {
         assertEquals(FileMode.SYMLINK, e.getFileMode());
         ObjectId id = e.getObjectId();
         assertTrue((ts - 1000) < e.getLastModified() && (ts + 1000) > e.getLastModified());
-        ObjectReader reader = repository.getObjectDatabase().newReader();
-        assertTrue(reader.has(e.getObjectId()));
-        byte[] bytes = reader.open(e.getObjectId()).getBytes();
-        assertEquals(path, RawParseUtils.decode(bytes));
-        
-        // now with internal
-        File link2 = new File(workDir, "link2");
-        Files.createSymbolicLink(Paths.get(link2.getAbsolutePath()), Paths.get(path));
-        ts = Files.readAttributes(Paths.get(link2.getAbsolutePath()), BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS).lastModifiedTime().toMillis();
-        getClient(workDir).add(new File[] { link2 }, NULL_PROGRESS_MONITOR);
-        
-        DirCacheEntry e2 = repository.readDirCache().getEntry(link2.getName());
-        assertEquals(FileMode.SYMLINK, e2.getFileMode());
-        assertEquals(id, e2.getObjectId());
-        assertEquals(0, e2.getLength());
-        assertTrue((ts - 1000) < e2.getLastModified() && (ts + 1000) > e2.getLastModified());
-        assertTrue(reader.has(e2.getObjectId()));
-        bytes = reader.open(e2.getObjectId()).getBytes();
-        assertEquals(path, RawParseUtils.decode(bytes));
-        reader.release();
+        try(ObjectReader reader = repository.getObjectDatabase().newReader()) {
+            assertTrue(reader.has(e.getObjectId()));
+            byte[] bytes = reader.open(e.getObjectId()).getBytes();
+            assertEquals(path, RawParseUtils.decode(bytes));
+
+            // now with internal
+            File link2 = new File(workDir, "link2");
+            Files.createSymbolicLink(Paths.get(link2.getAbsolutePath()), Paths.get(path));
+            ts = Files.readAttributes(Paths.get(link2.getAbsolutePath()), BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS).lastModifiedTime().toMillis();
+            getClient(workDir).add(new File[]{link2}, NULL_PROGRESS_MONITOR);
+
+            DirCacheEntry e2 = repository.readDirCache().getEntry(link2.getName());
+            assertEquals(FileMode.SYMLINK, e2.getFileMode());
+            assertEquals(id, e2.getObjectId());
+            assertEquals(0, e2.getLength());
+            assertTrue((ts - 1000) < e2.getLastModified() && (ts + 1000) > e2.getLastModified());
+            assertTrue(reader.has(e2.getObjectId()));
+            bytes = reader.open(e2.getObjectId()).getBytes();
+            assertEquals(path, RawParseUtils.decode(bytes));
+        }
     }
     
     public void testAddMissingSymlink () throws Exception {
@@ -564,11 +562,11 @@ public class AddTest extends AbstractGitTestCase {
         DirCacheEntry e = repository.readDirCache().getEntry(link.getName());
         assertEquals(FileMode.SYMLINK, e.getFileMode());
         assertEquals(0, e.getLength());
-        ObjectReader reader = repository.getObjectDatabase().newReader();
-        assertTrue(reader.has(e.getObjectId()));
-        byte[] bytes = reader.open(e.getObjectId()).getBytes();
-        assertEquals(path, RawParseUtils.decode(bytes));
-        reader.release();
+        try (ObjectReader reader = repository.getObjectDatabase().newReader()) {
+            assertTrue(reader.has(e.getObjectId()));
+            byte[] bytes = reader.open(e.getObjectId()).getBytes();
+            assertEquals(path, RawParseUtils.decode(bytes));
+        }
     }
     
     public void testAdd_243092 () throws Exception {
@@ -605,11 +603,8 @@ public class AddTest extends AbstractGitTestCase {
             DirCacheEntry e = cache.getEntry(relativePath);
             assertNotNull(e);
             assertEquals(relativePath, e.getPathString());
-            InputStream in = new FileInputStream(f);
-            try {
+            try (InputStream in = new FileInputStream(f)) {
                 assertNotSame(e.getObjectId(), repository.newObjectInserter().idFor(Constants.OBJ_BLOB, f.length(), in));
-            } finally {
-                in.close();
             }
         }
         cache.unlock();

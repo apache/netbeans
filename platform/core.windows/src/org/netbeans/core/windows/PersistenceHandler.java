@@ -131,7 +131,7 @@ final public class PersistenceHandler implements PersistenceObserver {
             wm.setRecentViewList(wmc.tcIdViewList);
         } else {
             //No recent view list is saved, fill it by opened TopComponents
-            List<String> idList = new ArrayList();
+            List<String> idList = new ArrayList<>();
             for (int i = 0; i < wmc.modes.length; i++) {
                 ModeConfig mc = wmc.modes[i];
                 for (int j = 0; j < mc.tcRefConfigs.length; j++) {

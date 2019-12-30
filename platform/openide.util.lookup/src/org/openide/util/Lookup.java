@@ -271,14 +271,8 @@ public abstract class Lookup {
      * Find all instances corresponding to a given class.
      * Equivalent to calling {@link #lookupResult} and asking for {@link Lookup.Result#allInstances} but slightly more convenient.
      * Subclasses may override this method to produce the same semantics more efficiently.
-     * <div class="nonnormative">
      * <p>Example usage:</p>
-     * <pre>
-     * for (MyService svc : Lookup.getDefault().lookupAll(MyService.class)) {
-     *     svc.useMe();
-     * }
-     * </pre>
-     * </div>
+     * {@codesnippet org.openide.util.lookup.SampleLookupUsages#iterate}
      * @param clazz the supertype of the result
      * @return all currently available instances of that type
      * @since org.openide.util 6.10
@@ -474,8 +468,20 @@ public abstract class Lookup {
          */
         public abstract void removeLookupListener(LookupListener l);
 
-        /** Get all instances in the result. The return value type
-         * should be List instead of Collection, but it is too late to change it.
+        /** Get all instances in the result. The return value is an
+         * unmodifiable list (hence the type
+         * should be {@link List} as the order matters, but the {@link Collection}
+         * is kept for compatibility reasons) of all instances present in
+         * the {@link Result} right now that will never change its content.
+         * <p></p>
+         * <div class="nonnormative">
+         * While the returned collection never changes its content, some
+         * implementation like {@link ProxyLookup} may
+         * <a href="@TOP@/apichanges.html#lazy.proxy.lookup">compute the content
+         * lazily</a>. At least
+         * <a href="https://github.com/apache/netbeans/pull/1739">once</a>
+         * such behavior resulted in a deadlock.
+         * </div>
          * @return unmodifiable collection of all instances that will never change its content
          */
         public abstract Collection<? extends T> allInstances();
@@ -493,9 +499,20 @@ public abstract class Lookup {
         }
 
         /** Get all registered items.
-         * This should include all pairs of instances together
-         * with their classes, IDs, and so on. The return value type
-         * should be List instead of Collection, but it is too late to change it.
+         * This includes all pairs of instances together
+         * with their classes, {@link Item#getId() IDs}, and so on.
+         * The return value is an unmodifiable list (hence the type
+         * should be {@link List} as the order matters, but the {@link Collection}
+         * is kept for compatibility reasons) of all {@link Item items} present in
+         * the {@link Result} right now that will never change its content.
+         * <p></p>
+         * <div class="nonnormative">
+         * While the returned collection never changes its content, some
+         * implementation like {@link ProxyLookup} may
+         * <a href="@TOP@/apichanges.html#lazy.proxy.lookup">compute the content
+         * lazily</a>.
+         * </div>
+         *
          * @return unmodifiable collection of {@link Lookup.Item} that will never change its content
          *
          * @since 1.8

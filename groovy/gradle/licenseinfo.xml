@@ -21,40 +21,40 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-large-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/refresh.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/warning-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/empty.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/module-artifact_dark.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-task.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/libraries-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/refreshdebug.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/restart.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/javaseProjectIcon.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/stop.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/webProjectIcon_dark.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/webProjectIcon.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle_dark.png</file>
         <file>src/org/netbeans/modules/gradle/resources/buildscripts-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/module-artifact.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/options.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/sources-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/application-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/javaseProjectIcon_dark.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/javadoc-badge.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/libraries.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/cofee.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/gradle.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/globe.png</file>
-        <file>src/org/netbeans/modules/gradle/resources/wait.gif</file>
         <file>src/org/netbeans/modules/gradle/resources/defaultFolder.gif</file>
         <file>src/org/netbeans/modules/gradle/resources/defaultFolderOpen.gif</file>
+        <file>src/org/netbeans/modules/gradle/resources/empty.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/javadoc-badge.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/libraries-badge.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/libraries.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/module-artifact.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/module-artifact_dark.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/options.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/refresh.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/refreshdebug.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/restart.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/sources-badge.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/gradle/resources/warning-badge.png</file>
         <file>src/org/netbeans/modules/gradle/api/doc-files/gradle-classes.dia</file>
         <file>src/org/netbeans/modules/gradle/api/doc-files/gradle-classes.png</file>
         <file>src/org/netbeans/modules/gradle/api/doc-files/gradle-quality.dia</file>
         <file>src/org/netbeans/modules/gradle/api/doc-files/gradle-quality.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/gradle/resources/gradle-badge.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/gradle-badge_dark.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/gradle-large-badge.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/gradle-large-badge_dark.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/gradle.png</file>
+        <file>src/org/netbeans/modules/gradle/resources/gradle_dark.png</file>
+        <license ref="Gradle-icon" />
+        <comment type="COMMENT_UNSUPPORTED">
+            Icons are based based on artwork available on the https://gradle.org/brand/ .
+            More specificly: https://gradle.com/brand_assets/Gradle_Elephant_Icon_Assets.zip
+        </comment>
     </fileset>
 </licenseinfo>

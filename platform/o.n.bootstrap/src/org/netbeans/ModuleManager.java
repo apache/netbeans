@@ -299,7 +299,7 @@ public final class ModuleManager extends Modules {
         return completeLookup;
     }
     // Access from ChangeFirer:
-    final void fireModulesCreatedDeleted(Set created, Set deleted) {
+    final void fireModulesCreatedDeleted(Set<Module> created, Set<Module> deleted) {
         if (Util.err.isLoggable(Level.FINE)) {
             Util.err.fine("lookup created: " + created + " deleted: " + deleted);
         }
@@ -311,7 +311,7 @@ public final class ModuleManager extends Modules {
      * @see #PROP_MODULES
      */
     public Set<Module> getModules() {
-        return new HashSet<Module>(modules);
+        return new HashSet<>(modules);
     }
 
     final int getModuleCount() {
@@ -731,7 +731,7 @@ public final class ModuleManager extends Modules {
         }
 
         @Override
-        protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             ProxyClassLoader priviledged = null;
             NetigsoLoader osgi = null;
             if (!name.startsWith("java.")) { // NOI18N
@@ -896,7 +896,7 @@ public final class ModuleManager extends Modules {
         return installer.refineProvides (m);
     }
     /** Used by Module to communicate with the ModuleInstaller re. classloader. */
-    public ClassLoader refineClassLoader(Module m, List parents) {
+    public ClassLoader refineClassLoader(Module m, List<? extends ClassLoader> parents) {
         // #27853:
         installer.refineClassLoader(m, parents);
         // if fragment, integrate into the host's classloader. Should be called under mutex()

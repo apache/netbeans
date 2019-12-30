@@ -53,15 +53,15 @@ public class JavaCustomIndexerTest extends NbTestCase {
     public void testCopyTheClassInsteadOfCompiling() throws Exception {
         FileObject classesRoot = FileUtil.createFolder(src.getParent(), "mockclasses");
 
-        FileObject testFile = FileUtil.createData(src, "test2/NoCompileTest.java");
+        FileObject testFile = FileUtil.createData(src, "test2/NoCompileTestData.java");
         TestUtilities.copyStringToFile(testFile, "package test2; public class Test { error!; }");
 
-        FileObject testClass = FileUtil.createData(classesRoot, "test2/NoCompileTest.class");
+        FileObject testClass = FileUtil.createData(classesRoot, "test2/NoCompileTestData.class");
         try (
             OutputStream os = testClass.getOutputStream();
-            InputStream is = getClass().getResourceAsStream("/test2/NoCompileTest.class")
+            InputStream is = getClass().getResourceAsStream("/test2/NoCompileTestData.class")
         ) {
-            assertNotNull("test2/NoCompileTest found", is);
+            assertNotNull("test2/NoCompileTestData found", is);
             FileUtil.copy(is, os);
         }
 

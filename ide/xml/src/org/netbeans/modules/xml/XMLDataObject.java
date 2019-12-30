@@ -159,7 +159,7 @@ public final class XMLDataObject extends org.openide.loaders.XMLDataObject
     protected Node createNodeDelegate () {
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("--> XMLDataObject.createNodeDelegate: this = " + this);
 
-        DataNodeCreator dataNodeCreator = (DataNodeCreator) Lookup.getDefault().lookup (DataNodeCreator.class);
+        DataNodeCreator dataNodeCreator = Lookup.getDefault().lookup (DataNodeCreator.class);
         Node dataNode = null;
 
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("-*- XMLD   O     .createNodeDelegate: dataNodeCreator = " + dataNodeCreator);

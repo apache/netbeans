@@ -188,7 +188,7 @@ public final class AttributesUtilities {
         }
 
         public synchronized boolean containsAttributes(AttributeSet attributes) {
-            for(Enumeration names = attributes.getAttributeNames(); names.hasMoreElements(); ) {
+            for(Enumeration<?> names = attributes.getAttributeNames(); names.hasMoreElements(); ) {
                 Object name = names.nextElement();
                 Object value = attributes.getAttribute(name);
 

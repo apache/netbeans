@@ -62,6 +62,7 @@ public class AutoupdateCatalogFactory {
     public static final String ORIGINAL_ENABLED = "originalEnabled"; // NOI18N
     public static final String ORIGINAL_CATEGORY_NAME = "originalCategoryName"; // NOI18N
     public static final String ORIGINAL_CATEGORY_ICON_BASE = "originalCategoryIconBase"; // NOI18N
+    public static final String ORIGINAL_TRUSTED = "originalTrusted"; // NOI18N
     
     public static UpdateProvider createUpdateProvider (FileObject fo) {
         String sKey = (String) fo.getAttribute ("url_key"); // NOI18N
@@ -141,6 +142,12 @@ public class AutoupdateCatalogFactory {
         Boolean en = (Boolean) fo.getAttribute("enabled"); // NOI18N        
         if (en != null) {
             providerPreferences.putBoolean (ORIGINAL_ENABLED, en);
+        }
+
+        Boolean trusted = (Boolean) fo.getAttribute("trusted"); // NOI18N
+        if(trusted != null) {
+            au_catalog.setTrusted(trusted);
+            providerPreferences.putBoolean(ORIGINAL_TRUSTED, trusted);
         }
 
         return au_catalog;

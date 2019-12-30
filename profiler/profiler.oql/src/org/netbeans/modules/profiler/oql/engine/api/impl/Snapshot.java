@@ -199,7 +199,7 @@ public class Snapshot {
 
             @Override
             protected Iterator<JavaClass> getTraversingIterator(JavaClass popped) {
-                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.EMPTY_LIST.iterator();
+                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.<JavaClass>emptyList().iterator();
             }
         };
     }
@@ -334,10 +334,10 @@ public class Snapshot {
                 this.path = path;
             }
         }
-        Deque<State> stack = new ArrayDeque<State>();
-        Set ignored = new HashSet();
+        Deque<State> stack = new ArrayDeque<>();
+        Set<Object> ignored = new HashSet<>();
         
-        List<ReferenceChain> result = new ArrayList<ReferenceChain>();
+        List<ReferenceChain> result = new ArrayList<>();
         
         Iterator toInspect = getRoots();
         ReferenceChain path = null;

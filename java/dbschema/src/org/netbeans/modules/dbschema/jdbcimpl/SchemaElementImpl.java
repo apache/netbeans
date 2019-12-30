@@ -176,7 +176,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
      */
     public TableElement[] getTables() {
         DBElement[] dbe = tables.getElements();
-        return (TableElement[]) Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
     }
 
     /** Find a table by name.

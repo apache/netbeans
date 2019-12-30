@@ -205,7 +205,7 @@ public class JarClassLoader extends ProxyClassLoader {
     }
     
     @Override
-    protected Class doLoadClass(String pkgName, String name) {
+    protected Class<?> doLoadClass(String pkgName, String name) {
         String path = name.replace('.', '/').concat(".class"); // NOI18N
         
         // look up the Sources and return a class based on their content
@@ -1139,6 +1139,7 @@ public class JarClassLoader extends ProxyClassLoader {
             return new JarFile(src.file); // #134424
         }
 
+        @SuppressWarnings("rawtypes")
         public @Override Object getContent(Class[] classes) throws IOException {
             if (Arrays.asList(classes).contains(ClassLoader.class)) {
                 return loader;

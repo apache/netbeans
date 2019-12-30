@@ -21,9 +21,12 @@ package org.netbeans.modules.lsp.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -31,6 +34,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,6 +44,7 @@ import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
@@ -52,6 +58,8 @@ import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
+import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
+import org.netbeans.modules.lsp.client.options.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
@@ -101,18 +109,34 @@ public class LSPBindings {
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
+                                           MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
+                                           Reference<Project> prjRef = new WeakReference<>(prj);
+                                           ServerRestarter restarter = () -> {
+                                               synchronized (LSPBindings.class) {
+                                                   Project p = prjRef.get();
+                                                   if (p != null) {
+                                                       LSPBindings b = project2MimeType2Server.getOrDefault(p, Collections.emptyMap()).remove(mimeType);
+
+                                                       if (b != null) {
+                                                           b.process.destroy();
+                                                       }
+                                                   }
+                                               }
+                                           };
+                                           
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServerDescription desc = provider.startServer(Lookups.singleton(prj));
+                                               LanguageServerDescription desc = provider.startServer(Lookups.fixed(prj, mimeTypeInfo, restarter));
 
                                                if (desc != null) {
                                                    try {
                                                        LanguageClientImpl lci = new LanguageClientImpl();
                                                        InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
                                                        OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
+                                                       Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
                                                        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeResult result = initServer(server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
+                                                       InitializeResult result = initServer(p, server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
                                                        LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
                                                        return b;
@@ -150,7 +174,7 @@ public class LSPBindings {
                 });
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
-                InitializeResult result = initServer(server, root);
+                InitializeResult result = initServer(null, server, root);
                 LSPBindings bindings = new LSPBindings(server, result, null);
 
                 lc.setBindings(bindings);
@@ -162,7 +186,7 @@ public class LSPBindings {
         }, Bundle.LBL_Connecting());
     }
 
-    private static InitializeResult initServer(LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
+    private static InitializeResult initServer(Process p, LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
        InitializeParams initParams = new InitializeParams();
        initParams.setRootUri(Utils.toURI(root));
        initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
@@ -176,7 +200,17 @@ public class LSPBindings {
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
-       return server.initialize(initParams).get();
+       while (true) {
+           try {
+               return server.initialize(initParams).get(100, TimeUnit.MILLISECONDS);
+           } catch (TimeoutException ex) {
+               if (p != null && !p.isAlive()) {
+                   InitializeResult emptyResult = new InitializeResult();
+                   emptyResult.setCapabilities(new ServerCapabilities());
+                   return emptyResult;
+               }
+           }
+       }
     }
 
     private final LanguageServer server;
@@ -233,6 +267,19 @@ public class LSPBindings {
 
     public void scheduleBackgroundTask(RequestProcessor.Task req) {
         WORKER.post(req, DELAY);
+    }
+
+    public static void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
+        LSPBindings bindings = getBindings(file);
+
+        if (bindings == null)
+            return ;
+
+        RequestProcessor.Task req = bindings.backgroundTasks.computeIfAbsent(file, f -> Collections.emptyMap()).get(task);
+
+        if (req != null) {
+            WORKER.post(req, DELAY);
+        }
     }
 
     public void scheduleBackgroundTasks(FileObject file) {

@@ -27,6 +27,7 @@ import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -90,8 +91,8 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
      * @throws ClassNotFoundException
      */
     @Override
-    protected Class findClass (String name) throws ClassNotFoundException {
-        Class c = super.findClass (name);
+    protected Class<?> findClass (String name) throws ClassNotFoundException {
+        Class<?> c = super.findClass (name);
         if (c != null) {
             org.openide.filesystems.FileObject fo;
             String resName = name.replace('.', '/') + ".class"; // NOI18N
@@ -256,18 +257,18 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
     }
 
     private void removeAllListeners() {
-        Map.Entry[] removeListenerFrom;
+        List<Map.Entry<FileObject, Boolean>> removeListenerFrom;
         synchronized(lock){
             detachedFromCp = true;  //No need to add more listeners
             if (emittedFileObjects.isEmpty()) {
                 return;
             }
-            removeListenerFrom = emittedFileObjects.entrySet().toArray(new Map.Entry[emittedFileObjects.size()]);
+            removeListenerFrom = new ArrayList<>(emittedFileObjects.entrySet());
             emittedFileObjects.clear();
         }
-        for (Map.Entry e : removeListenerFrom) {
+        for (Map.Entry<FileObject, Boolean> e : removeListenerFrom) {
             if (e.getValue() == Boolean.TRUE) {
-                ((FileObject)e.getKey()).removeFileChangeListener(listener);
+                e.getKey().removeFileChangeListener(listener);
             }
         }
     }

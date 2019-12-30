@@ -29,6 +29,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.TestUtil;
 
 /**
  *
@@ -48,22 +49,9 @@ public class CachingArchiveTest extends NbTestCase {
     }
 
     public void testPutName() throws Exception {
-        File archive = null;
-        
-        String cp = System.getProperty("sun.boot.class.path");
-        String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-        
-        for (String path : paths) {
-            File f = new File(path);
-            
-            if (!f.canRead())
-                continue;
-            
-            if (f.getName().endsWith("jar") || f.getName().endsWith("zip")) {
-                archive = f;
-                break;
-            }
-        }
+        clearWorkDir();
+
+        File archive = TestUtil.createRT_JAR(getWorkDir());
         
         assertNotNull(archive);
         

@@ -87,7 +87,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -119,7 +119,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -149,7 +149,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -181,7 +181,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -215,7 +215,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -247,7 +247,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -279,7 +279,7 @@ public class InterfaceTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     

@@ -250,7 +250,7 @@ public final class NamingFactory {
         int index = Math.abs(key) % names.length;
         NameRef ref = getReference(names[index], file.getFile());
 
-        FileNaming cachedElement = (ref != null) ? (FileNaming) ref.get() : null;
+        FileNaming cachedElement = (ref != null) ? ref.get() : null;
         Boolean cachedIsDirectory = null;
         Boolean fileIsDirectory = null;
         if (ignoreCache) {

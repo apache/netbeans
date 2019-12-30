@@ -159,11 +159,11 @@ public class SourceGroupSupport {
     }
 
     private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
-        Map result;
+        Map<FileObject, SourceGroup> result;
         if (sourceGroups.length == 0) {
-            result = Collections.EMPTY_MAP;
+            result = Collections.emptyMap();
         } else {
-            result = new HashMap(2 * sourceGroups.length, .5f);
+            result = new HashMap<>(2 * sourceGroups.length, .5f);
             for (int i = 0; i < sourceGroups.length; i++) {
                 SourceGroup sourceGroup = sourceGroups[i];
                 result.put(sourceGroup.getRootFolder(), sourceGroup);
@@ -172,9 +172,9 @@ public class SourceGroupSupport {
         return result;
     }
 
-    private static Set/*<SourceGroup>*/ getTestSourceGroups(SourceGroup[] sourceGroups) {
+    private static Set<SourceGroup> getTestSourceGroups(SourceGroup[] sourceGroups) {
         Map foldersToSourceGroupsMap = createFoldersToSourceGroupsMap(sourceGroups);
-        Set testGroups = new HashSet();
+        Set<SourceGroup> testGroups = new HashSet<>();
         for (int i = 0; i < sourceGroups.length; i++) {
             testGroups.addAll(getTestTargets(sourceGroups[i], foldersToSourceGroupsMap));
         }
@@ -184,9 +184,9 @@ public class SourceGroupSupport {
     private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
-        List<SourceGroup> result = new ArrayList<SourceGroup>();
+        List<SourceGroup> result = new ArrayList<>();
         List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
             FileObject sourceRoot = sourceRoots.get(i);

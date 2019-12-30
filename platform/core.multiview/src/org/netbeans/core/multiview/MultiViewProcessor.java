@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -50,7 +48,6 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Jaroslav Tulach
  */
 @ServiceProvider(service=Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MultiViewProcessor extends LayerGeneratingProcessor {
     public @Override Set<String> getSupportedAnnotationTypes() {
         return new HashSet<String>(Arrays.asList(

@@ -25,6 +25,30 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="LayerProcessorSupportedSource">
+            <api name="filesystems"/>
+            <summary>Declare support for all source levels.</summary>
+            <version major="9" minor="17"/>
+            <date year="2019" month="10" day="18"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" source="compatible" semantic="incompatible" binary="compatible"/>
+            <description>
+                <p>
+                    <a href="@TOP@/org/openide/filesystems/annotations/LayerGeneratingProcessor.html"><code>LayerGeneratingProcessor</code></a> subclasses declare some
+                    <a href="@JDK@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
+                    but as new JDKs are released, the declaration becomes obsolete and produces spurious warnings. The processors
+                    are typically not affected by newer Java language features.
+                </p>
+                <p>
+                    This change changes the default behaviour if NO 
+                    <a href="@JDK@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
+                    annotation is present on subclass. From 8.40, the Processor will report 
+                    <a href="@JDK@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
+                </p>
+            </description>
+            <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations"/>
+            <issue number="NETBEANS-3250"/>
+        </change>
         <change id="ArchiveRootProvider">
             <api name="filesystems"/>
             <summary>Pluggable archive files support for FileUtil</summary>
@@ -41,6 +65,7 @@
             </description>
             <class name="FileUtil" package="org.openide.filesystems"/>
             <class name="ArchiveRootProvider" package="org.openide.filesystems.spi"/>
+            
         </change>
         <change id="repository.multiuser">
             <api name="filesystems"/>

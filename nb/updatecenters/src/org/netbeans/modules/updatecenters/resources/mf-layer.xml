@@ -31,6 +31,7 @@
           <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_Distribution"/>
           <attr name="category" stringvalue="STANDARD"/>
           <attr name="enabled" boolvalue="true"/>
+          <attr name="trusted" boolvalue="true"/>
           <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider" />
           <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
       </file>

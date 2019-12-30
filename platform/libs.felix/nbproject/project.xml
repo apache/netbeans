@@ -36,8 +36,8 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/org.apache.felix.main-6.0.2.jar</runtime-relative-path>
-                <binary-origin>external/org.apache.felix.main-6.0.2.jar</binary-origin>
+                <runtime-relative-path>ext/org.apache.felix.main-6.0.3.jar</runtime-relative-path>
+                <binary-origin>external/org.apache.felix.main-6.0.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

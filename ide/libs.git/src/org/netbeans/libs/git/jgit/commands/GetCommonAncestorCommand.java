@@ -50,26 +50,22 @@ public class GetCommonAncestorCommand extends GitCommand {
     @Override
     protected void run () throws GitException {
         Repository repository = getRepository();
-        RevWalk walk = null;
         try {
             if (revisions.length == 0) {
                 revision = null;
             } else {
-                walk = new RevWalk(repository);
-                List<RevCommit> commits = new ArrayList<>(revisions.length);
-                for (String rev : revisions) {
-                    commits.add(Utils.findCommit(repository, rev, walk));
+                try (RevWalk walk = new RevWalk(repository)) {
+                    List<RevCommit> commits = new ArrayList<>(revisions.length);
+                    for (String rev : revisions) {
+                        commits.add(Utils.findCommit(repository, rev, walk));
+                    }
+                    revision = getSingleBaseCommit(walk, commits);
                 }
-                revision = getSingleBaseCommit(walk, commits);
             }
         } catch (MissingObjectException ex) {
             throw new GitException.MissingObjectException(ex.getObjectId().toString(), GitObjectType.COMMIT);
         } catch (IOException ex) {
             throw new GitException(ex);
-        } finally {
-            if (walk != null) {
-                walk.release();
-            }
         }
     }
 

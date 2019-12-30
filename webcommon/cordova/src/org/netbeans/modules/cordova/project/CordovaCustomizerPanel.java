@@ -299,14 +299,14 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
             }
 
 
-            HashSet<CordovaPlugin> pluginsToAdd = new HashSet();
+            HashSet<CordovaPlugin> pluginsToAdd = new HashSet<>();
             pluginsToAdd.addAll(selected);
 
             //plugins to install
             pluginsToAdd.removeAll(getCurrent());
 
             //plugins to remove
-            HashSet<CordovaPlugin> pluginsToRemove = new HashSet();
+            HashSet<CordovaPlugin> pluginsToRemove = new HashSet<>();
             pluginsToRemove.addAll(getCurrent());
             pluginsToRemove.removeAll(selected);
 

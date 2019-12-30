@@ -65,7 +65,7 @@ public final class ContextHelper {
     public static List<ClassNode> getDeclaredClasses(CompletionContext request) {
         if (request.path == null) {
             LOG.log(Level.FINEST, "path == null"); // NOI18N
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         for (Iterator<ASTNode> it = request.path.iterator(); it.hasNext();) {
@@ -75,7 +75,7 @@ public final class ContextHelper {
                 return ((ModuleNode) current).getClasses();
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**

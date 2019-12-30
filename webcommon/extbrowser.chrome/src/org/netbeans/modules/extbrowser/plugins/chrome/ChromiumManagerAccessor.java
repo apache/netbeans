@@ -85,7 +85,7 @@ public class ChromiumManagerAccessor implements ExtensionManagerAccessor {
                 return Utils.getUserPaths("/Library/Application Support/Chromium");// NOI18N
             } 
             else {
-                return Utils.getUserPaths("/.config/chromium");// NOI18N
+                return Utils.getUserPaths("/snap/chromium/current/.config/chromium", "/.config/chromium");// NOI18N
             }
         }
         

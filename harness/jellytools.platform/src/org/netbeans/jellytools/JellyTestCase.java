@@ -368,9 +368,9 @@ public class JellyTestCase extends NbTestCase {
             Object openProjectsInstance = getDefaultOpenProjectsMethod.invoke(null);
             Method getOpenProjectsMethod = openProjectsClass.getMethod("getOpenProjects");
             if (openedProjects == null) {
-                openedProjects = new ArrayList();
+                openedProjects = new ArrayList<>();
             }
-            List<Object> newProjects = new ArrayList<Object>();
+            List<Object> newProjects = new ArrayList<>();
             Object pr;
             for (String p : projects) {
                 Method getDefaultMethod = projectManagerClass.getMethod("getDefault");

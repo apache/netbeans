@@ -20,10 +20,14 @@ package org.netbeans.modules.java.source.indexing;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.io.File;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -128,6 +132,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     }
 
     protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles) throws Exception {
+        return runIndexing(files, virtualFiles, Collections.emptyList());
+    }
+
+    protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles, List<CompileTuple> extraSourceFiles) throws Exception {
         TransactionContext txc = TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, false);
         Factory f = new JavaCustomIndexer.Factory();
         Context ctx = SPIAccessor.getInstance().createContext(CacheFolder.getDataFolder(src.toURL()), src.toURL(), f.getIndexerName(), f.getIndexVersion(), LuceneIndexFactory.getDefault(), false, false, true, SPIAccessor.getInstance().createSuspendStatus(new SuspendStatusImpl() {
@@ -151,6 +159,13 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         toIndex.addAll(files);
         toIndex.addAll(virtualFiles);
         
+        for (CompileTuple extra : extraSourceFiles) {
+            try (OutputStream out = FileUtil.createData(extraSrc, extra.indexable.getRelativePath()).getOutputStream();
+                 Writer w = new OutputStreamWriter(out)) {
+                w.append(extra.jfo.getCharContent(true));
+            }
+        }
+
         ParsingOutput result = runCompileWorker(ctx, javaContext, toIndex);
         
         txc.commit();
@@ -171,13 +186,16 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         FileObject wd = FileUtil.toFileObject(wdFile);
         assertNotNull(wd);
         src = FileUtil.createFolder(wd, "src");
+        extraSrc = FileUtil.createFolder(wd, "extraSrc");
         FileObject buildRoot = FileUtil.createFolder(wd, "build");
         FileObject cache = FileUtil.createFolder(wd, "cache");
+        ClassPath sourcePath = ClassPathSupport.createClassPath(src, extraSrc);
 
-        SourceUtilsTestUtil.prepareTest(src, buildRoot, cache);
+        SourceUtilsTestUtil.prepareTest(sourcePath, buildRoot, cache, new FileObject[0]);
     }
     
     private FileObject src;
+    private FileObject extraSrc;
     private String sourceLevel;
     
     private FileObject createSrcFile(String pathAndName, String content) throws Exception {

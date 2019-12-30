@@ -470,7 +470,13 @@ final class GeneralAction {
             }
             BaseDelAction other = copyDelegate(f, actionContext);
             if (attrs != null) {
-                other.attrs = new HashMap<String,Object>(attrs);
+                if (other.attrs == null) {
+                    other.attrs = new HashMap<>(attrs);
+                } else {
+                    for (String k : attrs.keySet()) {
+                        other.attrs.putIfAbsent(k, attrs.get(k));
+                    }
+                }
             }
             return other;
         }

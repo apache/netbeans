@@ -97,10 +97,15 @@ public final class FindComponentModules extends Task {
      * Accumulated during {@link #getMissingModules(org.netbeans.modules.ide.ergonomics.fod.FeatureInfo)}
      */
     private boolean downloadRequired;
-    
+    private Set<FeatureInfo.ExtraModuleInfo> filter;
     private final SpecificationVersion jdk = new SpecificationVersion(System.getProperty("java.specification.version"));
     
     public FindComponentModules(FeatureInfo info, FeatureInfo... additional) {
+        this(info, Collections.emptySet(), additional);
+    }
+    
+    public FindComponentModules(FeatureInfo info, Set<FeatureInfo.ExtraModuleInfo> filter, FeatureInfo... additional) {
+        this.filter = filter;
         ArrayList<FeatureInfo> l = new ArrayList<FeatureInfo>();
         l.add(info);
         l.addAll(Arrays.asList(additional));
@@ -293,7 +298,7 @@ public final class FindComponentModules extends Task {
     
     private void registerExtraDownloadable(FeatureInfo fi, FeatureInfo.ExtraModuleInfo fmi) {
         boolean required = false;
-        if (fmi.recMinJDK != null && jdk.compareTo(fmi.recMinJDK) < 0) {
+        if (fmi.isRequiredFor(jdk)) {
             required = true;
         }
         if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
@@ -329,8 +334,11 @@ public final class FindComponentModules extends Task {
             codebasesSeen.add(startFi.getFeatureCodeNameBase());
             
             while (!closure.isEmpty()) {
-                FeatureInfo fi = closure.poll();
-                Set<FeatureInfo.ExtraModuleInfo> extraModules = fi.getExtraModules();
+                FeatureInfo fi = closure.poll();             
+                Set<FeatureInfo.ExtraModuleInfo> extraModules = filter;
+                if (filter.isEmpty()){
+                    extraModules = fi.getExtraModules();
+                }
                 FOUND:
                 for (FeatureInfo.ExtraModuleInfo moduleInfo : extraModules) {
                     boolean found = false;

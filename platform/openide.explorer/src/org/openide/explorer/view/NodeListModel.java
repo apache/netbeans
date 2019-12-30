@@ -327,12 +327,10 @@ public class NodeListModel extends AbstractListModel implements ComboBoxModel {
 
     final void changeAll() {
         size = getSize();
-
-        if (size > 0) {
-            fireContentsChanged(this, 0, size - 1);
-        }
-
         clearChildrenCount();
+        if (size > 0) {
+            fireContentsChanged(this, 0, size);
+        }
     }
 
     final void added(VisualizerEvent.Added ev) {

@@ -24,7 +24,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.TableColumn;
-import org.netbeans.modules.bugtracking.issuetable.IssueNode.IssueProperty;
 import org.openide.util.NbBundle;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.AncestorEvent;
@@ -114,9 +113,9 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     private final FindInQuerySupport findInQuerySupport;
     private boolean isSaved;
     
-    private static final Comparator<IssueProperty> nodeComparator = new Comparator<IssueProperty>() {
+    private static final Comparator<IssueNode<Object>.IssueProperty<Object>> nodeComparator = new Comparator<IssueNode<Object>.IssueProperty<Object>>() {
         @Override
-        public int compare(IssueProperty p1, IssueProperty p2) {
+        public int compare(IssueNode<Object>.IssueProperty<Object> p1, IssueNode<Object>.IssueProperty<Object> p2) {
             Integer sk1 = (Integer) p1.getValue("sortkey"); // NOI18N
             if (sk1 != null) {
                 Integer sk2 = (Integer) p2.getValue("sortkey"); // NOI18N

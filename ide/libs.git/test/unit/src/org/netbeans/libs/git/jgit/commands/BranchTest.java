@@ -338,7 +338,7 @@ public class BranchTest extends AbstractGitTestCase {
             client.deleteBranch("master", true, NULL_PROGRESS_MONITOR);
             fail("Can not delete active branch");
         } catch (GitException ex) {
-            assertTrue(ex.getMessage().contains("Branch master is checked out and can not be deleted"));
+            assertTrue(ex.getMessage().contains("Branch master is checked out and cannot be deleted"));
         }
     }
     

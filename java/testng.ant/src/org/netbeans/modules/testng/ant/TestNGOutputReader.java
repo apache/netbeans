@@ -951,7 +951,7 @@ final class TestNGOutputReader {
     private void testStarted(String suiteName, String testCase, String parameters, String values) {
         suiteName = testSession.getCurrentSuite().getName();
         testSession.setCurrentSuite(suiteName);
-        TestNGTestcase tc = ((TestNGTestSuite) ((TestNGTestSession) testSession).getCurrentSuite()).getTestCase(testCase, values);
+        TestNGTestcase tc = ((TestNGTestSuite)testSession.getCurrentSuite()).getTestCase(testCase, values);
         if (tc == null) {
             tc = new TestNGTestcase(testCase, parameters, values, testSession);
             testSession.addTestCase(tc);
@@ -968,7 +968,7 @@ final class TestNGOutputReader {
     private void testFinished(String st, String suiteName, String testCase, String parameters, String values, String duration) {
         suiteName = testSession.getCurrentSuite().getName();
         testSession.setCurrentSuite(suiteName);
-        TestNGTestcase tc = ((TestNGTestSuite) ((TestNGTestSession) testSession).getCurrentSuite()).getTestCase(testCase, values);
+        TestNGTestcase tc = ((TestNGTestSuite)testSession.getCurrentSuite()).getTestCase(testCase, values);
         CoreManager testngManager = getManagerProvider();
         if (tc == null) {
             //TestNG does not log invoke message for junit tests...

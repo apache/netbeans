@@ -28,7 +28,7 @@
 <changes>
     <change id="getArrowIcon">
         <api name="awt"/>
-        <summary>Added factory class for drop-down buttons</summary>
+        <summary>Added DropDownButtonFactory.getArrowIcon method.</summary>
         <version major="7" minor="75"/>
         <date day="13" month="12" year="2019"/>
         <author login="ebakke"/>

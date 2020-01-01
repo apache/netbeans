@@ -26,6 +26,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -426,6 +427,23 @@ public class IpAddressUtils {
         }
     }
 
+    /**
+     * Removes loopback addresses from the provided list.
+     * @param addresses 
+     */
+    public static void removeLoopback(List<InetAddress> addresses) {
+        if (addresses == null) {
+            return;
+        }
+        Iterator<InetAddress> iterator = addresses.iterator();
+        while (iterator.hasNext()) {
+            InetAddress a = iterator.next();
+            if (a.isLoopbackAddress()) {
+                iterator.remove();
+            }
+        }
+    }
+    
     /**
      * Sorts a list of IP addresses.
      * 

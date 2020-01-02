@@ -568,11 +568,12 @@ implements AWTEventListener, DragSourceListener, DragSourceMotionListener {
             final Set<Component> floatingFrames = windowDnDManager.getFloatingFrames();
             // Finally schedule the "drop" task later to be able to
             // detect if ESC was pressed.
+            final Point location = WindowDnDManager.getLocationWorkaround(evt);
             RequestProcessor.getDefault().post(new Runnable() {
                 @Override
                 public void run() {
                     SwingUtilities.invokeLater(createDropIntoFreeAreaTask(
-                            evt, WindowDnDManager.getLocationWorkaround(evt), floatingFrames));
+                            evt, location, floatingFrames));
                 }},
                 350 // XXX #21918, Neccessary to skip after possible ESC key event.
             );

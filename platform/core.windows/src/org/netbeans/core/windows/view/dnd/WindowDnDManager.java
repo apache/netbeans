@@ -115,10 +115,13 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
 
     /**
      * Get the location of a {@link DragSourceEvent}, incorporating a workaround for a JDK bug on
-     * HiDPI screens on Windows. See NETBEANS-2954.
+     * HiDPI screens on Windows. See NETBEANS-2954. This method should be called only while the
+     * mouse pointer is still likely to be in the same position as it was when the event was
+     * originally created.
      */
     public static Point getLocationWorkaround(DragSourceEvent evt) {
-        if (Utilities.isWindows()) {
+        Point ret = evt.getLocation();
+        if (Utilities.isWindows() && ret != null) {
             /* Workaround for JDK bug where DragSourceEvent.getLocation() returns incorrect screen
             coordinates for displays with HiDPI scaling on Windows. Use MouseInfo.getPointerInfo
             instead; that one handles HiDPI displays correctly. In the JDK codebase, the bug can be
@@ -142,10 +145,10 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
             the DPI scaling level. This is not done in awt_DnDDS.cpp, however. */
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
             if (pointerInfo != null) {
-                return pointerInfo.getLocation();
+                ret = pointerInfo.getLocation();
             }
         }
-        return evt.getLocation();
+        return ret;
     }
     
     /** Indicates whether the window drag and drop is enabled. */

@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common;
+package org.netbeans.modules.java.api.common.singlesourcefile;
 
+import org.netbeans.modules.java.api.common.singlesourcefile.RunProcess;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

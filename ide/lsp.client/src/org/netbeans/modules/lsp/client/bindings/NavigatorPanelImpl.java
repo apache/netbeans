@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -63,6 +65,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, DocumentSymbol>> implements NavigatorPanel, BackgroundTask, LookupListener {
 
+    private static final Logger LOG = Logger.getLogger(NavigatorPanelImpl.class.getName());
     private static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
 
     private final ExplorerManager manager;
@@ -127,10 +130,6 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
     }
 
     @Override
-    @Messages({
-        "# {0} - the exception's message",
-        "ERR_NavigatorNoInfoFromServer=The server produced an error while computing document symbols: {0}"
-    })
     public void run(LSPBindings bindings, FileObject file) {
         if (file.equals(this.file)) {
             try {
@@ -140,8 +139,8 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
                 setKeys(symbols);
                 view.expandAll();
             } catch (ExecutionException ex) {
-                Position zero = new Position(1, 1);
-                setKeys(Collections.singleton(Either.forLeft(new SymbolInformation(Bundle.ERR_NavigatorNoInfoFromServer(ex.getLocalizedMessage()), SymbolKind.File, new Location(Utils.toURI(file), new Range(zero, zero))))));
+                LOG.log(Level.FINE, null, ex);
+                setKeys(Collections.emptyList());
             } catch (InterruptedException ex) {
                 //try again:
                 LSPBindings.addBackgroundTask(file, this);

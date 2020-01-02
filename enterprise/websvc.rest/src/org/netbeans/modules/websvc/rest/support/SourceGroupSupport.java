@@ -73,7 +73,7 @@ public class SourceGroupSupport {
         SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(
                 JavaProjectConstants.SOURCES_TYPE_JAVA);
         Set testGroups = getTestSourceGroups(sourceGroups);
-        List result = new ArrayList();
+        List<SourceGroup> result = new ArrayList<>();
         for (int i = 0; i < sourceGroups.length; i++) {
             if (!testGroups.contains(sourceGroups[i])) {
                 result.add(sourceGroups[i]);
@@ -189,13 +189,13 @@ public class SourceGroupSupport {
         return testGroups;
     }
 
-    private static List/*<SourceGroup>*/ getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
+    private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
             return new ArrayList();
         }
-        List result = new ArrayList();
-        List sourceRoots = getFileObjects(rootURLs, true);
+        List<SourceGroup> result = new ArrayList<>();
+        List<FileObject> sourceRoots = getFileObjects(rootURLs, true);
         for (int i = 0; i < sourceRoots.size(); i++) {
             FileObject sourceRoot = (FileObject) sourceRoots.get(i);
             SourceGroup srcGroup = (SourceGroup) foldersToSourceGroupsMap.get(sourceRoot);
@@ -206,8 +206,8 @@ public class SourceGroupSupport {
         return result;
     }
 
-    private static List/*<FileObject>*/ getFileObjects(URL[] urls, boolean quiet) {
-        List result = new ArrayList();
+    private static List<FileObject> getFileObjects(URL[] urls, boolean quiet) {
+        List<FileObject> result = new ArrayList<>();
         for (int i = 0; i < urls.length; i++) {
             FileObject sourceRoot = URLMapper.findFileObject(urls[i]);
             if (sourceRoot != null) {

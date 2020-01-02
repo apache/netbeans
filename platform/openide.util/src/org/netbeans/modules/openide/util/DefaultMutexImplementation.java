@@ -607,7 +607,7 @@ public class DefaultMutexImplementation implements MutexImplementation {
                 }
 
                 // holds postedMode lock here
-                List runnables = info.dequeue(postedMode);
+                List<Runnable> runnables = info.dequeue(postedMode);
                 final int size = runnables.size();
 
                 for (int i = 0; i < size; i++) {
@@ -1099,7 +1099,7 @@ public class DefaultMutexImplementation implements MutexImplementation {
 
         /** @return a List of enqueued Runnables - may be null */
         public List dequeue(int mode) {
-            List ret = queues[mode];
+            List<Runnable> ret = queues[mode];
             queues[mode] = null;
 
             return ret;
@@ -1286,5 +1286,3 @@ public class DefaultMutexImplementation implements MutexImplementation {
         return registeredThreads;
     }
 }
-
-    

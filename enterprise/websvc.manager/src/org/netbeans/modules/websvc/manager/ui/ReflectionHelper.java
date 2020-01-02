@@ -688,7 +688,7 @@ public class ReflectionHelper {
              * 2. from objects to primitives
              */
             LinkedList<Class> classList = new LinkedList<>();
-            List parameterList = inMethod.getParametersList();
+            List<JavaParameter> parameterList = inMethod.getParametersList();
             for (int ii = 0; null != paramValues && ii < paramValues.length; ii++) {
 
                 /**

@@ -65,7 +65,7 @@ public class Snapshot {
             weakReferenceClass = findClass("sun.misc.Ref"); // NOI18N
             referentFieldIndex = 0;
         } else {
-            List flds = weakReferenceClass.getFields();
+            List<Field> flds = weakReferenceClass.getFields();
             int fldsCount = flds.size();
 
             for (int i = 0; i < fldsCount; i++) {
@@ -205,8 +205,8 @@ public class Snapshot {
     }
 
     public Iterator getReferrers(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List references = new ArrayList();
+        List<Object> instances  = new ArrayList<>();
+        List<Object> references = new ArrayList<>();
         
         if (obj instanceof Instance) {
             references.addAll(((Instance)obj).getReferences());
@@ -233,8 +233,8 @@ public class Snapshot {
     }
 
     public Iterator getReferees(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List values = new ArrayList();
+        List<Object> instances = new ArrayList<>();
+        List<Object> values    = new ArrayList<>();
         
         if (obj instanceof Instance) {
             Instance o = (Instance)obj;
@@ -278,7 +278,7 @@ public class Snapshot {
         Instance queue = ((ObjectFieldValue) clazz.getValueOfStaticField("queue")).getInstance(); // NOI18N
         ObjectFieldValue headFld = (ObjectFieldValue) queue.getValueOfField("head"); // NOI18N
 
-        List finalizables = new ArrayList();
+        List<Instance> finalizables = new ArrayList<>();
         if (headFld != null) {
             Instance head = headFld.getInstance();
             while (true) {
@@ -319,7 +319,7 @@ public class Snapshot {
     }
 
     public GCRoot[] getRootsArray() {
-        List rootList = getRootsList();
+        List<GCRoot> rootList = getRootsList();
         return (GCRoot[]) rootList.toArray(new GCRoot[0]);
     }
    

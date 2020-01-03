@@ -141,7 +141,6 @@ public final class FlatTabControlIcon extends VectorIcon {
                     if (bm.isPressed()) {
                         buttonState = TabControlButton.STATE_PRESSED;
                     } else if (bm.isRollover()) {
-                        System.out.println("rolling");
                         buttonState = TabControlButton.STATE_ROLLOVER;
                     }
                 }

@@ -31,7 +31,10 @@ import java.util.Locale;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.plaf.ColorUIResource;
 import org.netbeans.swing.plaf.LFCustoms;
 import org.netbeans.swing.plaf.util.UIBootstrapValue;
@@ -68,11 +71,7 @@ public final class Windows8LFCustoms extends LFCustoms {
         "ProgressBar.font", "Viewport.font", "TabbedPane.font", "List.font", "CheckBox.font",
         "Table.font", "ScrollPane.font", "ToggleButton.font", "Panel.font", "RadioButton.font",
         "FormattedTextField.font", "TextField.font", "Spinner.font", "Button.font", "EditorPane.font",
-        "Label.font", "ComboBox.font", "Tree.font", "TextArea.font"};
-
-    private static final String[] ADJUST_HIDPI_BORDERS = new String[] {
-        "TextField.border", "PasswordField.border", "FormattedTextField.border",
-        "ScrollPane.border"};
+        "Label.font", "ComboBox.font", "Tree.font", "TextArea.font" }; //NOI18N
 
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
@@ -85,15 +84,15 @@ public final class Windows8LFCustoms extends LFCustoms {
         }
         //Work around a bug in windows which sets the text area font to
         //"MonoSpaced", causing all accessible dialogs to have monospaced text
-        Font textAreaFont = UIManager.getFont("Label.font");
+        Font textAreaFont = UIManager.getFont("Label.font"); //NOI18N
         if (textAreaFont == null) {
-          textAreaFont = new Font("Dialog", Font.PLAIN, fontsize);
+            textAreaFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
         } else {
-          textAreaFont = textAreaFont.deriveFont((float) fontsize);
+            textAreaFont = textAreaFont.deriveFont((float) fontsize);
         }
 
         Object[] constants = new Object[] {
-            "TextArea.font", textAreaFont,
+            "TextArea.font", textAreaFont, //NOI18N
 
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
 
@@ -104,10 +103,10 @@ public final class Windows8LFCustoms extends LFCustoms {
                               http://hg.openjdk.java.net/jdk10/master/annotate/be620a591379/src/java.desktop/share/classes/com/sun/java/swing/plaf/windows/WindowsLookAndFeel.java .
                               Current Swing defaults are [2,2,2,2] for all of these (set in
                               javax.swing.plaf.basic.BasicLookAndFeel). */
-            "Menu.margin", new Insets(0, 2, 0, 2),
-            "MenuItem.margin", new Insets(0, 2, 0, 2),
-            "CheckBoxMenuItem.margin", new Insets(0, 2, 0, 2),
-            "RadioButtonMenuItem.margin", new Insets(0, 2, 0, 2),
+            "Menu.margin", new Insets(0, 2, 0, 2), //NOI18N
+            "MenuItem.margin", new Insets(0, 2, 0, 2), //NOI18N
+            "CheckBoxMenuItem.margin", new Insets(0, 2, 0, 2), //NOI18N
+            "RadioButtonMenuItem.margin", new Insets(0, 2, 0, 2), //NOI18N
             /* Note that menu separators are still 3 pixels too tall on Windows compared to native
             apps. Fixing that would be a bigger job, though (replacing WindowsPopupMenuSeparatorUI
             to override getPreferredSize). */
@@ -130,13 +129,13 @@ public final class Windows8LFCustoms extends LFCustoms {
             precautions (e.g. using deriveFont instead of FontUIResource for the Windows case). */
             Map<Font,Font> fontTranslation = new HashMap<>();
             for (String uiKey : DEFAULT_GUI_FONT_PROPERTIES) {
-                if (uiKey.equals("TextArea.font")) {
-                  // Skip this one; it was set earlier as part of an unrelated workaround.
-                  continue;
+                if (uiKey.equals("TextArea.font")) { //NOI18N
+                    // Skip this one; it was set earlier as part of an unrelated workaround.
+                    continue;
                 }
                 Font oldFont = UIManager.getFont(uiKey);
                 if (oldFont == null) {
-                   continue;
+                    continue;
                 }
                 Font newFont = fontTranslation.get(oldFont);
                 if (newFont == null) {
@@ -156,37 +155,55 @@ public final class Windows8LFCustoms extends LFCustoms {
                 type is of the kind that needs to be patched. All currently known icon properties
                 are suffixed "icon" or "Icon". All but one is of the kind that needs to be
                 patched. */
-                Object value = key.toString().toLowerCase(Locale.ROOT).endsWith("icon")
+                Object value = key.toString().toLowerCase(Locale.ROOT).endsWith("icon") //NOI18N
                         ? UIManager.getDefaults().get(key) : null;
                 if (value == null) {
                     continue;
                 }
                 String valueCN = value.getClass().getName();
                 if (value instanceof Icon &&
-                    (valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsIconFactory$") ||
-                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$")) &&
+                    (valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsIconFactory$") || //NOI18N
+                    valueCN.startsWith("com.sun.java.swing.plaf.windows.WindowsTreeUI$")) && //NOI18N
                     /* This particular one can't be used as a delegate, as it intentionally behaves
                     differently when the application has overridden UIDefaults. */
-                    !valueCN.contains("VistaMenuItemCheckIcon"))
+                    !valueCN.contains("VistaMenuItemCheckIcon")) //NOI18N
                 {
                     result.add(key);
                     result.add(new WindowsDPIWorkaroundIcon((Icon) value));
                 }
             }
         }
+
         /* Workaround for ugly borders on fractional HiDPI scalings (e.g. 150%), including
         NETBEANS-338. It would have been nice to fix this for JComboBox as well, but that one does
         not use the borders from UIManager. */
-        for (String key : ADJUST_HIDPI_BORDERS) {
-          Object value = UIManager.getDefaults().get(key);
-          if (value instanceof Border) {
-            Border adjustedBorder = DPISafeBorder.fromDelegate((Border) value);
-            if (adjustedBorder != value) {
-                result.add(key);
-                result.add(adjustedBorder);
+        for (String key : new String[] {
+                "TextField.border", "PasswordField.border", "FormattedTextField.border", //NOI18N
+                "ScrollPane.border" }) //NOI18N
+        {
+            Object value = UIManager.getDefaults().get(key);
+            if (value instanceof Border) {
+                Border adjustedBorder = new DPIUnscaledBorder((Border) value);
+                if (adjustedBorder != value) {
+                    result.add(key);
+                    result.add(adjustedBorder);
+                }
             }
-          }
         }
+        // JSpinner requires some special treatment.
+        Object spinnerBorder = UIManager.getDefaults().get("Spinner.border"); //NOI18N
+        if (spinnerBorder instanceof CompoundBorder) {
+            CompoundBorder cb = (CompoundBorder) spinnerBorder;
+            Border ob = cb.getOutsideBorder();
+            Border ib = cb.getInsideBorder();
+            if (ob instanceof LineBorder && ib instanceof EmptyBorder) {
+                result.add("Spinner.border"); //NOI18N
+                result.add(new DPIUnscaledBorder(new CompoundBorder(
+                        new MatteBorder(1, 1, 1, 1, ((LineBorder) ob).getLineColor()),
+                        new MatteBorder(2, 2, 2, 2, Color.WHITE))));
+            }
+        }
+
         return result.toArray();
     }
 
@@ -325,12 +342,12 @@ public final class Windows8LFCustoms extends LFCustoms {
             //Borders for the tab control
             EDITOR_TAB_OUTER_BORDER, BorderFactory.createEmptyBorder(),
             EDITOR_TAB_CONTENT_BORDER,
-                DPISafeBorder.matte(0, 1, 1, 1, new Color(137, 140, 149)),
+                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149))),
             EDITOR_TAB_TABS_BORDER, BorderFactory.createEmptyBorder(),
 
             VIEW_TAB_OUTER_BORDER, BorderFactory.createEmptyBorder(),
             VIEW_TAB_CONTENT_BORDER,
-                DPISafeBorder.matte(0, 1, 1, 1, new Color(137, 140, 149)),
+                new DPIUnscaledBorder(new MatteBorder(0, 1, 1, 1, new Color(137, 140, 149))),
             VIEW_TAB_TABS_BORDER, BorderFactory.createEmptyBorder(),
             };
         }

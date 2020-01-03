@@ -57,10 +57,10 @@ public class FlatLFCustoms extends LFCustoms {
             "nb.bigclose.tab.icon.rollover.icon", FlatTabControlIcon.get(TabControlButton.ID_CLOSE_BUTTON, TabControlButton.STATE_ROLLOVER), // NOI18N
 
             // for org.netbeans.core.multitabs.ButtonFactory
-            "nb.multitabs.button.dropdown.icon", FlatTabControlIcon.get(TabControlButton.ID_DROP_DOWN_BUTTON, -1), // NOI18N
-            "nb.multitabs.button.maximize.icon", FlatTabControlIcon.get(TabControlButton.ID_MAXIMIZE_BUTTON, -1), // NOI18N
-            "nb.multitabs.button.left.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_LEFT_BUTTON, -1), // NOI18N
-            "nb.multitabs.button.right.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_RIGHT_BUTTON, -1), // NOI18N
+            "nb.multitabs.button.dropdown.icon", FlatTabControlIcon.get(TabControlButton.ID_DROP_DOWN_BUTTON), // NOI18N
+            "nb.multitabs.button.maximize.icon", FlatTabControlIcon.get(TabControlButton.ID_MAXIMIZE_BUTTON), // NOI18N
+            "nb.multitabs.button.left.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_LEFT_BUTTON), // NOI18N
+            "nb.multitabs.button.right.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_RIGHT_BUTTON), // NOI18N
             "nb.multitabs.button.rollover", true, // NOI18N
         };
     }

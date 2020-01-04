@@ -81,7 +81,7 @@
  
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
 
-        <property name="cluster.config" value="basic" />
+        <property name="cluster.config" value="java" />
         <property name="config.javadoc.all" value="" />
         <checkmoduleconfigs nbroot="${nb_all}"/>
         <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>

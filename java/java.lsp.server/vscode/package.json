@@ -1,12 +1,12 @@
 {
-	"name": "netbeans-java",
-	"description": "A NetBeans Java plugin for Visual Studio Code",
-	"author": "Jan Lahoda",
-	"license": "MIT",
+	"name": "apache-netbeans-java",
+	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
+	"author": "Apache NetBeans",
+	"license": "Apache 2.0",
 	"version": "1.0.0",
 	"repository": {
 		"type": "git",
-		"url": "TBD"
+		"url": "https://github.com/apache/netbeans"
 	},
 	"publisher": "jlahoda",
 	"categories": [],

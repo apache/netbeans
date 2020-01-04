@@ -436,10 +436,10 @@ public class LocalAddressUtils {
         IpAddressUtils.removeLoopback(filteredList);
         
         try {
-            List<InetAddress> localHostAddresses = Arrays.asList(getLocalHostAddresses(ipTypePref));
+            List<InetAddress> localHostAddresses = new ArrayList<>(Arrays.asList(getLocalHostAddresses(ipTypePref)));
             IpAddressUtils.removeLoopback(localHostAddresses);
             
-            if (localHostAddresses != null && !localHostAddresses.isEmpty()) {
+            if (!localHostAddresses.isEmpty()) {
                 List<InetAddress> tmpList = new ArrayList<>(5);
                 for (InetAddress addr : filteredList) {
                     if (localHostAddresses.contains(addr)) {

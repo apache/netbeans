@@ -77,7 +77,7 @@ public class EvaluationResultsModel extends VariablesModel {
     @Override
     public Object[] getChildren(Object parent, int from, int to) throws UnknownTypeException {
         if (parent instanceof HistoryNode) {
-            List l = ((HistoryNode) parent).getItems();
+            List<?> l = ((HistoryNode) parent).getItems();
             for (Object o : l) {
                 if (!(o instanceof DefaultHistoryItem)) {
                     return new Object[]{};

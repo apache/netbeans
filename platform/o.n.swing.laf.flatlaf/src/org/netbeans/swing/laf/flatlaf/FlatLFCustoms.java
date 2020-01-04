@@ -38,6 +38,7 @@ public class FlatLFCustoms extends LFCustoms {
         return new Object[] {
             EDITOR_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatEditorTabDisplayerUI", // NOI18N
             VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatViewTabDisplayerUI", // NOI18N
+            SLIDING_BUTTON_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatSlidingButtonUI", // NOI18N
 
             EDITOR_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, UIManager.getColor("TabbedContainer.editor.contentBorderColor")), // NOI18N
             VIEW_TAB_CONTENT_BORDER, DPISafeBorder.matte(0, 1, 1, 1, UIManager.getColor("TabbedContainer.view.contentBorderColor")), // NOI18N

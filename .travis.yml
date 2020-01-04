@@ -478,7 +478,7 @@ matrix:
           before_install:
             - nvm install 8
           env:
-            - OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - ant $OPTS clean
             - ant $OPTS build

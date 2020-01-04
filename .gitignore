@@ -101,3 +101,5 @@ derby.log
 /groovy/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 /groovy/gradle/release/modules/gradle/daemon-loader/.gradle/
 /java/java.lsp.server/bundles/prepare/target/
+/nbbuild/misc/prepare/target/
+/nbbuild/misc/prepare-bundles/target/

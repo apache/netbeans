@@ -72,19 +72,17 @@
         <mkdir dir="${build.dir}/bundles/package" />
         <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
 
-        <exec executable="mvn" failonerror="true" dir="bundles/prepare">
+        <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
             <arg value="install" />
             <arg value="exec:java" />
-            <arg value="-Dexec.mainClass=org.netbeans.modules.learning.prepare.PrepareBundles" />
+            <arg value="-Dexec.mainClass=org.netbeans.prepare.bundles.PrepareBundles" />
             <arg value="-Dexec.args=${build.dir}/bundles ${nb_all}" />
         </exec>
  
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
 
-        <property name="cluster.config" value="java" />
         <property name="config.javadoc.all" value="" />
-        <checkmoduleconfigs nbroot="${nb_all}"/>
-        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.java.list}"/>
 
         <mkdir dir="${build.dir}/vscode/licenses" />
 

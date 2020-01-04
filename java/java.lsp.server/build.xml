@@ -109,7 +109,7 @@
         <exec executable="${build.dir}/vsce/node_modules/vsce/out/vsce" failonerror="true" dir="${build.dir}/vscode">
             <arg value="package" />
             <arg value="--out" />
-            <arg value="${build.dir}/apache-netbeans-java-1.0.0.vsix" />
+            <arg value="${build.dir}/apache-netbeans-java-0.0.1.vsix" />
         </exec>
     </target>
 </project>

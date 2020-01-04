@@ -3,7 +3,7 @@
 	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"

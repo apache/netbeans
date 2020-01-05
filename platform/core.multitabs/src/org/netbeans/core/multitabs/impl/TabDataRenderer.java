@@ -149,7 +149,7 @@ public class TabDataRenderer implements TableCellRenderer {
             // The HTML rendering makes startup slow (and CPU load high).
             // To workaround this, remove the leading "<html>" if text does not
             // contain HTML tags or entities.
-            String prefix = "<html>";
+            String prefix = "<html>"; // NOI18N
             if (text.startsWith(prefix)
                     && text.indexOf('<', prefix.length()) < 0
                     && text.indexOf('&', prefix.length()) < 0) {

@@ -92,13 +92,15 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
             } else {
                 scrollPane.setBorder(new EmptyBorder(borderInsets));
             }
+        } else {
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
         }
         scrollPane.setFont(referenceTextField.getFont());
         scrollPane.setBackground(referenceTextField.getBackground());
         int preferredHeight = referenceTextField.getPreferredSize().height;
         Dimension spDim = scrollPane.getPreferredSize();
         spDim.height = preferredHeight + getLFHeightAdjustment();
-        if (!isCurrentLF("Aqua")) {  //NOI18N 
+        if (!isCurrentLF("Aqua")) {  //NOI18N
             spDim.height += margin.bottom + margin.top; //borderInsets.top + borderInsets.bottom;
         }
         scrollPane.setPreferredSize(spDim);

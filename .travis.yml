@@ -472,3 +472,20 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+            
+        - name: MacOS tests
+          language: java
+          os: osx
+          jdk: openjdk11
+          addons:
+            homebrew:
+              packages:
+                - ant
+          env:
+            - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f platform/masterfs.macosx test
+            - ant $OPTS -f platform/core.network test

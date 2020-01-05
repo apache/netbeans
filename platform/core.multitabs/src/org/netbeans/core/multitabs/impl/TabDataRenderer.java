@@ -141,6 +141,21 @@ public class TabDataRenderer implements TableCellRenderer {
                     icon = i;
                 }
             }
+
+            // On startup, this method is invoked very often if many files are open
+            // (~60000 times for 200 open files).
+            // The text (usually a filename) always starts with "<html>",
+            // but does not contain other HTML tags.
+            // The HTML rendering makes startup slow (and CPU load high).
+            // To workaround this, remove the leading "<html>" if text does not
+            // contain HTML tags or entities.
+            String prefix = "<html>";
+            if (text.startsWith(prefix)
+                    && text.indexOf('<', prefix.length()) < 0
+                    && text.indexOf('&', prefix.length()) < 0) {
+                text = text.substring(prefix.length());
+            }
+
             renderer.label.setText( text );
             renderer.label.setIcon( icon );
             renderer.tabData = tab;

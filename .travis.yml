@@ -32,7 +32,6 @@ script:
   - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
   - ant $OPTS clean
   - ant $OPTS $TARGET
-  - if [ "x$LICENSE" == "xtrue" ]; then ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant check-sigtests; fi
   - if [ "x$SIGTEST" == "xtrue" ]; then ant gen-sigtests-release; fi
   - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
@@ -48,10 +47,11 @@ matrix:
             - unzip -qq ../nbbuild/build/release-src*
             - ant -quiet rat -Drat-report.haltonfailure=true
           
-        - env: SIGTEST=false LICENSE=true
-          jdk: openjdk8
+        - name: Verify libs and licenses
+          script:
+            - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
 
-        - env: SIGTEST=true LICENSE=false
+        - env: SIGTEST=true
           jdk: openjdk8
 
 #        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/scripting.sh
@@ -120,7 +120,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/core.kit test
             - hide-logs.sh ant $OPTS -f platform/core.multiview test
             - hide-logs.sh ant $OPTS -f platform/core.netigso test
-            #- hide-logs.sh ant $OPTS -f platform/core.network test
+            - hide-logs.sh ant $OPTS -f platform/core.network test
             - hide-logs.sh ant $OPTS -f platform/core.osgi test
             - hide-logs.sh ant $OPTS -f platform/core.output2 test
             - hide-logs.sh ant $OPTS -f platform/core.startup test
@@ -472,3 +472,20 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+            
+        - name: MacOS tests
+          language: java
+          os: osx
+          jdk: openjdk11
+          addons:
+            homebrew:
+              packages:
+                - ant
+          env:
+            - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f platform/masterfs.macosx test
+            - ant $OPTS -f platform/core.network test

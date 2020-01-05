@@ -29,6 +29,9 @@
             <file name="spring-framework400.xml" url="spring-framework400.xml">
                 <attr name="displayName" bundlevalue="org.netbeans.libs.springframework.Bundle#spring-framework400"/>
             </file>
+            <file name="spring-framework500.xml" url="spring-framework500.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.libs.springframework.Bundle#spring-framework500"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

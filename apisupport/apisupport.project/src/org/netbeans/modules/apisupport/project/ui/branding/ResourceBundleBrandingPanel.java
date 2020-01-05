@@ -502,7 +502,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
         }
 
         private void refreshList() {
-            List keys = new ArrayList();
+            List<Node> keys = new ArrayList<>();
             Node[] origChildren = original.getChildren().getNodes();
             for (Node node : origChildren) {
                 keys.add(node);

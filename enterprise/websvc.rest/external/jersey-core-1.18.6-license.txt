@@ -1,9 +1,9 @@
 Name: Jersey-core
-Version: 1.5
+Version: 1.18.6
 Description: Jersey-core
 License: CDDL-1.1
 Origin: Oracle
-Files: jersey-core-1.5.jar
+Files: jersey-core-1.18.6.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

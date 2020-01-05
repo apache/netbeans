@@ -437,7 +437,7 @@ private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         final Component order[] = new Component[]{rowHeader, insertRecordTableUI};
         FocusTraversalPolicy policy = new FocusTraversalPolicy() {
 
-            List componentList = Arrays.asList(order);
+            List<Component> componentList = Arrays.asList(order);
 
             @Override
             public Component getFirstComponent(Container focusCycleRoot) {

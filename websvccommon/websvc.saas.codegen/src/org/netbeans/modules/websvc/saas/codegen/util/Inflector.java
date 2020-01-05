@@ -141,21 +141,21 @@ public class Inflector {
      * <p>List of <code>Replacer</code>s for performing replacement operations
      * on matches for plural words.</p>
      */
-    private List plurals = new LinkedList();
+    private List<Replacer> plurals = new LinkedList<>();
 
 
     /**
      * <p>List of <code>Replacer</code>s for performing replacement operations
      * on matches for addSingular words.</p>
      */
-    private List singulars = new ArrayList();
+    private List<Replacer> singulars = new ArrayList<>();
 
 
     /**
      * <p>List of words that represent addUncountable concepts that cannot be
      * pluralized or singularized.</p>
      */
-    private List uncountables = new LinkedList();
+    private List<String> uncountables = new LinkedList<>();
 
 
     // ------------------------------------------------------ Instance Variables

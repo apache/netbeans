@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
 public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDescriptor2, EntityResolver {
     private static final String PROPERTY_LEX_HANDLER = "http://xml.org/sax/properties/lexical-handler";
     private Map publicIds;
-    private List catalogListeners;
+    private List<CatalogListener> catalogListeners;
     private static final String catalogResource = "xml/catalogs/UserXMLCatalog.xml"; // NOI18N
     private static final String URI_PREFIX = "URI:"; // NOI18N
     private static final String PUBLIC_PREFIX = "PUBLIC:"; // NOI18N
@@ -68,7 +68,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     
     /** Default constructor for use from layer. */
     public UserXMLCatalog() {
-        catalogListeners=new ArrayList();
+        catalogListeners=new ArrayList<>();
     }
 
     public String resolveURI(String name) {

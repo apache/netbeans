@@ -387,7 +387,9 @@ public class ServerFileDistributor extends ServerProgress {
                         createOrReplace(file, targetFO, destRoot, relative, mc, destMap, false, 0);
                     }
                 } else if (fsFile != null && !fsFile.exists()) {
-                    mc.recordRemovedFile(fsFile);
+                    if (altDistPath != null && altDistPath.delete()) {
+                        mc.recordRemovedFile(fsFile);
+                    }
                 }
             }
 

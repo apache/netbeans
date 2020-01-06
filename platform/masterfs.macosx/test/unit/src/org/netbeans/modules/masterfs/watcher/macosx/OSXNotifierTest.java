@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.masterfs.watcher.linux;
+package org.netbeans.modules.masterfs.watcher.macosx;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import static junit.framework.TestCase.assertFalse;
+import org.junit.Test;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FolderObj;
@@ -35,45 +36,29 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 
 /**
- * Test for bug 235632.
- *
- * @author jhavlin
+ * Test based in the LinuxNotifier235632Test test class
+ * @author Hector Espert
  */
-public class LinuxNotifier235632Test extends NbTestCase {
-
+public class OSXNotifierTest extends NbTestCase {
+    
     private File folder1;
     private File folder1text1Txt;
     private FileObject folder2FO;
     private FileObject folder2text2TxtFO;
 
-    public LinuxNotifier235632Test(String testName) {
-        super(testName);
+    public OSXNotifierTest(String name) {
+        super(name);
     }
-
+    
+    @Override
+    public boolean canRun() {
+        return super.canRun() && Utilities.getOperatingSystem() == Utilities.OS_MAC;
+    }
+    
     @Override
     protected void setUp() throws Exception {
         Log.enable(FolderObj.class.getName(), Level.FINEST);
         clearWorkDir();
-    }
-
-    @Override
-    public boolean canRun() {
-        return super.canRun() && Utilities.getOperatingSystem() == Utilities.OS_LINUX;
-    }
-
-    /**
-     * Prepare folders and files for testing.
-     *
-     * <pre>
-     * - folder1          (only java.io.File)
-     *    - text1.txt     (only java.io.File)
-     * - folder2          (FileObject)
-     *    - text2.txt     (FileObject, with registered listener)
-     * </pre>
-     *
-     * @throws IOException
-     */
-    private void prepareFiles() throws IOException {
         folder1 = new File(getWorkDir(), "folder1");
         folder1.mkdir();
         folder1text1Txt = new File(folder1, "text1.txt");
@@ -83,20 +68,12 @@ public class LinuxNotifier235632Test extends NbTestCase {
         folder2.mkdir();
         folder2FO = FileUtil.toFileObject(folder2);
         folder2text2TxtFO = folder2FO.createData("text2.txt");
-        // Causes the path to be registered in the notifier.
         folder2text2TxtFO.addFileChangeListener(new FileChangeAdapter());
         folder2FO.refresh();
     }
 
-    /**
-     * Test of nextEvent method, of class LinuxNotifier.
-     *
-     * @throws java.lang.Exception
-     */
+    @Test
     public void testNextEvent() throws Exception {
-
-        prepareFiles();
-
         final AtomicBoolean folder2refreshed = new AtomicBoolean(false);
         Logger log = Logger.getLogger(FolderObj.class.getName());
 
@@ -105,9 +82,7 @@ public class LinuxNotifier235632Test extends NbTestCase {
         try {
             FileChangeListener l = new FileChangeAdapter();
             FileUtil.addFileChangeListener(l, folder1text1Txt);
-            // This causes an IN_IGNORED native event.
             FileUtil.removeFileChangeListener(l, folder1text1Txt);
-            // Native listeners may need some time.
             Thread.sleep(2000);
         } finally {
             log.removeHandler(h);
@@ -115,15 +90,7 @@ public class LinuxNotifier235632Test extends NbTestCase {
         assertFalse("Folder folder2 should not be refreshed.",
                 folder2refreshed.get());
     }
-
-    /**
-     * Create a logging handler that sets value in an AtomicBoolean to true if
-     * folder2 or text2.txt is refreshed.
-     *
-     * @param refreshedFlag The AtomicBoolean to be set to true if incorrect
-     * refreshing was triggered.
-     * @return The new logging handler.
-     */
+    
     private Handler createHandler(final AtomicBoolean refreshedFlag) {
         Handler h = new Handler() {
 
@@ -149,4 +116,5 @@ public class LinuxNotifier235632Test extends NbTestCase {
         };
         return h;
     }
+    
 }

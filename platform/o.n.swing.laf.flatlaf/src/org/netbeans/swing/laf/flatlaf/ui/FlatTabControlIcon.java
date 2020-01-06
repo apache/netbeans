@@ -34,6 +34,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
@@ -49,11 +51,9 @@ import org.netbeans.swing.tabcontrol.plaf.TabControlButton;
  * - minimize, maximize and restore icons changed
  * - increased size from 14x14 to 16x16
  * - scales in Java 8 and Linux
- *
- * @author Eirik Bakke
  */
 @SuppressWarnings("serial")
-final class FlatTabControlIcon extends VectorIcon {
+public final class FlatTabControlIcon extends VectorIcon {
     private static final boolean chevron = "chevron".equals(UIManager.getString("Component.arrowType")); // NOI18N
     private static final int arc = UIManager.getInt("TabControlIcon.arc"); // NOI18N
     private static final Color foreground = UIManager.getColor("TabControlIcon.foreground"); // NOI18N
@@ -65,11 +65,11 @@ final class FlatTabControlIcon extends VectorIcon {
 
     private static final Map<Entry<Integer,Integer>,Icon> INSTANCES = populateInstances();
     private final int buttonId;
-    private final int buttonState;
+    private final Integer buttonState;
     private final float userScaleFactor; // for Java 8 and Linux
 
     private static void populateOne(
-            Map<Entry<Integer,Integer>,Icon> toMap, int buttonId, int buttonState)
+            Map<Entry<Integer,Integer>,Icon> toMap, int buttonId, Integer buttonState)
     {
         toMap.put(new SimpleEntry<Integer,Integer>(buttonId, buttonState),
                 new FlatTabControlIcon(buttonId, buttonState));
@@ -94,6 +94,7 @@ final class FlatTabControlIcon extends VectorIcon {
         buttonIDs.put("maximize", TabControlButton.ID_MAXIMIZE_BUTTON); // NOI18N
         buttonIDs.put("restore", TabControlButton.ID_RESTORE_BUTTON); // NOI18N
         Map<String, Integer> buttonStates = new LinkedHashMap<String, Integer>();
+        buttonStates.put("component", null); // NOI18N
         buttonStates.put("default", TabControlButton.STATE_DEFAULT); // NOI18N
         buttonStates.put("pressed", TabControlButton.STATE_PRESSED); // NOI18N
         buttonStates.put("disabled", TabControlButton.STATE_DISABLED); // NOI18N
@@ -108,7 +109,7 @@ final class FlatTabControlIcon extends VectorIcon {
         return Collections.unmodifiableMap(ret);
     }
 
-    private FlatTabControlIcon(int buttonId, int buttonState) {
+    private FlatTabControlIcon(int buttonId, Integer buttonState) {
         super(UIScale.scale(16), UIScale.scale(16));
         this.buttonId = buttonId;
         this.buttonState = buttonState;
@@ -122,6 +123,13 @@ final class FlatTabControlIcon extends VectorIcon {
         return INSTANCES.get(new SimpleEntry<Integer,Integer>(buttonId, buttonState));
     }
 
+    /**
+     * @return null if the requested icon is not available in vector format
+     */
+    public static Icon get(int buttonId) {
+        return INSTANCES.get(new SimpleEntry<Integer,Integer>(buttonId, null));
+    }
+
     @Override
     protected void paintIcon(Component c, Graphics2D g, int width, int height, double scaling) {
         // scale on Java 8 and Linux
@@ -130,6 +138,24 @@ final class FlatTabControlIcon extends VectorIcon {
         Color bgColor = new Color(0, 0, 0, 0); // Alpha zero means no background.
         Color fgColor = foreground;
         {
+            int buttonState;
+            if (this.buttonState != null) {
+                buttonState = this.buttonState.intValue();
+            } else {
+                // get button state from component
+                buttonState = TabControlButton.STATE_DEFAULT;
+                if (!c.isEnabled()) {
+                    buttonState = TabControlButton.STATE_DISABLED;
+                } else if (c instanceof AbstractButton) {
+                    ButtonModel bm = ((AbstractButton) c).getModel();
+                    if (bm.isPressed()) {
+                        buttonState = TabControlButton.STATE_PRESSED;
+                    } else if (bm.isRollover()) {
+                        buttonState = TabControlButton.STATE_ROLLOVER;
+                    }
+                }
+            }
+
             Color closeColor = (buttonId == TabControlButton.ID_CLOSE_BUTTON)
                     ? closeRolloverBackground : null;
             if (buttonState == TabControlButton.STATE_DISABLED) {
@@ -183,10 +209,8 @@ final class FlatTabControlIcon extends VectorIcon {
         {
             // Draw one little window on top of another.
             int wh = round(8 * scaling);
-            // Upper right-hand corner.
             int win1X = round(5 * scaling);
             int win1Y = round(3 * scaling);
-            // Lower left-hand corner.
             int win2X = round(3 * scaling);
             int win2Y = round(5 * scaling);
             Area win1 = getWindowSymbol(scaling, win1X, win1Y, wh, wh);

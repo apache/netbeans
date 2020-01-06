@@ -342,7 +342,7 @@ final class GUIRegistrationPanel extends BasicWizardIterator.Panel {
     private void createPositionModel(final JComboBox positionsCombo,
             final FileObject[] files,
             final LayerItemPresenter parent) {
-        DefaultComboBoxModel newModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<Position> newModel = new DefaultComboBoxModel<>();
         LayerItemPresenter previous = null;
         for (FileObject file : files) {
             if (file.getNameExt().endsWith(LayerUtil.HIDDEN)) {

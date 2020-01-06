@@ -516,7 +516,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     
     private ListModel getInstalledDictionariesModel() {
-        DefaultListModel dlm = new DefaultListModel();
+        DefaultListModel<Locale> dlm = new DefaultListModel<>();
 
         for (Locale l : DictionaryProviderImpl.getInstalledDictionariesLocales()) {
             dlm.addElement(l);

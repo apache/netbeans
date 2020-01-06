@@ -164,7 +164,7 @@ public class NewLicensePanel extends javax.swing.JPanel {
         super.addNotify();
         
         assert nls != null : " The notificationLineSupport was not attached to the panel."; //NOI18N
-        DefaultListModel dlm = new DefaultListModel();
+        DefaultListModel<Tuple> dlm = new DefaultListModel<>();
         FileObject root = FileUtil.getConfigFile("Templates/Licenses");
         if (root != null) {
             for (FileObject lic : root.getChildren()) {

@@ -1,5 +1,5 @@
 Name: Byte Buddy
-Version: 1.7.9
+Version: 1.10.6
 Description: Code Generation Library
 License: Apache-2.0+BSD-INRIA
 Origin: Byte Buddy

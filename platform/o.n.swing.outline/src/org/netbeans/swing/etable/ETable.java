@@ -2156,7 +2156,7 @@ public class ETable extends JTable {
             implements DocumentListener, FocusListener {
         
         /** The last search results */
-        private List results = new ArrayList();
+        private List<Integer> results = new ArrayList<>();
         /** The last selected index from the search results. */
         private int currentSelectionIndex;
         

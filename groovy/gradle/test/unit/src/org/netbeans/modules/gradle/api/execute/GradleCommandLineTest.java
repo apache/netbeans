@@ -19,6 +19,10 @@
 
 package org.netbeans.modules.gradle.api.execute;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -26,6 +30,9 @@ import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.rules.TemporaryFolder;
+import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleFilesTest;
 
 /**
  *
@@ -276,5 +283,27 @@ public class GradleCommandLineTest {
         GradleCommandLine second = new GradleCommandLine("-Pversion=2.0");
         GradleCommandLine cmd = GradleCommandLine.combine(first, second);
         assertEquals(Arrays.asList("-Pversion=2.0", "build"), cmd.getSupportedCommandLine());
+    }
+
+    @Test
+    public void testJVMArgs1() throws IOException {
+        TemporaryFolder root = new TemporaryFolder();
+        root.create();
+        File props = root.newFile("gradle.properties");
+        Files.write(props.toPath(), Arrays.asList("org.gradle.jvmargs=\"-Dfile.encoding=UTF-8\" -Xmx2g"));
+        List<String> jvmargs = new ArrayList<>();
+        GradleCommandLine.addGradleSettingJvmargs(root.getRoot(), jvmargs);
+        assertEquals(Arrays.asList("-Dfile.encoding=UTF-8", "-Xmx2g"), jvmargs);
+    }
+
+    @Test
+    public void testJVMArgs2() throws IOException {
+        TemporaryFolder root = new TemporaryFolder();
+        root.create();
+        File props = root.newFile("gradle.properties");
+        Files.write(props.toPath(), Arrays.asList("org.gradle.jvmargs=\"-Dfile.encoding=UTF-8\" -Dsomething=\"space value\""));
+        List<String> jvmargs = new ArrayList<>();
+        GradleCommandLine.addGradleSettingJvmargs(root.getRoot(), jvmargs);
+        assertEquals(Arrays.asList("-Dfile.encoding=UTF-8", "-Dsomething=space value"), jvmargs);
     }
 }

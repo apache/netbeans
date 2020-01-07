@@ -32,6 +32,9 @@
     </folder>
     <folder name="org-netbeans-api-project-libraries">
         <folder name="Libraries">
+            <file name="spring-webmvc-5.0.xml" url="spring-webmvc-5.0.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc5"/>
+            </file>
             <file name="spring-webmvc-4.0.xml" url="spring-webmvc-4.0.xml">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.spring.webmvc.resources.Bundle#spring-webmvc4"/>
             </file>

@@ -198,8 +198,8 @@ public class SourceGroupSupport {
         return result;
     }
 
-    private static List/*<FileObject>*/ getFileObjects(URL[] urls, boolean quiet) {
-        List result = new ArrayList();
+    private static List<FileObject> getFileObjects(URL[] urls, boolean quiet) {
+        List<FileObject> result = new ArrayList<>();
         for (int i = 0; i < urls.length; i++) {
             FileObject sourceRoot = URLMapper.findFileObject(urls[i]);
             if (sourceRoot != null) {

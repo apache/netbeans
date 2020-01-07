@@ -864,7 +864,7 @@ public class DataNode extends AbstractNode {
                 } 
                 
                  /*See #31413*/
-                List transmitProperties = Arrays.asList(new String[] {
+                List<String> transmitProperties = Arrays.asList(new String[] {
                     DataObject.PROP_NAME, DataObject.PROP_FILES, DataObject.PROP_TEMPLATE});
                 if (transmitProperties.contains(ev.getPropertyName())) {
                     firePropertyChange(ev.getPropertyName(), ev.getOldValue(), ev.getNewValue());

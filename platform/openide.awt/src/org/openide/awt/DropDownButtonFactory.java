@@ -23,6 +23,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
+import org.openide.awt.IconWithArrow.ArrowIcon;
 
 /**
  * Factory creating buttons with a small arrow icon that shows a popup menu when clicked.
@@ -69,5 +70,17 @@ public final class DropDownButtonFactory {
      */
     public static JToggleButton createDropDownToggleButton( Icon icon, JPopupMenu dropDownMenu ) {
         return new DropDownToggleButton( icon, dropDownMenu );
+    }
+
+    /**
+     * Get a dropdown button icon that is identical to those used in the dropdown buttons returned
+     * by other methods in this class. The returned icon scales properly on HiDPI screens.
+     *
+     * @since 7.74
+     * @param disabled whether to get a disabled version of the icon or not
+     * @return a dropdown arrow icon
+     */
+    public static Icon getArrowIcon(boolean disabled) {
+        return disabled ? ArrowIcon.INSTANCE_DEFAULT : ArrowIcon.INSTANCE_DISABLED;
     }
 }

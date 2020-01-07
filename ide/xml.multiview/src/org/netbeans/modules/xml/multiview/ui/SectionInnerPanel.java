@@ -49,7 +49,7 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
     private static final RequestProcessor RP = new RequestProcessor(SectionInnerPanel.class);
 
     private SectionView sectionView;
-    private java.util.List refreshableList = new LinkedList();
+    private java.util.List<Refreshable> refreshableList = new LinkedList<>();
     
     private boolean localFocusListenerInitialized = false;
     private FocusListener localFocusListener = new FocusListener() {

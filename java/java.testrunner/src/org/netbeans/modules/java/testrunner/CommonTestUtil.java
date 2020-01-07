@@ -127,11 +127,10 @@ public class CommonTestUtil {
         for (int i = 0; i < rootURLs.length; i++) {
             if ((sourceRoots[i] = URLMapper.findFileObject(rootURLs[i]))
                     == null) {
-                ErrorManager.getDefault().notify(
+                ErrorManager.getDefault().log(
                         ErrorManager.INFORMATIONAL,
-                        new IllegalStateException(
                            "No FileObject found for the following URL: "//NOI18N
-                           + rootURLs[i]));
+                           + rootURLs[i]);
                 someSkipped = true;
                 continue;
             }

@@ -35,6 +35,7 @@ import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.*;
 import org.netbeans.core.windows.view.ui.*;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 
@@ -111,8 +112,44 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
              AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
         );
     }
-    
 
+    /**
+     * Get the location of a {@link DragSourceEvent}, incorporating a workaround for a JDK bug on
+     * HiDPI screens on Windows. See NETBEANS-2954. This method should be called only while the
+     * mouse pointer is still likely to be in the same position as it was when the event was
+     * originally created.
+     */
+    public static Point getLocationWorkaround(DragSourceEvent evt) {
+        Point ret = evt.getLocation();
+        if (Utilities.isWindows() && ret != null) {
+            /* Workaround for JDK bug where DragSourceEvent.getLocation() returns incorrect screen
+            coordinates for displays with HiDPI scaling on Windows. Use MouseInfo.getPointerInfo
+            instead; that one handles HiDPI displays correctly. In the JDK codebase, the bug can be
+            seen by comparing the correct implementation of MouseInfo.getPointerInfo at
+
+              java.desktop/windows/native/libawt/windows/MouseInfo.cpp
+              (see Java_sun_awt_windows_WMouseInfoPeer_fillPointWithCoords )
+
+            with the function AwtDragSource::GiveFeedback, which initiates the creation of
+            DragSourceEvent objects, in
+
+              java.desktop/windows/native/libawt/windows/awt_DnDDS.cpp
+              (see GetCursorPos, call_dSCenter, and call_dSCmotion calls in
+              AwtDragSource::GiveFeedback)
+
+            In both cases the screen coordinates of the mouse pointer is retrieved using the
+            "GetCursorPos" Windows API function. This one seems to return device coordinates rather
+            than logical coordinates, presumably because the java.exe executable (and the NetBeans
+            launcher, since NETBEANS-1227) declares itself to be fully DPI-aware. In MouseInfo.cpp,
+            extra code is added to convert the device coordinates to logical coordinates based on
+            the DPI scaling level. This is not done in awt_DnDDS.cpp, however. */
+            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            if (pointerInfo != null) {
+                ret = pointerInfo.getLocation();
+            }
+        }
+        return ret;
+    }
     
     /** Indicates whether the window drag and drop is enabled. */
     public static boolean isDnDEnabled() {
@@ -990,7 +1027,7 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
                 debugLog("dragMouseMoved evt=" + evt); // NOI18N
             }
             
-            Point location = evt.getLocation();
+            Point location = WindowDnDManager.getLocationWorkaround(evt);
             if(location == null) {
                 return;
             }

@@ -1613,5 +1613,24 @@ public class Utilities {
     private static Preferences getPreferences() {
         return NbPreferences.root ().node ("/org/netbeans/modules/autoupdate"); // NOI18N
     }    
-    
+
+    public static String hexEncode(byte[] input) {
+        StringBuilder sb = new StringBuilder(input.length * 2);
+        for(byte b: input) {
+            sb.append(Character.forDigit((b & 0xF0) >> 4, 16));
+            sb.append(Character.forDigit((b & 0x0F), 16));
+        }
+        return sb.toString();
+    }
+
+    public static byte[] hexDecode(String input) {
+        int length = input.length() / 2;
+        byte[] result = new byte[length];
+        for(int i = 0; i < length; i++) {
+            int b = Character.digit(input.charAt(i * 2), 16) << 4;
+            b |= Character.digit(input.charAt(i * 2 + 1), 16);
+            result[i] = (byte) (b & 0xFF);
+        }
+        return result;
+    }
 }

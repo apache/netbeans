@@ -41,8 +41,8 @@ public class AddForwardDialogPanel extends javax.swing.JPanel implements Validat
         this.config=config;
         initComponents();
         List actions = StrutsConfigUtilities.getAllActionsInModule(config);
-        DefaultComboBoxModel model = (DefaultComboBoxModel)jComboBoxFwdAction.getModel();
-        DefaultComboBoxModel model1 = (DefaultComboBoxModel)jComboBoxLocationAction.getModel();
+        DefaultComboBoxModel<String> model  = (DefaultComboBoxModel<String>)jComboBoxFwdAction.getModel();
+        DefaultComboBoxModel<String> model1 = (DefaultComboBoxModel<String>)jComboBoxLocationAction.getModel();
         Iterator iter = actions.iterator();
         while (iter.hasNext()) {
             String actionPath=((Action)iter.next()).getAttributeValue("path"); //NOI18N

@@ -63,7 +63,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
         String[] htmlTags = HtmlTags.getTags();
 
         // Optional prefix
-        DefaultComboBoxModel htmlTagsModel1 = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> htmlTagsModel1 = new DefaultComboBoxModel<>();
         htmlTagsModel1.addElement(NONE);
         htmlTagsModel1.addElement("a:link");
         htmlTagsModel1.addElement("a:visited");

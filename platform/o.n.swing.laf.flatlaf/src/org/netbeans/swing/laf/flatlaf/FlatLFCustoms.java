@@ -20,6 +20,7 @@
 package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.util.UIScale;
+import java.awt.Color;
 import javax.swing.UIManager;
 import org.netbeans.swing.laf.flatlaf.ui.FlatTabControlIcon;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -38,6 +39,9 @@ public class FlatLFCustoms extends LFCustoms {
     @Override
     public Object[] createApplicationSpecificKeysAndValues() {
         return new Object[] {
+            // necessary for org.openide.explorer.propertysheet.PropertySheet and others
+            CONTROLFONT, UIManager.getFont("Label.font"),
+
             EDITOR_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatEditorTabDisplayerUI", // NOI18N
             VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatViewTabDisplayerUI", // NOI18N
             SLIDING_BUTTON_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatSlidingButtonUI", // NOI18N
@@ -63,6 +67,12 @@ public class FlatLFCustoms extends LFCustoms {
             "nb.multitabs.button.left.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_LEFT_BUTTON), // NOI18N
             "nb.multitabs.button.right.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_RIGHT_BUTTON), // NOI18N
             "nb.multitabs.button.rollover", true, // NOI18N
+
+            // Change some colors from ColorUIResource to Color because they are used as
+            // background colors for checkboxes (e.g. in org.netbeans.modules.palette.ui.CategoryButton),
+            // which in FlatLaf paint background only if background color is not a UIResource.
+            "PropSheet.setBackground", new Color(UIManager.getColor("PropSheet.setBackground").getRGB()),
+            "PropSheet.selectedSetBackground", new Color(UIManager.getColor("PropSheet.selectedSetBackground").getRGB()),
         };
     }
 }

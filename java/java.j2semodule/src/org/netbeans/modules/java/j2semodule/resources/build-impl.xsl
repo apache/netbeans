@@ -1697,7 +1697,7 @@ is divided into following sections:
             </target>
             
             <target name="-do-jar-jar">
-                <xsl:attribute name="depends">init,compile,-pre-pre-jar,-pre-jar</xsl:attribute>
+                <xsl:attribute name="depends">init,compile,-pre-pre-jar,-pre-jar,-main-module-check-condition</xsl:attribute>
                 <xsl:attribute name="if">do.archive</xsl:attribute>
                 <xsl:attribute name="unless">do.mkdist</xsl:attribute>
                 <property name="build.modules.dir.resolved" location="${{build.modules.dir}}"/>
@@ -1716,7 +1716,17 @@ is divided into following sections:
                         <param name="module.dir" location="${{entry}}"/>
                     </antcall>
                 </j2semodularproject1:for-paths>
-                
+                <condition property="named.module.internal">
+                    <and>
+                        <isset property="module.name"/>
+                        <length length="0" string="${{module.name}}" when="greater"/>
+                    </and>
+                </condition>
+                <condition property="unnamed.module.internal">
+                    <not>
+                        <isset property="named.module.internal"/>
+                    </not>
+                </condition>
                 <property location="${{build.classes.dir}}" name="build.classes.dir.resolved"/>
                 <property location="${{dist.jar}}" name="dist.jar.resolved"/>
                 <pathconvert property="run.classpath.with.dist.jar">
@@ -1727,7 +1737,7 @@ is divided into following sections:
                     <path path="${{run.modulepath}}"/>
                     <map from="${{build.classes.dir.resolved}}" to="${{dist.jar.resolved}}"/>
                 </pathconvert>
-                <condition property="jar.usage.message.module.path" value=" -modulepath ${{run.modulepath.with.dist.jar}}" else="">
+                <condition property="jar.usage.message.module.path" value=" --module-path ${{run.modulepath.with.dist.jar}}" else="">
                     <and>
                         <isset property="modules.supported.internal"/>
                         <length length="0" string="${{run.modulepath.with.dist.jar}}" when="greater"/>
@@ -1894,6 +1904,18 @@ is divided into following sections:
                 </pathconvert>
             </target>
             <target name="-main-module-check" depends="-main-module-set">
+                <fail message="Could not determine module of the main class and module.name is not set">
+                    <condition>
+                        <or>
+                            <not>
+                                <isset property="module.name"/>
+                            </not>
+                            <length string="${{module.name}}" when="equal" length="0"/>
+                        </or>
+                    </condition>
+                </fail>
+            </target>
+            <target name="-main-module-check-condition" depends="-main-module-set" if="main.class.available">
                 <fail message="Could not determine module of the main class and module.name is not set">
                     <condition>
                         <or>

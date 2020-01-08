@@ -464,6 +464,17 @@ matrix:
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
             
+        - name: Test groovy modules
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+          script:
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+
         - name: Test php modules
           jdk: openjdk8
           env:

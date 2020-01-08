@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.groovy.editor.completion.inference;
 
+import groovy.lang.Range;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -32,7 +33,9 @@ import org.codehaus.groovy.ast.expr.DeclarationExpression;
 import org.codehaus.groovy.ast.expr.EmptyExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.ListExpression;
+import org.codehaus.groovy.ast.expr.MapExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.control.SourceUnit;
@@ -109,19 +112,7 @@ public class TypeInferenceVisitor extends TypeVisitor {
     @Override
     public void visitDeclarationExpression(DeclarationExpression expression) {
         if (sameVariableName(leaf, expression.getLeftExpression())) {
-            Expression rightExpression = expression.getRightExpression();
-            if (rightExpression instanceof ConstantExpression
-                    && !rightExpression.getText().equals("null")) { // NOI18N
-                guessedType = ((ConstantExpression) rightExpression).getType();
-            } else if (rightExpression instanceof ConstructorCallExpression) {
-                guessedType = ((ConstructorCallExpression) rightExpression).getType();
-            } else if (rightExpression instanceof MethodCallExpression) {
-                guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
-            } else if (rightExpression instanceof StaticMethodCallExpression) {
-                guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
-            } else if (rightExpression instanceof ListExpression) {
-                guessedType = ((ListExpression) rightExpression).getType();
-            }
+            guessedType = deriveExpressonType(expression.getRightExpression());
         }
     }
 
@@ -144,6 +135,14 @@ public class TypeInferenceVisitor extends TypeVisitor {
                         int newOffset = ASTUtils.getOffset(doc, initialExpression.getLineNumber(), initialExpression.getColumnNumber());
                         AstPath newPath = new AstPath(path.root(), newOffset, doc);
                         guessedType = MethodInference.findCallerType(initialExpression, newPath, doc, newOffset);
+                    } else if (initialExpression instanceof ListExpression) {
+                        guessedType = ((ListExpression) initialExpression).getType();
+                    } else if (initialExpression instanceof MapExpression) {
+                        guessedType = ((MapExpression) initialExpression).getType();
+                    } else if (initialExpression instanceof RangeExpression) {
+                        // this should work, but the type is Object - nut sure why
+                        // guessedType = ((RangeExpression)initialExpression).getType();
+                        guessedType = ClassHelper.makeWithoutCaching(Range.class, true);                
                     }
                 } else if (accessedVariable instanceof Parameter) {
                     Parameter param = (Parameter) accessedVariable;
@@ -192,6 +191,31 @@ public class TypeInferenceVisitor extends TypeVisitor {
     private static boolean sameVariableName(ASTNode node1, FieldNode node2) {
         return node1 instanceof VariableExpression
                 && ((VariableExpression) node1).getName().equals(node2.getName());
+    }
+
+    private ClassNode deriveExpressonType(Expression expression) {
+        if (expression instanceof ConstantExpression
+                && !expression.getText().equals("null")) { // NOI18N
+            return ((ConstantExpression) expression).getType();
+        } else if (expression instanceof ConstructorCallExpression) {
+            return ((ConstructorCallExpression) expression).getType();
+        } else if (expression instanceof MethodCallExpression) {
+            int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
+            AstPath newPath = new AstPath(path.root(), newOffset, doc);
+            return MethodInference.findCallerType(expression, newPath, doc, newOffset);
+        } else if (expression instanceof StaticMethodCallExpression) {
+            return MethodInference.findCallerType(expression, path, doc, cursorOffset);
+        } else if (expression instanceof ListExpression) {
+            return ((ListExpression) expression).getType();
+        } else if (expression instanceof MapExpression) {
+            return ((MapExpression) expression).getType();
+        } else if (expression instanceof RangeExpression) {
+            // this should work, but the type is Object - nut sure why
+            // guessedType = ((RangeExpression)initialExpression).getType();
+            return ClassHelper.makeWithoutCaching(Range.class, true);                
+        } else {
+            return null;
+        }       
     }
 
 }

@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -60,6 +61,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.DropDownButtonFactory;
 import org.openide.awt.ToolbarPool;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -237,7 +239,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
         private WebBrowser wb;
 
         public SelectBrowserAction(ProjectBrowserProvider pbp, WebBrowser wb) {
-            super(BrowserUISupport.getLongDisplayName(wb), new ImageIcon(wb.getIconImage(isSmallToolbarIcon())));
+            super(BrowserUISupport.getLongDisplayName(wb), ImageUtilities.image2Icon(wb.getIconImage(isSmallToolbarIcon())));
             this.pbp = pbp;
             this.wb = wb;
         }
@@ -272,8 +274,8 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 showBrowserPickerPopup( button );
             }
         });
-        button.setDisabledIcon(new ImageIcon(badgeImageWithArrow(
-            ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE))));
+        button.setDisabledIcon(badgeWithArrowIcon(
+            ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE)));
         button.setEnabled(false);
         button.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -350,8 +352,8 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                 lastWebBrowser = null;
             }
             if (pbp == null) {
-                tb.setIcon(new ImageIcon(badgeImageWithArrow(ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE)))); // NOI18N
-                tb.setDisabledIcon(new ImageIcon(badgeImageWithArrow(ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE)))); // NOI18N
+                tb.setIcon(badgeWithArrowIcon(ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE))); // NOI18N
+                tb.setDisabledIcon(badgeWithArrowIcon(ImageUtilities.loadImage(isSmallToolbarIcon() ? DISABLED_SMALL : DISABLED_LARGE))); // NOI18N
                 tb.setToolTipText(null);
             } else {
                 WebBrowser wb = pbp.getActiveBrowser();
@@ -364,7 +366,7 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
                     im = ImageUtilities.loadImage(isSmallToolbarIcon() ? GENERIC_SMALL : GENERIC_LARGE); // NOI18N
                     tb.setToolTipText(Bundle.ActiveBrowserAction_missingProject());
                 }
-                tb.setIcon(new ImageIcon(badgeImageWithArrow(im)));
+                tb.setIcon(badgeWithArrowIcon(im));
                 lastWebBrowser = wb;
             }
             tb.setEnabled(pbp != null);
@@ -375,14 +377,12 @@ public class ActiveBrowserAction extends CallableSystemAction implements LookupL
         }
     }
 
-    private Image badgeImageWithArrow(Image im) {
+    private Icon badgeWithArrowIcon(Image im) {
         // #235642
         assert im != null : "Image must be provided";
-        Image arrow = ImageUtilities.loadImage("org/openide/awt/resources/arrow.png"); // NOI18N
-        assert arrow != null : "Arrow image must be found";
-        return ImageUtilities.mergeImages(im,
-            arrow,
-            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10); // NOI18N
+        return ImageUtilities.image2Icon(ImageUtilities.mergeImages(im,
+            ImageUtilities.icon2Image(DropDownButtonFactory.getArrowIcon(false)),
+            isSmallToolbarIcon() ? 20 : 28, isSmallToolbarIcon() ? 6 : 10)); // NOI18N
     }
 
     private void showBrowserPickerPopup( JButton invoker ) {

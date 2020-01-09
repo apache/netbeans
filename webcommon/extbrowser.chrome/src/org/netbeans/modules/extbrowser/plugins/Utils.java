@@ -420,7 +420,7 @@ public final class Utils {
             char[] pszPath = new char[Shell32.MAX_PATH];
             try {
                 if (Shell32_INSTANCE == null) {
-                    Shell32_INSTANCE = (Shell32) Native.load("shell32", Shell32.class, W32APIOptions.UNICODE_OPTIONS);
+                    Shell32_INSTANCE = Native.load("shell32", Shell32.class, W32APIOptions.UNICODE_OPTIONS);
                 }
                 int hResult = Shell32_INSTANCE.SHGetFolderPath(null, Shell32.CSIDL_LOCAL_APPDATA,
                         null, Shell32.SHGFP_TYPE_CURRENT, pszPath);

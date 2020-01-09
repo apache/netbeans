@@ -986,7 +986,8 @@ public final class Stamps {
             dos.writeUTF(codeName);
             dos.writeUTF(relPath);
         } else {
-            Collection coll = (Collection) out;
+            @SuppressWarnings("unchecked")
+            Collection<String> coll = (Collection<String>) out;
             coll.add(codeName);
             coll.add(relPath);
         }

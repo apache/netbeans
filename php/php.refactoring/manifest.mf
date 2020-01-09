@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.modules.php.refactoring
 OpenIDE-Module-Layer: org/netbeans/modules/refactoring/php/resources/mf-layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/refactoring/php/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.37
+OpenIDE-Module-Specification-Version: 1.38
 

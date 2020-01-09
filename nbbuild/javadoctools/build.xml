@@ -116,42 +116,67 @@
                 <include name="**/allclasses-noframe.html"/>
             </packageslist>
         </javadoc-index>
+        
+        <!-- we concat all xml into one big xml file alldatas.xml -->
+        <echo file="${export.interfaces}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;alldata&gt;
+        </echo>
+
+        <echo file="${export.interfaces}/footer.gen">
+            &lt;/alldata&gt;
+        </echo>
+        <concat destfile="${netbeans.javadoc.dir}/alldatas.xml">
+            <fileset dir="${export.interfaces}" includes="header.gen"/>
+            <fileset file="${netbeans.javadoc.dir}/allclasses.xml"/>
+            <fileset file="${netbeans.javadoc.dir}/modules.xml"/>
+            <fileset file="${netbeans.javadoc.dir}/apichanges.xml"/>
+            <fileset dir="${export.interfaces}" includes="footer.gen"/>
+            <filterchain>
+                <linecontainsregexp negate="true">
+                    <regexp pattern="&lt;\?xml version"/>
+                </linecontainsregexp>
+            </filterchain>  
+        </concat>
     </target>
     
     <target name="generate-html" depends="init">
-        <tstamp>
-            <format property="timestamp-modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
-        </tstamp>
-        <condition property="modules-javadoc-date" value="${timestamp-modules-javadoc-date}">
-	    <not>
-		<isset property="modules-javadoc-date"/>
-	    </not>
+        <!-- reformulate dev version from json to more human version -->
+        <condition property="json.uversion" value="${json.version}" else="Development Version">
+            <not>
+                <equals arg1="${json.version}" arg2="dev"/>
+            </not>
         </condition>
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
             <param name="changes-since-year" expression="${previous.release.year}"/>
             <param name="changes-since-day" expression="${previous.release.day}"/>
             <param name="changes-since-month" expression="${previous.release.month}"/>
             <param name="include-introduction" expression="true"/>
+            <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
+            <param name="allmodule" expression="${netbeans.javadoc.dir}/modules.xml" />
         </style>
 
-        <tstamp>
-            <format property="timestamp-atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
-        </tstamp>
-	<condition property="atom-date" value="${timestamp-atom-date}">
- 	    <not>
-               <isset property="atom-date"/> 
-            </not>		
-        </condition>
-        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
             <param name="date" expression="${atom-date}"/>
+            <param name="maturity" expression="${json.maturity}" />
         </style>
-        
+        <!-- copy some assets to apidoc root -->
         <copy file="netbeans.css" tofile="${netbeans.javadoc.dir}/netbeans.css"/>
+        <copy file="siteresource/apache-netbeans.svg" tofile="${netbeans.javadoc.dir}/apache-netbeans.svg" overwrite="true"/>
+        <copy todir="${netbeans.javadoc.dir}" overwrite="true">
+            <fileset dir="siteresource" >
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
         <condition property="javadoc.style.sheet.exists">
             <available file="${netbeans.javadoc.dir}/org-openide-util/javadoc.css"/>
         </condition>
@@ -161,65 +186,46 @@
             it from master module Javadoc pages. If it does not anymore, update
             the export*.xsl templates.
         </fail>
-
+<!--
         <style in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="export2allclasses.xsl"/>
         
         <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="export2allmodules.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
         </style>
-        
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
+-->        
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
+             <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
 
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
             <param name="date" expression="${modules-javadoc-date}"/>
-        </style>
-        
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-summary.html" style="export2html.xsl">
-            <param name="date" expression="${modules-javadoc-date}"/>
-            <param name="download" expression="true"/>
-        </style>
-        
-        <style in="${netbeans.javadoc.dir}/modules.xml" out="${nb_all}/nbbuild/build/tmp/overview-summary.html" style="export2html.xsl">
-            <param name="date" expression="${modules-javadoc-date}"/>
-            <param name="download" expression="false"/>
+            <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
         </style>
         
         <!-- at the end generate the index.html so people know where to start -->      
-        <echo file="${netbeans.javadoc.dir}/index.html"><![CDATA[
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-<html>
-    <head>
-        <title>NetBeans API Index</title>
-        <link type="application/atom+xml" rel="alternate" href="apichanges.atom"></link>
-    </head>
-    <frameset cols="20%,80%" title="" onLoad="top.loadFrames()">
-        <frameset rows="30%,70%" title="" onLoad="top.loadFrames()">
-            <frame src="overview-frame.html" name="packageListFrame" title="All Modules"></frame>
-            <frame src="allclasses-frame.html" name="packageFrame" title="All classes"></frame>
-        </frameset>
-        <frame src="overview-summary.html" name="classFrame" title="Module, package, class and interface descriptions" scrolling="yes"></frame>
-        <noframes>
-            <h2>Frame Alert</h2>
-            <p>
-                This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-                Link to <a href="overview-summary.html">Non-frame version.</a>
-            </p>
-        </noframes>
-    </frameset>
-</html>
-]]>
-        </echo>
+        <style in="${netbeans.javadoc.dir}/alldatas.xml" out="${netbeans.javadoc.dir}/index.html" style="export2index.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="maturity" expression="${json.maturity}" />
+            <param name="version" expression="${json.uversion}" />
+            <param name="releaseinfo" expression="${xmlrelease}" />
+        </style>
         &properties;
 
         <replace dir="${netbeans.javadoc.dir}">
             <include name="*.html"/>
-            <replacefilter token="@JDK@" value="http://download.oracle.com/javase/6/docs/api/"/>
+            <replacefilter token="@JDK@" value="${javaapidocurl}"/>
             &replaces;   
             <replacefilter token="http://root/" value="."/>
             <replacefilter token="$${javadoc.web.root}" value="."/>

@@ -21,6 +21,8 @@ package org.netbeans.modules.java.lsp.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -188,7 +190,9 @@ public class Server implements ArgsProcessor {
             }
             ServerCapabilities capabilities = new ServerCapabilities();
             capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
-            capabilities.setCompletionProvider(new CompletionOptions());
+            CompletionOptions completionOptions = new CompletionOptions();
+            completionOptions.setResolveProvider(true);
+            capabilities.setCompletionProvider(completionOptions);
             capabilities.setCodeActionProvider(true);
             capabilities.setDocumentSymbolProvider(true);
             capabilities.setDefinitionProvider(true);

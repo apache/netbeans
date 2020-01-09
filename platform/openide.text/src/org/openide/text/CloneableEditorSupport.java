@@ -168,7 +168,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private Set<ChangeListener> listeners;
 
     /** last selected editor pane. */
-    private transient Reference<Pane> lastSelected[] = new Reference[] { null };
+    private transient Reference<Pane> lastSelected = null;
 
     /** The time of the last save to determine the real external modifications */
     private long lastSaveTime;
@@ -921,13 +921,11 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Returns the lastly selected Pane or null
      */
     final Pane getLastSelected() {
-        Reference<Pane> r = lastSelected[0];
-
-        return (r == null) ? null : r.get();
+        return (lastSelected == null) ? null : lastSelected.get();
     }
 
     final void setLastSelected(Pane lastSelected) {
-        this.lastSelected[0] = new WeakReference<Pane>(lastSelected);
+        this.lastSelected = new WeakReference<>(lastSelected);
     }
 
     //

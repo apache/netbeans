@@ -22,7 +22,6 @@ package org.netbeans.libs.git.jgit;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.libs.git.jgit.factory.CheckJava7ExtensionTest;
 import org.netbeans.libs.git.jgit.factory.CreateClientTest;
 
 /**
@@ -38,7 +37,6 @@ public class ClientFactoryTestSuite extends NbTestSuite {
     public static Test suite() throws Exception {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(CreateClientTest.class);
-        suite.addTestSuite(CheckJava7ExtensionTest.class);
         return suite;
     }
 

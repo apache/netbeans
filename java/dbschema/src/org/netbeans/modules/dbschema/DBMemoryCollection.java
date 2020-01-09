@@ -107,7 +107,7 @@ class DBMemoryCollection {
         if (_elms != null)
             return _elms;
         else
-            return (DBElement[]) Arrays.asList(_template).toArray(new DBElement[_template.length]);
+            return Arrays.asList(_template).toArray(new DBElement[_template.length]);
     }
 
     /** Returns an element specified by the name from this collection.

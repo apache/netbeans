@@ -62,6 +62,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.classpath.CacheClassPath;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
@@ -2435,21 +2436,7 @@ public class JavaSourceTest extends NbTestCase {
     }
 
     private ClassPath createBootPath () throws MalformedURLException {
-        String bootPath = System.getProperty ("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = org.openide.util.Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return BootClassPathUtil.getBootClassPath();
     }
 
     private ClassPath createCompilePath () {

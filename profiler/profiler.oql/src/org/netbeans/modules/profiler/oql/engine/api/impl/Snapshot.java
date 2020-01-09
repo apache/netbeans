@@ -65,7 +65,7 @@ public class Snapshot {
             weakReferenceClass = findClass("sun.misc.Ref"); // NOI18N
             referentFieldIndex = 0;
         } else {
-            List flds = weakReferenceClass.getFields();
+            List<Field> flds = weakReferenceClass.getFields();
             int fldsCount = flds.size();
 
             for (int i = 0; i < fldsCount; i++) {
@@ -199,14 +199,14 @@ public class Snapshot {
 
             @Override
             protected Iterator<JavaClass> getTraversingIterator(JavaClass popped) {
-                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.EMPTY_LIST.iterator();
+                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.<JavaClass>emptyList().iterator();
             }
         };
     }
 
     public Iterator getReferrers(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List references = new ArrayList();
+        List<Object> instances  = new ArrayList<>();
+        List<Object> references = new ArrayList<>();
         
         if (obj instanceof Instance) {
             references.addAll(((Instance)obj).getReferences());
@@ -233,8 +233,8 @@ public class Snapshot {
     }
 
     public Iterator getReferees(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List values = new ArrayList();
+        List<Object> instances = new ArrayList<>();
+        List<Object> values    = new ArrayList<>();
         
         if (obj instanceof Instance) {
             Instance o = (Instance)obj;
@@ -278,9 +278,9 @@ public class Snapshot {
         Instance queue = ((ObjectFieldValue) clazz.getValueOfStaticField("queue")).getInstance(); // NOI18N
         ObjectFieldValue headFld = (ObjectFieldValue) queue.getValueOfField("head"); // NOI18N
 
-        List finalizables = new ArrayList();
+        List<Instance> finalizables = new ArrayList<>();
         if (headFld != null) {
-            Instance head = (Instance) headFld.getInstance();
+            Instance head = headFld.getInstance();
             while (true) {
                 ObjectFieldValue referentFld = (ObjectFieldValue) head.getValueOfField("referent"); // NOI18N
                 ObjectFieldValue nextFld = (ObjectFieldValue) head.getValueOfField("next"); // NOI18N
@@ -288,7 +288,7 @@ public class Snapshot {
                 if (nextFld == null || nextFld.getInstance().equals(head)) {
                     break;
                 }
-                head = (Instance) nextFld.getInstance();
+                head = nextFld.getInstance();
                 finalizables.add(referentFld.getInstance());
             }
         }
@@ -319,7 +319,7 @@ public class Snapshot {
     }
 
     public GCRoot[] getRootsArray() {
-        List rootList = getRootsList();
+        List<GCRoot> rootList = getRootsList();
         return (GCRoot[]) rootList.toArray(new GCRoot[0]);
     }
    
@@ -334,10 +334,10 @@ public class Snapshot {
                 this.path = path;
             }
         }
-        Deque<State> stack = new ArrayDeque<State>();
-        Set ignored = new HashSet();
+        Deque<State> stack = new ArrayDeque<>();
+        Set<Object> ignored = new HashSet<>();
         
-        List<ReferenceChain> result = new ArrayList<ReferenceChain>();
+        List<ReferenceChain> result = new ArrayList<>();
         
         Iterator toInspect = getRoots();
         ReferenceChain path = null;

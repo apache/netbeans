@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>org-netbeans-html-ko4j.jar</runtime-relative-path>
-               <binary-origin>external/ko4j-1.6.1.jar</binary-origin>
+               <binary-origin>external/ko4j-1.7.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

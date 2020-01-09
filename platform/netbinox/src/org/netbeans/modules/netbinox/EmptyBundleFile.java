@@ -46,8 +46,8 @@ final class EmptyBundleFile extends BundleFile {
     }
 
     @Override
-    public Enumeration getEntryPaths(String string) {
-        return Collections.enumeration(Collections.emptyList());
+    public Enumeration<String> getEntryPaths(String string) {
+        return Collections.enumeration(Collections.<String>emptyList());
     }
 
     @Override

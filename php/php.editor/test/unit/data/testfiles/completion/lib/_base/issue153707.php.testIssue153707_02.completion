@@ -2,6 +2,7 @@ Code completion result for source line:
 echo "class property: $|this->name\n";
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 VARIABLE   ? $name                         [PUBLIC]   issue153707.php
+VARIABLE   ? name                          [PUBLIC]   Book
 KEYWORD    Book $this->                               null
 ------------------------------------
 VARIABLE   $GLOBALS                                   PHP Platform

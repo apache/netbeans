@@ -119,7 +119,7 @@ public class EncodingUtil {
      * @return
      */
     public static String getIANA2JavaMapping(String ianaEncoding) {
-        String java = (String) encodingIANA2JavaMap.get (ianaEncoding.toUpperCase ());
+        String java = encodingIANA2JavaMap.get (ianaEncoding.toUpperCase ());
         return java == null ? ianaEncoding : java;
 }
     
@@ -130,7 +130,7 @@ public class EncodingUtil {
      * @return
      */
     public static String getJava2IANAMapping(String javaEncoding) {
-        String iana = (String) encodingJava2IANAMap.get (javaEncoding);
+        String iana = encodingJava2IANAMap.get (javaEncoding);
         return iana == null ? javaEncoding : iana;
     }
         

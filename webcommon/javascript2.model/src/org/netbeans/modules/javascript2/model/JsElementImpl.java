@@ -81,7 +81,7 @@ public abstract class JsElementImpl implements JsElement {
             LOG.log(Level.WARNING, "Suspicious offset range of element at \n", new Throwable());
         }
         this.offsetRange = offsetRange;
-        this.modifiers = modifiers == null ? Collections.EMPTY_SET: modifiers;
+        this.modifiers = modifiers == null ? Collections.emptySet(): modifiers;
         this.isDeclared = isDeclared;
         assert mimeType == null || 
                isCorrectMimeType(mimeType) : mimeType;

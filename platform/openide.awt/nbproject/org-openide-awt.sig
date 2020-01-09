@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.73
+#Version 7.74
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1671,6 +1671,7 @@ CLSS public static org.openide.awt.Actions$CheckboxMenuItem
  outer org.openide.awt.Actions
 cons public init(javax.swing.Action,boolean)
 cons public init(org.openide.util.actions.BooleanStateAction,boolean)
+ anno 0 java.lang.Deprecated()
 supr javax.swing.JCheckBoxMenuItem
 hfds serialVersionUID
 

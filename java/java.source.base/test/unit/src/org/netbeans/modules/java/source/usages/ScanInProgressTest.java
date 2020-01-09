@@ -75,6 +75,9 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
 
     @Override
     protected void setUp() throws Exception {
+        //ensure ProjectsRootNode children are processed synchronously:
+        System.setProperty("test.projectnode.sync", "true");
+
         clearWorkDir();
 
         MockServices.setServices(TestSupport.TestProjectFactory.class);

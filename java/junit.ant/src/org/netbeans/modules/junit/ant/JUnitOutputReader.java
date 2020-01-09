@@ -614,7 +614,7 @@ final class JUnitOutputReader {
                         lastSuiteTime = reportSuite.getElapsedTime();
                         for(Testcase tc: currentSuite.getTestcases()){
                             if (!tc.getOutput().isEmpty()){
-                                List<String> output = new ArrayList();
+                                List<String> output = new ArrayList<>();
                                 for(OutputLine l: tc.getOutput()){
                                     output.add(l.getLine());
                                 }

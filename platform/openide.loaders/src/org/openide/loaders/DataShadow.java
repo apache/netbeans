@@ -1204,7 +1204,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
             }
             
             if (o instanceof DSWeakReference) {
-                DSWeakReference him = (DSWeakReference) o;
+                DSWeakReference<?> him = (DSWeakReference<?>) o;
                 return mine.equals(him.get());
             }
             

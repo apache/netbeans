@@ -25,6 +25,6 @@
   <display-name value='PostgreSQL'/>
   <class value='org.postgresql.Driver'/>
   <urls>
-  	<url value="nbinst://org.netbeans.modules.db.drivers/modules/ext/postgresql-42.2.5.jar"/>
+  	<url value="nbinst://org.netbeans.modules.db.drivers/modules/ext/postgresql-42.2.8.jar"/>
   </urls>
 </driver>

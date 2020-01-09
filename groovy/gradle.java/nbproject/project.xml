@@ -30,7 +30,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.3</specification-version>
+                        <release-version>1</release-version>
+                        <specification-version>1.4</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -101,14 +102,6 @@
                     <run-dependency>
                         <release-version>2</release-version>
                         <specification-version>1.41.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.gsf.codecoverage</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.26.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -357,22 +350,6 @@
                 <package>org.netbeans.modules.gradle.java.api.output</package>
                 <package>org.netbeans.modules.gradle.java.spi.debug</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>
-                <binary-origin>external/org.jacoco.core-0.8.3.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>gradle/asm.jar</runtime-relative-path>
-                <binary-origin>external/asm-7.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>gradle/asm-commons.jar</runtime-relative-path>
-                <binary-origin>external/asm-commons-7.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>gradle/asm-tree.jar</runtime-relative-path>
-                <binary-origin>external/asm-tree-7.0.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

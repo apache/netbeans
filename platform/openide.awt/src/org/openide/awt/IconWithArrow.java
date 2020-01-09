@@ -90,7 +90,7 @@ class IconWithArrow implements Icon {
         return GAP/2 + 5;
     }
 
-    private static class ArrowIcon extends VectorIcon {
+    static class ArrowIcon extends VectorIcon {
         public static final Icon INSTANCE_DEFAULT = new ArrowIcon(false);
         public static final Icon INSTANCE_DISABLED = new ArrowIcon(true);
         private final boolean disabled;

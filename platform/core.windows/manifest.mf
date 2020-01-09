@@ -6,5 +6,5 @@ OpenIDE-Module-Provides: org.netbeans.core.WindowSystem, org.openide.windows.Win
 OpenIDE-Module-Recommends: org.netbeans.core.windows.nativeaccess.NativeWindowSystem
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 2.89
+OpenIDE-Module-Specification-Version: 2.90
 

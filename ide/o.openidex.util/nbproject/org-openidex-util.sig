@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.52
+#Version 3.53
 
 CLSS public abstract interface java.io.Serializable
 
@@ -164,13 +164,16 @@ hfds registry
 CLSS public final org.openidex.search.SearchHistory
 fld public final static java.lang.String ADD_TO_HISTORY = "add-to-history"
 fld public final static java.lang.String LAST_SELECTED = "last-selected"
+ anno 0 java.lang.Deprecated()
 meth public java.util.List<org.openidex.search.SearchPattern> getSearchPatterns()
 meth public org.openidex.search.SearchPattern getLastSelected()
+ anno 0 java.lang.Deprecated()
 meth public static org.openidex.search.SearchHistory getDefault()
 meth public void add(org.openidex.search.SearchPattern)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setLastSelected(org.openidex.search.SearchPattern)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds INSTANCE,MAX_SEARCH_PATTERNS_ITEMS,PREFS_NODE,PROP_SEARCH_PATTERN_PREFIX,pcs,prefs,searchPatternsList
 

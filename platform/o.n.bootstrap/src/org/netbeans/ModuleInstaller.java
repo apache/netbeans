@@ -191,7 +191,7 @@ public abstract class ModuleInstaller {
      * @since org.netbeans.core/1 > 1.6
      * @see "#27853"
      */
-    public void refineClassLoader(Module m, List parents) {
+    public void refineClassLoader(Module m, List<? extends ClassLoader> parents) {
         // do nothing
     }
 

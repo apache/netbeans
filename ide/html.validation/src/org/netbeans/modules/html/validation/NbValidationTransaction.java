@@ -849,8 +849,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         sourceReader.addCharacterHandler(sourceCode);
         reader = new IdFilter(xmlParser.getXMLReader());
         if (lexicalHandler != null) {
-            xmlParser.setProperty("http://xml.org/sax/properties/lexical-handler",
-                    (LexicalHandler) lexicalHandler);
+            xmlParser.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
         }
 
         reader.setFeature("http://xml.org/sax/features/string-interning", true);

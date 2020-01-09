@@ -118,6 +118,15 @@ public class TplParserErrorsTest extends TplTestBase {
         assertParserErrors();
     }
 
+    // no errors
+    public void testParserNETBEANS3335_01() throws Exception {
+        assertParserErrors();
+    }
+
+    public void testParserNETBEANS3335_02() throws Exception {
+        assertParserErrors();
+    }
+
     private String getTestFileRelPath() {
         return "testfiles/parserErrors/" + getName() + ".tpl";
     }

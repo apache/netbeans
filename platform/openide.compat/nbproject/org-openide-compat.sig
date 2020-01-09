@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.45
+#Version 6.46
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -887,6 +887,7 @@ meth public abstract void insertUpdate(javax.swing.event.DocumentEvent)
 meth public abstract void removeUpdate(javax.swing.event.DocumentEvent)
 
 CLSS public org.openide.explorer.ExplorerActions
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public final boolean isConfirmDelete()
 meth public final void setConfirmDelete(boolean)
@@ -928,6 +929,7 @@ CLSS public abstract interface static org.openide.explorer.ExplorerManager$Provi
 meth public abstract org.openide.explorer.ExplorerManager getExplorerManager()
 
 CLSS public org.openide.explorer.ExplorerPanel
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(org.openide.explorer.ExplorerManager)
 intf org.openide.explorer.ExplorerManager$Provider
@@ -1153,19 +1155,28 @@ CLSS public abstract interface static org.openide.util.HelpCtx$Provider
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 
 CLSS public abstract org.openide.util.HttpServer
+ anno 0 java.lang.Deprecated()
 innr public abstract interface static Impl
 meth public static boolean allowAccess(java.net.InetAddress) throws java.net.UnknownHostException
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL getRepositoryRoot() throws java.net.MalformedURLException,java.net.UnknownHostException
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL getRepositoryURL(org.openide.filesystems.FileObject) throws java.net.MalformedURLException,java.net.UnknownHostException
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL getResourceRoot() throws java.net.MalformedURLException,java.net.UnknownHostException
+ anno 0 java.lang.Deprecated()
 meth public static java.net.URL getResourceURL(java.lang.String) throws java.net.MalformedURLException,java.net.UnknownHostException
+ anno 0 java.lang.Deprecated()
 meth public static void deregisterServer(org.openide.util.HttpServer$Impl)
+ anno 0 java.lang.Deprecated()
 meth public static void registerServer(org.openide.util.HttpServer$Impl)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds registeredServer
 
 CLSS public abstract interface static org.openide.util.HttpServer$Impl
  outer org.openide.util.HttpServer
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean allowAccess(java.net.InetAddress) throws java.net.UnknownHostException
 meth public abstract java.net.URL getRepositoryRoot() throws java.net.MalformedURLException,java.net.UnknownHostException
 meth public abstract java.net.URL getRepositoryURL(org.openide.filesystems.FileObject) throws java.net.MalformedURLException,java.net.UnknownHostException
@@ -1406,6 +1417,7 @@ meth public static boolean isAuthenticationDialogSuppressed()
 meth public static char[] getAuthenticationPassword(java.net.URI)
 meth public static java.lang.String getAuthenticationUsername(java.net.URI)
 meth public static java.lang.String getKeyForAuthenticationPassword(java.net.URI)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String getProxyHost(java.net.URI)
 meth public static java.lang.String getProxyPort(java.net.URI)
 supr java.lang.Object
@@ -1734,6 +1746,7 @@ supr java.lang.Object
 hfds height,width
 
 CLSS public abstract org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons protected init(java.lang.Class,java.util.EventListener)
 innr public final static Change
 innr public final static Document
@@ -1750,21 +1763,31 @@ meth protected final java.util.EventListener get(java.util.EventObject)
 meth protected final void setSource(java.lang.Object)
 meth public java.lang.String toString()
 meth public static java.awt.event.FocusListener focus(java.awt.event.FocusListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static java.beans.PropertyChangeListener propertyChange(java.beans.PropertyChangeListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static java.beans.VetoableChangeListener vetoableChange(java.beans.VetoableChangeListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static java.util.EventListener create(java.lang.Class,java.util.EventListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.event.ChangeListener change(javax.swing.event.ChangeListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.event.DocumentListener document(javax.swing.event.DocumentListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileChangeListener fileChange(org.openide.filesystems.FileChangeListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.FileStatusListener fileStatus(org.openide.filesystems.FileStatusListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.filesystems.RepositoryListener repository(org.openide.filesystems.RepositoryListener,java.lang.Object)
 meth public static org.openide.nodes.NodeListener node(org.openide.nodes.NodeListener,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds listenerClass,ref,source
 hcls ListenerReference,ProxyListener
 
 CLSS public final static org.openide.util.WeakListener$Change
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.event.ChangeListener)
 intf javax.swing.event.ChangeListener
 meth protected java.lang.String removeMethodName()
@@ -1773,6 +1796,7 @@ supr org.openide.util.WeakListener
 
 CLSS public final static org.openide.util.WeakListener$Document
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(javax.swing.event.DocumentListener)
 intf javax.swing.event.DocumentListener
 meth protected java.lang.String removeMethodName()
@@ -1783,6 +1807,7 @@ supr org.openide.util.WeakListener
 
 CLSS public static org.openide.util.WeakListener$FileChange
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.filesystems.FileChangeListener)
 intf org.openide.filesystems.FileChangeListener
 meth protected java.lang.String removeMethodName()
@@ -1796,6 +1821,7 @@ supr org.openide.util.WeakListener
 
 CLSS public static org.openide.util.WeakListener$FileStatus
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.filesystems.FileStatusListener)
 intf org.openide.filesystems.FileStatusListener
 meth protected java.lang.String removeMethodName()
@@ -1804,6 +1830,7 @@ supr org.openide.util.WeakListener
 
 CLSS public final static org.openide.util.WeakListener$Focus
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(java.awt.event.FocusListener)
 intf java.awt.event.FocusListener
 meth protected java.lang.String removeMethodName()
@@ -1813,6 +1840,7 @@ supr org.openide.util.WeakListener
 
 CLSS public final static org.openide.util.WeakListener$Node
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.nodes.NodeListener)
 intf org.openide.nodes.NodeListener
 meth protected java.lang.String removeMethodName()
@@ -1824,6 +1852,7 @@ supr org.openide.util.WeakListener$PropertyChange
 
 CLSS public static org.openide.util.WeakListener$PropertyChange
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(java.beans.PropertyChangeListener)
 intf java.beans.PropertyChangeListener
 meth protected java.lang.String removeMethodName()
@@ -1832,6 +1861,7 @@ supr org.openide.util.WeakListener
 
 CLSS public static org.openide.util.WeakListener$Repository
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(org.openide.filesystems.RepositoryListener)
 intf org.openide.filesystems.RepositoryListener
 meth protected java.lang.String removeMethodName()
@@ -1842,6 +1872,7 @@ supr org.openide.util.WeakListener
 
 CLSS public static org.openide.util.WeakListener$VetoableChange
  outer org.openide.util.WeakListener
+ anno 0 java.lang.Deprecated()
 cons public init(java.beans.VetoableChangeListener)
 intf java.beans.VetoableChangeListener
 meth protected java.lang.String removeMethodName()

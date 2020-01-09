@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.xml.multiview.ui;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.*;
@@ -100,7 +102,7 @@ public class SimpleDialogPanel extends JPanel {
             }
         }
         if (customizers!=null) {
-            java.util.List buttonList = new java.util.ArrayList();
+            List<JButton> buttonList = new ArrayList<>();
             int j=0;
             for (int i=0;i<customizers.length;i++) {
                 if (customizers[i]) {

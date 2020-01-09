@@ -3,5 +3,5 @@ OpenIDE-Module: org.netbeans.modules.progress.ui
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/progress/ui/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.progress.spi.ProgressUIWorkerProvider, org.netbeans.modules.progress.spi.RunOffEDTProvider
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 1.39
+OpenIDE-Module-Specification-Version: 1.40
 

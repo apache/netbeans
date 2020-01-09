@@ -430,7 +430,7 @@ JNIEXPORT void JNICALL Java_org_netbeans_installer_utils_system_windows_WindowsR
     DWORD  dword     = (DWORD) jValue;
     LPBYTE byteValue = (LPBYTE) &dword;
     
-    if (!setValue(getMode(jMode),getHKEY(jSection), key, name, REG_DWORD, byteValue, sizeof(name), 0)) {
+    if (!setValue(getMode(jMode),getHKEY(jSection), key, name, REG_DWORD, byteValue, sizeof(dword), 0)) {
         throwException(jEnv, "Cannot set value");
     }
     

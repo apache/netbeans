@@ -275,7 +275,7 @@ WHILE:
     */
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         // hashtable that maps names of properties to setter methods
-        HashMap map = new HashMap();
+        HashMap<String, Method> map = new HashMap<>();
 
         try {
             synchronized (getLock()) {

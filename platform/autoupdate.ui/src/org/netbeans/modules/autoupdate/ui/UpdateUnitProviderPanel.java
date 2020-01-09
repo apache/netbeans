@@ -50,7 +50,7 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
     private final Icon errorIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/autoupdate/ui/resources/error.png", false);
 
     /** Creates new form UpdateUnitProviderPanel */
-    public UpdateUnitProviderPanel(boolean isActive, String name, String url, boolean editing) {
+    public UpdateUnitProviderPanel(boolean isActive, String name, String url, boolean editing, boolean isTrusted) {
         isEdit = editing;
         originalName = name;
         initComponents();
@@ -58,6 +58,7 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
         tfURL.setText(url);
         tfName.setText(name);
         cbActive.setSelected(isActive);
+        cbTrusted.setSelected(isTrusted);
         getAccessibleContext().setAccessibleName("ACN_UpdateCenterCustomizer");
         getAccessibleContext().setAccessibleDescription("ACD_UpdateCenterCustomizer");
     }
@@ -239,7 +240,11 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
     public String getProviderURL() {
         return tfURL.getText().trim();
     }    
-    
+
+    public boolean isTrusted() {
+        return cbTrusted.isSelected();
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -254,6 +259,7 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
         tfURL = new javax.swing.JTextField();
         cbActive = new javax.swing.JCheckBox();
         errorLabel = new javax.swing.JLabel();
+        cbTrusted = new javax.swing.JCheckBox();
 
         lName.setLabelFor(tfName);
         org.openide.awt.Mnemonics.setLocalizedText(lName, org.openide.util.NbBundle.getMessage(UpdateUnitProviderPanel.class, "UpdateUnitProviderPanel.lName.text")); // NOI18N
@@ -263,6 +269,9 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbActive, org.openide.util.NbBundle.getMessage(UpdateUnitProviderPanel.class, "UpdateUnitProviderPanel.cbActive.text")); // NOI18N
         cbActive.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbTrusted, org.openide.util.NbBundle.getMessage(UpdateUnitProviderPanel.class, "UpdateUnitProviderPanel.cbTrusted.text")); // NOI18N
+        cbTrusted.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -280,7 +289,11 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tfURL, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                             .addComponent(tfName, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-                            .addComponent(cbActive))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbTrusted)
+                                    .addComponent(cbActive))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -296,7 +309,9 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lURL)
                     .addComponent(tfURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(cbTrusted)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(errorLabel)
                 .addContainerGap())
         );
@@ -309,6 +324,7 @@ public class UpdateUnitProviderPanel extends javax.swing.JPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbActive;
+    private javax.swing.JCheckBox cbTrusted;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel lName;
     private javax.swing.JLabel lURL;

@@ -183,6 +183,8 @@ public final class XMLUtil extends Object {
                     return new InputSource(XMLUtil.class.getResource("resources/autoupdate-catalog-2_7.dtd").toString()); // NOI18N
                 } else if ("-//NetBeans//DTD Autoupdate Module Info 2.7//EN".equals(publicID)) { // NOI18N
                     return new InputSource(XMLUtil.class.getResource("resources/autoupdate-info-2_7.dtd").toString()); // NOI18N
+                } else if ("-//NetBeans//DTD Autoupdate Catalog 2.8//EN".equals(publicID)) { // NOI18N
+                    return new InputSource(XMLUtil.class.getResource("resources/autoupdate-catalog-2_8.dtd").toString()); // NOI18N
                 } else {
                     if (systemID.endsWith(".dtd")) { // NOI18N
                         return new InputSource(new ByteArrayInputStream(new byte[0]));

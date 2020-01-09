@@ -763,7 +763,7 @@ public class StatusTest extends AbstractGitTestCase {
         assertStatus(statuses, workDir, link, false, Status.STATUS_NORMAL, Status.STATUS_ADDED, Status.STATUS_ADDED, false);
         
         client.ignore(new File[] { link }, NULL_PROGRESS_MONITOR);
-        assertEquals("/boo/some_dir/", read(new File(workDir, ".gitignore")));
+        assertEquals("/boo/some_dir", read(new File(workDir, ".gitignore")));
         statuses = client.getStatus(new File[] { link }, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, link, false, Status.STATUS_NORMAL, Status.STATUS_IGNORED, Status.STATUS_ADDED, false);
     }

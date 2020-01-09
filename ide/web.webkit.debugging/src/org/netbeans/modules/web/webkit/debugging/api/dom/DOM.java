@@ -264,7 +264,7 @@ public class DOM {
      * no matching node is found).
      */
     public List<Node> querySelectorAll(Node node, String selector) {
-        List<Node> list = Collections.EMPTY_LIST;
+        List<Node> list = Collections.emptyList();
         JSONObject params = new JSONObject();
         params.put("nodeId", node.getNodeId()); // NOI18N
         params.put("selector", selector); // NOI18N

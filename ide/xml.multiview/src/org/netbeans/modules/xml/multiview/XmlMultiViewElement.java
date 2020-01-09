@@ -124,7 +124,7 @@ public class XmlMultiViewElement extends AbstractMultiViewElement implements jav
         if (xmlEditor == null) {
             xmlEditor = (XmlMultiViewEditorSupport.XmlCloneableEditor) dObj.getEditorSupport().createCloneableEditor();
             final ActionMap map = xmlEditor.getActionMap();
-            SaveAction act = (SaveAction) SystemAction.get(SaveAction.class);
+            SaveAction act = SystemAction.get(SaveAction.class);
             KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
             xmlEditor.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, "save"); //NOI18N
             map.put("save", act); //NOI18N

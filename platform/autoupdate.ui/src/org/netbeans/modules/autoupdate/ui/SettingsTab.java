@@ -512,6 +512,7 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
         
         provider.setEnable (panel.isActive ());
+        provider.setTrusted(panel.isTrusted());
         if (panel.isActive ()) {
             // was not enabled and will be -> add it to model and read its content
             refreshProvider (provider, forceRead);
@@ -566,7 +567,8 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 final UpdateUnitProviderPanel panel = new UpdateUnitProviderPanel(provider.isEnabled(),
                         provider.getDisplayName(), // display name
                         provider.getProviderURL().toExternalForm(), // URL
-                        true); // editing
+                        true, // editing
+                        provider.isTrusted());
                 DialogDescriptor descriptor = getCustomizerDescriptor(panel);
                 panel.getOKButton().addActionListener(new ActionListener(){
                     @Override
@@ -628,6 +630,7 @@ private void bProxyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             final UpdateUnitProviderPanel panel = new UpdateUnitProviderPanel(true,
                     NbBundle.getMessage(SettingsTab.class, "SettingsTab_NewProviderName"), // NOI18N
                     NbBundle.getMessage(SettingsTab.class, "SettingsTab_NewProviderURL"), // NOI18N
+                    false,
                     false);
             DialogDescriptor descriptor = getCustomizerDescriptor(panel);
             panel.getOKButton().addActionListener(new ActionListener(){

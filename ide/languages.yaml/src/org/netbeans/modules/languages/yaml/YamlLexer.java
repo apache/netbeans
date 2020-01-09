@@ -48,6 +48,9 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
     private static final int ISI_RUBY_LINE = 9; // just after % in an %-line
     private static final int ISI_NONWHITESPACE = 10; // after seeing non space characters on a line
     private static final int ISI_PHP = 11; // after <?
+    private static final int ISA_CURLY = 12; // after '{' char
+    private static final int ISI_MUSTACHE = 13; // after '{{'
+    private static final int ISI_MUSTACHE_QUOTE = 14; // cover {{ '}}' }} inside mouthstache
 
     /**
      * A Lexer for ruby strings
@@ -61,7 +64,7 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
         if (info.state() == null) {
             this.state = ISI_WHITESPACE;
         } else {
-            state = ((Integer) info.state()).intValue();
+            state = ((Integer) info.state());
         }
     }
 
@@ -125,6 +128,10 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
                             state = ISA_LT;
                             break;
 
+                        case '{':
+                            state = ISA_CURLY;
+                            break;
+
                         case '%': {
                             int peek = input.read();
                             if (peek == '%') {
@@ -185,6 +192,23 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
 //                            break;
                     }
                     break;
+
+                case ISA_CURLY: {
+                    switch (actChar) {
+                        case '{':
+                            if (input.readLength() > 2) {
+                                input.backup(2);
+                                state = ISI_WHITESPACE;
+                                return token(YamlTokenId.TEXT);
+                            } else {
+                              state = ISI_MUSTACHE;
+                              return token(YamlTokenId.MUSTACHE_DELIMITER);
+                            }
+                        default:
+                           state = ISI_WHITESPACE;
+                    }
+                    break;
+                }
 
                 case ISA_LT_PC:
                     switch (actChar) {
@@ -274,7 +298,35 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
                     }
                     break;
 
+                case ISI_MUSTACHE:
+                    switch (actChar) {
+                        case '\'':
+                            state = ISI_MUSTACHE_QUOTE;
+                            break;
+                        case '}':
+                            int peek = input.read();
+                            if (peek == '}') {
+                                if (input.readLength() == 2) {
+                                    state = ISI_WHITESPACE;
+                                    return token(YamlTokenId.MUSTACHE_DELIMITER);
+                                } else {
+                                    input.backup(2);
+                                    return token(YamlTokenId.MUSTACHE);
+                                }
+                            } else if (peek != LexerInput.EOF) {
+                                input.backup(1);
+                            }
+                            break;
+                    }
+                    break;
 
+                case ISI_MUSTACHE_QUOTE:
+                    switch (actChar){
+                        case '\'':
+                           state = ISI_MUSTACHE;
+                           break;
+                    }
+                    break;
                 case ISI_SCRIPTLET:
                     switch (actChar) {
                         case '%':

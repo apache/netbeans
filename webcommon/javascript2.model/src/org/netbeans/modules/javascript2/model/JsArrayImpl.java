@@ -86,7 +86,7 @@ public class JsArrayImpl extends JsObjectImpl implements JsArray {
     public void resolveTypes(JsDocumentationHolder jsDocHolder) {
         super.resolveTypes(jsDocHolder); 
         HashSet<String> nameTypesInArray = new HashSet<String>();
-        Collection<TypeUsage> resolved = new ArrayList();
+        Collection<TypeUsage> resolved = new ArrayList<>();
         Collection<? extends TypeUsage> typesIA = getTypesInArray();
         for (TypeUsage type : typesIA) {
             if (!(type.getType().equals(Type.UNRESOLVED) && typesIA.size() > 1)) {

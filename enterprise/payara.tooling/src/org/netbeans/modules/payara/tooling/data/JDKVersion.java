@@ -42,31 +42,37 @@ public final class JDKVersion {
      */
     private final Optional<Short> update;
 
-    public static JDKVersion IDE_JDK_VERSION;
+    /**
+     * JDK vendor
+     */
+    private final Optional<String> vendor;
 
-    private static final String VERSION_MATCHER = "([0-9]+[\\._u\\-]+)*[0-9]+";
+    private final static int MAJOR_INDEX = 0;
+    private final static int MINOR_INDEX = 1;
+    private final static int SUBMINOR_INDEX = 2;
+    private final static int UPDATE_INDEX = 3;
 
-    // split java version into it's constituent parts, i.e.
-    // 1.2.3.4 -> [ 1, 2, 3, 4]
-    // 1.2.3u4 -> [ 1, 2, 3, 4]
-    // 1.2.3_4 -> [ 1, 2, 3, 4]
-    private static final String VERSION_SPLITTER = "[\\._u\\-]+";
+    private static JDKVersion IDE_JDK_VERSION;
+
+    private static final String VERSION_MATCHER = "(\\d+(\\.\\d+)*)([_u\\-]+[\\S]+)*";
 
     private static final Short DEFAULT_VALUE = 0;
 
-    private JDKVersion(String string) {
-        String[] split = string.split(VERSION_SPLITTER);
-        major = split.length > 0 ? Short.parseShort(split[0]) : 0;
-        minor = split.length > 1 ? Optional.of(Short.parseShort(split[1])) : Optional.empty();
-        subminor = split.length > 2 ? Optional.of(Short.parseShort(split[2])) : Optional.empty();
-        update = split.length > 3 ? Optional.of(Short.parseShort(split[3])) : Optional.empty();
+    private JDKVersion(String version, String vendor) {
+        short[] versions = parseVersions(version);
+        this.major = versions[MAJOR_INDEX];
+        this.minor = Optional.ofNullable(versions[MINOR_INDEX]);
+        this.subminor = Optional.ofNullable(versions[SUBMINOR_INDEX]);
+        this.update = Optional.ofNullable(versions[UPDATE_INDEX]);
+        this.vendor = Optional.ofNullable(vendor);
     }
 
-    private JDKVersion(Short major, Short minor, Short subminor, Short update) {
+    JDKVersion(Short major, Optional<Short> minor, Optional<Short> subminor, Optional<Short> update, Optional<String> vendor) {
         this.major = major;
-        this.minor = Optional.of(minor);
-        this.subminor = Optional.of(subminor);
-        this.update = Optional.of(update);
+        this.minor = minor;
+        this.subminor = subminor;
+        this.update = update;
+        this.vendor = vendor;
     }
 
     /**
@@ -103,6 +109,15 @@ public final class JDKVersion {
      */
     public Optional<Short> getUpdate() {
         return update;
+    }
+
+    /**
+     * Get JDK Vendor.
+     *
+     * @return JDK vendor.
+     */
+    public Optional<String> getVendor() {
+        return vendor;
     }
 
     public boolean gt(JDKVersion version) {
@@ -210,7 +225,8 @@ public final class JDKVersion {
 
     @Override
     public String toString() {
-        StringBuilder value = new StringBuilder(major);
+        StringBuilder value = new StringBuilder();
+        value.append(major);
         if (minor.isPresent()) {
             value.append('.').append(minor.get());
         }
@@ -225,7 +241,15 @@ public final class JDKVersion {
 
     public static JDKVersion toValue(String version) {
         if (version != null && version.matches(VERSION_MATCHER)) {
-            return new JDKVersion(version);
+            return new JDKVersion(version, null);
+        } else {
+            return null;
+        }
+    }
+
+    public static JDKVersion toValue(String version, String vendor) {
+        if (version != null && version.matches(VERSION_MATCHER)) {
+            return new JDKVersion(version, vendor);
         } else {
             return null;
         }
@@ -235,9 +259,17 @@ public final class JDKVersion {
         return IDE_JDK_VERSION;
     }
 
-    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
+    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<String> vendor, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
         boolean correctJDK = true;
-        if (minVersion.isPresent()) {
+
+        if (vendor.isPresent()) {
+            if (jdkVersion.getVendor().isPresent()) {
+                correctJDK = jdkVersion.getVendor().get().contains(vendor.get());
+            } else {
+                correctJDK = false;
+            }
+        }
+        if (correctJDK && minVersion.isPresent()) {
             correctJDK = jdkVersion.ge(minVersion.get());
         }
         if (correctJDK && maxVersion.isPresent()) {
@@ -247,7 +279,7 @@ public final class JDKVersion {
     }
 
     public static boolean isCorrectJDK(Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
-        return isCorrectJDK(IDE_JDK_VERSION, minVersion, maxVersion);
+        return isCorrectJDK(IDE_JDK_VERSION, Optional.empty(), minVersion, maxVersion);
     }
 
     static {
@@ -255,12 +287,8 @@ public final class JDKVersion {
     }
 
     private static void initialize() {
-        short major = 1;
-        short minor = 0;
-        short subminor = 0;
-        short update = 0;
-        try {
-            /*
+        String vendor = System.getProperty("java.vendor"); // NOI18N
+        /*
             In JEP 223 java.specification.version will be a single number versioning , not a dotted versioning . 
             For JDK 8:
                 java.specification.version  1.8
@@ -271,58 +299,51 @@ public final class JDKVersion {
             For JDK 11:
                 java.specification.version  11
                 java.version                11.0.3
-             */
-            String javaSpecVersion = System.getProperty("java.specification.version");
-            String javaVersion = System.getProperty("java.version");
-            String[] javaSpecVersionSplit = javaSpecVersion.split("\\.");
-            if (javaSpecVersionSplit.length == 1) {
-                // Handle Early Access build. e.g: 13-ea
-                String[] javaVersionSplit = javaVersion.split("-");
-                String javaVersionCategory = javaVersionSplit[0];
-                String[] split = javaVersionCategory.split("[\\.]+");
+         */
+        String javaVersion = System.getProperty("java.version"); // NOI18N
+        short[] versions = parseVersions(javaVersion);
 
-                if (split.length > 0) {
-                    if (split.length > 0) {
-                        major = Short.parseShort(split[0]);
-                    }
-                    if (split.length > 1) {
-                        minor = Short.parseShort(split[1]);
-                    }
-                    if (split.length > 2) {
-                        subminor = Short.parseShort(split[2]);
-                    }
-                    if (split.length > 3) {
-                        update = Short.parseShort(split[3]);
-                    }
-                }
-            } else {
-                if (javaVersion == null || javaVersion.length() <= 0) {
-                    return;
-                }
+        IDE_JDK_VERSION = new JDKVersion(
+                versions[MAJOR_INDEX],
+                Optional.of(versions[MINOR_INDEX]),
+                Optional.of(versions[SUBMINOR_INDEX]),
+                Optional.of(versions[UPDATE_INDEX]),
+                Optional.of(vendor)
+        );
+    }
 
-                String[] javaVersionSplit = javaVersion.split("\\.");
-                if (javaVersionSplit.length < 3 || !javaVersionSplit[0].equals("1")) {
-                    return;
-                }
+    /**
+     * Parses the java version text
+     *
+     * @param javaVersion the Java Version e.g 1.8.0u222,
+     * 1.8.0_232-ea-8u232-b09-0ubuntu1-b09, 11.0.5
+     * @return
+     */
+    static short[] parseVersions(String javaVersion) {
 
-                major = Short.parseShort(javaVersionSplit[0]);
-                minor = Short.parseShort(javaVersionSplit[1]);
-                javaVersionSplit = javaVersionSplit[2].split("_");
-
-                if (javaVersionSplit.length < 1) {
-                    return;
-                }
-
-                subminor = Short.parseShort(javaVersionSplit[0]);
-
-                if (javaVersionSplit.length > 1) {
-                    update = Short.parseShort(javaVersionSplit[1]);
-                }
-            }
-        } catch (Exception e) {
-            // ignore
+        short[] versions = {1, 0, 0, 0};
+        if (javaVersion == null || javaVersion.length() <= 0) {
+            return versions; // not likely!!
         }
 
-        IDE_JDK_VERSION = new JDKVersion(major, minor, subminor, update);
+        String[] javaVersionSplit = javaVersion.split("-"); // NOI18N
+        String[] split = javaVersionSplit[0].split("\\."); // NOI18N
+
+        if (split.length > 0) {
+            if (split.length > 0) {
+                versions[MAJOR_INDEX] = Short.parseShort(split[0]);
+            }
+            if (split.length > 1) {
+                versions[MINOR_INDEX] = Short.parseShort(split[1]);
+            }
+            if (split.length > 2) {
+                split = split[2].split("[_u]"); // NOI18N
+                versions[SUBMINOR_INDEX] = Short.parseShort(split[0]);
+                if (split.length > 1) {
+                    versions[UPDATE_INDEX] = Short.parseShort(split[1]);
+                }
+            }
+        }
+        return versions;
     }
 }

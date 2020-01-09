@@ -75,7 +75,7 @@ public abstract class StoreEntry {
         this.ts = ts;
         this.label = label;
         this.date = new Date(ts);
-        setSiblings(Collections.EMPTY_LIST);
+        setSiblings(Collections.<StoreEntry>emptyList());
     }    
     
     public File getStoreFile() {

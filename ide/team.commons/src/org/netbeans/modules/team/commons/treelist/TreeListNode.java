@@ -338,7 +338,7 @@ public abstract class TreeListNode extends ListNode {
         private Thread t = null;
 
         public void run() {
-            final List<TreeListNode> res[] = new List[1];
+            final List<TreeListNode>[] res = new List[1];
             Runnable r = new Runnable() {
                 public void run() {
                     res[0] = createChildren();

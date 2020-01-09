@@ -1047,8 +1047,8 @@ public final class FileUtil extends Object {
         //
         // apply all extended attributes
         //
-        for (Map.Entry entry : attributes.entrySet()) { 
-            String fileName = (String) entry.getKey();
+        for (Map.Entry<String, DefaultAttributes.Table> entry : attributes.entrySet()) { 
+            String fileName = entry.getKey();
             int last = fileName.lastIndexOf('/');
             String dirName;
 
@@ -1060,11 +1060,11 @@ public final class FileUtil extends Object {
 
             String prefix = fo.isRoot() ? dirName : (fo.getPath() + '/' + dirName);
 
-            DefaultAttributes.Table t = (DefaultAttributes.Table) entry.getValue();
-            Iterator files = t.keySet().iterator();
+            DefaultAttributes.Table t = entry.getValue();
+            Iterator<String> files = t.keySet().iterator();
 
             while (files.hasNext()) {
-                String orig = (String) files.next();
+                String orig = files.next();
                 String fn = prefix + orig;
                 FileObject obj = fo.getFileSystem().findResource(fn);
 

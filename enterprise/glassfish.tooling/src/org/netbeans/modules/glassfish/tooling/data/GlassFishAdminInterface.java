@@ -53,7 +53,7 @@ public enum GlassFishAdminInterface {
      * conversion.
      */
     private static final Map<String, GlassFishAdminInterface> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
 
     // Initialize backward String conversion <code>Map</code>.
     static {

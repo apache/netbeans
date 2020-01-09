@@ -60,7 +60,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private final static String[] CARDS = {"Execution", "Appearance", "Dependencies", "Experimental"}; //NOI18N
 
-    private final GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
+    private GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
 
     /**
      * Creates new form SettingsPanel
@@ -104,6 +104,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbPreferWrapper = new javax.swing.JCheckBox();
         lbVersionInfo = new javax.swing.JLabel();
         cbSilentInstall = new javax.swing.JCheckBox();
+        btDefaultHome = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         cbOffline = new javax.swing.JCheckBox();
         cbSkipTest = new javax.swing.JCheckBox();
@@ -179,15 +181,15 @@ public class SettingsPanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jPanel1.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lblGradleUserHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblGradleUserHome.text")); // NOI18N
-        lblGradleUserHome.setEnabled(false);
 
         tfGradleUserHome.setEditable(false);
-        tfGradleUserHome.setText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.tfGradleUserHome.text")); // NOI18N
-        tfGradleUserHome.setEnabled(false);
 
         org.openide.awt.Mnemonics.setLocalizedText(btGradleUserHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.btGradleUserHome.text")); // NOI18N
-        btGradleUserHome.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.btGradleUserHome.toolTipText")); // NOI18N
-        btGradleUserHome.setEnabled(false);
+        btGradleUserHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btGradleUserHomeActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(lblGradleDistribution, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblGradleDistribution.text")); // NOI18N
 
@@ -232,6 +234,24 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSilentInstall, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSilentInstall.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(btDefaultHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.btDefaultHome.text")); // NOI18N
+        btDefaultHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDefaultHomeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -247,26 +267,32 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbPreferWrapper)
-                                    .addComponent(cbStartDaemonOnStart))
-                                .addGap(0, 165, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbUseStandardGradle)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfGradleUserHome, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(231, 231, 231)
+                                                .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE))
+                                            .addComponent(rbUseStandardGradle, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbGradleVersion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(rbUseCustomGradle)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tfUseCustomGradle)))
+                                        .addComponent(tfUseCustomGradle))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tfGradleUserHome)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btGradleUserHome, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btUseCustomGradle, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                    .addComponent(btDefaultHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btGradleUserHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btUseCustomGradle)))))
+                                    .addComponent(cbStartDaemonOnStart)
+                                    .addComponent(cbPreferWrapper))
+                                .addGap(0, 140, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cbSilentInstall)))
@@ -282,13 +308,16 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGradleUserHome)
                     .addComponent(tfGradleUserHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btGradleUserHome))
+                    .addComponent(btGradleUserHome)
+                    .addComponent(btDefaultHome))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblGradleDistribution)
-                    .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbUseStandardGradle)
-                    .addComponent(lbVersionInfo))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblGradleDistribution)
+                        .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rbUseStandardGradle)
+                        .addComponent(lbVersionInfo))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbUseCustomGradle)
@@ -296,7 +325,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(btUseCustomGradle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbPreferWrapper)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(44, 44, 44)
                 .addComponent(cbStartDaemonOnStart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbSilentInstall))
@@ -328,7 +357,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbOffline)
                             .addComponent(cbNoRebuild))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbSkipCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbSkipTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -362,7 +391,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addComponent(cbPreferMaven)
-                        .addGap(0, 367, Short.MAX_VALUE))
+                        .addGap(0, 346, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -395,7 +424,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbDisplayDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+                    .addComponent(cbDisplayDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
                     .addComponent(cbHideEmptyConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -424,9 +453,9 @@ public class SettingsPanel extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbAlwaysShowOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+                    .addComponent(cbAlwaysShowOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                     .addComponent(cbReuseOutputTabs, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbReuseEditorOnStackTrace, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE))
+                    .addComponent(cbReuseEditorOnStackTrace, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -458,7 +487,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlAppearance, "Appearance");
@@ -490,7 +519,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(pnlDependenciesLayout.createSequentialGroup()
                         .addComponent(lbDownloadLibs)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbDownloadLibs, 0, 311, Short.MAX_VALUE))
+                        .addComponent(cbDownloadLibs, 0, 347, Short.MAX_VALUE))
                     .addGroup(pnlDependenciesLayout.createSequentialGroup()
                         .addComponent(lbDownloadJavadoc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -519,7 +548,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addGroup(pnlDependenciesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbDownloadJavadoc)
                     .addComponent(cbDownloadJavadoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(324, Short.MAX_VALUE))
+                .addContainerGap(352, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlDependencies, "Dependencies");
@@ -545,7 +574,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGroup(pnlExperimentalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbOpenLazy)
                             .addComponent(cbEnableCache))))
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addContainerGap(423, Short.MAX_VALUE))
         );
         pnlExperimentalLayout.setVerticalGroup(
             pnlExperimentalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,7 +585,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbEnableCache)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbOpenLazy)
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addContainerGap(362, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlExperimental, "Experimental");
@@ -564,17 +593,15 @@ public class SettingsPanel extends javax.swing.JPanel {
         add(pnlCards, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    @Messages("TIT_CustomGradle=Select Gradle Distribution")
     private void btUseCustomGradleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUseCustomGradleActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Select Gradle Home");
+        chooser.setDialogTitle(Bundle.TIT_CustomGradle());
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setFileHidingEnabled(false);
         String path = tfUseCustomGradle.getText();
         if (path == null || path.trim().length() == 0) {
-            path = System.getenv("GRADLE_HOME");
-            if (path == null) {
-                path = new File(System.getProperty("user.home")).getAbsolutePath(); //NOI18N
-            }
+            path = GradleSettings.getDefault().getGradleUserHome().getAbsolutePath();
         }
         if (path.length() > 0) {
             File f = new File(path);
@@ -596,11 +623,12 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lstCategoriesValueChanged
 
+    @Messages("LBL_IncompatibleGradle=This version does not work with NetBeans!")
     private void cbGradleVersionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradleVersionItemStateChanged
         NbGradleVersion v = gdm.createVersion(evt.getItem().toString());
         if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
             if (v.isBlackListed()) {
-                lbVersionInfo.setText("This version does not work with NetBeans!");
+                lbVersionInfo.setText(Bundle.LBL_IncompatibleGradle());
             } else {
                 lbVersionInfo.setText(null);
             }
@@ -618,8 +646,40 @@ public class SettingsPanel extends javax.swing.JPanel {
         btUseCustomGradle.setEnabled(selected);
     }//GEN-LAST:event_rbUseCustomGradleStateChanged
 
+    @Messages("TIT_GradleUserHome=Select Gradle User Home")
+    private void btGradleUserHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGradleUserHomeActionPerformed
+        final GradleSettings settings = GradleSettings.getDefault();
+        settings.getGradleUserHome();
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(Bundle.TIT_GradleUserHome());
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setFileHidingEnabled(false);
+        String path = tfGradleUserHome.getText();
+
+        if (path.length() > 0) {
+            File f = new File(path);
+            if (f.exists()) {
+                chooser.setSelectedFile(f);
+            }
+        }
+        if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
+            File home = chooser.getSelectedFile();
+            tfGradleUserHome.setText(home.getAbsolutePath());
+            gdm = GradleDistributionManager.get(home);
+            cbGradleVersion.repaint();
+        }
+    }//GEN-LAST:event_btGradleUserHomeActionPerformed
+
+    private void btDefaultHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDefaultHomeActionPerformed
+        tfGradleUserHome.setText(getDefaultGradleUserHome());
+    }//GEN-LAST:event_btDefaultHomeActionPerformed
+
     public void setValues() {
         final GradleSettings settings = GradleSettings.getDefault();
+
+        tfGradleUserHome.setText(settings.getGradleUserHome().getAbsolutePath());
+
         tfUseCustomGradle.setText(settings.getDistributionHome());
         cbPreferWrapper.setSelected(settings.isWrapperPreferred());
 
@@ -680,6 +740,12 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
+
+        if (getDefaultGradleUserHome().equals(tfGradleUserHome.getText())) {
+            settings.setGradleUserHome(null);
+        } else {
+            settings.setGradleUserHome(new File(tfGradleUserHome.getText()));
+        }
         settings.setGradleVersion(cbGradleVersion.getSelectedItem().toString());
         settings.setDistributionHome(tfUseCustomGradle.getText());
         settings.setWrapperPreferred(cbPreferWrapper.isSelected());
@@ -755,12 +821,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         return isChanged;
     }
 
-    File currentGradleUserHome() {
-        return GradleSettings.getDefault().getGradleUserHome();
-    }
-
     private class VersionCellRenderer extends DefaultListCellRenderer {
+        @SuppressWarnings("rawtypes")
         final ListCellRenderer delegate;
+        @SuppressWarnings("rawtypes")
         public VersionCellRenderer(ListCellRenderer delegate) {
             this.delegate = delegate;
         }
@@ -771,6 +835,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             "NbGradleVersion.blacklist_TXT=<html>This version is known to have issues with NetBeans, hence usage is not recommended."
         })
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            @SuppressWarnings("unchecked")
             Component cmp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (cmp instanceof JLabel) {
                 JLabel label = (JLabel) cmp;
@@ -792,8 +857,18 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     }
 
+    private static String getRawGradleUserHome() {
+        return GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
+    }
+
+    private static String getDefaultGradleUserHome() {
+        String dir = System.getenv("GRADLE_USER_HOME"); //NOI18N
+        return dir != null ? dir : new File(System.getProperty("user.home"), ".gradle").getAbsolutePath(); //NOI18N
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgUsedDistribution;
+    private javax.swing.JButton btDefaultHome;
     private javax.swing.JButton btGradleUserHome;
     private javax.swing.JButton btUseCustomGradle;
     private javax.swing.JCheckBox cbAlwaysShowOutput;
@@ -822,6 +897,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JLabel lbDownloadJavadoc;
     private javax.swing.JLabel lbDownloadLibs;
     private javax.swing.JLabel lbDownloadSources;

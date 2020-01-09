@@ -38,7 +38,6 @@ import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.tooling.utils.Utils;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import static org.netbeans.modules.payara.tooling.data.JDKVersion.IDE_JDK_VERSION;
 import org.netbeans.modules.payara.tooling.data.JDKVersion;
 import org.netbeans.modules.payara.tooling.server.parser.JvmConfigReader.JvmOption;
 
@@ -164,11 +163,11 @@ public class ServerTasks {
             }
         }
 
-        JDKVersion javaVersion = args.getJavaVersion() != null ? args.getJavaVersion() : IDE_JDK_VERSION;
+        JDKVersion javaVersion = args.getJavaVersion() == null ? JDKVersion.getDefaultPlatformVersion() : args.getJavaVersion() ;
         List<String> optList
                 = jvmConfigReader.getJvmOptions()
                         .stream()
-                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.minVersion, fullOption.maxVersion))
+                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.vendor, fullOption.minVersion, fullOption.maxVersion))
                         .map(fullOption -> fullOption.option)
                         .collect(toList());
 

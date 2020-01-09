@@ -103,7 +103,7 @@ public class KnockoutExportInterceptor implements FunctionInterceptor {
                     LOGGER.log(Level.FINE, "Exporting property {0} to {1} as {2}",
                             new Object[] {name, object.getFullyQualifiedName(), value.getFullyQualifiedName()});
                 }
-                EnumSet modifiers = EnumSet.copyOf(value.getModifiers());
+                EnumSet<Modifier> modifiers = EnumSet.copyOf(value.getModifiers());
                 modifiers.remove(Modifier.STATIC);
                 object.addProperty(name,
                         factory.newReference(object, name, offsetRange, value, true, modifiers));

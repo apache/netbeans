@@ -96,7 +96,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, isTypeParam? MISSING_TYPEPARAM_HINT("<" + name + ">"):MISSING_PARAM_HINT(name), index) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Param(isTypeParam, make.DocIdentifier(name), Collections.EMPTY_LIST);
+                return make.Param(isTypeParam, make.DocIdentifier(name), Collections.emptyList());
             }
         };
     }
@@ -105,7 +105,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_RETURN_HINT(), -1) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.DocReturn(Collections.EMPTY_LIST);
+                return make.DocReturn(Collections.emptyList());
             }
         };
     }
@@ -114,7 +114,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_THROWS_HINT(fqn), throwIndex) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Throws(make.Reference(make.Identifier(fqn), null, null), Collections.EMPTY_LIST);
+                return make.Throws(make.Reference(make.Identifier(fqn), null, null), Collections.emptyList());
             }
         };
     }
@@ -123,7 +123,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_DEPRECATED_HINT(), -1) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Deprecated(Collections.EMPTY_LIST);
+                return make.Deprecated(Collections.emptyList());
             }
         };
     }

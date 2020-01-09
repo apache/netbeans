@@ -1181,7 +1181,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
 
     @Override
     public ResultImplementation<NBVersionInfo> findVersionsByClass(final String className, List<RepositoryInfo> repos) {
-        ResultImpl<NBVersionInfo> result = new ResultImpl(new Redo<NBVersionInfo>() {
+        ResultImpl<NBVersionInfo> result = new ResultImpl<>(new Redo<NBVersionInfo>() {
             @Override
             public void run(ResultImpl<NBVersionInfo> result) {
                 findVersionsByClass(className, result, result.getSkipped(), false);
@@ -1315,7 +1315,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         Map<String, NBGroupInfo> groupMap = new HashMap<String, NBGroupInfo>();
         Map<String, NBArtifactInfo> artifactMap = new HashMap<String, NBArtifactInfo>();
         List<NBGroupInfo> groupInfos = new ArrayList<NBGroupInfo>(result.getResults());
-        ResultImpl<NBVersionInfo> res = new ResultImpl(new Redo<NBVersionInfo>() {
+        ResultImpl<NBVersionInfo> res = new ResultImpl<>(new Redo<NBVersionInfo>() {
 
             @Override
             public void run(ResultImpl<NBVersionInfo> result) {

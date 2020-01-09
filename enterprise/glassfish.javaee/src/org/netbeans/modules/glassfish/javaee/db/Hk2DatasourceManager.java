@@ -149,7 +149,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             return readDatasources(
                     domainXml, "/domain/", null, server.getVersion(), false);
         } else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
 

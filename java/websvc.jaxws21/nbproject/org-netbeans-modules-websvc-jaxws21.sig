@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.37
+#Version 1.38
 
 CLSS public abstract com.sun.codemodel.CodeWriter
 cons public init()

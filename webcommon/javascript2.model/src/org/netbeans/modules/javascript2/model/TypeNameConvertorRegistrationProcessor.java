@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
@@ -38,7 +36,6 @@ import org.netbeans.modules.javascript2.model.spi.TypeNameConvertor;
 
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.javascript2.model.spi.TypeNameConvertor.Registration") //NOI18N
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class TypeNameConvertorRegistrationProcessor extends LayerGeneratingProcessor {
 
     public TypeNameConvertorRegistrationProcessor() {

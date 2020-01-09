@@ -2,5 +2,5 @@ Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.maven.junit.ui
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/junit/ui/Bundle.properties
 OpenIDE-Module-Provides: org.netbeans.modules.maven.junit.ui.MavenJUnitManagerProvider
-OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Specification-Version: 1.12
 

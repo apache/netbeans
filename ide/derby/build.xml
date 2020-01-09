@@ -35,8 +35,8 @@
             <arg value="etc/sample.sql"/>
             <sysproperty key="derby.system.home" value="${build.dir}/sampledb" />
             <classpath>
-                <pathelement location="external/derby-10.14.1.0.jar"/>
-                <pathelement location="external/derbytools-10.14.1.0.jar"/>
+                <pathelement location="external/derby-10.14.2.0.jar"/>
+                <pathelement location="external/derbytools-10.14.2.0.jar"/>
             </classpath>
         </java>
         <zip basedir="${build.dir}/sampledb/sample"

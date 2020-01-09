@@ -142,7 +142,7 @@ class TabsComponent extends JPanel {
 		}
 	    }
         }
-        Enumeration en = model.getButtonGroup().getElements();
+        Enumeration<AbstractButton> en = model.getButtonGroup().getElements();
         while (en.hasMoreElements()) {
             JToggleButton but = (JToggleButton)en.nextElement();
             but.setPreferredSize(new Dimension(prefWidth + 10, prefHeight));
@@ -274,7 +274,7 @@ class TabsComponent extends JPanel {
 		prefWidth = Math.max(button.getPreferredSize().width, prefWidth);
 	    }
         }
-        Enumeration en = model.getButtonGroupSplit().getElements();
+        Enumeration<AbstractButton> en = model.getButtonGroupSplit().getElements();
         while (en.hasMoreElements()) {
             JToggleButton but = (JToggleButton)en.nextElement();
             Insets ins = but.getBorder().getBorderInsets(but);
@@ -359,7 +359,7 @@ class TabsComponent extends JPanel {
 
     private void syncSplitButtonsWithModel() {
         model.setFreezeTabButtons( true );
-	Enumeration en = model.getButtonGroupSplit().getElements();
+	Enumeration<AbstractButton> en = model.getButtonGroupSplit().getElements();
 	while (en.hasMoreElements()) {
 	    JToggleButton but = (JToggleButton) en.nextElement();
             TabsButtonModel buttonModel = ( TabsButtonModel ) but.getModel();
@@ -373,7 +373,7 @@ class TabsComponent extends JPanel {
 
     private void syncButtonsWithModel() {
         model.setFreezeTabButtons( true );
-	Enumeration en = model.getButtonGroup().getElements();
+	Enumeration<AbstractButton> en = model.getButtonGroup().getElements();
 	while (en.hasMoreElements()) {
 	    JToggleButton but = (JToggleButton) en.nextElement();
             TabsButtonModel buttonModel = ( TabsButtonModel ) but.getModel();
@@ -513,7 +513,7 @@ class TabsComponent extends JPanel {
     }
 
     void changeActiveManually(MultiViewDescription desc) {
-        Enumeration en = model.getButtonGroup().getElements();
+        Enumeration<AbstractButton> en = model.getButtonGroup().getElements();
 	MultiViewDescription activeDescription = model.getActiveDescription();
 	if (activeDescription instanceof ContextAwareDescription && ((ContextAwareDescription) activeDescription).isSplitDescription()) {
 	    en = model.getButtonGroupSplit().getElements();
@@ -549,7 +549,7 @@ class TabsComponent extends JPanel {
     }
 
     void changeVisibleManually(MultiViewDescription desc) {
-        Enumeration en = model.getButtonGroup().getElements();
+        Enumeration<AbstractButton> en = model.getButtonGroup().getElements();
 	MultiViewDescription activeDescription = model.getActiveDescription();
 	if (activeDescription instanceof ContextAwareDescription && ((ContextAwareDescription) activeDescription).isSplitDescription()) {
 	    en = model.getButtonGroupSplit().getElements();
@@ -703,7 +703,7 @@ class TabsComponent extends JPanel {
 
     void requestFocusForSelectedButton() {
         bar.setFocusable(true);
-        Enumeration en = model.getButtonGroup().getElements();
+        Enumeration<AbstractButton> en = model.getButtonGroup().getElements();
         while (en.hasMoreElements()) {
             JToggleButton but = (JToggleButton)en.nextElement();
             if (model.getButtonGroup().isSelected(but.getModel())) {

@@ -168,7 +168,7 @@ final class CodeTemplatesModel {
                     abbreviation,
                     tableModel.getDescription(idx),
                     tableModel.getText(idx),
-                    new ArrayList(tableModel.getContexts(idx)),
+                    new ArrayList<String>(tableModel.getContexts(idx)),
                     tableModel.getUniqueId(idx),
                     mimeType
                 );
@@ -306,9 +306,9 @@ final class CodeTemplatesModel {
             if (ret == null) {
                 CodeTemplateDescription ctd = codeTemplatesMap.get(abbreviation);
                 final boolean[] afterInit = {false};
-                ret = new LinkedHashSet() {
+                ret = new LinkedHashSet<String>() {
                     @Override
-                    public boolean add(Object e) {
+                    public boolean add(String e) {
                         boolean b = super.add(e);
                         if (b && afterInit[0]) {
                             TM.this.fireChanged();

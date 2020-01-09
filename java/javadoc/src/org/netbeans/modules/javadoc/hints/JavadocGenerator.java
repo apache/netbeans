@@ -221,7 +221,7 @@ public final class JavadocGenerator {
 
                 if (SourceVersion.RELEASE_5.compareTo(srcVersion) <= 0) {
                     for (TypeParameterElement param : clazz.getTypeParameters()) {
-                        tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                        tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                     }
                 }
                 break;
@@ -229,15 +229,15 @@ public final class JavadocGenerator {
             case METHOD:
                 ExecutableElement method = (ExecutableElement) elm;
                 for (TypeParameterElement param : method.getTypeParameters()) {
-                    tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                    tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                 }
 
                 for (VariableElement param : method.getParameters()) {
-                    tags.add(make.Param(false, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                    tags.add(make.Param(false, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                 }
 
                 if (method.getReturnType().getKind() != TypeKind.VOID) {
-                    tags.add(make.DocReturn(Collections.EMPTY_LIST));
+                    tags.add(make.DocReturn(Collections.emptyList()));
                 }
                 for (TypeMirror exceptionType : method.getThrownTypes()) {
                     Element exception;
@@ -250,7 +250,7 @@ public final class JavadocGenerator {
                         throw new IllegalStateException("Illegal kind: " + exceptionType.getKind()); // NOI18N
                     }
                     ExpressionTree ident = make.QualIdent(exception);
-                    tags.add(make.Throws(make.Reference(ident, null, null), Collections.EMPTY_LIST));
+                    tags.add(make.Throws(make.Reference(ident, null, null), Collections.emptyList()));
                 }
                 break;
             case FIELD:
@@ -262,7 +262,7 @@ public final class JavadocGenerator {
         }
         if (SourceVersion.RELEASE_5.compareTo(srcVersion) <= 0
                 && JavadocUtilities.isDeprecated(javac, elm)) {
-            tags.add(make.Deprecated(Collections.EMPTY_LIST));
+            tags.add(make.Deprecated(Collections.emptyList()));
         }
         return make.DocComment(firstSentence, body, tags);
     }

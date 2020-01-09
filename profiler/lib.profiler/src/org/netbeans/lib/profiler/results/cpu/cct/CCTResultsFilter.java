@@ -55,7 +55,7 @@ public final class CCTResultsFilter extends RuntimeCCTNodeProcessor.PluginAdapte
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private Set /*<Evaluator>*/ evaluators = null;
+    private Set<Evaluator> evaluators = null;
     private Set evaluatorProviders = new HashSet();
 
     private Stack passFlagStack;
@@ -65,7 +65,7 @@ public final class CCTResultsFilter extends RuntimeCCTNodeProcessor.PluginAdapte
 
     /** Creates a new instance of CategoryFilter */
     public CCTResultsFilter() {
-        evaluators = new HashSet /*<Evaluator>*/();
+        evaluators = new HashSet<>();
         passFlagStack = new Stack();
         doReset();
     }

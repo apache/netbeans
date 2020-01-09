@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.0
+#Version 2.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1227,7 +1227,6 @@ cons public init()
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.payara.tooling.data.JDKVersion
-fld public static org.netbeans.modules.payara.tooling.data.JDKVersion IDE_JDK_VERSION
 meth public boolean equals(java.lang.Object)
 meth public boolean ge(org.netbeans.modules.payara.tooling.data.JDKVersion)
 meth public boolean gt(org.netbeans.modules.payara.tooling.data.JDKVersion)
@@ -1240,7 +1239,7 @@ meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
-meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
+meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<java.lang.String>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
 supr java.lang.Object
@@ -1422,6 +1421,8 @@ fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion P
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_191
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_192
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_193
+fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_194
+fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_201
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public java.lang.String toFullString()
@@ -1442,7 +1443,7 @@ meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion toValu
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>
-hfds PF_4_1_144_STR,PF_4_1_144_STR_NEXT,PF_4_1_151_STR,PF_4_1_151_STR_NEXT,PF_4_1_152_STR,PF_4_1_152_STR_NEXT,PF_4_1_153_STR,PF_4_1_153_STR_NEXT,PF_4_1_1_154_STR,PF_4_1_1_154_STR_NEXT,PF_4_1_1_161_STR,PF_4_1_1_161_STR_NEXT,PF_4_1_1_162_STR,PF_4_1_1_162_STR_NEXT,PF_4_1_1_163_STR,PF_4_1_1_163_STR_NEXT,PF_4_1_1_164_STR,PF_4_1_1_164_STR_NEXT,PF_4_1_1_171_STR,PF_4_1_1_171_STR_NEXT,PF_4_1_2_172_STR,PF_4_1_2_172_STR_NEXT,PF_4_1_2_173_STR,PF_4_1_2_173_STR_NEXT,PF_4_1_2_174_STR,PF_4_1_2_174_STR_NEXT,PF_4_1_2_181_STR,PF_4_1_2_181_STR_NEXT,PF_5_181_STR,PF_5_181_STR_NEXT,PF_5_182_STR,PF_5_182_STR_NEXT,PF_5_183_STR,PF_5_183_STR_NEXT,PF_5_184_STR,PF_5_184_STR_NEXT,PF_5_191_STR,PF_5_191_STR_NEXT,PF_5_192_STR,PF_5_192_STR_NEXT,PF_5_193_STR,PF_5_193_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds PF_4_1_144_STR,PF_4_1_144_STR_NEXT,PF_4_1_151_STR,PF_4_1_151_STR_NEXT,PF_4_1_152_STR,PF_4_1_152_STR_NEXT,PF_4_1_153_STR,PF_4_1_153_STR_NEXT,PF_4_1_1_154_STR,PF_4_1_1_154_STR_NEXT,PF_4_1_1_161_STR,PF_4_1_1_161_STR_NEXT,PF_4_1_1_162_STR,PF_4_1_1_162_STR_NEXT,PF_4_1_1_163_STR,PF_4_1_1_163_STR_NEXT,PF_4_1_1_164_STR,PF_4_1_1_164_STR_NEXT,PF_4_1_1_171_STR,PF_4_1_1_171_STR_NEXT,PF_4_1_2_172_STR,PF_4_1_2_172_STR_NEXT,PF_4_1_2_173_STR,PF_4_1_2_173_STR_NEXT,PF_4_1_2_174_STR,PF_4_1_2_174_STR_NEXT,PF_4_1_2_181_STR,PF_4_1_2_181_STR_NEXT,PF_5_181_STR,PF_5_181_STR_NEXT,PF_5_182_STR,PF_5_182_STR_NEXT,PF_5_183_STR,PF_5_183_STR_NEXT,PF_5_184_STR,PF_5_184_STR_NEXT,PF_5_191_STR,PF_5_191_STR_NEXT,PF_5_192_STR,PF_5_192_STR_NEXT,PF_5_193_STR,PF_5_193_STR_NEXT,PF_5_194_STR,PF_5_194_STR_NEXT,PF_5_201_STR,PF_5_201_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.StartupArgs
 meth public abstract java.lang.String getJavaHome()
@@ -1538,12 +1539,17 @@ meth public boolean isLoggable(java.util.logging.Level)
 meth public java.lang.String buildKey(java.lang.String,java.lang.String)
 meth public java.lang.String excMsg(java.lang.String,java.lang.String)
 meth public static boolean loggable(java.util.logging.Level)
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String excMsg(java.lang.Class,java.lang.String)
 meth public static java.lang.String logMsg(java.lang.Class,java.lang.String)
 meth public static java.util.logging.Logger getLogger()
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
 meth public void exception(java.util.logging.Level,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.Object)

@@ -114,7 +114,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
     private String          viewType;
     private JComponent      view;
     private JComponent      buttonsPane;
-    private List models = new ArrayList(11);
+    private List<Object> models = new ArrayList<>(11);
     private List hyperModels;
 
     private List<? extends SessionProvider> sessionProviders;
@@ -525,7 +525,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
     }
 
     private static List joinLists(List[] modelLists) {
-        List models = new ArrayList();
+        List<Object> models = new ArrayList<>();
         for (List l : modelLists) {
             synchronized (l) {
                 for (Object o : l) {
@@ -637,10 +637,10 @@ public class ViewModelListener extends DebuggerManagerAdapter {
         if (hyperModels != null) {
             newModel = Models.createCompoundModel (hyperModels, propertiesHelpID);
         } else if (haveModels) {
-            List theModels;
+            List<Object> theModels;
             viewTreeDisplayFormat = createTreeDisplayFormat(viewPreferences, columnModels);
             if (viewTreeDisplayFormat != null) {
-                theModels = new ArrayList(models);
+                theModels = new ArrayList<>(models);
                 theModels.add(viewTreeDisplayFormat);
             } else {
                 theModels = models;

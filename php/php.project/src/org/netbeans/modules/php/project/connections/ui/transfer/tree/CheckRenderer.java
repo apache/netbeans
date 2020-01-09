@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.project.connections.ui.transfer.tree;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -28,7 +27,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import org.openide.explorer.view.NodeRenderer;
@@ -65,12 +63,7 @@ final class CheckRenderer extends JPanel implements TreeCellRenderer {
 
         setLayout(null);
         add(check);
-        Color c = UIManager.getColor("Tree.textBackground"); // NOI18N
-        if (c == null) {
-            // may be null on GTK L&F
-            c = Color.WHITE;
-        }
-        check.setBackground(c);
+        check.setOpaque(false);
         check.setPreferredSize(CHECK_DIM);
     }
 

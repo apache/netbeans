@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.websvc.restapi/0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/websvc/rest/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.42
+OpenIDE-Module-Specification-Version: 1.43
 AutoUpdate-Show-In-Client: false
 

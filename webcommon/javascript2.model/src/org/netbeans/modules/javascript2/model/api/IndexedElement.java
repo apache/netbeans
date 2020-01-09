@@ -390,7 +390,7 @@ public class IndexedElement implements JsElement {
         }
         
         public static Set<Modifier> getModifiers(int flag) {
-            EnumSet result = EnumSet.noneOf(Modifier.class);
+            EnumSet<Modifier> result = EnumSet.noneOf(Modifier.class);
             if ((flag & PRIVATE) != 0) result.add(Modifier.PRIVATE);
             if ((flag & PUBLIC) != 0) result.add(Modifier.PUBLIC);
             if ((flag & STATIC) != 0) result.add(Modifier.STATIC);

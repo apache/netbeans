@@ -295,8 +295,8 @@ public class CanYouQueryFromRenameTest extends LoggingTestCaseHid {
         public Pool() {
         }
         
-        public Enumeration loaders() {
-            return Enumerations.singleton(DataLoader.getLoader(MyLoader.class));
+        public Enumeration<? extends DataLoader> loaders() {
+            return Enumerations.<DataLoader>singleton(DataLoader.getLoader(MyLoader.class));
         }
     }
     

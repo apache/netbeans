@@ -64,7 +64,7 @@ public final class Source {
 
     private final String name;
     private final JPDAClassType classType;
-    private final ObservableSet<JPDAClassType> functionClassTypes = new ObservableSet();
+    private final ObservableSet<JPDAClassType> functionClassTypes = new ObservableSet<>();
     private final URL url;          // The original file source
     private final URL runtimeURL;   // The current content in runtime, or null when equal to 'url'
     private final int contentLineShift; // Line shift of 'url' content in 'runtimeURL'. Can not be negative.

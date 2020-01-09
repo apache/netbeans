@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -102,7 +103,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     
     private void changeIgnoreStatus (File f) throws IOException {
         File parent = f;
-        boolean isDirectory = f.isDirectory();
+        boolean isDirectory = f.isDirectory() && (! Files.isSymbolicLink(f.toPath()));
         StringBuilder sb = new StringBuilder('/');
         if (isDirectory) {
             sb.append('/');

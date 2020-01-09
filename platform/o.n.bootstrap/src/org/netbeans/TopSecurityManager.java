@@ -57,10 +57,10 @@ public class TopSecurityManager extends SecurityManager {
         and Class.forName
     */
     private static final Class<?> classLoaderClass = ClassLoader.class;
-    private static final Class URLClass = URL.class;
-    private static final Class runtimePermissionClass = RuntimePermission.class;
-    private static final Class accessControllerClass = AccessController.class;
-    private static final Class awtPermissionClass = AWTPermission.class;
+    private static final Class<?> URLClass = URL.class;
+    private static final Class<?> runtimePermissionClass = RuntimePermission.class;
+    private static final Class<?> accessControllerClass = AccessController.class;
+    private static final Class<?> awtPermissionClass = AWTPermission.class;
     private static SecurityManager fsSecManager;
 
     private static final List<SecurityManager> delegates = new ArrayList<SecurityManager>();
@@ -125,9 +125,9 @@ public class TopSecurityManager extends SecurityManager {
         }
         
         synchronized (delegates) {
-            Iterator it = delegates.iterator();
+            Iterator<SecurityManager> it = delegates.iterator();
             while (it.hasNext()) {
-                ((SecurityManager)it.next()).checkExit(status);
+                it.next().checkExit(status);
             }
         }
         
@@ -165,7 +165,7 @@ public class TopSecurityManager extends SecurityManager {
     }
     
     static boolean officialExit = false;
-    static Class[] getStack() {
+    static Class<?>[] getStack() {
         SecurityManager s = System.getSecurityManager();
         TopSecurityManager t;
         if (s instanceof TopSecurityManager) {
@@ -197,6 +197,7 @@ public class TopSecurityManager extends SecurityManager {
         super.checkExit(status);
     }
 
+    @SuppressWarnings("deprecation")
     public boolean checkTopLevelWindow(Object window) {
         return checkTopLevelWindow(new AWTPermission("showWindowWithoutWarningBanner"), window); // NOI18N
     }
@@ -362,7 +363,7 @@ public class TopSecurityManager extends SecurityManager {
     }
      
     final void checkConnectImpl(String host, int port) {
-        Class insecure = getInsecureClass();
+        Class<?> insecure = getInsecureClass();
         if (insecure != null) {  
             URL ctx = getClassURL(insecure);
             if (ctx != null) {
@@ -385,13 +386,14 @@ public class TopSecurityManager extends SecurityManager {
         checkConnect(s, port);
     }
 
-    private final Set<Class> warnedSunMisc = new WeakSet<Class>();
+    private final Set<Class<?>> warnedSunMisc = new WeakSet<>();
     private final Set<String> callerWhiteList = createCallerWhiteList();
+    @SuppressWarnings("deprecation")
     public void checkMemberAccess(Class<?> clazz, int which) {
         final String n = clazz.getName();
         if (n.startsWith("sun.misc")) { // NOI18N
             Class<?> caller = null;
-            Class[] arr = getClassContext();
+            Class<?>[] arr = getClassContext();
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i] == TopSecurityManager.class) {
                     continue;
@@ -537,7 +539,7 @@ public class TopSecurityManager extends SecurityManager {
                 if (!check) {
                     return;
                 }
-                Class[] arr = getClassContext();
+                Class<?>[] arr = getClassContext();
                 boolean seenJava = false;
                 for (int i = 0; i < arr.length; i++) {
                     if (arr[i].getName().equals("org.netbeans.TopSecurityManager")) { // NOI18N
@@ -570,9 +572,9 @@ public class TopSecurityManager extends SecurityManager {
 //        }
 //    }
 //
-    private Class getInsecureClass() {
+    private Class<?> getInsecureClass() {
 
-        Class[] ctx = getClassContext();
+        Class<?>[] ctx = getClassContext();
         boolean firstACClass = false;
 
 LOOP:   for (int i = 0; i < ctx.length; i++) {
@@ -607,7 +609,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
     }
 
     /** Checks if the class is loaded through the nbfs URL */
-    static boolean isSecureClass(final Class clazz) {
+    static boolean isSecureClass(final Class<?> clazz) {
         URL source = getClassURL(clazz);
         if (source != null) {
             return isSecureProtocol(source.getProtocol());
@@ -618,7 +620,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
     
     /** @return a protocol through which was the class loaded (file://...) or null
     */
-    static URL getClassURL(Class clazz) {
+    static URL getClassURL(Class<?> clazz) {
         java.security.CodeSource cs = clazz.getProtectionDomain().getCodeSource();                                                     
         if (cs != null) {
             URL url = cs.getLocation();
@@ -628,7 +630,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
         }
     }
 
-    static Field getUrlField(Class clazz) {
+    static Field getUrlField(Class<?> clazz) {
         if (urlField == null) {
             try {
                 Field[] fds = clazz.getDeclaredFields();
@@ -711,7 +713,7 @@ LOOP:   for (int i = 0; i < ctx.length; i++) {
             Method getAppContext = appContextClass.getMethod ("getAppContext"); // NOI18N
             Object appContext = getAppContext.invoke (null, new Object[0]);
             
-            Class actionClass = javax.swing.TransferHandler.getCopyAction ().getClass ();
+            Class<?> actionClass = javax.swing.TransferHandler.getCopyAction ().getClass ();
             java.lang.reflect.Field sandboxKeyField = actionClass.getDeclaredField ("SandboxClipboardKey"); // NOI18N
             sandboxKeyField.setAccessible (true);
             Object value = sandboxKeyField.get (null);

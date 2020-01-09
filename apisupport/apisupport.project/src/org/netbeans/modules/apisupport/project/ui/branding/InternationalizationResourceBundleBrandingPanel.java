@@ -410,11 +410,11 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
-            List<BundleNode> keys = new ArrayList();
+            List<BundleNode> keys = new ArrayList<>();
             for (BundleNode node : resourceBundleNodes) {
                 keys.add(node);
             }
@@ -533,7 +533,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {

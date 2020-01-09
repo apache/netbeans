@@ -226,7 +226,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         
 
         /** Property representing for thumbanil property in the sheet. */
-        private static final class ThumbnailProperty extends PropertySupport.ReadOnly {
+        private static final class ThumbnailProperty extends PropertySupport.ReadOnly<Icon> {
             /** (Image) data object associated with. */
             private final DataObject obj;
             
@@ -239,7 +239,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
             }
             
             /** Gets value of property. Overrides superclass method. */
-            public Object getValue() throws InvocationTargetException {
+            public Icon getValue() throws InvocationTargetException {
                 try {
                     return new ImageIcon(obj.getPrimaryFile().getURL());
                 } catch (FileStateInvalidException fsie) {
@@ -320,7 +320,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         } // End of class ThumbnailProperty.
 
        /** Property representing for image width property in the sheet. */
-       private final class ImageWidthProperty extends PropertySupport.ReadOnly {
+       private final class ImageWidthProperty extends PropertySupport.ReadOnly<Integer> {
           /** Constructs property. */
           public ImageWidthProperty() {
              super("width", Integer.class, // NOI18N
@@ -329,7 +329,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
           }
 
           /** Gets value of property. Overrides superclass method. */
-          public Object getValue() throws InvocationTargetException {
+          public Integer getValue() throws InvocationTargetException {
              try {
                 final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().
                       getURL());
@@ -341,7 +341,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
        } // End of class ImageWidthProperty.
 
        /** Property representing for image height property in the sheet. */
-       private final class ImageHeightProperty extends PropertySupport.ReadOnly {
+       private final class ImageHeightProperty extends PropertySupport.ReadOnly<Integer> {
           /** Constructs property. */
           public ImageHeightProperty() {
              super("height", Integer.class, // NOI18N
@@ -352,7 +352,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
           }
 
           /** Gets value of property. Overrides superclass method. */
-          public Object getValue() throws InvocationTargetException {
+          public Integer getValue() throws InvocationTargetException {
              try {
                 final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().
                       getURL());

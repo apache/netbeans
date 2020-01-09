@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY st0 "fill:#CAE3FF;">
+	<!ENTITY st1 "fill:#FAFAFA;">
+	<!ENTITY st2 "opacity:0.2;">
+	<!ENTITY st3 "opacity:0.03;">
+	<!ENTITY st4 "opacity:0.1;">
+	<!ENTITY st5 "opacity:0.15;">
+	<!ENTITY st6 "opacity:0.25;">
+	<!ENTITY st7 "fill:#FFFFFF;">
+	<!ENTITY st8 "opacity:0.45;">
+	<!ENTITY st9 "fill:#FFE1B0;">
+	<!ENTITY st10 "fill:#B3DBFF;">
+	<!ENTITY st11 "opacity:0.33;">
+	<!ENTITY st12 "fill:#FBDC7C;">
+	<!ENTITY st13 "fill:#FFDB43;">
+	<!ENTITY st14 "fill:#E79B00;">
+	<!ENTITY st15 "fill:#3883CE;">
+	<!ENTITY st16 "fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;">
+	<!ENTITY st17 "fill:#E8513D;">
+	<!ENTITY st18 "fill:#1E1E1E;">
+	<!ENTITY st19 "fill:#FFC36D;">
+	<!ENTITY st20 "fill:#9FCBFF;">
+	<!ENTITY st21 "fill:#E9F7FF;">
+	<!ENTITY st22 "fill:#62707C;">
+	<!ENTITY st23 "fill:#7A8896;">
+	<!ENTITY st24 "fill:#57BFFF;">
+	<!ENTITY st25 "fill:#E69D35;">
+	<!ENTITY st26 "fill:#9CFF73;">
+	<!ENTITY st27 "fill:none;stroke:#000000;stroke-miterlimit:10;">
+	<!ENTITY st28 "fill:#4891CC;">
+	<!ENTITY st29 "fill:#474747;">
+	<!ENTITY st30 "fill:#CCA05E;">
+	<!ENTITY st31 "opacity:0.67;">
+	<!ENTITY st32 "opacity:0.3;">
+	<!ENTITY st33 "fill:#EAEAEA;">
+	<!ENTITY st34 "fill:#FFE945;">
+	<!ENTITY st35 "fill:#FFCF8C;">
+	<!ENTITY st36 "fill:#E2BF8E;">
+	<!ENTITY st37 "fill:#FF5252;">
+	<!ENTITY st38 "fill:#512EFF;">
+	<!ENTITY st39 "opacity:0.12;">
+	<!ENTITY st40 "fill:#45A5F4;">
+	<!ENTITY st41 "fill:url(#SVGID_1_);">
+	<!ENTITY st42 "fill:url(#SVGID_2_);">
+	<!ENTITY st43 "fill:none;stroke:#000000;stroke-width:0.3359;stroke-miterlimit:10;">
+	<!ENTITY st44 "opacity:0.05;">
+]>
+<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+<g>
+	<path style="&st24;" d="M6,10h10V0h-1l-3.05,3.05C10.683,1.783,8.933,1,7,1C3.134,1,0,4.134,0,8s3.134,7,7,7v-3.75
+		c-1.795,0-3.25-1.455-3.25-3.25S5.205,4.75,7,4.75c0.897,0,1.71,0.364,2.298,0.952L6,9V10z"/>
+	<g style="&st11;">
+		<path d="M15,1.414V9H7.414l2.591-2.591l0.707-0.707l-0.707-0.707C9.202,4.192,8.135,3.75,7,3.75C4.656,3.75,2.75,5.656,2.75,8
+			c0,1.999,1.387,3.68,3.25,4.131v1.786C3.166,13.439,1,10.968,1,8c0-3.308,2.692-6,6-6c1.603,0,3.109,0.624,4.243,1.757
+			l0.707,0.707l0.707-0.707L15,1.414 M16,0h-1l-3.05,3.05C10.683,1.783,8.933,1,7,1C3.134,1,0,4.134,0,8s3.134,7,7,7v-3.75
+			c-1.795,0-3.25-1.455-3.25-3.25S5.205,4.75,7,4.75c0.897,0,1.71,0.364,2.298,0.952L6,9v1h10V0L16,0z"/>
+	</g>
+</g>
+</svg>

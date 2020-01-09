@@ -222,7 +222,7 @@ public class JUnitProjectOpenedHook implements LookupProvider {
             } else {
                 res = ProjectProblemsProvider.Result.create(ProjectProblemsProvider.Status.UNRESOLVED, "No resolution for the problem");
             }
-            RunnableFuture<ProjectProblemsProvider.Result> f = new FutureTask(new Runnable() {
+            RunnableFuture<ProjectProblemsProvider.Result> f = new FutureTask<>(new Runnable() {
                 @Override
                 public void run() {
                 }

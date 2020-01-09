@@ -21,38 +21,22 @@ package org.netbeans.modules.editor.settings.storage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
-import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.AttributesUtilities;
-import org.netbeans.modules.editor.settings.storage.spi.StorageReader;
-import org.netbeans.modules.editor.settings.storage.spi.StorageWriter;
-import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
-import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.xml.EntityCatalog;
-import org.openide.xml.XMLUtil;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 
 /**
@@ -70,7 +54,7 @@ public class NbUtils {
      * to their immutable versions.
      */
     public static Map<String, AttributeSet> immutize(Map<String, ? extends AttributeSet> map, Object... filterOutKeys) {
-        Map<String, AttributeSet> immutizedMap = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> immutizedMap = new HashMap<>();
         
         for(String name : map.keySet()) {
             AttributeSet attribs = map.get(name);
@@ -78,7 +62,7 @@ public class NbUtils {
             if (filterOutKeys.length == 0) {
                 immutizedMap.put(name, AttributesUtilities.createImmutable(attribs));
             } else {
-                List<Object> pairs = new ArrayList<Object>();
+                List<Object> pairs = new ArrayList<>();
 
                 // filter out attributes specified by filterOutKeys
                 first:
@@ -103,7 +87,7 @@ public class NbUtils {
     }
     
     public static Map<String, AttributeSet> immutize(Collection<AttributeSet> set) {
-        Map<String, AttributeSet> immutizedMap = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> immutizedMap = new HashMap<>();
     
         for(AttributeSet as : set) {
             Object nameObject = as.getAttribute(StyleConstants.NameAttribute);

@@ -1004,26 +1004,30 @@ public class DockerAction {
         }
     }
 
-    public boolean ping() {
+    public boolean pingWithExceptions() throws Exception {
         assert !SwingUtilities.isEventDispatchThread() : "Remote access invoked from EDT";
+        Endpoint s = createEndpoint();
         try {
-            Endpoint s = createEndpoint();
-            try {
-                OutputStream os = s.getOutputStream();
-                // FIXME should we use default headers ?
-                os.write(("GET /_ping HTTP/1.1\r\n"
-                        + "Host: " + getHostHeader().second() + "\r\n\r\n").getBytes("ISO-8859-1"));
-                os.flush();
+            OutputStream os = s.getOutputStream();
+            // FIXME should we use default headers ?
+            os.write(("GET /_ping HTTP/1.1\r\n"
+                    + "Host: " + getHostHeader().second() + "\r\n\r\n").getBytes("ISO-8859-1"));
+            os.flush();
 
-                InputStream is = s.getInputStream();
-                HttpUtils.Response response = HttpUtils.readResponse(is);
-                return response.getCode() == HttpURLConnection.HTTP_OK;
-            } finally {
-                closeEndpoint(s);
-            }
+            InputStream is = s.getInputStream();
+            HttpUtils.Response response = HttpUtils.readResponse(is);
+            return response.getCode() == HttpURLConnection.HTTP_OK;
+        } finally {
+            closeEndpoint(s);
+        }
+    }
+    
+    public boolean ping() {      
+        try {
+            return pingWithExceptions();
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.INFO, null, ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.log(Level.FINE, null, ex);
         }
         return false;

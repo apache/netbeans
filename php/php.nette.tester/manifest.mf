@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.php.nette.tester
 OpenIDE-Module-Layer: org/netbeans/modules/php/nette/tester/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/php/nette/tester/resources/Bundle.properties
-OpenIDE-Module-Specification-Version: 0.20
+OpenIDE-Module-Specification-Version: 0.21
 

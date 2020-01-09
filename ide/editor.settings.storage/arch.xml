@@ -405,10 +405,11 @@ how to do that.
 
 <pre>
 &lt;?xml version="1.0"  encoding="UTF-8"?&gt;
-&lt;!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd"&gt;
+&lt;!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN" "http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd"&gt;
 
 &lt;fontscolors&gt;
-    &lt;fontcolor name="mylang-keyword" foreColor="0000CC" default="keyword"&gt;
+    &lt;colordef name="bg0" color="202020"/&gt;
+    &lt;fontcolor name="mylang-keyword" foreColor="0000CC" bgColor="bg0" default="keyword"&gt;
         &lt;font style="bold" /&gt;
     &lt;/fontcolor&gt;
 &lt;/fontscolors&gt;
@@ -416,7 +417,7 @@ how to do that.
 
 <p>
 Please see the
-<a href="http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd</a>
+<a href="http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd">http://www.netbeans.org/dtds/EditorFontsColors-1_2.dtd</a>
 for more details.
 </p>
 </usecase>

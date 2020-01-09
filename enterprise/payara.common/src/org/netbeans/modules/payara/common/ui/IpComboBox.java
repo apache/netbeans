@@ -307,8 +307,7 @@ public class IpComboBox extends JComboBox<IpComboBox.InetAddr> {
         for (i = 0; i < count; i++) {
             InetAddr element = dataModel.getElementAt(i);
             // Passed IP address has highest priority.
-            if (((InetAddress) ip).equals(
-                    element.getIp())) {
+            if (ip.equals(element.getIp())) {
                 super.setSelectedItem(element);
                 isSelectedSet = true;
                 break;

@@ -22,7 +22,6 @@ package org.netbeans.swing.plaf;
 import java.awt.Color;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.AttributeSet;
 
 /** Look and feel customizations interface.
@@ -79,9 +78,9 @@ public abstract class LFCustoms {
     public static String getTextFgColorHTML() {
         synchronized(LFCustoms.class) {
             if (textFgColorHTML.isEmpty()) {
-                    Object o = UIManager.getLookAndFeel().getDefaults().get("windowText");
+                    Object o = UIManager.getLookAndFeelDefaults().get("windowText");
                     if( null == o )
-                        o = UIManager.getLookAndFeel().getDefaults().get("Tree.foreground");
+                        o = UIManager.getLookAndFeelDefaults().get("Tree.foreground");
                     if (o instanceof Color) {
                             Color resource = (Color)o;
                             textFgColorHTML = "<font color=#" + getHexString(resource.getRed()) + getHexString(resource.getGreen()) + getHexString(resource.getBlue())+">";
@@ -103,9 +102,9 @@ public abstract class LFCustoms {
     public static Color getTextFgColor() {
         synchronized(LFCustoms.class) {
             if (textFgColor == null) {
-                Object o = UIManager.getLookAndFeel().getDefaults().get("windowText");
+                Object o = UIManager.getLookAndFeelDefaults().get("windowText");
                 if( null == o )
-                    o = UIManager.getLookAndFeel().getDefaults().get("Tree.foreground");
+                    o = UIManager.getLookAndFeelDefaults().get("Tree.foreground");
                 if (o instanceof Color) {
                     textFgColor = (Color) o;
                 } else {

@@ -272,7 +272,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
         public void reload() {
             //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug(" Reloading kids of " + peer + "..."); // NOI18N
 
-            Set previous = new HashSet(keys);
+            Set<String> previous = new HashSet<>(keys);
             keys.clear();
             Iterator it = peer.getPublicIDs();
             if (it != null) {
@@ -351,7 +351,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
             for (int i = 0; i<activatedNodes.length; i++) {
                 try {
                     Node me = activatedNodes[i];
-                    CatalogNode self = (CatalogNode) me.getCookie(CatalogNode.class);
+                    CatalogNode self = me.getCookie(CatalogNode.class);
                     self.destroy();
                 } catch (IOException ex) {
                     //Util.THIS.debug("Cannot unmount XML entity catalog!", ex);

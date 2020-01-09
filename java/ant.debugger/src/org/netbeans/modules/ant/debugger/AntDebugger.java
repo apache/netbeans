@@ -129,8 +129,8 @@ public class AntDebugger extends ActionsProviderSupport {
     
     // ActionsProvider .........................................................
     
-    private static final Set actions = new HashSet ();
-    private static final Set actionsToDisable = new HashSet ();
+    private static final Set<Object> actions = new HashSet<>();
+    private static final Set<Object> actionsToDisable = new HashSet<>();
     static {
         actions.add (ActionsManager.ACTION_KILL);
         actions.add (ActionsManager.ACTION_CONTINUE);
@@ -397,7 +397,7 @@ public class AntDebugger extends ActionsProviderSupport {
         //updateTargetsByName(event.getScriptLocation());
         TargetLister.Target target = findTarget(targetName, event.getScriptLocation());
         
-        List originatingTargets = null;
+        List<TargetOriginating> originatingTargets = null;
         if (callStackList.size() > 0) {
             Object topFrame = callStackList.get(0);
             if (topFrame instanceof Task) {
@@ -419,7 +419,7 @@ public class AntDebugger extends ActionsProviderSupport {
                     callStackList.removeFirst();
                     originatingIndex--;
                 } else {
-                    List path = findPath (event.getScriptLocation(), start, targetName);
+                    List<TargetOriginating> path = findPath (event.getScriptLocation(), start, targetName);
                     if (path != null) {
                         callStackList.removeFirst();
                         originatingTargets = path;
@@ -434,7 +434,7 @@ public class AntDebugger extends ActionsProviderSupport {
                 if (start.equals(targetName)) {
                     continue;
                 }
-                List path = findPath (event.getScriptLocation(), start, targetName);
+                List<TargetOriginating> path = findPath (event.getScriptLocation(), start, targetName);
                 if (path != null) {
                     originatingTargets = path;
                     break;
@@ -827,7 +827,7 @@ public class AntDebugger extends ActionsProviderSupport {
         return callStack;
     }
     
-    private LinkedList findPath (
+    private LinkedList<TargetOriginating> findPath (
         File file,
         String start,
         String end
@@ -837,7 +837,7 @@ public class AntDebugger extends ActionsProviderSupport {
             return null; // A non-existing target referenced
         }
         if (start.equals (end)) {
-            LinkedList ll = new LinkedList ();
+            LinkedList<TargetOriginating> ll = new LinkedList<>();
             ll.addFirst (new TargetOriginating(null, t));
             return ll;
         }
@@ -845,7 +845,7 @@ public class AntDebugger extends ActionsProviderSupport {
         StringTokenizer st = new StringTokenizer (depends, ",");
         while (st.hasMoreTokens ()) {
             String newStart = st.nextToken ().trim();
-            LinkedList ll = findPath (
+            LinkedList<TargetOriginating> ll = findPath (
                 file,
                 newStart,
                 end
@@ -869,16 +869,16 @@ public class AntDebugger extends ActionsProviderSupport {
     /**
      * File as a script location is a key. Values are maps of name to Target.
      */
-    private Map nameToTargetByFiles = new HashMap();
+    private Map<File, Map<String, TargetLister.Target>> nameToTargetByFiles = new HashMap<>();
     /**
      * File as a script location is a key, values are project names.
      */
-    private Map projectNamesByFiles = new HashMap();
+    private Map<File, String> projectNamesByFiles = new HashMap<>();
     
     private synchronized TargetLister.Target findTarget(String name, File file) {
-        Map nameToTarget = (Map) nameToTargetByFiles.get(file);
+        Map<String, TargetLister.Target> nameToTarget = nameToTargetByFiles.get(file);
         if (nameToTarget == null) {
-            nameToTarget = new HashMap ();
+            nameToTarget = new HashMap<>();
             FileObject fo = FileUtil.toFileObject(file);
             DataObject dob;
             try {

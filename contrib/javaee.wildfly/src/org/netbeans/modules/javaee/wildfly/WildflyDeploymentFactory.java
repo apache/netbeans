@@ -153,7 +153,7 @@ public class WildflyDeploymentFactory implements DeploymentFactory {
                                 return super.getCommonSuperClass(string, string1);
                             }
                         };
-                        ClassNode node = new ClassNode();
+                        ClassNode node = new ClassNode(Opcodes.ASM7);
                         cr.accept(node, 0);
 
                         for (MethodNode m : (Collection<MethodNode>) node.methods) {

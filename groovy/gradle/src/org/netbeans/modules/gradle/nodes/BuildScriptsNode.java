@@ -28,7 +28,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
@@ -82,6 +85,7 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
 
         private final NbGradleProjectImpl project;
         private final FileChangeAdapter fileChangeListener;
+        private final PreferenceChangeListener prefChangeListener;
 
         ProjectFilesChildren(NbGradleProjectImpl proj) {
             project = proj;
@@ -93,6 +97,11 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
 
                 @Override
                 public void fileDeleted(FileEvent fe) {
+                    refresh(false);
+                }
+            };
+            prefChangeListener = (PreferenceChangeEvent evt) -> {
+                if (GradleSettings.PROP_GRADLE_USER_HOME.equals(evt.getKey())) {
                     refresh(false);
                 }
             };
@@ -154,12 +163,14 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
         protected void addNotify() {
             NbGradleProject.addPropertyChangeListener(project, this);
             project.getProjectDirectory().addFileChangeListener(fileChangeListener);
+            GradleSettings.getDefault().getPreferences().addPreferenceChangeListener(prefChangeListener);
         }
 
         @Override
         protected void removeNotify() {
             NbGradleProject.removePropertyChangeListener(project, this);
             project.getProjectDirectory().removeFileChangeListener(fileChangeListener);
+            GradleSettings.getDefault().getPreferences().removePreferenceChangeListener(prefChangeListener);
         }
 
         @Override

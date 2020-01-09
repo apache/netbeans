@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.24.0
+#Version 2.26.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -775,8 +775,9 @@ CLSS public final static org.netbeans.spi.editor.typinghooks.TypedTextIntercepto
 meth public java.lang.String getReplacedText()
 meth public java.lang.String getText()
 meth public void setText(java.lang.String,int)
+meth public void setText(java.lang.String,int,boolean)
 supr org.netbeans.spi.editor.typinghooks.TypedTextInterceptor$Context
-hfds caretPosition,insertionText,replacedText
+hfds caretPosition,formatNewLines,insertionText,replacedText
 hcls Accessor
 
 CLSS public abstract interface org.openide.util.Cancellable

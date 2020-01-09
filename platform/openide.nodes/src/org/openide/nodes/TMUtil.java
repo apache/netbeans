@@ -43,7 +43,7 @@ abstract class TMUtil extends Object {
      * @param className name of the class
      * @return the class
      */
-    private static Class loadClass(String className) throws Exception {
+    private static Class<?> loadClass(String className) throws Exception {
         ClassLoader loader = org.openide.util.Lookup.getDefault().lookup(ClassLoader.class);
 
         if (loader == null) {
@@ -166,7 +166,7 @@ abstract class TMUtil extends Object {
 
         if (obj == null) {
             try {
-                Class c = Class.forName("org.openide.nodes.TMUtil$" + name); // NOI18N
+                Class<?> c = Class.forName("org.openide.nodes.TMUtil$" + name); // NOI18N
                 obj = c.newInstance();
             } catch (ClassNotFoundException ex) {
                 obj = ex;
@@ -300,7 +300,7 @@ abstract class TMUtil extends Object {
     /** Finds renderer.
      */
     static final class Rend implements Runnable {
-        private static Class nodeRenderer;
+        private static Class<?> nodeRenderer;
 
         public void run() {
             try {

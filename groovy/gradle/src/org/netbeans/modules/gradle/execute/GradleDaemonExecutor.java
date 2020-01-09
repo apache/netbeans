@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.StreamCorruptedException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -42,14 +42,17 @@ import org.gradle.tooling.BuildCancelledException;
 import org.gradle.tooling.BuildException;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.CancellationTokenSource;
+import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.internal.gradle.GradleBuildIdentity;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
@@ -95,7 +98,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         "# {0} - Project name",
         "BUILD_FAILED=Building {0} failed.",
         "# {0} - Platform Key",
-        "NO_PLATFORM=No valid Java Platform found for key: ''{0}''"
+        "NO_PLATFORM=No valid Java Platform found for key: ''{0}''",
+        "GRADLE_IO_ERROR=Gradle internal IO problem has been detected.\nThe running build may or may not have finished succesfully."
     })
     @Override
     public void run() {
@@ -129,8 +133,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 gconn.useBuildDistribution();
             }
 
+            gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
+
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
-            //TODO: GradleUserHome
             pconn = gconn.forProjectDirectory(projectDir).connect();
 
             BuildLauncher buildLauncher = pconn.newBuild();
@@ -140,7 +145,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.INIT_SCRIPT);
                 cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, GradleDaemon.TOOLING_JAR);
             }
-            cmd.configure(buildLauncher, projectDir);
+            GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
+            cmd.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);
 
             printCommandLine();
 
@@ -187,6 +193,21 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 // an external aplication
                 showAbort();
             }
+        } catch (GradleConnectionException ex) {
+            Throwable th = ex.getCause();
+            boolean handled = false;
+            while (th != null && !handled) {
+                if (th instanceof StreamCorruptedException) {
+                    LOGGER.log(Level.INFO, "Suspecting Gradle Serialization IO Error:", ex);
+                    try {
+                        IOColorPrint.print(io, Bundle.GRADLE_IO_ERROR(), IOColors.getColor(io, IOColors.OutputType.LOG_WARNING));
+                    } catch (IOException iex) {
+                    }
+                    handled = true;
+                }
+                th = th.getCause();
+            }
+            if (!handled) throw ex;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
             if (pconn != null) {
@@ -208,6 +229,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private void printCommandLine() {
         StringBuilder commandLine = new StringBuilder(1024);
 
+        String userHome = GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
+        if (userHome != null) {
+            commandLine.append("GRADLE_USER_HOME=\"").append(userHome).append("\"\n"); //NOI18N
+        }
         JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
         if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
             File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
@@ -274,15 +299,16 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     @Messages("LBL_ABORTING_BUILD=Aborting Build...")
     @Override
     public boolean cancel() {
-        if (cancelTokenSource != null) {
+        if (!cancelling && (cancelTokenSource != null)) {
             handle.switchToIndeterminate();
             handle.setDisplayName(Bundle.LBL_ABORTING_BUILD());
             // Closing out and err streams to prevent ambigous output NETBEANS-2038
             closeInOutErr();
             cancelling = true;
             cancelTokenSource.cancel();
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

@@ -2,6 +2,8 @@ Code completion result for source line:
 $fn = fn(int $test) => $af->getNumber() + | + $this->getNumber();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      ArrowFunctions                  [PUBLIC]   arrowFunctionsInMethodWithError.php
+METHOD     getNumber()                     [PUBLIC]   ArrowFunctions
+METHOD     test(ArrowFunctions $af, int $  [PUBLIC]   ArrowFunctions
 VARIABLE   ? $fn                           [PUBLIC]   arrowFunctionsInMethodWithError.php
 VARIABLE   ArrowFunctions $af              [PUBLIC]   arrowFunctionsInMethodWithError.php
 VARIABLE   int $number                     [PUBLIC]   arrowFunctionsInMethodWithError.php

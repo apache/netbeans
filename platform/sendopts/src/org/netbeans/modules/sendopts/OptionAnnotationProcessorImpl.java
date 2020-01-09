@@ -22,8 +22,6 @@ package org.netbeans.modules.sendopts;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.PrimitiveType;
@@ -41,7 +39,6 @@ import org.openide.filesystems.annotations.LayerGenerationException;
  *
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 final class OptionAnnotationProcessorImpl extends LayerGeneratingProcessor {
 
     @Override

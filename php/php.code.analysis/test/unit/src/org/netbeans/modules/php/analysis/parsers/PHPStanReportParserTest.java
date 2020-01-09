@@ -35,8 +35,9 @@ public class PHPStanReportParserTest extends NbTestCase {
     }
 
     public void testParse() throws Exception {
-        FileObject root = getRoot("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log.xml"), root);
+        FileObject root = getDataDir("phpstan/PHPStanSupport");
+        FileObject workDir = root;
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log.xml"), root, workDir);
         assertNotNull(results);
 
         assertEquals(4, results.size());
@@ -61,10 +62,35 @@ public class PHPStanReportParserTest extends NbTestCase {
     }
 
     public void testParseWithOtherOutput() throws Exception {
-        FileObject root = getRoot("phpstan/PHPStanSupport");
-        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root);
+        FileObject root = getDataDir("phpstan/PHPStanSupport");
+        FileObject workDir = root;
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-with-other-output.xml"), root, workDir);
         assertNotNull(results);
         assertEquals(2, results.size());
+    }
+
+    public void testParseNetBeans3022() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
+        FileObject workDir = getDataDir("phpstan/PHPStanSupport");
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022.xml"), root, workDir);
+        assertNotNull(results);
+        assertEquals(3, results.size());
+    }
+
+    public void testParseNetBeans3022Win() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
+        FileObject workDir = getDataDir("phpstan/PHPStanSupport");
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022-win.xml"), root, workDir);
+        assertNotNull(results);
+        assertEquals(3, results.size());
+    }
+
+    public void testParseNetBeans3022WithoutWorkDir() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport/netbeans3022");
+        FileObject workDir = null;
+        List<Result> results = PHPStanReportParser.parse(getLogFile("phpstan-log-netbeans-3022-without-workdir.xml"), root, workDir);
+        assertNotNull(results);
+        assertEquals(3, results.size());
     }
 
     private File getLogFile(String name) throws Exception {
@@ -75,7 +101,7 @@ public class PHPStanReportParserTest extends NbTestCase {
         return xmlLog;
     }
 
-    private FileObject getRoot(String name) {
+    private FileObject getDataDir(String name) {
         assertNotNull(name);
         FileObject dataDir = FileUtil.toFileObject(getDataDir());
         return dataDir.getFileObject(name);

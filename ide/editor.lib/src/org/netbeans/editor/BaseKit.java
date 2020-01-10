@@ -4120,21 +4120,19 @@ public class BaseKit extends DefaultEditorKit {
                 arr = components.toArray(new JTextComponent[components.size()]);
             }
             
-            if(arr.length > 0) {
-                Runnable pushKeymapChange = () -> {
-                    for(JTextComponent c : arr) {
-                        if (c != null) {
-                            c.setKeymap(keymap);
-                        }
+            Runnable pushKeymapChange = () -> {
+                for(JTextComponent c : arr) {
+                    if (c != null) {
+                        c.setKeymap(keymap);
                     }
-
-                    searchableKit.fireActionsChange();
-                };
-                if(SwingUtilities.isEventDispatchThread()) {
-                    pushKeymapChange.run();
-                } else {
-                    SwingUtilities.invokeLater(pushKeymapChange);
                 }
+                
+                searchableKit.fireActionsChange();
+            };
+            if(SwingUtilities.isEventDispatchThread()) {
+                pushKeymapChange.run();
+            } else {
+                SwingUtilities.invokeLater(pushKeymapChange);
             }
         }
         

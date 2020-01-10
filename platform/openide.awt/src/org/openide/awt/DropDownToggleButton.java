@@ -24,7 +24,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -77,11 +76,8 @@ class DropDownToggleButton extends JToggleButton {
         
         resetIcons();
         
-        addPropertyChangeListener(  DropDownButtonFactory.PROP_DROP_DOWN_MENU,new PropertyChangeListener() {
-            @Override
-            public void propertyChange( PropertyChangeEvent e ) {
-                resetIcons();
-            }
+        addPropertyChangeListener(DropDownButtonFactory.PROP_DROP_DOWN_MENU, (PropertyChangeEvent e) -> {
+            resetIcons();
         });
         
         addMouseMotionListener( new MouseMotionAdapter() {
@@ -176,11 +172,8 @@ class DropDownToggleButton extends JToggleButton {
                     Ignore any such button press while the popup is closing, to avoid interpreting
                     the press as a click to open the menu again. */
                     popupClosingInProgress = true;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            popupClosingInProgress = false;
-                        }
+                    SwingUtilities.invokeLater(() -> {
+                        popupClosingInProgress = false;
                     });
                 }
 
@@ -352,7 +345,7 @@ class DropDownToggleButton extends JToggleButton {
         
         @Override
         public void setPressed(boolean b) {
-            if( mouseInArrowArea || _pressed )
+            if( _pressed || b && mouseInArrowArea)
                 return;
             super.setPressed( b );
         }

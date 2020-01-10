@@ -807,7 +807,7 @@ supr java.lang.Object
 hfds hint,isSourceRoot,support,supportIncludes,type
 hcls MyAccessor,NonSourceRoots,PropSourceRoots
 
-CLSS public final org.netbeans.modules.java.api.common.SingleJavaSourceRunActionProvider
+CLSS public final org.netbeans.modules.java.api.common.singlesourcefile.SingleJavaSourceRunActionProvider
 cons public init()
 intf org.netbeans.spi.project.ActionProvider
 meth public boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)

@@ -314,11 +314,21 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
+            #- ant $OPTS -f java/ant.debugger test
+            - ant $OPTS -f java/ant.freeform test
+            #- ant $OPTS -f java/ant.grammar test
+            - ant $OPTS -f java/api.debugger.jpda test
+            - ant $OPTS -f java/api.java test
+            - ant $OPTS -f java/api.maven test
+            #- ant $OPTS -f java/beans test
+            - ant $OPTS -f java/classfile test
+            - ant $OPTS -f java/dbschema test -Dtest.config=stable
+            - ant $OPTS -f java/hudson.maven test
             - ant $OPTS -f java/java.completion test
-            #- ant $OPTS -f java/spi.java.hints test
             - ant $OPTS -f java/java.hints.declarative test
-            - ant $OPTS -f java/spring.beans test
             - ant $OPTS -f java/java.source.base test
+            #- ant $OPTS -f java/spi.java.hints test
+            - ant $OPTS -f java/spring.beans test
 
         - name: Test Java modules with nb-javac on Java 11
           jdk: openjdk8

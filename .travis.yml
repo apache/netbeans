@@ -291,6 +291,7 @@ matrix:
             - ant $OPTS -f ide/xml.multiview test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
+            - travis_retry ant $OPTS -f ide/xml.wsdl.model test
             - ant $OPTS -f ide/xml.xam test
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test

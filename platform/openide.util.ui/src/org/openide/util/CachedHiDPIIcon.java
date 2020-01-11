@@ -37,6 +37,8 @@ import javax.swing.Icon;
  * Abstract base class for {@link javax.swing.Icon} implementations that need to cache scaled bitmap
  * representations for HiDPI displays. Bitmaps for multiple HiDPI scaling factors can be cached at
  * the same time, e.g. for multi-monitor setups. Thread-safe.
+ *
+ * @since 9.15
  */
 public abstract class CachedHiDPIIcon implements Icon {
     /**

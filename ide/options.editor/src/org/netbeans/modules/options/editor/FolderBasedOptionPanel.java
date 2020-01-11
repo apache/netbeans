@@ -76,7 +76,7 @@ public final class FolderBasedOptionPanel extends JPanel implements ActionListen
     }
 
     void update () {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String mimeType : controller.getMimeTypes()) {
             model.addElement(mimeType);
         }

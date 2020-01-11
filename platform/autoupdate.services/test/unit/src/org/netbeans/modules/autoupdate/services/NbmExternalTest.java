@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.autoupdate.services;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -49,6 +52,7 @@ import org.netbeans.updater.UpdateTracking;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import static org.netbeans.modules.autoupdate.services.Utilities.hexEncode;
 
 public class NbmExternalTest extends NbTestCase {
 
@@ -160,7 +164,7 @@ public class NbmExternalTest extends NbTestCase {
                 + "\n";
     }
 
-    private File prepareNBM(String codeName, String releaseVersion, String implVersion, String specVersion, boolean visible, String dependency) throws Exception {
+    private File prepareNBM(String codeName, String releaseVersion, String implVersion, String specVersion, boolean visible, String dependency, Long overriddenCRC32, String messageDigestLine) throws Exception {
         String moduleName = codeName.substring(codeName.lastIndexOf(".") + 1);
         String moduleFile = codeName.replace(".", "-");
         String moduleDir = codeName.replace(".", "/") + "/";
@@ -185,8 +189,17 @@ public class NbmExternalTest extends NbTestCase {
         jos.close();
         File ext = new File(jar.getParentFile(), jar.getName() + ".external");
         FileOutputStream os = new FileOutputStream(ext);
-        os.write(("CRC: " + UpdateTracking.getFileCRC(jar) + "\n").getBytes());
+        if(overriddenCRC32 != null) {
+            os.write(("CRC: " + overriddenCRC32 + "\n").getBytes());
+        } else {
+            os.write(("CRC: " + UpdateTracking.getFileCRC(jar) + "\n").getBytes());
+        }
         os.write(("URL: " + Utilities.toURI(jar).toString() + "\n").getBytes());
+        if(messageDigestLine != null) {
+            os.write(("MessageDigest: " + messageDigestLine + "\n").getBytes());
+        } else {
+            os.write(("MessageDigest: SHA-1 " + digest(jar, "SHA-1") + "\n").getBytes());
+        }
         os.close();
 
         Manifest mf = new Manifest();
@@ -263,7 +276,7 @@ public class NbmExternalTest extends NbTestCase {
         String moduleImplVersion = "2";
         String moduleSpecVersion = "1.0";
 
-        prepareNBM(moduleCNB, moduleReleaseVersion, moduleImplVersion, moduleSpecVersion, false, null);
+        prepareNBM(moduleCNB, moduleReleaseVersion, moduleImplVersion, moduleSpecVersion, false, null, null, null);
 
         writeCatalog();
         UpdateUnitProviderFactory.getDefault().refreshProviders(null, true);
@@ -302,7 +315,88 @@ public class NbmExternalTest extends NbTestCase {
         }
     }
 
-    
+    public void testNbmWithExternalFailMessageDigest() throws Exception {
+        String moduleCNB = "org.netbeans.modules.mymodule2";
+        String moduleReleaseVersion = "1";
+        String moduleImplVersion = "2";
+        String moduleSpecVersion = "1.0";
+
+        // Override message digest with an invalid SHA-1 sum - this must prevent
+        // the module from being installed
+        prepareNBM(moduleCNB, moduleReleaseVersion, moduleImplVersion, moduleSpecVersion, false, null, null, "SHA-1 5a7d7df655ba40478fae80a6abafc6afc36f9b6a");
+
+        writeCatalog();
+        UpdateUnitProviderFactory.getDefault().refreshProviders(null, true);
+        OperationContainer<InstallSupport> installContainer = OperationContainer.createForInstall();
+        UpdateUnit moduleUnit = getUpdateUnit(moduleCNB);
+        assertNull("cannot be installed", moduleUnit.getInstalled());
+        UpdateElement moduleElement = getAvailableUpdate(moduleUnit, 0);
+        assertEquals(moduleElement.getSpecificationVersion(), moduleSpecVersion);
+        OperationInfo<InstallSupport> independentInfo = installContainer.add(moduleElement);
+        assertNotNull(independentInfo);
+
+        try {
+            doInstall(installContainer);
+        } catch (OperationException ex) {
+            assertTrue(ex.getMessage().contains("Failed checks [Message Digest (SHA-1)]"));
+            return;
+        }
+
+        fail("Expected operation exception was not raised.");
+    }
+
+    public void testNbmWithExternalFailCRC32() throws Exception {
+        String moduleCNB = "org.netbeans.modules.mymodule3";
+        String moduleReleaseVersion = "1";
+        String moduleImplVersion = "2";
+        String moduleSpecVersion = "1.0";
+
+        // Override CRC32 with an invalid CRC32 check sum - this must prevent
+        // the module from being installed
+        prepareNBM(moduleCNB, moduleReleaseVersion, moduleImplVersion, moduleSpecVersion, false, null, 1L, null);
+
+        writeCatalog();
+        UpdateUnitProviderFactory.getDefault().refreshProviders(null, true);
+        OperationContainer<InstallSupport> installContainer = OperationContainer.createForInstall();
+        UpdateUnit moduleUnit = getUpdateUnit(moduleCNB);
+        assertNull("cannot be installed", moduleUnit.getInstalled());
+        UpdateElement moduleElement = getAvailableUpdate(moduleUnit, 0);
+        assertEquals(moduleElement.getSpecificationVersion(), moduleSpecVersion);
+        OperationInfo<InstallSupport> independentInfo = installContainer.add(moduleElement);
+        assertNotNull(independentInfo);
+
+        try {
+            doInstall(installContainer);
+        } catch (OperationException ex) {
+            assertTrue(ex.getMessage().contains("Failed checks [Checksum CRC32]"));
+            return;
+        }
+
+        fail("Expected operation exception was not raised.");
+    }
+
+    public void testExternalFileWithMultipleMessageDigest() throws IOException {
+        String externalFileString =
+              "URL: https://netbeans.apache.org/dummy\n"
+            + "CRC: 1\n"
+            + "MessageDigest: SHA-1 5a7d7df655ba40478fae80a6abafc6afc36f9b6a\n"
+            + "MessageDigest: SHA-256 8c6db340475136df3c1201d458fa5755698eace76e510471ecc9d857d6083dac\n"
+            + "MessageDigest: UNKNOWN 8c6db340475136df3c1201d458fa5755698eace76e510471ecc9d857d6083dac\n"
+            + "MessageDigest: UNKNOWN2 8c6db340475136df3c1201d458fa5755698eace76e510471ecc9d857d6083dac\n";
+        byte[] externalFileData = externalFileString.getBytes();
+        ExternalFile externalFile = ExternalFile
+            .fromStream("dummy.external", new ByteArrayInputStream(externalFileData));
+
+        assertNotNull(externalFile);
+        assertNotNull(externalFile.getCrc32());
+        assertEquals(1L, (long) externalFile.getCrc32());
+        // There are 4 message digests defined
+        assertEquals(4, externalFile.getMessageDigests().size());
+        // The JDK supports 2 of the 4 defined messaged digests (SHA-1 and SHA-256)
+        // one additional validator is added for the CRC32, expected are so 3
+        // validators
+        assertEquals(3, externalFile.getValidator().getValidators().size());
+    }
 
     public UpdateUnit getUpdateUnit(String codeNameBase) {
         UpdateUnit uu = UpdateManagerImpl.getInstance().getUpdateUnit(codeNameBase);
@@ -315,5 +409,20 @@ public class NbmExternalTest extends NbTestCase {
         assertTrue(available.size() > idx);
         return available.get(idx);
 
+    }
+
+    @SuppressWarnings("NestedAssignment")
+    private static String digest(File file, String algorithm) throws IOException {
+        try(FileInputStream fis = new FileInputStream(file)) {
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            byte[] buffer = new byte[102400];
+            int read;
+            while((read = fis.read(buffer)) >= 0) {
+                md.update(buffer, 0, read);
+            }
+            return hexEncode(md.digest());
+        } catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

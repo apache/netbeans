@@ -56,7 +56,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     /** Set&lt;elementName:String> holding all emenets with <code>EMPTY</code> content model.*/
     private Set emptyElements;
 
-    private List/*<String>*/ resolvedEntities;
+    private List<String> resolvedEntities;
     
     /** Creates new DTDGrammar */
     DTDGrammar(Map elementDecls, Map contentModels, Map attrDecls, Map attrDefs, Map enums, Set entities, Set notations, Set emptyElements) {
@@ -85,7 +85,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     public Enumeration queryEntities(String prefix) {
         if (entities == null) return org.openide.util.Enumerations.empty();
         
-        List list = new LinkedList();
+        List<MyEntityReference> list = new LinkedList<>();
         Iterator it = entities.iterator();
         while ( it.hasNext()) {
             String next = (String) it.next();

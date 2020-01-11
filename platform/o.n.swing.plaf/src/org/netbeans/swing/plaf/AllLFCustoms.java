@@ -154,6 +154,7 @@ final class AllLFCustoms extends LFCustoms {
         switchFont("windowTitleFont", fontTranslation, uiFontSize, nbDialogBold); // NOI18N
         switchFont("Spinner.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("FormattedTextField.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("Slider.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
     }
 
     //#144402

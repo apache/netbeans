@@ -2156,7 +2156,7 @@ public class ETable extends JTable {
             implements DocumentListener, FocusListener {
         
         /** The last search results */
-        private List results = new ArrayList();
+        private List<Integer> results = new ArrayList<>();
         /** The last selected index from the search results. */
         private int currentSelectionIndex;
         
@@ -2363,8 +2363,8 @@ public class ETable extends JTable {
         }
     }
     
-    private ComboBoxModel getSearchComboModel() {
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
+    private ComboBoxModel<String> getSearchComboModel() {
+        DefaultComboBoxModel<String> result = new DefaultComboBoxModel();
         for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
             TableColumn column = en.nextElement();
             if (column instanceof ETableColumn) {

@@ -26,6 +26,8 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * SVG image loader. This is an optional service provider. If implemented, a single instance should
  * be placed in the default lookup (e.g. via the {@link ServiceProvider} annotation).
+ *
+ * @since 9.15
  */
 public interface SVGLoader {
     /**

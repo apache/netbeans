@@ -375,17 +375,17 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
 
     private void fireActionPerformed(final java.awt.event.ActionEvent event) {
         //        System.err.println("Radio editor firing action performed " + event.getActionCommand());
-        java.util.List list;
+        List<ActionListener> list;
 
         synchronized (this) {
             if (actionListenerList == null) {
                 return;
             }
 
-            list = (List) ((ArrayList) actionListenerList).clone();
+            list = (List<ActionListener>) ((ArrayList) actionListenerList).clone();
         }
 
-        final java.util.List theList = list;
+        final List<ActionListener> theList = list;
 
         //When used in a table, the typical case is that the editor is instantiated,
         //processes its mouse event, fires an event and is immediately removed.

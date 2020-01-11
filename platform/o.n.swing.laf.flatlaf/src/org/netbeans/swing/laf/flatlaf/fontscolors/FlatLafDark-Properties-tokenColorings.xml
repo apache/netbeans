@@ -22,8 +22,8 @@
 <!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
     <fontcolor name="properties-equal-sign" default="operator" foreColor="gray"/>
-    <fontcolor name="properties-key" default="default" foreColor="ffcc7832"/>
+    <fontcolor name="properties-key" default="keyword"/>
     <fontcolor name="properties-line-comment" default="comment"/>
-    <fontcolor name="properties-text" default="default"><font style="bold"/></fontcolor>
+    <fontcolor name="properties-text" default="default"/>
     <fontcolor name="properties-value" default="string"/>
 </fontscolors>

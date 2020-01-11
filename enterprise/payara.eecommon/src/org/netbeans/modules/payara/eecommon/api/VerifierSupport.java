@@ -79,6 +79,7 @@ import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+import org.netbeans.modules.j2ee.sun.dd.impl.verifier.Error;
 
 /**
  * Main TopComponent to display the output of the Sun J2EE Verifier Tool from an archive file.
@@ -128,10 +129,10 @@ public class VerifierSupport extends TopComponent {
         NbBundle.getMessage(VerifierSupport.class,STATUS_LIT),
         NbBundle.getMessage(VerifierSupport.class,"Test_Description"),      // NOI18N
         NbBundle.getMessage(VerifierSupport.class,"Result")};       // NOI18N
-    private Vector passResults = new Vector();
-    private Vector failResults = new Vector();
-    private Vector errorResults = new Vector();
-    private Vector warnResults = new Vector();
+    private Vector<Test> passResults = new Vector<>();
+    private Vector<Test> failResults = new Vector<>();
+    private Vector<Test> warnResults = new Vector<>();
+    private Vector<Error> errorResults = new Vector<>();
     private Vector naResults = new Vector();
     private Vector notImplementedResults = new Vector();
     private Vector notRunResults = new Vector();
@@ -882,7 +883,7 @@ public class VerifierSupport extends TopComponent {
      *
      * @param r
      */
-    public void saveErrorResultsForDisplay(org.netbeans.modules.j2ee.sun.dd.impl.verifier.Error r){
+    public void saveErrorResultsForDisplay(Error r){
         errorResults.addElement(r);
     }
     

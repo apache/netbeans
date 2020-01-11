@@ -46,7 +46,7 @@ public class AddFrameworkPanel extends javax.swing.JPanel {
     
     private void createFrameworksList(List usedFrameworks) {
         List frameworks = WebFrameworks.getFrameworks();
-	DefaultListModel model = new DefaultListModel();
+	DefaultListModel<WebFrameworkProvider> model = new DefaultListModel<>();
 	jListFrameworks.setModel(model);
         
 	for (int i = 0; i < frameworks.size(); i++) {

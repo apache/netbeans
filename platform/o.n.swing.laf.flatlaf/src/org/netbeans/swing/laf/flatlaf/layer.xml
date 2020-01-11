@@ -106,6 +106,15 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="x-ini">
+                <folder name="FontsColors">
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-ini-token-colorings.xml" url="fontscolors/FlatLafDark-INI-tokenColorings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="x-java">
                 <folder name="FontsColors">
                     <folder name="FlatLafDark">

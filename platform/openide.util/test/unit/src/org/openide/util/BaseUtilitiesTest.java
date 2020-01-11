@@ -22,9 +22,6 @@ package org.openide.util;
 import java.io.File;
 import java.net.URI;
 import java.util.Locale;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -144,6 +141,64 @@ public class BaseUtilitiesTest extends NbTestCase {
         File f = new File(file);
         assertEquals(u, BaseUtilities.toURI(f));
         assertEquals(f, BaseUtilities.toFile(u));
+    }
+
+    public void testParseParameters1() {
+        String[] args = BaseUtilities.parseParameters("\"c:\\program files\\jdk\\bin\\java\" -Dmessage=\"Hello /\\\\/\\\\ there!\" -Xmx128m");
+        assertEquals(3, args.length);
+        assertEquals("c:\\program files\\jdk\\bin\\java", args[0]);
+        assertEquals("-Dmessage=Hello /\\/\\ there!", args[1]);
+        assertEquals("-Xmx128m", args[2]);
+    }
+
+    public void testParseParameters2() {
+        String[] args = BaseUtilities.parseParameters("c:\\program files\\jdk\\bin\\java   -Xmx128m");
+        assertEquals(3, args.length);
+        assertEquals("c:\\program", args[0]);
+        assertEquals("files\\jdk\\bin\\java", args[1]);
+        assertEquals("-Xmx128m", args[2]);
+    }
+
+    public void testParseParameters3() {
+        String[] args = BaseUtilities.parseParameters("\"-Xmx128m");
+        assertEquals(1, args.length);
+        assertEquals("-Xmx128m", args[0]);
+    }
+
+    public void testParseParameters4() {
+        String[] args = BaseUtilities.parseParameters("'-Xmx128m");
+        assertEquals(1, args.length);
+        assertEquals("-Xmx128m", args[0]);
+    }
+
+    public void testParseParameters5() {
+        String[] args = BaseUtilities.parseParameters("-Dmessage='Hello \"NetBeans\"'");
+        assertEquals(1, args.length);
+        assertEquals("-Dmessage=Hello \"NetBeans\"", args[0]);
+    }
+
+    public void testParseParameters6() {
+        String[] args = BaseUtilities.parseParameters("'c:\\program files\\jdk\\bin\\java'\n-Dmessage='Hello /\\/\\ there!' \t -Xmx128m");
+        assertEquals(3, args.length);
+        assertEquals("c:\\program files\\jdk\\bin\\java", args[0]);
+        assertEquals("-Dmessage=Hello /\\/\\ there!", args[1]);
+        assertEquals("-Xmx128m", args[2]);
+    }
+
+    public void testParseParameters7() {
+        String[] args = BaseUtilities.parseParameters("-Dmessage=\"NetBeans\" \"\" 'third\narg'");
+        assertEquals(3, args.length);
+        assertEquals("-Dmessage=NetBeans", args[0]);
+        assertEquals("", args[1]);
+        assertEquals("third\narg", args[2]);
+    }
+
+    public void testParseParameters8() {
+        String[] args = BaseUtilities.parseParameters("-Dmessage=\"NetBeans\" \"\" \"third\\narg\"");
+        assertEquals(3, args.length);
+        assertEquals("-Dmessage=NetBeans", args[0]);
+        assertEquals("", args[1]);
+        assertEquals("third\\narg", args[2]);
     }
 
 }

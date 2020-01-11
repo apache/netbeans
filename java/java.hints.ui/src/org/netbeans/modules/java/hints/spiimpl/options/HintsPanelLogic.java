@@ -115,8 +115,8 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
     private JCheckBox tasklistCheckBox;
     private JPanel customizerPanel;
     private JEditorPane descriptionTextArea;
-    private DefaultComboBoxModel defModel = new DefaultComboBoxModel();
-    private DefaultComboBoxModel depScanningModel = new DefaultComboBoxModel();
+    private DefaultComboBoxModel<String> defModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> depScanningModel = new DefaultComboBoxModel<>();
     private String defLabel = NbBundle.getMessage(HintsPanel.class, "CTL_ShowAs_Label"); //NOI18N
     private String depScanningLabel = NbBundle.getMessage(HintsPanel.class, "CTL_Scope_Label"); //NOI18N
     private String depScanningDescription = NbBundle.getMessage(HintsPanel.class, "CTL_Scope_Desc"); //NOI18N

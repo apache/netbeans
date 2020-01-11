@@ -39,6 +39,7 @@ public interface Constants {
     static final String COLOR_TAB_BACKGROUND = "TabBackgroundColor"; //NOI18N
     static final String COLOR_TAB_BORDER1 = "TabBorder1Color"; //NOI18N
     static final String COLOR_TAB_BORDER2 = "TabBorder2Color"; //NOI18N
+    static final String COLOR_TAB_FOREGROUND = "TabForegroundColor"; //NOI18N
 
     static final String COLOR_RSS_DATE = "RssDateTimeColor"; //NOI18N
     static final String COLOR_RSS_DETAILS = "RssDetailsColor"; //NOI18N

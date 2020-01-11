@@ -938,7 +938,7 @@ class Controller  {
 	if(debug) log("getTransactions removed old nodes"); //NOI18N 
 
 	e = currDir.getData(false);
-        final List fileObjectsToDelete = new ArrayList();
+        final List<FileObject> fileObjectsToDelete = new ArrayList<>();
 	while(e.hasMoreElements()) {
 
 	    fo = (FileObject)e.nextElement();

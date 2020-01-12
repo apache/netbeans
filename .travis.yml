@@ -370,6 +370,21 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
+            
+        - name: Test apisupport modules
+          jdk: openjdk8
+          env: 
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            #- ant $OPTS -f apisupport/apisupport.ant test
+            - ant $OPTS -f apisupport/apisupport.project test
+            - ant $OPTS -f apisupport/apisupport.refactoring test
+            - ant $OPTS -f apisupport/apisupport.wizards test
+            - ant $OPTS -f apisupport/maven.apisupport test
+            - ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
         - name: Test ergonomics modules
           jdk: openjdk8

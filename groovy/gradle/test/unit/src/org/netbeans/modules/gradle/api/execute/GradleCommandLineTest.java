@@ -31,8 +31,6 @@ import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.rules.TemporaryFolder;
-import org.netbeans.modules.gradle.spi.GradleFiles;
-import org.netbeans.modules.gradle.spi.GradleFilesTest;
 
 /**
  *

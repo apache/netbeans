@@ -194,7 +194,8 @@ public final class GradleCommandLine implements Serializable {
         PROJECT_DIR(PARAM, "-p", "--project-dir"),
         PROJECT_CACHE_DIR(UNSUPPORTED, "--project-cache-dir"),
         EXCLUDE_TASK(PARAM, "-x", "--exclude-task"),
-        IMPORT_BUILD(PARAM, "--import-build");
+        IMPORT_BUILD(UNSUPPORTED),
+        INCLUDE_BUILD(PARAM, "--include-build");
 
         final Argument.Kind kind;
         final List<String> flags;
@@ -465,40 +466,7 @@ public final class GradleCommandLine implements Serializable {
     }
 
     public GradleCommandLine(CharSequence argLine) {
-        this(parseArgLine(argLine));
-    }
-
-    static String[] parseArgLine(CharSequence cli) {
-        char quote = 0;
-        StringBuilder buf = new StringBuilder();
-        List<String> args = new ArrayList<>();
-        for (int i = 0; i < cli.length(); i++) {
-            char ch = cli.charAt(i);
-            if (quote == 0) {
-                if (Character.isWhitespace(ch)) {
-                    if (buf.length() > 0) {
-                        args.add(buf.toString());
-                        buf.setLength(0);
-                    }
-                } else {
-                    if (ch == '"' || ch == '\'') {
-                        quote = ch;
-                    } else {
-                        buf.append(ch);
-                    }
-                }
-            } else {
-                if (quote == ch) {
-                    quote = 0;
-                } else {
-                    buf.append(ch);
-                }
-            }
-        }
-        if (buf.length() > 0) {
-            args.add(buf.toString());
-        }
-        return args.toArray(new String[args.size()]);
+        this(Utilities.parseParameters(argLine.toString()));
     }
 
     private List<String> getArgs(Set<Argument.Kind> kinds) {

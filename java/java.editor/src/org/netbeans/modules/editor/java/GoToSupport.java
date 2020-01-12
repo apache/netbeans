@@ -923,7 +923,8 @@ public class GoToSupport {
                 Element enclosing = e.getEnclosingElement();
                 
                 if (e.getKind() != ElementKind.PARAMETER && e.getKind() != ElementKind.LOCAL_VARIABLE
-                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER) {
+                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER
+                        && !TreeShims.BINDING_VARIABLE.equals(e.getKind().name())) {
                     result.append(" in ");
 
                     //short typename:

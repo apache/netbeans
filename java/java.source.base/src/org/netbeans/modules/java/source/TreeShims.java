@@ -40,6 +40,7 @@ public class TreeShims {
     public static final String BINDING_PATTERN = "BINDING_PATTERN"; //NOI18N
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
     public static final String YIELD = "YIELD"; //NOI18N
+    public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {

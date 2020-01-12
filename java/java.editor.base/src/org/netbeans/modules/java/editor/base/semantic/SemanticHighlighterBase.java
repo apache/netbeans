@@ -361,9 +361,24 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         return c;
     }
     
+    private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(
+            ElementKind.LOCAL_VARIABLE, ElementKind.RESOURCE_VARIABLE,
+            ElementKind.EXCEPTION_PARAMETER);
+    private static final ElementKind BINDING_VARIABLE;
+
+    static {
+        ElementKind bindingVariable;
+        try {
+            LOCAL_VARIABLES.add(bindingVariable = ElementKind.valueOf(TreeShims.BINDING_VARIABLE));
+        } catch (IllegalArgumentException ex) {
+            bindingVariable = null;
+        }
+        BINDING_VARIABLE = bindingVariable;
+    }
+
     private static boolean isLocalVariableClosure(Element el) {
-        return el.getKind() == ElementKind.PARAMETER || el.getKind() == ElementKind.LOCAL_VARIABLE
-                || el.getKind() == ElementKind.RESOURCE_VARIABLE || el.getKind() == ElementKind.EXCEPTION_PARAMETER;
+        return el.getKind() == ElementKind.PARAMETER ||
+               LOCAL_VARIABLES.contains(el.getKind());
     }
     
     /** Detects static final long SerialVersionUID 
@@ -436,7 +451,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         }
         
         private void firstIdentifier(String name) {
-            tl.firstIdentifier(getCurrentPath(), name, tree2Tokens);
+            firstIdentifier(getCurrentPath(), name);
+        }
+
+        private void firstIdentifier(TreePath path, String name) {
+            tl.firstIdentifier(path, name, tree2Tokens);
         }
         
         private Token firstIdentifierToken(String... names) {
@@ -537,8 +556,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 return c;
             }
             
-            if (decl.getKind() == ElementKind.LOCAL_VARIABLE || decl.getKind() == ElementKind.RESOURCE_VARIABLE
-                    || decl.getKind() == ElementKind.EXCEPTION_PARAMETER) {
+            if (LOCAL_VARIABLES.contains(decl.getKind())) {
                 c.add(ColoringAttributes.LOCAL_VARIABLE);
                 
                 return c;
@@ -684,7 +702,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                         } else if (method.getModifiers().contains(Modifier.ABSTRACT) || method.getModifiers().contains(Modifier.NATIVE) || !method.getModifiers().contains(Modifier.PRIVATE)) {
                             type.add(UseTypes.READ);
                         }
-                    } else if (decl.getKind().isField() || decl.getKind() == ElementKind.EXCEPTION_PARAMETER) {
+                    } else if (decl.getKind().isField() || decl.getKind() == ElementKind.EXCEPTION_PARAMETER || decl.getKind() == BINDING_VARIABLE) {
                         type.add(UseTypes.WRITE);
                     } else if (parent.getLeaf().getKind() == Kind.ENHANCED_FOR_LOOP &&
                                ((EnhancedForLoopTree) parent.getLeaf()).getVariable() == currentPath.getLeaf()) {
@@ -1132,6 +1150,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (t != null) {
                     contextKeywords.add(t);
                 }
+            } else if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
+                super.scan(tree, p);
+                TreePath tp = new TreePath(getCurrentPath(), tree);
+                handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
+                tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
+                firstIdentifier(tp, TreeShims.getBinding(tree).toString());
             }
             return super.scan(tree, p);
         }

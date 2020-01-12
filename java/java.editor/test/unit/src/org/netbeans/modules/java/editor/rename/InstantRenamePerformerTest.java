@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.event.ChangeEvent;
@@ -179,6 +180,17 @@ public class InstantRenamePerformerTest extends NbTestCase {
     public void testTypeParameters153337() throws Exception {
         KeyEvent ke = new KeyEvent(new JFrame(), KeyEvent.KEY_TYPED, 0, 0, KeyEvent.VK_UNDEFINED, 'R');
         performTest("package test; public class Test { public <T|T> void test(TT t) { } }", 64 - 22, ke, - 1, "package test; public class Test { public <RTT> void test(RTT t) { } }", true);
+    }
+
+    public void testPatternBinding() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return ;
+        }
+        KeyEvent ke = new KeyEvent(new JFrame(), KeyEvent.KEY_TYPED, 0, 0, KeyEvent.VK_UNDEFINED, 'a');
+        performTest("package test; public class Test { public void test(Object o) {boolean b = o instanceof String s|tr && str.isEmpty(); } }", 117 - 22, ke, "package test; public class Test { public void test(Object o) {boolean b = o instanceof String satr && satr.isEmpty(); } }", true);
     }
 
     private void performTest(String sourceCode, int offset, KeyEvent ke, String golden, boolean stillInRename) throws Exception {

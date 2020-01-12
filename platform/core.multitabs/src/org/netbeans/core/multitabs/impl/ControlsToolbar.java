@@ -58,6 +58,7 @@ final class ControlsToolbar extends JToolBar {
     private void configure() {
         setFloatable( false );
         setFocusable( false );
+        setOpaque( false );
         setBorder( BorderFactory.createEmptyBorder() );
         setBorderPainted( false );
         if( TabTableUI.IS_AQUA ) {

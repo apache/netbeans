@@ -36,6 +36,7 @@ import org.netbeans.swing.tabcontrol.DefaultTabDataModel;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabDataModel;
 import org.netbeans.swing.tabcontrol.WinsysInfoForTabbedContainer;
+import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
 import org.netbeans.swing.tabcontrol.plaf.BusyTabsSupport;
 import org.openide.windows.TopComponent;
 
@@ -53,6 +54,7 @@ public final class TabbedImpl extends AbstractTabbedImpl {
     private final Controller controller;
     private final DefaultTabDataModel tabModel;
     private ComponentConverter componentConverter = ComponentConverter.DEFAULT;
+    private boolean active;
 
     public TabbedImpl( WinsysInfoForTabbedContainer winsysInfo, int orientation ) {
         tabModel = new DefaultTabDataModel();
@@ -162,9 +164,17 @@ public final class TabbedImpl extends AbstractTabbedImpl {
         tabModel.setToolTipTextAt(index, toolTip);
     }
 
+
+    public static boolean isActive( Component c ) {
+        Tabbed.Accessor acc = (Tabbed.Accessor)SwingUtilities.getAncestorOfClass(Tabbed.Accessor.class, c);
+        return acc != null
+                && acc.getTabbed() instanceof TabbedImpl
+                && ((TabbedImpl) acc.getTabbed()).active;
+    }
+
     @Override
     public void setActive( boolean active ) {
-        //TODO implement
+        this.active = active;
     }
 
     @Override

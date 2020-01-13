@@ -503,7 +503,7 @@ public class DetectorTest extends TestBase {
         try {
             SourceVersion.valueOf("RELEASE_14");
         } catch (IllegalArgumentException iae) {
-            //OK, presumably no support for raw string literals
+            //OK, presumably no support for pattern matching
             return ;
         }
         setSourceLevel("14");

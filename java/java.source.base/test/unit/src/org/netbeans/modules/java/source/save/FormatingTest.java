@@ -5073,6 +5073,12 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testTypeTestPatterns() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);

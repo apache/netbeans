@@ -188,7 +188,7 @@ public class InstanceOfTest extends GeneratorTestMDRCompat {
     
     private boolean typeTestPatternAvailable() {
         try {
-            Class.forName("com.sun.source.tree.InstanceOfTree", false, JCTree.class.getClassLoader());
+            Class.forName("com.sun.source.tree.BindingPatternTree", false, JCTree.class.getClassLoader());
             return true;
         } catch (ClassNotFoundException ex) {
             //OK

@@ -73,7 +73,7 @@
         <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
 
         <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
-            <arg value="install" />
+            <arg value="package" />
             <arg value="exec:java" />
             <arg value="-Dexec.mainClass=org.netbeans.prepare.bundles.PrepareBundles" />
             <arg value="-Dexec.args=${build.dir}/bundles ${nb_all}" />

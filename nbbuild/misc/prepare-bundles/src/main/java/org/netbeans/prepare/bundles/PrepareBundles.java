@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.JarOutputStream;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -52,18 +53,13 @@ import java.util.zip.ZipEntry;
  */
 public class PrepareBundles {
 
-    private static final String[] LICENSE_FILE_NAMES = {
-        "license",
-        "License",
-        "LICENSE",
-        "LICENSE.txt",
-        "LICENSE-MIT.txt",
-        "license.txt",
-        "License.txt",
-        "LICENSE.md",
-        "license.md"
-    };
-    private static final String nl = System.getProperty("line.separator");
+    private static final List<Pattern> LICENSE_FILE_NAMES = Arrays.asList(
+        Pattern.compile("license", Pattern.CASE_INSENSITIVE),
+        Pattern.compile("LICENSE.txt", Pattern.CASE_INSENSITIVE),
+        Pattern.compile("LICENSE-MIT.txt", Pattern.CASE_INSENSITIVE),
+        Pattern.compile("LICENSE.md", Pattern.CASE_INSENSITIVE)
+    );
+    private static final String nl = "\n";
 
     public static void main(String... args) throws IOException, InterruptedException, NoSuchAlgorithmException {
         if (args.length != 2) {
@@ -122,19 +118,20 @@ public class PrepareBundles {
 
                 String licenseText = null;
 
-                for (String l : LICENSE_FILE_NAMES) {
-                    if (Files.isReadable(module.resolve(l))) {
-                        licenseText = readString(module.resolve(l));
-                        break;
+                try (DirectoryStream<Path> insideModule = Files.newDirectoryStream(module)) {
+                    for (Path licenseCandidate : insideModule) {
+                        String fileName = licenseCandidate.getFileName().toString();
+
+                        if (LICENSE_FILE_NAMES.stream().anyMatch(p -> p.matcher(fileName).matches())) {
+                            licenseText = readString(module.resolve(licenseCandidate));
+                            break;
+                        }
                     }
                 }
 
-                if (licenseText == null) {
-                    String hardcodedLicenseName = name + "-" + version + "-license";
-                    URL hardcodedLicense = PrepareBundles.class.getResource(hardcodedLicenseName);
-                    if (hardcodedLicense == null ){
-                        throw new IllegalStateException("Cannot find license for: " + module.getFileName());
-                    }
+                String hardcodedLicenseName = name + "-" + version + "-license";
+                URL hardcodedLicense = PrepareBundles.class.getResource(hardcodedLicenseName);
+                if (hardcodedLicense != null ){
                     StringBuilder licenseTextBuffer = new StringBuilder();
                     try (InputStream in = hardcodedLicense.openStream();
                          Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
@@ -144,6 +141,8 @@ public class PrepareBundles {
                         }
                     }
                     licenseText = licenseTextBuffer.toString();
+                } else if (licenseText == null) {
+                    throw new IllegalStateException("Cannot find license for: " + module.getFileName());
                 }
                 
                 Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
@@ -154,15 +153,9 @@ public class PrepareBundles {
                                   "\n\n" +
                                   "Parts of this work are licensed:\n" +
                                   readString(thirdpartynoticestxt);
-                } else {
-                    licenseText = licenseText;
                 }
 
-                Path noticestxt = module.resolve("CopyrightNotice.txt");
-
-                if (Files.isReadable(noticestxt)) {
-                    project2Notice.put(module.getFileName().toString(), readString(noticestxt));
-                }
+                //fill project2Notice here if needed
 
                 List<String> tokens = licenseTextToTokens(licenseText);
                 String licenseTextFin = licenseText;
@@ -182,7 +175,7 @@ public class PrepareBundles {
                             out.putNextEntry(ze);
                             if (!isDir) {
                                 if (relative.equals("package.json")) {
-                                    out.write(packageJsonText.replace(targetDir.toString(), "").getBytes());
+                                    out.write(packageJsonText.replace(targetDir.toString(), "").getBytes("UTF-8"));
                                 } else {
                                     Files.copy(p, out);
                                 }
@@ -258,13 +251,13 @@ public class PrepareBundles {
         return Arrays.asList(licenseText.replaceAll("[ \n\r\t]+", " ").split(" "));
     }
     private static class LicenseDescription {
-        private final String name;
-        private final String version;
-        private final String description;
-        private final String homepage;
-        private final String licenseKey;
-        private final String licenseText;
-        private final List<String> bundles = new ArrayList<>();
+        public final String name;
+        public final String version;
+        public final String description;
+        public final String homepage;
+        public final String licenseKey;
+        public final String licenseText;
+        public final List<String> bundles = new ArrayList<>();
 
         public LicenseDescription(String name, String version, String description, String homepage, String licenseKey, String licenseText) {
             this.name = name;
@@ -282,9 +275,9 @@ public class PrepareBundles {
 
     }
     private static class LicenseUses {
-        private final String key;
-        private final String licenseText;
-        private final List<String> projects = new ArrayList<>();
+        public final String key;
+        public final String licenseText;
+        public final List<String> projects = new ArrayList<>();
 
         public LicenseUses(String key, String licenseText) {
             this.key = key;

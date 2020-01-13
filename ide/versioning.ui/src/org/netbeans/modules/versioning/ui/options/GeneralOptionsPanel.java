@@ -91,7 +91,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
     private void fillDisconnectedFolders () {
         if (cmbVersioningSystems.getSelectedItem() instanceof VersioningSystem) {
             String[] disconnected = Utils.getDisconnectedRoots(((VersioningSystem) cmbVersioningSystems.getSelectedItem()));
-            DefaultListModel model = new DefaultListModel();
+            DefaultListModel<String> model = new DefaultListModel<>();
             for (String f : disconnected) {
                 model.addElement(f);
             }

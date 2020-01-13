@@ -35,12 +35,10 @@ import java.security.cert.Certificate;
 import java.security.cert.TrustAnchor;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.CRC32;
 import org.netbeans.Module;
 import org.netbeans.api.autoupdate.*;
 import org.netbeans.api.autoupdate.InstallSupport.Installer;
@@ -49,7 +47,6 @@ import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParser;
-import org.netbeans.modules.autoupdate.updateprovider.MessageDigestValue;
 import org.netbeans.modules.autoupdate.updateprovider.ModuleItem;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess;
 import org.netbeans.modules.autoupdate.updateprovider.NetworkAccess.Task;
@@ -718,52 +715,56 @@ public class InstallSupportImpl {
             }
             c = copy (source, dest, progress, toUpdateImpl.getDownloadSize (), aggregateDownload, totalSize, label);
             boolean wasException = false;
-            JarFile nbm = new JarFile(dest);
-            try {
+            try (JarFile nbm = new JarFile(dest)) {
                 Enumeration<JarEntry> en = nbm.entries();
                 while (en.hasMoreElements()) {
                     JarEntry jarEntry = en.nextElement();
                     if (jarEntry.getName().endsWith(".external")) {
-                        InputStream is = nbm.getInputStream(jarEntry);
-                        try {
-                            AtomicLong crc = new AtomicLong();
-                            InputStream real = externalDownload(is, crc, jarEntry.getName());
-                            if (crc.get() == -1L) {
-                                throw new IOException(jarEntry.getName() + " does not contain CRC: line!");
-                            }
-                            byte[] arr = new byte[4096];
-                            CRC32 check = new CRC32();
-                            File external = new File(dest.getPath() + "." + Long.toHexString(crc.get()));
-                            FileOutputStream fos = new FileOutputStream(external);
-                            try {
-                                for (;;) {
-                                    int len = real.read(arr);
-                                    if (len == -1) {
-                                        break;
-                                    }
-                                    check.update(arr, 0, len);
-                                    fos.write(arr, 0, len);
-                                    if (progressRunning) {
-                                        if ((c += len) <= toUpdateImpl.getDownloadSize()) {
-                                            progress.progress(aggregateDownload + c);
-                                        }
+                        ExternalFile externalFile;
+                        try(InputStream is = nbm.getInputStream(jarEntry)) {
+                            externalFile = ExternalFile.fromStream(jarEntry.getName(), is);
+                        }
+                        if (externalFile.getCrc32() == null) {
+                            throw new IOException(jarEntry.getName() + " does not contain CRC: line!");
+                        }
+
+                        MessageMultiValidator check = externalFile.getValidator();
+                        File external = new File(dest.getPath() + "." + Long.toHexString(externalFile.getCrc32()));
+                        try (
+                            InputStream real = externalDownload(externalFile);
+                            FileOutputStream fos = new FileOutputStream(external)) {
+                            byte[] buffer = new byte[4096];
+                            for (;;) {
+                                int len = real.read(buffer);
+                                if (len == -1) {
+                                    break;
+                                }
+                                check.update(buffer, 0, len);
+                                fos.write(buffer, 0, len);
+                                if (progressRunning) {
+                                    if ((c += len) <= toUpdateImpl.getDownloadSize()) {
+                                        progress.progress(aggregateDownload + c);
                                     }
                                 }
-                            } finally {
-                                fos.close();
                             }
-                            real.close();
-                            if (check.getValue() != crc.get()) {
-                                LOG.log(Level.INFO, "Deleting file with uncomplete external content(cause: wrong CRC) " + normalized);
-                                dest.delete();
-                                synchronized(downloadedFiles) {
-                                    downloadedFiles.remove(normalized);
+                        }
+
+                        if (! check.isValid()) {
+                            List<String> failedChecks = new ArrayList<>();
+                            for(MessageValidator v: check.getValidators()) {
+                                if(! v.isValid()) {
+                                    failedChecks.add(v.getName());
                                 }
-                                external.delete();
-                                throw new IOException("Wrong CRC for " + jarEntry.getName());
+                                LOG.log(Level.INFO,
+                                    "Deleting file with invalid check {0}, expected {1}, got {2}: {3}",
+                                    new Object[] {v.getName(), v.getExpectedValueAsString(), v.getRealValueAsString(), normalized});
                             }
-                        } finally {
-                            is.close();
+                            dest.delete();
+                            synchronized (downloadedFiles) {
+                                downloadedFiles.remove(normalized);
+                            }
+                            external.delete();
+                            throw new IOException("Failed checks " + failedChecks.toString() + " for " + jarEntry.getName());
                         }
                     }
                 }
@@ -776,7 +777,6 @@ public class InstallSupportImpl {
                 wasException = true;
                 throw new OperationException(OperationException.ERROR_TYPE.PROXY, x.getLocalizedMessage());
             } finally {
-                nbm.close();
                 if (wasException) {
                     dest.delete();
                 }
@@ -1094,7 +1094,7 @@ public class InstallSupportImpl {
             }
 
             {
-                MessageDigestChecker mdChecker = new MessageDigestChecker(impl.getMessageDigests());
+                MessageMultiValidator mdChecker = MessageValidator.createFromMessageDigestValues(impl.getMessageDigests());
                 byte[] buffer = new byte[102400];
                 int read;
                 try(FileInputStream fis = new FileInputStream(nbmFile)) {
@@ -1102,18 +1102,19 @@ public class InstallSupportImpl {
                         mdChecker.update(buffer, 0, read);
                     }
                 }
-                if(!mdChecker.validate()) {
-                    for (String algorithm : mdChecker.getFailingHashes()) {
+                if(!mdChecker.isValid()) {
+                    for (MessageValidator mv: mdChecker.getValidators()) {
                         LOG.log(Level.INFO,
-                            "Failed to validate message digest for ''{0}'' expected ''{1}'' got ''{2}''",
+                            "Failed to validate message digest {3} for ''{0}'' expected ''{1}'' got ''{2}''",
                             new Object[]{
                                 nbmFile.getAbsolutePath(),
-                                mdChecker.getExpectedHashAsString(algorithm),
-                                mdChecker.getCalculatedHashAsString(algorithm)
+                                mv.getExpectedValueAsString(),
+                                mv.getRealValueAsString(),
+                                mv.getName()
                             });
                     }
                     res = Utilities.MODIFIED;
-                } else if (mdChecker.isDigestAvailable() && impl.isCatalogTrusted()) {
+                } else if ((! mdChecker.getValidators().isEmpty()) && impl.isCatalogTrusted()) {
                     res = Utilities.TRUSTED;
                 }
             }
@@ -1361,61 +1362,32 @@ public class InstallSupportImpl {
         }
         return es;
     }
-    
-    // copied from nbbuild/antsrc/org/netbeans/nbbuild/AutoUpdate.java:
-    private static InputStream externalDownload(InputStream is, AtomicLong crc, String pathTo) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+    private static InputStream externalDownload(ExternalFile ef) throws IOException {
         URLConnection conn;
-        crc.set(-1L);
-        String url = null;
-        String externalUrl = null;
         IOException ioe = null;
-        for (;;) {
-            String line = br.readLine();
-            if (line == null) {
-                break;
-            }
-            if (line.startsWith("CRC:")) {
-                crc.set(Long.parseLong(line.substring(4).trim()));
-            }
-            if (line.startsWith("URL:")) {
-                url = line.substring(4).trim();
-                for (;;) {
-                    int index = url.indexOf("${");
-                    if (index == -1) {
-                        break;
-                    }
-                    int end = url.indexOf("}", index);
-                    String propName = url.substring(index + 2, end);
-                    final String propVal = System.getProperty(propName);
-                    if (propVal == null) {
-                        throw new IOException("Can't find property " + propName);
-                    }
-                    url = url.substring(0, index) + propVal + url.substring(end + 1);
-                }
-                LOG.log(Level.INFO, "Trying external URL: {0}", url);
-                try {
-                    conn = new URL(url).openConnection();
-                    conn.setConnectTimeout(AutoupdateSettings.getOpenConnectionTimeout());
-                    conn.setReadTimeout(AutoupdateSettings.getOpenConnectionTimeout());
-                    return conn.getInputStream();
-                } catch (IOException ex) {
-                    LOG.log(Level.WARNING, "Cannot connect to {0}", url);
-                    LOG.log(Level.INFO, "Details", ex);
-                    if (ex instanceof UnknownHostException || ex instanceof ConnectException || ex instanceof SocketTimeoutException) {
-                        ioe = ex;
-                        externalUrl = url;
-                    }
+        for (String url : ef.getUrls()) {
+            LOG.log(Level.INFO, "Trying external URL: {0}", url);
+            try {
+                conn = new URL(url).openConnection();
+                conn.setConnectTimeout(AutoupdateSettings.getOpenConnectionTimeout());
+                conn.setReadTimeout(AutoupdateSettings.getOpenConnectionTimeout());
+                return conn.getInputStream();
+            } catch (IOException ex) {
+                LOG.log(Level.WARNING, "Cannot connect to {0}", url);
+                LOG.log(Level.INFO, "Details", ex);
+                if (ex instanceof UnknownHostException || ex instanceof ConnectException || ex instanceof SocketTimeoutException) {
+                    ioe = ex;
                 }
             }
         }
         if (ioe == null) {
-            throw new FileNotFoundException("Cannot resolve external reference to " + (url == null ? pathTo : url));
+            throw new FileNotFoundException("Cannot resolve external reference to " + ef.getUrls());
         } else {
-            throw new IOException("resolving external reference to " + (externalUrl == null ? pathTo : externalUrl));
+            throw new IOException("resolving external reference to " + ef.getUrls());
         }
     }
-    
+
     private static class UpdaterInfo {
         private final JarEntry updaterJarEntry;
         private final File zipFileWithUpdater;

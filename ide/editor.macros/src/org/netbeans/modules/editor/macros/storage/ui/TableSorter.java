@@ -67,7 +67,7 @@ public class TableSorter extends AbstractTableModel {
     private MouseListener mouseListener;
     private TableModelListener tableModelListener;
     private Map<Class, Comparator> columnComparators = new HashMap<>();
-    private List sortingColumns = new ArrayList();
+    private List<Directive> sortingColumns = new ArrayList<>();
 
     public TableSorter() {
         this.mouseListener = new MouseHandler();

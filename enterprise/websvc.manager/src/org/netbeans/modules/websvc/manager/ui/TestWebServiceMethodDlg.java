@@ -677,7 +677,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         private final LinkedList paramList;
         private final JavaMethod javaMethod;
         private final URLClassLoader urlClassLoader;
-        private final List listeners = new ArrayList();
+        private final List<MethodTaskListener> listeners = new ArrayList<>();
         private boolean cancelled=false;
 
 

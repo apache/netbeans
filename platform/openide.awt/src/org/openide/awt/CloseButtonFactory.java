@@ -92,7 +92,7 @@ public final class CloseButtonFactory{
     private static boolean isWindows8LaF() {
         return isWindowsLaF() && isWindows8() && isWindowsXPLaF();
     }
-    
+
     private static boolean isWindows10LaF() {
         return isWindowsLaF() && isWindows10() && isWindowsXPLaF();
     }
@@ -102,7 +102,7 @@ public final class CloseButtonFactory{
         return osName.indexOf("Vista") >= 0
             || (osName.equals( "Windows NT (unknown)" ) && "6.0".equals( System.getProperty("os.version") ));
     }
-    
+
     private static boolean isWindows10() {
         String osName = System.getProperty ("os.name");
         return osName.indexOf("Windows 10") >= 0
@@ -142,6 +142,9 @@ public final class CloseButtonFactory{
 
     private static Icon getCloseTabImage() {
         if( null == closeTabImage ) {
+            closeTabImage = UIManager.getIcon("nb.close.tab.icon.enabled.icon"); //NOI18N
+        }
+        if( null == closeTabImage ) {
             String path = UIManager.getString("nb.close.tab.icon.enabled.name" ); //NOI18N
             if( null != path ) {
                 closeTabImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
@@ -169,6 +172,9 @@ public final class CloseButtonFactory{
 
     private static Icon getCloseTabPressedImage() {
         if( null == closeTabPressedImage ) {
+            closeTabPressedImage = UIManager.getIcon("nb.close.tab.icon.pressed.icon"); //NOI18N
+        }
+        if( null == closeTabPressedImage ) {
             String path = UIManager.getString("nb.close.tab.icon.pressed.name" ); //NOI18N
             if( null != path ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
@@ -195,6 +201,9 @@ public final class CloseButtonFactory{
     }
 
     private static Icon getCloseTabRolloverImage() {
+        if( null == closeTabMouseOverImage ) {
+            closeTabMouseOverImage = UIManager.getIcon("nb.close.tab.icon.rollover.icon"); //NOI18N
+        }
         if( null == closeTabMouseOverImage ) {
             String path = UIManager.getString("nb.close.tab.icon.rollover.name" ); //NOI18N
             if( null != path ) {
@@ -224,6 +233,9 @@ public final class CloseButtonFactory{
 
     private static Icon getBigCloseTabImage() {
         if( null == bigCloseTabImage ) {
+            bigCloseTabImage = UIManager.getIcon("nb.bigclose.tab.icon.enabled.icon"); //NOI18N
+        }
+        if( null == bigCloseTabImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.enabled.name" ); //NOI18N
             if( null != path ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
@@ -251,6 +263,9 @@ public final class CloseButtonFactory{
 
     private static  Icon getBigCloseTabPressedImage() {
         if( null == bigCloseTabPressedImage ) {
+            bigCloseTabPressedImage = UIManager.getIcon("nb.bigclose.tab.icon.pressed.icon"); //NOI18N
+        }
+        if( null == bigCloseTabPressedImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.pressed.name" ); //NOI18N
             if( null != path ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
@@ -277,6 +292,9 @@ public final class CloseButtonFactory{
     }
 
     private static Icon getBigCloseTabRolloverImage() {
+        if( null == bigCloseTabMouseOverImage ) {
+            bigCloseTabMouseOverImage = UIManager.getIcon("nb.bigclose.tab.icon.rollover.icon"); //NOI18N
+        }
         if( null == bigCloseTabMouseOverImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.rollover.name" ); //NOI18N
             if( null != path ) {

@@ -23,26 +23,23 @@ import java.security.NoSuchAlgorithmException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class MessageDigestCheckerTest {
-
-    public MessageDigestCheckerTest() {
-    }
+public class UtilitiesTest {
 
     @Test
     public void testHexEncode() throws NoSuchAlgorithmException {
         MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
-        byte[] hash = sha512.digest(new byte[] {});
+        byte[] hash = sha512.digest(new byte[]{});
         assertEquals(
             "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
-            MessageDigestChecker.hexEncode(hash));
+            Utilities.hexEncode(hash));
     }
 
     @Test
     public void testHexDecode() throws NoSuchAlgorithmException {
         MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
-        byte[] hash = sha512.digest(new byte[] {});
+        byte[] hash = sha512.digest(new byte[]{});
         assertArrayEquals(
             hash,
-            MessageDigestChecker.hexDecode("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"));
+            Utilities.hexDecode("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"));
     }
 }

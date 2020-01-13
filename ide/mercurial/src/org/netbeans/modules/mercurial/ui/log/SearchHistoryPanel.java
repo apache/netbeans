@@ -794,7 +794,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private void initializeFilter () {
-        DefaultComboBoxModel filterModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<FilterKind> filterModel = new DefaultComboBoxModel<>();
         filterModel.addElement(FilterKind.ALL);
         filterModel.addElement(FilterKind.ID);
         filterModel.addElement(FilterKind.MESSAGE);

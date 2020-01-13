@@ -74,10 +74,8 @@ public abstract class AbstractParseTreeNode extends ParseTree implements Node {
     @Override
     @SuppressWarnings(value="unchecked") //antlr 3.3 does not use generics
     public List<Node> children() {
-        List ch = getChildren();
-        return ch == null 
-                ? Collections.<Node>emptyList() 
-                : ch;
+        List<Node> ch = getChildren();
+        return ch == null ? Collections.<Node>emptyList() : ch;
     }
 
     @Override

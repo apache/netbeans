@@ -45,7 +45,7 @@ final class ControlsToolbar extends JToolBar {
             btn.setBorder( BorderFactory.createEmptyBorder(2,2,2,2) );
             btn.setFocusable( false );
             btn.setBorderPainted( false );
-            btn.setRolloverEnabled( false );
+            btn.setRolloverEnabled( UIManager.getBoolean("nb.multitabs.button.rollover") );
         }
     }
     
@@ -58,6 +58,7 @@ final class ControlsToolbar extends JToolBar {
     private void configure() {
         setFloatable( false );
         setFocusable( false );
+        setOpaque( false );
         setBorder( BorderFactory.createEmptyBorder() );
         setBorderPainted( false );
         if( TabTableUI.IS_AQUA ) {

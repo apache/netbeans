@@ -218,6 +218,7 @@ final class VanillaCompileWorker extends CompileWorker {
             return null;
         }
         if (isLowMemory(null)) {
+            fallbackCopyExistingClassFiles(context, javaContext, files);
             return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
         }
         boolean aptEnabled = true;
@@ -229,6 +230,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<Element, CompileTuple>();
@@ -248,6 +250,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             for (Entry<CompilationUnitTree, CompileTuple> unit : units.entrySet()) {
@@ -303,6 +306,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             final JavacTaskImpl jtFin = jt;
@@ -372,6 +376,7 @@ final class VanillaCompileWorker extends CompileWorker {
             }
         } catch (CancelAbort ca) {
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
@@ -394,42 +399,47 @@ final class VanillaCompileWorker extends CompileWorker {
                     JavaIndex.LOG.log(level, message, t);  //NOI18N
                 }
             }
-             //fallback: copy output classes to caches, so that editing is not extremely slow/broken:
-            BinaryForSourceQuery.Result res2 = BinaryForSourceQuery.findBinaryRoots(context.getRootURI());
-            Set<String> filter;
-            if (!context.isAllFilesIndexing()) {
-                filter = new HashSet<>();
-                for (CompileTuple toIndex : files) {
-                    String path = toIndex.indexable.getRelativePath();
-                    filter.add(path.substring(0, path.lastIndexOf(".")));
-                }
-            } else {
-                filter = null;
-            }
-            try {
-                final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
-                    File cache = JavaIndex.getClassFolder(context.getRootURI(), false, false);
-                    for (URL u : res2.getRoots()) {
-                        FileObject binaryFO = URLMapper.findFileObject(u);
-                        if (binaryFO == null)
-                            continue;
-                        FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
-                        List<File> copied = new ArrayList<>();
-                        copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
-                        final ClassIndexImpl cii = javaContext.getClassIndexImpl();
-                        if (cii != null) {
-                            cii.getBinaryAnalyser().analyse(context, cache, copied);
-                        }
-                    }
-                });
-                done.get();
-            } catch (IOException | InterruptedException | ExecutionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
+        fallbackCopyExistingClassFiles(context, javaContext, files);
         return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }
 
+    private static void fallbackCopyExistingClassFiles(final Context context,
+                                                       final JavaParsingContext javaContext,
+                                                       final Collection<? extends CompileTuple> files) {
+        //fallback: copy output classes to caches, so that editing is not extremely slow/broken:
+        BinaryForSourceQuery.Result res2 = BinaryForSourceQuery.findBinaryRoots(context.getRootURI());
+        Set<String> filter;
+        if (!context.isAllFilesIndexing()) {
+            filter = new HashSet<>();
+            for (CompileTuple toIndex : files) {
+                String path = toIndex.indexable.getRelativePath();
+                filter.add(path.substring(0, path.lastIndexOf(".")));
+            }
+        } else {
+            filter = null;
+        }
+        try {
+            final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
+                File cache = JavaIndex.getClassFolder(context.getRootURI(), false, false);
+                for (URL u : res2.getRoots()) {
+                    FileObject binaryFO = URLMapper.findFileObject(u);
+                    if (binaryFO == null)
+                        continue;
+                    FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
+                    List<File> copied = new ArrayList<>();
+                    copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
+                    final ClassIndexImpl cii = javaContext.getClassIndexImpl();
+                    if (cii != null) {
+                        cii.getBinaryAnalyser().analyse(context, cache, copied);
+                    }
+                }
+            });
+            done.get();
+        } catch (IOException | InterruptedException | ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        }
     private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx, List<File> copied) throws IOException {
         if (source.isFolder()) {
             if (target.exists() && !target.isDirectory()) {

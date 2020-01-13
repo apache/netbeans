@@ -69,7 +69,7 @@ public class ListValuePicker extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(valuesLabel, label); 
         
         valuesList.setCellRenderer(new ListValueRenderer());
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<ListValue> model = new DefaultListModel<>();
         for (ListValue lvalue : knownValues) {
             model.addElement(lvalue);
         }

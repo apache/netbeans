@@ -99,7 +99,7 @@ public final class SingleJavaSourceDebugActionProvider implements ActionProvider
         Callable<Process> callable = () -> debuggerProcess.setupProcess(compileProcess, fileObject);
         ExecutionService exeService = ExecutionService.newService(
                 callable,
-                descriptor, "Debuging Single Java File");
+                descriptor, "Debugging Single Java File");
 
         Future<Integer> exitCode = exeService.run();
 

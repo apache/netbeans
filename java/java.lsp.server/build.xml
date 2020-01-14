@@ -51,4 +51,65 @@
     <target name="clean" depends="projectized.clean">
         <delete dir="${lsp.build.dir}" />
     </target>
+    <target name="build-vscode-ext" depends="build-lsp-server" description="Build the Visual Studio Code extension.">
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="install" />
+        </exec>
+
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="run" />
+            <arg value="compile" />
+        </exec>
+
+        <delete dir="${build.dir}/vscode" />
+        <exec executable="cp" failonerror="true">
+            <arg value="-r" />
+            <arg value="vscode/" />
+            <arg value="${build.dir}/" />
+        </exec>
+
+        <delete dir="${build.dir}/bundles" />
+        <mkdir dir="${build.dir}/bundles/package" />
+        <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
+
+        <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
+            <arg value="package" />
+            <arg value="exec:java" />
+            <arg value="-Dexec.mainClass=org.netbeans.prepare.bundles.PrepareBundles" />
+            <arg value="-Dexec.args=${build.dir}/bundles ${nb_all}" />
+        </exec>
+ 
+        <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+
+        <property name="config.javadoc.all" value="" />
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.java.list}"/>
+
+        <mkdir dir="${build.dir}/vscode/licenses" />
+
+        <createlicensesummary licenseStub="${nb_all}/LICENSE"
+                              noticeStub="${nb_all}/nbbuild/notice-stub.txt"
+                              report="${build.dir}/createlicensesummary.xml"
+                              nball="${nb_all}"
+                              build="${build.dir}/vscode"
+                              license="${build.dir}/vscode/LICENSE"
+                              licenseTargetDir="${build.dir}/vscode/licenses"
+                              notice="${build.dir}/vscode/NOTICE"
+                              binary="true"
+                              excludes="${nb-extra-files}"
+                              extraExternalDirectory="${build.dir}/bundles/bundles"
+                              extraLicenseDirectory="${build.dir}/bundles/licenses"
+                              includeAllFiles="true"
+        />
+
+        <mkdir dir="${build.dir}/vsce" />
+        <exec executable="npm" failonerror="true" dir="${build.dir}/vsce">
+            <arg value="install" />
+            <arg value="vsce" />
+        </exec>
+        <exec executable="${build.dir}/vsce/node_modules/vsce/out/vsce" failonerror="true" dir="${build.dir}/vscode">
+            <arg value="package" />
+            <arg value="--out" />
+            <arg value="${build.dir}/apache-netbeans-java-0.0.1.vsix" />
+        </exec>
+    </target>
 </project>

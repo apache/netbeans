@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -371,7 +372,8 @@ public final class CompilationInfoImpl {
     public synchronized JavacTaskImpl getJavacTask() {
         if (javacTask == null) {
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
-            javacTask = JavacParser.createJavacTask(this.file, this.jfo, this.root, this.cpInfo,
+            Iterable<? extends JavaFileObject> jfos = this.jfo != null ? Arrays.asList(this.jfo) : Collections.emptyList();
+            javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                     this.parser, diagnosticListener, isDetached);
         }
 	return javacTask;

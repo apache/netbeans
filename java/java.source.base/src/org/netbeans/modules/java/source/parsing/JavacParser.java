@@ -53,6 +53,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -181,8 +182,8 @@ public class JavacParser extends Parser {
     private FileObject root;
     //ClassPaths used by the parser
     private ClasspathInfo cpInfo;
-    //Count of files the parser was created for
-    private final int sourceCount;
+    //XXX: Count of files the parser was created for
+    private final Collection<Snapshot> snapshots;
     //Incremental parsing support
     private final boolean supportsReparse;
     //Incremental parsing support
@@ -209,11 +210,16 @@ public class JavacParser extends Parser {
     private ChangeListener weakCpListener;
     //Current source for parse optmalization of task with no Source (identity)
     private Reference<JavaSource> currentSource;
+    //cache of already parsed files
+    static private Map<String, CompilationUnitTree> parsedTrees;
 
+    static {
+        parsedTrees = new HashMap<>();
+    }
     JavacParser (final Collection<Snapshot> snapshots, boolean privateParser) {
         this.privateParser = privateParser;
-        this.sourceCount = snapshots.size();
-        final boolean singleJavaFile = this.sourceCount == 1 && MIME_TYPE.equals(snapshots.iterator().next().getSource().getMimeType());
+        this.snapshots = snapshots;
+        final boolean singleJavaFile = this.snapshots.size() == 1 && MIME_TYPE.equals(snapshots.iterator().next().getSource().getMimeType());
         this.supportsReparse = singleJavaFile && !DISABLE_PARTIAL_REPARSE;
         JavaFileFilterImplementation filter = null;
         if (singleJavaFile) {
@@ -230,7 +236,7 @@ public class JavacParser extends Parser {
             new Runnable() {
                 @Override
                 public void run() {
-                    if (sourceCount == 0) {
+                    if (snapshots.size() == 0) {
                         invalidate(true);
                     }
                 }
@@ -386,7 +392,7 @@ public class JavacParser extends Parser {
         final CompilationInfoImpl oldInfo = ciImpl;
         boolean success = false;
         try {
-            switch (this.sourceCount) {
+            switch (this.snapshots.size()) {
                 case 0:
                     if (shouldParse(task)) {
                         init(task);
@@ -395,6 +401,7 @@ public class JavacParser extends Parser {
                     break;
                 case 1:
                     init (snapshot, task, true);
+                    parsedTrees.clear();
                     boolean needsFullReparse = true;
                     if (supportsReparse) {
                         final Pair<DocPositionRegion,MethodTree> _changedMethod = changedMethod.getAndSet(null);
@@ -415,9 +422,28 @@ public class JavacParser extends Parser {
                     break;
                 default:
                     init (snapshot, task, false);
+                    DiagnosticListener<JavaFileObject> diagnosticListener;
+                    JavacTaskImpl javacTask;
+                    if (sequentialParsing == null && ciImpl == null) {
+                        parsedTrees.clear();//for first file in refactoring
+                        List<JavaFileObject> jfos = new ArrayList<>();
+                        for (Snapshot s : snapshots) {
+                            jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
+                        }
+                        diagnosticListener = new CompilationInfoImpl.DiagnosticListenerImpl(this.root, jfos.get(0), this.cpInfo);
+                        javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
+                                this, diagnosticListener, false);
+                    } else if (ciImpl != null) {
+                        diagnosticListener = ciImpl.getDiagnosticListener();
+                        javacTask = ciImpl.getJavacTask();
+                    } else {
+                        parsedTrees.clear();
+                        diagnosticListener = null;
+                        javacTask = null;
+                    }
                     ciImpl = createCurrentInfo(this, file, root, snapshot,
-                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getJavacTask(),
-                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getDiagnosticListener());
+                        javacTask,
+                        diagnosticListener);
             }
             success = true;
         } finally {
@@ -450,14 +476,14 @@ public class JavacParser extends Parser {
             if (isClasspathInfoProvider) {
                 final ClasspathInfo providedInfo = ((ClasspathInfo.Provider)task).getClasspathInfo();
                 if (providedInfo != null && !providedInfo.equals(cpInfo)) {
-                    if (sourceCount != 0) {
+                    if (snapshots.size() != 0) {
                         LOGGER.log (Level.FINE, "Task {0} has changed ClasspathInfo form: {1} to:{2}", new Object[]{task, cpInfo, providedInfo}); //NOI18N
                     }
                     invalidate(true); //Reset initialized, world has changed.
                 }
             }
             if (invalid) {
-                assert cachedSnapShot != null || sourceCount == 0;
+                assert cachedSnapShot != null || snapshots.size() == 0;
                 try {
                     parseImpl(cachedSnapShot, task);
                 } catch (FileObjects.InvalidFileException ife) {
@@ -582,24 +608,37 @@ public class JavacParser extends Parser {
                 }
                 long start = System.currentTimeMillis();
                 // XXX - this might be with wrong encoding
-                Iterable<? extends CompilationUnitTree> trees;
+                Iterable<? extends CompilationUnitTree> trees=null;
+                CompilationUnitTree unit=null;
+                if(snapshots.size()>1 && parsedTrees.containsKey(currentInfo.jfo.getName())){
+                    unit=parsedTrees.get(currentInfo.jfo.getName());
+                }
+                else{
                 if (sequentialParsing != null) {
                     trees = sequentialParsing.parse(currentInfo.getJavacTask(), currentInfo.jfo);
                 } else {
                     trees = currentInfo.getJavacTask().parse();
                 }
-                if (trees == null) {
-                    LOGGER.log( Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
-                    return Phase.MODIFIED;
+                if (unit == null) {
+                    if (trees == null) {
+                        LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
+                        return Phase.MODIFIED;
+                    }
+                    Iterator<? extends CompilationUnitTree> it = trees.iterator();
+                    if (!it.hasNext()) {
+                        LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
+                        return Phase.MODIFIED;
+                    }
+                    while (it.hasNext()) {
+                        CompilationUnitTree oneFileTree = it.next();
+                        CompilationUnitTree put = parsedTrees.put( oneFileTree.getSourceFile().getName(), oneFileTree);
+                    }
+                    unit = trees.iterator().next();
+                    }
                 }
-                Iterator<? extends CompilationUnitTree> it = trees.iterator();
-                if (!it.hasNext()) {
-                    LOGGER.log( Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
-                    return Phase.MODIFIED;
-                }
-                CompilationUnitTree unit = it.next();
+               
                 currentInfo.setCompilationUnit(unit);
-                assert !it.hasNext();
+                //assert !it.hasNext();
                 final Document doc = currentInfo.getDocument();
                 if (doc != null && supportsReparse) {
                     final FindMethodRegionsVisitor v = new FindMethodRegionsVisitor(doc,Trees.instance(currentInfo.getJavacTask()).getSourcePositions(),this.parserCanceled, unit);
@@ -721,7 +760,7 @@ public class JavacParser extends Parser {
 
     static JavacTaskImpl createJavacTask(
             final FileObject file,
-            final JavaFileObject jfo,
+            final Iterable<? extends JavaFileObject> jfos,
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,
@@ -742,7 +781,7 @@ public class JavacParser extends Parser {
         }
         final Set<ConfigFlags> flags = EnumSet.noneOf(ConfigFlags.class);
         final Optional<JavacParser> mayBeParser = Optional.ofNullable(parser);
-        if (mayBeParser.filter((p)->p.sourceCount>1).isPresent()) {
+        if (mayBeParser.filter((p)->p.snapshots.size()>1).isPresent()) {
             flags.add(ConfigFlags.MULTI_SOURCE);
         }
         if (Optional.ofNullable(mayBeParser.map(p->(p.file))
@@ -789,7 +828,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    jfo != null ? Arrays.asList(jfo) : Collections.emptyList());
+                    jfos);
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()

@@ -150,7 +150,7 @@ public final class Authentication {
             throw new IllegalArgumentException("Invalid ssh key file " + filename); // NOI18N
         }
 
-        type = type.SSH_KEY;
+        type = Type.SSH_KEY;
         sshKeyFile = filename;
     }
 

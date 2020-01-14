@@ -471,11 +471,11 @@ class HeapView extends JComponent {
             if (e.isPopupTrigger()) {
                 // Show a popup allowing to configure the various options
                 showPopup(e.getX(), e.getY());
-            }  else if (e.getID() == e.MOUSE_ENTERED) {
+            }  else if (e.getID() == MouseEvent.MOUSE_ENTERED) {
                 containsMouse = true;
                 cachedBorderVaild = false;
                 repaint();
-            } else if (e.getID() == e.MOUSE_EXITED) {
+            } else if (e.getID() == MouseEvent.MOUSE_EXITED) {
                 containsMouse = false;
                 cachedBorderVaild = false;
                 repaint();

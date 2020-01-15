@@ -37,6 +37,6 @@ $GRAALVM/bin/gu install R
 JAVA_HOME=$GRAALVM ant -f platform/api.scripting/build.xml test
 JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 
-#JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
+JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test

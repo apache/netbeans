@@ -311,6 +311,9 @@ public abstract class LFCustoms {
     //custom fonts based on this value
     protected static final String DEFAULT_FONT_SIZE = "nbDefaultFontSize"; //NOI18N
 
+    //Color Profile
+    protected static final String EDITOR_PREFERRED_COLOR_PROFILE = "nb.preferred.color.profile"; //NOI18N
+
     //Editor
     protected static final String EDITOR_STATUS_LEFT_BORDER = "Nb.Editor.Status.leftBorder"; //NOI18N
     protected static final String EDITOR_STATUS_INNER_BORDER = "Nb.Editor.Status.innerBorder"; //NOI18N

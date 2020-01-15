@@ -25,8 +25,8 @@ import org.openide.modules.ModuleInstall;
 import org.openide.util.*;
 
 @NbBundle.Messages({
-    "LBL_FLATLAF_LIGHT=FlatLaf Light (experimental)",
-    "LBL_FLATLAF_DARK=FlatLaf Dark (experimental)"
+    "LBL_FLATLAF_LIGHT=FlatLaf Light",
+    "LBL_FLATLAF_DARK=FlatLaf Dark"
 })
 public class Installer extends ModuleInstall {
 
@@ -34,8 +34,6 @@ public class Installer extends ModuleInstall {
     public void validate() throws IllegalStateException {
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_LIGHT(), FlatLightLaf.class.getName()));
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), FlatDarkLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat IntelliJ", FlatIntelliJLaf.class.getName()));
-//        UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo("Flat Darcula", FlatDarculaLaf.class.getName()));
     }
 
 }

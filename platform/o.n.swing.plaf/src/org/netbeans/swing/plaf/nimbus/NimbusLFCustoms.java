@@ -79,6 +79,7 @@ public final class NimbusLFCustoms extends LFCustoms {
         }*/
 
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             //UI Delegates for the tab control
             EDITOR_TAB_DISPLAYER_UI,
                 "org.netbeans.swing.tabcontrol.plaf.NimbusEditorTabDisplayerUI", //NOI18N

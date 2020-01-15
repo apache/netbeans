@@ -74,6 +74,7 @@ public class GtkLFCustoms extends LFCustoms {
         }
         
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             PROPSHEET_SELECTION_BACKGROUND, selBg,
             PROPSHEET_SELECTION_FOREGROUND, selFg,
             PROPSHEET_SELECTED_SET_BACKGROUND, selBg,

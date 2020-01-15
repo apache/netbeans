@@ -21,10 +21,11 @@ set -e
 
 if [ -z "$GRAALVM" ]; then
   VERSION=19.3.1
-  BASE=graalvm-ce-$VERSION
+  BASE=graalvm-ce-java8-$VERSION
   URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$VERSION/graalvm-ce-java8-linux-amd64-$VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
+  ls -l
   GRAALVM=`pwd`/$BASE
 fi
 

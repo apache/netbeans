@@ -126,7 +126,7 @@ public abstract class GrammarQueryManager {
                     GrammarQuery query = g.getGrammar(ctx);
                     if (query == null) {
                         ErrorManager err = ErrorManager.getDefault();
-                        err.log(err.WARNING, "Broken contract: " + g.getClass());
+                        err.log(ErrorManager.WARNING, "Broken contract: " + g.getClass());
                     }
                     return query;
                 } else {
@@ -136,7 +136,7 @@ public abstract class GrammarQueryManager {
                     PrintWriter writer = new PrintWriter(stringWriter);
                     ex.printStackTrace(writer);
                     writer.flush();
-                    err.log(err.WARNING, stringWriter.getBuffer().toString());
+                    err.log(ErrorManager.WARNING, stringWriter.getBuffer().toString());
                     return null;
                 }
             } finally {

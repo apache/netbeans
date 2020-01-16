@@ -500,7 +500,7 @@ public class Utilities {
     
     public static int findBodyStart(final CompilationInfo info, final Tree cltree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         Kind kind = cltree.getKind();
-        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD)
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD && !cltree.getKind().toString().equals(TreeShims.RECORD))
             throw new IllegalArgumentException("Unsupported kind: "+ kind);
         final int[] result = new int[1];
         

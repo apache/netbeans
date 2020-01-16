@@ -39,6 +39,7 @@ public class TreeShims {
 
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
     public static final String YIELD = "YIELD"; //NOI18N
+    public static final String RECORD = "RECORD"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {

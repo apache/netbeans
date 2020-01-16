@@ -66,6 +66,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.editor.GuardedException;
 import org.netbeans.modules.java.editor.codegen.ImplementOverrideMethodGenerator;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
@@ -168,6 +169,11 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         }
         Element e = info.getTrees().getElement(path);
         final Tree leaf = path.getLeaf();
+        //TODO: Fix defect #NETBEANS-3702
+        //Disabling hints for record
+        if(leaf.getKind().toString().equals(TreeShims.RECORD)){
+            return null;
+        }
         boolean isUsableElement = e != null && (e.getKind().isClass() || e.getKind().isInterface());
         boolean containsDefaultMethod = saved == Boolean.FALSE;
 

@@ -89,6 +89,7 @@ public final class VistaLFCustoms extends LFCustoms {
         Object propertySheetValues = new VistaPropertySheetColorings();
 
         Object[] uiDefaults = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             EDITOR_TAB_DISPLAYER_UI, editorTabsUI,
             VIEW_TAB_DISPLAYER_UI, viewTabsUI,
             

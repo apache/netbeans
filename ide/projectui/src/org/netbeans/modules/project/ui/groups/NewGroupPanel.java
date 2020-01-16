@@ -34,6 +34,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
+import static org.netbeans.modules.project.ui.groups.ManageGroupsPanel.NONE_GOUP;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.NotificationLineSupport;
 import org.openide.filesystems.FileObject;
@@ -93,6 +94,9 @@ public class NewGroupPanel extends JPanel {
         String name = nameField.getText();
         if (name != null) {
             if (name.trim().length() <= 0 || name.trim().length() >= MAX_NAME) {
+                return false;
+            }
+            if (name.equalsIgnoreCase(NONE_GOUP)) {
                 return false;
             }
             for (Group group : Group.allGroups()) {
@@ -535,6 +539,9 @@ public class NewGroupPanel extends JPanel {
         if (name != null) {
             if (name.length() > MAX_NAME) {
                 notificationLineSupport.setErrorMessage(NewGroupPanel_too_long_warning());
+            }
+            if (name.equalsIgnoreCase(NONE_GOUP)) {
+                notificationLineSupport.setErrorMessage(NewGroupPanel_exists_warning());
             }
             for (Group group : Group.allGroups()) {
                 if (name.equalsIgnoreCase(group.getName())) {

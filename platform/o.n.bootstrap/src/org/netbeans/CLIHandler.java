@@ -818,7 +818,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getOutputStream().write(outputArr, 0, howMuch);
                                     break;
                                 }
@@ -828,7 +828,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getErrorStream().write(outputArr, 0, howMuch);
                                     break;
                                 }

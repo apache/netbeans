@@ -462,10 +462,10 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
      * Implements a TableModel.
      */
     public static final class FrameworksTableModel extends AbstractTableModel {
-        private DefaultListModel model;
+        private DefaultListModel<FrameworkModelItem> model;
         
         public FrameworksTableModel() {
-            model = new DefaultListModel();
+            model = new DefaultListModel<>();
         }
         
         public int getColumnCount() {

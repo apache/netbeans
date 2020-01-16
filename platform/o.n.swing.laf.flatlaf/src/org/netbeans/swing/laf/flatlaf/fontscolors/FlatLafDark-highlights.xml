@@ -49,4 +49,8 @@
     <fontcolor name="text-limit-line-color" foreColor="ff555555"/>
     <fontcolor name="trailing-whitespace"/>
     <fontcolor name="west-sidebars-color"/>
+    <fontcolor name="coverage-covered" bgColor="005000"/>
+    <fontcolor name="coverage-uncovered" bgColor="813438"/>
+    <fontcolor name="coverage-inferred" bgColor="1c501c"/>
+    <fontcolor name="coverage-partial" bgColor="707000"/>
 </fontscolors>

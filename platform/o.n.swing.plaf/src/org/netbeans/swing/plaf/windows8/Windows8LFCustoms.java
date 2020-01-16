@@ -94,6 +94,7 @@ public final class Windows8LFCustoms extends LFCustoms {
         Object[] constants = new Object[] {
             "TextArea.font", textAreaFont, //NOI18N
 
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(17, 0, 17, 0),
 
             /* NETBEANS-1249: Remove excessive spacing between menu items, which appeared going from

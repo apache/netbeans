@@ -67,7 +67,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
 
     private static final Logger LOG = Logger.getLogger(ClasspathPanel.class.getName());
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     private File lastChosenFile = null;
     private boolean isSeparateClasspath = true;
     private List<ProjectModel.CompilationUnitKey> compUnitsKeys;
@@ -101,7 +101,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         initComponents();
         jTextArea1.setBackground(getBackground());
         jTextArea1.setDisabledTextColor(jLabel2.getForeground());
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         classpath.setModel(listModel);
     }
 
@@ -499,9 +499,9 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index++;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -516,9 +516,9 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index--;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);

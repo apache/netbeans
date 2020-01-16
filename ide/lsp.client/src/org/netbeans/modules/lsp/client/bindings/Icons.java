@@ -61,6 +61,10 @@ public final class Icons {
     }
     
     public static String getSymbolIconBase(SymbolKind symbolKind) {
+        if (symbolKind == null) {
+            return ICON_BASE + "empty.png";
+        }
+
         for (String variant : new String[] {
             ICON_BASE + symbolKind.name().toLowerCase(Locale.US) + PNG_EXTENSION,
             ICON_BASE + symbolKind.name().toLowerCase(Locale.US) + GIF_EXTENSION,

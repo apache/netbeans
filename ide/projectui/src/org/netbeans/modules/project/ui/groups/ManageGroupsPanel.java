@@ -43,7 +43,7 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
 
     private static final RequestProcessor RP = new RequestProcessor(ManageGroupsPanel.class.getName());
     
-    private static final String NONE_GOUP = "(none)";
+    static final String NONE_GOUP = "(none)";
     
     /**
      * Creates new form ManageGroupPanel

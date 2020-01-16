@@ -42,7 +42,7 @@ final class TabTableUI extends BasicTableUI {
         if( IS_AQUA ) {
             return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
         } else {
-            if( tabsLocation != JTabbedPane.TOP )
+            if( tabsLocation != JTabbedPane.TOP && !UIManager.getBoolean("nb.multitabs.noTabBorder") ) //NOI18N
                 return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
         }
         return BorderFactory.createEmptyBorder();
@@ -50,7 +50,8 @@ final class TabTableUI extends BasicTableUI {
 
     @Override
     protected void installDefaults() {
-        super.installDefaults(); //To change body of generated methods, choose Tools | Templates.
+        super.installDefaults();
+
         String lafId = UIManager.getLookAndFeel().getID();
         if( "Windows".equals( lafId ) ) { //NOI18N
             Color background = UIManager.getColor( "TabbedPane.background"); //NOI18N
@@ -100,6 +101,23 @@ final class TabTableUI extends BasicTableUI {
                 txtFont = new Font(txtFont.getName(), Font.PLAIN, txtFont.getSize());
             }
             table.setFont( txtFont );
+        } else {
+            Color background = UIManager.getColor("nb.multitabs.background"); //NOI18N
+            Color foreground = UIManager.getColor("nb.multitabs.foreground"); //NOI18N
+            Color selectedBackground = UIManager.getColor("nb.multitabs.selectedBackground"); //NOI18N
+            Color selectedForeground = UIManager.getColor("nb.multitabs.selectedForeground"); //NOI18N
+            Color gridColor = UIManager.getColor("nb.multitabs.gridColor"); //NOI18N
+
+            if (background != null)
+                table.setBackground(background);
+            if (foreground != null)
+                table.setForeground(foreground);
+            if (selectedBackground != null)
+                table.setSelectionBackground(selectedBackground);
+            if (selectedForeground != null)
+                table.setSelectionForeground(selectedForeground);
+            if (gridColor != null)
+                table.setGridColor(gridColor);
         }
     }
 

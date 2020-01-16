@@ -177,6 +177,7 @@ profiler/lib.profiler/release/lib/deployed/**/*.map
 nbbuild/license-dialog-stub.txt
 nbbuild/notice-stub.txt
 nbbuild/standard-nbm-license.txt
+nbbuild/misc/prepare-bundles/src/main/resources/org/netbeans/prepare/bundles/*-license
 ide/projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt
 ide/projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt
 

@@ -92,18 +92,18 @@ public class LocalAddressUtils {
     
     
     // 8.8.8.8  -- which incidentially is Google's DNS server, but we don't ever connect
-    private static final byte[] SOMEADDR_IPV4_RAW = new byte[]{
-        (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80, (byte)0x80};
+    private static final byte[] SOMEADDR_IPV4_RAW = new byte[]{0x08, 0x08, 0x08, 0x08};
 
     // 2001:4860:4860::8888  -- which incidentially is Google's DNS server, but we don't ever connect
     private static final byte[] SOMEADDR_IPV6_RAW = new byte[]{
         0x20, 0x01, 0x48, 0x60, 0x48, 0x60, 0x00, 0x00, 
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte)0x88, (byte)0x88};
     
-    private static InetAddress LOOPBACK_IPV4;
-    private static InetAddress LOOPBACK_IPV6;
-    private static InetAddress SOMEADDR_IPV4;
-    private static InetAddress SOMEADDR_IPV6;
+    private static final InetAddress LOOPBACK_IPV4;
+    private static final InetAddress LOOPBACK_IPV6;
+    private static final InetAddress SOMEADDR_IPV4;
+    private static final InetAddress SOMEADDR_IPV6;
+    
     static {
         try {
             LOOPBACK_IPV4 = InetAddress.getByAddress("local-ipv4-dummy", LOOPBACK_IPV4_RAW);
@@ -111,11 +111,7 @@ public class LocalAddressUtils {
             SOMEADDR_IPV4 = InetAddress.getByAddress("some-ipv4-dummy", SOMEADDR_IPV4_RAW);
             SOMEADDR_IPV6 = InetAddress.getByAddress("some-ipv6-dummy", SOMEADDR_IPV6_RAW);
         } catch (UnknownHostException ex) {
-            // Cannot happen by definition
-            LOOPBACK_IPV4 = null;
-            LOOPBACK_IPV6 = null;
-            SOMEADDR_IPV4 = null;
-            SOMEADDR_IPV6 = null;
+            throw new RuntimeException(ex);
         }
     }
             

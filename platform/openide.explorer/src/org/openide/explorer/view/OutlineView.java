@@ -269,24 +269,28 @@ public class OutlineView extends JScrollPane {
             defaultTreeActionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), JComponent.WHEN_FOCUSED
         );
 
-        final Color focusSelectionBackground = outline.getSelectionBackground();
-        final Color focusSelectionForeground = outline.getSelectionForeground();
-        outline.addFocusListener(new java.awt.event.FocusListener(){
-            @Override
-            public void focusGained(java.awt.event.FocusEvent ev) {
-                outline.setSelectionBackground(focusSelectionBackground);
-                outline.setSelectionForeground(focusSelectionForeground);
-            }
+        // toggle selection colors depending on whether table is focused or not
+        if (!UIManager.getLookAndFeel().getID().startsWith("FlatLaf")) {
+            final Color focusSelectionBackground = outline.getSelectionBackground();
+            final Color focusSelectionForeground = outline.getSelectionForeground();
+            outline.addFocusListener(new java.awt.event.FocusListener(){
+                @Override
+                public void focusGained(java.awt.event.FocusEvent ev) {
+                    outline.setSelectionBackground(focusSelectionBackground);
+                    outline.setSelectionForeground(focusSelectionForeground);
+                }
 
-            @Override
-            public void focusLost(java.awt.event.FocusEvent ev) {
-                outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
-                outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
-            }
+                @Override
+                public void focusLost(java.awt.event.FocusEvent ev) {
+                    outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
+                    outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+                }
 
-        });
-        outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
-        outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+            });
+            outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
+            outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+        }
+
         TableColumnSelector tcs = Lookup.getDefault ().lookup (TableColumnSelector.class);
         if (tcs != null) {
             outline.setColumnSelector(tcs);

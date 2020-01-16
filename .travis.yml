@@ -22,6 +22,7 @@ addons:
       - ant-optional
       - xvfb
       - openjfx
+      - libgfortran3
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0

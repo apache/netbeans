@@ -163,7 +163,7 @@ public class DownloadBinaries extends Task {
         if (local.exists()) {
             url = local.toURI().toString();
         } else {
-            url = "http://central.maven.org/maven2/" + cacheName;
+            url = "https://repo1.maven.org/maven2/" + cacheName;
         }
         URL u = new URL(url);
         return downloadFromServer(u);

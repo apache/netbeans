@@ -467,7 +467,7 @@ matrix:
         - name: Test groovy modules
           jdk: openjdk8
           env:
-            - OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - ant $OPTS clean
             - ant $OPTS build

@@ -913,6 +913,15 @@ public class TreeFactory {
                            (JCExpression)type, (JCExpression)initializer);
     }
     
+    public Tree BindingPattern(CharSequence name,
+                               Tree type) {
+        try {
+            return (Tree) make.getClass().getMethod("BindingPattern", Name.class, JCTree.class).invoke(make.at(NOPOS), names.fromString(name.toString()), type);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
+
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
         return make.at(NOPOS).VarDef((Symbol.VarSymbol)variable, (JCExpression)initializer);
     }

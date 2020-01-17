@@ -580,7 +580,9 @@ public class Reformatter implements ReformatTask {
                     return false;
                 if (tokens.offset() > endPos)
                     return true;
+
                 Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : (tree.getKind().toString().equals(TreeShims.RECORD)) ? scanRecord((ClassTree)tree,p) : super.scan(tree, p) : null;
+
                 switch (tree.getKind().toString()) {
                     case TreeShims.SWITCH_EXPRESSION:
                         ret = scanSwitchExpression(tree, p);

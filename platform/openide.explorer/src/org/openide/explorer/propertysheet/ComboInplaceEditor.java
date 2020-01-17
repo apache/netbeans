@@ -455,7 +455,7 @@ class ComboInplaceEditor extends JComboBox implements InplaceEditor, FocusListen
      * by the look and feel */
     @Override
     public void processFocusEvent(FocusEvent fe) {
-        if ((fe.getID() == fe.FOCUS_LOST) &&
+        if ((fe.getID() == FocusEvent.FOCUS_LOST) &&
             fe.getOppositeComponent() == getEditor().getEditorComponent() &&
             isPopupVisible()) {
 
@@ -471,7 +471,7 @@ class ComboInplaceEditor extends JComboBox implements InplaceEditor, FocusListen
 
         Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
-        if (isDisplayable() && (fe.getID() == fe.FOCUS_GAINED) && (focusOwner == this) && !isPopupVisible()) {
+        if (isDisplayable() && (fe.getID() == FocusEvent.FOCUS_GAINED) && (focusOwner == this) && !isPopupVisible()) {
             if (isEditable()) {
                 prepareEditor();
 
@@ -489,7 +489,7 @@ class ComboInplaceEditor extends JComboBox implements InplaceEditor, FocusListen
             }
 
             repaint();
-        } else if ((fe.getID() == fe.FOCUS_LOST) && isPopupVisible() && !isDisplayable()) {
+        } else if ((fe.getID() == FocusEvent.FOCUS_LOST) && isPopupVisible() && !isDisplayable()) {
             if (!PropUtils.psCommitOnFocusLoss) {
                 setActionCommand(COMMAND_FAILURE);
                 fireActionEvent();
@@ -603,7 +603,7 @@ class ComboInplaceEditor extends JComboBox implements InplaceEditor, FocusListen
     public void processKeyEvent(KeyEvent ke) {
         super.processKeyEvent(ke);
 
-        if ((ke.getID() == ke.KEY_PRESSED) && (ke.getKeyCode() == ke.VK_ESCAPE)) {
+        if ((ke.getID() == KeyEvent.KEY_PRESSED) && (ke.getKeyCode() == KeyEvent.VK_ESCAPE)) {
             setActionCommand(COMMAND_FAILURE);
             fireActionEvent();
         }

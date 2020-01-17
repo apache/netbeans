@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Name;
 import org.openide.util.Exceptions;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -45,7 +46,6 @@ public class TreeShims {
     public static final String YIELD = "YIELD"; //NOI18N
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
-
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {

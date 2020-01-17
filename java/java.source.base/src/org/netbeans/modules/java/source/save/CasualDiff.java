@@ -131,6 +131,7 @@ import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Position;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
@@ -2577,12 +2578,28 @@ public class CasualDiff {
         copyTo(localPointer, exprBounds[0]);
         localPointer = diffTree(oldT.expr, newT.expr, exprBounds);
         // clazz
-        int[] clazzBounds = getBounds(oldT.clazz);
+        JCTree oldPattern = getPattern(oldT);
+        JCTree newPattern = getPattern(newT);
+        int[] clazzBounds = getBounds(oldPattern);
         clazzBounds[0] = copyUpTo(localPointer, clazzBounds[0]);
-        localPointer = diffTree(oldT.clazz, newT.clazz, clazzBounds);
+        localPointer = diffTree(oldPattern, newPattern, clazzBounds);
         localPointer = copyUpTo(localPointer, bounds[1]);
 
         return localPointer;
+    }
+
+    public static JCTree getPattern(JCInstanceOf tree) {
+        try {
+            Field clazzField = JCInstanceOf.class.getField("clazz");
+            return (JCTree) clazzField.get(tree);
+        } catch (Throwable t) {
+            try {
+                Field patternField = JCInstanceOf.class.getField("pattern");
+                return (JCTree) patternField.get(tree);
+            } catch (Throwable t2) {
+                return (JCTree) tree.getType();
+            }
+        }
     }
 
     protected int diffIndexed(JCArrayAccess oldT, JCArrayAccess newT, int[] bounds) {

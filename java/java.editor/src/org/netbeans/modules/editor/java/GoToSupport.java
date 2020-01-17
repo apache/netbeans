@@ -787,6 +787,7 @@ public class GoToSupport {
                 return process(getCurrentPath());
             }
             private boolean process(TreePath path) {
+
                 Element resolved = TreeShims.toRecordComponent(info.getTrees().getElement(path));
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();

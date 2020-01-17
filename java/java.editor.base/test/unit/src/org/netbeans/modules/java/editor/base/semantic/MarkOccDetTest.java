@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.semantic;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import junit.framework.Test;
@@ -324,6 +325,30 @@ public class MarkOccDetTest extends TestBase {
         performTest("ErroneousMethod", 3, 24);
     }
 
+    public void testMatchBindings() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return ;
+        }
+        performTest("MatchBindings.java",
+                    "public class MatchBindings {\n" +
+                    "    public boolean t(Object o) {\n" +
+                    "        if (o instanceof String str && str.isEmpty()) {\n" +
+                    "            return str.equals(str);\n" +
+                    "        }\n" +
+                    "        return false;\n" +
+                    "    }\n" +
+                    "}\n",
+                   3,
+                   33,
+                   "[MARK_OCCURRENCES], 2:32-2:35",
+                   "[MARK_OCCURRENCES], 2:39-2:42",
+                   "[MARK_OCCURRENCES], 3:19-3:22",
+                   "[MARK_OCCURRENCES], 3:30-3:33");
+    }
+
     //Support for exotic identifiers has been removed 6999438
     public void REMOVEDtestExoticIdentifiers1() throws Exception {
         performTest("ExoticIdentifier", 3, 43);
@@ -370,4 +395,25 @@ public class MarkOccDetTest extends TestBase {
         }, doCompileRecursively);
     }
     
+    private void performTest(String fileName, String code, final int line, final int column, String... expected) throws Exception {
+        performTest(fileName, code, new Performer() {
+            public void compute(CompilationController info, Document doc, SemanticHighlighterBase.ErrorDescriptionSetter setter) {
+                int offset = NbDocument.findLineOffset((StyledDocument) doc, line) + column;
+                List<int[]> spans = new MarkOccurrencesHighlighterBase() {
+                    @Override
+                    protected void process(CompilationInfo info, Document doc, SchedulerEvent event) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                }.processImpl(info, MarkOccurencesSettings.getCurrentNode(), doc, offset);
+                
+                if (spans != null) {
+                    setter.setHighlights(doc, spans.stream()
+                                                   .map(span -> Pair.of(span, MARK_OCCURRENCES))
+                                                   .collect(Collectors.toList()),
+                                         Collections.<int[], String>emptyMap());
+                }
+            }
+        }, expected);
+    }
+
 }

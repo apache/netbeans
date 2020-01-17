@@ -30,9 +30,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 
@@ -52,10 +50,10 @@ public class OpenGradleProjectForBinary implements SourceForBinaryQueryImplement
             try {
                 URI uri = FileUtil.getArchiveFile(binaryRoot).toURI();
                 if ("file".equals(uri.getScheme())) {
-                    FileObject jar = FileUtil.toFileObject(FileUtil.normalizeFile(Utilities.toFile(uri)));
+                    File jar = new File(uri);
                     Map<String, Project> projectArchives = projectArchives();
-                    if (projectArchives.containsKey(jar.getNameExt())) {
-                        Project p = projectArchives.get(jar.getNameExt());
+                    if (projectArchives.containsKey(jar.getName())) {
+                        Project p = projectArchives.get(jar.getName());
                         GradleJavaProject gjp = GradleJavaProject.get(p);
                         File archive = gjp.getArchive(GradleJavaProject.CLASSIFIER_NONE);
                         URL root = FileUtil.urlForArchiveOrDir(archive);

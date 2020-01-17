@@ -97,5 +97,6 @@ public class TreeShimsCopier extends AbstractProcessor {
         put("org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider", "org.netbeans.modules.java.hints");
         put("org.netbeans.modules.java.completion.JavaCompletionTask", "org.netbeans.modules.java.completion");
         put("org.netbeans.modules.editor.java.GoToSupport", "org.netbeans.modules.editor.java");
+        put("org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase", "org.netbeans.modules.java.editor.base.semantic");
     }};
 }

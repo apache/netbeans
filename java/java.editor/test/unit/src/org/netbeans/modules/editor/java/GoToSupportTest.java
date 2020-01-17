@@ -45,6 +45,7 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
+import org.netbeans.modules.java.source.TreeShims;
 //import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.cookies.EditorCookie;
@@ -1049,6 +1050,254 @@ public class GoToSupportTest extends NbTestCase {
         assertTrue(wasCalled[0]);
     }
 
+    public void testBindingVar() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String str) {\n" +
+                      "            System.err.println(s|tr);\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(code.indexOf("o instanceof String str"), pos);
+                wasCalled[0] = true;
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testBindingVarInName() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String s|tr) {\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                wasCalled[0] = true;
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testBindingVarToolTip() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String s|tr) {\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        String tooltip = performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                wasCalled[0] = true;
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, true, false);
+
+        assertEquals("<html><body>final java.lang.String <b>str</b>", tooltip);
+    }
+
+    private String sourceLevel = "1.5";
+    private FileObject source;
+    
+    private String performTest(String sourceCode, final int offset, final OrigUiUtilsCaller validator, boolean tooltip) throws Exception {
+        return performTest(sourceCode, offset, new UiUtilsCaller() {
+            public boolean open(FileObject fo, int pos) {
+                validator.open(fo, pos);
+                return true;
+            }
+            public void beep(boolean goToSource, boolean goToJavadoc) {
+                validator.beep();
+            }
+            public boolean open(final ClasspathInfo info, final ElementHandle<?> el) {
+                try {
+                    JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
+                        public void run(CompilationController parameter) throws Exception {
+                            Element e = el.resolve(parameter);
+
+                            validator.open(info, e);
+                        }
+                    }, true);
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                return true;
+            }
+            public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, tooltip);
+    }
+    
+    private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip) throws Exception {
+        return performTest(sourceCode, offset, validator, tooltip, false);
+    }
+
+    private String performTest(String sourceCode, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
+        int offset = sourceCode.indexOf('|');
+
+        assertNotSame(-1, offset);
+
+        sourceCode = sourceCode.replace("|", "");
+
+        return performTest(sourceCode, -1, validator, tooltip, doCompileRecursively);
+    }
+
+    private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
+        String auxiliary = "package test; public class Auxiliary {}"; //test go to "syntetic" constructor
+        return performTest(sourceCode, auxiliary, offset, validator, tooltip, doCompileRecursively);
+    }
+
+    private String performTest(String sourceCode, String auxiliaryCode, int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
+
+        GoToSupport.CALLER = validator;
+        
+        if (offset == (-1)) {
+            offset = sourceCode.indexOf('|');
+
+            assertNotSame(-1, offset);
+
+            sourceCode = sourceCode.replace("|", "");
+        }
+
+        clearWorkDir();
+        FileUtil.refreshFor(getWorkDir());
+
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceDir = FileUtil.createFolder(wd, "src");
+        FileObject buildDir = FileUtil.createFolder(wd, "build");
+        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
+        
+        source = FileUtil.createData(sourceDir, "test/Test.java");
+        
+        FileObject auxiliarySource = FileUtil.createData(sourceDir, "test/Auxiliary.java");
+
+        TestUtilities.copyStringToFile(source, sourceCode);
+        TestUtilities.copyStringToFile(auxiliarySource, auxiliaryCode);
+
+        SourceUtilsTestUtil.setSourceLevel(source, sourceLevel);
+        SourceUtilsTestUtil.setSourceLevel(auxiliarySource, sourceLevel);
+        
+        SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
+
+        if (doCompileRecursively) {
+            SourceUtilsTestUtil.compileRecursively(sourceDir);
+        }
+        
+        DataObject od = DataObject.find(source);
+        EditorCookie ec = od.getCookie(EditorCookie.class);
+        Document doc = ec.openDocument();
+
+        doc.putProperty(Language.class, JavaTokenId.language());
+        doc.putProperty("mimeType", "text/x-java");
+        
+        if (tooltip)
+            return GoToSupport.getGoToElementTooltip(doc, offset, false, null);
+        else
+            GoToSupport.goTo(doc, offset, false);
+        
+        return null;
+    }
+
+    /**Copied from org.netbeans.api.project.
+     * Create a scratch directory for tests.
+     * Will be in /tmp or whatever, and will be empty.
+     * If you just need a java.io.File use clearWorkDir + getWorkDir.
+     */
+    public static FileObject makeScratchDir(NbTestCase test) throws IOException {
+        test.clearWorkDir();
+        File root = test.getWorkDir();
+        assert root.isDirectory() && root.list().length == 0;
+        FileObject fo = FileUtil.toFileObject(root);
+        if (fo != null) {
+            // Presumably using masterfs.
+            return fo;
+        } else {
+            // For the benefit of those not using masterfs.
+            LocalFileSystem lfs = new LocalFileSystem();
+            try {
+                lfs.setRootDirectory(root);
+            } catch (PropertyVetoException e) {
+                assert false : e;
+            }
+            Repository.getDefault().addFileSystem(lfs);
+            return lfs.getRoot();
+        }
+    }
+    
+    interface OrigUiUtilsCaller {
+        
+        public void open(FileObject fo, int pos);
+        public void beep();
+        public void open(ClasspathInfo info, Element el);
+        
+    }
+    
+    private static boolean hasPatterns() {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            return true;
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return false;
+        }
+    }
+    
     public void testRecords1() throws Exception {
 //        try {
 //            SourceVersion.valueOf("RELEASE_14");
@@ -1267,134 +1516,4 @@ public class GoToSupportTest extends NbTestCase {
 
         assertTrue(wasCalled[0]);
     }
-
-    private String sourceLevel = "1.5";
-    private FileObject source;
-    
-    private String performTest(String sourceCode, final int offset, final OrigUiUtilsCaller validator, boolean tooltip) throws Exception {
-        return performTest(sourceCode, offset, new UiUtilsCaller() {
-            public boolean open(FileObject fo, int pos) {
-                validator.open(fo, pos);
-                return true;
-            }
-            public void beep(boolean goToSource, boolean goToJavadoc) {
-                validator.beep();
-            }
-            public boolean open(final ClasspathInfo info, final ElementHandle<?> el) {
-                try {
-                    JavaSource.create(info).runUserActionTask(new Task<CompilationController>() {
-                        public void run(CompilationController parameter) throws Exception {
-                            Element e = el.resolve(parameter);
-
-                            validator.open(info, e);
-                        }
-                    }, true);
-                } catch (IOException ex) {
-                    throw new IllegalStateException(ex);
-                }
-                return true;
-            }
-            public void warnCannotOpen(String displayName) {
-                fail("Should not be called.");
-            }
-        }, tooltip);
-    }
-    
-    private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip) throws Exception {
-        return performTest(sourceCode, offset, validator, tooltip, false);
-    }
-
-    private String performTest(String sourceCode, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
-        return performTest(sourceCode, -1, validator, tooltip, doCompileRecursively);
-    }
-
-    private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
-        String auxiliary = "package test; public class Auxiliary {}"; //test go to "syntetic" constructor
-        return performTest(sourceCode, auxiliary, offset, validator, tooltip, doCompileRecursively);
-    }
-
-    private String performTest(String sourceCode, String auxiliaryCode, int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
-        GoToSupport.CALLER = validator;
-        
-        if (offset == (-1)) {
-            offset = sourceCode.indexOf('|');
-
-            assertNotSame(-1, offset);
-
-            sourceCode = sourceCode.replace("|", "");
-        }
-
-        clearWorkDir();
-        FileUtil.refreshFor(getWorkDir());
-
-        FileObject wd = FileUtil.toFileObject(getWorkDir());
-        FileObject sourceDir = FileUtil.createFolder(wd, "src");
-        FileObject buildDir = FileUtil.createFolder(wd, "build");
-        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
-        
-        source = FileUtil.createData(sourceDir, "test/Test.java");
-        
-        FileObject auxiliarySource = FileUtil.createData(sourceDir, "test/Auxiliary.java");
-
-        TestUtilities.copyStringToFile(source, sourceCode);
-        TestUtilities.copyStringToFile(auxiliarySource, auxiliaryCode);
-
-        SourceUtilsTestUtil.setSourceLevel(source, sourceLevel);
-        SourceUtilsTestUtil.setSourceLevel(auxiliarySource, sourceLevel);
-        
-        SourceUtilsTestUtil.prepareTest(sourceDir, buildDir, cacheDir, new FileObject[0]);
-
-        if (doCompileRecursively) {
-            SourceUtilsTestUtil.compileRecursively(sourceDir);
-        }
-        
-        DataObject od = DataObject.find(source);
-        EditorCookie ec = od.getCookie(EditorCookie.class);
-        Document doc = ec.openDocument();
-
-        doc.putProperty(Language.class, JavaTokenId.language());
-        doc.putProperty("mimeType", "text/x-java");
-        
-        if (tooltip)
-            return GoToSupport.getGoToElementTooltip(doc, offset, false, null);
-        else
-            GoToSupport.goTo(doc, offset, false);
-        
-        return null;
-    }
-
-    /**Copied from org.netbeans.api.project.
-     * Create a scratch directory for tests.
-     * Will be in /tmp or whatever, and will be empty.
-     * If you just need a java.io.File use clearWorkDir + getWorkDir.
-     */
-    public static FileObject makeScratchDir(NbTestCase test) throws IOException {
-        test.clearWorkDir();
-        File root = test.getWorkDir();
-        assert root.isDirectory() && root.list().length == 0;
-        FileObject fo = FileUtil.toFileObject(root);
-        if (fo != null) {
-            // Presumably using masterfs.
-            return fo;
-        } else {
-            // For the benefit of those not using masterfs.
-            LocalFileSystem lfs = new LocalFileSystem();
-            try {
-                lfs.setRootDirectory(root);
-            } catch (PropertyVetoException e) {
-                assert false : e;
-            }
-            Repository.getDefault().addFileSystem(lfs);
-            return lfs.getRoot();
-        }
-    }
-    
-    interface OrigUiUtilsCaller {
-        
-        public void open(FileObject fo, int pos);
-        public void beep();
-        public void open(ClasspathInfo info, Element el);
-        
-    }
-    
 }

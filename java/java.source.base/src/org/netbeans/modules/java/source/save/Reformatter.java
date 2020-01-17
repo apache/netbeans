@@ -31,10 +31,10 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import java.net.URL;
 import java.util.*;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.lang.model.element.Modifier;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.guards.DocumentGuards;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -578,7 +578,23 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
+                if (tokens.offset() > endPos)
+                    return true;
                 Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : (tree.getKind().toString().equals(TreeShims.RECORD)) ? scanRecord((ClassTree)tree,p) : super.scan(tree, p) : null;
+                switch (tree.getKind().toString()) {
+                    case TreeShims.SWITCH_EXPRESSION:
+                        ret = scanSwitchExpression(tree, p);
+                        break;
+                    case TreeShims.YIELD:
+                        ret = scanYield(tree, p);
+                        break;
+                    case TreeShims.BINDING_PATTERN:
+                        ret = scanBindingPattern(tree, p);
+                        break;
+                    default:
+                        ret = super.scan(tree, p);
+                        break;
+                }
                 return ret != null ? ret : true;
             }
             finally {
@@ -1062,14 +1078,14 @@ public class Reformatter implements ReformatTask {
                                 }
                                 blankLines(cs.getBlankLinesAfterClass());
                                 break;
-                             default:
+                            default:
                                 if (member.getKind().toString().equals(TreeShims.RECORD)) {
                                 if (!first)
                                    blankLines(cs.getBlankLinesBeforeMethods());
                                     scanRecord((ClassTree)member, p);
                                 blankLines(cs.getBlankLinesAfterMethods());
                                 break;
-                                }
+                                }    
                         }
                         first = false;
                     }
@@ -1247,7 +1263,115 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-                @Override
+        public Boolean scanRecord(ClassTree node, Void p) {
+            boolean old = continuationIndent;
+            try {
+                ModifiersTree mods = node.getModifiers();
+                if (mods != null) {
+                    if (scan(mods, p)) {
+                        continuationIndent = true;
+                        if (cs.placeNewLineAfterModifiers()) {
+                            newline();
+                        } else {
+                            space();
+                        }
+                    } else if (afterAnnotation) {
+                        newline();
+                    }
+                    afterAnnotation = false;
+                }
+                accept(IDENTIFIER);
+                space();
+                List<? extends TypeParameterTree> tparams = node.getTypeParameters();
+                if (tparams != null && !tparams.isEmpty()) {
+                    if (LT == accept(LT)) {
+                        tpLevel++;
+                    }
+                    continuationIndent = true;
+                    for (Iterator<? extends TypeParameterTree> it = tparams.iterator(); it.hasNext();) {
+                        TypeParameterTree tparam = it.next();
+                        scan(tparam, p);
+                        if (it.hasNext()) {
+                            spaces(cs.spaceBeforeComma() ? 1 : 0);
+                            accept(COMMA);
+                            spaces(cs.spaceAfterComma() ? 1 : 0);
+                        }
+                    }
+                    JavaTokenId accepted;
+                    if (tpLevel > 0 && (accepted = accept(GT, GTGT, GTGTGT)) != null) {
+                        switch (accepted) {
+                            case GTGTGT:
+                                tpLevel -= 3;
+                                break;
+                            case GTGT:
+                                tpLevel -= 2;
+                                break;
+                            case GT:
+                                tpLevel--;
+                                break;
+                        }
+                    }
+                    spaces(1, true);
+                }
+
+                if (!ERROR.contentEquals(node.getSimpleName())) {
+                    accept(IDENTIFIER, UNDERSCORE);
+                }
+                //continuationIndent = true;
+                spaces(cs.spaceBeforeMethodDeclParen() ? 1 : 0);
+                accept(LPAREN);
+                int oldIndent = indent;
+                List<? extends Tree> members = node.getMembers();
+                List recParams = new ArrayList<Tree>();
+
+                for (Tree member : members) {
+                    if (member.getKind() == Tree.Kind.VARIABLE) {
+                        ModifiersTree modifiers = ((VariableTree) member).getModifiers();
+                        Set<Modifier> modifierSet = modifiers.getFlags();
+                        boolean isPublicModPresent = false;
+
+                        if (modifiers == null || !modifierSet.contains(Modifier.STATIC)) {
+                            recParams.add(member);
+                        }
+                    }
+                }
+
+                if (members != null && !members.isEmpty()) {
+                    int oldLastIndent = lastIndent;
+                    try {
+                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+                        wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                        accept(RPAREN);
+                        spaces(true ? 1 : 0, tokens.offset() < startOffset);
+                        accept(LBRACE);
+                        continuationIndent = old;
+                        indent += indentSize;
+
+                        for (Tree member : members) {
+                            if (member.getKind() != Tree.Kind.VARIABLE || !recParams.contains(member)) {
+                                newline();
+                                scan(member, p);
+                            }
+                        }
+
+                    } finally {
+                        indent = oldIndent;
+                        lastIndent = oldLastIndent;
+                        continuationIndent = isLastIndentContinuation;
+                    }
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+                }
+
+                newline();
+                indent = oldIndent;
+                accept(RBRACE);
+            } finally {
+                continuationIndent = old;
+            }
+
+            return true;
+        }
+        @Override
         public Boolean visitMethod(MethodTree node, Void p) {
             boolean old = continuationIndent;
             try {
@@ -1349,115 +1473,6 @@ public class Reformatter implements ReformatTask {
             }
             return true;
         }
-        
-        public Boolean scanRecord(ClassTree node, Void p) {
-          
-          boolean old = continuationIndent;
-            try {
-                    ModifiersTree mods = node.getModifiers();
-                    if (mods != null) {
-                        if (scan(mods, p)) {
-                            continuationIndent = true;
-                            if (cs.placeNewLineAfterModifiers())
-                                newline();
-                            else
-                                space();
-                        } else if (afterAnnotation) {
-                            newline();
-                        }
-                        afterAnnotation = false;
-                    }
-                accept(IDENTIFIER);
-                space();
-                List<? extends TypeParameterTree> tparams = node.getTypeParameters();
-                if (tparams != null && !tparams.isEmpty()) {
-                    if (LT == accept(LT)) {
-                        tpLevel++;
-                    }
-                    continuationIndent = true;
-                    for (Iterator<? extends TypeParameterTree> it = tparams.iterator(); it.hasNext();) {
-                        TypeParameterTree tparam = it.next();
-                        scan(tparam, p);
-                        if (it.hasNext()) {
-                            spaces(cs.spaceBeforeComma() ? 1 : 0);
-                            accept(COMMA);
-                            spaces(cs.spaceAfterComma() ? 1 : 0);
-                        }
-                    }
-                    JavaTokenId accepted;
-                    if (tpLevel > 0 && (accepted = accept(GT, GTGT, GTGTGT)) != null) {
-                        switch (accepted) {
-                            case GTGTGT:
-                                tpLevel -= 3;
-                                break;
-                            case GTGT:
-                                tpLevel -= 2;
-                                break;
-                            case GT:
-                                tpLevel--;
-                                break;
-                        }
-                    }
-                    spaces(1, true);
-                }
-
-                if (!ERROR.contentEquals(node.getSimpleName())) {
-                    accept(IDENTIFIER, UNDERSCORE);
-                }
-                //continuationIndent = true;
-                spaces(cs.spaceBeforeMethodDeclParen() ? 1 : 0);
-                accept(LPAREN);
-                int oldIndent = indent;
-                List<? extends Tree> members = node.getMembers();
-                List recParams = new ArrayList<Tree>();
-               
-                for (Tree member : members) {
-                    if (member.getKind() == Tree.Kind.VARIABLE ) {
-                        ModifiersTree modifiers =  ((VariableTree)member).getModifiers();
-                         Set<Modifier> modifierSet = modifiers.getFlags();
-                         boolean isPublicModPresent = false;
-                         
-                        if (modifiers == null || !modifierSet.contains(Modifier.STATIC)) {
-                            recParams.add(member);
-                        }
-                    }
-                }
-                
-                if (members != null && !members.isEmpty()) {
-                    int oldLastIndent = lastIndent;
-                    try {
-                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                        wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
-                        accept(RPAREN);
-                        spaces(true ? 1 : 0, tokens.offset() < startOffset);
-                        accept(LBRACE);
-                        continuationIndent = old;
-                        indent += indentSize;
-
-                        for (Tree member : members) {
-                            if (member.getKind() != Tree.Kind.VARIABLE || !recParams.contains(member)) {
-                                newline();
-                                scan(member, p);
-                            }
-                        }
-
-                    } finally {
-                        indent = oldIndent;
-                        lastIndent = oldLastIndent;
-                        continuationIndent = isLastIndentContinuation ;
-                    }
-                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                }
-
-                newline();
-                indent = oldIndent;
-                accept(RBRACE);
-            } finally {
-                continuationIndent = old;
-            }
-
-            return true;
-        }
 
         @Override
         public Boolean visitModifiers(ModifiersTree node, Void p) {
@@ -1469,7 +1484,6 @@ public class Reformatter implements ReformatTask {
             Tree parent = path.getLeaf();
             path = path.getParentPath();
             Tree grandParent = path != null ? path.getLeaf(): parent;
-            
             boolean isStandalone = parent.getKind() != Tree.Kind.VARIABLE ||
                     org.netbeans.api.java.source.TreeUtilities.CLASS_TREE_KINDS.contains(grandParent.getKind()) || grandParent.getKind() == Tree.Kind.BLOCK;
             while (tokens.offset() < endPos) {
@@ -2695,6 +2709,17 @@ public class Reformatter implements ReformatTask {
             return handleYield(node, p);
         }
 
+        private Boolean scanBindingPattern(Tree node, Void p) {
+            Name name = TreeShims.getBinding(node);
+            Tree type = TreeShims.getBindingPatternType(node);
+            scan(type, p);
+            if (name != null) {
+                space();
+                accept(IDENTIFIER);
+            }
+            return true;
+        }
+
         private Boolean handleYield(Tree node, Void p) {
             ExpressionTree exprTree = TreeShims.getYieldValue(node);
             if (exprTree != null) {
@@ -3250,7 +3275,10 @@ public class Reformatter implements ReformatTask {
             space();
             accept(INSTANCEOF);
             space();
-            scan(node.getType(), p);
+            Tree pattern = TreeShims.getPattern(node);
+            if (pattern == null)
+                pattern = node.getType();
+            scan(pattern, p);
             return true;
         }
 

@@ -24,6 +24,7 @@ import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -43,15 +44,12 @@ import com.sun.source.util.Trees;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -111,6 +109,9 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  *
@@ -701,6 +702,11 @@ public class GoToSupport {
     private static boolean isCaretInsideDeclarationName(CompilationInfo info, Tree t, TreePath path, int caret) {
         try {
             switch (t.getKind()) {
+                case INSTANCE_OF:
+                    Tree pattern = TreeShims.getPattern((InstanceOfTree) t);
+                    if (pattern == null || !"BINDING_PATTERN".equals(pattern.getKind().name())) {
+                        return false;
+                    }
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
@@ -770,10 +776,18 @@ public class GoToSupport {
                 if (found != null) {
                     return null;
                 }
+                if (tree != null && "BINDING_PATTERN".equals(tree.getKind().name())) {
+                    if (process(new TreePath(getCurrentPath(), tree))) {
+                        return null;
+                    }
+                }
                 return super.scan(tree, p);
             }
             private boolean process() {
-                Element resolved = TreeShims.toRecordComponent(info.getTrees().getElement(getCurrentPath()));
+                return process(getCurrentPath());
+            }
+            private boolean process(TreePath path) {
+                Element resolved = TreeShims.toRecordComponent(info.getTrees().getElement(path));
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();
                     return true;
@@ -942,7 +956,8 @@ public class GoToSupport {
                 Element enclosing = e.getEnclosingElement();
                 
                 if (e.getKind() != ElementKind.PARAMETER && e.getKind() != ElementKind.LOCAL_VARIABLE
-                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER) {
+                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER
+                        && !TreeShims.BINDING_VARIABLE.equals(e.getKind().name())) {
                     result.append(" in ");
 
                     //short typename:
@@ -1003,7 +1018,7 @@ public class GoToSupport {
         public Void visitTypeParameter(TypeParameterElement e, Boolean highlightName) {
             return null;
         }
-
+        
         @Override
         public Void visitUnknown(Element e, Boolean p) {
             if (TreeShims.isRecordComponent(e)) {
@@ -1011,8 +1026,6 @@ public class GoToSupport {
             }
             return super.visitUnknown(e, p); //To change body of generated methods, choose Tools | Templates.
         }
-
-        
         
         private void modifier(Set<Modifier> modifiers) {
             boolean addSpace = false;

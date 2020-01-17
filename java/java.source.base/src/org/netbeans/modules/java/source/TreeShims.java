@@ -21,6 +21,7 @@ package org.netbeans.modules.java.source;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
@@ -31,15 +32,20 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.element.Name;
+import org.openide.util.Exceptions;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 public class TreeShims {
 
+    public static final String BINDING_PATTERN = "BINDING_PATTERN"; //NOI18N
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
     public static final String YIELD = "YIELD"; //NOI18N
+    public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
+
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -56,6 +62,17 @@ public class TreeShims {
         try {
             Method getBody = CaseTree.class.getDeclaredMethod("getBody");
             return (Tree) getBody.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static Tree getPattern(InstanceOfTree node) {
+        try {
+            Method getPattern = InstanceOfTree.class.getDeclaredMethod("getPattern");
+            return (Tree) getPattern.invoke(node);
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -120,6 +137,18 @@ public class TreeShims {
         }
     }
 
+    public static Name getBinding(Tree node) {
+        try {
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
+            Method getBinding = bpt.getDeclaredMethod("getBinding");
+            return (Name) getBinding.invoke(node);
+        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
     public static ExpressionTree getYieldValue(Tree node) {
         if (!node.getKind().toString().equals(YIELD)) {
             return null;
@@ -148,6 +177,25 @@ public class TreeShims {
         }
     }
   
+    public static Tree getBindingPatternType(Tree node) {
+        if (!node.getKind().toString().equals(BINDING_PATTERN)) {
+            return null;
+        }
+        try {
+            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
+            return (Tree) getType.invoke(node);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
+        throw (T) t;
+    }
     public static boolean isRecord(Element el) {
         return el != null && "RECORD".equals(el.getKind().name());
     }
@@ -175,10 +223,5 @@ public class TreeShims {
 
     private static boolean isRecordComponent(ElementKind kind) {
         return "RECORD_COMPONENT".equals(kind.name());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
-        throw (T) t;
     }
 }

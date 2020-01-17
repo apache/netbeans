@@ -212,7 +212,11 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         public CI createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
             String varName = elem.getSimpleName().toString();
             String typeName = type != null ? info.getTypeUtilities().getTypeName(type).toString() : null;
-            switch (elem.getKind()) {
+            ElementKind ek = elem.getKind();
+            if (TreeShims.BINDING_VARIABLE.equals(ek.name())) {
+                ek = ElementKind.LOCAL_VARIABLE;
+            }
+            switch (ek) {
                 case LOCAL_VARIABLE:
                 case RESOURCE_VARIABLE:
                 case PARAMETER:

@@ -1211,6 +1211,20 @@ public final class TreeMaker {
     }
     
     /**
+     * Creates a new BindingPatternTree.
+     *
+     * @param name name of the binding variable
+     * @param type the type of the pattern
+     * @return the newly created BindingPatternTree
+     * @throws NoSuchMethodException if the used javac does not support
+     *                               BindingPatternTree.
+     */
+    public Tree BindingPattern(CharSequence name,
+                               Tree type) {
+        return delegate.BindingPattern(name, type);
+    }
+
+    /**
      * Creates a new VariableTree from a VariableElement.
      *
      * @param variable the VariableElement to reference.

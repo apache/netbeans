@@ -5072,6 +5072,46 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testTypeTestPatterns() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public boolean main(Object o) {\n"
+                + "        if (o instanceof String s) {\n"
+                + "            return s.isEmpty();\n"
+                + "        } else {\n"
+                + "            return false;\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        String golden = // no change
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public boolean main(Object o) {\n"
+                + "        if (o instanceof String s) {\n"
+                + "            return s.isEmpty();\n"
+                + "        } else {\n"
+                + "            return false;\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }

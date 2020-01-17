@@ -528,6 +528,7 @@ public class DetectorTest extends TestBase {
             SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for raw string literals
+            return ;
         }
         setSourceLevel("13");
         performTest("RawStringLiteral",
@@ -550,6 +551,31 @@ public class DetectorTest extends TestBase {
                     "[PACKAGE_PRIVATE, FIELD, DECLARATION], 5:11-5:13",
                     "[UNINDENTED_TEXT_BLOCK], 6:16-6:27",
                     "[UNINDENTED_TEXT_BLOCK], 7:16-7:29");
+    }
+
+    public void testBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException iae) {
+            //OK, presumably no support for pattern matching
+            return ;
+        }
+        setSourceLevel("14");
+        performTest("BindingPattern",
+                    "public class BindingPattern {\n" +
+                    "    public boolean test(Object o) {\n" +
+                    "        return o instanceof String str && str.isEmpty();\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:27",
+                    "[PUBLIC, METHOD, DECLARATION], 1:19-1:23",
+                    "[PUBLIC, CLASS], 1:24-1:30",
+                    "[PARAMETER, DECLARATION], 1:31-1:32",
+                    "[PARAMETER], 2:15-2:16",
+                    "[PUBLIC, CLASS], 2:28-2:34",
+                    "[LOCAL_VARIABLE, DECLARATION], 2:35-2:38",
+                    "[LOCAL_VARIABLE], 2:42-2:45",
+                    "[PUBLIC, METHOD], 2:46-2:53");
     }
 
     private void performTest(String fileName) throws Exception {

@@ -1049,6 +1049,108 @@ public class GoToSupportTest extends NbTestCase {
         assertTrue(wasCalled[0]);
     }
 
+    public void testBindingVar() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String str) {\n" +
+                      "            System.err.println(s|tr);\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(code.indexOf("o instanceof String str"), pos);
+                wasCalled[0] = true;
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testBindingVarInName() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String s|tr) {\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                wasCalled[0] = true;
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
+    public void testBindingVarToolTip() throws Exception {
+        if (hasPatterns()) return ;
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "14";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method(Object o) {\n" +
+                      "        if (o instanceof String s|tr) {\n" +
+                      "        }\n" +
+                      "    }\n" +
+                      "}\n";
+
+        String tooltip = performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                fail("Should not be called.");
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                wasCalled[0] = true;
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, true, false);
+
+        assertEquals("<html><body>final java.lang.String <b>str</b>", tooltip);
+    }
+
     private String sourceLevel = "1.5";
     private FileObject source;
     
@@ -1171,4 +1273,13 @@ public class GoToSupportTest extends NbTestCase {
         
     }
     
+    private static boolean hasPatterns() {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            return true;
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return false;
+        }
+    }
 }

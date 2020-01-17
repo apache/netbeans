@@ -158,7 +158,7 @@ public class FtpClient implements RemoteClient {
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, "Connecting to {0} [timeout: {1} ms]", new Object[] {configuration.getHost(), timeout});
             }
-            ftpClient.setStrictReplyParsing(false);
+            ftpClient.setStrictReplyParsing(false); // NETBEANS-3647
             ftpClient.setDefaultTimeout(timeout);
             ftpClient.setControlKeepAliveReplyTimeout(keepAliveInterval);
             if (LOGGER.isLoggable(Level.FINE)) {

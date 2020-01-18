@@ -72,6 +72,11 @@ public class FlatLFCustoms extends LFCustoms {
             "nb.multitabs.button.right.icon", FlatTabControlIcon.get(TabControlButton.ID_SCROLL_RIGHT_BUTTON), // NOI18N
             "nb.multitabs.button.rollover", true, // NOI18N
 
+            // for module progress.ui
+            "nb.progress.cancel.icon", FlatTabControlIcon.get(TabControlButton.ID_CLOSE_BUTTON, TabControlButton.STATE_DEFAULT), // NOI18N
+            "nb.progress.cancel.icon.pressed", FlatTabControlIcon.get(TabControlButton.ID_CLOSE_BUTTON, TabControlButton.STATE_PRESSED), // NOI18N
+            "nb.progress.cancel.icon.mouseover", FlatTabControlIcon.get(TabControlButton.ID_CLOSE_BUTTON, TabControlButton.STATE_ROLLOVER), // NOI18N
+
             // Change some colors from ColorUIResource to Color because they are used as
             // background colors for checkboxes (e.g. in org.netbeans.modules.palette.ui.CategoryButton),
             // which in FlatLaf paint background only if background color is not a UIResource.

@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -130,18 +131,18 @@ public class ListComponent extends JPanel {
             closeButton.setContentAreaFilled(false);
             closeButton.setFocusable(false);
             
-            Image img = (Image)UIManager.get("nb.progress.cancel.icon");
+            Object img = UIManager.get("nb.progress.cancel.icon");
             if( null != img ) {
-                closeButton.setIcon( new ImageIcon( img ) );
+                closeButton.setIcon( iconOrImage2icon( img ) );
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.mouseover");
+            img = UIManager.get("nb.progress.cancel.icon.mouseover");
             if( null != img ) {
                 closeButton.setRolloverEnabled(true);
-                closeButton.setRolloverIcon( new ImageIcon( img ) );
+                closeButton.setRolloverIcon( iconOrImage2icon( img ) );
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.pressed");
+            img = UIManager.get("nb.progress.cancel.icon.pressed");
             if( null != img ) {
-                closeButton.setPressedIcon( new ImageIcon( img ) );
+                closeButton.setPressedIcon( iconOrImage2icon( img ) );
             }
             
             closeButton.setToolTipText(NbBundle.getMessage(ListComponent.class, "ListComponent.btnClose.tooltip"));
@@ -190,6 +191,12 @@ public class ListComponent extends JPanel {
             
         });
         
+    }
+
+    static Icon iconOrImage2icon( Object iconOrImage ) {
+        return (iconOrImage instanceof Icon)
+                ? (Icon) iconOrImage
+                : new ImageIcon( (Image) iconOrImage );
     }
     
     
@@ -296,12 +303,12 @@ public class ListComponent extends JPanel {
                putValue(Action.NAME, NbBundle.getMessage(ListComponent.class, "StatusLineComponent.Cancel"));
                putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
            } else {
-               Image icon = (Image)UIManager.get("nb.progress.cancel.icon");
+               Object icon = UIManager.get("nb.progress.cancel.icon");
                if (icon == null) {
                    // for custom L&F?
                    icon = ImageUtilities.loadImage("org/netbeans/progress/module/resources/buton.png");
                }
-               putValue(Action.SMALL_ICON, new ImageIcon(icon));
+               putValue(Action.SMALL_ICON, iconOrImage2icon(icon));
            }
             setEnabled(handle == null ? false : handle.isAllowCancel());
        }
@@ -395,7 +402,14 @@ public class ListComponent extends JPanel {
             }
             // have the bar approx 30 percent of the width
             int barOffset = offset - (ITEM_WIDTH / 3);
-            bar.setBounds(barOffset, UPPERMARGIN, offset - barOffset, mainHeight);
+            int barY = UPPERMARGIN;
+            int barHeight = mainHeight;
+            if (UIManager.getLookAndFeel().getID().startsWith("FlatLaf")) {
+                // use smaller (preferred) height
+                barHeight = bar.getPreferredSize().height;
+                barY += (mainHeight - barHeight) / 2;
+            }
+            bar.setBounds(barOffset, barY, offset - barOffset, barHeight);
             mainLabel.setBounds(LEFTMARGIN, UPPERMARGIN, barOffset - LEFTMARGIN, mainHeight);
             dynaLabel.setBounds(LEFTMARGIN, mainHeight + UPPERMARGIN + BETWEENTEXTMARGIN, 
                                 parentWidth - LEFTMARGIN, dynaHeight);

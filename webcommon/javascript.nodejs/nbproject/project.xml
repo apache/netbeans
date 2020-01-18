@@ -352,6 +352,7 @@
                 <friend>org.netbeans.modules.selenium2.webclient.protractor</friend>
                 <friend>org.netbeans.modules.web.client.kit</friend>
                 <friend>org.netbeans.modules.debugger.jpda.trufflenode</friend>
+                <friend>org.netbeans.modules.typescript.editor</friend>
                 <package>org.netbeans.modules.javascript.nodejs.api</package>
             </friend-packages>
         </data>

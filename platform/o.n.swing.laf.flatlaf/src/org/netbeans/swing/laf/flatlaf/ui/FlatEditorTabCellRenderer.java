@@ -58,13 +58,17 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
 
     private static final Color underlineColor = UIManager.getColor("EditorTab.underlineColor"); // NOI18N
     private static final Color inactiveUnderlineColor = UIManager.getColor("EditorTab.inactiveUnderlineColor"); // NOI18N
+    private static final Color tabSeparatorColor = UIManager.getColor("EditorTab.tabSeparatorColor"); // NOI18N
     private static final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
 
     private static final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
     private static final int underlineHeight = UIScale.scale(UIManager.getInt("EditorTab.underlineHeight")); // NOI18N
     private static final boolean underlineAtTop = UIManager.getBoolean("EditorTab.underlineAtTop"); // NOI18N
+    private static boolean showTabSeparators = UIManager.getBoolean("EditorTab.showTabSeparators"); // NOI18N
 
     private static final FlatTabPainter painter = new FlatTabPainter();
+
+    boolean nextTabSelected;
 
     public FlatEditorTabCellRenderer() {
         super(painter, new Dimension(tabInsets.left + tabInsets.right, tabInsets.top + tabInsets.bottom));
@@ -198,24 +202,39 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
             FlatEditorTabCellRenderer ren = (FlatEditorTabCellRenderer) c;
             boolean selected = ren.isSelected();
 
+            // get background color
+            Color bg = ren.colorForState(
+                    background, activeBackground, selectedBackground,
+                    hoverBackground, attentionBackground);
+
+            boolean showSeparator = showTabSeparators && !selected && !ren.nextTabSelected;
+
+            // do not round tab separator width to get nice small lines at 125%, 150% and 175%
+            int tabSeparatorWidth = showSeparator ? (int) (1 * scale) : 0;
+
             // paint background
-            g.setColor(ren.colorForState(background, activeBackground, selectedBackground,
-                    hoverBackground, attentionBackground));
-            g.fillRect(0, 0, width, height);
+            g.setColor(bg);
+            g.fillRect(0, 0, width - (bg != background ? tabSeparatorWidth : 0), height);
 
             if (selected && underlineHeight > 0) {
                 // paint underline if tab is selected
                 int underlineHeight = (int) Math.round(FlatEditorTabCellRenderer.underlineHeight * scale);
                 g.setColor(ren.isActive() ? underlineColor : inactiveUnderlineColor);
                 if (underlineAtTop)
-                    g.fillRect(0, 0, width, underlineHeight);
+                    g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
                 else
-                    g.fillRect(0, height - underlineHeight, width, underlineHeight);
+                    g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
             } else {
                 // paint bottom border
                 int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
                 g.setColor(contentBorderColor);
                 g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
+            }
+
+            if (showSeparator) {
+                int offset = (int) (4 * scale);
+                g.setColor(tabSeparatorColor);
+                g.fillRect(width - tabSeparatorWidth, offset, tabSeparatorWidth, height - (offset * 2) - 1);
             }
         }
 

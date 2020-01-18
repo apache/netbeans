@@ -36,6 +36,7 @@ import org.netbeans.swing.laf.flatlaf.HiDPIUtils;
 import org.netbeans.swing.tabcontrol.TabDisplayer;
 import org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI;
 import org.netbeans.swing.tabcontrol.plaf.TabCellRenderer;
+import org.netbeans.swing.tabcontrol.plaf.TabState;
 
 /**
  * Tab displayer UI for FlatLaf look and feel
@@ -74,6 +75,15 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         } else
             prefHeight = UIScale.scale(28);
         return new Dimension(displayer.getWidth(), prefHeight);
+    }
+
+    @Override
+    public TabCellRenderer getTabCellRenderer(int tab) {
+        TabCellRenderer ren = super.getTabCellRenderer(tab);
+        if (ren instanceof FlatEditorTabCellRenderer && tab + 1 < displayer.getModel().size()) {
+            ((FlatEditorTabCellRenderer)ren).nextTabSelected = (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
+        }
+        return ren;
     }
 
     @Override

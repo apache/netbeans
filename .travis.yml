@@ -467,12 +467,13 @@ matrix:
         - name: Test groovy modules
           jdk: openjdk8
           env:
-            - OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
           script:
-            - ant $OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
 
         - name: Test php modules
           jdk: openjdk8

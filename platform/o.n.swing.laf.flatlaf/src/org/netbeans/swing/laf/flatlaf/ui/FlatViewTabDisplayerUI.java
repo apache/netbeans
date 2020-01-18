@@ -72,11 +72,13 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
             underlineColor,         // underline color of selected active tabs
             inactiveUnderlineColor, // underline color of selected inactive tabs
+            tabSeparatorColor,      // tab separator color
             contentBorderColor;     // bottom border color
 
     private static Insets tabInsets;
     private static int underlineHeight;     // height of "underline" painted at bottom of tab to indicate selection
     private static boolean underlineAtTop;  // paint "underline" at top of tab
+    private static boolean showTabSeparators; // paint tab separators
 
     private Font font;
 
@@ -115,7 +117,7 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         FontMetrics fm = getTxtFontMetrics();
         // setting font already here to compute string width correctly
         g.setFont(getTxtFont());
-        int txtWidth = width;
+        int availTxtWidth = width - (txtLeftPad + txtRightPad);
         if (isSelected(index)) {
             // layout buttons
             Component buttons = getControlButtons();
@@ -125,20 +127,47 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                     buttons.setVisible(false);
                 } else {
                     buttons.setVisible(true);
-                    txtWidth = width - (buttonsSize.width + ICON_X_PAD + txtLeftPad + txtRightPad);
+                    availTxtWidth -= (buttonsSize.width + ICON_X_PAD);
                     buttons.setLocation(x + width - buttonsSize.width - ICON_X_PAD, y + (height - buttonsSize.height) / 2);
                 }
             }
-        } else {
-            txtWidth = width - (txtLeftPad + txtRightPad);
         }
 
         // paint busy icon
         if (isTabBusy(index)) {
             Icon busyIcon = BusyTabsSupport.getDefault().getBusyIcon(isSelected(index));
-            txtWidth -= busyIcon.getIconWidth() - UIScale.scale(3) - txtLeftPad;
+            availTxtWidth -= busyIcon.getIconWidth() - UIScale.scale(3) - txtLeftPad;
             busyIcon.paintIcon(displayer, g, x + txtLeftPad, y + (height - busyIcon.getIconHeight()) / 2);
-            x += busyIcon.getIconWidth() + UIScale.scale(3);
+            int busyWidth = busyIcon.getIconWidth() + UIScale.scale(3);
+            x += busyWidth;
+            width -= busyWidth;
+        }
+
+        // make sure that as much text as possible is shown (and avoid empty tabs)
+        int realTxtWidth = (text.startsWith("<html") || text.startsWith("<HTML")) //NOI18N
+                ? (int) HtmlRenderer.renderString(text, g, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE,
+                            getTxtFont(), foreground, HtmlRenderer.STYLE_TRUNCATE, false)
+                : fm.stringWidth(text);
+        if (realTxtWidth > availTxtWidth) {
+            // add left and right insets to available width
+            int left = Math.min(txtLeftPad - 1, realTxtWidth - availTxtWidth);
+            availTxtWidth += left + txtRightPad;
+            txtLeftPad -= left;
+
+            // Truncate text here because HtmlRenderer.renderString() does not paint any text
+            // if it is longer that 3 characters and the available width is smaller
+            // than the width of the first 3 characters plus "…".
+            if (realTxtWidth > availTxtWidth && text.length() > 3) {
+                int minWidth = fm.stringWidth(text.substring(0, 3) + "…"); //NOI18N
+                if (minWidth > availTxtWidth) {
+                    // truncate text; in the worst case, text becomes "…" only
+                    for (int i = 2; i >= 0; i--) {
+                        text = text.substring(0, i) + "…"; //NOI18N
+                        if (fm.stringWidth(text) < availTxtWidth)
+                            break;
+                    }
+                }
+            }
         }
 
         // text color
@@ -146,14 +175,19 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                 hoverForeground, attentionForeground);
 
         // paint text
-        int txtX = x + tabInsets.left;
+        int txtX = x + txtLeftPad;
         int txtY = y + tabInsets.top + fm.getAscent();
         int availH = height - tabInsets.top - tabInsets.bottom;
         if (availH > fm.getHeight()) {
             txtY += (availH - fm.getHeight()) / 2;
         }
-        HtmlRenderer.renderString(text, g, txtX, txtY, txtWidth, height,
-                getTxtFont(), c, HtmlRenderer.STYLE_TRUNCATE, true);
+        int style = HtmlRenderer.STYLE_TRUNCATE;
+        if (!isSelected(index)) {
+            // center text of unselected tabs
+            txtX = Math.max(x + 1, x + ((width - realTxtWidth) / 2));
+        }
+        HtmlRenderer.renderString(text, g, txtX, txtY, availTxtWidth, height,
+                getTxtFont(), c, style, true);
     }
 
     @Override
@@ -173,25 +207,35 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
     }
 
     private void paintTabBackgroundAtScale1x(Graphics2D g, int index, int width, int height, double scale) {
+        // do not round tab separator width to get nice small lines at 125%, 150% and 175%
+        int tabSeparatorWidth = (showTabSeparators && index >= 0) ? (int) (1 * scale) : 0;
+
         // paint background
-        g.setColor(colorForState(index, background, activeBackground, selectedBackground,
-                hoverBackground, attentionBackground));
-        g.fillRect(0, 0, width, height);
+        Color bg = colorForState(index, background, activeBackground, selectedBackground,
+                hoverBackground, attentionBackground);
+        g.setColor(bg);
+        g.fillRect(0, 0, width - (bg != background ? tabSeparatorWidth : 0), height);
 
         if (isSelected(index) && underlineHeight > 0) {
             // paint underline if tab is selected
             int underlineHeight = (int) Math.round(this.underlineHeight * scale);
             g.setColor(isActive() ? underlineColor : inactiveUnderlineColor);
             if (underlineAtTop) {
-                g.fillRect(0, 0, width, underlineHeight);
+                g.fillRect(0, 0, width - tabSeparatorWidth, underlineHeight);
             } else {
-                g.fillRect(0, height - underlineHeight, width, underlineHeight);
+                g.fillRect(0, height - underlineHeight, width - tabSeparatorWidth, underlineHeight);
             }
         } else {
             // paint bottom border
             int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
             g.setColor(contentBorderColor);
             g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
+        }
+
+        if (showTabSeparators && index >= 0) {
+            int offset = (int) (4 * scale);
+            g.setColor(tabSeparatorColor);
+            g.fillRect(width - tabSeparatorWidth, offset, tabSeparatorWidth, height - (offset * 2) - 1);
         }
     }
 
@@ -251,11 +295,13 @@ public class FlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
             underlineColor = UIManager.getColor("ViewTab.underlineColor"); // NOI18N
             inactiveUnderlineColor = UIManager.getColor("ViewTab.inactiveUnderlineColor"); // NOI18N
+            tabSeparatorColor = UIManager.getColor("ViewTab.tabSeparatorColor"); // NOI18N
             contentBorderColor = UIManager.getColor("TabbedContainer.view.contentBorderColor"); // NOI18N
 
             tabInsets = UIManager.getInsets("ViewTab.tabInsets"); // NOI18N
             underlineHeight = UIManager.getInt("ViewTab.underlineHeight"); // NOI18N
             underlineAtTop = UIManager.getBoolean("ViewTab.underlineAtTop"); // NOI18N
+            showTabSeparators = UIManager.getBoolean("ViewTab.showTabSeparators"); // NOI18N
 
             // scale on Java 8 and Linux
             tabInsets = UIScale.scale(tabInsets);

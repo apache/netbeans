@@ -220,17 +220,17 @@ public final class FlatTabControlIcon extends VectorIcon {
             g.fill(win1);
             g.fill(win2);
         } else if (buttonId == TabControlButton.ID_MAXIMIZE_BUTTON) {
-            int xy = round(3 * scaling);
-            int wh = round(10 * scaling);
+            int xy = (int) (3 * scaling);
+            int wh = width - (2 * xy);
             /* Draw one larger window. The getWindowSymbol method ensures we are using the same
             window border thickness as for ID_RESTORE_BUTTON. */
             g.fill(getWindowSymbol(scaling, xy, xy, wh, wh));
         } else if (buttonId == TabControlButton.ID_SLIDE_GROUP_BUTTON) {
             // Draw a simple bar towards the bottom of the icon.
-            int barX = round(3 * scaling);
-            int barY = round(7 * scaling);
-            int barWidth = round(10 * scaling);
-            int barThickness = round(2 * scaling);
+            int barX = (int) (3 * scaling);
+            int barY = round(11 * scaling);
+            int barWidth = width - (2 * barX);
+            int barThickness = (int) (1 * scaling);
             g.fill(new Rectangle2D.Double(barX, barY, barWidth, barThickness));
         } else if (buttonId == TabControlButton.ID_DROP_DOWN_BUTTON ||
                    buttonId == TabControlButton.ID_SCROLL_LEFT_BUTTON ||

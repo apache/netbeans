@@ -156,6 +156,9 @@ public class CompletionProviderImpl implements CompletionProvider {
                     CountDownLatch l = new CountDownLatch(1);
                     //TODO: Location or Location[]
                     Either<List<CompletionItem>, CompletionList> completionResult = server.getTextDocumentService().completion(params).get();
+                    if (completionResult == null) {
+                        return ; //no results
+                    }
                     List<CompletionItem> items;
                     boolean incomplete;
                     if (completionResult.isLeft()) {

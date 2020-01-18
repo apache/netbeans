@@ -28,7 +28,6 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -48,7 +47,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -191,18 +189,18 @@ public class StatusLineComponent extends JPanel implements ProgressUIWorkerWithM
         closeButton.setOpaque(false);
         closeButton.setContentAreaFilled(false);
         
-        Image img = (Image)UIManager.get("nb.progress.cancel.icon");
+        Object img = UIManager.get("nb.progress.cancel.icon");
         if( null != img ) {
-            closeButton.setIcon( new ImageIcon( img ) );
+            closeButton.setIcon( ListComponent.iconOrImage2icon( img ) );
         }
-        img = (Image)UIManager.get("nb.progress.cancel.icon.mouseover");
+        img = UIManager.get("nb.progress.cancel.icon.mouseover");
         if( null != img ) {
             closeButton.setRolloverEnabled(true);
-            closeButton.setRolloverIcon( new ImageIcon( img ) );
+            closeButton.setRolloverIcon( ListComponent.iconOrImage2icon( img ) );
         }
-        img = (Image)UIManager.get("nb.progress.cancel.icon.pressed");
+        img = UIManager.get("nb.progress.cancel.icon.pressed");
         if( null != img ) {
-            closeButton.setPressedIcon( new ImageIcon( img ) );
+            closeButton.setPressedIcon( ListComponent.iconOrImage2icon( img ) );
         }
     }
     
@@ -620,12 +618,12 @@ public class StatusLineComponent extends JPanel implements ProgressUIWorkerWithM
             if (text) {
                 putValue(Action.NAME, NbBundle.getMessage(StatusLineComponent.class, "StatusLineComponent.Cancel"));
             } else {
-                Image icon = (Image)UIManager.get("nb.progress.cancel.icon");
+                Object icon = UIManager.get("nb.progress.cancel.icon");
                 if (icon == null) {
                        // for custom L&F?
                     putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon("org/netbeans/progress/module/resources/buton.png", true));
                 } else {
-                    putValue(Action.SMALL_ICON, new ImageIcon(icon));
+                    putValue(Action.SMALL_ICON, ListComponent.iconOrImage2icon(icon));
                 }
             }
             setEnabled(handle == null ? false : handle.isAllowCancel());

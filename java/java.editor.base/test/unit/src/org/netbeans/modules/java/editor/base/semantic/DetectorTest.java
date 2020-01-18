@@ -509,7 +509,13 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRecord1() throws Exception {
-        //TODO: check records are available, skip if they are not.
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return ;
+        }
+        setSourceLevel("14");
         performTest("Record",
                     "public record Test(String s) {}\n" +
                     "class T {\n" +
@@ -531,7 +537,13 @@ public class DetectorTest extends TestBase {
     }
 
     public void testRecord2() throws Exception {
-        //TODO: check record are available, skip if they are not.
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }        
+        setSourceLevel("14");
         performTest("Records",
                     "public class Records {\n" +
                     "    public interface Super {}\n" +

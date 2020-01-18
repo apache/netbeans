@@ -555,7 +555,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             addModifiers(decl, c);
             
-            if (decl.getKind().isField() || isRecordComponent(decl.getKind())) {
+            if (decl.getKind().isField() || TreeShims.isRecordComponent(decl.getKind())) {
                 if (decl.getKind().isField()) {
                     c.add(ColoringAttributes.FIELD);
                 } else {
@@ -582,10 +582,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             return null;
         }
 
-        private boolean isRecordComponent(ElementKind kind) {
-            return "RECORD_COMPONENT".equals(kind.name());
-        }
-
         private Element toRecordComponent(Element el) {
             if (el == null ||el.getKind() != ElementKind.FIELD) {
                 return el;
@@ -595,7 +591,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 return el;
             }
             for (Element encl : owner.getEnclosedElements()) {
-                if (isRecordComponent(encl.getKind()) &&
+                if (TreeShims.isRecordComponent(encl.getKind()) &&
                     encl.getSimpleName().equals(el.getSimpleName())) {
                     return encl;
                 }
@@ -653,7 +649,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             isDeclType = decl.getKind().isClass() || decl.getKind().isInterface();
             Collection<ColoringAttributes> c = null;
 
-            if (decl.getKind().isField() || isLocalVariableClosure(decl) || isRecordComponent(decl.getKind())) {
+            if (decl.getKind().isField() || isLocalVariableClosure(decl) || TreeShims.isRecordComponent(decl.getKind())) {
                 c = getVariableColoring(decl);
             }
             
@@ -760,7 +756,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                         }
                         type.add(UseTypes.EXECUTE);
                     }
-                } else if (isRecordComponent(toRecordComponent(decl).getKind())) {
+                } else if (TreeShims.isRecordComponent(toRecordComponent(decl).getKind())) {
                     if (declaration) {
                         type.add(UseTypes.READ);
                         type.add(UseTypes.WRITE);
@@ -1137,7 +1133,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         
         private boolean isRecordComponent(Tree member) {
             Element el = info.getTrees().getElement(new TreePath(getCurrentPath(), member));
-            return el != null && isRecordComponent(toRecordComponent(el).getKind());
+            return el != null && TreeShims.isRecordComponent(toRecordComponent(el).getKind());
         }
 
         @Override

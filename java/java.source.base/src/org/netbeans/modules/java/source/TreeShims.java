@@ -221,7 +221,7 @@ public class TreeShims {
         return el;
     }
 
-    private static boolean isRecordComponent(ElementKind kind) {
+    public static boolean isRecordComponent(ElementKind kind) {
         return "RECORD_COMPONENT".equals(kind.name());
     }
 }

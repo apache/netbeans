@@ -1025,7 +1025,7 @@ public class GoToSupport {
             if (TreeShims.isRecordComponent(e)) {
                 return visitVariable((VariableElement) e, p);
             }
-            return super.visitUnknown(e, p); //To change body of generated methods, choose Tools | Templates.
+            return super.visitUnknown(e, p);
         }
         
         private void modifier(Set<Modifier> modifiers) {

@@ -37,7 +37,8 @@ import org.openide.util.NbBundle.Messages;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_TypeScriptDataObject_LOADER",
         mimeType = "application/x-typescript",
-        extension = {"ts"}
+        extension = {"ts"},
+        position = 600
 )
 @DataObject.Registration(
         mimeType = "application/x-typescript",

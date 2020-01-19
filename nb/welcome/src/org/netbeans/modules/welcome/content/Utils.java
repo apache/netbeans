@@ -149,7 +149,7 @@ public class Utils {
     public static Color getTopBarForeground() {
         Color res = UIManager.getColor("nb.startpage.topbar.foreground"); //NOI18N
         if( null == res )
-            res = getColor( Constants.COLOR_TAB_BACKGROUND );
+            res = getColor( Constants.COLOR_TAB_FOREGROUND );
         return res;
     }
 

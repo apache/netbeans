@@ -1051,7 +1051,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testBindingVar() throws Exception {
-        if (hasPatterns()) return ;
+        if (!hasPatterns()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "14";
         final String code = "package test;\n" +
@@ -1087,7 +1087,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testBindingVarInName() throws Exception {
-        if (hasPatterns()) return ;
+        if (!hasPatterns()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "14";
         final String code = "package test;\n" +
@@ -1120,7 +1120,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testBindingVarToolTip() throws Exception {
-        if (hasPatterns()) return ;
+        if (!hasPatterns()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "14";
         final String code = "package test;\n" +
@@ -1195,7 +1195,7 @@ public class GoToSupportTest extends NbTestCase {
 
         sourceCode = sourceCode.replace("|", "");
 
-        return performTest(sourceCode, -1, validator, tooltip, doCompileRecursively);
+        return performTest(sourceCode, offset, validator, tooltip, doCompileRecursively);
     }
 
     private String performTest(String sourceCode, final int offset, final UiUtilsCaller validator, boolean tooltip, boolean doCompileRecursively) throws Exception {
@@ -1288,23 +1288,8 @@ public class GoToSupportTest extends NbTestCase {
         
     }
     
-    private static boolean hasPatterns() {
-        try {
-            SourceVersion.valueOf("RELEASE_14"); //NOI18N
-            return true;
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip tests
-            return false;
-        }
-    }
-    
     public void testRecords1() throws Exception {
-//        try {
-//            SourceVersion.valueOf("RELEASE_14");
-//        } catch (IllegalArgumentException ex) {
-//            //OK, no RELEASE_10, skip test:
-//            return ;
-//        }
+        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "1.14";
         final String code = "package test;\n" +
@@ -1339,12 +1324,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords2() throws Exception {
-//        try {
-//            SourceVersion.valueOf("RELEASE_14");
-//        } catch (IllegalArgumentException ex) {
-//            //OK, no RELEASE_10, skip test:
-//            return ;
-//        }
+        if (!hasRecords()) return ;
         this.sourceLevel = "1.14";
         final String code = "package test;\n" +
                       "public class Test {\n" +
@@ -1377,12 +1357,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords3() throws Exception {
-//        try {
-//            SourceVersion.valueOf("RELEASE_14");
-//        } catch (IllegalArgumentException ex) {
-//            //OK, no RELEASE_10, skip test:
-//            return ;
-//        }
+        if (!hasRecords()) return ;
         this.sourceLevel = "1.14";
         final String code = "package test;\n" +
                       "public class Test {\n" +
@@ -1415,12 +1390,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords4() throws Exception {
-//        try {
-//            SourceVersion.valueOf("RELEASE_14");
-//        } catch (IllegalArgumentException ex) {
-//            //OK, no RELEASE_10, skip test:
-//            return ;
-//        }
+        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "1.14";
         final String code = "package test;\n" +
@@ -1467,12 +1437,7 @@ public class GoToSupportTest extends NbTestCase {
     }
 
     public void testRecords5() throws Exception {
-//        try {
-//            SourceVersion.valueOf("RELEASE_14");
-//        } catch (IllegalArgumentException ex) {
-//            //OK, no RELEASE_10, skip test:
-//            return ;
-//        }
+        if (!hasRecords()) return ;
         final boolean[] wasCalled = new boolean[1];
         this.sourceLevel = "1.14";
         final String code = "package test;\n" +
@@ -1516,4 +1481,25 @@ public class GoToSupportTest extends NbTestCase {
 
         assertTrue(wasCalled[0]);
     }
+
+    private static boolean hasPatterns() {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            return true;
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return false;
+        }
+    }
+
+    private static boolean hasRecords() {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+            return true;
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return false;
+        }
+    }
+
 }

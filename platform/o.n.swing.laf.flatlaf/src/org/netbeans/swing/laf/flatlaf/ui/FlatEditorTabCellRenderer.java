@@ -100,7 +100,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
         int txtH = fm.getHeight();
         Insets ins = getInsets();
         int availH = getHeight() - (ins.top + ins.bottom);
-        return (availH <= txtH) ? -fm.getDescent() : 0;
+        return (availH <= txtH) ? -fm.getDescent() : -1;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class FlatEditorTabCellRenderer extends AbstractTabCellRenderer {
             int iconWidth = icon.getIconWidth();
             int iconHeight = icon.getIconHeight();
             rect.x = bounds.x + bounds.width - iconWidth - UIScale.scale(CLOSE_ICON_RIGHT_PAD);
-            rect.y = bounds.y + (Math.max(0, bounds.height / 2 - iconHeight / 2));
+            rect.y = bounds.y + (Math.max(0, bounds.height / 2 - iconHeight / 2)) - 1;
             rect.width = iconWidth;
             rect.height = iconHeight;
         }

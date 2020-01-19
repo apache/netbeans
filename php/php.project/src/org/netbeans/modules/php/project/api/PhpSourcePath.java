@@ -106,7 +106,7 @@ public final class PhpSourcePath {
     public static synchronized List<FileObject> getPreindexedFolders() {
         if (phpStubsFolder == null) {
             // Core classes: Stubs generated for the "builtin" php runtime and extenstions.
-            File clusterFile = InstalledFileLocator.getDefault().locate("docs/phpsigfiles.zip", null, true); //NOI18N
+            File clusterFile = InstalledFileLocator.getDefault().locate("docs/phpsigfiles.zip", "org.netbeans.modules.php.project", true); //NOI18N
 
             if (clusterFile != null) {
                 FileObject root = FileUtil.getArchiveRoot(FileUtil.toFileObject(clusterFile));

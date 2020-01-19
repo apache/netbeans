@@ -581,7 +581,7 @@ public class Reformatter implements ReformatTask {
                 if (tokens.offset() > endPos)
                     return true;
 
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : (tree.getKind().toString().equals(TreeShims.RECORD)) ? scanRecord((ClassTree)tree,p) : super.scan(tree, p) : null;
+                Boolean ret;
 
                 switch (tree.getKind().toString()) {
                     case TreeShims.SWITCH_EXPRESSION:
@@ -592,6 +592,9 @@ public class Reformatter implements ReformatTask {
                         break;
                     case TreeShims.BINDING_PATTERN:
                         ret = scanBindingPattern(tree, p);
+                        break;
+                    case TreeShims.RECORD:
+                        ret = scanRecord((ClassTree) tree, p);
                         break;
                     default:
                         ret = super.scan(tree, p);

@@ -35,12 +35,17 @@ import java.util.List;
 import javax.lang.model.element.Name;
 import org.openide.util.Exceptions;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
+
 public class TreeShims {
 
     public static final String BINDING_PATTERN = "BINDING_PATTERN"; //NOI18N
     public static final String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"; //NOI18N
     public static final String YIELD = "YIELD"; //NOI18N
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
+    public static final String RECORD = "RECORD"; //NOI18N
 
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
@@ -190,5 +195,33 @@ public class TreeShims {
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;
+    }
+    public static boolean isRecord(Element el) {
+        return el != null && "RECORD".equals(el.getKind().name());
+    }
+
+    public static boolean isRecordComponent(Element el) {
+        return el != null && "RECORD_COMPONENT".equals(el.getKind().name());
+    }
+
+    public static Element toRecordComponent(Element el) {
+        if (el == null ||el.getKind() != ElementKind.FIELD) {
+            return el;
+        }
+        TypeElement owner = (TypeElement) el.getEnclosingElement();
+        if (!"RECORD".equals(owner.getKind().name())) {
+            return el;
+        }
+        for (Element encl : owner.getEnclosedElements()) {
+            if (isRecordComponent(encl.getKind()) &&
+                encl.getSimpleName().equals(el.getSimpleName())) {
+                return encl;
+            }
+        }
+        return el;
+    }
+
+    public static boolean isRecordComponent(ElementKind kind) {
+        return "RECORD_COMPONENT".equals(kind.name());
     }
 }

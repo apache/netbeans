@@ -109,6 +109,9 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  *
@@ -348,6 +351,7 @@ public class GoToSupport {
                     el = controller.getTrees().getElement(path);
 
                     if (parentLeaf.getKind() == Kind.METHOD_INVOCATION && isError(el)) {
+                        //TODO: accessor handling?
                         List<ExecutableElement> ee = Utilities.fuzzyResolveMethodInvocation(controller, path.getParentPath(), new ArrayList<TypeMirror>(), new int[1]);
 
                         if (!ee.isEmpty()) {
@@ -379,6 +383,35 @@ public class GoToSupport {
                         Element e = controller.getTrees().getElement(new TreePath(path, ((VariableTree)path.getLeaf()).getInitializer()));
                         if (!controller.getElementUtilities().isSynthetic(e)) {
                             el = e;
+                        }
+                    }
+                    if (el != null && el.getKind() == ElementKind.METHOD) {
+                        for (Element peer : el.getEnclosingElement().getEnclosedElements()) {
+                            if (peer.getKind().name().contains("RECORD_COMPONENT")) {
+                                try {
+                                    Class<?> recordComponent = Class.forName("javax.lang.model.element.RecordComponentElement", true, VariableTree.class.getClassLoader());
+                                    Method getAccessor = recordComponent.getDeclaredMethod("getAccessor");
+                                    Method getRecordComponents = TypeElement.class.getDeclaredMethod("getRecordComponents");
+                                    for (Element component : (Iterable<Element>) getRecordComponents.invoke(peer.getEnclosingElement())) {
+                                        if (Objects.equals(el, getAccessor.invoke(component))) {
+                                            el = component;
+                                            break;
+                                        }
+                                    }
+                                } catch (ClassNotFoundException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                } catch (IllegalAccessException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                } catch (IllegalArgumentException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                } catch (InvocationTargetException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                } catch (NoSuchMethodException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                } catch (SecurityException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            }
                         }
                     }
                 }
@@ -754,7 +787,8 @@ public class GoToSupport {
                 return process(getCurrentPath());
             }
             private boolean process(TreePath path) {
-                Element resolved = info.getTrees().getElement(path);
+
+                Element resolved = TreeShims.toRecordComponent(info.getTrees().getElement(path));
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();
                     return true;
@@ -984,6 +1018,14 @@ public class GoToSupport {
         @Override
         public Void visitTypeParameter(TypeParameterElement e, Boolean highlightName) {
             return null;
+        }
+        
+        @Override
+        public Void visitUnknown(Element e, Boolean p) {
+            if (TreeShims.isRecordComponent(e)) {
+                return visitVariable((VariableElement) e, p);
+            }
+            return super.visitUnknown(e, p);
         }
         
         private void modifier(Set<Modifier> modifiers) {

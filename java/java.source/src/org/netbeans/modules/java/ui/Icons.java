@@ -90,7 +90,15 @@ public final class Icons {
 	    case METHOD: 	
 		icon = ImageUtilities.loadImageIcon(getIconName(elementKind, ICON_BASE + "method", PNG_EXTENSION, modifiers ), false );
 		break;
-	    default:	
+	    default:
+                if (elementKind.name().equals("RECORD")) {
+                    icon = ImageUtilities.loadImageIcon(ICON_BASE + "record" + PNG_EXTENSION, false);
+                    break;
+                }
+                if (elementKind.name().equals("STATE_COMPONENT")) {
+                    icon = ImageUtilities.loadImageIcon(ICON_BASE + "stateComponent" + PNG_EXTENSION, false);
+                    break;
+                }
 	        icon = null;
         }
 	return icon;

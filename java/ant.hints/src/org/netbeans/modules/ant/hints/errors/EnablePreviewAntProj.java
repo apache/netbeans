@@ -128,8 +128,10 @@ public class EnablePreviewAntProj implements ErrorRule<Void> {
             compilerArgs = compilerArgs != null ? compilerArgs + " " + ENABLE_PREVIEW_FLAG : ENABLE_PREVIEW_FLAG;
 
             String runJVMArgs = ep.getProperty(RUN_JVMARGS);
-            if (!runJVMArgs.contains(ENABLE_PREVIEW_FLAG)) {
-                runJVMArgs = runJVMArgs != null ? runJVMArgs + " " + ENABLE_PREVIEW_FLAG : ENABLE_PREVIEW_FLAG;
+            if (runJVMArgs == null) {
+                runJVMArgs = ENABLE_PREVIEW_FLAG;
+            } else if (!runJVMArgs.contains(ENABLE_PREVIEW_FLAG)) {
+                runJVMArgs = runJVMArgs + " " + ENABLE_PREVIEW_FLAG;
             }
 
             ep.setProperty(JAVAC_COMPILER_ARGS, compilerArgs);

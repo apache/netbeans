@@ -1720,7 +1720,8 @@ public final class TreeUtilities {
             public Void visitClass(ClassTree node, Void p) {
                 if (fromIdx[0] < -2)
                     return super.visitClass(node, p);
-                fromIdx[0] = ((IndexedClassDecl)node).index;
+                if (node instanceof IndexedClassDecl)
+                    fromIdx[0] = ((IndexedClassDecl)node).index;
                 return null;
             }
             @Override
@@ -1746,7 +1747,8 @@ public final class TreeUtilities {
         scanner = new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitClass(ClassTree node, Void p) {
-                ((IndexedClassDecl)node).index = fromIdx[0]++;
+                if (node instanceof IndexedClassDecl)
+                    ((IndexedClassDecl)node).index = fromIdx[0]++;
                 return null;
             }
         };

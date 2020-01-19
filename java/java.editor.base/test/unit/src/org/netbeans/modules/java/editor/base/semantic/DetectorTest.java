@@ -508,6 +508,74 @@ public class DetectorTest extends TestBase {
         performTest("IncDecReading230408");
     }
 
+    public void testRecord1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return ;
+        }
+        setSourceLevel("14");
+        performTest("Record",
+                    "public record Test(String s) {}\n" +
+                    "class T {\n" +
+                    "    public String g(Test t) {\n" +
+                    "        return t.s();\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[KEYWORD], 0:7-0:13",
+                    "[PUBLIC, RECORD, DECLARATION], 0:14-0:18",
+                    "[PUBLIC, CLASS], 0:19-0:25",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 0:26-0:27",
+                    "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:6-1:7",
+                    "[PUBLIC, CLASS], 2:11-2:17",
+                    "[PUBLIC, METHOD, DECLARATION], 2:18-2:19",
+                    "[PUBLIC, RECORD], 2:20-2:24",
+                    "[PARAMETER, DECLARATION], 2:25-2:26",
+                    "[PARAMETER], 3:15-3:16",
+                    "[PUBLIC, METHOD], 3:17-3:18");
+    }
+
+    public void testRecord2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }        
+        setSourceLevel("14");
+        performTest("Records",
+                    "public class Records {\n" +
+                    "    public interface Super {}\n" +
+                    "    public record Foo1(String i, String j) implements Super { }\n" +
+                    "    public record Foo2(String i, String j) implements Super { }\n" +
+                    "    public record Foo3(String i, String j) implements Super { }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:20",
+                    "[STATIC, PUBLIC, INTERFACE, DECLARATION], 1:21-1:26",
+                    "[KEYWORD], 2:11-2:17",
+                    "[STATIC, PUBLIC, RECORD, DECLARATION], 2:18-2:22",
+                    "[PUBLIC, CLASS], 2:23-2:29",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 2:30-2:31",
+                    "[PUBLIC, CLASS], 2:33-2:39",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 2:40-2:41",
+                    "[STATIC, PUBLIC, INTERFACE], 2:54-2:59",
+                    "[KEYWORD], 3:11-3:17",
+                    "[STATIC, PUBLIC, RECORD, DECLARATION], 3:18-3:22",
+                    "[PUBLIC, CLASS], 3:23-3:29",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 3:30-3:31",
+                    "[PUBLIC, CLASS], 3:33-3:39",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 3:40-3:41",
+                    "[STATIC, PUBLIC, INTERFACE], 3:54-3:59",
+                    "[KEYWORD], 4:11-4:17",
+                    "[STATIC, PUBLIC, RECORD, DECLARATION], 4:18-4:22",
+                    "[PUBLIC, CLASS], 4:23-4:29",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 4:30-4:31",
+                    "[PUBLIC, CLASS], 4:33-4:39",
+                    "[PUBLIC, RECORD_COMPONENT, DECLARATION], 4:40-4:41",
+                    "[STATIC, PUBLIC, INTERFACE], 4:54-4:59");
+    }
+
     public void testYield() throws Exception {
         enablePreview();
         performTest("YieldTest.java",

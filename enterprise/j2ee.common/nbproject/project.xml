@@ -542,6 +542,7 @@
                 <friend>org.netbeans.modules.websvc.core</friend>
                 <friend>org.netbeans.modules.websvc.jaxrpc</friend>
                 <friend>org.netbeans.modules.websvc.restapi</friend>
+                <friend>io.github.jeddict.jcode.util</friend>
                 <package>org.netbeans.modules.j2ee.common</package>
                 <package>org.netbeans.modules.j2ee.common.dd</package>
                 <package>org.netbeans.modules.j2ee.common.ui</package>

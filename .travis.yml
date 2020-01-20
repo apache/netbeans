@@ -397,6 +397,17 @@ matrix:
             - ant $OPTS -f apisupport/maven.apisupport test
             - ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
+        - name: Test JavaFX modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+            #- ant $OPTS -f javafx/javafx2.project test
+
         - name: Test ergonomics modules
           jdk: openjdk8
           env: 

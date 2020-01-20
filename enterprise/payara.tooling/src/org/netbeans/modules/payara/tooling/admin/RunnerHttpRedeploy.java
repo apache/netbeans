@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.payara.tooling.admin;
 
+import java.util.List;
 import org.netbeans.modules.payara.tooling.utils.Utils;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
@@ -36,23 +37,32 @@ public class RunnerHttpRedeploy extends RunnerHttp {
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
 
-    /** Deploy command <code>target</code> parameter name. */
+    /** Redeploy command <code>target</code> parameter name. */
     private static final String TARGET_PARAM = "target";
 
-    /** Deploy command <code>name</code> parameter name. */
+    /** Redeploy command <code>name</code> parameter name. */
     private static final String NAME_PARAM = "name";
 
-    /** Deploy command <code>contextroot</code> parameter name. */
+    /** Redeploy command <code>contextroot</code> parameter name. */
     private static final String CTXROOT_PARAM = "contextroot";
 
-    /** Deploy command <code>properties</code> parameter name. */
+    /** Redeploy command <code>properties</code> parameter name. */
     private static final String PROPERTIES_PARAM = "properties";
 
-    /** Deploy command <code>libraries</code> parameter name. */
+    /** Redeploy command <code>libraries</code> parameter name. */
     private static final String LIBRARIES_PARAM = "libraries";
 
-    /** Deploy command <code>keepState</code> parameter name. */
+    /** Redeploy command <code>keepState</code> parameter name. */
     private static final String KEEP_STATE_PARAM = "keepState";
+
+    /** Redeploy command <code>hotDeploy</code> parameter name. */
+    private static final String HOT_DEPLOY_PARAM = "hotDeploy";
+
+    /** Redeploy command <code>metadataChanged</code> parameter name. */
+    private static final String METADATA_CHANGED_PARAM = "metadataChanged";
+
+    /** Redeploy command <code>sourcesChanged</code> parameter name. */
+    private static final String SOURCES_CHANGED_PARAM = "sourcesChanged";
 
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
@@ -66,6 +76,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "target" '=' &lt;target&gt; ] <br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "contextroot" '=' &lt;contextRoot&gt; ] <br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "keepState" '=' true | false ]<br/>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "hotDeploy" '=' true | false ]<br/>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "properties" '=' &lt;pname&gt; '=' &lt;pvalue&gt;
      *                                                  { ':' &lt;pname&gt; '=' &lt;pvalue&gt;} ]</code>
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ['&' "libraries" '=' &lt;lname&gt; '=' &lt;lvalue&gt;
@@ -79,31 +90,41 @@ public class RunnerHttpRedeploy extends RunnerHttp {
         String target;
         String ctxRoot;
         String keepState;
+        String hotDeploy;
+        String metadataChanged;
+        List<String> sourcesChanged;
+        CommandRedeploy redeploy;
         if (command instanceof CommandRedeploy) {
-            name = Utils.sanitizeName(((CommandRedeploy)command).name);
-            target = ((CommandRedeploy)command).target;
-            ctxRoot = ((CommandRedeploy)command).contextRoot;
-            keepState = Boolean.toString(((CommandRedeploy)command).keepState);
+            redeploy = (CommandRedeploy)command;
+            name = Utils.sanitizeName(redeploy.name);
+            target = redeploy.target;
+            ctxRoot = redeploy.contextRoot;
+            keepState = Boolean.toString(redeploy.keepState);
+            hotDeploy = Boolean.toString(redeploy.hotDeploy);
+            metadataChanged = Boolean.toString(redeploy.metadataChanged);
+            sourcesChanged = redeploy.sourcesChanged;
         }
         else {
             throw new CommandException(
                     CommandException.ILLEGAL_COMAND_INSTANCE);
         }
         // Calculate StringBuilder initial length to avoid resizing
-        boolean first = true;
         StringBuilder sb = new StringBuilder(
                 queryPropertiesLength(
-                        ((CommandRedeploy)command).properties, PROPERTIES_PARAM)
+                        redeploy.properties, PROPERTIES_PARAM)
                 + queryLibrariesLength(
-                        ((CommandRedeploy)command).libraries, LIBRARIES_PARAM)
+                        redeploy.libraries, LIBRARIES_PARAM)
                 + ( NAME_PARAM.length() + 1 + name.length() )
                 + ( target != null
                         ? 1 + TARGET_PARAM.length() + 1 + target.length() : 0 )
                 + ( ctxRoot != null && ctxRoot.length() > 0
                         ? 1 + CTXROOT_PARAM.length() + 1 + ctxRoot.length()
                         : 0 )
-                + ( ((CommandRedeploy)command).keepState
+                + ( redeploy.keepState
                         ? KEEP_STATE_PARAM.length() + 1 + keepState.length()
+                        : 0 )
+                + ( redeploy.hotDeploy
+                        ? HOT_DEPLOY_PARAM.length() + 1 + hotDeploy.length()
                         : 0 )
                 );
         sb.append(NAME_PARAM).append(PARAM_ASSIGN_VALUE).append(name);
@@ -115,15 +136,30 @@ public class RunnerHttpRedeploy extends RunnerHttp {
             sb.append(PARAM_SEPARATOR);
             sb.append(CTXROOT_PARAM).append(PARAM_ASSIGN_VALUE).append(ctxRoot);
         }
-        if (((CommandRedeploy)command).keepState) {
+        if (redeploy.keepState) {
             sb.append(PARAM_SEPARATOR);
             sb.append(KEEP_STATE_PARAM);
             sb.append(PARAM_ASSIGN_VALUE).append(keepState);
         }
+        if (redeploy.hotDeploy) {
+            sb.append(PARAM_SEPARATOR);
+            sb.append(HOT_DEPLOY_PARAM);
+            sb.append(PARAM_ASSIGN_VALUE).append(hotDeploy);
+            if (redeploy.metadataChanged) {
+                sb.append(PARAM_SEPARATOR);
+                sb.append(METADATA_CHANGED_PARAM);
+                sb.append(PARAM_ASSIGN_VALUE).append(metadataChanged);
+            }
+            if (!sourcesChanged.isEmpty()) {
+                sb.append(PARAM_SEPARATOR);
+                sb.append(SOURCES_CHANGED_PARAM);
+                sb.append(PARAM_ASSIGN_VALUE).append(String.join(",", sourcesChanged));
+            }
+        }
         // Add properties into query string.
-        queryPropertiesAppend(sb, ((CommandRedeploy)command).properties,
+        queryPropertiesAppend(sb, redeploy.properties,
                 PROPERTIES_PARAM, true);
-        queryLibrariesAppend(sb, ((CommandRedeploy)command).libraries,
+        queryLibrariesAppend(sb, redeploy.libraries,
                 LIBRARIES_PARAM, true);
         return sb.toString();
     }

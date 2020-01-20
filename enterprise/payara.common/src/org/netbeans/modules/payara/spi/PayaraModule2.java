@@ -20,6 +20,7 @@
 package org.netbeans.modules.payara.spi;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import org.netbeans.modules.payara.tooling.TaskStateListener;
@@ -42,11 +43,22 @@ public interface PayaraModule2 extends PayaraModule {
             final Map<String,String> properties, final File[] libraries);
 
     /**
+     * Redeploy the named application onto the server.The application must have
+     * previously been directory deployed.If not, use deploy().
+     *
+     * @param stateListener listener to listen message describing the redeploy
+     * process as it progresses. Can be null.
+     * @param name name this application is deployed under.
+     * @param contextRoot
      * @param libraries array of jar files on which standalone EE module depends
      *  and which need to be part of deployment
+     * @param resourcesChanged Is application resource file modified.
+     * @param metadataChanged Is application metadata files modified.
+     * @param sourcesChanged the list of source file modified.
+     * @return
      */
     Future<ResultString> redeploy(final TaskStateListener stateListener, 
             final String name, final String contextRoot, File[] libraries,
-            boolean resourcesChanged);
+            boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
     
 }

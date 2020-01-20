@@ -1740,6 +1740,7 @@ fld protected boolean configFileParsed
 fld protected boolean httpMonitorFlag
 fld protected boolean jdbcDriverDeploymentFlag
 fld protected boolean loopbackFlag
+fld protected boolean hotDeployFlag
 fld protected boolean preserverSessionsFlag
 fld protected boolean showPasswordFlag
 fld protected boolean startDerbyFlag
@@ -1749,8 +1750,9 @@ fld protected javax.swing.JCheckBox commetSupport
 fld protected javax.swing.JCheckBox httpMonitor
 fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
+fld protected javax.swing.JCheckBox hotDeploy
 fld protected javax.swing.JCheckBox preserveSessions
-fld protected javax.swing.JCheckBox showPassword
+fld protected javax.swing.JToggleButton showPassword
 fld protected javax.swing.JCheckBox startDerby
 fld protected javax.swing.JComboBox hostLocalField
 fld protected javax.swing.JLabel dasPortLabel
@@ -1805,7 +1807,7 @@ meth protected boolean getJdbcDriverDeploymentProperty()
 meth protected boolean getLoopbackProperty()
 meth protected boolean getPreserveSessionsProperty()
 meth protected boolean getStartDerbyProperty()
-meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
+meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 meth protected void storeBooleanProperty(java.lang.String,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 supr java.lang.Object
 hfds cometSupportProperty,httpMonitorProperty,jdbcDriverDeploymentProperty,loopbackProperty,preserveSessionsProperty,startDerbyProperty

@@ -364,7 +364,7 @@ public class ServerFileDistributor extends ServerProgress {
 
                 FileObject file = FileUtil.toFileObject(FileUtil.normalizeFile(fsFile));
 
-                FileObject checkFile = null;
+                FileObject checkFile;
                 if (altDistPath != null) {
                     checkFile = FileUtil.toFileObject(FileUtil.normalizeFile(altDistPath));
                     if (checkFile == null && file != null) { //#165045
@@ -385,6 +385,10 @@ public class ServerFileDistributor extends ServerProgress {
 
                         // FIXME timestamp
                         createOrReplace(file, targetFO, destRoot, relative, mc, destMap, false, 0);
+                    }
+                } else if (fsFile != null && !fsFile.exists()) {
+                    if (altDistPath != null && altDistPath.delete()) {
+                        mc.recordRemovedFile(fsFile);
                     }
                 }
             }
@@ -441,6 +445,7 @@ public class ServerFileDistributor extends ServerProgress {
                 // the build target.
                 if (targetFO.equals(sourceFO) && targetFO.lastModified().after(ldDate)) {
                     mc.record(dest, relativePath);
+                    return;
                 }
 
                 //check timestamp
@@ -545,7 +550,8 @@ public class ServerFileDistributor extends ServerProgress {
         private boolean ejbsChanged = false;
         private List changedEjbs = Collections.EMPTY_LIST;
         private J2eeModule.Type moduleType = null;
-        private List changedFiles = new ArrayList();
+        private List<File> changedFiles = new ArrayList<>();
+        private List<File> removedFiles = new ArrayList<>();
         private List descriptorRelativePaths;
         private List serverDescriptorRelativePaths;
 
@@ -558,6 +564,7 @@ public class ServerFileDistributor extends ServerProgress {
             this.serverDescriptorRelativePaths = serverDescriptorRelativePaths;
             this.moduleType = moduleType;
         }
+
         private void record(AppChanges changes) {
             if (!descriptorChanged) {
                 descriptorChanged = changes.descriptorChanged();
@@ -579,6 +586,7 @@ public class ServerFileDistributor extends ServerProgress {
                 changedEjbs.addAll(ejbs);
             }
             changedFiles.addAll(changes.changedFiles);
+            removedFiles.addAll(changes.removedFiles);
         }
 
         /**
@@ -636,7 +644,6 @@ public class ServerFileDistributor extends ServerProgress {
             }
             if (!manifestChanged && relativePath.equals("META-INF/MANIFEST.MF")) { // NOI18N
                 manifestChanged = true;
-                return;
             }
         }
 
@@ -652,32 +659,50 @@ public class ServerFileDistributor extends ServerProgress {
             }
         }
 
+        private void recordRemovedFile(File removedFile) {
+            if(removedFile != null) {
+                this.removedFiles.add(removedFile);
+            }
+        }
+
+        @Override
         public boolean classesChanged() {
             return classesChanged;
         }
 
+        @Override
         public boolean descriptorChanged() {
             return descriptorChanged;
         }
 
+        @Override
         public boolean manifestChanged() {
             return manifestChanged;
         }
 
+        @Override
         public boolean serverDescriptorChanged() {
             return serverDescriptorChanged;
         }
 
+        @Override
         public boolean ejbsChanged() {
             return ejbsChanged;
         }
 
+        @Override
         public String[] getChangedEjbs() {
             return (String[]) changedEjbs.toArray(new String[]{});
         }
 
+        @Override
         public File[] getChangedFiles() {
             return (File[]) changedFiles.toArray(new File[changedFiles.size()]);
+        }
+
+        @Override
+        public File[] getRemovedFiles() {
+            return (File[]) removedFiles.toArray(new File[removedFiles.size()]);
         }
 
         @Override

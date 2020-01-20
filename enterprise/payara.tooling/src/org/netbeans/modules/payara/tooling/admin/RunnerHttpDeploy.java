@@ -67,6 +67,9 @@ public class RunnerHttpDeploy extends RunnerHttp {
     /** Deploy command <code>libraries</code> parameter name. */
     private static final String LIBRARIES_PARAM = "libraries";
 
+    /** Deploy command <code>hotDeploy</code> parameter name. */
+    private static final String HOT_DEPLOY_PARAM = "hotDeploy";
+
     /** Deploy command <code>force</code> parameter value. */
     private static final boolean FORCE_VALUE = true;
 
@@ -96,15 +99,19 @@ public class RunnerHttpDeploy extends RunnerHttp {
         String path;
         String target;
         String ctxRoot;
+        String hotDeploy;
         String force = Boolean.toString(FORCE_VALUE);
+        CommandDeploy deploy;
         if (command instanceof CommandDeploy) {
-            if (((CommandDeploy)command).path == null) {
+            deploy = (CommandDeploy)command;
+            if (deploy.path == null) {
                 throw new CommandException(CommandException.ILLEGAL_NULL_VALUE);
             }
-            name = Utils.sanitizeName(((CommandDeploy)command).name);
-            path = ((CommandDeploy)command).path.getAbsolutePath();
-            target =((CommandDeploy)command).target;
-            ctxRoot = ((CommandDeploy)command).contextRoot;
+            name = Utils.sanitizeName(deploy.name);
+            path = deploy.path.getAbsolutePath();
+            target =deploy.target;
+            ctxRoot = deploy.contextRoot;
+            hotDeploy = Boolean.toString(deploy.hotDeploy);
         }
         else {
             throw new CommandException(
@@ -115,9 +122,9 @@ public class RunnerHttpDeploy extends RunnerHttp {
                 DEFAULT_PARAM.length() + 1 + path.length() +
                 1 + FORCE_PARAM.length() + 1 + force.length()
                 + queryPropertiesLength(
-                        ((CommandDeploy)command).properties, PROPERTIES_PARAM)
+                        deploy.properties, PROPERTIES_PARAM)
                 + queryLibrariesLength(
-                        ((CommandDeploy)command).libraries, LIBRARIES_PARAM)
+                        deploy.libraries, LIBRARIES_PARAM)
                 + ( name != null && name.length() > 0
                         ? 1 + NAME_PARAM.length() + 1 + name.length()
                         : 0
@@ -144,10 +151,15 @@ public class RunnerHttpDeploy extends RunnerHttp {
             sb.append(PARAM_SEPARATOR);
             sb.append(CTXROOT_PARAM).append(PARAM_ASSIGN_VALUE).append(ctxRoot);
         }
+        if (((CommandDeploy) command).hotDeploy) {
+            sb.append(PARAM_SEPARATOR);
+            sb.append(HOT_DEPLOY_PARAM);
+            sb.append(PARAM_ASSIGN_VALUE).append(hotDeploy);
+        }
         // Add properties into query string.
-        queryPropertiesAppend(sb, ((CommandDeploy)command).properties,
+        queryPropertiesAppend(sb, deploy.properties,
                 PROPERTIES_PARAM, true);
-        queryLibrariesAppend(sb, ((CommandDeploy)command).libraries,
+        queryLibrariesAppend(sb, deploy.libraries,
                 LIBRARIES_PARAM, true);
         
         return sb.toString();

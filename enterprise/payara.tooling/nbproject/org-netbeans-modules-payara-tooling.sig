@@ -431,7 +431,7 @@ supr org.netbeans.modules.payara.tooling.admin.Command
 hfds COMMAND
 
 CLSS public org.netbeans.modules.payara.tooling.admin.CommandRedeploy
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[],boolean)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[],boolean,boolean)
 supr org.netbeans.modules.payara.tooling.admin.CommandTargetName
 hfds COMMAND,contextRoot,keepState,libraries,properties
 

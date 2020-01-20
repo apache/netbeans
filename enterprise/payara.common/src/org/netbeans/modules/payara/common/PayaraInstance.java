@@ -1231,6 +1231,11 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return properties.get(PayaraModule.USERNAME_ATTR);
     }
 
+    public boolean isHotDeployEnabled() {
+       return PayaraVersion.ge(this.getVersion(), PayaraVersion.PF_5_201) ?
+                    Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY)) : false;
+    }
+
     /**
      * Returns Java SE platform home configured for GlassFfish server.
      * <p/>
@@ -1521,6 +1526,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
                 "Bogus display name");
         updateInt(properties, PayaraModule.ADMINPORT_ATTR,
                 DEFAULT_ADMIN_PORT);
+        updateString(properties, PayaraModule.HOT_DEPLOY, "false");
         updateString(properties, PayaraModule.SESSION_PRESERVATION_FLAG,
                 "true");
         updateString(properties, PayaraModule.START_DERBY_FLAG, "false");

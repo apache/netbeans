@@ -293,6 +293,20 @@ matrix:
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
             
+        - name: Test nb modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f nb/deadlock.detector test
+            - ant $OPTS -f nb/ide.branding test
+            - ant $OPTS -f nb/o.n.upgrader test
+            #- ant $OPTS -f nb/updatecenters test
+            - ant $OPTS -f nb/welcome test
+            
         - name: Test extide modules
           jdk: openjdk8
           env:

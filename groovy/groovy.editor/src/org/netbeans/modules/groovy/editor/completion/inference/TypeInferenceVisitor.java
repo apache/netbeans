@@ -194,28 +194,28 @@ public class TypeInferenceVisitor extends TypeVisitor {
     }
 
     private ClassNode deriveExpressonType(Expression expression) {
+        ClassNode derivedExpressionType = null;
         if (expression instanceof ConstantExpression
                 && !expression.getText().equals("null")) { // NOI18N
-            return ((ConstantExpression) expression).getType();
+            derivedExpressionType = ((ConstantExpression) expression).getType();
         } else if (expression instanceof ConstructorCallExpression) {
-            return ((ConstructorCallExpression) expression).getType();
+            derivedExpressionType = ((ConstructorCallExpression) expression).getType();
         } else if (expression instanceof MethodCallExpression) {
             int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
             AstPath newPath = new AstPath(path.root(), newOffset, doc);
-            return MethodInference.findCallerType(expression, newPath, doc, newOffset);
+            derivedExpressionType = MethodInference.findCallerType(expression, newPath, doc, newOffset);
         } else if (expression instanceof StaticMethodCallExpression) {
-            return MethodInference.findCallerType(expression, path, doc, cursorOffset);
+            derivedExpressionType = MethodInference.findCallerType(expression, path, doc, cursorOffset);
         } else if (expression instanceof ListExpression) {
-            return ((ListExpression) expression).getType();
+            derivedExpressionType = ((ListExpression) expression).getType();
         } else if (expression instanceof MapExpression) {
-            return ((MapExpression) expression).getType();
+            derivedExpressionType = ((MapExpression) expression).getType();
         } else if (expression instanceof RangeExpression) {
             // this should work, but the type is Object - nut sure why
             // guessedType = ((RangeExpression)initialExpression).getType();
-            return ClassHelper.makeWithoutCaching(Range.class, true);                
-        } else {
-            return null;
-        }       
+            derivedExpressionType = ClassHelper.makeWithoutCaching(Range.class, true);                
+        } 
+        return derivedExpressionType;
     }
 
 }

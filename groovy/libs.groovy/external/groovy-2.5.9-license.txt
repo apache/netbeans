@@ -1,6 +1,6 @@
 Name: Groovy
-Version: 2.5.2
-Files: groovy-2.5.2.jar groovy-ant-2.5.2.jar
+Version: 2.5.9
+Files: groovy-2.5.9.jar groovy-ant-2.5.9.jar
 Description: Groovy Language distribution.
 License: Apache-2.0-groovy
 Origin: http://groovy-lang.org/

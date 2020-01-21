@@ -59,7 +59,16 @@ matrix:
           jdk: openjdk8
           script:
             - nbbuild/travis/gensigtest.sh
-          
+        
+        - name: Pristine platform build
+          jdk: openjdk8
+          script: 
+            - ant -quiet build-source-config -Dcluster.config=platform
+            - mkdir tmpplatform
+            - cd tmpplatform
+            - unzip -qq ../nbbuild/build/platform-src*
+            - ant build -Dcluster.config=platform
+        
         - name: Compile all modules with OpenJDK8
           jdk: openjdk8
           env:

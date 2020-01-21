@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="ide/o.apache.commons.codec" default="build" basedir=".">
+<project name="platform/o.apache.commons.codec" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
         <FileCRC32Calculator file="external/commons-codec-1.13.jar" property="o.apache.commons.codec.crc32" />

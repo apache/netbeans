@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +56,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.api.common.ant.UpdateHelper;
 import org.netbeans.modules.java.api.common.classpath.ClassPathSupport;
@@ -72,6 +74,7 @@ import org.openide.actions.FileSystemAction;
 import org.openide.actions.FindAction;
 import org.openide.actions.PasteAction;
 import org.openide.actions.ToolsAction;
+import org.openide.actions.DeleteAction;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -93,6 +96,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 import org.openide.util.ContextAwareAction;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -107,10 +111,6 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.util.*;
-import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
 
 /**
  * Multi Module logical view content.
@@ -440,6 +440,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
     private static final class ModuleNode extends AbstractNode implements PropertyChangeListener, FileChangeListener, FileStatusListener {
         @StaticResource
         private static final String ICON = "org/netbeans/modules/java/api/common/project/ui/resources/module.png";
+        private static final String CLASSES="classes";
         private final Project prj;
         private final MultiModule modules;
         private final MultiModule testModules;
@@ -465,6 +466,100 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                     new DynLkp());
         }
 
+        @Override
+        public boolean canDestroy() {
+            return true;
+        }
+
+        @Override
+        public void destroy() {
+            Map<String, FileObject> pkgMap = new HashMap<>();
+            String preLastFolderPkg = "";
+            String moduleChildPath = "";
+            Collection<? extends FileObject> moduleFileObjects = this.getFileObjects();
+            for (FileObject moduleFileObject : moduleFileObjects) {
+                DataFolder moduledataFolder = DataFolder.findFolder(moduleFileObject);
+                DataObject[] moduledataObjects = moduledataFolder.getChildren();
+                FileObject classesFileObject = null;
+                for (int k = 0; moduledataObjects != null && k < moduledataObjects.length; k++) {
+                    if (moduledataObjects[k].getPrimaryFile().isFolder()) {
+                        if (moduledataObjects[k].getPrimaryFile().isFolder() && moduledataObjects[k].getPrimaryFile().getName().equalsIgnoreCase(CLASSES)) {
+                            classesFileObject = moduledataObjects[k].getPrimaryFile();
+                        }
+                        Enumeration<? extends FileObject> moduleChildren = moduledataObjects[k].getPrimaryFile().getFolders(true);
+                        boolean hasChildren = false;
+                        while (moduleChildren.hasMoreElements()) {
+                            FileObject moduleChild = moduleChildren.nextElement();
+                            Enumeration<? extends FileObject> fileObjectChildren = moduleChild.getChildren(false);
+                            if (fileObjectChildren.hasMoreElements()) {
+                                if (fileObjectChildren.nextElement().isData()) {
+                                }
+                            }
+                            moduleChildPath = moduleChild.getPath();
+                            preLastFolderPkg = moduleChildPath.substring(0, moduleChildPath.lastIndexOf("/"));
+                            if (!pkgMap.containsKey(preLastFolderPkg)) {
+                                pkgMap.put(moduleChildPath, moduleChild);
+                            } else {
+                                FileObject predecessorPkg = pkgMap.get(preLastFolderPkg);
+                                if (!predecessorPkg.getData(false).hasMoreElements()) {
+                                    pkgMap.remove(preLastFolderPkg);
+                                }
+                                pkgMap.put(moduleChildPath, moduleChild);
+                            }
+                            hasChildren = true;
+                        }
+                        if (!hasChildren && !moduledataObjects[k].getPrimaryFile().getName().equalsIgnoreCase(CLASSES)) {
+                            pkgMap.put(moduledataObjects[k].getPrimaryFile().getPath(), moduledataObjects[k].getPrimaryFile());
+                        }
+                    }
+                }
+                for (Map.Entry<String, FileObject> pkg : pkgMap.entrySet()) {
+                    deletePackage(pkg.getValue());
+                }
+
+                deletePackage(classesFileObject);
+            }
+        }
+
+        private void deletePackage(FileObject source) {
+            ClassPath classPath = null;
+            classPath = ClassPath.getClassPath(source, ClassPath.SOURCE);
+            FileObject root = null;
+            root = classPath != null ? classPath.findOwnerRoot(source) : null;
+
+            DataFolder dataFolder = DataFolder.findFolder(source);
+
+            FileObject parent = dataFolder.getPrimaryFile().getParent();
+            // First; delete all files except packages
+
+            try {
+                DataObject ch[] = dataFolder.getChildren();
+                boolean empty = true;
+                for (int i = 0; ch != null && i < ch.length; i++) {
+                    if (!ch[i].getPrimaryFile().isFolder()) {
+                        ch[i].delete();
+                    } else if (empty && VisibilityQuery.getDefault().isVisible(ch[i].getPrimaryFile())) {
+                        // 156529: hidden folders should be considered as empty content
+                        empty = false;
+                    }
+                }
+
+                // If empty delete itself
+                if (empty) {
+                    dataFolder.delete();
+                }
+
+                // Second; delete empty super packages, or empty folders when there is not root
+                while (!parent.equals(root) && parent.getChildren().length == 0) {
+                    FileObject newParent = parent.getParent();
+                    parent.delete();
+                    parent = newParent;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+        }
         private ModuleNode(@NonNull final ModuleKey key, @NonNull final DynLkp lookup) {
             super(new ModuleChildren (key), lookup);
             this.prj = key.getProject();
@@ -562,40 +657,14 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                         SystemAction.get(FileSystemAction.class ),
                         null,
                         SystemAction.get(ToolsAction.class ),
-                        //Added new action to delete module
-                        new DeleteAction("Delete") // NOI18N
+                        null,
+                        SystemAction.get(DeleteAction.class)
                     };
                 }
                 return actions;
             }
         }
         
-        private class DeleteAction extends AbstractAction {
-            public DeleteAction(String name) {
-                super(name);
-            }
-            public void actionPerformed(ActionEvent e) {
-                Collection<? extends FileObject> res = getFileObjects();
-                StringBuffer modulesToDelete=new StringBuffer();
-                for(FileObject moduleObj:res){
-                    modulesToDelete.append(moduleObj.getNameExt()+",");
-                }
-                modulesToDelete.deleteCharAt(modulesToDelete.length()-1);
-                String warningMessage = "Delete module \""+modulesToDelete.toString()+"\" and its contents.";
-                int choice = JOptionPane.showConfirmDialog(null, warningMessage, "Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE); // NOI18N
-                if(choice!=JOptionPane.OK_OPTION){
-                    return;
-                }
-                for (FileObject source : res) {
-                    try {
-                        source.delete();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            } 
-        }
-
         @Override
         protected void createPasteTypes(
                 @NonNull final Transferable t,

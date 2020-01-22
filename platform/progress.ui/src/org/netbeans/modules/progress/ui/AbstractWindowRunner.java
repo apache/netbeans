@@ -42,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -252,21 +253,21 @@ abstract class AbstractWindowRunner<T> extends WindowAdapter implements Runnable
             closeButton.setOpaque(false);
             closeButton.setContentAreaFilled(false);
 
-            Image img = (Image)UIManager.get("nb.progress.cancel.icon"); //NOI18N
+            Object img = UIManager.get("nb.progress.cancel.icon"); //NOI18N
             if( null != img ) {
-                closeButton.setIcon( ImageUtilities.image2Icon( img ) );
+                closeButton.setIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             } else {
                 closeButton.setText ( NbBundle.getMessage(AbstractWindowRunner.class,
                         "ModalDialog.btnClose.text")); //NOI18N
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.mouseover"); //NOI18N
+            img = UIManager.get("nb.progress.cancel.icon.mouseover"); //NOI18N
             if( null != img ) {
                 closeButton.setRolloverEnabled(true);
-                closeButton.setRolloverIcon( ImageUtilities.image2Icon( img ) );
+                closeButton.setRolloverIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.pressed"); //NOI18N
+            img = UIManager.get("nb.progress.cancel.icon.pressed"); //NOI18N
             if( null != img ) {
-                closeButton.setPressedIcon( ImageUtilities.image2Icon( img ) ); //NOI18N
+                closeButton.setPressedIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             }
             closeButton.setToolTipText(NbBundle.getMessage(AbstractWindowRunner.class,
                     "ModalDialog.btnClose.tooltip")); //NOI18N

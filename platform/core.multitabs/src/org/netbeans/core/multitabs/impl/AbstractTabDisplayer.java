@@ -32,8 +32,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,6 +47,7 @@ import org.netbeans.core.multitabs.ButtonFactory;
 import org.netbeans.core.multitabs.Controller;
 import org.netbeans.core.multitabs.Settings;
 import org.netbeans.core.multitabs.TabDisplayer;
+import org.netbeans.core.multitabs.TabbedImpl;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabDataModel;
 
@@ -168,6 +167,21 @@ abstract class AbstractTabDisplayer extends TabDisplayer implements MouseWheelLi
             public void componentHidden( ComponentEvent e ) {
             }
         });
+    }
+
+    @Override
+    public Color getBackground() {
+        Color activeBackground = UIManager.getColor("nb.multitabs.activeBackground"); // NOI18N
+        if (activeBackground != null && TabbedImpl.isActive(this)) {
+            return activeBackground;
+        }
+
+        Color background = UIManager.getColor("nb.multitabs.background"); // NOI18N
+        if (background != null) {
+            return background;
+        }
+
+        return super.getBackground();
     }
 
     @Override

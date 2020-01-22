@@ -4101,8 +4101,8 @@ public class BaseKit extends DefaultEditorKit {
                 LOG.fine("BaseKit.KeymapTracker('" + mimeType + "') refreshing keymap " + (refreshActions ? "and actions" : "")); //NOI18N
             }
             
-            MultiKeymap keymap;
-            JTextComponent [] arr;
+            final MultiKeymap keymap;
+            final JTextComponent [] arr;
             
             synchronized (KEYMAPS_AND_ACTIONS_LOCK) {
                 MimePath mimePath = MimePath.parse(mimeType);
@@ -4120,13 +4120,20 @@ public class BaseKit extends DefaultEditorKit {
                 arr = components.toArray(new JTextComponent[components.size()]);
             }
             
-            for(JTextComponent c : arr) {
-                if (c != null) {
-                    c.setKeymap(keymap);
+            Runnable pushKeymapChange = () -> {
+                for(JTextComponent c : arr) {
+                    if (c != null) {
+                        c.setKeymap(keymap);
+                    }
                 }
+                
+                searchableKit.fireActionsChange();
+            };
+            if(SwingUtilities.isEventDispatchThread()) {
+                pushKeymapChange.run();
+            } else {
+                SwingUtilities.invokeLater(pushKeymapChange);
             }
-
-            searchableKit.fireActionsChange();
         }
         
     } // End of KeymapTracker class

@@ -26,14 +26,15 @@ https://github.com/microsoft/vscode-extension-samples
 
 To build the VS Code extension do:
  * cd java/java.lsp.server
+ * ant build-vscode-ext
+
+The resulting extension is then in the build directory, with the vsix extension.
+
+#Building for Development
+
+If you want to develop the extension, use these steps for building instead:
+ * cd java/java.lsp.server
  * ant build-lsp-server
  * cd vscode
  * npm install
  * npm run compile
- * (cd ../build/; npm install vsce)
- * ../build/node_modules/vsce/out/vsce package
-
-The resulting extension is then in this directory, with the vsix extension.
-
-
-

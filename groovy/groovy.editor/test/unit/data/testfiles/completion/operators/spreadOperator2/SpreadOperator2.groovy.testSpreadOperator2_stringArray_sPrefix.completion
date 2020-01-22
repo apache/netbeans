@@ -3,6 +3,7 @@ Code completion result for source line:
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     setMetaClass(MetaClass)                    void
+METHOD     sha256()                                   String
 METHOD     size()                                     int
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void

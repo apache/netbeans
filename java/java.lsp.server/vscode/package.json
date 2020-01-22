@@ -1,12 +1,12 @@
 {
-	"name": "netbeans-java",
-	"description": "A NetBeans Java plugin for Visual Studio Code",
-	"author": "Jan Lahoda",
-	"license": "MIT",
-	"version": "1.0.0",
+	"name": "apache-netbeans-java",
+	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
+	"author": "Apache NetBeans",
+	"license": "Apache 2.0",
+	"version": "0.0.1",
 	"repository": {
 		"type": "git",
-		"url": "TBD"
+		"url": "https://github.com/apache/netbeans"
 	},
 	"publisher": "jlahoda",
 	"categories": [],
@@ -29,8 +29,8 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^5.2.0",
-		"@types/node": "^8.0.0",
-		"typescript": "2.8.3",
+		"@types/node": "^13.1.7",
+		"typescript": "3.7.4",
 		"vscode": "^1.1.21"
 	},
 	"dependencies": {

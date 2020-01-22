@@ -54,7 +54,7 @@ public class OJETPanel extends javax.swing.JPanel implements CustomizerPanelImpl
     }
 
     private void initData() {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String version: DataProviderImpl.getInstance().getAvailableVersions()) {
             model.addElement(version);
         }

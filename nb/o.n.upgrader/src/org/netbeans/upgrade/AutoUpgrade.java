@@ -24,9 +24,12 @@ import java.beans.PropertyVetoException;
 import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -92,10 +95,14 @@ public final class AutoUpgrade {
             Arrays.asList (new String[] { ".netbeans/7.1.2",  ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9" });//NOI18N
     
     // userdir on OS specific root of userdir (see issue 196075)
-    static final List<String> NEWER_VERSION_TO_CHECK =
-            Arrays.asList ("11.1", "11.0", "10.0", "9.0", "8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
-
-            
+    static final List<String> PRE_APACHE_NEWER_VERSION_TO_CHECK =
+            Arrays.asList ("8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
+    private static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> Float.compare(Float.parseFloat(v1), Float.parseFloat(v2));
+    
+    static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(AutoUpgrade.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
+    
+    static final List<String> NEWER_VERSION_TO_CHECK = Stream.concat(APACHE_VERSION_TO_CHECK.stream(), PRE_APACHE_NEWER_VERSION_TO_CHECK.stream()).collect(Collectors.toList());
+                
     private static File checkPreviousOnOsSpecificPlace (final List<String> versionsToCheck) {
         String defaultUserdirRoot = System.getProperty ("netbeans.default_userdir_root"); // NOI18N
         File sourceFolder;

@@ -95,6 +95,7 @@ public final class AquaLFCustoms extends LFCustoms {
             "org/netbeans/swing/plaf/resources/osx-folder.png"); //NOI18N
 
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             TOOLBAR_UI, "org.netbeans.swing.plaf.aqua.PlainAquaToolbarUI",
 
             // XXX  - EXPLORER_STATUS_BORDER,

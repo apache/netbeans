@@ -70,6 +70,11 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
     private FileObject fileObject;
     private Project project;
 
+    private static final String COLORING_COVERED   = "coverage-covered"; //NOI18N
+    private static final String COLORING_UNCOVERED = "coverage-uncovered"; //NOI18N
+    private static final String COLORING_INFERRED  = "coverage-inferred"; //NOI18N
+    private static final String COLORING_PARTIAL   = "coverage-partial"; //NOI18N
+
     CoverageHighlightsContainer(JTextComponent component) {
         this.component = component;
         Document document = component.getDocument();
@@ -118,7 +123,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
     }
 
     private static Color getColoring(FontColorSettings fcs, String tokenName) {
-        AttributeSet as = fcs.getTokenFontColors(tokenName);
+        AttributeSet as = fcs.getFontColors(tokenName);
         if (as != null) {
             return (Color) as.getAttribute(StyleConstants.Background); //NOI18N
         }
@@ -136,10 +141,10 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
         Color partialBc = null;
         FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
         if (fcs != null) {
-            coveredBc = getColoring(fcs, "covered"); // NOI18N
-            uncoveredBc = getColoring(fcs, "uncovered"); // NOI18N
-            inferredBc = getColoring(fcs, "inferred"); // NOI18N
-            partialBc = getColoring(fcs, "partial"); // NOI18N
+            coveredBc = getColoring(fcs, COLORING_COVERED);
+            uncoveredBc = getColoring(fcs, COLORING_UNCOVERED);
+            inferredBc = getColoring(fcs, COLORING_INFERRED);
+            partialBc = getColoring(fcs, COLORING_PARTIAL);
         }
         if (coveredBc == null) {
             coveredBc = new Color(0xCC, 0xFF, 0xCC);

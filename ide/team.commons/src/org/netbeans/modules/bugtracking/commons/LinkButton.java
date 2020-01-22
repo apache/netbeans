@@ -119,10 +119,10 @@ public class LinkButton extends JButton implements MouseListener, FocusListener 
     }
     
     public void setColors(Color linkColor, Color linkInFocusColor, Color mouseOverLinkColor, Color visitedLinkColor) {
-        this.linkInFocusColor = linkInFocusColor;
-        this.linkColor = linkColor;
-        this.mouseOverLinkColor = mouseOverLinkColor;
-        this.visitedLinkColor = visitedLinkColor;
+        LinkButton.linkInFocusColor = linkInFocusColor;
+        LinkButton.linkColor = linkColor;
+        LinkButton.mouseOverLinkColor = mouseOverLinkColor;
+        LinkButton.visitedLinkColor   = visitedLinkColor;
     }
 
     private void init() {

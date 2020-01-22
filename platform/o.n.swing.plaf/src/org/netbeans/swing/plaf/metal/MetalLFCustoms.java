@@ -50,6 +50,7 @@ public final class MetalLFCustoms extends LFCustoms {
         Font controlFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
         Object[] result = {
             //The assorted standard NetBeans metal font customizations
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             CONTROLFONT, controlFont,
             SYSTEMFONT, controlFont,
             USERFONT, controlFont,

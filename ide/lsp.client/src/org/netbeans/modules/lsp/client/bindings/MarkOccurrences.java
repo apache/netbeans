@@ -93,6 +93,10 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         if (server == null) {
             return result;
         }
+        Boolean hasDocumentHighlight = server.getInitResult().getCapabilities().getDocumentHighlightProvider();
+        if (hasDocumentHighlight == null || !hasDocumentHighlight) {
+            return result;
+        }
         String uri = Utils.toURI(file);
         try {
             List<? extends DocumentHighlight> highlights =

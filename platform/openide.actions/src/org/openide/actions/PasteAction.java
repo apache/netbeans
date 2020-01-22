@@ -497,7 +497,7 @@ public final class PasteAction extends CallbackSystemAction {
             } else {
                 // is action
                 Action a = (Action) arr[index];
-                a.actionPerformed(new ActionEvent(a, ActionEvent.ACTION_PERFORMED, a.NAME));
+                a.actionPerformed(new ActionEvent(a, ActionEvent.ACTION_PERFORMED, Action.NAME));
 
                 return;
             }

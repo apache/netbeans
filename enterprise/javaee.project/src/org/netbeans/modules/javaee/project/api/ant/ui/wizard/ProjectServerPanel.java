@@ -65,7 +65,7 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
 
     private ProjectServerWizardPanel wizard;
     private boolean contextModified = false;
-    private final DefaultComboBoxModel serversModel = new DefaultComboBoxModel();
+    private final DefaultComboBoxModel<ServerInstanceWrapper> serversModel = new DefaultComboBoxModel<>();
     
     private J2eeVersionWarningPanel warningPanel;
     private boolean sharableProject;

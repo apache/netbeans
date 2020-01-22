@@ -46,7 +46,7 @@ import org.openide.util.NbBundle;
  */
 public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     /** Original project folder (not nbproject folder) */
     private File projectFolder = null;
     /** Freeform Project base folder */
@@ -263,9 +263,9 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index++;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -279,9 +279,9 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index--;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);

@@ -182,7 +182,7 @@ public class JavacParser extends Parser {
     private FileObject root;
     //ClassPaths used by the parser
     private ClasspathInfo cpInfo;
-    //XXX: Count of files the parser was created for
+    //all the files for which parser was created for
     private final Collection<Snapshot> snapshots;
     //Incremental parsing support
     private final boolean supportsReparse;
@@ -210,12 +210,7 @@ public class JavacParser extends Parser {
     private ChangeListener weakCpListener;
     //Current source for parse optmalization of task with no Source (identity)
     private Reference<JavaSource> currentSource;
-    //cache of already parsed files
-    static private Map<String, CompilationUnitTree> parsedTrees;
 
-    static {
-        parsedTrees = new HashMap<>();
-    }
     JavacParser (final Collection<Snapshot> snapshots, boolean privateParser) {
         this.privateParser = privateParser;
         this.snapshots = snapshots;
@@ -390,6 +385,7 @@ public class JavacParser extends Parser {
             task.toString(),
             snapshot == null ? "null" : snapshot.getText()});      //NOI18N
         final CompilationInfoImpl oldInfo = ciImpl;
+        Map<String, CompilationUnitTree> oldParsedTrees = new HashMap<>();
         boolean success = false;
         try {
             switch (this.snapshots.size()) {
@@ -401,7 +397,6 @@ public class JavacParser extends Parser {
                     break;
                 case 1:
                     init (snapshot, task, true);
-                    parsedTrees.clear();
                     boolean needsFullReparse = true;
                     if (supportsReparse) {
                         final Pair<DocPositionRegion,MethodTree> _changedMethod = changedMethod.getAndSet(null);
@@ -416,7 +411,7 @@ public class JavacParser extends Parser {
                     }
                     if (needsFullReparse) {
                         positions.clear();
-                        ciImpl = createCurrentInfo (this, file, root, snapshot, null, null);
+                        ciImpl = createCurrentInfo(this, file, root, snapshot, null, null, oldParsedTrees);
                         LOGGER.fine("\t:created new javac");                                    //NOI18N
                     }
                     break;
@@ -425,7 +420,6 @@ public class JavacParser extends Parser {
                     DiagnosticListener<JavaFileObject> diagnosticListener;
                     JavacTaskImpl javacTask;
                     if (sequentialParsing == null && ciImpl == null) {
-                        parsedTrees.clear();//for first file in refactoring
                         List<JavaFileObject> jfos = new ArrayList<>();
                         for (Snapshot s : snapshots) {
                             jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
@@ -436,14 +430,14 @@ public class JavacParser extends Parser {
                     } else if (ciImpl != null) {
                         diagnosticListener = ciImpl.getDiagnosticListener();
                         javacTask = ciImpl.getJavacTask();
+                        oldParsedTrees=ciImpl.getParsedTrees();
                     } else {
-                        parsedTrees.clear();
                         diagnosticListener = null;
                         javacTask = null;
                     }
                     ciImpl = createCurrentInfo(this, file, root, snapshot,
                         javacTask,
-                        diagnosticListener);
+                        diagnosticListener,oldParsedTrees);
             }
             success = true;
         } finally {
@@ -607,38 +601,35 @@ public class JavacParser extends Parser {
                     return Phase.MODIFIED;
                 }
                 long start = System.currentTimeMillis();
-                // XXX - this might be with wrong encoding
-                Iterable<? extends CompilationUnitTree> trees=null;
-                CompilationUnitTree unit=null;
-                if(snapshots.size()>1 && parsedTrees.containsKey(currentInfo.jfo.getName())){
-                    unit=parsedTrees.get(currentInfo.jfo.getName());
-                }
-                else{
-                if (sequentialParsing != null) {
-                    trees = sequentialParsing.parse(currentInfo.getJavacTask(), currentInfo.jfo);
+                Iterable<? extends CompilationUnitTree> trees = null;
+                CompilationUnitTree unit = null;
+                if (snapshots.size() > 1 && currentInfo.getParsedTrees() != null && currentInfo.getParsedTrees().containsKey(currentInfo.jfo.getName())) {
+                    unit = currentInfo.getParsedTrees().get(currentInfo.jfo.getName());
                 } else {
-                    trees = currentInfo.getJavacTask().parse();
+                    if (sequentialParsing != null) {
+                        trees = sequentialParsing.parse(currentInfo.getJavacTask(), currentInfo.jfo);
+                    } else {
+                        trees = currentInfo.getJavacTask().parse();
+                    }
+                    if (unit == null) {
+                        if (trees == null) {
+                            LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
+                            return Phase.MODIFIED;
+                        }
+                        Iterator<? extends CompilationUnitTree> it = trees.iterator();
+                        if (!it.hasNext()) {
+                            LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
+                            return Phase.MODIFIED;
+                        }
+                        while (it.hasNext()) {
+                            CompilationUnitTree oneFileTree = it.next();
+                            CompilationUnitTree put = currentInfo.getParsedTrees().put(oneFileTree.getSourceFile().getName(), oneFileTree);
+                        }
+                        unit = trees.iterator().next();
+                    }
                 }
-                if (unit == null) {
-                    if (trees == null) {
-                        LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
-                        return Phase.MODIFIED;
-                    }
-                    Iterator<? extends CompilationUnitTree> it = trees.iterator();
-                    if (!it.hasNext()) {
-                        LOGGER.log(Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
-                        return Phase.MODIFIED;
-                    }
-                    while (it.hasNext()) {
-                        CompilationUnitTree oneFileTree = it.next();
-                        CompilationUnitTree put = parsedTrees.put( oneFileTree.getSourceFile().getName(), oneFileTree);
-                    }
-                    unit = trees.iterator().next();
-                    }
-                }
-               
+
                 currentInfo.setCompilationUnit(unit);
-                //assert !it.hasNext();
                 final Document doc = currentInfo.getDocument();
                 if (doc != null && supportsReparse) {
                     final FindMethodRegionsVisitor v = new FindMethodRegionsVisitor(doc,Trees.instance(currentInfo.getJavacTask()).getSourcePositions(),this.parserCanceled, unit);
@@ -749,12 +740,14 @@ public class JavacParser extends Parser {
             final FileObject root,
             final Snapshot snapshot,
             final JavacTaskImpl javac,
-            final DiagnosticListener<JavaFileObject> diagnosticListener) throws IOException {
+            final DiagnosticListener<JavaFileObject> diagnosticListener,
+            final Map<String, CompilationUnitTree> parsedTrees) throws IOException {
         CompilationInfoImpl info = new CompilationInfoImpl(parser, file, root, javac, diagnosticListener, snapshot, false);
         if (file != null) {
             Logger.getLogger("TIMER").log(Level.FINE, "CompilationInfo",    //NOI18N
                     new Object[] {file, info});
         }
+        info.setParsedTrees(parsedTrees);
         return info;
     }
 

@@ -1366,6 +1366,10 @@ public class Reformatter implements ReformatTask {
                     }
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                 }
+                else{
+                    accept(RPAREN);
+                    accept(LBRACE);
+                }
 
                 newline();
                 indent = oldIndent;

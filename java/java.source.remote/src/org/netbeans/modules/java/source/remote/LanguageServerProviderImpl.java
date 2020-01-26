@@ -21,20 +21,15 @@ package org.netbeans.modules.java.source.remote;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.modules.InstalledFileLocator;
+import org.openide.modules.Places;
 import org.openide.util.Lookup;
 
 /**
@@ -51,8 +46,14 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
         }
         try {
             File launcher = InstalledFileLocator.getDefault().locate("modules/scripts/org-netbeans-modules-java-source-remote/bin/nb-java-lsp-server", "org.netbeans.modules.java.source.remote", false);
-
-            Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", new File(remotePlatform.getJavaCommand()).getParentFile().getParentFile().getAbsolutePath(), "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath()).redirectError(ProcessBuilder.Redirect.INHERIT).start();
+            String jdkHome = new File(remotePlatform.getJavaCommand()).getParentFile().getParentFile().getAbsolutePath();
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            StringBuilder digest = new StringBuilder();
+            for (byte b : md.digest(jdkHome.getBytes(StandardCharsets.UTF_8))) {
+                digest.append(String.format("%02X", b));
+            }
+            File cache = Places.getCacheSubdirectory("java-lsp-server/" + digest.toString());
+            Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", jdkHome, "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath(), "--userdir", cache.getAbsolutePath()).redirectError(ProcessBuilder.Redirect.INHERIT).start();
             return LanguageServerDescription.create(new InputStreamWrapper(process.getInputStream()), new OutputStreamWrapper(process.getOutputStream()), process);
         } catch (Throwable t) {
             t.printStackTrace(); //TODO

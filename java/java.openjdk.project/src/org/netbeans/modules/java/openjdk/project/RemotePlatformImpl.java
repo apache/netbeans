@@ -128,4 +128,9 @@ public class RemotePlatformImpl implements RemotePlatform {
         return Lookups.singleton(provider);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

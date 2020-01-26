@@ -31,13 +31,19 @@ import org.openide.util.Lookup;
 public interface RemotePlatform {
     
     public static @CheckForNull RemotePlatform lookupRemotePlatform(FileObject source) {
-        RemotePlatform.Provider rp = Lookup.getDefault().lookup(RemotePlatform.Provider.class);
-        return rp != null ? rp.findPlatform(source) : null;
-    }
-    public static boolean hasRemotePlatform(FileObject source) {
-        return lookupRemotePlatform(source) != null;
+        for (Provider p : Lookup.getDefault().lookupAll(Provider.class)) {
+            RemotePlatform rp = p.findPlatform(source);
+            if (rp != null) return rp;
+        }
+        return null;
     }
 
+    public static boolean hasRemotePlatform(FileObject source) {
+        RemotePlatform rp = lookupRemotePlatform(source);
+        return rp != null && rp.isEnabled();
+    }
+
+    public boolean isEnabled();
     public String getJavaCommand();
     public List<String> getJavaArguments();
     public void addChangeListener(ChangeListener l);

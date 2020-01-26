@@ -46,7 +46,7 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
     public LanguageServerDescription startServer(Lookup lookup) {
         Project prj = lookup.lookup(Project.class);
         RemotePlatform remotePlatform = RemotePlatform.lookupRemotePlatform(prj.getProjectDirectory());
-        if (remotePlatform == null) {
+        if (remotePlatform == null || !remotePlatform.isEnabled()) {
             return null;
         }
         try {

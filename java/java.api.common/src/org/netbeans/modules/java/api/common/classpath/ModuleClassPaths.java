@@ -389,7 +389,7 @@ final class ModuleClassPaths {
 
         private List<PathResourceImplementation> createResources() {
             final List<PathResourceImplementation> res = new ArrayList<>();
-            getPlatforms()
+            addDefault(getPlatforms())
                 .flatMap((plat)->plat.getBootstrapLibraries().entries().stream())
                 .map((entry) -> entry.getURL())
                 .forEach((root)->{res.add(org.netbeans.spi.java.classpath.support.ClassPathSupport.createResource(root));});
@@ -405,6 +405,12 @@ final class ModuleClassPaths {
                             platformName.equals(plat.getProperties().get(PLATFORM_ANT_NAME)) &&
                             platformType.equals(plat.getSpecification().getName())) :
                     Stream.empty();
+        }
+
+        private Stream<JavaPlatform> addDefault(Stream<JavaPlatform> base) {
+            return Stream.concat(base,
+                                 Stream.of(JavaPlatformManager.getDefault().getDefaultPlatform()))
+                         .limit(1);
         }
     }
 

@@ -1345,7 +1345,8 @@ public abstract class CLIHandler extends Object {
                     // read provided data
                     int really = requestedVersion >= 1 ? is.readInt() : is.read ();
                     if (really > 0) {
-                        return is.read(b, off, really);
+                        is.readFully(b, off, really);
+                        return really;
                     } else {
                         if (really < 0) {
                             return really;

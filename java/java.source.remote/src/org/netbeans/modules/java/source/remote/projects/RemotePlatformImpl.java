@@ -108,14 +108,16 @@ public class RemotePlatformImpl implements RemotePlatform {
                 return null;
             }
             RemotePlatformImpl rpi = project2Platform.computeIfAbsent(prj, p -> new RemotePlatformImpl());
-            SourceGroup[] sg = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
             JavaPlatform foundPlatform = null;
-            if (sg != null && sg.length > 0) {
-                ClassPath boot = ClassPath.getClassPath(sg[0].getRootFolder(), ClassPath.BOOT);
-                for (JavaPlatform jp : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
-                    if (Objects.equals(jp.getBootstrapLibraries().findResource("java/lang/Object.class"), boot.findResource("java/lang/Object.class"))) { //XXX
-                        foundPlatform = jp;
-                        break;
+            if (isEnabled(prj)) {
+                SourceGroup[] sg = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                if (sg != null && sg.length > 0) {
+                    ClassPath boot = ClassPath.getClassPath(sg[0].getRootFolder(), ClassPath.BOOT);
+                    for (JavaPlatform jp : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                        if (Objects.equals(jp.getBootstrapLibraries().findResource("java/lang/Object.class"), boot.findResource("java/lang/Object.class"))) { //XXX
+                            foundPlatform = jp;
+                            break;
+                        }
                     }
                 }
             }

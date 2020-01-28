@@ -183,7 +183,7 @@ final class CallHierarchyTopComponent extends TopComponent implements ExplorerMa
         jBtnRefresh.addActionListener(formListener);
         jToolBar.add(jBtnRefresh);
 
-        jBtnCancel.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/refactoring/java/resources/cancel.png", false)); // NOI18N
+        jBtnCancel.setIcon(org.openide.util.ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/java/resources/cancel.png", false));
         jBtnCancel.setToolTipText(org.openide.util.NbBundle.getMessage(CallHierarchyTopComponent.class, "CallHierarchyTopComponent.jBtnCancel.toolTipText")); // NOI18N
         jBtnCancel.setEnabled(false);
         jBtnCancel.setFocusable(false);
@@ -193,21 +193,21 @@ final class CallHierarchyTopComponent extends TopComponent implements ExplorerMa
         jToolBar.add(jBtnCancel);
         jToolBar.add(jSeparator1);
 
-        jTogBtnCaller.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/refactoring/java/resources/who_is_called.png", false)); // NOI18N
+        jTogBtnCaller.setIcon(org.openide.util.ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/java/resources/who_is_called.png", false));
         jTogBtnCaller.setSelected(true);
         jTogBtnCaller.setToolTipText(org.openide.util.NbBundle.getMessage(CallHierarchyTopComponent.class, "CallHierarchyTopComponent.jTogBtnCaller.toolTipText")); // NOI18N
         jTogBtnCaller.setFocusable(false);
         jTogBtnCaller.addActionListener(formListener);
         jToolBar.add(jTogBtnCaller);
 
-        jTogBtnCallee.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/refactoring/java/resources/who_calls.png", false)); // NOI18N
+        jTogBtnCallee.setIcon(org.openide.util.ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/java/resources/who_calls.png", false));
         jTogBtnCallee.setToolTipText(org.openide.util.NbBundle.getMessage(CallHierarchyTopComponent.class, "CallHierarchyTopComponent.jTogBtnCallee.toolTipText")); // NOI18N
         jTogBtnCallee.setFocusable(false);
         jTogBtnCallee.addActionListener(formListener);
         jToolBar.add(jTogBtnCallee);
         jToolBar.add(jSeparator2);
 
-        jTogBtnScope.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/refactoring/java/resources/filter.png", false)); // NOI18N
+        jTogBtnScope.setIcon(org.openide.util.ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/java/resources/filter.png", false));
         jTogBtnScope.setToolTipText(org.openide.util.NbBundle.getMessage(CallHierarchyTopComponent.class, "CallHierarchyTopComponent.jTogBtnScope.toolTipText")); // NOI18N
         jTogBtnScope.setFocusable(false);
         jTogBtnScope.addItemListener(formListener);

@@ -37,5 +37,5 @@
             <name>maven-dependencies</name>
             <value>org.eclipse.persistence:javax.persistence:2.1.0:jar</value>
         </property>
-    </properties>    
+    </properties>
 </library>

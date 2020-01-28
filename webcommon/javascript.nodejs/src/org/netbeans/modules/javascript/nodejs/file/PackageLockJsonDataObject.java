@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL_PackageLockJson_LOADER=package-lock.json"
 })
-@MIMEResolver.Registration(displayName = "package-lock.json", resource = "../resources/npm-resolver.xml", position = 127)
+@MIMEResolver.Registration(displayName = "package-lock.json", resource = "../resources/npm-resolver.xml", position = 143)
 @Registration(displayName = "#LBL_PackageLockJson_LOADER", iconBase = "org/netbeans/modules/javascript/nodejs/ui/resources/npm.png", mimeType = "text/package-lock+x-json")
 @ActionReferences({
     @ActionReference(

@@ -20,12 +20,8 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -37,18 +33,14 @@ import org.openide.util.Utilities;
  *
  * @author Arunava Sinha
  */
-class DebugProcess extends Process {
+class DebugProcess {
 
     private static final Logger LOG = Logger.getLogger(DebugProcess.class.getName());
-    Process p;
-    private Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
+    private final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
 
-    public Process setupProcess(CompileProcess compileProcess, FileObject fileObject) {
+    public Process setupProcess(FileObject fileObject, String port) {
         try {
 
-            if (compileProcess.exitValue() > 0) {
-                return compileProcess;
-            }
             List<String> commandsList = new ArrayList<>();
             if (Utilities.isUnix()) {
                 commandsList.add("bash");
@@ -72,7 +64,7 @@ class DebugProcess extends Process {
                 vmOptions = group1 + group3;
             }
 
-            String JavaDebugParams = " " + vmOptions + " -agentlib:jdwp=transport=dt_socket,address=" + ",server=y "; //NOI18N
+            String JavaDebugParams = " " + vmOptions + " -Xdebug -Xrunjdwp:transport=dt_socket,address=" + port + ",server=n "; //NOI18N
             commandsList.add(javaPath + JavaDebugParams + "-cp " + fileObject.getParent().getPath() + " " + fileObject.getName() + " " + arguments); //NOI18N
 
             ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
@@ -80,63 +72,13 @@ class DebugProcess extends Process {
             runFileProcessBuilder.redirectErrorStream(true);
             runFileProcessBuilder.redirectOutput();
 
-            p = runFileProcessBuilder.start();
+            return runFileProcessBuilder.start();
 
         } catch (IOException ex) {
             LOG.log(
                     Level.WARNING,
                     "Could not get InputStream of Run Process"); //NOI18N
         }
-        return p;
+        return null;
     }
-
-    @Override
-    public OutputStream getOutputStream() {
-        PrintStream p1 = new PrintStream(p.getOutputStream(), true);
-        p1.append("running debug process......... ");
-        p1.flush();
-        return p1;
-    }
-
-    @Override
-    public InputStream getInputStream() {
-        return p.getInputStream();
-    }
-
-    @Override
-    public InputStream getErrorStream() {
-        return p.getErrorStream();
-    }
-
-    @Override
-    public int waitFor() throws InterruptedException {
-        return p.waitFor();
-    }
-
-    @Override
-    public int exitValue() {
-        return p.exitValue();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return p.isAlive();
-    }
-
-    @Override
-    public Process destroyForcibly() {
-        p.destroyForcibly();
-        return this;
-    }
-
-    @Override
-    public boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException {
-        return p.waitFor(timeout, unit);
-    }
-
-    @Override
-    public void destroy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

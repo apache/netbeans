@@ -21,10 +21,8 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
@@ -34,12 +32,12 @@ import org.openide.util.Utilities;
  *
  * @author Arunava Sinha
  */
-class CompileProcess extends Process {
+class CompileProcess  {
 
     private static final Logger LOG = Logger.getLogger(CompileProcess.class.getName());
-    Process p;
     FileObject fileObject;
 
+    
     public CompileProcess(FileObject fileObject) {
         this.fileObject = fileObject;
     }
@@ -65,60 +63,15 @@ class CompileProcess extends Process {
         compileProcessBuilder.redirectOutput();
 
         try {
-            p = compileProcessBuilder.start();
+            return compileProcessBuilder.start();
         } catch (IOException ex) {
             LOG.log(
                     Level.WARNING,
                     "Could not get InputStream of Compile Process"); //NOI18N
         }
-        return p;
+           
+        return null;
 
-    }
-
-    @Override
-    public OutputStream getOutputStream() {
-        return p.getOutputStream();
-    }
-
-    @Override
-    public InputStream getInputStream() {
-        return p.getInputStream();
-    }
-
-    @Override
-    public InputStream getErrorStream() {
-        return p.getErrorStream();
-    }
-
-    @Override
-    public int waitFor() throws InterruptedException {
-        return p.waitFor();
-    }
-
-    @Override
-    public int exitValue() {
-        return p.exitValue();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return p.isAlive();
-    }
-
-    @Override
-    public Process destroyForcibly() {
-        p.destroyForcibly();
-        return this;
-    }
-
-    @Override
-    public boolean waitFor(long timeout, TimeUnit unit) throws InterruptedException {
-        return p.waitFor(timeout, unit);
-    }
-
-    @Override
-    public void destroy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

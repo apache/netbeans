@@ -19,21 +19,18 @@
 package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeListener;
+
 import org.netbeans.api.extexecution.ExecutionDescriptor;
-import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
 import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.api.extexecution.print.LineConvertor;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
-import org.openide.windows.OutputWriter;
 
 /**
  * This class provides support to debug a single Java file without a parent
@@ -45,8 +42,9 @@ import org.openide.windows.OutputWriter;
 public final class SingleJavaSourceDebugActionProvider implements ActionProvider {
 
     private static final Logger LOG = Logger.getLogger(SingleJavaSourceDebugActionProvider.class.getName());
-
     private static final String CUSTOM_ERR_MSG = "Error on Compilation. Please verify Source code and Compiler VM Options:\n"; //NOI18N
+    private static final RequestProcessor BACKGROUND = new RequestProcessor(SingleJavaSourceDebugActionProvider.class.getName(), 100, false, false);
+    private static final String IONAME = "Debugging Single Java File"; //NOI18N
 
     @Override
     public String[] getSupportedActions() {
@@ -61,78 +59,45 @@ public final class SingleJavaSourceDebugActionProvider implements ActionProvider
             return;
         }
 
-        DebugProcess debuggerProcess = invokeDebugActionHelper(command, fileObject);
-        ExecutionDescriptor descriptor = getDescriptor(fileObject, debuggerProcess).controllable(true).frontWindow(true).frontWindowOnError(true);
-        CompileProcess compileProcess = new CompileProcess(fileObject);
-        descriptor = descriptor.preExecution(() -> {
+        ExecutionDescriptor descriptor = new ExecutionDescriptor().controllable(true).frontWindow(true).
+                preExecution(null).postExecution(null);
 
-            final Process compilePreProcess = compileProcess.setupProcess();
-            try {
-                int compilationResult = compilePreProcess.waitFor();
-                if (compilationResult != 0) {
+        ExecutionService exeService = ExecutionService.newService(
+                new Callable<Process>() {
+            @Override
+            public Process call() {
+                CompileProcess compileProcess = new CompileProcess(fileObject);
+                InputOutput io = IOProvider.getDefault().getIO(IONAME, false);
 
-                    InputOutput log = IOProvider.getDefault().getIO("Debugging Single Java File", false);  //NOI18N
-                    OutputWriter out = log.getOut();
-                    out.append(CUSTOM_ERR_MSG);
+                Process compilePreProcess = compileProcess.setupProcess();
+                try {
+                    int processExitCode = compilePreProcess.waitFor();
+                    if (processExitCode != 0) {
+                        io.getOut().append(CUSTOM_ERR_MSG);
+                        return compilePreProcess;
+                    }
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
 
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
+                JPDAStart s = new JPDAStart(io, fileObject);
+                try {
+                    String port = s.execute();
+                    DebugProcess debugProcess = new DebugProcess();
+                    Process p = debugProcess.setupProcess(fileObject, port);
+                    return p;
+                } catch (Throwable ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                return compilePreProcess;
             }
-        }).rerunCondition(new ExecutionDescriptor.RerunCondition() {
-            @Override
-            public void addChangeListener(ChangeListener listener) {
+        }, descriptor, IONAME);
 
-            }
-
-            @Override
-            public void removeChangeListener(ChangeListener listener) {
-
-            }
-
-            @Override
-            public boolean isRerunPossible() {
-                return false;
-            }
-        });
-
-        Callable<Process> callable = () -> debuggerProcess.setupProcess(compileProcess, fileObject);
-        ExecutionService exeService = ExecutionService.newService(
-                callable,
-                descriptor, "Debugging Single Java File");
-
-        Future<Integer> exitCode = exeService.run();
-
-    }
-
-    private ExecutionDescriptor getDescriptor(final FileObject filObj, DebugProcess debuggerProcess) {
-        LineConvertorFactory factory = new LineConvertorFactory() {
-            @Override
-            public LineConvertor newLineConvertor() {
-                return new DebugSingleSourceOutputConvertor(filObj, debuggerProcess);
-            }
-        };
-        ExecutionDescriptor descriptor = new ExecutionDescriptor().outConvertorFactory(factory);
-
-        return descriptor;
-
+        exeService.run();
     }
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         return SingleSourceFileUtil.getJavaFileWithoutProjectFromLookup(context) != null;
     }
-
-    final DebugProcess invokeDebugActionHelper(String command, FileObject fileObject) {
-        String filePath = fileObject.getPath();
-        String filePathWithoutExt = filePath.substring(0, filePath.lastIndexOf("."));
-        Object argumentsObject = fileObject.getAttribute(SingleSourceFileUtil.FILE_ARGUMENTS);
-        String arguments = argumentsObject != null ? (String) argumentsObject : "";
-
-        Object debugVmOptionsObj = fileObject.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-        String debugVmOptions = debugVmOptionsObj != null ? " -XX:+IgnoreUnrecognizedVMOptions " + (String) debugVmOptionsObj : ""; //NOI18N
-
-        return new DebugProcess();
-    }
-
 }

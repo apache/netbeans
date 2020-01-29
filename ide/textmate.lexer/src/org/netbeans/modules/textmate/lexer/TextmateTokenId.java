@@ -78,39 +78,41 @@ public enum TextmateTokenId implements TokenId {
 
         static {
             FileObject editors = FileUtil.getSystemConfigRoot().getFileObject("Editors");
-            editors.addRecursiveListener(new FileChangeListener() {
-                @Override
-                public void fileFolderCreated(FileEvent fe) {
-                    if (fe.getFile().getParent() == editors || fe.getFile().getParent().getParent() == editors) {
-                        REFRESH.schedule(REFRESH_DELAY);
+            if (editors != null) {
+                editors.addRecursiveListener(new FileChangeListener() {
+                    @Override
+                    public void fileFolderCreated(FileEvent fe) {
+                        if (fe.getFile().getParent() == editors || fe.getFile().getParent().getParent() == editors) {
+                            REFRESH.schedule(REFRESH_DELAY);
+                        }
                     }
-                }
-                @Override
-                public void fileDataCreated(FileEvent fe) {
-                    if (fe.getFile().getAttribute(GRAMMAR_MARK) != null) {
-                        REFRESH.schedule(REFRESH_DELAY);
+                    @Override
+                    public void fileDataCreated(FileEvent fe) {
+                        if (fe.getFile().getAttribute(GRAMMAR_MARK) != null) {
+                            REFRESH.schedule(REFRESH_DELAY);
+                        }
                     }
-                }
 
-                @Override
-                public void fileChanged(FileEvent fe) {
-                    if (fe.getFile().getAttribute(GRAMMAR_MARK) != null) {
-                        REFRESH.schedule(REFRESH_DELAY);
+                    @Override
+                    public void fileChanged(FileEvent fe) {
+                        if (fe.getFile().getAttribute(GRAMMAR_MARK) != null) {
+                            REFRESH.schedule(REFRESH_DELAY);
+                        }
                     }
-                }
 
-                @Override
-                public void fileDeleted(FileEvent fe) {
-                }
+                    @Override
+                    public void fileDeleted(FileEvent fe) {
+                    }
 
-                @Override
-                public void fileRenamed(FileRenameEvent fe) {
-                }
+                    @Override
+                    public void fileRenamed(FileRenameEvent fe) {
+                    }
 
-                @Override
-                public void fileAttributeChanged(FileAttributeEvent fe) {
-                }
-            });
+                    @Override
+                    public void fileAttributeChanged(FileAttributeEvent fe) {
+                    }
+                });
+            }
             refreshGrammars();
         }
 

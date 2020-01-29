@@ -1365,8 +1365,7 @@ public class Reformatter implements ReformatTask {
                         continuationIndent = isLastIndentContinuation;
                     }
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                }
-                else{
+                } else {
                     accept(RPAREN);
                     accept(LBRACE);
                 }

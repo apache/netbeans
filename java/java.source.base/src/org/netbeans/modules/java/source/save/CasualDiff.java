@@ -2732,9 +2732,8 @@ public class CasualDiff {
     }
 
     protected int diffLiteral(JCLiteral oldT, JCLiteral newT, int[] bounds) {
-        if (oldT.typetag != newT.typetag ||
-           (oldT.value != null && !oldT.value.equals(newT.value)))
-        {
+        if (oldT.typetag != newT.typetag
+                || (oldT.value != null && !oldT.value.equals(newT.value)) || (oldT.getKind() == Tree.Kind.STRING_LITERAL && newT.getKind() == Tree.Kind.STRING_LITERAL)) {
             int localPointer = bounds[0];
             // literal
             int[] literalBounds = getBounds(oldT);

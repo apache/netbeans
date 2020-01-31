@@ -67,6 +67,7 @@
                 org.springframework:spring-context-support:5.2.2.RELEASE:jar
                 org.springframework:spring-core:5.2.2.RELEASE:jar
                 org.springframework:spring-expression:5.2.2.RELEASE:jar
+                org.springframework:spring-framework-bom:5.2.2.RELEASE:pom
                 org.springframework:spring-instrument:5.2.2.RELEASE:jar
                 org.springframework:spring-jcl:5.2.2.RELEASE:jar
                 org.springframework:spring-jdbc:5.2.2.RELEASE:jar

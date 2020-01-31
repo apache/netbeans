@@ -381,11 +381,12 @@ class HTMLJavadocParser {
             public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos) {
                 if (t == HTML.Tag.A) {
                     String attrName = (String)a.getAttribute(HTML.Attribute.NAME);
-                    if (names.contains(attrName)){
+                    String attrId = (String)a.getAttribute(HTML.Attribute.ID);
+                    if (names.contains(attrName) || names.contains(attrId)){
                         // we have found desired javadoc member info anchor
                         state[0] = A_OPEN;
                     } else {
-                        if ((state[0] == PRE_CLOSE) && attrName!=null && hrPos != -1){
+                        if ((state[0] == PRE_CLOSE) && (attrName != null || attrId != null) && hrPos != -1){
                             // reach the end of retrieved javadoc info
                             state[0] = INIT;
                             offset[1] = hrPos;

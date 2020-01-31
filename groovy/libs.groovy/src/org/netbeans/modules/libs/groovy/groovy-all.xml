@@ -33,8 +33,10 @@
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.codehaus.groovy:groovy:2.5.9:jar</value>
-            <value>org.codehaus.groovy:groovy-ant:2.5.9:jar</value>
+            <value>
+                org.codehaus.groovy:groovy:2.5.9:jar
+                org.codehaus.groovy:groovy-ant:2.5.9:jar
+            </value>
         </property>
     </properties>
 </library>

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common;
+package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.io.File;
 import java.util.ArrayList;

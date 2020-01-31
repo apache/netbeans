@@ -78,8 +78,10 @@ public class OpenGradleProjectForBinary implements SourceForBinaryQueryImplement
         for (Project project : projects) {
             GradleJavaProject gjp = GradleJavaProject.get(project);
             if (gjp != null) {
-                String archive = gjp.getArchive(GradleJavaProject.CLASSIFIER_NONE).getName();
-                ret.put(archive, project);
+                File archive = gjp.getArchive(GradleJavaProject.CLASSIFIER_NONE);
+                if (archive != null) {
+                    ret.put(archive.getName(), project);
+                }
             }
         }
         return ret;

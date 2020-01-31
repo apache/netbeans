@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle.actions;
+package org.netbeans.modules.gradle;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
@@ -25,7 +25,6 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -33,8 +32,9 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import static org.netbeans.modules.gradle.actions.Bundle.*;
 import org.netbeans.modules.gradle.api.GradleProjects;
+
+import static org.netbeans.modules.gradle.Bundle.*;
 
 /**
  *
@@ -53,6 +53,7 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
     }
 
     @NbBundle.Messages({"# {0} - count", "ACT_Reload_Projects=Reload {0} Projects"})
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     private ReloadAction(Lookup lkp) {
         context = lkp;
         Collection<? extends NbGradleProjectImpl> col = context.lookupAll(NbGradleProjectImpl.class);
@@ -70,7 +71,10 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
             reload.addAll(GradleProjects.openedProjectDependencies(prj).values());
         }
         for (Project project : reload) {
-            NbGradleProject.fireGradleProjectReload(project);
+            if (project instanceof NbGradleProjectImpl) {
+                NbGradleProjectImpl impl = (NbGradleProjectImpl) project;
+                impl.reloadProject(true, impl.getAimedQuality());
+            }
         }
     }
 

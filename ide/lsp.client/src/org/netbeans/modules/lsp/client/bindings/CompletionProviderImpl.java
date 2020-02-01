@@ -388,6 +388,8 @@ public class CompletionProviderImpl implements CompletionProvider {
         if (capabilities == null) return false;
         CompletionOptions completionOptions = capabilities.getCompletionProvider();
         if (completionOptions == null) return false;
-        return completionOptions.getTriggerCharacters().stream().anyMatch(trigger -> text.endsWith(trigger));
+        List<String> triggerCharacters = completionOptions.getTriggerCharacters();
+        if (triggerCharacters == null) return false;
+        return triggerCharacters.stream().anyMatch(trigger -> text.endsWith(trigger));
     }
 }

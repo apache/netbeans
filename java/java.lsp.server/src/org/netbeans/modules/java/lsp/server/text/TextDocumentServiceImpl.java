@@ -716,9 +716,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         List<? extends ModificationResult.Difference> diffs = changes.getDifferences(changes.getModifiedFileObjects().iterator().next());
                         List<TextEdit> edits = new ArrayList<>();
                         for (ModificationResult.Difference diff : diffs) {
+                            String newText = diff.getNewText();
                             edits.add(new TextEdit(new Range(createPosition(lm[0], diff.getStartPosition().getOffset()),
                                                              createPosition(lm[0], diff.getEndPosition().getOffset())),
-                                                   diff.getNewText()));
+                                                   newText != null ? newText : ""));
                         }
                         TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
                                                                                                        -1),

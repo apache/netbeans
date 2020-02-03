@@ -42,6 +42,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -117,42 +118,50 @@ public class ParameterNameProviderImpl {
     public CharSequence getParameterName(VariableElement parameter) {
         Element method = parameter.getEnclosingElement();
         String methodKey = computeKey(method);
-        List<String> names;
+        List<String> names = null;
 
         //from sources:
         {
-        Element topLevel = parameter;
-        while (topLevel.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
-            topLevel = topLevel.getEnclosingElement();
-        }
-        ElementHandle<?> topLevelHandle = ElementHandle.create(topLevel);
+            Element topLevel = parameter;
+            while (topLevel.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
+                topLevel = topLevel.getEnclosingElement();
+            }
+            ElementHandle<?> topLevelHandle = ElementHandle.create(topLevel);
 
-        names = source_toplevelClass2method2Parameters.computeIfAbsent(computeKey(topLevel), d -> {
-            Map<String, List<String>> parametersInClass = new HashMap<>();
-            FileObject source = SourceUtils.getFile(topLevelHandle, cpInfo);
-            JavaSource javaSource = source != null ? JavaSource.forFileObject(source) : null;
-            if (javaSource != null) {
-                try {
-                    javaSource.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        new TreePathScanner<Void, Void>() {
-                            public Void visitMethod(MethodTree mt, Void v) {
-                                Element el = cc.getTrees().getElement(getCurrentPath());
-                                if (el != null && el.getKind() == ElementKind.METHOD) {
-                                    parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).collect(Collectors.toList()));
-                                }
-                                return super.visitMethod(mt, v);
-                            }
-                        }.scan(cc.getCompilationUnit(), null);
-                    }, true);
-                } catch (IOException ex) {
-                    //ignore
+            String topLevelKey = computeKey(topLevel);
+            try {
+                names = source_toplevelClass2method2Parameters.computeIfAbsent(topLevelKey, d -> {
+                    Map<String, List<String>> parametersInClass = new HashMap<>();
+                    FileObject source = SourceUtils.getFile(topLevelHandle, cpInfo);
+                    JavaSource javaSource = source != null ? JavaSource.forFileObject(source) : null;
+                    if (javaSource != null) {
+                        try {
+                            javaSource.runUserActionTask(cc -> {
+                                cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                new TreePathScanner<Void, Void>() {
+                                    public Void visitMethod(MethodTree mt, Void v) {
+                                        Element el = cc.getTrees().getElement(getCurrentPath());
+                                        if (el != null && el.getKind() == ElementKind.METHOD) {
+                                            parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).collect(Collectors.toList()));
+                                        }
+                                        return super.visitMethod(mt, v);
+                                    }
+                                }.scan(cc.getCompilationUnit(), null);
+                            }, true);
+                        } catch (IOException ex) {
+                            //ignore
+                        }
+                    }
+                    return parametersInClass;
+                }).get(methodKey);
+            } catch(ConcurrentModificationException ex) {
+                // Naive fix for CME, we assume that some other thread computed
+                // the required results. NETBEANS-3286
+                if (source_toplevelClass2method2Parameters.containsKey(topLevelKey)) {
+                    names = source_toplevelClass2method2Parameters.get(topLevelKey).get(methodKey);
                 }
             }
-            return parametersInClass;
-        }).get(methodKey);
         }
-
         if (names == null) {
             Element clazzCandidate = method.getEnclosingElement();
             if (clazzCandidate != null && (clazzCandidate.getKind().isClass() || clazzCandidate.getKind().isInterface())) {
@@ -185,6 +194,8 @@ public class ParameterNameProviderImpl {
         int idx = ((ExecutableElement) method).getParameters().indexOf(parameter);
         return idx != (-1) && idx < names.size() ? names.get(idx) : null;
     }
+
+
 
     private static String computeKey(Element el) {
         return Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(el))).collect(Collectors.joining(":"));

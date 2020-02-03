@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -1543,7 +1543,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                     return new StringReader(html);
                 } else if (InputStream.class.equals(flavor.getRepresentationClass())) {
                     // XXX should this enforce UTF-8 encoding?
-                    return new StringBufferInputStream(html);
+                    return new StringReader(html);
                 }
                 // fall through to unsupported
             } else if (isPlainFlavor(flavor)) {
@@ -1555,7 +1555,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
                     return new StringReader(data);
                 } else if (InputStream.class.equals(flavor.getRepresentationClass())) {
                     // XXX should this enforce UTF-8 encoding?
-                    return new StringBufferInputStream(data);
+                    return new StringReader(data);
                 }
                 // fall through to unsupported
             } else if (isStringFlavor(flavor)) {

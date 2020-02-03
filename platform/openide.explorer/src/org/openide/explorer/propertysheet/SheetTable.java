@@ -47,7 +47,7 @@ import java.beans.PropertyEditor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.io.StringReader;
 import java.util.EventObject;
 import java.util.logging.Level;
@@ -1834,7 +1834,7 @@ final class SheetTable extends BaseTable implements PropertySetModelListener, Cu
                     return new StringReader(data);
                 } else if (InputStream.class.equals(flavor.getRepresentationClass())) {
                     // XXX should this enforce UTF-8 encoding?
-                    return new StringBufferInputStream(data);
+                    return new StringReader(data);
                 }
 
                 // fall through to unsupported

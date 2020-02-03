@@ -31,10 +31,12 @@ import org.openide.util.HelpCtx;
 
 public class ChoosingDriverPanel implements AddConnectionWizard.Panel {
 
+    private final int stepIndex;
     private AddConnectionWizard pw;
 
-    public ChoosingDriverPanel(JDBCDriver driver) {
+    public ChoosingDriverPanel(JDBCDriver driver, int stepIndex) {
         this.driver = driver;
+        this.stepIndex = stepIndex;
     }
 
     /**
@@ -56,7 +58,7 @@ public class ChoosingDriverPanel implements AddConnectionWizard.Panel {
             }
             component = new ChoosingDriverUI(this, driver, pw);
             JComponent jc = (JComponent) component;
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, stepIndex);
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, pw.getSteps());
             jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.FALSE);

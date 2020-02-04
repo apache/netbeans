@@ -408,7 +408,7 @@ class HtmlLabelUI extends LabelUI {
 
         if (!replace) {
             dif = difference(fg, bg);
-            replace = dif < 80;
+            replace = dif < 60;
         }
 
         if (replace) {

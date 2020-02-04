@@ -192,7 +192,7 @@ public class ConnectionPanel implements AddConnectionWizard.Panel, WizardDescrip
 
             databaseConnection.addExceptionListener(excListener);
             databaseConnection.connectAsync();
-            int maxLoops = 60;
+            int maxLoops = 20;
             int loop = 0;
             while (loop < maxLoops) {
                 try {

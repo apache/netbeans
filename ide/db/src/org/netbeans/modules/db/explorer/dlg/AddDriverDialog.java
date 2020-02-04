@@ -160,6 +160,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         String fileName = null;
         dlm.clear();
         drvs.clear();
+        jarClassLoader = null;
         URL[] urls = drv == null ? new URL[0] : drv.getURLs();
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
@@ -379,6 +380,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
             if (lsm.isSelectedIndex(i)) {
                 dlm.remove(i);
                 drvs.remove(i);
+                jarClassLoader = null;
                 count--;
                 continue;
             }
@@ -431,6 +433,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
                     dlm.addElement(file.toString());
                     try {
                         drvs.add(file.toURI().toURL());
+                        jarClassLoader = null;
                     } catch (MalformedURLException exc) {
                         LOGGER.log(Level.WARNING,
                                 "Unable to add driver jar file " +
@@ -603,10 +606,11 @@ public final class AddDriverDialog extends javax.swing.JPanel {
     }
     
     private URLClassLoader getJarClassLoader() {
-        // This classloader is used to load classes
-        // from the jar files for the driver.  We can then use
-        // introspection to see if a class in one of these jar files
-        // implements java.sql.Driver
+        /* This classloader is used to load classes from the jar files for the driver.  We can then
+        introspection to see if a class in one of these jar files implements java.sql.Driver. (We
+        clear the jarClassLoader whenever drvs is modified, to avoid the AddDriverNotJavaSqlDriver
+        message popping up if a different driver is picked from the dropdown after an unrelated JAR
+        file is added.) */
         jarClassLoader =
                 new URLClassLoader(drvs.toArray(new URL[drvs.size()]),
                 this.getClass().getClassLoader());

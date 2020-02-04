@@ -213,9 +213,12 @@ public class DriverListUtil {
         "com.microsoft.jdbc.sqlserver.SQLServerDriver",
         "jdbc:microsoft:sqlserver://<HOST>[:<PORT>][;DatabaseName=<DB>]");
 
-        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MSSQL2005"),
+        /* Previously we used to say "Microsoft SQL Server 2005" here, but as of driver version 7.2.2
+        (latest per July 2019), the class name is still the same. So don't say "2005" anymore. */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MSSQL"),
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
+        url.setSampleUrl("jdbc:sqlserver://localhost:1433");
         
         url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MySQL"),
                 "com.mysql.cj.jdbc.Driver", 

@@ -278,6 +278,8 @@ public class EditorView extends ViewElement {
             if(this.areaComponent != null) {
                 add(this.areaComponent, BorderLayout.CENTER);
             }
+
+            repaint();
         }
         
         @Override

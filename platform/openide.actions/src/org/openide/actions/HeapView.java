@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.prefs.Preferences;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -85,19 +84,19 @@ class HeapView extends JComponent {
         //init colors
         Color c = UIManager.getColor("nb.heapview.maxtick.color"); //NOI18N
         if (null == c) {
-            c = new Color(0x615d0f);
+            c = new Color(0x2E90E8);
         }
         CHART_COLOR = c;
 
         c = UIManager.getColor("nb.heapview.foreground"); //NOI18N
         if (null == c) {
-            c = Color.WHITE;
+            c = Color.DARK_GRAY;
         }
         TEXT_COLOR = c;
 
         c = UIManager.getColor("nb.heapview.background1"); //NOI18N
         if (null == c) {
-            c = new Color(0xC0BCAC);
+            c = new Color(0xCEDBE6);
         }
         BACKGROUND_COLOR = c;
     }
@@ -163,10 +162,8 @@ class HeapView extends JComponent {
      */
     @Override
     public void updateUI() {
-        Font f = new JLabel().getFont().deriveFont(Font.BOLD);
+        Font f = UIManager.getFont("Label.font");
         setFont(f);
-        revalidate();
-        repaint();
     }
 
     /**

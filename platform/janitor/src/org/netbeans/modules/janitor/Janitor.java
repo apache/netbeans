@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
@@ -54,16 +55,19 @@ import org.openide.windows.OnShowing;
     "# {0} - is the user directory name",
     "# {1} - the days of abandonement",
     "# {2} - the disk space can be reclaimed (in megabytes)",
-    "TIT_ABANDONED_USERDIR=NetBeans {0} was abandoned {1} days ago.",
+    "TIT_ABANDONED_USERDIR=NetBeans {0} was last used {1} days ago.",
     "# {0} - is the user directory name",
     "# {1} - the days of abandonement",
     "# {2} - the disk space can be reclaimed (in megabytes)",
     "DESC_ABANDONED_USERDIR=Remove unused data and cache directories of NetBeans {0}. "
-            + "Free up {2}Mb of disk space.",
+            + "Free up {2} MB of disk space.",
 })
 public class Janitor {
 
-    private static final long UNUSED_DAYS = 30;
+    private static final int UNUSED_DAYS = 30;
+
+    public static final String PROP_JANITOR_ENABLED = "janitorEnabled"; //NOI18N
+    public static final String PROP_UNUSED_DAYS = "UnusedDays"; //NOI18N
 
     private static final String LOGFILE_NAME = "var/log/messages.log"; //NOI18N
     @StaticResource
@@ -72,12 +76,16 @@ public class Janitor {
     static final RequestProcessor JANITOR_RP = new RequestProcessor("janitor", 1); //NOI18N
     static final Map<ActionListener, Notification> CLEANUP_TASKS = new WeakHashMap<>();
     static final Runnable SCAN_FOR_JUNK = () -> {
+        // Remove previously opened notifications
+        CLEANUP_TASKS.values().forEach((nf) -> nf.clear());
+        CLEANUP_TASKS.clear();
+
         Icon clean = ImageUtilities.loadImageIcon(CLEAN_ICON, false);
         List<Pair<String, Integer>> otherVersions = getOtherVersions();
 
         for (Pair<String, Integer> ver : otherVersions) {
             long toFree = size(getUserDir(ver.first())) + size(getCacheDir(ver.first()));
-            toFree = toFree / (1024 * 1024) + 1;
+            toFree = toFree / (1_000_000) + 1;
             ActionListener cleanupListener = cleanupAction(ver.first());
             Notification nf = NotificationDisplayer.getDefault().notify(
                     Bundle.TIT_ABANDONED_USERDIR(ver.first(), ver.second(), toFree),
@@ -91,7 +99,7 @@ public class Janitor {
     @Messages({
         "TIT_CONFIRM_CLEANUP=Confirm Cleanup",
         "# {0} - the dirname to be cleaned up",
-        "TXT_CONFIRM_CLEANUP=Are you sure to remove user and cache data for NetBeans {0}?",
+        "TXT_CONFIRM_CLEANUP=Remove user and cache data for NetBeans {0}?",
         "# {0} - the dirname to be cleaned up",
         "LBL_CLEANUP=Removing user and cache dirs of {0}"
     })
@@ -99,14 +107,16 @@ public class Janitor {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                JanitorPanel panel = new JanitorPanel(Bundle.TXT_CONFIRM_CLEANUP(name));
                 DialogDescriptor descriptor = new DialogDescriptor(
-                        Bundle.TXT_CONFIRM_CLEANUP(name),
+                        panel,
                         Bundle.TIT_CONFIRM_CLEANUP(),
                         true,
                         DialogDescriptor.YES_NO_OPTION,
                         DialogDescriptor.YES_OPTION,
                         null
-                );  if (DialogDescriptor.YES_OPTION == DialogDisplayer.getDefault().notify(descriptor)) {
+                );
+                if (DialogDescriptor.YES_OPTION == DialogDisplayer.getDefault().notify(descriptor)) {
                     JANITOR_RP.post(() -> {
                         try (ProgressHandle handle = ProgressHandle.createHandle(Bundle.LBL_CLEANUP(name))){
                             handle.start();
@@ -115,6 +125,7 @@ public class Janitor {
                         }
                     });
                 }
+                Janitor.setEnabled(panel.isEnabledOnStartup());
                 Notification nf = CLEANUP_TASKS.get(this);
                 if (nf != null) {
                     nf.clear();
@@ -123,15 +134,25 @@ public class Janitor {
         };
     }
 
+    public static final Preferences getPreferences() {
+        return NbPreferences.forModule(Janitor.class);
+    }
+
     @OnShowing
     public static final class PlatformOpenHook implements Runnable {
 
         @Override
         public void run() {
-            // Starting delayed, not to interfere with other startup IO operations
-            JANITOR_RP.post(SCAN_FOR_JUNK, 60_000);
+            if (isEnabled()) {
+                // Starting delayed, not to interfere with other startup IO operations
+                JANITOR_RP.post(SCAN_FOR_JUNK, 60_000);
+            }
         }
 
+    }
+
+    static void runNow() {
+        JANITOR_RP.post(SCAN_FOR_JUNK);
     }
 
     static File getUserDir(String version) {
@@ -221,7 +242,7 @@ public class Janitor {
                     try {
                         Instant lastModified = Files.getLastModifiedTime(logFile).toInstant();
                         Integer age = (int) Duration.between(lastModified, now).toDays();
-                        if (lastModified.plus(UNUSED_DAYS, ChronoUnit.DAYS).isBefore(now)) {
+                        if (lastModified.plus(getUnusedDays(), ChronoUnit.DAYS).isBefore(now)) {
                                 ret.add(Pair.of(f.getName(), age));
                         }
                     } catch (IOException ex) {
@@ -231,6 +252,22 @@ public class Janitor {
             }
         }
         return ret;
+    }
+
+    static void setEnabled(boolean b) {
+        getPreferences().putBoolean(PROP_JANITOR_ENABLED, b);
+    }
+
+    static boolean isEnabled() {
+        return getPreferences().getBoolean(PROP_JANITOR_ENABLED, true);
+    }
+
+    static void setUnusedDays(int days) {
+        getPreferences().putInt(PROP_UNUSED_DAYS, days);
+    }
+
+    static int getUnusedDays() {
+        return getPreferences().getInt(PROP_UNUSED_DAYS, UNUSED_DAYS);
     }
 
 }

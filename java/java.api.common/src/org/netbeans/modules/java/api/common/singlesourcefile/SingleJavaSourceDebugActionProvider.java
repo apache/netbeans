@@ -66,10 +66,10 @@ public final class SingleJavaSourceDebugActionProvider implements ActionProvider
                 new Callable<Process>() {
             @Override
             public Process call() {
-                CompileProcess compileProcess = new CompileProcess(fileObject);
+                CompileProcess compileProcess = new CompileProcess();
                 InputOutput io = IOProvider.getDefault().getIO(IONAME, false);
 
-                Process compilePreProcess = compileProcess.setupProcess();
+                Process compilePreProcess = compileProcess.setupProcess(fileObject);
                 try {
                     int processExitCode = compilePreProcess.waitFor();
                     if (processExitCode != 0) {

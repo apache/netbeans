@@ -21,13 +21,15 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Utilities;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -42,30 +44,37 @@ class DebugProcess {
         try {
 
             List<String> commandsList = new ArrayList<>();
-            if (Utilities.isUnix()) {
-                commandsList.add("bash");
-                commandsList.add("-c");
-            }
-            File javaBinPath = new File(new File(System.getProperty("java.home")), "bin"); //NOI18N
-            String javaPath = javaBinPath.getAbsolutePath() + "//java"; //NOI18N
+
+            FileObject java = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("java"); //NOI18N
+            File javaFile = FileUtil.toFile(java);
+            String javaPath = javaFile.getAbsolutePath();
 
             Object argumentsObject = fileObject.getAttribute(SingleSourceFileUtil.FILE_ARGUMENTS);
-            String arguments = argumentsObject != null ? (String) argumentsObject : ""; //NOI18N
+            String arguments = argumentsObject != null ? ((String) argumentsObject).trim() : ""; // NOI18N
 
             Object vmOptionsObj = fileObject.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-            String vmOptions = vmOptionsObj != null ? (String) vmOptionsObj : ""; //NOI18N
+            String vmOptions = vmOptionsObj != null ? ((String) vmOptionsObj) : ""; // NOI18N
 
-            //filtering out --source param from VM option
-            Matcher m1 = JVM_ARGS_PATTERN.matcher(vmOptions);
-
-            while (m1.find()) {
-                String group1 = m1.group(1);
-                String group3 = m1.group(3);
-                vmOptions = group1 + group3;
+            commandsList.add(javaPath);
+            if (!vmOptions.isEmpty()) {
+                //filtering out --source param from VM option
+                Matcher m1 = JVM_ARGS_PATTERN.matcher(vmOptions);
+                while (m1.find()) {
+                    String group1 = m1.group(1);
+                    String group3 = m1.group(3);
+                    vmOptions = group1 + group3;
+                }
+                commandsList.addAll(Arrays.asList(vmOptions.split(" ")));  //NOI18N
             }
+            commandsList.add("-Xdebug");  //NOI18N
+            commandsList.add("-Xrunjdwp:transport=dt_socket,address=" + port + ",server=n"); //NOI18N
+            commandsList.add("-cp"); //NOI18N
+            commandsList.add(fileObject.getParent().getPath());
+            commandsList.add(fileObject.getName());
 
-            String JavaDebugParams = " " + vmOptions + " -Xdebug -Xrunjdwp:transport=dt_socket,address=" + port + ",server=n "; //NOI18N
-            commandsList.add(javaPath + JavaDebugParams + "-cp " + fileObject.getParent().getPath() + " " + fileObject.getName() + " " + arguments); //NOI18N
+            if (!arguments.isEmpty()) {
+                commandsList.addAll(Arrays.asList(arguments.split(" ")));  //NOI18N
+            }
 
             ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
             runFileProcessBuilder.directory(new File(System.getProperty("user.home"))); //NOI18N
@@ -73,7 +82,6 @@ class DebugProcess {
             runFileProcessBuilder.redirectOutput();
 
             return runFileProcessBuilder.start();
-
         } catch (IOException ex) {
             LOG.log(
                     Level.WARNING,

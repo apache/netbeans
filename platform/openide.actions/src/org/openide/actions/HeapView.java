@@ -43,8 +43,14 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
- *
- * @author sky, radim
+ * Implements a widget to show the current heap size / max and to trigger a manual GC.
+ * Appearance can be customized using the following properties in the LAF
+ * <ul>
+ * <li> nb.heapview.background - Color of widget background
+ * <li> nb.heapview.foreground - Color of text
+ * <li> nb.heapview.chart - Color of area chart
+ * </ul>
+ * @author sky, radim, peter
  */
 class HeapView extends JComponent {
 
@@ -82,7 +88,7 @@ class HeapView extends JComponent {
 
     static {
         //init colors
-        Color c = UIManager.getColor("nb.heapview.maxtick.color"); //NOI18N
+        Color c = UIManager.getColor("nb.heapview.chart"); //NOI18N
         if (null == c) {
             c = new Color(0x2E90E8);
         }
@@ -94,7 +100,7 @@ class HeapView extends JComponent {
         }
         TEXT_COLOR = c;
 
-        c = UIManager.getColor("nb.heapview.background1"); //NOI18N
+        c = UIManager.getColor("nb.heapview.background"); //NOI18N
         if (null == c) {
             c = new Color(0xCEDBE6);
         }

@@ -139,6 +139,16 @@ public class AnnotationUtilsTest {
                     }},
                 },
                 {
+                    "DiscriminatorMap({\"person\" = Person, \"employee\" = Employee })",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(29, 35), "Person");
+                        put(new OffsetRange(50, 58), "Employee");
+                    }},
+                },
+                {
                     "DiscriminatorMap({\"person\" = \" My\\Person \", \"employee\" = \" \\Full\\Q\\Employee \"})",
                     new HashSet<String>() {{
                         add("");
@@ -146,6 +156,16 @@ public class AnnotationUtilsTest {
                     new HashMap<OffsetRange, String>() {{
                         put(new OffsetRange(31, 40), "My\\Person");
                         put(new OffsetRange(59, 75), "\\Full\\Q\\Employee");
+                    }},
+                },
+                {
+                    "DiscriminatorMap({person = My\\Person, employee=\\Full\\Q\\Employee})",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(27, 36), "My\\Person");
+                        put(new OffsetRange(47, 63), "\\Full\\Q\\Employee");
                     }},
                 },
                 {
@@ -158,6 +178,15 @@ public class AnnotationUtilsTest {
                     }},
                 },
                 {
+                    "ManyToOne(targetEntity=Cart, cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(23, 27), "Cart");
+                    }},
+                },
+                {
                     "ManyToOne(targetEntity=\"\\Foo\\Cart\", cascade={\"all\"}, fetch=\"EAGER\")",
                     new HashSet<String>() {{
                         add("targetEntity");
@@ -165,6 +194,32 @@ public class AnnotationUtilsTest {
                     new HashMap<OffsetRange, String>() {{
                         put(new OffsetRange(24, 33), "\\Foo\\Cart");
                     }},
+                },
+                {
+                    "ManyToOne(targetEntity = \\Foo\\Cart, cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(25, 34), "\\Foo\\Cart");
+                    }},
+                },
+                {
+                    "@Enum(class=\"Visibility\")",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(13, 23), "Visibility");
+                    }},
+                },
+                {
+                    // If there's a leading quote, then there must be a trailing quote as well. The other way around would work though.
+                    "@Enum(class=\"Visibility)",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>(),
                 },
             });
         }

@@ -149,6 +149,16 @@ public class AnnotationUtilsTest {
                     }},
                 },
                 {
+                    "DiscriminatorMap({\"person\" = Person::class, \"employee\" = \"Employee\" })",
+                    new HashSet<String>() {{
+                        add("");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(29, 35), "Person");
+                        put(new OffsetRange(58, 66), "Employee");
+                    }},
+                },
+                {
                     "DiscriminatorMap({\"person\" = \" My\\Person \", \"employee\" = \" \\Full\\Q\\Employee \"})",
                     new HashSet<String>() {{
                         add("");
@@ -196,6 +206,15 @@ public class AnnotationUtilsTest {
                     }},
                 },
                 {
+                    "ManyToOne(targetEntity=\"\\Foo\\Cart::class \" , cascade={\"all\"}, fetch=\"EAGER\")",
+                    new HashSet<String>() {{
+                        add("targetEntity");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(24, 33), "\\Foo\\Cart");
+                    }},
+                },
+                {
                     "ManyToOne(targetEntity = \\Foo\\Cart, cascade={\"all\"}, fetch=\"EAGER\")",
                     new HashSet<String>() {{
                         add("targetEntity");
@@ -211,6 +230,24 @@ public class AnnotationUtilsTest {
                     }},
                     new HashMap<OffsetRange, String>() {{
                         put(new OffsetRange(13, 23), "Visibility");
+                    }},
+                },
+                {
+                    "@Enum(class=\"Visibility::class\")",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(13, 23), "Visibility");
+                    }},
+                },
+                {
+                    "@Enum(class=Visibility::class)",
+                    new HashSet<String>() {{
+                        add("class");
+                    }},
+                    new HashMap<OffsetRange, String>() {{
+                        put(new OffsetRange(12, 22), "Visibility");
                     }},
                 },
                 {

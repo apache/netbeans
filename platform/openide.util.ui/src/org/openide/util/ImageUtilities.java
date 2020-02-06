@@ -37,6 +37,9 @@ import java.awt.image.ImageObserver;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.util.HashMap;
@@ -1001,7 +1004,9 @@ public final class ImageUtilities {
      * scalable icons from {@link #loadImageIcon(String,boolean)} without changing the API.
      */
     private static final class IconImageIcon extends ImageIcon {
-        private final Icon delegate;
+        /* I'd love to make this final, but the custom serialization handling precludes this. Make
+        it volatile instead, to be completely sure that the class is still thread-safe. */
+        private volatile Icon delegate;
 
         private IconImageIcon(Icon delegate) {
             super(icon2Image(delegate));
@@ -1021,6 +1026,24 @@ public final class ImageUtilities {
 
         public Icon getDelegateIcon() {
             return delegate;
+        }
+
+        /* NETBEANS-3769: Since ImageIcon implements Serializable, we must support serialization.
+        But there is no guarantee that the delegate implements Serializable, thus the default
+        serialization mechanism might throw a java.io.NotSerializableException when
+        ObjectOutputStream.writeObject gets recursively called on the delegate. Implement a custom
+        serialization mechanism based on ImageIcon instead. */
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.writeObject(new ImageIcon(getImage()));
+        }
+
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            this.delegate = (ImageIcon) in.readObject();
+        }
+
+        private void readObjectNoData() throws ObjectStreamException {
+            this.delegate = new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR));
         }
     }
 

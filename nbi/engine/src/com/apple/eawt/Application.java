@@ -24,62 +24,50 @@
 
 package com.apple.eawt;
 
-import java.awt.Point;
+import java.awt.desktop.AboutHandler;
+import java.awt.desktop.PreferencesHandler;
+import java.awt.desktop.QuitHandler;
 
+/**
+ * Note: A lot of methods which used to be in here were deprecated as of java 6 and got removed
+ * in java 11. Thus this stub classes have been adjusted accordingly. If your code fails to compile
+ * have a look at the javadoc for Application on Java 6 and follow the deprecation hints.
+ * It might be necessary to add additional handlers and events to this class.
+ * In addition to that, lot of apple specific code has been adopted to the java.awt.desktop packages natively.
+ */
 public class Application {
-    public void addAboutMenuItem() {
-        // does nothing
-    }
-    
-    public void addApplicationListener(final ApplicationListener listener) {
-        // does nothing
-    }
-    
-    public void addPreferencesMenuItem() {
-        // does nothing
-    }
-    
+
     public static Application getApplication() {
         return null;
     }
-    
-    public boolean getEnabledAboutMenu() {
-        return false;
-    }
-    
-    public boolean getEnabledPreferencesMenu() {
-        return false;
-    }
-    
-    public static Point getMouseLocationOnScreen() {
-        return null;
-    }
-    
-    public boolean isAboutMenuItemPresent() {
-        return false;
-    }
-    
-    public boolean isPreferencesMenuItemPresent() {
-        return false;
-    }
-    
-    public void removeAboutMenuItem() {
+
+    /**
+     * @since Java for Mac OS X 10.6 Update 3, Java for Mac OS X 10.5 Update 8
+     */
+    public void setQuitHandler(java.awt.desktop.QuitHandler quitHandler) {
         // does nothing
     }
-    
-    public void removeApplicationListener(final ApplicationListener listener) {
+
+    /**
+     * Installs a handler to show a custom About window for your application.<br/>
+     * Setting the {@link AboutHandler} to <code>null</code> reverts it to the default Cocoa About window.
+     *
+     * @param aboutHandler the handler to respond to the AboutHandler#handleAbout() message
+     * @since Java for Mac OS X 10.6 Update 3, Java for Mac OS X 10.5 Update 8
+     */
+    public void setAboutHandler(java.awt.desktop.AboutHandler aboutHandler) {
         // does nothing
     }
-    
-    public void removePreferencesMenuItem() {
+
+    /**
+     * Installs a handler to create the Preferences menu item in your application's app menu.<br/>
+     * Setting the {@link PreferencesHandler} to <code>null</code> will remove the Preferences item from the app menu.
+     *
+     * @param preferencesHandler
+     * @since Java for Mac OS X 10.6 Update 3, Java for Mac OS X 10.5 Update 8
+     */
+    public void setPreferencesHandler(java.awt.desktop.PreferencesHandler preferencesHandler) {
         // does nothing
     }
-    
-    public void setEnabledAboutMenu(final boolean enable) {
-        // does nothing
-    }
-    
-    public void setEnabledPreferencesMenu(final boolean enable) {
-        // does nothing
-    }
+
 }

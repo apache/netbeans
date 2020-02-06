@@ -20,8 +20,6 @@
 package org.netbeans.installer.wizard.containers;
 
 import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -77,7 +75,7 @@ public class SwingFrameContainer extends NbiFrame implements SwingContainer {
      * Content pane used by the container.
      */
     private WizardFrameContentPane contentPane;
-    
+
     /**
      * Prefix of the container frame title.
      */
@@ -423,14 +421,10 @@ public class SwingFrameContainer extends NbiFrame implements SwingContainer {
                 // e.g. running OpenJDK port via X11 on Mac OS X
                 return;
             }
-            application.removeAboutMenuItem();
-            application.removePreferencesMenuItem();
-            application.addApplicationListener(new ApplicationAdapter() {
-
-                @Override
-                public void handleQuit(ApplicationEvent event) {
-                    cancelContainer();
-                }
+            application.setAboutHandler(null); // No "About" menu
+            application.setPreferencesHandler(null); // No "perferences" menu item
+            application.setQuitHandler((e, response) -> {
+                cancelContainer();
             });
         }
     }

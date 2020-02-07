@@ -62,6 +62,7 @@ import org.openide.filesystems.FileSystem;
 public class EnablePreviewMavenProj implements ErrorRule<Void> {
 
     private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+            "compiler.err.preview.feature.disabled",
             "compiler.err.preview.feature.disabled.plural")); // NOI18N
     private static final String ENABLE_PREVIEW_FLAG = "--enable-preview";   // NOI18N
 

@@ -46,13 +46,11 @@ import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
-import org.gradle.tooling.internal.gradle.GradleBuildIdentity;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
@@ -132,6 +130,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             } else {
                 gconn.useBuildDistribution();
             }
+
+            gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
 
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             pconn = gconn.forProjectDirectory(projectDir).connect();
@@ -227,6 +227,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private void printCommandLine() {
         StringBuilder commandLine = new StringBuilder(1024);
 
+        String userHome = GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
+        if (userHome != null) {
+            commandLine.append("GRADLE_USER_HOME=\"").append(userHome).append("\"\n"); //NOI18N
+        }
         JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
         if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
             File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());

@@ -24,7 +24,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -33,6 +32,7 @@ import javax.swing.DefaultButtonModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.openide.util.ImageUtilities;
@@ -48,6 +48,7 @@ class DropDownButton extends JButton {
 
     private boolean mouseInButton = false;
     private boolean mouseInArrowArea = false;
+    private boolean popupClosingInProgress = false;
 
     private Map<String,Icon> regIcons = new HashMap<String,Icon>( 5 );
     private Map<String,Icon> arrowIcons = new HashMap<String,Icon>( 5 );
@@ -68,7 +69,6 @@ class DropDownButton extends JButton {
     /** Creates a new instance of MenuToggleButton */
     public DropDownButton( Icon icon, JPopupMenu popup ) {
         Parameters.notNull("icon", icon); //NOI18N
-        assert null != icon;
 
         putClientProperty( DropDownButtonFactory.PROP_DROP_DOWN_MENU, popup );
 
@@ -77,10 +77,8 @@ class DropDownButton extends JButton {
 
         resetIcons();
 
-        addPropertyChangeListener(  DropDownButtonFactory.PROP_DROP_DOWN_MENU,new PropertyChangeListener() {
-            public void propertyChange( PropertyChangeEvent e ) {
-                resetIcons();
-            }
+        addPropertyChangeListener(DropDownButtonFactory.PROP_DROP_DOWN_MENU, (PropertyChangeEvent e) -> {
+            resetIcons();
         });
 
         addMouseMotionListener( new MouseMotionAdapter() {
@@ -98,12 +96,17 @@ class DropDownButton extends JButton {
 
             @Override
             public void mousePressed( MouseEvent e ) {
+                if (popupClosingInProgress) {
+                    return;
+                }
                 popupMenuOperation = false;
                 JPopupMenu menu = getPopupMenu();
                 if ( menu != null && getModel() instanceof Model ) {
                     Model model = (Model) getModel();
                     if ( !model._isPressed() ) {
-                        if( isInArrowArea( e.getPoint() ) && menu.getComponentCount() > 0 ) {
+                        if( isInArrowArea( e.getPoint() ) && menu.getComponentCount() > 0 &&
+                            model.isEnabled() )
+                        {
                             model._press();
                             menu.addPopupMenuListener( getMenuListener() );
                             menu.show( DropDownButton.this, 0, getHeight() );
@@ -152,13 +155,12 @@ class DropDownButton extends JButton {
     private PopupMenuListener getMenuListener() {
         if( null == menuListener ) {
             menuListener = new PopupMenuListener() {
+                @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 }
 
+                @Override
                 public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                    // If inside the button let the button's mouse listener
-                    // deal with the state. The popup menu will be hidden and
-                    // we should not show it again.
                     if( getModel() instanceof Model ) {
                         ((Model)getModel())._release();
                     }
@@ -166,8 +168,17 @@ class DropDownButton extends JButton {
                     if( null != menu ) {
                         menu.removePopupMenuListener( this );
                     }
+                    /* If the popup was closed by a mouse click inside the button area, the button
+                    may also receive a mousePressed event, although this seems not to be guaranteed.
+                    Ignore any such button press while the popup is closing, to avoid interpreting
+                    the press as a click to open the menu again. */
+                    popupClosingInProgress = true;
+                    SwingUtilities.invokeLater(() -> {
+                        popupClosingInProgress = false;
+                    });
                 }
 
+                @Override
                 public void popupMenuCanceled(PopupMenuEvent e) {
                 }
             };
@@ -251,6 +262,11 @@ class DropDownButton extends JButton {
     }
 
     private boolean isInArrowArea( Point p ) {
+        /* If no one is listening for button presses, treat the entire button as a dropdown menu
+        trigger. This also means we do not paint the IconWithArrow.paintRollOver separator. */
+        if (getActionListeners().length == 0) {
+            return true;
+        }
         return p.getLocation().x >= getWidth() - IconWithArrow.getArrowAreaWidth() - getInsets().right;
     }
 
@@ -322,7 +338,7 @@ class DropDownButton extends JButton {
     @Override
     public void setText( String text ) {
         //does nothing
-        Logger.getLogger(DropDownToggleButton.class.getName()).log(Level.FINER, "DropDownButton cannot display text."); //NOI18N
+        Logger.getLogger(DropDownButton.class.getName()).log(Level.FINER, "DropDownButton cannot display text."); //NOI18N
     }
 
     @Override
@@ -335,13 +351,13 @@ class DropDownButton extends JButton {
 
         @Override
         public void setPressed(boolean b) {
-            if( mouseInArrowArea || _pressed )
+            if( _pressed || b && mouseInArrowArea)
                 return;
             super.setPressed( b );
         }
 
         public void _press() {
-            if((isPressed()) || !isEnabled()) {
+            if((_pressed && isPressed()) || !isEnabled()) {
                 return;
             }
 
@@ -353,7 +369,6 @@ class DropDownButton extends JButton {
 
         public void _release() {
             _pressed = false;
-            mouseInArrowArea = false;
             setArmed( false );
             setPressed( false );
             setRollover( false );

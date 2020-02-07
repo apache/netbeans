@@ -4,7 +4,7 @@ Version: 2.5.2
 Description: The Eclipse Persistence Services Project ( EclipseLink) project.
 License: EPL-v10-eclipselink
 Origin: http://www.eclipse.org/eclipselink/
-Files: javax.persistence-2.1.0-sources.jar, javax.persistence-2.1.0.jar, org.eclipse.persistence.core-2.5.2.jar, org.eclipse.persistence.asm-2.5.2.jar, org.eclipse.persistence.antlr-2.5.2.jar, org.eclipse.persistence.jpa-2.5.2.jar, org.eclipse.persistence.jpa.jpql-2.5.2.jar
+Files: javax.persistence-2.1.0-sources.jar, javax.persistence-2.1.0.jar, org.eclipse.persistence.core-2.5.2.jar, org.eclipse.persistence.asm-2.5.2.jar, org.eclipse.persistence.antlr-2.5.2.jar, org.eclipse.persistence.jpa-2.5.2.jar, org.eclipse.persistence.jpa.jpql-2.5.2.jar,org.eclipse.persistence.moxy-2.5.2.jar
 
 Use of EclipseLink version 2.5.2 is governed by the terms of the license below:
 

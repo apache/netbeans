@@ -242,7 +242,7 @@ final class RendererFactory {
 
         if (
             !(result instanceof JLabel) &&
-                ((env.getState() == env.STATE_INVALID) || (prop.getValue("valueIcon") != null))
+                ((env.getState() == ReusablePropertyEnv.STATE_INVALID) || (prop.getValue("valueIcon") != null))
         ) { //NOI18N
             result = prepareIconPanel(editor, env, (InplaceEditor) result);
         }

@@ -42,6 +42,12 @@
                 <val>date</val>
                 <val>time</val>
                 <val>both</val>
+                <val>localDate</val>
+                <val>localDateTime</val>
+                <val>localTime</val>
+                <val>offsetTime</val>
+                <val>offsetDateTime</val>
+                <val>zonedDateTime</val>
             </type>
         </attr>
     </tag>
@@ -108,6 +114,9 @@
     <tag name="validateDoubleRange"/>
     <tag name="validateLength"/>
     <tag name="validateLongRange"/>
+    <tag name="validateWholeBean"/>
+    <tag name="importConstants"/>
+    <tag name="websocket"/>
     <tag name="validateBean"/>
     <tag name="validateRegex"/>
     <tag name="validateRequired"/>

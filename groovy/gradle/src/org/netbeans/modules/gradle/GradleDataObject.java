@@ -58,7 +58,7 @@ import org.openide.windows.CloneableOpenSupport;
 @MIMEResolver.Registration(
         displayName="#LBL_GradleFile_LOADER",
         resource="gradle-mime-resolver.xml",
-        position = 300
+        position = 290
 )
 @ActionReferences({
     @ActionReference(

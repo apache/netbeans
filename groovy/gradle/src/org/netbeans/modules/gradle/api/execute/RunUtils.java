@@ -26,6 +26,7 @@ import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
 import org.netbeans.modules.gradle.execute.ProxyNonSelectableInputOutput;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -54,6 +56,7 @@ import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.ActionProvider;
@@ -75,6 +78,7 @@ public final class RunUtils {
     public static final String PROP_JDK_PLATFORM = "jdkPlatform"; //NOI18N
     public static final String PROP_COMPILE_ON_SAVE = "compile.on.save"; //NOI18N
     public static final String PROP_AUGMENTED_BUILD = "augmented.build"; //NOI18N
+    public static final String PROP_INCLUDE_OPEN_PROJECTS = "include.open.projects"; //NOI18N
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
     private RunUtils() {}
@@ -142,6 +146,11 @@ public final class RunUtils {
             basecmd = GradleCommandLine.combine(syscmd, prjcmd);
         }
 
+        if (isIncludeOpenProjectsEnabled(project)) {
+            GradleCommandLine include = getIncludedOpenProjects(project);
+            basecmd = GradleCommandLine.combine(basecmd, include);
+        }
+
         // Make sure we only exclude 'test' and 'check' by default if the
         // project allows this (has these tasks or root project with sub projects).
         validateExclude(basecmd, gbp, GradleCommandLine.TEST_TASK);
@@ -192,6 +201,18 @@ public final class RunUtils {
 
     public static boolean isAugmentedBuildEnabled(Project project) {
         return isOptionEnabled(project, PROP_AUGMENTED_BUILD, true);
+    }
+
+    /**
+     * Returns true if the include open projects checkbox is marked
+     * in the project configuration.
+     *
+     * @param project the given project.
+     * @return true if the settings has been enabled.
+     * @since 1.5
+     */
+    public static boolean isIncludeOpenProjectsEnabled(Project project) {
+        return isOptionEnabled(project, PROP_INCLUDE_OPEN_PROJECTS, false);
     }
 
     public static GradleCommandLine getDefaultCommandLine(Project project) {
@@ -362,14 +383,38 @@ public final class RunUtils {
         return getActivePlatform(platformId);
     }
 
-    private static String stringsInCurly(List<String> l) {
-        StringBuilder sb = new StringBuilder("(");
-        Iterator<String> it = l.iterator();
-        while (it.hasNext()) {
-            sb.append(it.next());
-            sb.append(it.hasNext() ? ", " : ")");
+    static GradleCommandLine getIncludedOpenProjects(Project project) {
+        GradleCommandLine ret = new GradleCommandLine();
+        Set<File> openRoots = new HashSet<>();
+        for (Project openProject : OpenProjects.getDefault().getOpenProjects()){
+            GradleBaseProject gpb = GradleBaseProject.get(openProject);
+            if (gpb != null) {
+                openRoots.add(gpb.getRootDir());
+            }
         }
-        return sb.toString();
+        GradleBaseProject gbp = GradleBaseProject.get(project);
+        if (gbp != null) {
+            //Removing ourself
+            openRoots.remove(gbp.getRootDir());
+            openRoots.removeAll(gbp.getIncludedBuilds().values());
+
+            Path projectPath = gbp.getProjectDir().toPath();
+            for (File openRoot : openRoots) {
+                Path root = openRoot.toPath();
+                String ib = root.toString();
+                try {
+                    Path rel = projectPath.relativize(root);
+
+                    if (rel.getNameCount() < root.getNameCount()) {
+                        ib = rel.toString();
+                    }
+                } catch (IllegalArgumentException ex) {
+                    // Relative path cannot be computed, just use the full path then.
+                }
+                ret.addParameter(GradleCommandLine.Parameter.INCLUDE_BUILD, ib);
+            }
+        }
+        return ret;
     }
 
 }

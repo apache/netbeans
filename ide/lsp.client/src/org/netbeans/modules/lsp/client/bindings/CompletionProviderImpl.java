@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -41,6 +42,7 @@ import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.ServerCapabilities;
@@ -50,6 +52,7 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
@@ -156,6 +159,9 @@ public class CompletionProviderImpl implements CompletionProvider {
                     CountDownLatch l = new CountDownLatch(1);
                     //TODO: Location or Location[]
                     Either<List<CompletionItem>, CompletionList> completionResult = server.getTextDocumentService().completion(params).get();
+                    if (completionResult == null) {
+                        return ; //no results
+                    }
                     List<CompletionItem> items;
                     boolean incomplete;
                     if (completionResult.isLeft()) {
@@ -181,36 +187,51 @@ public class CompletionProviderImpl implements CompletionProvider {
                         resultSet.addItem(new org.netbeans.spi.editor.completion.CompletionItem() {
                             @Override
                             public void defaultAction(JTextComponent jtc) {
-                                Document doc = jtc.getDocument();
+                                commit("");
+                            }
+                            private void commit(String appendText) {
                                 TextEdit te = i.getTextEdit();
-                                if (te != null) {
-                                    int start = Utils.getOffset(doc, te.getRange().getStart());
-                                    int end = Utils.getOffset(doc, te.getRange().getEnd());
-                                    NbDocument.runAtomic((StyledDocument) doc, () -> {
-                                        try {
+                                NbDocument.runAtomic((StyledDocument) doc, () -> {
+                                    try {
+                                        int endPos;
+                                        if (te != null) {
+                                            int start = Utils.getOffset(doc, te.getRange().getStart());
+                                            int end = Utils.getOffset(doc, te.getRange().getEnd());
                                             doc.remove(start, end - start);
                                             doc.insertString(start, te.getNewText(), null);
-                                        } catch (BadLocationException ex) {
-                                            Exceptions.printStackTrace(ex);
+                                            endPos = start + te.getNewText().length();
+                                        } else {
+                                            String toAdd = i.getInsertText();
+                                            if (toAdd == null) {
+                                                toAdd = i.getLabel();
+                                            }
+                                            int[] identSpan = Utilities.getIdentifierBlock((BaseDocument) doc, caretOffset);
+                                            String printSuffix = toAdd.substring(identSpan != null ? caretOffset - identSpan[0] : 0);
+                                            doc.insertString(caretOffset, printSuffix, null);
+                                            endPos = caretOffset + printSuffix.length();
                                         }
-                                    });
-                                } else {
-                                    String toAdd = i.getInsertText();
-                                    if (toAdd == null) {
-                                        toAdd = i.getLabel();
-                                    }
-                                    try {
-                                        int offset = jtc.getCaretPosition();
-                                        String ident = Utilities.getIdentifier((BaseDocument) doc, offset);
-                                        doc.insertString(offset, toAdd.substring(ident != null ? ident.length() : 0), null);
+                                        doc.insertString(endPos, appendText, null);
                                     } catch (BadLocationException ex) {
                                         Exceptions.printStackTrace(ex);
                                     }
-                                }
+                                });
+                                Completion.get().hideDocumentation();
+                                Completion.get().hideCompletion();
                             }
 
                             @Override
                             public void processKeyEvent(KeyEvent ke) {
+                                if (ke.getID() == KeyEvent.KEY_TYPED) {
+                                    String commitText = String.valueOf(ke.getKeyChar());
+
+                                    if (i.getCommitCharacters().contains(commitText)) {
+                                        commit(commitText);
+                                        ke.consume();
+                                        if (isTriggerCharacter(server, commitText)) {
+                                            Completion.get().showCompletion();
+                                        }
+                                    }
+                                }
                             }
 
                             @Override
@@ -349,7 +370,26 @@ public class CompletionProviderImpl implements CompletionProvider {
 
     @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
-        return 0; //TODO: implement trigger characters, if any?
+        FileObject file = NbEditorUtilities.getFileObject(component.getDocument());
+        if (file == null) {
+            return 0;
+        }
+        LSPBindings server = LSPBindings.getBindings(file);
+        if (server == null) {
+            return 0;
+        }
+        return isTriggerCharacter(server, typedText) ? COMPLETION_QUERY_TYPE : 0;
     }
     
+    private boolean isTriggerCharacter(LSPBindings server, String text) {
+        InitializeResult init = server.getInitResult();
+        if (init == null) return false;
+        ServerCapabilities capabilities = init.getCapabilities();
+        if (capabilities == null) return false;
+        CompletionOptions completionOptions = capabilities.getCompletionProvider();
+        if (completionOptions == null) return false;
+        List<String> triggerCharacters = completionOptions.getTriggerCharacters();
+        if (triggerCharacters == null) return false;
+        return triggerCharacters.stream().anyMatch(trigger -> text.endsWith(trigger));
+    }
 }

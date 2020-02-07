@@ -209,7 +209,7 @@ class HtmlLabelUI extends LabelUI {
                 focus = Color.BLUE;
             }
 
-            if (!isGTK() && !isAqua() && !isNimbus()) {
+            if (!isGTK() && !isAqua() && !isNimbus() &&!isFlatLaf()) {
                 int x;
                 if (h.getType() == HtmlRendererImpl.Type.TABLE) {
                     x = 0; // in a table we want to have the whole row selected
@@ -408,7 +408,7 @@ class HtmlLabelUI extends LabelUI {
 
         if (!replace) {
             dif = difference(fg, bg);
-            replace = dif < 80;
+            replace = dif < 60;
         }
 
         if (replace) {
@@ -510,6 +510,10 @@ class HtmlLabelUI extends LabelUI {
     
     static boolean isNimbus () {
         return "Nimbus".equals(UIManager.getLookAndFeel().getID());
+    }
+
+    static boolean isFlatLaf () {
+        return UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
     }
 
     /** Get the system-wide unfocused selection background color */

@@ -27,7 +27,7 @@ import org.netbeans.modules.versioning.util.Utils;
 
 /**
  * Turbo is general purpose entries/attributes dictionary with pluggable
- * layer enabling high scalability disk swaping implementations.
+ * layer enabling high scalability disk swapping implementations.
  * It allows to store several name identified values
  * for an entity identified by a key.
  *
@@ -36,7 +36,7 @@ import org.netbeans.modules.versioning.util.Utils;
  * It must have properly implemented <code>equals()</code>,
  * <code>hashcode()</code> and <code>toString()</code> (returning
  * unique string) methods. Key lifetime must be well
- * understood to set cache strategy effeciently:
+ * understood to set cache strategy efficiently:
  * <ul>
  * <li>MAXIMUM: The implementation monitors key instance lifetime and does
  * not release data from memory until max. size limit reached or
@@ -51,14 +51,14 @@ import org.netbeans.modules.versioning.util.Utils;
  * actually stored in cache and lifetime monitored.
  * </ul>
  *
- * <p>Entry <b>name</b> fully indentifies contract between
+ * <p>Entry <b>name</b> fully identifies contract between
  * consumers and providers. Contracts are described elsewhere.
  *
  * <p>The dictionary does not support storing <code>null</code>
  * <b>values</b>. Writing <code>null</code> value means that given
- * entry should be invalidated and removed (it actualy depends
+ * entry should be invalidated and removed (it actually depends
  * on externally negotiated contract identified by name). Getting
- * <code>null</code> as requets result means that given value
+ * <code>null</code> as request result means that given value
  * is not (yet) known or does not exist at all.
  *
  * @author Petr Kuzel
@@ -160,11 +160,11 @@ public final class Turbo {
         List speculative = new ArrayList(57);
         Object value = loadEntry(key, name, speculative);
         memory.put(key, name, value != null ? value : Memory.NULL);
-        // XXX should fire here?  yes if name avalability changes should be
+        // XXX should fire here?  yes if name availability changes should be
         // dispatched to clients that have not called prepare otherwise NO.
 
-        // refire speculative results, can be optinized later on to fire
-        // them lazilly on prepareAttribute or isPrepared calls
+        // refire speculative results, can be optimized later on to fire
+        // them lazily on prepareAttribute or isPrepared calls
         Iterator it = speculative.iterator();
         while (it.hasNext()) {
             Object[] next = (Object[]) it.next();
@@ -212,7 +212,7 @@ public final class Turbo {
             } catch (Throwable t) {
                 // error in provider
                 ErrorManager.getDefault().annotate(t, "Error in provider " + provider + ", skipping... "); // NOI18N
-                ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, t);  // XXX in Junit mode writes to stdout ommiting annotation!!!
+                ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, t);  // XXX in Junit mode writes to stdout omitting annotation!!!
             }
         }
 
@@ -225,20 +225,20 @@ public final class Turbo {
      * The call speed depends on actually used provider. However do not
      * rely on synchronous provider  call. In future it may return and
      * fire immediately on writing into memory layer, populating providers
-     * asychronously on background.
+     * asynchronously on background.
      *
-     * <p>A client calling this method is reponsible for passing
+     * <p>A client calling this method is responsible for passing
      * valid value that is accepted by attribute serving providers.
      *
      * @param key identifies target, never <code>null</code>
      * @param name identifies attribute, never <code>null</code>
      * @param value actual attribute value to be stored, <code>null</code> behaviour
-     * is defined specificaly for each name. It always invalidates memory entry
+     * is defined specifically for each name. It always invalidates memory entry
      * and it either invalidates or removes value from providers layer
-     * (mening: value unknown versus value is known to not exist).
+     * (meaning: value unknown versus value is known to not exist).
      *
-     * <p>Client should consider a size of stored value. It must be corelated
-     * with Turbo memory layer limits to avoid running ouf of memory.
+     * <p>Client should consider a size of stored value. It must be correlated
+     * with Turbo memory layer limits to avoid running out of memory.
      *
      * @return <ul>
      * <li><code>false</code> on write failure caused by a provider denying the value.
@@ -248,8 +248,8 @@ public final class Turbo {
      *    assert success : "Unexpected name[" + name + "] value[" + value + "] denial for " + key + "!";
      * </code>
 
-     * <li><code>true</code> in all other cases includins I/O error.
-     * After all it's just best efford cache. All values can be recomputed.
+     * <li><code>true</code> in all other cases including I/O error.
+     * After all it's just best effort cache. All values can be recomputed.
      * </ul>
      */
     public boolean writeEntry(Object key, String name, Object value) {
@@ -328,7 +328,7 @@ public final class Turbo {
             return true;
         }
 
-        // start asynchronous providers queriing
+        // start asynchronous providers querying
         scheduleLoad(key, name);
         return false;
     }
@@ -495,7 +495,7 @@ public final class Turbo {
                             value = memory.get(key, name);
                         }
                         if (fire) {
-                            statistics.providerHit(); // from our perpective we achieved hit
+                            statistics.providerHit(); // from our perspective we achieved hit
                         }
                     } else {
                         value = loadEntry(key, name, null);
@@ -531,7 +531,7 @@ public final class Turbo {
 
         /**
          * Wait for requests, it no request comes until timeout
-         * it ommits suicide. It's respawned on next request however.
+         * it commits suicide. It's respawned on next request however.
          */
         private boolean waitForRequests() throws InterruptedException {
             synchronized(requests) {

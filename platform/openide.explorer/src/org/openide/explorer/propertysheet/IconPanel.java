@@ -177,7 +177,7 @@ class IconPanel extends JComponent implements InplaceEditor {
             Icon ic = null;
             FeatureDescriptor fd = env.getFeatureDescriptor();
 
-            if (env.getState() == env.STATE_INVALID) {
+            if (env.getState() == PropertyEnv.STATE_INVALID) {
                 ic = ImageUtilities.loadImageIcon("org/openide/resources/propertysheet/invalid.gif", false); //NOI18N
             } else if (fd != null) {
                 ic = (Icon) fd.getValue("valueIcon"); //NOI18N

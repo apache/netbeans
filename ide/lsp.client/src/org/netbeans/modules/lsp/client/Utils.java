@@ -20,12 +20,14 @@ package org.netbeans.modules.lsp.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -48,11 +50,13 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 
@@ -219,5 +223,28 @@ public class Utils {
             Exceptions.printStackTrace(ex);
         }
         return edits;
+    }
+
+    public static void open(String targetUri, Range targetRange) {
+        try {
+            URI target = URI.create(targetUri);
+            FileObject targetFile = URLMapper.findFileObject(target.toURL());
+
+            if (targetFile != null) {
+                LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+
+                //TODO: expecting lc != null!
+
+                Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
+
+                SwingUtilities.invokeLater(() ->
+                    line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+                );
+            } else {
+                //TODO: beep
+            }
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 }

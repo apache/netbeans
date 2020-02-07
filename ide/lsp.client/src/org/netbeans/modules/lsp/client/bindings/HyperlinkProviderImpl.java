@@ -118,26 +118,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 } else {
                     return null;
                 }
-                try {
-                    URI target = URI.create(targetUri);
-                    FileObject targetFile = URLMapper.findFileObject(target.toURL());
-
-                    if (targetFile != null) {
-                        LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
-
-                        //TODO: expecting lc != null!
-
-                        Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
-
-                        SwingUtilities.invokeLater(() ->
-                            line.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
-                        );
-                    } else {
-                        //TODO: beep
-                    }
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                Utils.open(targetUri, targetRange);
                 return null;
             }).get();
         } catch (BadLocationException ex) {

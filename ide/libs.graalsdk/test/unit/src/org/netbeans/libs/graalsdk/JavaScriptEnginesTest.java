@@ -288,13 +288,13 @@ public class JavaScriptEnginesTest {
         }
         assertNotNull("Result looks like array", res);
 
-        Map<?, ?> list = ((Invocable) engine).getInterface(raw, Map.class);
+        List<?> list = ((Invocable) engine).getInterface(raw, List.class);
         assertEquals("Length of five", 5, list.size());
-        assertEquals(1, list.get("0"));
-        assertEquals(2, list.get("1"));
-        assertEquals("a", list.get("2"));
-        assertEquals(Math.PI, list.get("3"));
-        assertEquals(sum, list.get("4"));
+        assertEquals(1, list.get(0));
+        assertEquals(2, list.get(1));
+        assertEquals("a", list.get(2));
+        assertEquals(Math.PI, list.get(3));
+        assertEquals(sum, list.get(4));
     }
 
     private void assumeNotNashorn() {

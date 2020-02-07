@@ -88,7 +88,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
      * defined in the context XSL document.  The first prefix in the list is the actual XSL
      * transformation prefix, which is normally defined on the xsl:stylesheet element.
      */
-    private List prefixList = new LinkedList();
+    private List<String> prefixList = new LinkedList<>();
 
     /** A GrammarQuery for the result elements created for the doctype-public" and
      * "doctype-system" attributes of the xsl:output element.*/

@@ -1986,9 +1986,9 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n\n"
                 + "    public void taragui(int i) {\n"
                 + "        switch (i) {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                System.out.println(i);\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -2000,9 +2000,9 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n\n"
                 + "    public void taragui(int i) {\n"
                 + "        switch( i ){\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                System.out.println(i);\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -2021,9 +2021,9 @@ public class FormatingTest extends NbTestCase {
                 + "    public void taragui(int i) {\n"
                 + "        switch (i)\n"
                 + "        {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                System.out.println(i);\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -2037,9 +2037,9 @@ public class FormatingTest extends NbTestCase {
                 + "    public void taragui(int i) {\n"
                 + "        switch (i)\n"
                 + "          {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                System.out.println(i);\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "          }\n"
                 + "    }\n"
@@ -2053,9 +2053,9 @@ public class FormatingTest extends NbTestCase {
                 + "    public void taragui(int i) {\n"
                 + "        switch (i)\n"
                 + "            {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                System.out.println(i);\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "            }\n"
                 + "    }\n"
@@ -2069,9 +2069,9 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n\n"
                 + "    public void taragui(int i) {\n"
                 + "        switch (i) {\n"
-                + "        case 0->\n"
+                + "        case 0 ->\n"
                 + "            System.out.println(i);\n"
-                + "        default->\n"
+                + "        default ->\n"
                 + "            System.out.println(\"DEFAULT\");\n"
                 + "        }\n"
                 + "    }\n"
@@ -2265,12 +2265,12 @@ public class FormatingTest extends NbTestCase {
                 + "    public void taragui(int i) {\n"
                 + "        int i = switch( i )\n"
                 + "        {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "            {\n"
                 + "                System.out.println(i);\n"
                 + "                yield 5;\n"
                 + "            }\n"
-                + "            default->\n"
+                + "            default ->\n"
                 + "            {\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "                yield 6;\n"
@@ -2304,12 +2304,12 @@ public class FormatingTest extends NbTestCase {
                 + "public class Test {\n\n"
                 + "    public void taragui(int i) {\n"
                 + "        Runnable r = switch (i) {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                new Runnable() {\n"
                 + "                    public void run() {\n"
                 + "                    }\n"
                 + "                };\n"
-                + "            default-> {\n"
+                + "            default -> {\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "                yield new Runnable() {\n"
                 + "                    public void run() {\n"
@@ -2341,9 +2341,9 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n\n"
                 + "    public void taragui(int i) {\n"
                 + "        int i = switch (i) {\n"
-                + "            case 0->\n"
+                + "            case 0 ->\n"
                 + "                get();\n"
-                + "            default-> {\n"
+                + "            default -> {\n"
                 + "                System.out.println(\"DEFAULT\");\n"
                 + "                yield get();\n"
                 + "            }\n"
@@ -5066,6 +5066,46 @@ public class FormatingTest extends NbTestCase {
                 + "    public static void main(String[] args) {\n"
                 + "        for (int y : Arrays.asList(1, 2, 3)) synchronized (Test.class) {\n"
                 + "            int x = 3;\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testTypeTestPatterns() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public boolean main(Object o) {\n"
+                + "        if (o instanceof String s) {\n"
+                + "            return s.isEmpty();\n"
+                + "        } else {\n"
+                + "            return false;\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        String golden = // no change
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public boolean main(Object o) {\n"
+                + "        if (o instanceof String s) {\n"
+                + "            return s.isEmpty();\n"
+                + "        } else {\n"
+                + "            return false;\n"
                 + "        }\n"
                 + "    }\n"
                 + "}\n";

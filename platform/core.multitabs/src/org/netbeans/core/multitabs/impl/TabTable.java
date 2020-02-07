@@ -27,6 +27,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.TableUI;
@@ -42,12 +43,14 @@ import org.openide.util.NbBundle;
  */
 public class TabTable extends JTable {
 
+    private int tabsLocation = JTabbedPane.TOP;
     private final int  orientation;
     private final TabDataRenderer renderer = new TabDataRenderer();
 
     public TabTable( TabDataModel tabModel, int tabsLocation ) {
         this( TabTableModel.create(tabModel, tabsLocation),
                 tabsLocation == JTabbedPane.TOP || tabsLocation == JTabbedPane.BOTTOM ? JTabbedPane.HORIZONTAL : JTabbedPane.VERTICAL );
+        this.tabsLocation = tabsLocation;
     }
 
     protected TabTable( TabTableModel tableModel, int orientation ) {
@@ -76,12 +79,30 @@ public class TabTable extends JTable {
         setFocusable( false );
         ToolTipManager.sharedInstance().registerComponent( this );
         setDefaultRenderer( Object.class, renderer );
+
+        // show/hide vertical/horizontal grid lines depending on orientation
+        Object showVerticalLines = UIManager.get("nb.multitabs.showVerticalLines"); //NOI18N
+        Object showHorizontalLines = UIManager.get("nb.multitabs.showHorizontalLines"); //NOI18N
+        if (showVerticalLines instanceof Boolean) {
+            boolean show = (Boolean) showVerticalLines && orientation == JTabbedPane.HORIZONTAL;
+            setShowVerticalLines(show);
+            setIntercellSpacing(new Dimension(show ? 1 : 0, getIntercellSpacing().height));
+        }
+        if (showHorizontalLines instanceof Boolean) {
+            boolean show = (Boolean) showHorizontalLines && orientation != JTabbedPane.HORIZONTAL;
+            setShowHorizontalLines(show);
+            setIntercellSpacing(new Dimension(getIntercellSpacing().width, show ? 1 : 0));
+        }
     }
 
     @Override
     protected void initializeLocalVars() {
         super.initializeLocalVars();
         setRowHeight( TabDataRenderer.getPreferredTableRowHeight() );
+    }
+
+    int getTabsLocation() {
+        return tabsLocation;
     }
 
     @Override

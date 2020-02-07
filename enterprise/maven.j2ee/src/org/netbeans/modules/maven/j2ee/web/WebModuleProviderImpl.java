@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -94,15 +96,20 @@ public class WebModuleProviderImpl extends BaseEEModuleProvider implements WebMo
             public ArtifactListener.Artifact convert(ArtifactListener.Artifact original) {
                 NbMavenProject prj = project.getLookup().lookup(NbMavenProject.class);
                 FileObject targetClasses = FileUtil.toFileObject(prj.getOutputDirectory(false));
-                FileObject clazz = FileUtil.toFileObject(original.getFile());
-                if (targetClasses != null && clazz != null) {
-                    String path = FileUtil.getRelativePath(targetClasses, clazz);
+                Path targetClassesPath = Paths.get(prj.getOutputDirectory(false).toURI());
+                Path classPath = Paths.get(original.getFile().toURI());
+                if (targetClasses != null) {
+                    Path path = targetClassesPath.relativize(classPath);
                     if (path != null) {
                         try {
                             FileObject webBuildBase = implementation.getContentDirectory();
                             if (webBuildBase != null) {
                                 File base = FileUtil.toFile(webBuildBase);
-                                File dist = new File(base, "WEB-INF" + File.separator + "classes" + File.separator + path.replace("/", File.separator));
+                                File dist = new File(base,
+                                        "WEB-INF" + File.separator
+                                        + "classes" + File.separator
+                                        + path.toString().replace("/", File.separator)
+                                );
                                 return original.distributionPath(dist);
                             }
                         } catch (IOException ex) {

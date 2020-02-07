@@ -37,6 +37,8 @@ import javax.swing.Icon;
  * Abstract base class for {@link javax.swing.Icon} implementations that need to cache scaled bitmap
  * representations for HiDPI displays. Bitmaps for multiple HiDPI scaling factors can be cached at
  * the same time, e.g. for multi-monitor setups. Thread-safe.
+ *
+ * @since 9.15
  */
 public abstract class CachedHiDPIIcon implements Icon {
     /**
@@ -76,6 +78,10 @@ public abstract class CachedHiDPIIcon implements Icon {
         this.height = height;
     }
 
+    /**
+     * Get a scaled bitmap image of this icon. This method may not be called if either of the icon's
+     * dimensions are zero.
+     */
     private synchronized Image getScaledImageCached(Component c, CachedImageKey key) {
         Image ret = cache.get(key);
         if (ret != null) {
@@ -104,6 +110,10 @@ public abstract class CachedHiDPIIcon implements Icon {
 
     @Override
     public final void paintIcon(Component c, Graphics g0, int x, int y) {
+        if (getIconWidth() == 0 || getIconHeight() == 0) {
+            // Special case: Avoid attempting to create a zero-width/height image.
+            return;
+        }
         final Graphics2D g = (Graphics2D) g0;
         CachedImageKey key = CachedImageKey.create(g);
         final AffineTransform oldTransform = g.getTransform();
@@ -153,8 +163,8 @@ public abstract class CachedHiDPIIcon implements Icon {
      * @param colorModel the {@link ColorModel} of the surface on which the image will be painted
      *        (may be passed to {@link #createBufferedImage(ColorModel, int, int)} in the common
      *        case)
-     * @param deviceWidth the required width of the image, in device pixels
-     * @param deviceHeight the required height of the image, in device pixels
+     * @param deviceWidth the required width of the image, in device pixels (>=1)
+     * @param deviceHeight the required height of the image, in device pixels (>=1)
      * @param scale the HiDPI scaling factor detected in {@code graphicsConfiguration}
      */
     protected abstract Image createAndPaintImage(Component c, ColorModel colorModel,
@@ -166,8 +176,8 @@ public abstract class CachedHiDPIIcon implements Icon {
      * implementors of the latter to create a surface to draw on and return.
      *
      * @param colorModel the required {@link ColorModel}
-     * @param deviceWidth the required width of the image, in device pixels
-     * @param deviceHeight the required height of the image, in device pixels
+     * @param deviceWidth the required width of the image, in device pixels (>=1)
+     * @param deviceHeight the required height of the image, in device pixels (>=1)
      * @return an image compatible with the given parameters
      */
     protected static final BufferedImage createBufferedImage(

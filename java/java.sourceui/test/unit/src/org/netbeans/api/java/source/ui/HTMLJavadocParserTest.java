@@ -19,7 +19,9 @@
 package org.netbeans.api.java.source.ui;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import junit.framework.TestCase;
 
 /**
@@ -68,7 +70,87 @@ public class HTMLJavadocParserTest extends TestCase {
     assertTrue(result.contains("See Also"));
 
   }
-
+  
+  /**
+   * Test of getJavadocText method used with class output from javadoc 11.
+   */
+  public void testJavadoc11Class() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc11Class.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example class."));
+    
+    URL url = appendFragment(root, "<init>(java.lang.String)");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking a single String parameter."));
+    
+    url = appendFragment(root, "<init>(java.lang.String,java.lang.String)");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking two String parameters."));
+    
+    url = appendFragment(root, "hi()");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+  }
+  
+  /**
+   * Test of getJavadocText method used with enum output from javadoc 11.
+   */
+  public void testJavadoc11Enum() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc11Enum.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example enum."));
+    
+    URL url = appendFragment(root, "FIRST");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("The first value."));
+    
+    url = appendFragment(root, "hi()");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+  }
+  
+  /**
+   * Test of getJavadocText method used with class output from javadoc 8.
+   */
+  public void testJavadoc8Class() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc8Class.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example class."));
+    
+    URL url = appendFragment(root, "Javadoc8Class-java.lang.String-");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking a single String parameter."));
+    
+    url = appendFragment(root, "Javadoc8Class-java.lang.String-java.lang.String-");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking two String parameters."));
+      
+    url = appendFragment(root, "hi--");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+  }
+  
+  /**
+   * Test of getJavadocText method used with enum output from javadoc 8.
+   */
+  public void testJavadoc8Enum() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc8Enum.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example enum."));
+    
+    URL url = appendFragment(root, "FIRST");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("The first value."));
+      
+    url = appendFragment(root, "hi--");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+  }
+  
   public void test199194() throws MalformedURLException {
     URL url = HTMLJavadocParserTest.class.getResource("JavaApplication1.html");
     String result = HTMLJavadocParser.getJavadocText(url, false);
@@ -90,5 +172,12 @@ public class HTMLJavadocParserTest extends TestCase {
                 new URL(url, "FileChooser.html#showSaveDialog(javafx.stage.Window)"), false);
         assertNotNull(result);
         assertTrue(result.contains("the selected file or"));
+  }
+  
+  private static URL appendFragment(URL root, String unencodedFragment) throws Exception {
+      StringBuilder uri = new StringBuilder(root.toExternalForm());
+      uri.append("#");
+      uri.append(URLEncoder.encode(unencodedFragment, "UTF-8").replace("+", "%20"));
+      return new URI(uri.toString()).toURL();
   }
 }

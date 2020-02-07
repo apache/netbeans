@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.javafx2.editor.completion.beans;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -454,7 +455,7 @@ public final class FxBean extends FxDefinition {
     
     @SuppressWarnings("unchecked")
     private void appendMap(StringBuilder sb, Map m) {
-        ArrayList al = new ArrayList(m.keySet());
+        List al = new ArrayList(m.keySet());
         Collections.sort(al);
         
         for (Object o : al) {

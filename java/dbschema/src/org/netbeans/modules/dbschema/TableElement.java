@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.dbschema;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.text.MessageFormat;
@@ -367,14 +368,14 @@ public final class TableElement extends DBElement implements ColumnElementHolder
      * @param subtype the type of the key classes
 	 * @return the keys of the given subtype or <code>null</code> if not found
 	 */
-	private ArrayList getKeys(Class subtype) {
+	private List<KeyElement> getKeys(Class subtype) {
 		KeyElement[] keys = getKeys();
 
         if (keys == null)
             return null;
 
 		int i, count = keys.length;
-		ArrayList subKeys = new ArrayList(count);
+		List<KeyElement> subKeys = new ArrayList<>(count);
 
 		for (i = 0; i < count; i++) {
 			KeyElement key = keys[i];
@@ -390,7 +391,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 	 * @return the foreign keys or <code>null</code> if not found
 	 */
 	public ForeignKeyElement[] getForeignKeys() {
-		ArrayList keys = getKeys(ForeignKeyElement.class);
+		List<KeyElement> keys = getKeys(ForeignKeyElement.class);
         
         if (keys == null)
             return null;
@@ -422,7 +423,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 	 * @return the unique keys or <code>null</code> if not found
 	 */
 	public UniqueKeyElement[] getUniqueKeys() {
-		ArrayList keys = getKeys(UniqueKeyElement.class);
+		List<KeyElement> keys = getKeys(UniqueKeyElement.class);
 
 		if (keys == null)
             return null;

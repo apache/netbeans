@@ -44,9 +44,9 @@ public class SimpleLibraryProjectWizard extends SimpleGradleWizardIterator {
     
     private static Map<String, Object> initParams() {
         Map<String, Object> params = new HashMap<>();
-        params.put(PROP_PLUGINS, Arrays.asList("java", "jacoco", "maven"));
+        params.put(PROP_PLUGINS, Arrays.asList("java", "jacoco", "maven-publish"));
         params.put(PROP_DEPENDENCIES, Arrays.asList(
-                "testCompile 'junit:junit:4.12'"
+                "testImplementation     'junit:junit:4.13'"
         ));
         return params;
     }

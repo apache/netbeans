@@ -27,6 +27,6 @@ public class Test {
 package test;
 public class Test {
     public void method() {
-        method(System.err::println);
+        method(t -> System.err.println(t));
     }
 }

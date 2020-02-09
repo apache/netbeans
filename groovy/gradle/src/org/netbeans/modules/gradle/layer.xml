@@ -97,6 +97,14 @@
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="2200"/>
                 </file>
+                <file name="org-netbeans-modules-project-ui-DeleteProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-DeleteProject.instance"/>
+                    <attr name="position" intvalue="2600"/>
+                </file>
+                <file name="sep-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2700"/>
+                </file>
                 <file name="org-openide-actions-FindAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
                     <attr name="position" intvalue="2800"/>

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import static org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag.REPEATABLE;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileUtil;
@@ -105,8 +106,10 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
     @Override
     protected void reassignAdditionalContext(TabContext tabContext) {
         this.tabContext = tabContext;
-        tabContext.rerun.setConfig(config);
-        tabContext.rerunDebug.setConfig(config);
+        if (config.getExecFlags().contains(REPEATABLE)){
+            tabContext.rerun.setConfig(config);
+            tabContext.rerunDebug.setConfig(config);
+        }
         tabContext.stop.setExecutor(this);
     }
 

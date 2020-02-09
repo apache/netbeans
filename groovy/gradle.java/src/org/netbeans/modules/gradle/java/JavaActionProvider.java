@@ -27,9 +27,6 @@ import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import static org.netbeans.spi.project.ActionProvider.*;
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -69,6 +66,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         COMMAND_RUN_SINGLE,
         COMMAND_DEBUG_SINGLE,
         COMMAND_COMPILE_SINGLE,
+        COMMAND_DELETE,
     };
 
     public JavaActionProvider() {

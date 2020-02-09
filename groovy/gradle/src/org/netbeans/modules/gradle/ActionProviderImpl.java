@@ -59,6 +59,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,6 +75,10 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.spi.project.support.ProjectOperations;
+import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -124,12 +129,20 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+        if (COMMAND_DELETE.equals(command)) {
+            DefaultProjectOperations.performDefaultDeleteOperation(project);
+            return;
+        }
         ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
         invokeProjectAction(project, mapping, context, false);
     }
 
     @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+        if (COMMAND_DELETE.equals(command)) {
+            GradleBaseProject gbp = GradleBaseProject.get(project);
+            return gbp != null && gbp.getSubProjects().isEmpty() && ProjectOperations.isDeleteOperationSupported(project);
+        }
         return ActionToTaskUtils.isActionEnabled(command, project, context);
     }
 
@@ -139,10 +152,11 @@ public class ActionProviderImpl implements ActionProvider {
         "# {0} - artifactId", "TXT_ApplyCodeChanges=Apply Code Changes ({0})",
         "# {0} - artifactId", "TXT_Profile=Profile ({0})",
         "# {0} - artifactId", "TXT_Test=Test ({0})",
-        "# {0} - artifactId", "TXT_Build=Build ({0})"
+        "# {0} - artifactId", "TXT_Build=Build ({0})",
+        "# {0} - artifactId", "TXT_Delete=Delete ({0})",
     })
 
-    private static String taskName(Project project, String action, Lookup lkp) {
+    static String taskName(Project project, String action, Lookup lkp) {
         String title;
         DataObject dobj = lkp.lookup(DataObject.class);
         String dobjName = dobj != null ? dobj.getName() : "";
@@ -154,6 +168,9 @@ public class ActionProviderImpl implements ActionProvider {
                 break;
             case ActionProvider.COMMAND_DEBUG:
                 title = TXT_Debug(prjLabel);
+                break;
+            case ActionProvider.COMMAND_DELETE:
+                title = TXT_Delete(prjLabel);
                 break;
             case ActionProvider.COMMAND_PROFILE:
                 title = TXT_Profile(prjLabel);
@@ -198,7 +215,8 @@ public class ActionProviderImpl implements ActionProvider {
 
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
         final String[] args = evalueteArgs(project, action, argLine, ctx);
-        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), args);
+        Set<ExecFlag> flags = mapping.isRepeatable() ? EnumSet.of(ExecFlag.REPEATABLE) : EnumSet.noneOf(ExecFlag.class);
+        RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), flags, args);
 
         if (showUI) {
             GradleExecutorOptionsPanel pnl = new GradleExecutorOptionsPanel(project);

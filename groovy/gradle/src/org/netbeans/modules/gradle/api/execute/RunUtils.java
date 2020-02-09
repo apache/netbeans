@@ -40,7 +40,6 @@ import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
 
-import static org.netbeans.modules.gradle.api.execute.Bundle.*;
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,16 +54,14 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.Specification;
 
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.spi.GradleSettings;
-import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 
 /**
@@ -135,8 +132,9 @@ public final class RunUtils {
      * @param displayName The display name of the output tab
      * @param args Gradle command line arguments
      * @return the Gradle execution configuration.
+     * @since 1.5
      */
-    public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
+    public static RunConfig createRunConfig(Project project, String action, String displayName, Set<ExecFlag> flags, String... args) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
 
         GradleCommandLine syscmd = GradleCommandLine.getDefaultCommandLine();
@@ -158,8 +156,25 @@ public final class RunUtils {
 
 
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
-        RunConfig ret = new RunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), cmd);
+        RunConfig ret = new RunConfig(project, action, displayName, flags, cmd);
         return ret;
+    }
+
+    /**
+     * Create Gradle execution configuration (context). It applies the default
+     * setting from the project and the Global Gradle configuration on the
+     * command line.
+     *
+     * @param project The Gradle project
+     * @param action The name of the IDE action that's going to be executed
+     * @param displayName The display name of the output tab
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @deprecated use {@link #createRunConfig(org.netbeans.api.project.Project, java.lang.String, java.lang.String, java.util.Set, java.lang.String...) } instead.
+     */
+    @Deprecated
+    public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
+        return createRunConfig(project, action, displayName, EnumSet.of(RunConfig.ExecFlag.REPEATABLE), args);
     }
 
     /**
@@ -296,56 +311,6 @@ public final class RunUtils {
                 return Collections.singletonMap(token, value);
             }
         };
-    }
-
-    @NbBundle.Messages({
-        "# {0} - artifactId", "TXT_Run=Run ({0})",
-        "# {0} - artifactId", "TXT_Debug=Debug ({0})",
-        "# {0} - artifactId", "TXT_ApplyCodeChanges=Apply Code Changes ({0})",
-        "# {0} - artifactId", "TXT_Profile=Profile ({0})",
-        "# {0} - artifactId", "TXT_Test=Test ({0})",
-        "# {0} - artifactId", "TXT_Build=Build ({0})"
-    })
-    private static String taskName(String action, Lookup lkp) {
-        String title;
-        DataObject dobj = lkp.lookup(DataObject.class);
-        String dobjName = dobj != null ? dobj.getName() : "";
-        Project prj = lkp.lookup(Project.class);
-        String prjLabel = prj != null ? ProjectUtils.getInformation(prj).getDisplayName() : "No Project on Lookup";
-        switch (action) {
-            case ActionProvider.COMMAND_RUN:
-                title = TXT_Run(prjLabel);
-                break;
-            case ActionProvider.COMMAND_DEBUG:
-                title = TXT_Debug(prjLabel);
-                break;
-            case ActionProvider.COMMAND_PROFILE:
-                title = TXT_Profile(prjLabel);
-                break;
-            case ActionProvider.COMMAND_TEST:
-                title = TXT_Test(prjLabel);
-                break;
-            case ActionProvider.COMMAND_RUN_SINGLE:
-                title = TXT_Run(dobjName);
-                break;
-            case ActionProvider.COMMAND_DEBUG_SINGLE:
-            case ActionProvider.COMMAND_DEBUG_TEST_SINGLE:
-                title = TXT_Debug(dobjName);
-                break;
-            case ActionProvider.COMMAND_PROFILE_SINGLE:
-            case ActionProvider.COMMAND_PROFILE_TEST_SINGLE:
-                title = TXT_Profile(dobjName);
-                break;
-            case ActionProvider.COMMAND_TEST_SINGLE:
-                title = TXT_Test(dobjName);
-                break;
-            case "debug.fix":
-                title = TXT_ApplyCodeChanges(prjLabel);
-                break;
-            default:
-                title = TXT_Build(prjLabel);
-        }
-        return title;
     }
 
  /**

@@ -136,39 +136,6 @@ public class JavacParserTest extends NbTestCase {
         }, true);
     }
 
-    public void testMultiSourceVanilla() throws Exception {
-        Lookup noSP = Lookups.exclude(Lookup.getDefault(), JavacParser.SequentialParsing.class);
-        GlobalLookup.execute(noSP, () -> {
-            try {
-                FileObject f1 = createFile("test/Test1.java", "package test; class Test1");
-                FileObject f2 = createFile("test/Test2.java", "package test; class Test2{}");
-                FileObject f3 = createFile("test/Test3.java", "package test; class Test3{}");
-
-                ClasspathInfo cpInfo = ClasspathInfo.create(f2);
-                JavaSource js = JavaSource.create(cpInfo, f2, f3);
-
-                SourceUtilsTestUtil.compileRecursively(sourceRoot);
-
-                js.runUserActionTask(new Task<CompilationController>() {
-                    TypeElement storedJLObject;
-                    public void run(CompilationController parameter) throws Exception {
-                        assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
-                        assertNotNull(parameter.getCompilationUnit());
-                        TypeElement jlObject = parameter.getElements().getTypeElement("java.lang.Object");
-
-                        if (storedJLObject == null) {
-                            storedJLObject = jlObject;
-                        } else {
-                            assertFalse(Objects.equals(storedJLObject, jlObject));
-                        }
-                    }
-                }, true);
-            } catch (Exception ex) {
-                throw new AssertionError(ex);
-            }
-        });
-    }
-
     public void test199332() throws Exception {
         settings.commandLine = "-Xlint:serial";
 

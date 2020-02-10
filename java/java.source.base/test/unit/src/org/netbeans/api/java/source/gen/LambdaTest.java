@@ -209,6 +209,48 @@ public class LambdaTest extends GeneratorTestMDRCompat {
         }
     }
     
+    public void testExplicitLambdaParam() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package hierbas.del.litoral;\n\n" +
+            "public class Test {\n" +
+            "    public static void taragui() {\n" +
+            "        ChangeListener l;\n" +
+            "    }\n" +
+            "}\n"
+            );
+        String golden =
+            "package hierbas.del.litoral;\n\n" +
+            "public class Test {\n" +
+            "    public static void taragui() {\n" +
+            "        ChangeListener l = (String e) -> System.err.println();\n" +
+            "    }\n" +
+            "}\n";
+        JavaSource src = getJavaSource(testFile);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(final WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                final TreeMaker make = workingCopy.getTreeMaker();
+                new ErrorAwareTreeScanner<Void, Void>() {
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        ExpressionTree stat = make.MethodInvocation(Collections.emptyList(), make.MemberSelect(make.MemberSelect(make.QualIdent("java.lang.System"), "err"), "println"), Collections.emptyList());
+                        LambdaExpressionTree lambda = make.LambdaExpression(Collections.singletonList(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "e", make.Type("java.lang.String"), null)), stat);
+                        workingCopy.rewrite(node, make.Variable(node.getModifiers(), node.getName(), node.getType(), lambda));
+                        return super.visitVariable(node, p);
+                    }
+                }.scan(workingCopy.getCompilationUnit(), null);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
     public void testAddFirstLambdaParam() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, 

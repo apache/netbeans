@@ -1339,6 +1339,22 @@ public class JavaFixUtilitiesTest extends TestBase {
 		           "}\n");
     }
 
+    public void testRewriteToExplicitLambda() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m();\n" +
+                           "    }\n" +
+                           "}\n",
+                           "$0{test.Test}.m()=>$0.m((String t) -> System.err.println(t))",
+                           "package test;\n" +
+                           "public class Test {\n" +
+                           "    public void m() {\n" +
+                           "        m((String t) -> System.err.println(t));\n" +
+                           "    }\n" +
+		           "}\n");
+    }
+
     public void performRewriteTest(String code, String rule, String golden) throws Exception {
         performRewriteTest(code, rule, golden, null);
     }

@@ -1212,7 +1212,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitLambda(JCLambda tree) {
-        boolean useParens = cs.parensAroundSingularLambdaParam() || tree.params.size() != 1;
+        boolean useParens = cs.parensAroundSingularLambdaParam() ||
+                            tree.params.size() != 1 ||
+                            tree.paramKind != JCLambda.ParameterKind.IMPLICIT;
         if (useParens) {
             print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
         }

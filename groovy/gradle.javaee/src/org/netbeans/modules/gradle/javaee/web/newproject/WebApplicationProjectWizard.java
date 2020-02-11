@@ -85,7 +85,7 @@ public class WebApplicationProjectWizard extends SimpleGradleWizardIterator {
         List<String> dependencies = new LinkedList<>();
         dependencies.addAll(webDependencies(profileId));
         dependencies.add("");
-        dependencies.add("testCompile     'junit:junit:4.12'");
+        dependencies.add("testImplementation     'junit:junit:4.13'");
         params.put(PROP_DEPENDENCIES, dependencies);
 
         String projectName = (String) params.get(PROP_NAME);

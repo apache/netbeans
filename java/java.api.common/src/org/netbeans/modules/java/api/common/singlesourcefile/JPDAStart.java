@@ -26,9 +26,6 @@ import com.sun.jdi.Bootstrap;
 import com.sun.jdi.connect.ListeningConnector;
 import com.sun.jdi.connect.Transport;
 import com.sun.jdi.connect.Connector;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +39,6 @@ import org.openide.filesystems.FileUtil;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.util.Exceptions;
 import org.openide.windows.InputOutput;
 
 /**
@@ -143,37 +139,9 @@ public class JPDAStart implements Runnable {
                 lock.notify();
             }
         }
-
     }
 
     public String getTransport() {
         return TRANSPORT;
     }
-
-    private static final class CopyReaderWriter implements Runnable {
-
-        private final Reader in;
-        private final Writer out;
-
-        public CopyReaderWriter(Reader in, Writer out) {
-            this.in = in;
-            this.out = out;
-        }
-
-        @Override
-        public void run() {
-            try {
-                char[] buf = new char[1024];
-                int read;
-
-                while ((read = in.read(buf)) != (-1)) {
-                    out.write(buf, 0, read);
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-    }
-
 }

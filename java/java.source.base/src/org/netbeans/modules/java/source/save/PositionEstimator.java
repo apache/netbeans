@@ -22,6 +22,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.Tree;
+import org.netbeans.modules.java.source.TreeShims;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
@@ -58,7 +59,6 @@ public abstract class PositionEstimator {
      * For JCTree instances that have no associated source position.
      */
     public static final int NOPOS = -2;
-    
     
     final List<? extends Tree> oldL;
     final List<? extends Tree> newL;
@@ -314,7 +314,7 @@ public abstract class PositionEstimator {
                 do {
                     Tree t = cut.getTypeDecls().get(tdpos);
                     typeDeclStart = (int) positions.getStartPosition(cut, t);
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
+                    if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind()) || t.getKind().toString().equals(TreeShims.RECORD)) {
                         break;
                     }
                     tdpos++;

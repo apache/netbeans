@@ -58,24 +58,8 @@ public class DarkNimbusTheme {
         UIManager.put( "nb.errorForeground", new Color(127,0,0) ); //NOI18N
         UIManager.put( "nb.warningForeground", new Color(255,216,0) ); //NOI18N
 
-        UIManager.put( "nb.heapview.border1", new Color( 128, 128, 128) ); //NOI18N
-        UIManager.put( "nb.heapview.border2", new Color( 128, 128, 128).darker() ); //NOI18N
-        UIManager.put( "nb.heapview.border3", new Color(115,164,209) ); //NOI18N
-
         UIManager.put( "nb.heapview.foreground", new Color( 230, 230, 230) ); //NOI18N
-
-        UIManager.put( "nb.heapview.background1", new Color( 18, 30, 49) ); //NOI18N
-
-        UIManager.put( "nb.heapview.background2", new Color( 18, 30, 49).brighter() ); //NOI18N
-
-        UIManager.put( "nb.heapview.grid1.start", new Color( 97, 95, 87 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid1.end", new Color( 98, 96, 88 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid2.start", new Color( 99, 97, 90 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid2.end", new Color( 101, 99, 92 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid3.start", new Color( 102, 101, 93 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid3.end", new Color( 105, 103, 95 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid4.start", new Color( 107, 105, 97 ) ); //NOI18N
-        UIManager.put( "nb.heapview.grid4.end", new Color( 109, 107, 99 ) ); //NOI18N
+        UIManager.put( "nb.heapview.background", new Color( 18, 30, 49) ); //NOI18N
 
         UIManager.put( "PropSheet.setBackground", new Color(112, 112, 112) ); //NOI18N
         UIManager.put( "PropSheet.selectedSetBackground", new Color(100, 100, 100) ); //NOI18N

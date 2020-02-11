@@ -20,43 +20,41 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Utilities;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
  * @author Arunava Sinha
  */
-class CompileProcess  {
+class CompileProcess {
 
     private static final Logger LOG = Logger.getLogger(CompileProcess.class.getName());
-    FileObject fileObject;
 
-    
-    public CompileProcess(FileObject fileObject) {
-        this.fileObject = fileObject;
-    }
+    public Process setupProcess(FileObject fileObject) {
 
-    public Process setupProcess() {
-        File javaBinPath = new File(new File(System.getProperty("java.home")), "bin");  //NOI18N
-        String javaPath = javaBinPath.getAbsolutePath() + "//java";  //NOI18N
+        FileObject javac = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("javac"); //NOI18N
+        File javacFile = FileUtil.toFile(javac);
+        String javacPath = javacFile.getAbsolutePath();
 
-        String javacPath = javaBinPath.getAbsolutePath() + "//javac";  //NOI18N
         List<String> compileCommandList = new ArrayList<>();
-        if (Utilities.isUnix()) {
-            compileCommandList.add("bash"); //NOI18N
-            compileCommandList.add("-c"); //NOI18N
-        }
 
         Object compilerVmOptionsObj = fileObject.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-        String vmOptions = compilerVmOptionsObj != null ? (String) compilerVmOptionsObj : "";
+        compileCommandList.add(javacPath);
+        compileCommandList.add("-g");  //NOI18N
 
-        compileCommandList.add(javacPath + " -g" + " " + vmOptions + " " + fileObject.getPath());
+        String vmOptions = compilerVmOptionsObj != null ? ((String) compilerVmOptionsObj).trim() : ""; // NOI18N
+        if (!vmOptions.isEmpty()) {
+            compileCommandList.addAll(Arrays.asList(vmOptions.split(" "))); //NOI18N
+        }
+
+        compileCommandList.add(fileObject.getPath());
         ProcessBuilder compileProcessBuilder = new ProcessBuilder(compileCommandList);
         compileProcessBuilder.directory(new File(fileObject.getParent().getPath()));
         compileProcessBuilder.redirectErrorStream(true);
@@ -69,9 +67,6 @@ class CompileProcess  {
                     Level.WARNING,
                     "Could not get InputStream of Compile Process"); //NOI18N
         }
-           
         return null;
-
     }
-
 }

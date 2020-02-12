@@ -93,7 +93,8 @@ public class GradleBinaryForSource implements BinaryForSourceQueryImplementation
 
         @Override
         public URL[] getRoots() {
-            GradleJavaSourceSet ss = GradleJavaProject.get(prj).getSourceSets().get(sourceSetName);
+            GradleJavaProject gjp = GradleJavaProject.get(prj);
+            GradleJavaSourceSet ss = gjp != null ? gjp.getSourceSets().get(sourceSetName) : null;
             if (ss == null) {
                 return new URL[0];
             }

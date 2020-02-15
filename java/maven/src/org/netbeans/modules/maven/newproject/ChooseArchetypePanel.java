@@ -245,8 +245,8 @@ public class ChooseArchetypePanel extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(labelDesc, org.openide.util.NbBundle.getMessage(ChooseArchetypePanel.class, "LBL_Description")); // NOI18N
 
         taDescription.setEditable(false);
-        taDescription.setBackground((java.awt.Color)(UIManager.get("textArea.background")!=null?
-            UIManager.get("textArea.background"):new java.awt.Color(238, 238, 238)));
+        taDescription.setBackground((java.awt.Color)(UIManager.get("TextArea.background")!=null?
+            UIManager.get("TextArea.background"):new java.awt.Color(238, 238, 238)));
     taDescription.setColumns(20);
     taDescription.setLineWrap(true);
     taDescription.setRows(5);

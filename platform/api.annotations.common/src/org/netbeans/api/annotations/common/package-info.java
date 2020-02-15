@@ -18,11 +18,10 @@
  */
 
 /**
- * The API containingg common annotations (namely for defect detection)
+ * The API containing common annotations (namely for defect detection)
  * to be used across the IDE sources.
  * <p>
  * Annotations are respected (and so annotated elements may be checked)
  * by the FindBugs tool.
  */
 package org.netbeans.api.annotations.common;
-

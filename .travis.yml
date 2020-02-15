@@ -518,7 +518,12 @@ matrix:
             - ant $BUILD_OPTS clean
             - ant $BUILD_OPTS build
           script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
             - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
 
         - name: Test php modules
           jdk: openjdk8

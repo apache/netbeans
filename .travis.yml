@@ -261,7 +261,8 @@ matrix:
             #- ant $OPTS -f ide/localhistory test
             - ant $OPTS -f ide/lsp.client test
             - ant $OPTS -f ide/notifications test
-            - ant $OPTS -f ide/notifications.linux test
+            #- ant $OPTS -f ide/notifications.linux test
+            - ant -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -f ide/notifications.linux test
             - ant $OPTS -f ide/o.openidex.util test
             #- ant $OPTS -f ide/parsing.api test
             #- ant $OPTS -f ide/parsing.indexing test

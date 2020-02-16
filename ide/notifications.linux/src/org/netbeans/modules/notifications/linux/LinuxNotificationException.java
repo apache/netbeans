@@ -18,17 +18,19 @@
  */
 package org.netbeans.modules.notifications.linux;
 
-import org.openide.awt.Notification;
-
 /**
  *
  * @author Hector Espert
  */
-public class FallbackNotification extends Notification {
+public class LinuxNotificationException extends RuntimeException {
 
-    @Override
-    public void clear() {
-        
+    /**
+     * Constructs an instance of <code>LinuxNotificationException</code> with
+     * the specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public LinuxNotificationException(String msg) {
+        super(msg);
     }
-    
 }

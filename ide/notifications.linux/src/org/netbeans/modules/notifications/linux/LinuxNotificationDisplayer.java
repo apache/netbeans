@@ -92,23 +92,23 @@ public class LinuxNotificationDisplayer extends NotificationDisplayer {
                     libnotify.notify_notification_show(notification, null);
                 });
 
-        return getDefaultNotificationDisplayer()
+        return getFallbackNotificationDisplayer()
                 .map(diplayer -> diplayer.notify(title, icon, detailsText, detailsAction, priority))
-                .orElseGet(FallbackNotification::new);
+                .orElseThrow(() -> new LinuxNotificationException("Fallback NotificationDisplayer implementation not available"));
     }
 
     @Override
     public Notification notify(String title, Icon icon, JComponent balloonDetails, JComponent popupDetails, Priority priority) {
-        return getDefaultNotificationDisplayer()
+        return getFallbackNotificationDisplayer()
                 .map(diplayer -> diplayer.notify(title, icon, balloonDetails, popupDetails, priority))
-                .orElseGet(FallbackNotification::new);
+                .orElseThrow(() -> new LinuxNotificationException("Fallback NotificationDisplayer implementation not available"));
     }
 
-    private Optional<NotificationDisplayer> getDefaultNotificationDisplayer() {
-        return searchDefaultNotificationDisplayerInLookup(Lookup.getDefault());
+    private Optional<NotificationDisplayer> getFallbackNotificationDisplayer() {
+        return searchFallbackNotificationDisplayerInLookup(Lookup.getDefault());
     }
 
-    private Optional<NotificationDisplayer> searchDefaultNotificationDisplayerInLookup(Lookup lookup) {
+    private Optional<NotificationDisplayer> searchFallbackNotificationDisplayerInLookup(Lookup lookup) {
         return lookup.lookupAll(NotificationDisplayer.class)
                 .stream()
                 .filter((notificationDisplayer) -> !LinuxNotificationDisplayer.class.isInstance(notificationDisplayer))

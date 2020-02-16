@@ -23,7 +23,7 @@ import org.openide.modules.OnStart;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Initializes linux notification displayer on module start.
  * @author Hector Espert
  */
 @OnStart
@@ -32,8 +32,15 @@ public class LinuxNotificationInitialize implements Runnable {
     @Override
     public void run() {
         Optional.ofNullable(Lookup.getDefault().lookup(LinuxNotificationDisplayer.class))
-                .filter(LinuxNotificationDisplayer::notStarted)
-                .ifPresent(LinuxNotificationDisplayer::start);
+                .ifPresent(linuxNotificationDisplayer -> {
+                    if (linuxNotificationDisplayer.notLoaded()) {
+                        linuxNotificationDisplayer.load();
+                    }
+
+                    if (linuxNotificationDisplayer.notStarted()) {
+                        linuxNotificationDisplayer.start();
+                    }
+                });
     }
-    
+
 }

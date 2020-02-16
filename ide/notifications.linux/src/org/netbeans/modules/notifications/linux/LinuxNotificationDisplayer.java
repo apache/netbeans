@@ -45,16 +45,31 @@ public class LinuxNotificationDisplayer extends NotificationDisplayer {
 
     private static final String APP_NAME = "netbeans";
 
-    private Optional<Libnotify> optionalLibnotify;
+    private Optional<Libnotify> optionalLibnotify = Optional.empty();
 
-    public LinuxNotificationDisplayer() {
-        try {
-            this.optionalLibnotify = Optional.of(Native.load(LIBNOTIFY, Libnotify.class));
-            LOG.log(Level.FINE, "Libnotify library loaded");
-        } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
-            LOG.log(Level.WARNING, "Libnotify library not found", unsatisfiedLinkError);
-            this.optionalLibnotify = Optional.empty();
+    /**
+     * Loads libnotify native library.
+     */
+    public void load() {
+        if (isLoaded()) {
+            LOG.log(Level.INFO, "Libnotify is already loaded");
+        } else {
+            try {
+                this.optionalLibnotify = Optional.of(Native.load(LIBNOTIFY, Libnotify.class));
+                LOG.log(Level.FINE, "Libnotify library loaded");
+            } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+                LOG.log(Level.WARNING, "Libnotify library not found", unsatisfiedLinkError);
+                this.optionalLibnotify = Optional.empty();
+            }
         }
+    }
+
+    public boolean isLoaded() {
+        return optionalLibnotify.isPresent();
+    }
+
+    public boolean notLoaded() {
+        return !isLoaded();
     }
 
     public boolean isStarted() {
@@ -94,14 +109,14 @@ public class LinuxNotificationDisplayer extends NotificationDisplayer {
 
         return getFallbackNotificationDisplayer()
                 .map(diplayer -> diplayer.notify(title, icon, detailsText, detailsAction, priority))
-                .orElseThrow(() -> new LinuxNotificationException("Fallback NotificationDisplayer implementation not available"));
+                .orElseThrow(FallbackLinuxNotificationException::new);
     }
 
     @Override
     public Notification notify(String title, Icon icon, JComponent balloonDetails, JComponent popupDetails, Priority priority) {
         return getFallbackNotificationDisplayer()
                 .map(diplayer -> diplayer.notify(title, icon, balloonDetails, popupDetails, priority))
-                .orElseThrow(() -> new LinuxNotificationException("Fallback NotificationDisplayer implementation not available"));
+                .orElseThrow(FallbackLinuxNotificationException::new);
     }
 
     private Optional<NotificationDisplayer> getFallbackNotificationDisplayer() {

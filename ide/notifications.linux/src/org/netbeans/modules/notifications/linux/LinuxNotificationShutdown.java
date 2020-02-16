@@ -23,7 +23,7 @@ import org.openide.modules.OnStop;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Shutdowns linux notification displayer on module stop.
  * @author Hector Espert
  */
 @OnStop

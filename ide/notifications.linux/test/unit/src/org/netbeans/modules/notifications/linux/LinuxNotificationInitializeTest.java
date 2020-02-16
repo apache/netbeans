@@ -16,23 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.notifications.linux.jna;
+package org.netbeans.modules.notifications.linux;
 
-import com.sun.jna.Native;
 import com.sun.jna.Platform;
-import com.sun.jna.Pointer;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
+import org.openide.util.Lookup;
 
 /**
- * Test libnotify integration
+ *
  * @author Hector Espert
  */
-public class LibnotifyTest extends NbTestCase {
-    
-    private Libnotify libnotify;
+public class LinuxNotificationInitializeTest extends NbTestCase {
 
-    public LibnotifyTest(String name) {
+    public LinuxNotificationInitializeTest(String name) {
         super(name);
     }
 
@@ -41,24 +38,20 @@ public class LibnotifyTest extends NbTestCase {
         return super.canRun() && Platform.LINUX == Platform.getOSType();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        libnotify = Native.load("libnotify.so.4", Libnotify.class);
+    @Test
+    public void testRun() {
+        LinuxNotificationInitialize linuxNotificationInitialize = new LinuxNotificationInitialize();
+        
+        LinuxNotificationDisplayer linuxNotificationDisplayer = Lookup.getDefault().lookup(LinuxNotificationDisplayer.class);
+        assertNotNull(linuxNotificationDisplayer);
+        
+        assertTrue(linuxNotificationDisplayer.notLoaded());
+        assertTrue(linuxNotificationDisplayer.notStarted());
+        
+        linuxNotificationInitialize.run();
+        
+        assertTrue(linuxNotificationDisplayer.isLoaded());
+        assertTrue(linuxNotificationDisplayer.isStarted());
     }
     
-    @Test
-    public void testLibnotify() {
-        assertFalse(libnotify.notify_is_initted());
-        assertTrue(libnotify.notify_init("netbeans_test"));
-        assertTrue(libnotify.notify_is_initted());
-        
-        Pointer notification = libnotify.notify_notification_new("Netbeans test notification", "Netbeans test notification body", null);
-        assertNotNull(notification);
-        
-        assertTrue(libnotify.notify_notification_show(notification, null));
-        
-        libnotify.notify_uninit();
-        assertFalse(libnotify.notify_is_initted());
-    }
-
 }

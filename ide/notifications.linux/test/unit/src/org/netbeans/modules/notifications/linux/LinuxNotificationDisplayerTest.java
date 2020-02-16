@@ -25,7 +25,7 @@ import org.openide.awt.Notification;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Test LinuxNotificationDisplayer
  * @author Hector Espert
  */
 public class LinuxNotificationDisplayerTest extends NbTestCase {
@@ -46,6 +46,13 @@ public class LinuxNotificationDisplayerTest extends NbTestCase {
         notificationDisplayer = Lookup.getDefault().lookup(LinuxNotificationDisplayer.class);
         assertNotNull(notificationDisplayer);
         assertEquals(LinuxNotificationDisplayer.class, notificationDisplayer.getClass());
+        
+        if (notificationDisplayer.notLoaded()) {
+            notificationDisplayer.load();
+        }
+
+        assertTrue(notificationDisplayer.isLoaded());
+        assertFalse(notificationDisplayer.notLoaded());
         
         assertFalse(notificationDisplayer.isStarted());
         assertTrue(notificationDisplayer.notStarted());

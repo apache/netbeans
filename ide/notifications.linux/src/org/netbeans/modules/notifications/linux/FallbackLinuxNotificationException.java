@@ -22,15 +22,11 @@ package org.netbeans.modules.notifications.linux;
  *
  * @author Hector Espert
  */
-public class LinuxNotificationException extends RuntimeException {
+public class FallbackLinuxNotificationException extends RuntimeException {
 
-    /**
-     * Constructs an instance of <code>LinuxNotificationException</code> with
-     * the specified detail message.
-     *
-     * @param msg the detail message.
-     */
-    public LinuxNotificationException(String msg) {
-        super(msg);
+
+    public FallbackLinuxNotificationException() {
+        super("Fallback NotificationDisplayer implementation not available");
     }
+    
 }

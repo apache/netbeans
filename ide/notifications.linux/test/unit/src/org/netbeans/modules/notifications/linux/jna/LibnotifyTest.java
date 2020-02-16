@@ -52,7 +52,7 @@ public class LibnotifyTest extends NbTestCase {
         assertTrue(libnotify.notify_init("netbeans_test"));
         assertTrue(libnotify.notify_is_initted());
         
-        Pointer notification = libnotify.notify_notification_new("Netbeans test notification", "Netbeans test notification body", "dialog-information");
+        Pointer notification = libnotify.notify_notification_new("Netbeans test notification", "Netbeans test notification body", null);
         assertNotNull(notification);
         
         assertTrue(libnotify.notify_notification_show(notification, null));

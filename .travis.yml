@@ -23,6 +23,7 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+      - libnotify-bin
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0

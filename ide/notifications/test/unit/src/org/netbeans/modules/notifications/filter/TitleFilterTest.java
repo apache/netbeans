@@ -16,31 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.notifications.filter;
 
-import org.openide.util.NbBundle;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * Utilities
+ *
+ * @author Hector Espert
  */
-final class Util {
-
-    public static String getString(String key) {
-        return NbBundle.getMessage(Util.class, key);
+public class TitleFilterTest {
+    
+    private TitleFilter titleFilter;
+    
+    @Before
+    public void setUp() {
+        titleFilter = new TitleFilter("string");
     }
 
-    public static char getChar(String key) {
-        return NbBundle.getMessage(Util.class, key).charAt(0);
-    }
-
-    public static String getMessage(String key, Object obj) {
-        return NbBundle.getMessage(Util.class, key, obj);
-    }
-
-    public static String getMessage(String key, Object obj, Object obj2) {
-        return NbBundle.getMessage(Util.class,key, obj, obj2);
+    @Test
+    public void testIsEnabled() {
+        assertFalse(titleFilter.isEnabled("title with number"));
+        assertTrue(titleFilter.isEnabled("title with string"));
     }
     
-
 }

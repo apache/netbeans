@@ -28,27 +28,27 @@
         <resource>jar:nbinst://org.apache.commons.logging/modules/org-apache-commons-logging.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.cglib/modules/ext/cglib-2.2.jar!/</resource>
 
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aop-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aspects-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-beans-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-build-src-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-support-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-core-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-expression-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-framework-bom-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-tomcat-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-jdbc-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-jms-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-orm-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-oxm-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-struts-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-test-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-tx-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-web-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-3.2.7.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-portlet-3.2.7.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aop-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aspects-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-beans-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-build-src-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-support-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-core-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-expression-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-framework-bom-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-tomcat-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-jdbc-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-jms-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-orm-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-oxm-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-struts-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-test-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-tx-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-web-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-3.2.18.RELEASE.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-webmvc-portlet-3.2.18.RELEASE.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
@@ -61,26 +61,26 @@
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.springframework:spring-aop:3.2.7.RELEASE:jar
-                org.springframework:spring-aspects:3.2.7.RELEASE:jar
-                org.springframework:spring-beans:3.2.7.RELEASE:jar
-                org.springframework:spring-context:3.2.7.RELEASE:jar
-                org.springframework:spring-context-support:3.2.7.RELEASE:jar
-                org.springframework:spring-core:3.2.7.RELEASE:jar
-                org.springframework:spring-expression:3.2.7.RELEASE:jar
-                org.springframework:spring-framework-bom:3.2.7.RELEASE:pom
-                org.springframework:spring-instrument:3.2.7.RELEASE:jar
-                org.springframework:spring-instrument-tomcat:3.2.7.RELEASE:jar
-                org.springframework:spring-jdbc:3.2.7.RELEASE:jar
-                org.springframework:spring-jms:3.2.7.RELEASE:jar
-                org.springframework:spring-orm:3.2.7.RELEASE:jar
-                org.springframework:spring-oxm:3.2.7.RELEASE:jar
-                org.springframework:spring-struts:3.2.7.RELEASE:jar
-                org.springframework:spring-test:3.2.7.RELEASE:jar
-                org.springframework:spring-tx:3.2.7.RELEASE:jar
-                org.springframework:spring-web:3.2.7.RELEASE:jar
-                org.springframework:spring-webmvc:3.2.7.RELEASE:jar
-                org.springframework:spring-webmvc-portlet:3.2.7.RELEASE:jar
+                org.springframework:spring-aop:3.2.18.RELEASE:jar
+                org.springframework:spring-aspects:3.2.18.RELEASE:jar
+                org.springframework:spring-beans:3.2.18.RELEASE:jar
+                org.springframework:spring-context:3.2.18.RELEASE:jar
+                org.springframework:spring-context-support:3.2.18.RELEASE:jar
+                org.springframework:spring-core:3.2.18.RELEASE:jar
+                org.springframework:spring-expression:3.2.18.RELEASE:jar
+                org.springframework:spring-framework-bom:3.2.18.RELEASE:pom
+                org.springframework:spring-instrument:3.2.18.RELEASE:jar
+                org.springframework:spring-instrument-tomcat:3.2.18.RELEASE:jar
+                org.springframework:spring-jdbc:3.2.18.RELEASE:jar
+                org.springframework:spring-jms:3.2.18.RELEASE:jar
+                org.springframework:spring-orm:3.2.18.RELEASE:jar
+                org.springframework:spring-oxm:3.2.18.RELEASE:jar
+                org.springframework:spring-struts:3.2.18.RELEASE:jar
+                org.springframework:spring-test:3.2.18.RELEASE:jar
+                org.springframework:spring-tx:3.2.18.RELEASE:jar
+                org.springframework:spring-web:3.2.18.RELEASE:jar
+                org.springframework:spring-webmvc:3.2.18.RELEASE:jar
+                org.springframework:spring-webmvc-portlet:3.2.18.RELEASE:jar
             </value>
         </property>
     </properties>

@@ -14,6 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+os: linux
 language: java
 addons:
   apt:
@@ -23,13 +24,17 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+      
+git:
+  quiet: true
+
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
 
-matrix:
+jobs:
     include:
         - name: Check line endings and verify RAT report
           script: 
@@ -587,3 +592,10 @@ matrix:
           script:
             - ant $OPTS -f platform/masterfs.macosx test
             - ant $OPTS -f platform/core.network test
+            
+cache:
+  directories:
+  - nbbuild/external
+  - platform/libs.junit4/external
+  - platform/javahelp/external
+  - java/libs.springframework/external

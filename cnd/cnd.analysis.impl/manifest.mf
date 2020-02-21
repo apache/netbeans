@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.cnd.analysis.impl
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/analysis/impl/resources/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.4
+

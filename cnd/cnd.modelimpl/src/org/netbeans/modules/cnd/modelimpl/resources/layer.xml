@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="CND">
+        <folder name="headers">
+            <folder name="CPP">
+                <file name="cstdlib">
+                    <attr name="define" stringvalue="EXIT_SUCCESS;EXIT_FAILURE;MB_CUR_MAX;RAND_MAX;div_t;ldiv_t;lldiv_t;size_t;abort;exit;quick_exit;_Exit;atexit;at_quick_exit;system;getenv;malloc;calloc;realloc;free;atof;atoi;atol;atoll;strtol;strtoll;strtoul;strtoull;strtof;strtod;strtold;mblen;mbtowc;wctomb;mbstowcs;wcstombs;rand;srand;qsort;bsearch;abs;labs;llabs;div;ldiv;lldiv"/>
+                </file>
+                <file name="csignal">
+                    <attr name="define" stringvalue="sig_atomic_t;SIGABRT;SIGFPE;SIGILL;SIGINT;SIGSEGV;SIGTERM;SIG_DFL;SIG_IGN;SIG_ERR;signal;raise"/>
+                </file>
+                <file name="csetjmp">
+                    <attr name="define" stringvalue="jmp_buf;setjmp;longjmp"/>
+                </file>
+                <file name="cstdarg">
+                    <attr name="define" stringvalue="va_start;va_arg;va_copy;va_end;va_list"/>
+                </file>
+                <file name="typeinfo">
+                    <attr name="define" stringvalue="type_info;bad_typeid;bad_cast"/>
+                </file>
+                <file name="bitset">
+                    <attr name="define" stringvalue="bitset"/>
+                </file>
+                <file name="functional">
+                    <attr name="define" stringvalue="function;mem_fn;bad_function_call;is_bind_expression;is_placeholder;reference_wrapper;bind;ref;cref;invoke;plus;minus;multiplies;divides;modulus;negate;equal_to;not_equal_to;greater;less;greater_equal;less_equal;logical_and;logical_or;logical_not;bit_and;bit_or;bit_xor;bit_not;not_fn;unary_negate;binary_negate;not1;not2;unary_function;binary_function;binder1st;binder2nd;bind1st;bind2nd;pointer_to_unary_function;pointer_to_binary_function;ptr_fun;mem_fun_t;mem_fun1_t;const_mem_fun_t;const_mem_fun1_t;mem_fun;mem_fun_ref_t;mem_fun1_ref_t;const_mem_fun_ref_t;const_mem_fun1_ref_t;mem_fun_ref"/>
+                </file>
+                <file name="utility">
+                    <attr name="define" stringvalue="rel_ops;exchange;forward;move;move_if_noexcept;declval;make_pair;as_const;pair;piecewise_construct_t;integer_sequence;piecewise_construct"/>
+                </file>
+                <file name="ctime">
+                    <attr name="define" stringvalue="CLOCKS_PER_SEC;clock_t;time_t;tm;clock;time;difftime;ctime;asctime;strftime;wcsftime;gmtime;localtime;mktime"/>
+                </file>
+                <file name="cstddef">
+                    <attr name="define" stringvalue="offsetof;ptrdiff_t;nullptr_t;max_align_t"/>
+                </file>
+                <file name="new">
+                    <attr name="define" stringvalue="get_new_handler;set_new_handler;bad_alloc;bad_array_new_length;nothrow_t;new_handler;nothrow"/>
+               </file>
+                 <file name="memory">
+                    <attr name="define" stringvalue="unique_ptr;shared_ptr;weak_ptr;auto_ptr;owner_less;enable_shared_from_this;bad_weak_ptr;default_delete;allocator;allocator_traits;allocator_arg_t;allocator_arg;uses_allocator;pointer_safety;pointer_traits;allocator_arg;uninitialized_copy;uninitialized_copy_n;uninitialized_fill;uninitialized_fill_n;raw_storage_iterator;get_temporary_buffer;return_temporary_buffer;declare_reachable;undeclare_reachable;declare_no_pointers;undeclare_no_pointers;get_pointer_safety;addressof;align;make_unique;make_shared;allocate_shared;static_pointer_cast;dynamic_pointer_cast;const_pointer_cast;reinterpret_pointer_cast;get_deleter"/>
+               </file>
+                <file name="climits">
+                    <attr name="define" stringvalue="CHAR_BIT;MB_LEN_MAX;CHAR_MIN;CHAR_MAX;SCHAR_MIN;SHRT_MIN;INT_MIN;LONG_MIN;LLONG_MIN;SCHAR_MAX;SHRT_MAX;INT_MAX;LONG_MAX;LLONG_MAX;UCHAR_MAX;USHRT_MAX;UINT_MAX;ULONG_MAX;ULLONG_MAX"/>
+               </file>
+                <file name="cfloat">
+                    <attr name="define" stringvalue="FLT_RADIX;DECIMAL_DIG;FLT_DECIMAL_DIG;DBL_DECIMAL_DIG;LDBL_DECIMAL_DIG;FLT_MIN;DBL_MIN;LDBL_MIN;FLT_TRUE_MIN;DBL_TRUE_MIN;LDBL_TRUE_MIN;FLT_MAX;DBL_MAX;LDBL_MAX;FLT_EPSILON;DBL_EPSILON;LDBL_EPSILON;FLT_DIG;DBL_DIGLDBL_DIG;FLT_MANT_DIG;DBL_MANT_DIG;LDBL_MANT_DIG;FLT_MIN_EXP;DBL_MIN_EXP;LDBL_MIN_EXP;FLT_MIN_10_EXP;DBL_MIN_10_EXP;LDBL_MIN_10_EXP;FLT_MAX_EXP;DBL_MAX_EXP;LDBL_MAX_EXP;FLT_MAX_10_EXP;DBL_MAX_10_EXP;LDBL_MAX_10_EXP;FLT_ROUNDS;FLT_EVAL_METHOD;FLT_HAS_SUBNORM;DBL_HAS_SUBNORM;LDBL_HAS_SUBNORM"/>
+               </file>
+                <file name="limits">
+                    <attr name="define" stringvalue="numeric_limits;float_round_style;float_denorm_style"/>
+               </file>
+                <file name="exception">
+                    <attr name="define" stringvalue="exception;nested_exception;bad_exception;unexpected;unexpected_handler;terminate_handler;exception_ptr;uncaught_exception;uncaught_exceptions;make_exception_ptr;current_exception;rethrow_exception;throw_with_nested;rethrow_if_nested;terminate;get_terminate;set_terminate;get_unexpected;set_unexpected"/>
+               </file>
+                <file name="stdexcept">
+                    <attr name="define" stringvalue="logic_error;invalid_argument;domain_error;length_error;out_of_range;runtime_error;range_error;overflow_error;underflow_error"/>
+               </file>
+                <file name="cassert">
+                    <attr name="define" stringvalue="assert"/>
+               </file>
+                <file name="cerrno">
+                    <attr name="define" stringvalue="errno;E2BIG;EACCES;EADDRINUSE;EADDRNOTAVAIL;EAFNOSUPPORT;EAGAIN;EALREADY;EBADF;EBADMSG;EBUSY;ECANCELED;ECHILD;ECONNABORTED;ECONNREFUSED;ECONNRESET;EDEADLK;EDESTADDRREQ;EDOM;EEXIST;EFAULT;EFBIG;EHOSTUNREACH;EIDRM;EILSEQ;EINPROGRESS;EINTR;EINVAL;EIO;EISCONN;EISDIR;ELOOP;EMFILE;EMLINK;EMSGSIZE;ENAMETOOLONG;ENETDOWN;ENETRESET;ENETUNREACH;ENFILE;ENOBUFS;ENODATA;ENODEV;ENOENT;ENOEXEC;ENOLCK;ENOLINK;ENOMEM;ENOMSG;ENOPROTOOPT;ENOSPC;ENOSR;ENOSTR;ENOSYS;ENOTCONN;ENOTDIR;ENOTEMPTY;ENOTRECOVERABLE;ENOTSOCK;ENOTSUP;ENOTTY;ENXIO;EOPNOTSUPP;EOVERFLOW;EOWNERDEAD;EPERM;EPIPE;EPROTO;EPROTONOSUPPORT;EPROTOTYPE;ERANGE;EROFS;ESPIPE;ESRCH;ETIME;ETIMEDOUT;ETXTBSY;EWOULDBLOCK;EXDEV"/>
+               </file>
+                <file name="cctype">
+                    <attr name="define" stringvalue="isalnum;isalpha;islower;isupper;isdigit;isxdigit;iscntrl;isgraph;isspace;isblank;isprint;ispunct;tolower;toupper"/>
+               </file>
+                <file name="cwctype">
+                    <attr name="define" stringvalue="wctrans_t;wctype_t;WEOF;iswalnum;iswalpha;iswlower;iswupper;iswdigit;iswxdigit;iswcntrl;iswgraph;iswspace;iswblank;iswprint;iswpunct;iswctype;wctype;towlower;towupper;towctrans;wctrans"/>
+               </file>
+                <file name="cstring">
+                    <attr name="define" stringvalue="strcpy;strncpy;strcat;strncat;strxfrm;strlen;strcmp;strncmp;strcoll;strchr;strrchr;strspn;strcspn;strpbrk;strstr;strtok;memchr;memcmp;memset;memcpy;memmove;strerror"/>
+               </file>
+                <file name="cwchar">
+                    <attr name="define" stringvalue="WEOF;WCHAR_MIN;WCHAR_MAX;mbstate_t;wint_t;tm;wcscpy;wcsncpy;wcscat;wcsncat;wcsxfrm;wcslen;wcscmp;wcsncmp;wcscoll;wcschr;wcsrchr;wcsspn;wcscspn;wcspbrk;wcsstr;wcstok;wmemcpy;wmemmove;wmemcmp;wmemchr;wmemset;mbsinit;btowc;wctob;mbrlen;mbrtowc;wcrtomb;mbsrtowcs;wcsrtombs;fgetwc;getwc;fgetws;fputwc;putwc;fputws;getwchar;putwchar;ungetwc;fwide;wscanf;fwscanfs;wscanf;vwscanf;vfwscanf;vswscanf;wprintf;fwprintf;swprintf;vwprintf;vfwprintf;vswprintf;wcsftime;wcstol;wcstoll;wcstoul;wcstoull;wcstof;wcstod;wcstold"/>
+               </file>
+                <file name="string">
+                    <attr name="define" stringvalue="char_traits;basic_string;string;wstring;u16string;u32string;getline;stoi;stol;stoll;stoul;stoull;stof;stod;stold;to_string;to_wstring"/>
+               </file>
+                <file name="vector">
+                    <attr name="define" stringvalue="vector"/>
+                </file>
+                <file name="deque">
+                    <attr name="define" stringvalue="deque"/>
+                </file>
+                <file name="list">
+                    <attr name="define" stringvalue="list"/>
+                </file>
+                <file name="set">
+                    <attr name="define" stringvalue="set;multiset"/>
+                </file>
+                <file name="map">
+                    <attr name="define" stringvalue="map;multimap"/>
+                </file>
+                <file name="stack">
+                    <attr name="define" stringvalue="stack"/>
+                </file>
+                <file name="queue">
+                    <attr name="define" stringvalue="queue;priority_queue"/>
+                </file>
+                <file name="algorithm">
+                    <attr name="define" stringvalue="all_of;any_of;none_of;for_each;count;count_if;mismatch;equal;find;find_if;find_if_not;find_end;find_first_of;adjacent_find;search;search_n;copy;copy_if;copy_n;copy_backward;move;move_backward;fill;fill_n;transform;generate;generate_n;remove;remove_if;remove_copy;remove_copy_if;replace;replace_if;replace_copy;replace_copy_if;swap;swap_ranges;iter_swap;reverse;reverse_copy;rotate;rotate_copy;random_shuffle;shuffle;unique;unique_copy;is_partitioned;partition;partition_copy;stable_partition;partition_point;is_sorted;is_sorted_until;sort;partial_sort;partial_sort_copy;stable_sort;nth_element;lower_bound;upper_bound;binary_search;equal_range;merge;inplace_merge;includes;set_difference;set_intersection;set_symmetric_difference;set_union;is_heap;is_heap_until;make_heap;push_heap;pop_heap;sort_heap;clamp;max;max_element;min;min_element;minmax;minmax_element;lexicographical_compare;is_permutation;next_permutation;prev_permutation"/>
+                </file>
+                <file name="iterator">
+                    <attr name="define" stringvalue="iterator_traits;input_iterator_tag;output_iterator_tag;forward_iterator_tag;bidirectional_iterator_tag;random_access_iterator_tag;iterator;reverse_iterator;move_iterator;back_insert_iterator;front_insert_iterator;insert_iterator;istream_iterator;ostream_iterator;istreambuf_iterator;ostreambuf_iterator;make_reverse_iterator;make_move_iterator;front_inserter;back_inserter;inserter;advance;distance;next;prev;begin;cbegin;end;cend;rbegin;crbegin;rend;crend"/>
+                </file>
+                <file name="cmath">
+                    <attr name="define" stringvalue="HUGE_VALF;HUGE_VAL;HUGE_VALL;INFINITY;NAN;math_errhandling;MATH_ERRNO;MATH_ERREXCEPT;FP_NORMAL;FP_SUBNORMAL;FP_ZERO;FP_INFINITE;FP_NAN;float_t;double_t;abs;fabs;fmod;remainder;remquo;fma;fmax;fmin;fdim;nan;nanf;nanl;exp;exp2;expm1;log;log10;log2;log1p;pow;sqrt;cbrt;hypot;sin;cos;tan;asin;acos;atan;atan2;sinh;cosh;tanh;asinh;acosh;atanh;erf;erfc;tgamma;lgamma;ceil;floor;trunc;roundl;round;llround;nearbyint;rint;lrint;llrint;frexp;ldexp;modf;scalbn;scalbln;ilogb;logb;nextafter;nexttoward;copysign;fpclassify;isfinite;isinf;isnan;isnormal;signbit;isgreater;isgreaterequal;isless;islessequal;islessgreater;isunordered"/>
+                </file>
+                <file name="complex">
+                    <attr name="define" stringvalue="complex;real;imag;abs;arg;norm;conj;proj;polar;exp;log;log10;pow;sqrt;sin;cos;tan;asin;acos;atan;sinh;cosh;tanh;asinh;acosh;atanh"/>
+                </file>
+                <file name="valarray">
+                    <attr name="define" stringvalue="valarray;slice;slice_array;gslice;gslice_array;mask_array;indirect_array;abs;exp;log;log10;pow;sqrt;sin;cos;tan;asin;acos;atan;atan2;sinh;cosh;tanh"/>
+                </file>
+                <file name="numeric">
+                    <attr name="define" stringvalue="iota;accumulate;inner_product;adjacent_difference;partial_sum"/>
+                </file>
+                <file name="iosfwd"/>
+                <file name="ios">
+                    <attr name="define" stringvalue="ios_base;basic_ios;fpos;io_errc;iostream_category;is_error_code_enum;streamoff;streamsize;make_error_code;make_error_condition;boolalpha;noboolalpha;showbase;noshowbase;showpoint;noshowpoint;showpos;noshowpos;skipws;noskipws;uppercase;nouppercase;unitbuf;nounitbuf;internal;left;right;dec;hex;oct;fixed;scientific;hexfloat;defaultfloat"/>
+                </file>               
+                <file name="istream">
+                    <attr name="define" stringvalue="basic_istream;istream;wistream;basic_iostream;iostream;wiostream;ws"/>
+                </file>
+                <file name="ostream">
+                    <attr name="define" stringvalue="basic_ostream;ostream;wostream;ends;flush;endl"/>
+                </file>
+                <file name="iostream">
+                    <attr name="define" stringvalue="cin;cout;cerr;clog;wcin;wcout;wcerr;wclog"/>
+                </file>
+                <file name="fstream">
+                    <attr name="define" stringvalue="basic_filebuf;basic_ifstream;basic_ofstream;basic_fstream;filebuf;wfilebuf;ifstream;wifstream;ofstream;wofstream;fstream;wfstream"/>
+                </file>
+                <file name="sstream">
+                    <attr name="define" stringvalue="basic_stringbuf;basic_istringstream;basic_ostringstream;basic_stringstream;stringbuf;wstringbuf;istringstream;wistringstream;ostringstream;wostringstream;stringstream;wstringstream"/>
+                </file>
+                <file name="strstream">
+                    <attr name="define" stringvalue="strstreambuf;istrstream;ostrstream;strstream"/>
+                </file>
+                <file name="iomanip">
+                    <attr name="define" stringvalue="resetiosflags;setiosflags;setbase;setfill;setprecision;setw;get_money;put_money;get_time;put_time;quoted"/>
+                </file>
+                <file name="streambuf">
+                    <attr name="define" stringvalue="basic_streambuf;streambuf;wstreambuf"/>
+                </file>
+                <file name="cstdio">
+                    <attr name="define" stringvalue="FILE;fpos_t;size_t;stdin;stdout;stderr;EOF;FOPEN_MAX;FILENAME_MAX;BUFSIZ;_IOFBF;_IOLBF;_IONBF;SEEK_SET;SEEK_CUR;SEEK_END;TMP_MAX;L_tmpnam;fopen;freopen;fclose;fflush;setbuf;setvbuf;fread;fwrite;fgetc;getc;fgets;fputc;putc;fputs;getchar;gets;putchar;puts;ungetc;scanf;fscanf;sscanf;vscanf;vfscanf;vsscanf;printf;fprintf;sprintf;snprintf;vprintf;vfprintf;vsprintf;vsnprintf;ftell;fgetpos;fseek;fsetpos;rewind;clearerr;feof;ferror;perror;remove;rename;tmpfile;tmpnam"/>
+                </file>
+                <file name="locale">
+                    <attr name="define" stringvalue="locale;wstring_convert;wbuffer_convert;ctype_base;codecvt_base;messages_base;time_base;money_base;ctype;codecvt;collate;messages;time_get;time_put;num_get;num_put;numpunct;money_get;money_put;moneypunct;ctype_byname;codecvt_byname;messages_byname;collate_byname;time_get_byname;time_put_byname;numpunct_byname;moneypunct_byname;use_facet;has_facet;isspace;isblank;iscntrl;isupper;islower;isalpha;isdigit;ispunct;isxdigit;isalnum;isprint;isgraph;toupper;tolower"/>
+                </file>
+                <file name="clocale">
+                    <attr name="define" stringvalue="lconv;LC_ALL;LC_COLLATE;LC_CTYPE;LC_MONETARY;LC_NUMERIC;LC_TIME;setlocale;localeconv"/>
+                </file>
+                <file name="ciso646"/>
+                <file name="typeindex">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="type_index"/>
+                </file>
+                <file name="type_traits">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="integral_constant;bool_constant;true_type;false_type;is_void;is_null_pointer;is_integral;is_floating_point;is_array;is_enum;is_union;is_class;is_function;is_pointer;is_lvalue_reference;is_rvalue_reference;is_member_object_pointer;is_member_function_pointer;is_fundamental;is_arithmetic;is_scalar;is_object;is_compound;is_reference;is_member_pointer;is_const;is_volatile;is_trivial;is_trivially_copyable;is_standard_layout;is_pod;is_literal_type;is_empty;is_polymorphic;is_abstract;is_signed;is_unsigned;is_constructible;is_trivially_constructible;is_nothrow_constructible;is_default_constructible;is_trivially_default_constructible;is_nothrow_default_constructible;is_copy_constructible;is_trivially_copy_constructible;is_nothrow_copy_constructible;is_move_constructible;is_trivially_move_constructible;is_nothrow_move_constructible;is_assignable;is_trivially_assignable;is_nothrow_assignable;is_copy_assignable;is_trivially_copy_assignable;is_nothrow_copy_assignable;is_move_assignable;is_trivially_move_assignable;is_nothrow_move_assignable;is_destructible;is_trivially_destructible;is_nothrow_destructible;has_virtual_destructor;alignment_of;rank;extent;is_same;is_base_of;is_convertible;remove_cv;remove_const;remove_volatile;add_cv;add_const;add_volatile;remove_reference;add_lvalue_reference;add_rvalue_reference;remove_pointer;add_pointer;make_signed;make_unsigned;remove_extent;remove_all_extents;aligned_storage;aligned_union;decay;enable_if;conditional;common_type;underlying_type;result_of"/>
+                </file>
+                <file name="chrono">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="duration;system_clock;steady_clock;high_resolution_clock;time_point;treat_as_floating_point;duration_values;nanoseconds;microseconds;milliseconds;seconds;minutes;hours;time_point_cast"/>
+                </file>
+                <file name="initializer_list">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="initializer_list"/>
+                </file>
+                <file name="tuple">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="tuple;tuple_size;tuple_element;ignore;make_tuple;tie;forward_as_tuple;tuple_cat"/>
+                </file>
+                <file name="scoped_allocator">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="cstdint">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="int8_t;int16_t;int32_t;int64_t;int_fast8_t;int_fast16_t;int_fast32_t;int_fast64_t;int_least8_t;int_least16_t;int_least32_t;int_least64_t;intmax_t;intptr_t;uint8_t;uint16_t;uint32_t;uint64_t;uint_fast8_t;uint_fast16_t;uint_fast32_t;uint_fast64_t;uint_least8_t;uint_least16_t;uint_least32_t;uint_least64_t;uintmax_t;uintptr_t;INT8_MIN;INT16_MIN;INT32_MIN;INT64_MIN;INT_FAST8_MIN;INT_FAST16_MIN;INT_FAST32_MIN;INT_FAST64_MIN;INT_LEAST8_MIN;INT_LEAST16_MIN;INT_LEAST32_MIN;INT_LEAST64_MIN;INTPTR_MIN;INTMAX_MIN;INT8_MAX;INT16_MAX;INT32_MAX;INT64_MAX;INT_FAST8_MAX;INT_FAST16_MAX;INT_FAST32_MAX;INT_FAST64_MAX;INT_LEAST8_MAX;INT_LEAST16_MAX;INT_LEAST32_MAX;INT_LEAST64_MAX;INTPTR_MAX;INTMAX_MAX;UINT8_MAX;UINT16_MAX;UINT32_MAX;UINT64_MAX;UINT_FAST8_MAX;UINT_FAST16_MAX;UINT_FAST32_MAX;UINT_FAST64_MAX;UINT_LEAST8_MAX;UINT_LEAST16_MAX;UINT_LEAST32_MAX;UINT_LEAST64_MAX;UINTPTR_MAX;UINTMAX_MAX;PTRDIFF_MIN;PTRDIFF_MAX;SIZE_MAX;SIG_ATOMIC_MIN;SIG_ATOMIC_MAX;WCHAR_MIN;WCHAR_MAX;WINT_MIN;WINT_MAX;INT8_C;INT16_C;INT32_C;INT64_C;INTMAX_C;UINT8_C;UINT16_C;UINT32_C;UINT64_C;UINTMAX_C"/>
+                </file>
+                <file name="cinttypes">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="imaxdiv_t;abs;div;imaxdiv;strtoimax;strtoumax;wcstoimax;wcstoumax;PRId8;PRId16;PRId32;PRId64;PRIdLEAST8;PRIdLEAST16;PRIdLEAST32;PRIdLEAST64;PRIdFAST8;PRIdFAST16;PRIdFAST32;PRIdFAST64;PRIdMAX;PRIdPTR;PRIi8;PRIi16;PRIi32;PRIi64;PRIiLEAST8;PRIiLEAST16;PRIiLEAST32;PRIiLEAST64;PRIiFAST8;PRIiFAST16;PRIiFAST32;PRIiFAST64;PRIiMAX;PRIiPTR;PRIu8;PRIu16;PRIu32;PRIu64;PRIuLEAST8;PRIuLEAST16;PRIuLEAST32;PRIuLEAST64;PRIuFAST8;PRIuFAST16;PRIuFAST32;PRIuFAST64;PRIuMAX;PRIuPTR;PRIo8;PRIo16;PRIo32;PRIo64;PRIoLEAST8;PRIoLEAST16;PRIoLEAST32;PRIoLEAST64;PRIoFAST8;PRIoFAST16;PRIoFAST32;PRIoFAST64;PRIoMAX;PRIoPTR;PRIx8;PRIx16;PRIx32;PRIx64;PRIxLEAST8;PRIxLEAST16;PRIxLEAST32;PRIxLEAST64;PRIxFAST8;PRIxFAST16;PRIxFAST32;PRIxFAST64;PRIxMAX;PRIxPTR;PRIX8;PRIX16;PRIX32;PRIX64;PRIXLEAST8;PRIXLEAST16;PRIXLEAST32;PRIXLEAST64;PRIXFAST8;PRIXFAST16;PRIXFAST32;PRIXFAST64;PRIXMAX;PRIXPTR;SCNd8;SCNd16;SCNd32;SCNd64;SCNdLEAST8;SCNdLEAST16;SCNdLEAST32;SCNdLEAST64;SCNdFAST8;SCNdFAST16;SCNdFAST32;SCNdFAST64;SCNdMAX;SCNdPTR;SCNi8;SCNi16;SCNi32;SCNi64;SCNiLEAST8;SCNiLEAST16;SCNiLEAST32;SCNiLEAST64;SCNiFAST8;SCNiFAST16;SCNiFAST32;SCNiFAST64;SCNiMAX;SCNiPTR;SCNu8;SCNu16;SCNu32;SCNu64;SCNuLEAST8;SCNuLEAST16;SCNuLEAST32;SCNuLEAST64;SCNuFAST8;SCNuFAST16;SCNuFAST32;SCNuFAST64;SCNuMAX;SCNuPTR;SCNo8;SCNo16;SCNo32;SCNo64;SCNoLEAST8;SCNoLEAST16;SCNoLEAST32;SCNoLEAST64;SCNoFAST8;SCNoFAST16;SCNoFAST32;SCNoFAST64;SCNoMAX;SCNoPTR;SCNx8;SCNx16;SCNx32;SCNx64;SCNxLEAST8;SCNxLEAST16;SCNxLEAST32;SCNxLEAST64;SCNxFAST8;SCNxFAST16;SCNxFAST32;SCNxFAST64;SCNxMAX;SCNxPTR"/>
+                </file>
+                <file name="system_error">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="error_category;generic_category;system_category;error_condition;errc;error_code;system_error;is_error_code_enum;is_error_condition_enum;make_error_code;make_error_condition"/>
+                </file>
+                <file name="cuchar">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="__STDC_UTF_16__;__STDC_UTF_32__;mbrtoc16;c16rtomb;mbrtoc32;c32rtomb"/>
+                </file>
+                <file name="array">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="array"/>
+                </file>
+                <file name="forward_list">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="forward_list"/>
+                </file>
+                <file name="unordered_set">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="unordered_set;unordered_multiset"/>
+                </file>
+                <file name="unordered_map">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="unordered_map;unordered_multimap"/>
+                </file>
+                <file name="random">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="linear_congruential_engine;mersenne_twister_engine;subtract_with_carry_engine;discard_block_engine;independent_bits_engine;shuffle_order_engine;seed_seq;minstd_rand0;minstd_rand;mt19937;mt19937_64;ranlux24_base;ranlux48_base;ranlux24;ranlux48;knuth_b;default_random_engine;uniform_int_distribution;uniform_real_distribution;bernoulli_distribution;binomial_distribution;negative_binomial_distribution;geometric_distribution;poisson_distribution;exponential_distribution;gamma_distribution;weibull_distribution;extreme_value_distribution;normal_distribution;lognormal_distribution;chi_squared_distribution;cauchy_distribution;fisher_f_distribution;student_t_distribution;discrete_distribution;piecewise_constant_distribution;piecewise_linear_distribution;generate_canonical"/>
+                </file>
+                <file name="ratio">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="ratio;ratio_add;ratio_subtract;ratio_multiply;ratio_divide;ratio_equal;ratio_not_equal;ratio_less;ratio_less_equal;ratio_greater;ratio_greater_equal;yocto;zepto;atto;femto;pico;nano;micro;milli;centi;deci;deca;hecto;kilo;mega;giga;tera;peta;exa;zetta;yotta"/>
+                </file>
+                <file name="cfenv">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="fenv_t;fexcept_t;feclearexcept;fetestexcept;feraiseexcept;fegetexceptflag;fesetexceptflag;fegetround;fesetround;fegetenv;fesetenv;feholdexcept;feupdateenv;FE_ALL_EXCEPT;FE_DIVBYZERO;FE_INEXACT;FE_INVALID;FE_OVERFLOW;FE_UNDERFLOW;FE_DOWNWARD;FE_TONEAREST;FE_TOWARDZEROFE_UPWARD;FE_DFL_ENV"/>
+                </file>
+                <file name="codecvt">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="regex">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="atomic">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="ccomplex">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="ctgmath">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="cstdalign">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="__alignas_is_defined"/>
+                </file>
+                <file name="cstdbool">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="__bool_true_false_are_defined"/>
+                </file>
+                <file name="thread">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="mutex">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="future">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="condition_variable">
+                    <attr name="standard" stringvalue="11"/>
+                </file>
+                <file name="shared_mutex">
+                    <attr name="standard" stringvalue="14"/>
+                </file>
+                <file name="any">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="any;bad_any_cast;any_cast"/>
+                </file>
+                <file name="optional">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="optional;bad_optional_access;nullopt_t;make_optional"/>
+                </file>
+                <file name="variant">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="variant;index;emplace;visit;holds_alternative;get_if;monostate;bad_variant_access;variant_sizevariant_size_v;variant_alternative;variant_alternative_t;variant_npos"/>
+                </file>
+                <file name="memory_resource">
+                    <attr name="standard" stringvalue="17"/>
+                </file>
+                <file name="string_view">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="basic_string_view;string_view;wstring_view;u16string_view;u32string_view"/>
+                </file>
+                <file name="execution">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="sequenced_policy;parallel_policy;parallel_unsequenced_policy;seq;par;par_unseq;is_execution_policy"/>
+                </file>
+                <file name="filesystem">
+                    <attr name="standard" stringvalue="17"/>
+                    <attr name="define" stringvalue="path;filesystem_error;directory_entry;directory_iterator;recursive_directory_iterator;file_status;space_info;file_type;perms;copy_options;directory_options;file_time_type;absolute;system_complete;canonical;weakly_canonical;relative;proximate;copy;copy_file;copy_symlink;create_directory;create_directories;create_hard_link;create_symlink;create_directory_symlink;current_path;exists;equivalent;file_size;hard_link_count;last_write_time;permissions;read_symlink;remove;remove_all;resize_file;space;status;symlink_status;temp_directory_path;is_block_file;is_character_file;is_directory;is_empty;is_fifo;is_other;is_regular_file;is_socket;is_symlink;status_known"/>
+                </file>
+            </folder>
+            <folder name="C">
+                <file name="assert.h">
+                    <attr name="define" stringvalue="assert; static_assert"/>
+                </file>
+                <file name="ctype.h">
+                    <attr name="define" stringvalue="isalnum;isalpha;islower;isupper;isdigit;isxdigit;iscntrl;isgraph;isspace;isblank;isprint;ispunct;tolower;toupper"/>
+                </file>
+                <file name="errno.h">
+                    <attr name="define" stringvalue="errno;E2BIG;EACCES;EADDRINUSE;EADDRNOTAVAIL;EAFNOSUPPORT;EAGAIN;EALREADY;EBADF;EBADMSG;EBUSY;ECANCELED;ECHILD;ECONNABORTED;ECONNREFUSED;ECONNRESET;EDEADLK;EDESTADDRREQ;EDOM;EEXIST;EFAULT;EFBIG;EHOSTUNREACH;EIDRM;EILSEQ;EINPROGRESS;EINTR;EINVAL;EIO;EISCONN;EISDIR;ELOOP;EMFILE;EMLINK;EMSGSIZE;ENAMETOOLONG;ENETDOWN;ENETRESET;ENETUNREACH;ENFILE;ENOBUFS;ENODATA;ENODEV;ENOENT;ENOEXEC;ENOLCK;ENOLINK;ENOMEM;ENOMSG;ENOPROTOOPT;ENOSPC;ENOSR;ENOSTR;ENOSYS;ENOTCONN;ENOTDIR;ENOTEMPTY;ENOTRECOVERABLE;ENOTSOCK;ENOTSUP;ENOTTY;ENXIO;EOPNOTSUPP;EOVERFLOW;EOWNERDEAD;EPERM;EPIPE;EPROTO;EPROTONOSUPPORT;EPROTOTYPE;ERANGE;EROFS;ESPIPE;ESRCH;ETIME;ETIMEDOUT;ETXTBSY;EWOULDBLOCK;EXDEV;set_constraint_handler_s;abort_handler_s;ignore_handler_s"/>
+                </file>
+                <file name="float.h">
+                    <attr name="define" stringvalue="FLT_RADIX;DECIMAL_DIG;FLT_DECIMAL_DIG;DBL_DECIMAL_DIG;LDBL_DECIMAL_DIG;FLT_MIN;DBL_MIN;LDBL_MIN;FLT_TRUE_MIN;DBL_TRUE_MIN;LDBL_TRUE_MIN;FLT_MAX;DBL_MAX;LDBL_MAX;FLT_EPSILON;DBL_EPSILON;LDBL_EPSILON;FLT_DIG;DBL_DIGLDBL_DIG;FLT_MANT_DIG;DBL_MANT_DIG;LDBL_MANT_DIG;FLT_MIN_EXP;DBL_MIN_EXP;LDBL_MIN_EXP;FLT_MIN_10_EXP;DBL_MIN_10_EXP;LDBL_MIN_10_EXP;FLT_MAX_EXP;DBL_MAX_EXP;LDBL_MAX_EXP;FLT_MAX_10_EXP;DBL_MAX_10_EXP;LDBL_MAX_10_EXP;FLT_ROUNDS;FLT_EVAL_METHOD;FLT_HAS_SUBNORM;DBL_HAS_SUBNORM;LDBL_HAS_SUBNORM"/>
+                </file>
+                <file name="locale.h">
+                    <attr name="define" stringvalue="lconv;LC_ALL;LC_COLLATE;LC_CTYPE;LC_MONETARY;LC_NUMERIC;LC_TIME;setlocale;localeconv"/>
+                </file>
+                <file name="limits.h">
+                    <attr name="define" stringvalue="CHAR_BIT;MB_LEN_MAX;CHAR_MIN;CHAR_MAX;SCHAR_MIN;SHRT_MIN;INT_MIN;LONG_MIN;LLONG_MIN;SCHAR_MAX;SHRT_MAX;INT_MAX;LONG_MAX;LLONG_MAX;UCHAR_MAX;USHRT_MAX;UINT_MAX;ULONG_MAX;ULLONG_MAX"/>
+                </file>
+                <file name="math.h">
+                    <attr name="define" stringvalue="HUGE_VALF;HUGE_VAL;HUGE_VALL;INFINITY;NAN;math_errhandling;MATH_ERRNO;MATH_ERREXCEPT;FP_NORMAL;FP_SUBNORMAL;FP_ZERO;FP_INFINITE;FP_NAN;float_t;double_t;fabs;fabsf;fabsl;fmod;fmodf;fmodl;remainder;remainderf;remainderl;remquo;remquof;remquol;fma;fmal;fmal;fmax;fmaxf;fmaxl;fmin;fminf;fminl;fdim;fdimf;fdiml;nan;nanf;nanl;exp;expf;expl;exp2;exp2f;exp2l;expm1;expm1f;expm1l;log;logf;logl;log10;log10f;log10l;log2;log2f;log2l;log1p;log1pf;log1pl;pow;powf;powl;sqrt;sqrtf;sqrtl;cbrt;cbrtf;cbrtl;hypot;hypotf;hypotl;sin;sinf;sinl;cos;cosf;cosl;tan;tanf;tanl;asin;asinf;asinl;acos;acosf;acosl;atan;atanf;atanl;atan2;atan2f;atan2l;sinh;sinhf;sinhl;cosh;coshf;coshl;tanh;tanhf;tanhl;asinh;asinhf;asinhl;acosh;acoshf;acoshl;atanh;atanhf;atanhl;erf;erff;erfl;erfc;erfcf;erfcl;tgamma;tgammaf;tgammal;lgamma;lgammaf;lgammal;ceil;ceilf;ceill;floor;floorf;floorl;trunc;truncf;truncf;round;lround;llround;nearbyint;nearbyintf;nearbyintl;rint;rintf;rintl;lrint;lrintf;lrintl;llrint;llrintf;llrintl;frexp;frexpf;frexpl;ldexp;ldexpf;ldexpl;modf;modff;modfl;scalbn;scalbnf;scalbnl;scalbln;scalblnf;scalblnl;ilogb;ilogbf;ilogbl;logb;logbf;logbl;nextafter;nextafterf;nextafterl;nexttoward;nexttowardf;nexttowardl;copysign;copysignf;copysignl;fpclassify;isfinite;isinf;isnan;isnormal;signbit;isgreater;isgreaterequal;isless;islessequal;islessgreater;isunordered"/>
+                </file>
+                <file name="setjmp.h">
+                    <attr name="define" stringvalue="jmp_buf;setjmp;longjmp"/>
+                </file>
+                <file name="signal.h">
+                    <attr name="define" stringvalue="sig_atomic_t;SIGABRT;SIGFPE;SIGILL;SIGINT;SIGSEGV;SIGTERM;SIG_DFL;SIG_IGN;SIG_ERR;signal;raise"/>
+                </file>
+                <file name="stdarg.h">
+                    <attr name="define" stringvalue="va_start;va_arg;va_copy;va_end;va_list"/>
+                </file>
+                <file name="stddef.h">
+                    <attr name="define" stringvalue="size_t;ptrdiff_t;NULL;max_align_t;offsetof"/>
+                </file>
+                <file name="stdio.h">
+                    <attr name="define" stringvalue="FILE;fpos_t;size_t;stdin;stdout;stderr;EOF;FOPEN_MAX;FILENAME_MAX;BUFSIZ;_IOFBF;_IOLBF;_IONBF;SEEK_SET;SEEK_CUR;SEEK_END;TMP_MAX;TMP_MAX_S;L_tmpnam;L_tmpnam_s;fopen;fopen_s;freopen;freopen_s;fclose;fflush;setbuf;setvbuf;fwide;fread;fwrite;fgetc;getc;fgets;fputc;putc;fputs;getchar;gets;gets_s;putchar;puts;ungetc;scanf;scanf_s;fscanf;fscanf_s;sscanf;sscanf_s;vscanf;vscanf_s;vfscanf;vfscanf_s;vsscanf;vsscanf_s;printf;printf_s;fprintf;fprintf_s;sprintf;sprintf_s;snprintf;snprintf_s;vprintf;vprintf_s;vfprintf;vfprintf_s;vsprintf;vsprintf_s;vsnprintf;vsnprintf_s;ftell;fgetpos;fseek;fsetpos;rewind;clearerr;feof;ferror;perror;remove;rename;tmpfile;tmpfile_s;tmpnam;tmpnam_s"/>
+                </file>
+                <file name="string.h">
+                    <attr name="define" stringvalue="strcpy;strcpy_s;strncpy;strncpy_s;strcat;strcat_s;strncat;strncat_s;strxfrm;strlen;strnlen_s;strcmp;strncmp;strcoll;strchr;strrchr;strspn;strcspn;strpbrk;strstr;strtok;strtok_s;memchr;memcmp;memset;memset_s;memcpy;memcpy_s;memmove;memmove_s;strerror;strerror_s;strerrorlen_s"/>
+                </file>
+                <file name="stdlib.h">
+                    <attr name="define" stringvalue="malloc;calloc;realloc;free;aligned_alloc;rand;srand;RAND_MAX;abort;exit;quick_exit;_Exit;atexit;at_quick_exit;EXIT_SUCCESS;EXIT_FAILURE;system;getenv;getenv_s"/>
+                </file>
+                <file name="time.h">
+                    <attr name="define" stringvalue="difftime;time;clock;timespec_get;asctime;asctime_s;ctime;ctime_s;strftime;gmtime;gmtime_s;localtime;localtime_s;mktime;CLOCKS_PER_SEC;tm;time_t;clock_t;timespec"/>
+                </file>
+                <file name="iso646.h">
+                    <attr name="define" stringvalue="and;and_eq;bitand;bitor;compl;not;not_eq;or;or_eq;xor;xor_eq"/>
+                </file>
+                <file name="wchar.h">
+                    <attr name="define" stringvalue="wcstol;wcstoll;wcstoul;wcstoull;wcstof;wcstod;wcstold;wcscpy;wcscpy_s;wcsncpy;wcsncpy_s;wcscat;wcscat_s;wcsncat;wcsncat_s;wcsxfrm;wcslen;wcsnlen_s;wcscmp;wcsncmp;wcscoll;wcschr;wcsrchr;wcsspn;wcscspn;wcspbrk;wcsstr;wcstok;wcstok_s;wmemcpy;wmemcpy_s;wmemmove;wmemmove_s;wmemcmp;wmemchr;wmemset;wchar_t;wint_t;wctrans_t;wctype_t;WEOF;WCHAR_MIN;WCHAR_MAX"/>
+                </file>
+                <file name="wctype.h">
+                    <attr name="define" stringvalue="iswalnum;iswalpha;iswlower;iswupper;iswdigit;iswxdigit;iswcntrl;iswgraph;iswspace;iswblank;iswprint;iswpunct;iswctype;wctype;towlower;towupper;towctrans;wctrans;wchar_t;wint_t;wctrans_t;wctype_t"/>
+                </file>
+                <file name="complex.h">
+                    <attr name="standard" stringvalue="99"/>
+                    <attr name="define" stringvalue="imaginary;complex;_Imaginary_I;_Complex_I;I;CMPLX;CMPLXF;CMPLXL;creal;crealf;creall;cimag;cimagf;cimagl;cabs;cabsf;cabsl;carg;cargf;cargl;conj;conjf;conjl;cproj;cprojf;cprojl;cexp;cexpf;cexpl;clog;clogf;clogl;cpow;cpowf;cpowl;csqrt;csqrtf;csqrtl;csin;csinf;csinl;ccos;ccosf;ccosl;ctan;ctanf;ctanl;casin;casinf;casinl;cacos;cacosf;cacosl;catan;catanf;catanl;csinh;csinhf;csinhl;ccosh;ccoshf;ccoshl;ctanh;ctanhf;ctanhl;casinh;casinhf;casinhl;cacosh;cacoshf;cacoshl;catanh;catanhf;catanhl"/>
+                </file>
+                <file name="fenv.h">
+                    <attr name="standard" stringvalue="99"/>
+                    <attr name="define" stringvalue="fenv_t;fexcept_t;feclearexcept;fetestexcept;feraiseexcept;fegetexceptflag;fesetexceptflag;fegetround;fesetround;fegetenv;fesetenv;feholdexcept;feupdateenv;FE_ALL_EXCEPT;FE_DIVBYZERO;FE_INEXACT;FE_INVALID;FE_OVERFLOW;FE_UNDERFLOW;FE_DOWNWARD;FE_TONEAREST;FE_TOWARDZEROFE_UPWARD;FE_DFL_ENV"/>
+                </file>
+                <file name="inttypes.h">
+                    <attr name="standard" stringvalue="99"/>
+                    <attr name="define" stringvalue="PRId8;PRId16;PRId32;PRId64;PRIdLEAST8;PRIdLEAST16;PRIdLEAST32;PRIdLEAST64;PRIdFAST8;PRIdFAST16;PRIdFAST32;PRIdFAST64;PRIdMAX;PRIdPTR;PRIi8;PRIi16;PRIi32;PRIi64;PRIiLEAST8;PRIiLEAST16;PRIiLEAST32;PRIiLEAST64;PRIiFAST8;PRIiFAST16;PRIiFAST32;PRIiFAST64;PRIiMAX;PRIiPTR;PRIu8;PRIu16;PRIu32;PRIu64;PRIuLEAST8;PRIuLEAST16;PRIuLEAST32;PRIuLEAST64;PRIuFAST8;PRIuFAST16;PRIuFAST32;PRIuFAST64;PRIuMAX;PRIuPTR;PRIo8;PRIo16;PRIo32;PRIo64;PRIoLEAST8;PRIoLEAST16;PRIoLEAST32;PRIoLEAST64;PRIoFAST8;PRIoFAST16;PRIoFAST32;PRIoFAST64;PRIoMAX;PRIoPTR;PRIx8;PRIx16;PRIx32;PRIx64;PRIxLEAST8;PRIxLEAST16;PRIxLEAST32;PRIxLEAST64;PRIxFAST8;PRIxFAST16;PRIxFAST32;PRIxFAST64;PRIxMAX;PRIxPTR;PRIX8;PRIX16;PRIX32;PRIX64;PRIXLEAST8;PRIXLEAST16;PRIXLEAST32;PRIXLEAST64;PRIXFAST8;PRIXFAST16;PRIXFAST32;PRIXFAST64;PRIXMAX;PRIXPTR;SCNd8;SCNd16;SCNd32;SCNd64;SCNdLEAST8;SCNdLEAST16;SCNdLEAST32;SCNdLEAST64;SCNdFAST8;SCNdFAST16;SCNdFAST32;SCNdFAST64;SCNdMAX;SCNdPTR;SCNi8;SCNi16;SCNi32;SCNi64;SCNiLEAST8;SCNiLEAST16;SCNiLEAST32;SCNiLEAST64;SCNiFAST8;SCNiFAST16;SCNiFAST32;SCNiFAST64;SCNiMAX;SCNiPTR;SCNu8;SCNu16;SCNu32;SCNu64;SCNuLEAST8;SCNuLEAST16;SCNuLEAST32;SCNuLEAST64;SCNuFAST8;SCNuFAST16;SCNuFAST32;SCNuFAST64;SCNuMAX;SCNuPTR;SCNo8;SCNo16;SCNo32;SCNo64;SCNoLEAST8;SCNoLEAST16;SCNoLEAST32;SCNoLEAST64;SCNoFAST8;SCNoFAST16;SCNoFAST32;SCNoFAST64;SCNoMAX;SCNoPTR;SCNx8;SCNx16;SCNx32;SCNx64;SCNxLEAST8;SCNxLEAST16;SCNxLEAST32;SCNxLEAST64;SCNxFAST8;SCNxFAST16;SCNxFAST32;SCNxFAST64;SCNxMAX;SCNxPTR"/>
+                </file>
+                <file name="stdbool.h">
+                    <attr name="standard" stringvalue="99"/>
+                    <attr name="define" stringvalue="bool;true;false;__bool_true_false_are_defined"/>
+                </file>
+                <file name="stdint.h">
+                    <attr name="standard" stringvalue="99"/>
+                    <attr name="define" stringvalue="int8_t;int16_t;int32_t;int64_t;int_fast8_t;int_fast16_t;int_fast32_t;int_fast64_t;int_least8_t;int_least16_t;int_least32_t;int_least64_t;intmax_t;intptr_t;uint8_t;uint16_t;uint32_t;uint64_t;uint_fast8_t;uint_fast16_t;uint_fast32_t;uint_fast64_t;uint_least8_t;uint_least16_t;uint_least32_t;uint_least64_t;uintmax_t;uintptr_t;INT8_MIN;INT16_MIN;INT32_MIN;INT64_MIN;INT_FAST8_MIN;INT_FAST16_MIN;INT_FAST32_MIN;INT_FAST64_MIN;INT_LEAST8_MIN;INT_LEAST16_MIN;INT_LEAST32_MIN;INT_LEAST64_MIN;INTPTR_MIN;INTMAX_MIN;INT8_MAX;INT16_MAX;INT32_MAX;INT64_MAX;INT_FAST8_MAX;INT_FAST16_MAX;INT_FAST32_MAX;INT_FAST64_MAX;INT_LEAST8_MAX;INT_LEAST16_MAX;INT_LEAST32_MAX;INT_LEAST64_MAX;INTPTR_MAX;INTMAX_MAX;UINT8_MAX;UINT16_MAX;UINT32_MAX;UINT64_MAX;UINT_FAST8_MAX;UINT_FAST16_MAX;UINT_FAST32_MAX;UINT_FAST64_MAX;UINT_LEAST8_MAX;UINT_LEAST16_MAX;UINT_LEAST32_MAX;UINT_LEAST64_MAX;UINTPTR_MAX;UINTMAX_MAX;INT8_C;INT16_C;INT32_C;INT64_C;INTMAX_C;UINT8_C;UINT16_C;UINT32_C;UINT64_C;UINTMAX_C"/>
+                </file>
+                <file name="tgmath.h">
+                    <attr name="standard" stringvalue="99"/>
+                </file>
+                <file name="stdalign.h">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="alignas;alignof;__alignas_is_defined;__alignof_is_defined"/>
+                </file>                    
+                <file name="stdatomic.h">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="memory_order;atomic_flag;ATOMIC_BOOL_LOCK_FREE;ATOMIC_CHAR_LOCK_FREE;ATOMIC_CHAR16_T_LOCK_FREE;ATOMIC_CHAR32_T_LOCK_FREE;ATOMIC_WCHAR_T_LOCK_FREE;ATOMIC_SHORT_LOCK_FREE;ATOMIC_INT_LOCK_FREE;ATOMIC_LONG_LOCK_FREE;ATOMIC_LLONG_LOCK_FREE;ATOMIC_POINTER_LOCK_FREE;ATOMIC_FLAG_INIT;ATOMIC_VAR_INIT;kill_dependency;atomic_flag_test_and_set;atomic_flag_test_and_set_explicit;atomic_flag_clear;atomic_flag_clear_explicit;atomic_init;atomic_is_lock_free;atomic_store;atomic_store_explicit;atomic_load;atomic_load_explicit;atomic_exchange;atomic_exchange_explicit;atomic_compare_exchange_strong;atomic_compare_exchange_strong_explicit;atomic_compare_exchange_weak;atomic_compare_exchange_weak_explicit;atomic_fetch_add;atomic_fetch_add_explicit;atomic_fetch_sub;atomic_fetch_sub_explicit;atomic_fetch_or;atomic_fetch_or_explicit;atomic_fetch_xor;atomic_fetch_xor_explicit;atomic_fetch_and;atomic_fetch_and_explicit;atomic_thread_fence;atomic_signal_fence;atomic_bool;atomic_char;atomic_schar;atomic_uchar;atomic_short;atomic_ushort;atomic_int;atomic_uint;atomic_long;atomic_ulong;atomic_llong;atomic_ullong;atomic_char16_t;atomic_char32_t;atomic_wchar_t;atomic_int_least8_t;atomic_uint_least8_t;atomic_int_least16_t;atomic_uint_least16_t;atomic_int_least32_t;atomic_uint_least32_t;atomic_int_least64_t;atomic_uint_least64_t;atomic_int_fast8_t;atomic_uint_fast8_t;atomic_int_fast16_t;atomic_uint_fast16_t;atomic_int_fast32_t;atomic_uint_fast32_t;atomic_int_fast64_t;atomic_uint_fast64_t;atomic_intptr_t;atomic_uintptr_t;atomic_size_t;atomic_ptrdiff_t;atomic_intmax_t;atomic_uintmax_t"/>
+                </file>
+                <file name="stdnoreturn.h">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="noreturn"/>
+                </file>
+                <file name="threads.h">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="thrd_t;thrd_create;thrd_equal;thrd_current;thrd_sleep;thrd_yield;thrd_exit;thrd_detach;thrd_join;thrd_success;thrd_timedout;thrd_busy;thrd_nomemthrd_error;thrd_start_t;mtx_t;mtx_init;mtx_lock;mtx_timedlock;mtx_trylock;mtx_unlock;mtx_destroy;mtx_plain;mtx_recursive;mtx_timed;call_once;cnd_t;cnd_init;cnd_signal;cnd_broadcast;cnd_wait;cnd_timedwait;cnd_destroy;thread_local;tss_t;TSS_DTOR_ITERATIONS;tss_dtor_t;tss_create;tss_get;tss_set;tss_delete"/>
+                </file>
+                <file name="uchar.h">
+                    <attr name="standard" stringvalue="11"/>
+                    <attr name="define" stringvalue="mbrtoc16;c16rtomb;mbrtoc32;c32rtomb"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

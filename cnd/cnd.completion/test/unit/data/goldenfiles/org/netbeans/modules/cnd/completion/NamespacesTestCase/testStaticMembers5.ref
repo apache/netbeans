@@ -1,0 +1,6 @@
+ssi int	$	S1::S2::ssi
+s2Struct	$	S1::S2::s2Struct
+i2 int	$	S1::S2::i2
+sss s2Struct	$	S1::S2::sss
+f2() void	$	S1::S2::f2()
+ssfoo() void	$	S1::S2::ssfoo()

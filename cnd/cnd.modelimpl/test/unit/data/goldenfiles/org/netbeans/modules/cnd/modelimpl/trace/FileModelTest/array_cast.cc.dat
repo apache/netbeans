@@ -1,0 +1,20 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE array_cast.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE a [1:1/0-1:13/12]  TYPE: *void TEXT=void*  [1:1/0-1:7/6]  INIT: text='0'  SCOPE: $Global$ 
+VARIABLE b [2:1/13-2:35/47]  TYPE: int TEXT=int  [2:1/13-2:7/19]  INIT: text='(int(*)[4][4]) a'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE a [1:1/0-1:13/12]  TYPE: *void TEXT=void*  [1:1/0-1:7/6]  INIT: text='0'  SCOPE: $Global$ 
+VARIABLE b [2:1/13-2:35/47]  TYPE: int TEXT=int  [2:1/13-2:7/19]  INIT: text='(int(*)[4][4]) a'  SCOPE: $Global$ 
+

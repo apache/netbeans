@@ -1,0 +1,12 @@
+org.netbeans.modules.debugger.ui.models.ColumnModels.createSessionHostNameColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createSessionLanguageColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createSessionStateColumn()-hidden
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$PID
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$State
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Location
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Debugger
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Host
+#org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Args
+# org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Mode
+org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Core
+# org.netbeans.modules.cnd.debugger.common2.debugger.SessionColumnModels$Host

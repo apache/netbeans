@@ -1,0 +1,40 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/*
+ * File:   ${nameAndExt}
+ * Author: ${user}
+ *
+ * Created on ${date}, ${time}
+ */
+
+#include "${headerNameAndExt}"
+<#if testIncludes?? && testIncludes != "">${testIncludes}</#if>
+
+CPPUNIT_TEST_SUITE_REGISTRATION(${className});
+
+${className}::${className}() {
+}
+
+${className}::~${className}() {
+}
+
+void ${className}::setUp() {
+}
+
+void ${className}::tearDown() {
+}
+<#if testFunctions?? && testFunctions != "">
+
+${testFunctions}<#else>
+void ${className}::testMethod() {
+    CPPUNIT_ASSERT(true);
+}
+
+void ${className}::testFailedMethod() {
+    CPPUNIT_ASSERT(false);
+}
+
+</#if>

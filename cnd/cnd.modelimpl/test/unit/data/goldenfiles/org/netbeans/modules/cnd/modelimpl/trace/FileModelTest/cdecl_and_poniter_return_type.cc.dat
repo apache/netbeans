@@ -1,0 +1,47 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["__cdecl",<ID>,line=1,col=9],offset=8,file=null'='["__attribute__",<ID>,line=1,col=17],offset=16,file=null ["(",<LPAREN>,line=1,col=30],offset=29,file=null ["(",<LPAREN>,line=1,col=31],offset=30,file=null ["__cdecl__",<ID>,line=1,col=32],offset=31,file=null [")",<RPAREN>,line=1,col=41],offset=40,file=null [")",<RPAREN>,line=1,col=42],offset=41,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE cdecl_and_poniter_return_type.cc
+Includes:
+    <no includes>
+Macros:
+#define '__cdecl' [1:1/0-1:43/42]
+FUNCTION foo [2:1/43-2:34/76] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(int,int)
+    UNIQUE NAME F:foo(int,int)
+    PARAMETERS:
+        a [2:20/62-2:25/67]  TYPE: int TEXT=int  [2:20/62-2:23/65]  INIT: null  SCOPE: foo 
+        b [2:27/69-2:32/74]  TYPE: int TEXT=int  [2:27/69-2:30/72]  INIT: null  SCOPE: foo 
+    RETURNS *char TEXT=char*  [2:1/43-2:7/49]
+FUNCTION foo [3:1/77-3:25/101] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(int)
+    UNIQUE NAME F:foo(int)
+    PARAMETERS:
+        a [3:18/94-3:23/99]  TYPE: int TEXT=int  [3:18/94-3:21/97]  INIT: null  SCOPE: foo 
+    RETURNS char TEXT=char  [3:1/77-3:5/81]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION foo [2:1/43-2:34/76] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(int,int)
+    UNIQUE NAME F:foo(int,int)
+    PARAMETERS:
+        a [2:20/62-2:25/67]  TYPE: int TEXT=int  [2:20/62-2:23/65]  INIT: null  SCOPE: foo 
+        b [2:27/69-2:32/74]  TYPE: int TEXT=int  [2:27/69-2:30/72]  INIT: null  SCOPE: foo 
+    RETURNS *char TEXT=char*  [2:1/43-2:7/49]
+FUNCTION foo [3:1/77-3:25/101] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(int)
+    UNIQUE NAME F:foo(int)
+    PARAMETERS:
+        a [3:18/94-3:23/99]  TYPE: int TEXT=int  [3:18/94-3:21/97]  INIT: null  SCOPE: foo 
+    RETURNS char TEXT=char  [3:1/77-3:5/81]
+

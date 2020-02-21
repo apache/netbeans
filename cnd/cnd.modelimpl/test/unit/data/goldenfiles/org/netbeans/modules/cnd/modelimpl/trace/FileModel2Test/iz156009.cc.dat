@@ -1,0 +1,21 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["LUAI_DATA",<ID>,line=2,col=9],offset=71,file=null'='["LUAI_FUNC",<ID>,line=2,col=25],offset=81,file=null'
+<U>#define '["LUAI_FUNC",<ID>,line=1,col=9],offset=8,file=null'='["__attribute__",<ID>,line=1,col=25],offset=18,file=null ["(",<LPAREN>,line=1,col=38],offset=31,file=null ["(",<LPAREN>,line=1,col=39],offset=32,file=null ["visibility",<ID>,line=1,col=40],offset=33,file=null ["(",<LPAREN>,line=1,col=50],offset=43,file=null [""hidden"",<STRING_LITERAL>,line=1,col=51],offset=44,file=null [")",<RPAREN>,line=1,col=59],offset=52,file=null [")",<RPAREN>,line=1,col=60],offset=53,file=null [")",<RPAREN>,line=1,col=61],offset=54,file=null ["extern",<ID>,line=1,col=63],offset=56,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz156009.cc
+Includes:
+    <no includes>
+Macros:
+#define 'LUAI_DATA' [2:1/63-2:34/90]
+#define 'LUAI_FUNC' [1:1/0-1:69/62]
+EXTERN VARIABLE luaO_nilobject_ [3:1/91-3:37/127]  TYPE: const int TEXT=const int  [3:1/91-3:20/110]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+EXTERN VARIABLE luaO_nilobject_ [3:1/91-3:37/127]  TYPE: const int TEXT=const int  [3:1/91-3:20/110]  INIT: null  SCOPE: $Global$ 
+

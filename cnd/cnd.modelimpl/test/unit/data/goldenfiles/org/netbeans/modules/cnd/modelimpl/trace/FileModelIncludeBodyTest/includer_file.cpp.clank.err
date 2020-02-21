@@ -1,0 +1,174 @@
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:44:17: warning: 'TOK' macro redefined
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:37:21: note: previous definition is here
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:51:13: warning: 'TOK' macro redefined
+    #define TOK(X) GLOBAL_##X,
+            ^
+${origin}/includer_file.cpp:44:17: note: previous definition is here
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:44:17: warning: 'TOK' macro redefined
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:37:21: note: previous definition is here
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:44:17: warning: 'TOK' macro redefined
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:37:21: note: previous definition is here
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:51:13: warning: 'TOK' macro redefined
+    #define TOK(X) GLOBAL_##X,
+            ^
+${origin}/includer_file.cpp:44:17: note: previous definition is here
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:20:33: warning: 'TOK' macro redefined
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:6:25: note: previous definition is here
+                #define TOK(X) OuterClassIncluderEnum_##X,
+                        ^
+${origin}/includer_file.cpp:27:29: warning: 'TOK' macro redefined
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:20:33: note: previous definition is here
+                        #define TOK(X) booIncluderEnum_##X,
+                                ^
+${origin}/includer_file.cpp:37:21: warning: 'TOK' macro redefined
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:27:29: note: previous definition is here
+                    #define TOK(X) InnerClassIncluderEnum_##X,
+                            ^
+${origin}/includer_file.cpp:44:17: warning: 'TOK' macro redefined
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^
+${origin}/includer_file.cpp:37:21: note: previous definition is here
+            #define TOK(X) InnnerNSIncluderEnum_##X,
+                    ^
+${origin}/includer_file.cpp:51:13: warning: 'TOK' macro redefined
+    #define TOK(X) GLOBAL_##X,
+            ^
+${origin}/includer_file.cpp:44:17: note: previous definition is here
+        #define TOK(X) OuterNSIncluderEnum_##X,
+                ^

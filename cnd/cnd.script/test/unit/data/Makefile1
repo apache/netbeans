@@ -1,0 +1,24 @@
+# Environment
+RM=rm
+CC=gcc
+
+# Include project Makefile
+include Makefile ${FOO}.mk
+
+# Build Targets
+.build-conf: $(BUILD_SUBPROJECTS) dist/Debug/GNU-Solaris-x86/quote_1
+
+# Clean Targets
+.clean-conf:
+	-$(RM) -r build/Debug
+	-$(RM) -r dist/Debug/GNU-Solaris-x86
+
+.DONE:
+	echo "Done"
+
+define FOO
+BAR=$(BAZ)
+a: b
+	echo endef
+#dummy comment
+endef

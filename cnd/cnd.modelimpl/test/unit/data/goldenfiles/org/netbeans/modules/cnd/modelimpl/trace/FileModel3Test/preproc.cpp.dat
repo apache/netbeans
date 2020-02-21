@@ -1,0 +1,66 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 11):
+<U>#define '["M1",<ID>,line=29,col=9],offset=556,file=null'='["1",<DECIMALINT>,line=29,col=12],offset=559,file=null ["<comment text skipped>",<CPP_COMMENT>,line=29,col=14],offset=561,file=null'
+<U>#define '["M2",<ID>,line=30,col=9],offset=580,file=null'='["2",<DECIMALINT>,line=30,col=12],offset=583,file=null ["<comment text skipped>",<CPP_COMMENT>,line=30,col=14],offset=585,file=null'
+<U>#define '["M3",<ID>,line=32,col=9],offset=605,file=null'='["<comment text skipped>",<COMMENT>,line=32,col=12],offset=608,file=null ["3",<DECIMALINT>,line=32,col=26],offset=622,file=null'
+<U>#define '["M4",<ID>,line=33,col=9],offset=632,file=null'='["4",<DECIMALINT>,line=33,col=12],offset=635,file=null ["<comment text skipped>",<CPP_COMMENT>,line=33,col=14],offset=637,file=null'
+<U>#define '["M5",<ID>,line=35,col=9],offset=657,file=null'='["<comment text skipped>",<COMMENT>,line=35,col=12],offset=660,file=null ["5",<DECIMALINT>,line=38,col=16],offset=718,file=null'
+<U>#define '["M5_YES",<ID>,line=49,col=9],offset=918,file=null'=''
+<U>#define '["M6",<ID>,line=40,col=9],offset=731,file=null'='["6",<DECIMALINT>,line=40,col=12],offset=734,file=null ["<comment text skipped>",<CPP_COMMENT>,line=40,col=13],offset=735,file=null'
+<U>#define '["M7",<ID>,line=26,col=9],offset=506,file=null'='["7",<DECIMALINT>,line=27,col=1],offset=511,file=null ["<comment text skipped>",<COMMENT>,line=27,col=3],offset=513,file=null ["77",<DECIMALINT>,line=27,col=18],offset=528,file=null ["777",<DECIMALINT>,line=28,col=1],offset=533,file=null ["<comment text skipped>",<CPP_COMMENT>,line=28,col=5],offset=537,file=null'
+<U>#define '["MAX",<ID>,line=42,col=9],offset=776,file=null[["a",<ID>,line=42,col=13],offset=780,file=null, ["b",<ID>,line=42,col=16],offset=783,file=null]'='["(",<LPAREN>,line=42,col=19],offset=786,file=null ["(",<LPAREN>,line=42,col=20],offset=787,file=null ["a",<ID>,line=42,col=21],offset=788,file=null [")",<RPAREN>,line=42,col=22],offset=789,file=null ["<",<LESSTHAN>,line=42,col=24],offset=791,file=null ["(",<LPAREN>,line=42,col=26],offset=793,file=null ["b",<ID>,line=42,col=27],offset=794,file=null [")",<RPAREN>,line=42,col=28],offset=795,file=null ["?",<QUESTIONMARK>,line=42,col=30],offset=797,file=null ["(",<LPAREN>,line=42,col=32],offset=799,file=null ["b",<ID>,line=42,col=33],offset=800,file=null [")",<RPAREN>,line=42,col=34],offset=801,file=null [":",<COLON>,line=42,col=36],offset=803,file=null ["(",<LPAREN>,line=42,col=38],offset=805,file=null ["a",<ID>,line=42,col=39],offset=806,file=null [")",<RPAREN>,line=42,col=40],offset=807,file=null [")",<RPAREN>,line=42,col=41],offset=808,file=null ["<comment text skipped>",<CPP_COMMENT>,line=42,col=43],offset=810,file=null'
+<U>#define '["TR",<ID>,line=44,col=9],offset=828,file=null[["t",<ID>,line=44,col=12],offset=831,file=null]'='["int",<ID>,line=44,col=15],offset=834,file=null ["<comment text skipped>",<COMMENT>,line=44,col=19],offset=838,file=null ["t",<ID>,line=44,col=41],offset=860,file=null [";",<SEMICOLON>,line=44,col=42],offset=861,file=null'
+<U>#define '["TR1",<ID>,line=46,col=9],offset=872,file=null[["t",<ID>,line=46,col=13],offset=876,file=null]'='["int",<ID>,line=46,col=16],offset=879,file=null ["<comment text skipped>",<COMMENT>,line=46,col=19],offset=882,file=null ["t",<ID>,line=46,col=33],offset=896,file=null [";",<SEMICOLON>,line=46,col=34],offset=897,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc.cpp
+Includes:
+<s1.h> <FAILED inclusion> [1:1/0-1:16/15]
+"h2.h" <FAILED inclusion> [2:1/27-2:16/42]
+<s3.h> <FAILED inclusion> [3:1/55-3:16/70]
+"h4.h" <FAILED inclusion> [4:1/84-4:16/99]
+<s11.h> <FAILED inclusion> [8:1/166-8:17/182]
+"h21.h" <FAILED inclusion> [10:1/196-10:17/212]
+<s31.h> <FAILED inclusion> [12:1/227-12:17/243]
+"h41.h" <FAILED inclusion> [14:1/259-14:17/275]
+<!!!Incorrent file #1,...> <FAILED inclusion> [18:1/346-18:36/381]
+"!!!Incorrent file #2,..." <FAILED inclusion> [19:1/382-19:36/417]
+Macros:
+#define 'M1' [29:1/548-29:24/571]
+#define 'M2' [30:1/572-30:24/595]
+#define 'M3' [32:1/597-32:27/623]
+#define 'M4' [33:1/624-33:24/647]
+#define 'M5' [35:1/649-38:17/719]
+#define 'M5_YES' [49:1/910-49:15/924]
+#define 'M6' [40:1/723-40:44/766]
+#define 'M7' [26:1/498-28:15/547]
+#define 'MAX[a, b]' [42:1/768-42:51/818]
+#define 'TR[t]' [44:1/820-44:43/862]
+#define 'TR1[t]' [46:1/864-46:35/898]
+FUNCTION DEFINITION hello  [60:1/993-63:2/1035] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hello()
+    UNIQUE NAME f:hello()
+    DECLARATION: hello  [60:1/993-63:2/1035]
+    PARAMETERS:
+    RETURNS void TEXT=void  [60:1/993-60:5/997]
+    STATEMENT COMPOUND  [60:14/1006-63:2/1035] SCOPE: hello 
+        STATEMENT EXPRESSION  [61:5/1012-61:14/1021] SCOPE: Stmt  [60:14/1006-63:2/1035] text: 'MAX(7, 9)'
+        STATEMENT DECLARATION  [62:5/1027-62:10/1032] SCOPE: Stmt  [60:14/1006-63:2/1035]
+            VARIABLE a [62:5/1027-62:10/1032]  TYPE: int TEXT=int  [62:5/1027-62:10/1032]  INIT: null  SCOPE: Stmt  [60:14/1006-63:2/1035]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION hello  [60:1/993-63:2/1035] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hello()
+    UNIQUE NAME f:hello()
+    DECLARATION: hello  [60:1/993-63:2/1035]
+    PARAMETERS:
+    RETURNS void TEXT=void  [60:1/993-60:5/997]
+    STATEMENT COMPOUND  [60:14/1006-63:2/1035] SCOPE: hello 
+        STATEMENT EXPRESSION  [61:5/1012-61:14/1021] SCOPE: Stmt  [60:14/1006-63:2/1035] text: 'MAX(7, 9)'
+        STATEMENT DECLARATION  [62:5/1027-62:10/1032] SCOPE: Stmt  [60:14/1006-63:2/1035]
+            VARIABLE a [62:5/1027-62:10/1032]  TYPE: int TEXT=int  [62:5/1027-62:10/1032]  INIT: null  SCOPE: Stmt  [60:14/1006-63:2/1035]
+

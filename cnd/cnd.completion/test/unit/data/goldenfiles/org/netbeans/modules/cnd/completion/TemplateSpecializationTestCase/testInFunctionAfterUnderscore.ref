@@ -1,0 +1,17 @@
+_Is_integer<bool>	$	    _Is_integer<bool>
+_Is_integer<char>	$	    _Is_integer<char>
+_Is_integer<class _Tp>	$	    _Is_integer<>
+_Is_integer<int>	$	    _Is_integer<int>
+_Is_integer<long long>	$	    _Is_integer<long long>
+_Is_integer<long>	$	    _Is_integer<long>
+_Is_integer<short>	$	    _Is_integer<short>
+_Is_integer<signed char>	$	    _Is_integer<signed char>
+_Is_integer<unsigned char>	$	    _Is_integer<unsigned char>
+_Is_integer<unsigned int>	$	    _Is_integer<unsigned int>
+_Is_integer<unsigned long long>	$	    _Is_integer<unsigned long long>
+_Is_integer<unsigned long>	$	    _Is_integer<unsigned long>
+_Is_integer<unsigned short>	$	    _Is_integer<unsigned short>
+_Is_integer<wchar_t>	$	    _Is_integer<wchar_t>
+_Is_normal_iterator<typename _Tp>	$	    _Is_normal_iterator<>
+__false_type	$	    __false_type
+__true_type	$	    __true_type

@@ -1,0 +1,56 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.cnd.makeproject.options;
+
+import org.netbeans.modules.cnd.utils.NamedOption;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
+
+/**
+ *
+ */
+@ServiceProvider(path=NamedOption.MAKE_PROJECT_CATEGORY, service=NamedOption.class, position=600)
+public class ShowConfigurationWarning extends NamedOption {
+    public static final String SHOW_CONFIGURATION_WARNING = "showConfigurationWarning"; // NOI18N
+
+    @Override
+    public String getName() {
+        return SHOW_CONFIGURATION_WARNING;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return NbBundle.getMessage(ShowConfigurationWarning.class, "SHOW_WARNING_ABOUT_MISMATCHED_CONFIGURATIONS.TXT"); //NOI18N
+    }
+
+    @Override
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public OptionKind getKind() {
+        return OptionKind.Boolean;
+    }
+
+    @Override
+    public Object getDefaultValue() {
+        return true;
+    }
+}

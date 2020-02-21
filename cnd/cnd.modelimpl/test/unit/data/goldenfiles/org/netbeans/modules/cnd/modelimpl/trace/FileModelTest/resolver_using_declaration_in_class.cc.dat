@@ -1,0 +1,82 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE resolver_using_declaration_in_class.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Base (Base ) [1:1/0-6:2/81] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION convert [3:17/24-3:50/57] MethodImpl SCOPE: Base 
+            DEFINITION: null
+            SIGNATURE convert(const char*)
+            UNIQUE NAME F:Base::convert(const char*)
+            PARAMETERS:
+                 [3:37/44-3:48/55]  TYPE: const *char TEXT=const char*  [3:37/44-3:48/55]  INIT: null  SCOPE: convert 
+            RETURNS Base TEXT=Base  [3:24/31-3:28/35]
+        CLASS Helper (Base::Helper ) [4:17/60-5:18/78] lcurly=73 SCOPE: Base 
+            BASE CLASSES:
+            MEMBERS:
+CLASS Derived (Derived ) [8:1/84-15:2/264] lcurly=113 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Base VISIBILITY==PRIVATE virtual==false text='private Base'
+    MEMBERS:
+        USING_DECLARATION PRIVATE Base::convert [9:9/116-9:28/135] UsingDeclarationImpl
+        CLASS Inner (Derived::Inner ) [11:9/161-13:10/250] lcurly=173 SCOPE: Derived 
+            BASE CLASSES:
+            MEMBERS:
+        FIELD PRIVATE h [14:9/253-14:18/262]  TYPE: Base::Helper TEXT=Helper  [14:9/253-14:15/259]  INIT: null  SCOPE: Derived 
+STRUCT A (A ) [17:1/267-19:2/292] lcurly=276 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS I (A::I ) [18:9/279-18:19/289] lcurly=287 SCOPE: A 
+            BASE CLASSES:
+            MEMBERS:
+STRUCT B (B ) [21:1/295-23:2/317] lcurly=308 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=A VISIBILITY==PUBLIC virtual==false text='A'
+    MEMBERS:
+        FIELD PUBLIC i [22:9/311-22:13/315]  TYPE: A::I TEXT=I  [22:9/311-22:10/312]  INIT: null  SCOPE: B 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Base (Base ) [1:1/0-6:2/81] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION convert [3:17/24-3:50/57] MethodImpl SCOPE: Base 
+            DEFINITION: null
+            SIGNATURE convert(const char*)
+            UNIQUE NAME F:Base::convert(const char*)
+            PARAMETERS:
+                 [3:37/44-3:48/55]  TYPE: const *char TEXT=const char*  [3:37/44-3:48/55]  INIT: null  SCOPE: convert 
+            RETURNS Base TEXT=Base  [3:24/31-3:28/35]
+        CLASS Helper (Base::Helper ) [4:17/60-5:18/78] lcurly=73 SCOPE: Base 
+            BASE CLASSES:
+            MEMBERS:
+CLASS Derived (Derived ) [8:1/84-15:2/264] lcurly=113 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Base VISIBILITY==PRIVATE virtual==false text='private Base'
+    MEMBERS:
+        USING_DECLARATION PRIVATE Base::convert [9:9/116-9:28/135] UsingDeclarationImpl
+        CLASS Inner (Derived::Inner ) [11:9/161-13:10/250] lcurly=173 SCOPE: Derived 
+            BASE CLASSES:
+            MEMBERS:
+        FIELD PRIVATE h [14:9/253-14:18/262]  TYPE: Base::Helper TEXT=Helper  [14:9/253-14:15/259]  INIT: null  SCOPE: Derived 
+STRUCT A (A ) [17:1/267-19:2/292] lcurly=276 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS I (A::I ) [18:9/279-18:19/289] lcurly=287 SCOPE: A 
+            BASE CLASSES:
+            MEMBERS:
+STRUCT B (B ) [21:1/295-23:2/317] lcurly=308 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=A VISIBILITY==PUBLIC virtual==false text='A'
+    MEMBERS:
+        FIELD PUBLIC i [22:9/311-22:13/315]  TYPE: A::I TEXT=I  [22:9/311-22:10/312]  INIT: null  SCOPE: B 
+

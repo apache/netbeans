@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE const.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE c [2:1/1-2:29/29]  TYPE: unsigned const char TEXT=unsigned const char  [2:1/1-2:20/20]  INIT: text=''a''  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE c [2:1/1-2:29/29]  TYPE: unsigned const char TEXT=unsigned const char  [2:1/1-2:20/20]  INIT: text=''a''  SCOPE: $Global$ 
+

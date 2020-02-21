@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.dlight.remote
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/remote/resources/Bundle.properties
+OpenIDE-Module-Needs: org.netbeans.modules.dlight.remote.spi.RemoteProviderToken
+OpenIDE-Module-Recommends: org.netbeans.modules.remotefs.versioning
+

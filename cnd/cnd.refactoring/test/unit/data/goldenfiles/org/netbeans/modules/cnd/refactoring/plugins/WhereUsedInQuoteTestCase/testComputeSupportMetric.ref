@@ -1,0 +1,17 @@
+References in file quote_nosyshdr/cpu.cc
+[48:9-48:29] <b>ComputeSupportMetric</b>();
+[57:11-57:31] void Cpu::<b>ComputeSupportMetric</b>() {
+References in file quote_nosyshdr/cpu.h
+[58:14-58:34] void <b>ComputeSupportMetric</b>();
+References in file quote_nosyshdr/disk.cc
+[48:9-48:29] <b>ComputeSupportMetric</b>();
+[56:12-56:32] void Disk::<b>ComputeSupportMetric</b>() {
+References in file quote_nosyshdr/disk.h
+[56:10-56:30] void <b>ComputeSupportMetric</b>();
+References in file quote_nosyshdr/memory.cc
+[46:9-46:29] <b>ComputeSupportMetric</b>();
+[56:14-56:34] void Memory::<b>ComputeSupportMetric</b>() {
+References in file quote_nosyshdr/memory.h
+[56:10-56:30] void <b>ComputeSupportMetric</b>();
+References in file quote_nosyshdr/module.h
+[81:18-81:38] virtual void <b>ComputeSupportMetric</b>() = 0; //metric is defined in derived classes

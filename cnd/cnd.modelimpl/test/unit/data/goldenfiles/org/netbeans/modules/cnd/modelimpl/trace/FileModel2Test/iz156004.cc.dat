@@ -1,0 +1,37 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["PRT_UNIT_NAMES",<ID>,line=1,col=10],offset=9,file=null'='["{",<LCURLY>,line=1,col=25],offset=24,file=null [""pc"",<STRING_LITERAL>,line=1,col=26],offset=25,file=null [",",<COMMA>,line=1,col=30],offset=29,file=null [""in"",<STRING_LITERAL>,line=1,col=32],offset=31,file=null [",",<COMMA>,line=1,col=36],offset=35,file=null [""mm"",<STRING_LITERAL>,line=1,col=38],offset=37,file=null [",",<COMMA>,line=1,col=42],offset=41,file=null [""pt"",<STRING_LITERAL>,line=1,col=44],offset=43,file=null ["}",<RCURLY>,line=1,col=48],offset=47,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz156004.cc
+Includes:
+    <no includes>
+Macros:
+#define 'PRT_UNIT_NAMES' [1:1/0-1:49/48]
+FUNCTION DEFINITION foo  [2:1/49-5:2/122] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/49-5:2/122]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/49-2:4/52]
+    STATEMENT COMPOUND  [2:11/59-5:2/122] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/65-3:46/106] SCOPE: Stmt  [2:11/59-5:2/122]
+            VARIABLE units [3:5/65-3:46/106]  TYPE: *char[] TEXT=char*[]  [3:5/65-3:18/78]  INIT: text='PRT_UNIT_NAMES'  SCOPE: Stmt  [2:11/59-5:2/122]
+        STATEMENT RETURN  [4:5/111-4:14/120] SCOPE: Stmt  [2:11/59-5:2/122] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [2:1/49-5:2/122] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/49-5:2/122]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/49-2:4/52]
+    STATEMENT COMPOUND  [2:11/59-5:2/122] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/65-3:46/106] SCOPE: Stmt  [2:11/59-5:2/122]
+            VARIABLE units [3:5/65-3:46/106]  TYPE: *char[] TEXT=char*[]  [3:5/65-3:18/78]  INIT: text='PRT_UNIT_NAMES'  SCOPE: Stmt  [2:11/59-5:2/122]
+        STATEMENT RETURN  [4:5/111-4:14/120] SCOPE: Stmt  [2:11/59-5:2/122] text: 'return 0;'
+

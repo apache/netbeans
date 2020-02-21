@@ -1,0 +1,3 @@
+1:INHERITED DescA proper_parent_single.cc:5,DescB proper_parent_single.cc:9,DescC proper_parent_single.cc:13
+5:INHERITED DescB proper_parent_single.cc:9,DescC proper_parent_single.cc:13
+9:INHERITED DescC proper_parent_single.cc:13

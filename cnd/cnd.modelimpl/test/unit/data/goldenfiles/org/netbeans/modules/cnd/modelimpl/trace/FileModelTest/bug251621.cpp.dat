@@ -1,0 +1,150 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug251621.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug251621 [1:1/0-14:2/590] SCOPE: bug251621.cpp
+    STRUCT AAA251621 (bug251621::AAA251621 ) [2:5/26-13:6/587] lcurly=43 SCOPE: bug251621 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo251621 [3:9/53-3:39/83] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE foo251621()
+                UNIQUE NAME F:bug251621::AAA251621::foo251621()
+                PARAMETERS:
+                RETURNS bug251621::AAA251621 TEXT=AAA251621  [3:9/53-3:26/70]
+            FUNCTION boo251621 [4:9/92-4:45/128] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE boo251621()
+                UNIQUE NAME F:bug251621::AAA251621::boo251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [4:9/92-4:32/115]
+            FUNCTION roo251621 [5:9/137-5:45/173] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE roo251621()
+                UNIQUE NAME F:bug251621::AAA251621::roo251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [5:9/137-5:32/160]
+            FUNCTION too251621 [6:9/182-6:45/218] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE too251621()
+                UNIQUE NAME F:bug251621::AAA251621::too251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [6:9/182-6:32/205]
+            FUNCTION loo1_251621 [7:9/227-7:69/287] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE loo1_251621(const int*)
+                UNIQUE NAME F:bug251621::AAA251621::loo1_251621(const int*)
+                PARAMETERS:
+                    src [7:53/271-7:67/285]  TYPE: const *int TEXT=const int*  [7:53/271-7:64/282]  INIT: null  SCOPE: loo1_251621 
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621* const  [7:9/227-7:40/258]
+            FUNCTION loo2_251621 [8:9/296-8:93/380] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE loo2_251621(const int*)
+                UNIQUE NAME F:bug251621::AAA251621::loo2_251621(const int*)
+                PARAMETERS:
+                    src [8:77/364-8:91/378]  TYPE: const *int TEXT=const int*  [8:77/364-8:88/375]  INIT: null  SCOPE: loo2_251621 
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621* const  [8:9/296-8:64/351]
+            FUNCTION zoo251621 [9:9/389-9:41/421] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE zoo251621()
+                UNIQUE NAME F:bug251621::AAA251621::zoo251621()
+                PARAMETERS:
+                RETURNS *bug251621::AAA251621 TEXT=AAA251621*  [9:9/389-9:28/408]
+            FUNCTION noo251621 [10:9/430-10:48/469] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE noo251621()
+                UNIQUE NAME F:bug251621::AAA251621::noo251621()
+                PARAMETERS:
+                RETURNS const int TEXT=const int  [10:9/430-10:35/456]
+            FUNCTION ptrfun251621 [11:9/478-11:66/535] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE ptrfun251621()
+                UNIQUE NAME F:bug251621::AAA251621::ptrfun251621()
+                PARAMETERS:
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621*  [11:9/478-11:50/519]
+            FUNCTION normal_function251621 [12:9/544-12:46/581] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE normal_function251621()
+                UNIQUE NAME F:bug251621::AAA251621::normal_function251621()
+                PARAMETERS:
+                RETURNS void TEXT=void  [12:17/552-12:21/556]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug251621 (bug251621) 
+    bug251621.cpp  [1:1/0-14:2/590]
+NAMESPACE bug251621 (bug251621) 
+    STRUCT AAA251621 (bug251621::AAA251621 ) [2:5/26-13:6/587] lcurly=43 SCOPE: bug251621 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo251621 [3:9/53-3:39/83] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE foo251621()
+                UNIQUE NAME F:bug251621::AAA251621::foo251621()
+                PARAMETERS:
+                RETURNS bug251621::AAA251621 TEXT=AAA251621  [3:9/53-3:26/70]
+            FUNCTION boo251621 [4:9/92-4:45/128] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE boo251621()
+                UNIQUE NAME F:bug251621::AAA251621::boo251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [4:9/92-4:32/115]
+            FUNCTION roo251621 [5:9/137-5:45/173] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE roo251621()
+                UNIQUE NAME F:bug251621::AAA251621::roo251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [5:9/137-5:32/160]
+            FUNCTION too251621 [6:9/182-6:45/218] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE too251621()
+                UNIQUE NAME F:bug251621::AAA251621::too251621()
+                PARAMETERS:
+                RETURNS const bug251621::AAA251621 TEXT=const AAA251621  [6:9/182-6:32/205]
+            FUNCTION loo1_251621 [7:9/227-7:69/287] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE loo1_251621(const int*)
+                UNIQUE NAME F:bug251621::AAA251621::loo1_251621(const int*)
+                PARAMETERS:
+                    src [7:53/271-7:67/285]  TYPE: const *int TEXT=const int*  [7:53/271-7:64/282]  INIT: null  SCOPE: loo1_251621 
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621* const  [7:9/227-7:40/258]
+            FUNCTION loo2_251621 [8:9/296-8:93/380] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE loo2_251621(const int*)
+                UNIQUE NAME F:bug251621::AAA251621::loo2_251621(const int*)
+                PARAMETERS:
+                    src [8:77/364-8:91/378]  TYPE: const *int TEXT=const int*  [8:77/364-8:88/375]  INIT: null  SCOPE: loo2_251621 
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621* const  [8:9/296-8:64/351]
+            FUNCTION zoo251621 [9:9/389-9:41/421] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE zoo251621()
+                UNIQUE NAME F:bug251621::AAA251621::zoo251621()
+                PARAMETERS:
+                RETURNS *bug251621::AAA251621 TEXT=AAA251621*  [9:9/389-9:28/408]
+            FUNCTION noo251621 [10:9/430-10:48/469] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE noo251621()
+                UNIQUE NAME F:bug251621::AAA251621::noo251621()
+                PARAMETERS:
+                RETURNS const int TEXT=const int  [10:9/430-10:35/456]
+            FUNCTION ptrfun251621 [11:9/478-11:66/535] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE ptrfun251621()
+                UNIQUE NAME F:bug251621::AAA251621::ptrfun251621()
+                PARAMETERS:
+                RETURNS const *bug251621::AAA251621 TEXT=const AAA251621*  [11:9/478-11:50/519]
+            FUNCTION normal_function251621 [12:9/544-12:46/581] MethodImpl SCOPE: AAA251621 
+                DEFINITION: null
+                SIGNATURE normal_function251621()
+                UNIQUE NAME F:bug251621::AAA251621::normal_function251621()
+                PARAMETERS:
+                RETURNS void TEXT=void  [12:17/552-12:21/556]
+

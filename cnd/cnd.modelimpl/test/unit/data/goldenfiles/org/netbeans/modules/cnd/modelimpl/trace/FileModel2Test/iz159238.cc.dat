@@ -1,0 +1,51 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz159238.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS QRect (QRect ) [1:1/0-4:2/127] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION operator == [3:5/26-3:104/125] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE operator ==(const QRect&,const QRect&)
+            UNIQUE NAME D:operator ==(const QRect&,const QRect&)
+            REFERENCED FRIEND FUNCTION: operator ==  [3:5/26-3:104/125]
+            PARAMETERS:
+                 [3:74/95-3:87/108]  TYPE: const &QRect TEXT=const QRect&  [3:74/95-3:87/108]  INIT: null  SCOPE: operator == 
+                 [3:89/110-3:102/123]  TYPE: const &QRect TEXT=const QRect&  [3:89/110-3:102/123]  INIT: null  SCOPE: operator == 
+            RETURNS bool TEXT=bool  [3:58/79-3:62/83]
+
+========== Dumping model of PROJECT DummyProject
+CLASS QRect (QRect ) [1:1/0-4:2/127] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION operator == [3:5/26-3:104/125] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE operator ==(const QRect&,const QRect&)
+            UNIQUE NAME D:operator ==(const QRect&,const QRect&)
+            REFERENCED FRIEND FUNCTION: operator ==  [3:5/26-3:104/125]
+            PARAMETERS:
+                 [3:74/95-3:87/108]  TYPE: const &QRect TEXT=const QRect&  [3:74/95-3:87/108]  INIT: null  SCOPE: operator == 
+                 [3:89/110-3:102/123]  TYPE: const &QRect TEXT=const QRect&  [3:89/110-3:102/123]  INIT: null  SCOPE: operator == 
+            RETURNS bool TEXT=bool  [3:58/79-3:62/83]
+FUNCTION operator == [3:5/26-3:104/125] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE operator ==(const QRect&,const QRect&)
+    UNIQUE NAME D:operator ==(const QRect&,const QRect&)
+    REFERENCED FRIEND FUNCTION: operator ==  [3:5/26-3:104/125]
+    PARAMETERS:
+         [3:74/95-3:87/108]  TYPE: const &QRect TEXT=const QRect&  [3:74/95-3:87/108]  INIT: null  SCOPE: operator == 
+         [3:89/110-3:102/123]  TYPE: const &QRect TEXT=const QRect&  [3:89/110-3:102/123]  INIT: null  SCOPE: operator == 
+    RETURNS bool TEXT=bool  [3:58/79-3:62/83]
+

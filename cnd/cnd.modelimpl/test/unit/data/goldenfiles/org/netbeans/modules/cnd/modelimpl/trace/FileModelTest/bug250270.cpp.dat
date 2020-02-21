@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug250270.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug250270 [1:1/0-8:2/140] SCOPE: bug250270.cpp
+    TYPEALIAS AAA250270  [2:3/24-2:38/59] TYPE: CCC250270 TEXT=CCC250270  [2:28/49-2:37/58] SCOPE: bug250270 
+    CLASS_FORWARD_DECLARATION CCC250270 [2:21/42-2:38/59]
+    FUNCTION DEFINITION main250270  [4:3/63-7:4/134] FunctionDDImpl SCOPE: bug250270 
+        SIGNATURE main250270()
+        UNIQUE NAME f:bug250270::main250270()
+        DECLARATION: main250270  [4:3/63-7:4/134]
+        PARAMETERS:
+        RETURNS int TEXT=int  [4:3/63-4:6/66]
+        STATEMENT COMPOUND  [4:20/80-7:4/134] SCOPE: main250270 
+            STATEMENT DECLARATION  [5:7/92-5:29/114] SCOPE: Stmt  [4:20/80-7:4/134]
+                TYPEALIAS BBB250270  [5:7/92-5:29/114] TYPE: int TEXT=int  [5:25/110-5:29/114] SCOPE: Stmt  [4:20/80-7:4/134]
+            STATEMENT RETURN  [6:7/121-6:16/130] SCOPE: Stmt  [4:20/80-7:4/134] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug250270 (bug250270) 
+    bug250270.cpp  [1:1/0-8:2/140]
+NAMESPACE bug250270 (bug250270) 
+    TYPEALIAS AAA250270  [2:3/24-2:38/59] TYPE: CCC250270 TEXT=CCC250270  [2:28/49-2:37/58] SCOPE: bug250270 
+    STRUCT CCC250270 (bug250270::CCC250270 ) [2:21/42-2:38/59] lcurly=58 SCOPE: bug250270 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION DEFINITION main250270  [4:3/63-7:4/134] FunctionDDImpl SCOPE: bug250270 
+        SIGNATURE main250270()
+        UNIQUE NAME f:bug250270::main250270()
+        DECLARATION: main250270  [4:3/63-7:4/134]
+        PARAMETERS:
+        RETURNS int TEXT=int  [4:3/63-4:6/66]
+        STATEMENT COMPOUND  [4:20/80-7:4/134] SCOPE: main250270 
+            STATEMENT DECLARATION  [5:7/92-5:29/114] SCOPE: Stmt  [4:20/80-7:4/134]
+                TYPEALIAS BBB250270  [5:7/92-5:29/114] TYPE: int TEXT=int  [5:25/110-5:29/114] SCOPE: Stmt  [4:20/80-7:4/134]
+            STATEMENT RETURN  [6:7/121-6:16/130] SCOPE: Stmt  [4:20/80-7:4/134] text: 'return 0;'
+

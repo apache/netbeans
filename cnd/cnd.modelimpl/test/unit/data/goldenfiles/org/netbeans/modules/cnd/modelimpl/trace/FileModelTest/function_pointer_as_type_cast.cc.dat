@@ -1,0 +1,56 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_pointer_as_type_cast.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION val  [1:1/0-15:2/586] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE val(my_bool*)
+    UNIQUE NAME f:val(my_bool*)
+    DECLARATION: val  [1:1/0-15:2/586]
+    PARAMETERS:
+        null_value [1:12/11-1:31/30]  TYPE: *$unresolved$::my_bool TEXT=my_bool*  [1:12/11-1:21/20]  INIT: null  SCOPE: val 
+    RETURNS double TEXT=double  [1:1/0-1:7/6]
+    STATEMENT COMPOUND  [2:1/32-15:2/586] SCOPE: val 
+        STATEMENT DECLARATION  [3:5/38-4:62/143] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE func [3:5/38-4:62/143]  TYPE: void(UDF_INIT*,uchar*,uchar*) TEXT=void(*)(UDF_INIT*,uchar*,uchar*)  [3:5/38-4:44/125]  INIT: text='(void (*)(UDF_INIT *, uchar *, uchar *)) u_d->func_clear'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT EXPRESSION  [5:5/148-5:36/179] SCOPE: Stmt  [2:1/32-15:2/586] text: 'func(&initid, &is_null, &error)'
+        STATEMENT DECLARATION  [7:1/182-8:68/308] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE funcD [7:1/182-8:68/308]  TYPE: double(UDF_INIT*,UDF_ARGS*,uchar*,uchar*) TEXT=double(*)(UDF_INIT*,UDF_ARGS*,uchar*,uchar*)  [7:1/182-8:56/296]  INIT: text='(double (*)(UDF_INIT *, UDF_ARGS *, uchar *, uchar *)) u_d->func'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [9:1/309-9:55/363] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE tmpD [9:1/309-9:55/363]  TYPE: double TEXT=double  [9:1/309-9:7/315]  INIT: text='funcD(&initid, &f_args, &is_null, &error)'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [11:5/369-12:74/503] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE funcL [11:5/369-12:74/503]  TYPE: longlong(UDF_INIT*,UDF_ARGS*,uchar*,uchar*) TEXT=longlong(*)(UDF_INIT*,UDF_ARGS*,uchar*,uchar*)  [11:5/369-12:62/491]  INIT: text='(longlong (*)(UDF_INIT *, UDF_ARGS *, uchar *, uchar *)) u_d->func'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [13:5/508-13:61/564] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE tmpL [13:5/508-13:61/564]  TYPE: $unresolved$::longlong TEXT=longlong  [13:5/508-13:13/516]  INIT: text='funcL(&initid, &f_args, &is_null, &error)'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT RETURN  [14:1/565-14:20/584] SCOPE: Stmt  [2:1/32-15:2/586] text: 'return tmpD + tmpL;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION val  [1:1/0-15:2/586] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE val(my_bool*)
+    UNIQUE NAME f:val(my_bool*)
+    DECLARATION: val  [1:1/0-15:2/586]
+    PARAMETERS:
+        null_value [1:12/11-1:31/30]  TYPE: *$unresolved$::my_bool TEXT=my_bool*  [1:12/11-1:21/20]  INIT: null  SCOPE: val 
+    RETURNS double TEXT=double  [1:1/0-1:7/6]
+    STATEMENT COMPOUND  [2:1/32-15:2/586] SCOPE: val 
+        STATEMENT DECLARATION  [3:5/38-4:62/143] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE func [3:5/38-4:62/143]  TYPE: void(UDF_INIT*,uchar*,uchar*) TEXT=void(*)(UDF_INIT*,uchar*,uchar*)  [3:5/38-4:44/125]  INIT: text='(void (*)(UDF_INIT *, uchar *, uchar *)) u_d->func_clear'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT EXPRESSION  [5:5/148-5:36/179] SCOPE: Stmt  [2:1/32-15:2/586] text: 'func(&initid, &is_null, &error)'
+        STATEMENT DECLARATION  [7:1/182-8:68/308] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE funcD [7:1/182-8:68/308]  TYPE: double(UDF_INIT*,UDF_ARGS*,uchar*,uchar*) TEXT=double(*)(UDF_INIT*,UDF_ARGS*,uchar*,uchar*)  [7:1/182-8:56/296]  INIT: text='(double (*)(UDF_INIT *, UDF_ARGS *, uchar *, uchar *)) u_d->func'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [9:1/309-9:55/363] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE tmpD [9:1/309-9:55/363]  TYPE: double TEXT=double  [9:1/309-9:7/315]  INIT: text='funcD(&initid, &f_args, &is_null, &error)'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [11:5/369-12:74/503] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE funcL [11:5/369-12:74/503]  TYPE: longlong(UDF_INIT*,UDF_ARGS*,uchar*,uchar*) TEXT=longlong(*)(UDF_INIT*,UDF_ARGS*,uchar*,uchar*)  [11:5/369-12:62/491]  INIT: text='(longlong (*)(UDF_INIT *, UDF_ARGS *, uchar *, uchar *)) u_d->func'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT DECLARATION  [13:5/508-13:61/564] SCOPE: Stmt  [2:1/32-15:2/586]
+            VARIABLE tmpL [13:5/508-13:61/564]  TYPE: $unresolved$::longlong TEXT=longlong  [13:5/508-13:13/516]  INIT: text='funcL(&initid, &f_args, &is_null, &error)'  SCOPE: Stmt  [2:1/32-15:2/586]
+        STATEMENT RETURN  [14:1/565-14:20/584] SCOPE: Stmt  [2:1/32-15:2/586] text: 'return tmpD + tmpL;'
+

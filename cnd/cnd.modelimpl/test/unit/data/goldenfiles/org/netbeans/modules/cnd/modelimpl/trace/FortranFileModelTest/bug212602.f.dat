@@ -1,0 +1,58 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug212602.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN module1 [1:1/0-20:4/262] SCOPE: bug212602.f
+    FUNCTION DEFINITION myadd  [6:1/40-10:13/112] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:myadd
+        DECLARATION: myadd  [6:1/40-10:13/112]
+        PARAMETERS:
+            a [6:1/40-10:13/112]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            b [6:1/40-10:13/112]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+    FUNCTION DEFINITION mytrig  [12:1/120-18:15/250] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:mytrig
+        DECLARATION: mytrig  [12:1/120-18:15/250]
+        PARAMETERS:
+            x [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            sinx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            cosx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            tanx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITOIN module1 [1:1/0-20:4/262] SCOPE: bug212602.f
+    FUNCTION DEFINITION myadd  [6:1/40-10:13/112] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:myadd
+        DECLARATION: myadd  [6:1/40-10:13/112]
+        PARAMETERS:
+            a [6:1/40-10:13/112]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            b [6:1/40-10:13/112]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+    FUNCTION DEFINITION mytrig  [12:1/120-18:15/250] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:mytrig
+        DECLARATION: mytrig  [12:1/120-18:15/250]
+        PARAMETERS:
+            x [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            sinx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            cosx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+            tanx [12:1/120-18:15/250]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+

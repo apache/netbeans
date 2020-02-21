@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug250325.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug250325 [2:1/27-12:2/339] SCOPE: bug250325.cpp
+    NAMESPACE DEFINITOIN tratata250325 [3:5/53-7:6/154] SCOPE: bug250325.cpp
+        STRONGLY TYPED ENUM BBB250325 [4:9/87-6:10/147] SCOPE: tratata250325 
+            val250325
+    STRUCT ccc250325 (bug250325::ccc250325 ) [8:5/159-11:6/336] lcurly=176 SCOPE: bug250325 
+        BASE CLASSES:
+        MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug250325 (bug250325) 
+    bug250325.cpp  [2:1/27-12:2/339]
+NAMESPACE bug250325 (bug250325) 
+    STRUCT ccc250325 (bug250325::ccc250325 ) [8:5/159-11:6/336] lcurly=176 SCOPE: bug250325 
+        BASE CLASSES:
+        MEMBERS:
+    NAMESPACE DEFINITIONS for tratata250325 (bug250325::tratata250325) 
+        bug250325.cpp  [3:5/53-7:6/154]
+    NAMESPACE tratata250325 (bug250325::tratata250325) 
+        STRONGLY TYPED ENUM BBB250325 [4:9/87-6:10/147] SCOPE: tratata250325 
+            val250325
+

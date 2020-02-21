@@ -1,0 +1,44 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE typedef_enum_in_class_scope.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN NS [1:1/0-6:2/80] SCOPE: typedef_enum_in_class_scope.cc
+    CLASS C (NS::C ) [2:9/16-4:10/54] lcurly=24 SCOPE: NS 
+        BASE CLASSES:
+        MEMBERS:
+            ENUM  [3:17/29-3:35/47] SCOPE: C 
+                E
+            TYPEDEF EE  [3:36/48-3:38/50] TYPE: NS::C:: TEXT=typedef enum { E } EE ;  [3:17/29-3:39/51] SCOPE: C 
+    ENUM  [5:9/57-5:27/75] SCOPE: NS 
+        A
+    TYPEDEF B  [5:28/76-5:29/77] TYPE: NS:: TEXT=typedef enum { A } B ;  [5:9/57-5:30/78] SCOPE: NS 
+ENUM  [7:1/81-7:19/99] SCOPE: $Global$ 
+    X
+TYPEDEF Y  [7:20/100-7:21/101] TYPE:  TEXT=typedef enum { X } Y ;  [7:1/81-7:22/102] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+ENUM  [7:1/81-7:19/99] SCOPE: $Global$ 
+    X
+TYPEDEF Y  [7:20/100-7:21/101] TYPE:  TEXT=typedef enum { X } Y ;  [7:1/81-7:22/102] SCOPE: $Global$ 
+NAMESPACE DEFINITIONS for NS (NS) 
+    typedef_enum_in_class_scope.cc  [1:1/0-6:2/80]
+NAMESPACE NS (NS) 
+    CLASS C (NS::C ) [2:9/16-4:10/54] lcurly=24 SCOPE: NS 
+        BASE CLASSES:
+        MEMBERS:
+            ENUM  [3:17/29-3:35/47] SCOPE: C 
+                E
+            TYPEDEF EE  [3:36/48-3:38/50] TYPE: NS::C:: TEXT=typedef enum { E } EE ;  [3:17/29-3:39/51] SCOPE: C 
+    ENUM  [5:9/57-5:27/75] SCOPE: NS 
+        A
+    TYPEDEF B  [5:28/76-5:29/77] TYPE: NS:: TEXT=typedef enum { A } B ;  [5:9/57-5:30/78] SCOPE: NS 
+

@@ -1,0 +1,19 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["A",<ID>,line=1,col=9],offset=8,file=null'='["<comment text skipped>",<COMMENT>,line=1,col=11],offset=10,file=null'
+<U>#define '["B",<ID>,line=2,col=9],offset=52,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE ppExpressionAndEmptyBodyMacro.cc
+Includes:
+    <no includes>
+Macros:
+#define 'A' [1:1/0-1:44/43]
+#define 'B' [2:1/44-2:10/53]
+
+========== Dumping model of PROJECT DummyProject
+

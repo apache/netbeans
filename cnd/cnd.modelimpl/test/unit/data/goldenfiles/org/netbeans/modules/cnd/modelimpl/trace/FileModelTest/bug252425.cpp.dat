@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug252425.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug252425 [1:1/0-30:2/556] SCOPE: bug252425.cpp
+    TYPEDEF type252425  [2:3/24-2:26/47] TYPE: int TEXT=int  [2:11/32-2:14/35] SCOPE: bug252425 
+    TYPEALIAS alias252425  [4:3/51-5:25/97] TYPE: T TEXT=T  [5:23/95-5:25/97] SCOPE: bug252425 
+    STRUCT AAA252425 (bug252425::AAA252425 ) [7:3/101-29:4/553] lcurly=118 SCOPE: bug252425 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF inner_type252425  [8:5/124-8:35/154] TYPE: char TEXT=char  [8:13/132-8:17/136] SCOPE: AAA252425 
+            STRONGLY TYPED ENUM  [10:5/160-12:6/208] SCOPE: AAA252425 
+                Val1
+            STRONGLY TYPED ENUM  [14:5/215-16:6/258] SCOPE: AAA252425 
+                Val2
+            STRONGLY TYPED ENUM  [18:5/265-20:6/324] SCOPE: AAA252425 
+                Val3
+            STRONGLY TYPED ENUM  [22:5/331-24:6/428] SCOPE: AAA252425 
+                Val4
+            STRONGLY TYPED ENUM NamedEnum252425 [26:5/435-28:6/548] SCOPE: AAA252425 
+                Val5
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug252425 (bug252425) 
+    bug252425.cpp  [1:1/0-30:2/556]
+NAMESPACE bug252425 (bug252425) 
+    TYPEDEF type252425  [2:3/24-2:26/47] TYPE: int TEXT=int  [2:11/32-2:14/35] SCOPE: bug252425 
+    TYPEALIAS alias252425  [4:3/51-5:25/97] TYPE: T TEXT=T  [5:23/95-5:25/97] SCOPE: bug252425 
+    STRUCT AAA252425 (bug252425::AAA252425 ) [7:3/101-29:4/553] lcurly=118 SCOPE: bug252425 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF inner_type252425  [8:5/124-8:35/154] TYPE: char TEXT=char  [8:13/132-8:17/136] SCOPE: AAA252425 
+            STRONGLY TYPED ENUM  [10:5/160-12:6/208] SCOPE: AAA252425 
+                Val1
+            STRONGLY TYPED ENUM  [14:5/215-16:6/258] SCOPE: AAA252425 
+                Val2
+            STRONGLY TYPED ENUM  [18:5/265-20:6/324] SCOPE: AAA252425 
+                Val3
+            STRONGLY TYPED ENUM  [22:5/331-24:6/428] SCOPE: AAA252425 
+                Val4
+            STRONGLY TYPED ENUM NamedEnum252425 [26:5/435-28:6/548] SCOPE: AAA252425 
+                Val5
+

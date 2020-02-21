@@ -1,0 +1,4 @@
+pPtr() PClass97120	$	            c.pPtr()
+ppPtr() PPClass97120	$	            c.ppPtr()
+pppPtr() PPPClass97120	$	            c.pppPtr()
+ptr() Class97120*	$	            c.ptr()

@@ -1,0 +1,25 @@
+Running "D:\progs\cygwin\bin\make.exe  -f ticketman-Makefile.mk CONF=Default" in C:\Documents and Settings\tichy.UC\Dokumenty\NetBeansProjects\ticketman
+
+/usr/bin/make -f nbproject/Makefile-Default.mk SUBPROJECTS= .build-conf
+make[1]: Entering directory `/cygdrive/c/Documents and Settings/tichy.UC/Dokumenty/NetBeansProjects/ticketman'
+cd C\:/cvshome/ifpappsw/aplikace/ticketman/make/linux && make -f makefile ARCH=arm
+make[2]: Entering directory `/cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux'
+make[3]: Entering directory `/cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux'
+__________________________________________________________________
+
+building ticketman.mak for linux/arm
+
+/opt/crosstool/gcc-3.3.2-glibc-2.3.2/arm-unknown-linux-gnu/bin/arm-unknown-linux-gnu-g++  -O3 -Wall -I../../include -I../../../include -c -o ../../rels/linux/arm/ticketman.oo ../../src/./ticketman.cpp
+../../src/ticketman.cpp: In destructor `virtual TicketMan::~TicketMan()':
+../../src/ticketman.cpp:41: error: `a' undeclared (first use this function)
+../../src/ticketman.cpp:41: error: (Each undeclared identifier is reported only
+   once for each function it appears in.)
+make[3]: *** [../../rels/linux/arm/ticketman.oo] Error 1
+make[3]: Leaving directory `/cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux'
+make[2]: *** [ticketman.mak_BUILD] Error 2
+make[2]: Leaving directory `/cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux'
+make[1]: *** [.build-conf] Error 2
+make[1]: Leaving directory `/cygdrive/c/Documents and Settings/tichy.UC/Dokumenty/NetBeansProjects/ticketman'
+make: *** [.build-impl] Error 2
+
+Build failed. Exit value 2.

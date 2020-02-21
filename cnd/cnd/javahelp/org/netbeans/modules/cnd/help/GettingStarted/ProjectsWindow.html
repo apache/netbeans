@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="StyleSheet" type="text/css" href="../ide.css">
+
+    <title>Projects Window</title>
+  </head>
+  <body>
+    <h2>
+       Projects Window
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       The Projects window is the main entry point to your projects. It shows a logical view of
+      important project contents. You can open the Projects window by choosing Window &gt; Projects
+      (Ctrl-1).
+    </p>
+    <p>
+       You can view all of your project contents in a directory-based view in the <a href=
+      "FilesWindow.html">Files window</a>. To open the Files window, choose Window &gt; Files
+      (Ctrl-2).
+    </p>
+    <h3>
+       Logical Folders
+    </h3>
+    <p>
+       A C or C++ Application or Library project is created with four logical folders, which are
+      displayed in the Projects window:
+    </p>
+    <ul>
+      <li>
+        Source Files
+      </li>
+      <li>
+        Header Files
+      </li>
+      <li>
+        Resource Files
+      </li>
+      <li>
+          Test Files
+      </li>
+      <li>
+        Important Files
+      </li>
+    </ul>
+    <p>
+       A C or C++ Project from Existing Sources is created with one logical folder, Important
+      Files.
+    </p>
+    <p>
+       A logical folder is not a directory. It is a way for you to organize your files, and does
+      not reflect where the files are physically stored. Files added to the Source Files folder,
+      Header Files folder, and other logical folders become part of a project and are
+      compiled when you build the project. Note that header files added to the Header Files folder
+      must be referenced in your C/C++ source files through #include statements in the usual way if you want
+      them to be compiled into the program.
+    </p>
+    <p>
+       Files added to the Important Files folder are not part of the project and are not compiled
+      when you build the project. These files are just for reference and are convenient for
+      projects with existing makefiles.
+    </p>
+    <h3>
+       Project Icons
+    </h3>
+    <p>
+       The following icons are used for C and C++ projects in the Projects window.
+    </p>
+    <table summary="The left column lists the icon. The right column lists the description."
+    cellspacing="0" cellpadding="5" border="1">
+      <tr valign="top">
+        <th scope="col" align="left">
+          Icon
+        </th>
+        <th scope="col" align="left">
+          Description
+        </th>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Existing_Sources.gif" alt="Project with existing sources icon">
+        </td>
+        <td>
+          C/C++ Project with Existing Sources
+</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/Application.gif" alt="Application project icon">
+</td>
+<td>C/C++ Application Project</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/Dynamic_Library.gif" alt="Dynamic library project icon">
+</td>
+<td>C/C++ Dynamic Library Project</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/Static_Library.gif" alt="Static library project icon">
+</td>
+<td>C/C++ Static Library Project</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/QT_Application.gif" alt="Qt application project icon">
+</td>
+<td>C/C++ Qt Application Project</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/QT_Dynamic_Library.gif" alt="Qt dynamic 
+library project icon">
+</td>
+<td>C/C++ Qt Dynamic Library Project</td>
+</tr>
+<tr valign="top">
+<td>
+<img src="../images/QT_Static_Library.gif" alt="Qt static
+library project icon">
+</td>
+<td>
+C/C++ Qt Static Library Project
+</td>
+</tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/logicalFolder.png" alt="C/C++ logical folder icon"> 
+        </td>
+        <td>
+          Header Files<br>
+           Resource Files<br>
+           Source Files
+        </td>
+      </tr>
+      <tr><td>
+              <img src="../images/testFolder.png" alt="C/C++ test folder icon">
+          </td>
+          <td>Test Files
+          </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/importantFiles.png" alt="C/C++ Important Files folder icon"> 
+        </td>
+        <td>
+          Important Files
+        </td>
+      </tr>
+    </table>
+    <h3>
+       Main Project
+    </h3>
+    <p>
+       By default the toolbar buttons apply to the project that is selected.  However, you can set one project to be the main project so that the toolbar buttons always apply to the main project, no matter which project is selected.
+    </p>
+    <p>
+      In the Projects window, if a main project has been set it is shown in bold.  You can set any project as the
+      main project by choosing Run &gt; Set Main Project &gt; <i>projectname</i>.
+    </p>
+    <h3>
+       Pop-up Context Menu
+    </h3>
+    <p>
+       Each node in the Projects window has a pop-up context menu of commands that you can run on
+      that node. You open a node's pop-up menu by right-clicking the node. The pop-up menu for
+      project nodes contains all of the major project commands, like Build and Run. The pop-up menu
+      also contains a Properties command, which you can use to configure your project.
+    </p>
+    <table summary="related topics">
+      <tr valign="top">
+        <th align="left" colspan="2">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="CandC++ProjectsMakefiles.html">C/C++/Fortran Projects and Makefiles</a><br>
+           <a href="FilesWindow.html">Files Window</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

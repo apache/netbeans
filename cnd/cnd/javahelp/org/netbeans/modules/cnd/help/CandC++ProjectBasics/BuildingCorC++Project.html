@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link type="text/css" href="../ide.css" rel="StyleSheet">
+
+    <title>Building a C or C++ Project</title>
+  </head>
+  <body>
+    <h2>
+       Building a C or C++ Project
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       When you build a C or C++ project, the IDE calls the corresponding target in the project's
+      makefile. The IDE executes the compiler from the project's associated tool collection to
+      compile the source files as specified by the makefile target. The IDE's Output window
+      displays the build command output such as make messages and compiler messages.
+    </p>
+    <p>
+       Some of the error messages that the compiler generates are underlined. If you double-click
+      an underlined message, the editor highlights the source code that caused the error.
+    </p>
+    <p>
+       You can build the selected project and all of its related projects, or build any project
+      individually.
+    </p>
+    <p>
+       If the tools required to build the project are not in the Tool Collection specified for the
+      project, the <a href="ResolveBuildTools.html">Resolve Build Tools dialog box</a> opens.
+      Resolve the missing tools and click OK.
+    </p>
+    <p>
+       <b>To build the selected project and its related projects:</b>
+    </p>
+    <ul>
+      <li>
+        <p>
+           Choose Run &gt; Build Project (F11).
+        </p>
+        <p>
+           The IDE displays the build output, and any build or compilation errors, in the Output
+          window. You can click any error to go to the location in the source code where the error
+          occurred.
+        </p>
+      </li>
+    </ul>
+    <p>
+       <b>To build an individual project and its related projects:</b>
+    </p>
+    <ul>
+      <li>
+        <p>
+           Right-click the project's node in the Projects window and choose Build.
+        </p>
+        <p>
+           The IDE displays the build output, and any build or compilation errors, in the Output
+          window. The IDE displays a progress bar in the status area at the bottom of the main
+          window. You can click any error to go to the location in the source code where the error
+          occurred.
+        </p>
+      </li>
+    </ul>
+    <p>
+       <b>To run other targets in the makefile of a project:</b>
+    </p>
+    <ul>
+      <li>
+        In the Project tab, expand the Important Files folder to see the Makefile.
+      </li>
+      <li>
+        Right-click the Makefile and select Make Target &gt; <i>target</i>
+      </li>
+    </ul>
+    <p>
+       <b>To stop building a project:</b>
+    </p>
+    <ul>
+      <li>
+        Click the <img align="bottom" src="../images/stop.png" alt="Stop icon"> icon in the top left corner of the
+        Output window.
+      </li>
+      <li>
+        You can also click the X in the progress bar in the status area at the bottom of the IDE
+        window.
+      </li>
+    </ul>
+    <table summary="related topics">
+      <tr valign="top">
+        <th align="left" colspan="2">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="../WorkingWithCandC++Projects/CandC++BuildingTasks.html">C and C++ Building
+          Tasks: Quick Reference</a><br>
+           <a href="CompilingSingleCandC++File.html">Compiling a Single C or C++ File</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE attributes_aligned_class.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN align [1:1/0-7:2/296] SCOPE: attributes_aligned_class.cc
+    STRUCT a2 (align::a2 ) [2:5/22-2:54/71] lcurly=69 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT a4 (align::a4 ) [3:5/77-3:54/126] lcurly=124 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS a8 (align::a8 ) [4:5/132-4:54/181] lcurly=179 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS a16 (align::a16 ) [5:5/187-5:55/237] lcurly=235 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    UNION a32 (align::a32 ) [6:5/243-6:55/293] lcurly=291 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for align (align) 
+    attributes_aligned_class.cc  [1:1/0-7:2/296]
+NAMESPACE align (align) 
+    STRUCT a2 (align::a2 ) [2:5/22-2:54/71] lcurly=69 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT a4 (align::a4 ) [3:5/77-3:54/126] lcurly=124 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS a8 (align::a8 ) [4:5/132-4:54/181] lcurly=179 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS a16 (align::a16 ) [5:5/187-5:55/237] lcurly=235 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+    UNION a32 (align::a32 ) [6:5/243-6:55/293] lcurly=291 SCOPE: align 
+        BASE CLASSES:
+        MEMBERS:
+

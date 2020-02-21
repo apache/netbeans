@@ -1,0 +1,80 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.mercurial.remote.ui.queues;
+
+import java.util.List;
+import java.util.Set;
+import org.netbeans.modules.mercurial.remote.HgException;
+import org.netbeans.modules.mercurial.remote.HgModuleConfig;
+import org.netbeans.modules.mercurial.remote.OutputLogger;
+import org.netbeans.modules.mercurial.remote.ui.queues.CreateRefreshAction.Cmd.CreateRefreshPatchCmd;
+import org.netbeans.modules.mercurial.remote.util.HgCommand;
+import org.netbeans.modules.versioning.core.api.VCSFileProxy;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
+import org.openide.nodes.Node;
+import org.openide.util.NbBundle.Messages;
+
+/**
+ *
+ * 
+ */
+@ActionID(id = "org.netbeans.modules.mercurial.remote.ui.queues.QCreatePatchAction", category = "MercurialRemote/Queues")
+@ActionRegistration(displayName = "#CTL_MenuItem_QCreatePatch")
+@Messages({
+    "CTL_MenuItem_QCreatePatch=&Create Patch...",
+    "CTL_PopupMenuItem_QCreatePatch=Create Patch..."
+})
+public class QCreatePatchAction extends CreateRefreshAction {
+
+    static final String KEY_CANCELED_MESSAGE = "qcreate"; //NOI18N
+
+    public QCreatePatchAction () {
+        super("create"); //NOI18N
+    }
+    
+    @Override
+    protected String getBaseName (Node[] nodes) {
+        return "CTL_MenuItem_QCreatePatch"; //NOI18N
+    }
+
+    @Override
+    CreateRefreshPatchCmd createHgCommand (VCSFileProxy root, List<VCSFileProxy> commitCandidates, OutputLogger logger, String message,
+            String patchName, String user, String bundleKeyPostfix,
+            List<VCSFileProxy> roots, Set<VCSFileProxy> excludedFiles, Set<VCSFileProxy> filesToRefresh) {
+        return new Cmd.CreateRefreshPatchCmd(root, commitCandidates, logger, message, patchName, user, bundleKeyPostfix,
+                roots, excludedFiles, filesToRefresh) {
+            @Override
+            protected void runHgCommand (VCSFileProxy repository, List<VCSFileProxy> candidates, Set<VCSFileProxy> excludedFiles,
+                    String patchId, String msg, String user, OutputLogger logger) throws HgException {
+                HgCommand.qCreatePatch(repository, candidates, excludedFiles, patchId, msg, user, logger);
+            }
+        };
+    }
+
+    @Override
+    QCommitPanel createPanel (VCSFileProxy root, VCSFileProxy[] roots) {
+        return QCommitPanel.createNewPanel(roots, root, HgModuleConfig.getDefault(root).getLastCanceledCommitMessage(KEY_CANCELED_MESSAGE), QCreatePatchAction.class.getName());
+    }
+
+    @Override
+    void persistCanceledCommitMessage (VCSFileProxy root, QCreatePatchParameters parameters, String canceledCommitMessage) {
+        HgModuleConfig.getDefault(root).setLastCanceledCommitMessage(KEY_CANCELED_MESSAGE, canceledCommitMessage);
+    }
+}

@@ -1,0 +1,2 @@
+References in file quote_nosyshdr/module.cc
+[133:41-133:48] output &lt;&lt; "Module type: " &lt;&lt; module.<b>GetType</b>() &lt;&lt; endl;

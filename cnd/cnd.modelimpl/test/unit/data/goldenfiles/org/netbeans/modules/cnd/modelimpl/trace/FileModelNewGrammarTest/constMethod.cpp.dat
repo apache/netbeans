@@ -1,0 +1,48 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE constMethod.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS AAA (AAA ) [1:1/0-3:2/35] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [2:5/16-2:22/33] MethodImpl SCOPE: AAA 
+            DEFINITION: foo  [5:1/38-6:2/63]
+            SIGNATURE foo() const
+            UNIQUE NAME F:AAA::foo() const
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:5/16-2:9/20]
+FUNCTION DEFINITION foo  [5:1/38-6:2/63] FunctionDefinitionImpl SCOPE: constMethod.cpp
+    SIGNATURE foo() const
+    UNIQUE NAME f:AAA::foo() const
+    DECLARATION: foo  [2:5/16-2:22/33]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/38-5:5/42]
+    STATEMENT COMPOUND  [5:23/60-6:2/63] SCOPE: foo 
+
+========== Dumping model of PROJECT DummyProject
+CLASS AAA (AAA ) [1:1/0-3:2/35] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [2:5/16-2:22/33] MethodImpl SCOPE: AAA 
+            DEFINITION: foo  [5:1/38-6:2/63]
+            SIGNATURE foo() const
+            UNIQUE NAME F:AAA::foo() const
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:5/16-2:9/20]
+FUNCTION DEFINITION foo  [5:1/38-6:2/63] FunctionDefinitionImpl SCOPE: constMethod.cpp
+    SIGNATURE foo() const
+    UNIQUE NAME f:AAA::foo() const
+    DECLARATION: foo  [2:5/16-2:22/33]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/38-5:5/42]
+    STATEMENT COMPOUND  [5:23/60-6:2/63] SCOPE: foo 
+

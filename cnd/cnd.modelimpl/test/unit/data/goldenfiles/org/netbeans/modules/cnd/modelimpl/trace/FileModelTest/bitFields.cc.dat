@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bitFields.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT Foo_t_ (Foo_t_ ) [1:1/0-7:2/94] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC f [2:3/26-2:11/34]  TYPE: int TEXT=int  [2:3/26-2:6/29]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC a [3:3/37-3:16/50]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [3:3/37-3:10/44]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC aa [4:3/53-4:12/62]  TYPE: int TEXT=int  [4:3/53-4:6/56]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC b [5:3/65-5:16/78]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [5:3/65-5:10/72]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC c [6:3/81-6:14/92]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [6:3/81-6:10/88]  INIT: null  SCOPE: Foo_t_ 
+TYPEDEF Foo_t  [7:3/95-7:8/100] TYPE: Foo_t_ TEXT=Foo_t_  [1:1/0-7:9/101] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT Foo_t_ (Foo_t_ ) [1:1/0-7:2/94] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC f [2:3/26-2:11/34]  TYPE: int TEXT=int  [2:3/26-2:6/29]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC a [3:3/37-3:16/50]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [3:3/37-3:10/44]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC aa [4:3/53-4:12/62]  TYPE: int TEXT=int  [4:3/53-4:6/56]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC b [5:3/65-5:16/78]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [5:3/65-5:10/72]  INIT: null  SCOPE: Foo_t_ 
+        FIELD PUBLIC c [6:3/81-6:14/92]  TYPE: $unresolved$::uint8_t TEXT=uint8_t  [6:3/81-6:10/88]  INIT: null  SCOPE: Foo_t_ 
+TYPEDEF Foo_t  [7:3/95-7:8/100] TYPE: Foo_t_ TEXT=Foo_t_  [1:1/0-7:9/101] SCOPE: $Global$ 
+

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.cnd.remote.projectui
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/remote/projectui/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/remote/projectui/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1
+

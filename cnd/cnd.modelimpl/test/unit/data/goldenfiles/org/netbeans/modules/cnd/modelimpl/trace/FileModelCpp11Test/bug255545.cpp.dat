@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug255545.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug255545 [1:1/0-7:2/173] SCOPE: bug255545.cpp
+    STRUCT A255545<int T1,int T2=decltype(T1){}> (bug255545::A255545 ) [2:5/26-5:6/121] lcurly=89 SCOPE: bug255545 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo255545 [4:9/99-4:25/115] MethodImpl SCOPE: A255545 
+                DEFINITION: null
+                SIGNATURE foo255545()
+                UNIQUE NAME F:bug255545::A255545::foo255545()
+                PARAMETERS:
+                RETURNS int TEXT=int  [4:9/99-4:12/102]
+    FUNCTION roo255545 [6:5/129-6:47/171] FunctionImpl SCOPE: bug255545 
+        DEFINITION: null
+        SIGNATURE roo255545(int)
+        UNIQUE NAME F:bug255545::roo255545(int)
+        PARAMETERS:
+            param [6:19/143-6:45/169]  TYPE: int TEXT=int  [6:19/143-6:22/146]  INIT: text='decltype(5){1}'  SCOPE: roo255545 
+        RETURNS int TEXT=int  [6:5/129-6:8/132]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug255545 (bug255545) 
+    bug255545.cpp  [1:1/0-7:2/173]
+NAMESPACE bug255545 (bug255545) 
+    STRUCT A255545<int T1,int T2=decltype(T1){}> (bug255545::A255545 ) [2:5/26-5:6/121] lcurly=89 SCOPE: bug255545 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo255545 [4:9/99-4:25/115] MethodImpl SCOPE: A255545 
+                DEFINITION: null
+                SIGNATURE foo255545()
+                UNIQUE NAME F:bug255545::A255545::foo255545()
+                PARAMETERS:
+                RETURNS int TEXT=int  [4:9/99-4:12/102]
+    FUNCTION roo255545 [6:5/129-6:47/171] FunctionImpl SCOPE: bug255545 
+        DEFINITION: null
+        SIGNATURE roo255545(int)
+        UNIQUE NAME F:bug255545::roo255545(int)
+        PARAMETERS:
+            param [6:19/143-6:45/169]  TYPE: int TEXT=int  [6:19/143-6:22/146]  INIT: text='decltype(5){1}'  SCOPE: roo255545 
+        RETURNS int TEXT=int  [6:5/129-6:8/132]
+

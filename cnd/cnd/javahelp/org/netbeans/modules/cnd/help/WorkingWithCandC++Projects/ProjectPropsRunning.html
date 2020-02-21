@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link href="../ide.css" rel="StyleSheet" type="text/css">
+    <meta content="Helen" name="generator">
+    <title>C/C++ Project Properties Dialog Box: Run</title>
+  </head>
+  <body>
+    <h2>
+       C/C++ Project Properties Dialog Box: Run
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       The Run panel lets you specify properties that are used when you run your project in the
+      IDE.
+    </p>
+    <p>
+       <b>Run Command.</b> Enter a command to be executed when you run the project. The IDE runs
+       the command as <tt>/bin/sh -c "run-command"</tt> which enables you to use any shell syntax including
+       redirection and pipes.  Type the command in the Run Command field the same way you would run it from the command
+       line. For example, you could type <tt>my-script -opt1 -opt2</tt> to run a script and specify
+       two options, or <tt>mycommand > output.log</tt>  to run your command and send the output to a
+       logfile. The Run Command list maintains history of previous entries so you can go back to the
+       default value or select among several different commands you have entered.
+    </p>
+    <p>
+       <b>Run Directory.</b> Enter the path to the directory where the project should run. Normally
+      this is the same as the project directory.
+    </p>
+    <p>
+       <b>Environment.</b> Enter any environment variables and their values if the project requires
+      them to run.
+    </p>
+    <p>
+       <b>Build First.</b> Select the checkbox if you want the project to build before it runs.
+    </p>
+    <p>
+       <b>Console Type.</b> The output generated when you run the project goes to the console. You
+      can specify what type of console to use.
+    </p>
+    <ul>
+      <li>
+        Standard Output sends the program's output to the Output window in the IDE. This causes the
+        build output to be replaced with the run output.
+      </li>
+      <li>
+        External Terminal causes the IDE to open a new terminal window outside the IDE to display
+        the program output and allow you to type input to the program.
+      </li>
+      <li>
+        Internal Terminal causes the IDE to open a new tab in the Output window,
+        to display the program output and allow you to type any input.
+      </li>
+    </ul>
+    <p>
+       <b>External Terminal Type.</b> This option is enabled if you set Console Type
+       to External Terminal. The terminal choices offered in the list vary according to the
+      environment where the IDE is running.
+    </p>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a>
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          C/C++ Project Properties Dialog Box:<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsGeneral.html">General</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsBuild.html">Build</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsCompilerGeneral.html">Compiler</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsLinkerGeneral.html">Linker</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsPackaging.html">Packaging</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsMake.html">Make</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsDebugging.html">Debug</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsRequired.html">Required
+          Projects</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsParser.html">Code
+          Assistance</a> <br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsFormatting.html">Formatting</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

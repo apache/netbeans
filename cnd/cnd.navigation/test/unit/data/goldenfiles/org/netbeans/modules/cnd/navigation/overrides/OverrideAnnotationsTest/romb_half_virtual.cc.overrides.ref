@@ -1,0 +1,15 @@
+2:OVERRIDDEN CatDogRomb::foo romb_half_virtual.cc:22,CatRomb::foo romb_half_virtual.cc:8,DogRomb::foo romb_half_virtual.cc:15
+3:OVERRIDDEN_PSEUDO CatDogRomb::boo romb_half_virtual.cc:23,CatRomb::boo romb_half_virtual.cc:9,DogRomb::boo romb_half_virtual.cc:16
+5:OVERRIDDEN_PSEUDO CatDogRomb::boo romb_half_virtual.cc:23,CatRomb::boo romb_half_virtual.cc:9,DogRomb::boo romb_half_virtual.cc:16
+8:OVERRIDES_AND_OVERRIDDEN BaseRomb::foo romb_half_virtual.cc:2,CatDogRomb::foo romb_half_virtual.cc:22
+9:OVERRIDES_AND_OVERRIDDEN_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatDogRomb::boo romb_half_virtual.cc:23
+11:OVERRIDES_AND_OVERRIDDEN BaseRomb::foo romb_half_virtual.cc:2,CatDogRomb::foo romb_half_virtual.cc:22
+12:OVERRIDES_AND_OVERRIDDEN_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatDogRomb::boo romb_half_virtual.cc:23
+15:OVERRIDES_AND_OVERRIDDEN BaseRomb::foo romb_half_virtual.cc:2,CatDogRomb::foo romb_half_virtual.cc:22
+16:OVERRIDES_AND_OVERRIDDEN_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatDogRomb::boo romb_half_virtual.cc:23
+18:OVERRIDES_AND_OVERRIDDEN BaseRomb::foo romb_half_virtual.cc:2,CatDogRomb::foo romb_half_virtual.cc:22
+19:OVERRIDES_AND_OVERRIDDEN_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatDogRomb::boo romb_half_virtual.cc:23
+22:OVERRIDES BaseRomb::foo romb_half_virtual.cc:2,CatRomb::foo romb_half_virtual.cc:8,DogRomb::foo romb_half_virtual.cc:15
+23:OVERRIDES_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatRomb::boo romb_half_virtual.cc:9,DogRomb::boo romb_half_virtual.cc:16
+25:OVERRIDES BaseRomb::foo romb_half_virtual.cc:2,CatRomb::foo romb_half_virtual.cc:8,DogRomb::foo romb_half_virtual.cc:15
+26:OVERRIDES_PSEUDO BaseRomb::boo romb_half_virtual.cc:3,CatRomb::boo romb_half_virtual.cc:9,DogRomb::boo romb_half_virtual.cc:16

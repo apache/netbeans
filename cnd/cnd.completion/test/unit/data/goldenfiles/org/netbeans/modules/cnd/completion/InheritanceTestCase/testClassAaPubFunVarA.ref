@@ -1,0 +1,6 @@
+aPriv int	$	    a.aPriv
+aProt int	$	    a.aProt
+aPub int	$	    a.aPub
+aPrivFun() void	$	    a.aPrivFun()
+aProtFun() void	$	    a.aProtFun()
+aPubFun() void	$	    a.aPubFun()

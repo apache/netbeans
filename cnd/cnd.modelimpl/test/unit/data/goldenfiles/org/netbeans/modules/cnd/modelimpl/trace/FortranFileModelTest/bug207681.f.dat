@@ -1,0 +1,188 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug207681.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION CSDcalc  [1:1/0-39:14/1037] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:CSDcalc
+    DECLARATION: CSDcalc  [1:1/0-39:14/1037]
+    PARAMETERS:
+        iw [1:1/0-39:14/1037]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION tt  [41:9/1055-44:13/1279] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:tt
+    DECLARATION: tt  [41:9/1055-44:13/1279]
+    PARAMETERS:
+        z [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x0 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x1 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x2 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y0 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y1 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y2 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION dtt  [46:9/1292-53:13/1572] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:dtt
+    DECLARATION: dtt  [46:9/1292-53:13/1572]
+    PARAMETERS:
+        z [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x0 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x1 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x2 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y0 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y1 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y2 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION read_data  [55:1/1578-102:15/3044] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:read_data
+    DECLARATION: read_data  [55:1/1578-102:15/3044]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Zn  [104:9/3064-108:13/3216] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Zn
+    DECLARATION: Zn  [104:9/3064-108:13/3216]
+    PARAMETERS:
+        t [104:9/3064-108:13/3216]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Znn  [110:9/3229-131:13/3669] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Znn
+    DECLARATION: Znn  [110:9/3229-131:13/3669]
+    PARAMETERS:
+        t [110:9/3229-131:13/3669]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Uu  [133:9/3683-174:13/4555] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Uu
+    DECLARATION: Uu  [133:9/3683-174:13/4555]
+    PARAMETERS:
+        z [133:9/3683-174:13/4555]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        t [133:9/3683-174:13/4555]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION fsq  [176:1/4560-224:15/5722] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:fsq
+    DECLARATION: fsq  [176:1/4560-224:15/5722]
+    PARAMETERS:
+        Xp [176:1/4560-224:15/5722]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        F [176:1/4560-224:15/5722]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION fcons  [226:1/5728-239:15/6027] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:fcons
+    DECLARATION: fcons  [226:1/5728-239:15/6027]
+    PARAMETERS:
+        x [226:1/5728-239:15/6027]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        fc [226:1/5728-239:15/6027]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION CSDcalc  [1:1/0-39:14/1037] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:CSDcalc
+    DECLARATION: CSDcalc  [1:1/0-39:14/1037]
+    PARAMETERS:
+        iw [1:1/0-39:14/1037]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION tt  [41:9/1055-44:13/1279] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:tt
+    DECLARATION: tt  [41:9/1055-44:13/1279]
+    PARAMETERS:
+        z [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x0 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x1 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x2 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y0 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y1 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y2 [41:9/1055-44:13/1279]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION dtt  [46:9/1292-53:13/1572] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:dtt
+    DECLARATION: dtt  [46:9/1292-53:13/1572]
+    PARAMETERS:
+        z [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x0 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x1 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        x2 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y0 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y1 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        y2 [46:9/1292-53:13/1572]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION read_data  [55:1/1578-102:15/3044] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:read_data
+    DECLARATION: read_data  [55:1/1578-102:15/3044]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Zn  [104:9/3064-108:13/3216] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Zn
+    DECLARATION: Zn  [104:9/3064-108:13/3216]
+    PARAMETERS:
+        t [104:9/3064-108:13/3216]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Znn  [110:9/3229-131:13/3669] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Znn
+    DECLARATION: Znn  [110:9/3229-131:13/3669]
+    PARAMETERS:
+        t [110:9/3229-131:13/3669]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Uu  [133:9/3683-174:13/4555] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Uu
+    DECLARATION: Uu  [133:9/3683-174:13/4555]
+    PARAMETERS:
+        z [133:9/3683-174:13/4555]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        t [133:9/3683-174:13/4555]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION fsq  [176:1/4560-224:15/5722] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:fsq
+    DECLARATION: fsq  [176:1/4560-224:15/5722]
+    PARAMETERS:
+        Xp [176:1/4560-224:15/5722]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        F [176:1/4560-224:15/5722]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION fcons  [226:1/5728-239:15/6027] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:fcons
+    DECLARATION: fcons  [226:1/5728-239:15/6027]
+    PARAMETERS:
+        x [226:1/5728-239:15/6027]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        fc [226:1/5728-239:15/6027]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

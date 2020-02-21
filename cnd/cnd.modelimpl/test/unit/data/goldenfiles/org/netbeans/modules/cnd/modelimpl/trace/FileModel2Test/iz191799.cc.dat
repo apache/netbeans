@@ -1,0 +1,98 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz191799.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN NS191799 [2:1/1-15:2/238] SCOPE: iz191799.cc
+    STRUCT Outer191799 (NS191799::Outer191799 ) [3:5/26-6:6/113] lcurly=45 SCOPE: NS191799 
+        BASE CLASSES:
+        MEMBERS:
+            CLASS_FORWARD_DECLARATION PUBLIC Inner191799 [4:9/55-4:28/74] ClassImpl$ClassMemberForwardDeclaration
+                STRUCT Outer191799::Inner191799 (NS191799::Outer191799::Inner191799 ) [8:5/120-10:6/192] lcurly=152 SCOPE: Outer191799 
+                    BASE CLASSES:
+                    MEMBERS:
+                    FRIENDS:
+                        FUNCTION foo191799 [9:9/162-9:33/186] FriendFunctionImpl SCOPE: NS191799 
+                            DEFINITION: foo191799  [12:5/203-14:6/236]
+                            SIGNATURE foo191799()
+                            UNIQUE NAME D:NS191799::foo191799()
+                            REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [9:16/169-9:20/173]
+        FRIENDS:
+            FUNCTION foo191799 [5:9/83-5:33/107] FriendFunctionImpl SCOPE: NS191799 
+                DEFINITION: foo191799  [12:5/203-14:6/236]
+                SIGNATURE foo191799()
+                UNIQUE NAME D:NS191799::foo191799()
+                REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+                PARAMETERS:
+                RETURNS void TEXT=void  [5:16/90-5:20/94]
+    STRUCT Outer191799::Inner191799 (NS191799::Outer191799::Inner191799 ) [8:5/120-10:6/192] lcurly=152 SCOPE: Outer191799 
+        BASE CLASSES:
+        MEMBERS:
+        FRIENDS:
+            FUNCTION foo191799 [9:9/162-9:33/186] FriendFunctionImpl SCOPE: NS191799 
+                DEFINITION: foo191799  [12:5/203-14:6/236]
+                SIGNATURE foo191799()
+                UNIQUE NAME D:NS191799::foo191799()
+                REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+                PARAMETERS:
+                RETURNS void TEXT=void  [9:16/169-9:20/173]
+    FUNCTION DEFINITION foo191799  [12:5/203-14:6/236] FunctionDDImpl SCOPE: NS191799 
+        SIGNATURE foo191799()
+        UNIQUE NAME f:NS191799::foo191799()
+        DECLARATION: foo191799  [9:9/162-9:33/186]
+        PARAMETERS:
+        RETURNS void TEXT=void  [12:5/203-12:9/207]
+        STATEMENT COMPOUND  [12:22/220-14:6/236] SCOPE: foo191799 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for NS191799 (NS191799) 
+    iz191799.cc  [2:1/1-15:2/238]
+NAMESPACE NS191799 (NS191799) 
+    STRUCT Outer191799 (NS191799::Outer191799 ) [3:5/26-6:6/113] lcurly=45 SCOPE: NS191799 
+        BASE CLASSES:
+        MEMBERS:
+            CLASS_FORWARD_DECLARATION PUBLIC Inner191799 [4:9/55-4:28/74] ClassImpl$ClassMemberForwardDeclaration
+                STRUCT Outer191799::Inner191799 (NS191799::Outer191799::Inner191799 ) [8:5/120-10:6/192] lcurly=152 SCOPE: Outer191799 
+                    BASE CLASSES:
+                    MEMBERS:
+                    FRIENDS:
+                        FUNCTION foo191799 [9:9/162-9:33/186] FriendFunctionImpl SCOPE: NS191799 
+                            DEFINITION: foo191799  [12:5/203-14:6/236]
+                            SIGNATURE foo191799()
+                            UNIQUE NAME D:NS191799::foo191799()
+                            REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [9:16/169-9:20/173]
+        FRIENDS:
+            FUNCTION foo191799 [5:9/83-5:33/107] FriendFunctionImpl SCOPE: NS191799 
+                DEFINITION: foo191799  [12:5/203-14:6/236]
+                SIGNATURE foo191799()
+                UNIQUE NAME D:NS191799::foo191799()
+                REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+                PARAMETERS:
+                RETURNS void TEXT=void  [5:16/90-5:20/94]
+    FUNCTION foo191799 [9:9/162-9:33/186] FriendFunctionImpl SCOPE: NS191799 
+        DEFINITION: foo191799  [12:5/203-14:6/236]
+        SIGNATURE foo191799()
+        UNIQUE NAME D:NS191799::foo191799()
+        REFERENCED FRIEND FUNCTION: foo191799  [12:5/203-14:6/236]
+        PARAMETERS:
+        RETURNS void TEXT=void  [9:16/169-9:20/173]
+    FUNCTION DEFINITION foo191799  [12:5/203-14:6/236] FunctionDDImpl SCOPE: NS191799 
+        SIGNATURE foo191799()
+        UNIQUE NAME f:NS191799::foo191799()
+        DECLARATION: foo191799  [9:9/162-9:33/186]
+        PARAMETERS:
+        RETURNS void TEXT=void  [12:5/203-12:9/207]
+        STATEMENT COMPOUND  [12:22/220-14:6/236] SCOPE: foo191799 
+

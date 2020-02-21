@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+    <title>C/C++ Project Properties Dialog Box: Debug</title>
+  </head>
+  <body>
+    <h2>
+       C/C++ Project Properties Dialog Box: Debug
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       The Debug panel lets you specify properties that are used when you debug your project in the
+      IDE.
+    </p>
+    <p>
+      <b>Debug Command.</b> For debugging, the IDE uses the command specified as the Run Command in the
+      Run properties by default. You can specify a different command to be executed when you debug the project.
+      The IDE runs the command as <tt>/bin/sh -c "debug-command"</tt> which enables you to use any shell syntax including
+       redirection and pipes.  Type the command in the Debug Command field the same way you would run it from the command
+       line. For example, you could type <tt>my-script -opt1 -opt2</tt> to run a script and specify
+       two options, or <tt>mycommand > output.log</tt>  to run your command and send the output to a
+       logfile. Unlike the Run Command, the Debug Command history is not maintained.
+    </p>
+    <p>
+       <b>Working dir.</b> By default, the IDE uses the run directory as the working directory when
+      debugging your project. You can specify a different working directory for the IDE to use for
+      debugging.
+    </p>
+    <p>
+       <b>Symbol file.</b> Specify a file containing a symbol table. By default the IDE
+       assumes the symbols are in the output binary.
+    </p>
+    <p>
+       <b>Gdb Init File.</b> By default, the IDE uses the <tt>.gdbinit</tt> file in your home
+      directory. You can specify a different <tt>.gdbinit</tt> file for gdb commands to be executed
+      before the debugging session starts.
+    </p>
+    <p>
+       <b>Source dirs.</b> You can specify directories to be added to the beginning of the search
+      path for source files.
+    </p>
+    <p>
+       <b>Follow Fork Mode.</b> Specify whether to follow the parent or child process after a call
+      to fork or vfork.
+    </p>
+    <p>
+       <b>Detach On Fork.</b> Set to <b>on</b> to make the debugger detach from one process after it
+      forks, or <b>off</b> to stay attached to both processes.
+    </p>
+    <p>
+       <b>Substitute Path.</b> You can map your compile time and debug time file paths if they are
+      different.
+    </p>
+    <p>
+       <b>Signals.</b> You can specify which signals the debugger should ignore.
+    </p>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a>
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          C/C++ Project Properties Dialog Box:<br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsBuild.html">Build</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsLinkerGeneral.html">Linker</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsGeneral.html">General</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsCompilerGeneral.html">Compiler</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsRunning.html">Run</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=
+          "ProjectPropsPackaging.html">Packaging</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsMake.html">Make</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsRequired.html">Required
+          Projects</a><br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsParser.html">Code
+          Assistance</a> <br>
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ProjectPropsFormatting.html">Formatting</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

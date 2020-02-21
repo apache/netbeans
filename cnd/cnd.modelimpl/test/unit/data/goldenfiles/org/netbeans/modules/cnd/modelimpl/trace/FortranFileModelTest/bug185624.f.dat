@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug185624.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN module1 [2:7/60-18:10/518] SCOPE: bug185624.f
+    FUNCTION DEFINITION sub1  [5:21/133-16:25/502] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:sub1
+        DECLARATION: sub1  [5:21/133-16:25/502]
+        PARAMETERS:
+            x [5:21/133-16:25/502]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+NAMESPACE DEFINITOIN main [20:7/541-26:10/704] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITOIN module1 [2:7/60-18:10/518] SCOPE: bug185624.f
+    FUNCTION DEFINITION sub1  [5:21/133-16:25/502] SubroutineImpl SCOPE: $Global$ 
+        SIGNATURE 
+        UNIQUE NAME f:sub1
+        DECLARATION: sub1  [5:21/133-16:25/502]
+        PARAMETERS:
+            x [5:21/133-16:25/502]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RETURNS int TEXT=int  [1:1/0-1:1/0]
+        STATEMENT is null
+NAMESPACE DEFINITOIN main [20:7/541-26:10/704] SCOPE: $Global$ 
+

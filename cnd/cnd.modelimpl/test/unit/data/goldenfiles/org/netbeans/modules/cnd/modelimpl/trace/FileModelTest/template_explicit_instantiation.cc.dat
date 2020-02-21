@@ -1,0 +1,43 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_explicit_instantiation.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Cls<class T> (Cls ) [1:1/0-2:2/31] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION min  [6:1/60-8:2/119] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE min<class>(T,T)
+    UNIQUE NAME f:min<class>(T,T)
+    DECLARATION: min  [6:1/60-8:2/119]
+    PARAMETERS:
+        x [6:25/84-6:28/87]  TYPE: min::T TEXT=T  [6:25/84-6:26/85]  INIT: null  SCOPE: min 
+        y [6:30/89-6:33/92]  TYPE: min::T TEXT=T  [6:30/89-6:31/90]  INIT: null  SCOPE: min 
+    RETURNS min::T TEXT=T  [6:19/78-6:20/79]
+    STATEMENT COMPOUND  [6:35/94-8:2/119] SCOPE: min 
+        STATEMENT RETURN  [7:1/96-7:22/117] SCOPE: Stmt  [6:35/94-8:2/119] text: 'return x < y ? x : y;'
+FUNCTION_INSTANTIATION min [10:1/121-10:27/147]
+
+========== Dumping model of PROJECT DummyProject
+CLASS Cls<class T> (Cls ) [1:1/0-2:2/31] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION min  [6:1/60-8:2/119] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE min<class>(T,T)
+    UNIQUE NAME f:min<class>(T,T)
+    DECLARATION: min  [6:1/60-8:2/119]
+    PARAMETERS:
+        x [6:25/84-6:28/87]  TYPE: min::T TEXT=T  [6:25/84-6:26/85]  INIT: null  SCOPE: min 
+        y [6:30/89-6:33/92]  TYPE: min::T TEXT=T  [6:30/89-6:31/90]  INIT: null  SCOPE: min 
+    RETURNS min::T TEXT=T  [6:19/78-6:20/79]
+    STATEMENT COMPOUND  [6:35/94-8:2/119] SCOPE: min 
+        STATEMENT RETURN  [7:1/96-7:22/117] SCOPE: Stmt  [6:35/94-8:2/119] text: 'return x < y ? x : y;'
+

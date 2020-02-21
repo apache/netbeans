@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=ISO646-US" http-equiv="Content-Type">
+    <link type="text/css" href="../ide.css" rel="StyleSheet">
+    <meta content="Helen" name="generator">
+    <title>Using the Call Graph</title>
+  </head>
+  <body>
+    <h2>
+       Using the Call Graph
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a></small>
+    </p>
+    <p>
+       The Call Graph window displays two views of the calling relationships between the parts
+      of your program. The left view is a hierarchical tree with expanding and collapsing nodes. The
+      right view is a graphical view of the functions called from a selected function, or the
+      functions that call that function. In addition, relationships between functions
+      and variables are shown with dotted lines. The two views are synchronized.
+    </p>
+    <p>The starting point of a call graph can be a function, variable, or field.
+    Each element in the Call Graph is marked with an <a href="Icons.html">icon</a> to identify its type.</p>
+    <p>
+       <b>To open the Call Graph:</b>
+    </p>
+    <ul>
+      <li>
+        In the Source Editor, right-click on a function, variable, or field, and choose Show Call Graph.
+      </li>
+      <li>
+        The Call Graph window opens and displays the tree of functions called by the selected
+        function, or the function that contains the selected variable or field.
+      </li>
+      <li>
+        The left panel shows a tree with the item that was originally selected at the top.
+      </li>
+      <li>
+        The right panel shows a graphical view of the selected function and its callers and callees,
+        or other selected item and associated function.
+      </li>
+    </ul>
+    <p>
+       <b>To use the Call Graph:</b>
+    </p>
+    <ul>
+        <li>Expand nodes in the left panel to expand the callers and callees in the graphic panel.</li>
+      <li>
+        Right-click a function in the Call Graph graphic window and select Expand Callees to add to
+        the call graph all the functions that the selected function calls.
+      </li>
+      <li>
+        Right-click any function and select Expand Callers to add the functions that call the
+        selected function.
+      </li>
+      <li>
+        Double-click a function to jump to the source file where the function is declared. You can
+        also right-click the function and select Go to Declaration to jump to the source file.
+      </li>
+      <li>
+        Save a PNG image of the call graph by right-clicking anywhere in the Call Graph window and
+        selecting Export.
+      </li>
+      <li>Export the call graph to a GraphML XML file by right-clicking anywhere in the Call Graph window and
+        selecting Export as XML.</li>
+    </ul>
+    <p>
+       Buttons at the left side of the Call Graph window allow you to change the display of the
+      call tree nodes and graph.
+    </p>
+    <table summary="The left column lists the button. The right column lists the description."
+    border="1" cellpadding="5" cellspacing="0">
+      <tr valign="top">
+        <th scope="col" align="left">
+          Button
+        </th>
+        <th scope="col" align="left">
+          Description
+        </th>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img alt="Refresh button" src="../images/refresh.png"> 
+        </td>
+        <td>
+          Updates the display.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img alt="Focus on button" src="../images/focus.png"> 
+        </td>
+        <td>
+          Focuses the display on the selected node in the call tree, and the node moves to the top.
+          Subsequent actions apply to the function that has focus.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img alt="Who is called from the function button" src="../images/who_is_included.png"> 
+        </td>
+        <td>
+          Changes the display to the tree of functions called from the function that has focus.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img alt="Who calls this function button" src="../images/who_includes.png"> 
+        </td>
+        <td>
+          Changes the display to the tree of functions that call the function that has focus.
+        </td>
+      </tr>
+    </table>
+    <table summary="related topics">
+      <tr valign="top">
+        <th align="left" colspan="2">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="UsingClassView.html">Using the Classes Window</a><br>
+           <a href="FindingUsages.html">Finding Class, Method, and Fields Usages</a><br>
+           <a href="UsingNavigator.html">Using the Navigator Window</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<assembler name="sparc5">
+
+    <register_group name="general">
+        <register name="r0;g0" bitwidth="64"/>
+        <register name="r1;g1" bitwidth="64"/>
+        <register name="r2;g2" bitwidth="64"/>
+        <register name="r3;g3" bitwidth="64"/>
+        <register name="r4;g4" bitwidth="64"/>
+        <register name="r5;g5" bitwidth="64"/>
+        <register name="r6;g6" bitwidth="64"/>
+        <register name="r7;g7" bitwidth="64"/>
+        <register name="r8;o0" bitwidth="64"/>
+        <register name="r9;o1" bitwidth="64"/>
+        <register name="r10;o2" bitwidth="64"/>
+        <register name="r11;o3" bitwidth="64"/>
+        <register name="r12;o4" bitwidth="64"/>
+        <register name="r13;o5" bitwidth="64"/>
+        <register name="r14;o6;sp" bitwidth="64"/>
+        <register name="r15;o7" bitwidth="64"/>
+        <register name="r16;l0" bitwidth="64"/>
+        <register name="r17;l1" bitwidth="64"/>
+        <register name="r18;l2" bitwidth="64"/>
+        <register name="r19;l3" bitwidth="64"/>
+        <register name="r20;l4" bitwidth="64"/>
+        <register name="r21;l5" bitwidth="64"/>
+        <register name="r22;l6" bitwidth="64"/>
+        <register name="r23;l7" bitwidth="64"/>
+        <register name="r24;i0" bitwidth="64"/>
+        <register name="r25;i1" bitwidth="64"/>
+        <register name="r26;i2" bitwidth="64"/>
+        <register name="r27;i3" bitwidth="64"/>
+        <register name="r28;i4" bitwidth="64"/>
+        <register name="r29;i5" bitwidth="64"/>
+        <register name="r30;i6;fp" bitwidth="64"/>
+        <register name="r31;i7" bitwidth="64"/>
+      </register_group>
+      
+      <register_group name="stack">
+        <register name="sp" bitwidth="64"/>
+        <register name="fp" bitwidth="64"/>
+      </register_group>
+      
+      <register_group name="floating">
+        <register name="f0" bitwidth="64"/>
+        <register name="f1" bitwidth="64"/>
+        <register name="f2" bitwidth="64"/>
+        <register name="f3" bitwidth="64"/>
+        <register name="f4" bitwidth="64"/>
+        <register name="f5" bitwidth="64"/>
+        <register name="f6" bitwidth="64"/>
+        <register name="f7" bitwidth="64"/>
+        <register name="f9" bitwidth="64"/>
+        <register name="f10" bitwidth="64"/>
+        <register name="f11" bitwidth="64"/>
+        <register name="f12" bitwidth="64"/>
+        <register name="f13" bitwidth="64"/>
+        <register name="f14" bitwidth="64"/>
+        <register name="f15" bitwidth="64"/>
+        <register name="f16" bitwidth="64"/>
+        <register name="f17" bitwidth="64"/>
+        <register name="f18" bitwidth="64"/>
+        <register name="f19" bitwidth="64"/>
+        <register name="f20" bitwidth="64"/>
+        <register name="f21" bitwidth="64"/>
+        <register name="f22" bitwidth="64"/>
+        <register name="f23" bitwidth="64"/>
+        <register name="f24" bitwidth="64"/>
+        <register name="f25" bitwidth="64"/>
+        <register name="f26" bitwidth="64"/>
+        <register name="f27" bitwidth="64"/>
+        <register name="f28" bitwidth="64"/>
+        <register name="f29" bitwidth="64"/>
+        <register name="f30" bitwidth="64"/>
+        <register name="f31" bitwidth="64"/>       
+        
+        <register name="fsr" bitwidth="64"/>       
+        <register name="fq" bitwidth="64"/>       
+      </register_group>                     
+      
+      <register_group name="coprocessor">
+        <register name="c0" bitwidth="64"/>
+        <register name="c1" bitwidth="64"/>
+        <register name="c2" bitwidth="64"/>
+        <register name="c3" bitwidth="64"/>
+        <register name="c4" bitwidth="64"/>
+        <register name="c5" bitwidth="64"/>
+        <register name="c6" bitwidth="64"/>
+        <register name="c7" bitwidth="64"/>
+        <register name="c9" bitwidth="64"/>
+        <register name="c10" bitwidth="64"/>
+        <register name="c11" bitwidth="64"/>
+        <register name="c12" bitwidth="64"/>
+        <register name="c13" bitwidth="64"/>
+        <register name="c14" bitwidth="64"/>
+        <register name="c15" bitwidth="64"/>
+        <register name="c16" bitwidth="64"/>
+        <register name="c17" bitwidth="64"/>
+        <register name="c18" bitwidth="64"/>
+        <register name="c19" bitwidth="64"/>
+        <register name="c20" bitwidth="64"/>
+        <register name="c21" bitwidth="64"/>
+        <register name="c22" bitwidth="64"/>
+        <register name="c23" bitwidth="64"/>
+        <register name="c24" bitwidth="64"/>
+        <register name="c25" bitwidth="64"/>
+        <register name="c26" bitwidth="64"/>
+        <register name="c27" bitwidth="64"/>
+        <register name="c28" bitwidth="64"/>
+        <register name="c29" bitwidth="64"/>
+        <register name="c30" bitwidth="64"/>
+        <register name="c31" bitwidth="64"/>       
+        
+        <register name="csr" bitwidth="64"/>       
+        <register name="cq" bitwidth="64"/>       
+      </register_group>     
+      
+      <register_group name="status">
+          <register name="psr" bitwidth="64"/>
+          <register name="tbr" bitwidth="64"/>
+          <register name="wim" bitwidth="64"/>
+          <register name="y" bitwidth="64"/>
+      </register_group>
+                            
+ </assembler>

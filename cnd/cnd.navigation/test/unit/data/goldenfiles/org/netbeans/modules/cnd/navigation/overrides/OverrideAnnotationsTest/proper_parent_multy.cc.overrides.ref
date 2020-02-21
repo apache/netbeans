@@ -1,0 +1,5 @@
+25:OVERRIDDEN A::v_foo proper_parent_multy.cc:65,B1::v_foo proper_parent_multy.cc:35
+35:OVERRIDES_AND_OVERRIDDEN B1C1::v_foo proper_parent_multy.cc:25,A::v_foo proper_parent_multy.cc:65
+42:OVERRIDDEN A::v_foo proper_parent_multy.cc:65
+46:OVERRIDDEN A::v_foo proper_parent_multy.cc:65
+65:OVERRIDES B1::v_foo proper_parent_multy.cc:35,B1C1::v_foo proper_parent_multy.cc:25,B2C2::v_foo proper_parent_multy.cc:42,B2C3::v_foo proper_parent_multy.cc:46

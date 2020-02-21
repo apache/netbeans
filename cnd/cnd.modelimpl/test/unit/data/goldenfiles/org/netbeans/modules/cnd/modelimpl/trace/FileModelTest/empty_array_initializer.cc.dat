@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE empty_array_initializer.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE empty_array [1:1/0-1:30/29]  TYPE: const int[] TEXT=const int[]  [1:1/0-1:10/9]  INIT: text='{}'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE empty_array [1:1/0-1:30/29]  TYPE: const int[] TEXT=const int[]  [1:1/0-1:10/9]  INIT: text='{}'  SCOPE: $Global$ 
+

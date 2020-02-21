@@ -1,0 +1,4 @@
+2:OVERRIDDEN DescA::foo proper_parent_single.cc:6,DescB::foo proper_parent_single.cc:10,DescC::foo proper_parent_single.cc:14
+6:OVERRIDES_AND_OVERRIDDEN Base::foo proper_parent_single.cc:2,DescB::foo proper_parent_single.cc:10,DescC::foo proper_parent_single.cc:14
+10:OVERRIDES_AND_OVERRIDDEN Base::foo proper_parent_single.cc:2,DescA::foo proper_parent_single.cc:6,DescC::foo proper_parent_single.cc:14
+14:OVERRIDES Base::foo proper_parent_single.cc:2,DescA::foo proper_parent_single.cc:6,DescB::foo proper_parent_single.cc:10

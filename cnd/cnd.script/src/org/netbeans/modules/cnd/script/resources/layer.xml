@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Loaders">
+
+        <folder name="text">
+
+            <folder name="x-make">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-cnd-makefile-loaders-MakefileDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/MakefileDataIcon.gif"/>
+                        <attr name="position" intvalue="99999"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="Separator3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="Separator4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1800"/>
+                    </file>
+                    <file name="Separator5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1900"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1950"/>
+                    </file>
+                    <file name="Separator6.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1975"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="2000"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="2100"/>
+                    </file>
+                </folder> <!-- Actions -->
+            </folder> <!-- x-make -->
+
+            <folder name="sh">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-cnd-script-loaders-ShellDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                        <attr name="position" intvalue="99999"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="Separator3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="Separator4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="Separator5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="Separator6.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1775"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1800"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1900"/>
+                    </file>
+                </folder> <!-- Actions -->
+            </folder> <!-- sh -->
+
+            <folder name="bat">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-cnd-script-loaders-BatDataLoader.instance">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                        <attr name="position" intvalue="99999"/>
+                    </file>
+                </folder>
+                <folder name="Actions">
+                    <file name="OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                    <file name="Separator3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="1400"/>
+                    </file>
+                    <file name="Separator4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1500"/>
+                    </file>
+                    <file name="SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="Separator5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1700"/>
+                    </file>
+                    <file name="Separator6.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1775"/>
+                    </file>
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1800"/>
+                    </file>
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1900"/>
+                    </file>
+                </folder> <!-- Actions -->
+            </folder> <!-- bat -->
+
+        </folder>
+
+    </folder>
+
+    <folder name="Templates">
+        <folder name="ShellScripts">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+            <attr name="position" intvalue="750"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/scriptTemplates.html"/>
+
+            <file name="script.bash" url="simple-shell.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/bashScript.html"/>
+                <attr name="templateCategory" stringvalue="shell-types"/>
+            </file>
+
+            <file name="script.csh" url="simple-shell.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/cshScript.html"/>
+                <attr name="templateCategory" stringvalue="shell-types"/>
+            </file>
+
+            <file name="script.ksh" url="simple-shell.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/kshScript.html"/>
+                <attr name="templateCategory" stringvalue="shell-types"/>
+            </file>
+
+            <file name="script.sh" url="simple-shell.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/shScript.html"/>
+                <attr name="templateCategory" stringvalue="shell-types"/>
+            </file>
+
+            <file name="script.zsh" url="simple-shell.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/zshScript.html"/>
+                <attr name="templateCategory" stringvalue="shell-types"/>
+            </file>
+
+        </folder>
+
+        <folder name="MakeTemplates">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+            <attr name="position" intvalue="850"/>
+            <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/makefiles.html"/>
+
+            <file name="ComplexMakefile">
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/complexMakefile.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.makefile.wizard.MakefileWizardComplex"/>
+                <attr name="templateCategory" stringvalue="makefile-types"/>
+            </file>
+        </folder>
+
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-make" url="makefileExample">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/MakefileDataIcon.gif"/>
+                </file>
+                <file name="sh" url="shellExample.sh">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                </file>
+		<file name="bat" url="batExample.bat">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/script/resources/ShellDataIcon.gif"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+
+            <folder name="x-make">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+
+                <file name="Language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.api.script.MakefileTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <file name="ParserFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.parser.MakefileParserFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
+                </file>
+
+                <file name="MakefileIndentTaskFactory.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.editor.MakefileIndentTaskFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.editor.indent.spi.IndentTask$Factory"/>
+                </file>
+
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.editor.MakefileKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
+                </file>
+
+                <file name="ShellEmbeddingProvider.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.editor.ShellEmbeddingProvider$Factory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
+                </file>
+
+                <file name="ShellEmbeddingSyntaxHighlighter.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.editor.ShellEmbeddingHighlightContainer$LayerFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+
+                <folder name="HyperlinkProviders">
+                    <file name="MakefileHyperlinkProvider.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makefile.editor.MakefileHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="codeTemplates.xml" url="makefileCodeTemplates.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="fontsColors.xml" url="makefileFontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makefile.editor.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="editorPreferences.xml" url="makefileEditorPreferences.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="Separator-before-comment-make.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="19110"/>
+                        </file>
+                        <file name="comment">
+                            <attr name="position" intvalue="19200"/>
+                        </file>
+                        <file name="uncomment">
+                            <attr name="position" intvalue="19300"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="x-cmake">
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.api.script.CMakeTokenId.languageMake"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="fontsColors.xml" url="cmakeFontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cmake.editor.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.cmake.editor.CMakeKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
+                </file>
+            </folder>
+
+            <folder name="x-cmake-include">
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.api.script.CMakeTokenId.languageInc"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="fontsColors.xml" url="cmakeIncFontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cmake.editor.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.cmake.editor.CMakeIncKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
+                </file>
+            </folder>
+
+            <folder name="sh">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.api.script.ShTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="fontsColors.xml" url="shellFontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.editor.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.script.editor.ShellKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
+                </file>
+
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="Separator-before-comment-sh.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="19110"/>
+                        </file>
+                        <file name="comment">
+                            <attr name="position" intvalue="19200"/>
+                        </file>
+                        <file name="uncomment">
+                            <attr name="position" intvalue="19300"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="bat">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.resources.Bundle"/>
+
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.api.script.BatTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="fontsColors.xml" url="batFontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.script.editor.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

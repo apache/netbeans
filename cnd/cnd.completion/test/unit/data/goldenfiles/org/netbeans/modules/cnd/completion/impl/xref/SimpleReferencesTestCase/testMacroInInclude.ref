@@ -1,0 +1,48 @@
+'SYS_INCL', tokenID=preprocessor_identifier, offset=8 [1:9/8-1:17/16]
+--OWNER:
+    MACROS #define 'SYS_INCL' [1:1/0-1:38/37]
+--RESOLVED TO:
+    MACROS #define 'SYS_INCL' [1:1/0-1:38/37]
+==============================================================
+'macro_in_include', tokenID=preprocessor_identifier, offset=18 [1:19/18-1:35/34]
+--OWNER:
+    MACROS #define 'SYS_INCL' [1:1/0-1:38/37]
+--RESOLVED TO:
+    null
+==============================================================
+'h', tokenID=preprocessor_identifier, offset=35 [1:36/35-1:37/36]
+--OWNER:
+    MACROS #define 'SYS_INCL' [1:1/0-1:38/37]
+--RESOLVED TO:
+    null
+==============================================================
+'USR_INCL', tokenID=preprocessor_identifier, offset=46 [2:9/46-2:17/54]
+--OWNER:
+    MACROS #define 'USR_INCL' [2:1/38-2:38/75]
+--RESOLVED TO:
+    MACROS #define 'USR_INCL' [2:1/38-2:38/75]
+==============================================================
+'include', tokenID=preprocessor_include, offset=78 [4:2/78-4:9/85]
+--OWNER:
+    INCLUDE <macro_in_include.h> [4:1/77-4:18/94]
+--RESOLVED TO:
+    INCLUDE <macro_in_include.h> [4:1/77-4:18/94]
+==============================================================
+'SYS_INCL', tokenID=preprocessor_identifier, offset=86 [4:10/86-4:18/94]
+--OWNER:
+    INCLUDE <macro_in_include.h> [4:1/77-4:18/94]
+--RESOLVED TO:
+    MACROS #define 'SYS_INCL' [1:1/0-1:38/37]
+==============================================================
+'include', tokenID=preprocessor_include, offset=96 [5:2/96-5:9/103]
+--OWNER:
+    INCLUDE "macro_in_include.h" [5:1/95-5:18/112]
+--RESOLVED TO:
+    INCLUDE "macro_in_include.h" [5:1/95-5:18/112]
+==============================================================
+'USR_INCL', tokenID=preprocessor_identifier, offset=104 [5:10/104-5:18/112]
+--OWNER:
+    INCLUDE "macro_in_include.h" [5:1/95-5:18/112]
+--RESOLVED TO:
+    MACROS #define 'USR_INCL' [2:1/38-2:38/75]
+==============================================================

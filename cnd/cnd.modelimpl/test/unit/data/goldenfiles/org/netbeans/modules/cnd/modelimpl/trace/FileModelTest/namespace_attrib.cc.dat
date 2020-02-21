@@ -1,0 +1,20 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE namespace_attrib.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN std [1:1/0-2:2/62] SCOPE: namespace_attrib.cc
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for std (std) 
+    namespace_attrib.cc  [1:1/0-2:2/62]
+NAMESPACE std (std) 
+

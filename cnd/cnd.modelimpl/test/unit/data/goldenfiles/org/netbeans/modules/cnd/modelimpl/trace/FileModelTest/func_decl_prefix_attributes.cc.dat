@@ -1,0 +1,44 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["GLAPI",<ID>,line=2,col=11],offset=86,file=null'='["__attribute__",<ID>,line=2,col=17],offset=92,file=null ["(",<LPAREN>,line=2,col=30],offset=105,file=null ["(",<LPAREN>,line=2,col=31],offset=106,file=null ["visibility",<ID>,line=2,col=32],offset=107,file=null ["(",<LPAREN>,line=2,col=42],offset=117,file=null [""default"",<STRING_LITERAL>,line=2,col=43],offset=118,file=null [")",<RPAREN>,line=2,col=52],offset=127,file=null [")",<RPAREN>,line=2,col=53],offset=128,file=null [")",<RPAREN>,line=2,col=54],offset=129,file=null'
+<U>#define '["GLAPIENTRY",<ID>,line=3,col=11],offset=141,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE func_decl_prefix_attributes.cc
+Includes:
+    <no includes>
+Macros:
+#define 'GLAPI' [2:1/76-2:55/130]
+#define 'GLAPIENTRY' [3:1/131-3:21/151]
+FUNCTION glFunction [5:7/159-5:66/218] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE glFunction(int,int,int)
+    UNIQUE NAME F:glFunction(int,int,int)
+    PARAMETERS:
+        red [5:35/187-5:42/194]  TYPE: int TEXT=int  [5:35/187-5:38/190]  INIT: null  SCOPE: glFunction 
+        green [5:44/196-5:53/205]  TYPE: int TEXT=int  [5:44/196-5:47/199]  INIT: null  SCOPE: glFunction 
+        blue [5:55/207-5:63/215]  TYPE: int TEXT=int  [5:55/207-5:58/210]  INIT: null  SCOPE: glFunction 
+    RETURNS void TEXT=void  [5:7/159-5:11/163]
+FUNCTION DEFINITION foo_149506  [8:37/282-8:64/309] FunctionDDImpl SCOPE: func_decl_prefix_attributes.cc
+    SIGNATURE foo_149506()
+    UNIQUE NAME f:foo_149506()
+    DECLARATION: foo_149506  [8:37/282-8:64/309]
+    PARAMETERS:
+    RETURNS void TEXT=void  [8:44/289-8:48/293]
+    STATEMENT COMPOUND  [8:62/307-8:64/309] SCOPE: foo_149506 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION glFunction [5:7/159-5:66/218] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE glFunction(int,int,int)
+    UNIQUE NAME F:glFunction(int,int,int)
+    PARAMETERS:
+        red [5:35/187-5:42/194]  TYPE: int TEXT=int  [5:35/187-5:38/190]  INIT: null  SCOPE: glFunction 
+        green [5:44/196-5:53/205]  TYPE: int TEXT=int  [5:44/196-5:47/199]  INIT: null  SCOPE: glFunction 
+        blue [5:55/207-5:63/215]  TYPE: int TEXT=int  [5:55/207-5:58/210]  INIT: null  SCOPE: glFunction 
+    RETURNS void TEXT=void  [5:7/159-5:11/163]
+

@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz222800.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+ENUM  [1:1/0-1:44/43] SCOPE: $Global$ 
+    A
+    B
+TYPEDEF T1  [1:45/44-1:47/46] TYPE:  TEXT=typedef enum { A B } T1 ;  [1:1/0-1:48/47] SCOPE: $Global$ 
+ENUM  [2:1/48-2:19/66] SCOPE: $Global$ 
+    C
+    D
+TYPEDEF T2  [2:46/93-2:48/95] TYPE:  TEXT=typedef enum { C D } T2 ;  [2:1/48-2:49/96] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+ENUM  [1:1/0-1:44/43] SCOPE: $Global$ 
+    A
+    B
+TYPEDEF T1  [1:45/44-1:47/46] TYPE:  TEXT=typedef enum { A B } T1 ;  [1:1/0-1:48/47] SCOPE: $Global$ 
+ENUM  [2:1/48-2:19/66] SCOPE: $Global$ 
+    C
+    D
+TYPEDEF T2  [2:46/93-2:48/95] TYPE:  TEXT=typedef enum { C D } T2 ;  [2:1/48-2:49/96] SCOPE: $Global$ 
+

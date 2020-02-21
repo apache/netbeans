@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="netbeans" name="cnd/cnd.debugger.dbx">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.debugger.dbx</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+<!--    <property name="cnd/glic.output.dir" value="com/sun/tools/swdev"/>
+
+    import file="${suite.dir}/ssplatform.xml"/
+
+     interpose on 'compile' target 
+    <target name="cnd/-pre-compile"
+            depends="our-init, compile-gp_xstart,compile-gp_dbx">
+        
+        <fail message="Precompilation pass done" />
+        
+        <copy todir="src/">
+            <fileset dir="build/java"/>
+        </copy>
+    </target>
+    <target name="cnd/compile" depends="-pre-compile,projectized-common.compile"/>
+    <target name="cnd/clean" depends="projectized-common.clean">
+        <delete dir="src/${glic.output.dir}"/>
+    </target>
+
+    <target name="cnd/our-init" depends="setup-ssplatform, setup">
+        <echo message="shelf=${shelf}" />
+    </target>
+
+    <target name="cnd/setup" >
+        <property name="cnd/glue"
+	          value= "${shelf}/${generic-ssplatform}/glue"/>
+        <property name= "dbx.gp"
+                  value= "${shelf}/${generic-ssplatform}/gp_dbx.6/proto/dbx.gp"/>
+	<property name= "xstart.gp"
+	         value="${shelf}/${generic-ssplatform}/gp_xstart/proto/xstart.gp"/>
+    </target>
+
+    <target name="cnd/compile-gp_dbx" depends="init">
+
+         need to pre-create the directory; GLIC isn't good at it 
+        <property name="cnd/gp_dbx_package_path"
+                  value="${glic.output.dir}/glue/dbx"/>
+        <mkdir dir="build/java/${gp_dbx_package_path}"/>
+        <mkdir dir="build/classes" />
+
+        <echo message="Running GLIC" level="info" />
+        <java classname="cnd/GlueIdlCompiler"
+              dir="build/java"
+              failonerror="true"
+              fork="true">
+
+            <classpath location="${glue}/bin/glic.jar"/>
+            <arg value="-java"/>
+            
+            <arg value="-force"/>
+            
+            <arg value="-dir"/>
+            <arg value="."/>
+            <arg value="${dbx.gp}"/>
+        </java>
+    </target>
+
+    <target name="cnd/compile-gp_xstart" depends="init">
+
+         need to pre-create the directory; GLIC isn't good at it 
+        <property name="cnd/gp_xstart_package_path"
+                  value="${glic.output.dir}/glue/xstart"/>
+        <mkdir dir="build/java/${gp_xstart_package_path}"/>
+        <mkdir dir="build/classes" />
+
+        <echo message="Running GLIC" level="info" />
+        <echo message="xstart.gp=${xstart.gp}" level="info" />
+        <java classname="cnd/GlueIdlCompiler"
+              dir="build/java"
+              failonerror="true"
+              fork="true">
+
+            <classpath location="${glue}/bin/glic.jar"/>
+            <arg value="-java"/>
+            
+            <arg value="-force"/>
+            
+            <arg value="-dir"/>
+            <arg value="."/>
+            <arg value="${xstart.gp}"/>
+        </java>
+    </target>-->
+</project>

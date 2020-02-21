@@ -1,0 +1,5 @@
+WARNING iz172227.cpp [740-745]: Unable to resolve template based identifier Parm1.
+WARNING iz172227.cpp [1930-1939]: Unable to resolve template based identifier Parm_null.
+WARNING iz172227.cpp [2014-2022]: Unable to resolve template based identifier Parm_int.
+WARNING iz172227.cpp [3278-3283]: Unable to resolve template based identifier Parm1.
+WARNING iz172227.cpp [3350-3355]: Unable to resolve template based identifier Parm2.

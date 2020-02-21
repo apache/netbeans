@@ -1,0 +1,35 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["CC_VISIBILITY",<ID>,line=6,col=9],offset=91,file=null'='["private",<ID>,line=6,col=23],offset=105,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz164017.cpp
+Includes:
+"iz164017_shared_header.h" [4:1/46-4:36/81]
+"iz164017_shared_header.h" [8:1/128-8:36/163]
+Macros:
+#define 'BRANCH1' [2:1/1-2:16/16]
+#define 'CC_VISIBILITY' [3:1/17-3:29/45]
+#define 'CC_VISIBILITY' [6:1/83-6:30/112]
+
+========== Dumping model of PROJECT DummyProject
+CLASS BB164017 (BB164017 ) [5:1/68-6:2/86] lcurly=83 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS CC164017 (CC164017 ) [8:1/89-9:2/107] lcurly=104 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS AA164017 (AA164017 ) [11:1/110-18:2/268] lcurly=167 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=BB164017 VISIBILITY==PUBLIC virtual==false text='public BB164017'
+        CLASS=CC164017 VISIBILITY==PUBLIC virtual==false text='CC_VISIBILITY CC164017'
+        CLASS=CC164017 VISIBILITY==PRIVATE virtual==false text='CC_VISIBILITY CC164017'
+    MEMBERS:
+        FIELD PRIVATE common [12:9/177-12:20/188]  TYPE: int TEXT=int  [12:9/177-12:12/180]  INIT: null  SCOPE: AA164017 
+        FIELD PRIVATE branch1 [14:9/218-14:21/230]  TYPE: int TEXT=int  [14:9/218-14:12/221]  INIT: null  SCOPE: AA164017 
+        FIELD PRIVATE branch2 [16:9/246-16:21/258]  TYPE: int TEXT=int  [16:9/246-16:12/249]  INIT: null  SCOPE: AA164017 
+

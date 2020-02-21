@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+
+    <folder name="Templates">
+        <folder name="cFiles">
+            <file name="CUnitMain.c" url="templates/c/cunittest-c.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cncppunit.Bundle"/>
+                <attr name="position" intvalue="500"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/cunittest-c.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.editor.filecreation.CCFSrcFileIterator"/>
+                <attr name="templateCategory" stringvalue="c-types"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+        </folder> <!-- End cFiles folder -->
+
+        <folder name="cppFiles">
+            <file name="cppunittest.cc" url="templates/cpp/cppunittest-cc.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cncppunit.Bundle"/>
+                <attr name="position" intvalue="700"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/cppunittest.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.editor.filecreation.CndClassWizardIterator"/>
+                <attr name="templateCategory" stringvalue="cpp-types"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="cppunittest.h" url="templates/cpp/cppunittest-h.template">
+                <attr name="position" intvalue="710"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="hidden"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="CppUnitRunner.cc" url="templates/cpp/cppunitrunner-cc.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cncppunit.Bundle"/>
+                <attr name="position" intvalue="750"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/cppunitrunner.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.editor.filecreation.CCFSrcFileIterator"/>
+                <attr name="templateCategory" stringvalue="cpp-types"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+        </folder> <!-- End cppFiles folder -->
+
+        <folder name="testFiles">
+
+            <file name="cunittest.c" url="templates/c/test-cunit-file-c.template">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cncppunit.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/testCUnit.png"/>
+                <attr name="position" intvalue="300"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/test-cunit.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.cncppunit.editor.filecreation.TestCUnitIterator"/>
+                <attr name="templateCategory" stringvalue="cncpp-test-types"/>
+                <attr name="templateGenerator" boolvalue="true"/>
+                <attr name="supportedMimeTypes" stringvalue="text/x-c;text/x-h"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="addToLogicalFolder" boolvalue="false"/>
+            </file>
+
+<!--            <file name="cunittestfile.c" url="templates/c/test-cunit-file-c.template">
+                <attr name="position" intvalue="310"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="hidden"/>
+                <attr name="addToLogicalFolder" boolvalue="false"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>-->
+
+            <file name="cppunittest.cpp">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.cncppunit.resources.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/testCppUnit.png"/>
+                <attr name="position" intvalue="400"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/cncppunit/resources/test-cppunit.html"/>
+                <attr name="templateWizardIterator" newvalue="org.netbeans.modules.cnd.cncppunit.editor.filecreation.TestCppUnitIterator"/>
+                <attr name="templateCategory" stringvalue="cncpp-test-types"/>
+                <attr name="templateGenerator" boolvalue="true"/>
+                <attr name="supportedMimeTypes" stringvalue="text/x-c++;text/x-h"/>
+            </file>
+
+            <file name="cppunittestclassfile.cpp" url="templates/cpp/test-cppunit-class-file-cpp.template">
+                <attr name="position" intvalue="410"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="hidden"/>
+                <attr name="addToLogicalFolder" boolvalue="false"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="cppunittestclassfile.h" url="templates/cpp/test-cppunit-class-file-h.template">
+                <attr name="position" intvalue="420"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="hidden"/>
+                <attr name="addToLogicalFolder" boolvalue="false"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="cppunittestrunnerfile.cpp" url="templates/cpp/test-cppunit-runner-file-cpp.template">
+                <attr name="position" intvalue="430"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="hidden"/>
+                <attr name="addToLogicalFolder" boolvalue="false"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+        </folder> <!-- End testFiles folder -->
+
+    </folder> <!-- Templates -->
+
+</filesystem>

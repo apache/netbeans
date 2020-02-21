@@ -1,0 +1,2 @@
+org.netbeans.modules.debugger.ui.views.VariablesViewButtons.createShowResultButton()-hidden
+org.netbeans.modules.cnd.debugger.common2.debugger.VariablesViewButtons.createShowAutosButton()

@@ -1,0 +1,88 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE infinite3.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN boost [1:1/0-18:2/380] SCOPE: infinite3.cc
+    NAMESPACE DEFINITOIN noncopyable_ [3:1/19-14:2/329] SCOPE: infinite3.cc
+        CLASS noncopyable (boost::noncopyable_::noncopyable ) [5:3/81-13:4/326] lcurly=101 SCOPE: noncopyable_ 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION DEFINITION noncopyable  [8:7/123-8:23/139] ConstructorDDImpl SCOPE: noncopyable 
+                    SIGNATURE noncopyable()
+                    UNIQUE NAME f:boost::noncopyable_::noncopyable::noncopyable()
+                    DECLARATION: noncopyable  [8:7/123-8:23/139]
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                    STATEMENT COMPOUND  [8:21/137-8:23/139] SCOPE: noncopyable 
+                FUNCTION DEFINITION ~noncopyable  [9:7/146-9:24/163] DestructorDDImpl SCOPE: noncopyable 
+                    SIGNATURE ~noncopyable()
+                    UNIQUE NAME f:boost::noncopyable_::noncopyable::~noncopyable()
+                    DECLARATION: ~noncopyable  [9:7/146-9:24/163]
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                    STATEMENT COMPOUND  [9:22/161-9:24/163] SCOPE: ~noncopyable 
+                FUNCTION noncopyable [11:7/230-11:41/264] ConstructorImpl SCOPE: noncopyable 
+                    DEFINITION: null
+                    SIGNATURE noncopyable(const noncopyable&)
+                    UNIQUE NAME F:boost::noncopyable_::noncopyable::noncopyable(const noncopyable&)
+                    PARAMETERS:
+                         [11:20/243-11:38/261]  TYPE: const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [11:20/243-11:38/261]  INIT: null  SCOPE: noncopyable 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                FUNCTION operator = [12:7/271-12:58/322] MethodImpl SCOPE: noncopyable 
+                    DEFINITION: null
+                    SIGNATURE operator =(const noncopyable&)
+                    UNIQUE NAME F:boost::noncopyable_::noncopyable::operator =(const noncopyable&)
+                    PARAMETERS:
+                         [12:37/301-12:55/319]  TYPE: const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [12:37/301-12:55/319]  INIT: null  SCOPE: operator = 
+                    RETURNS const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [12:7/271-12:25/289]
+    TYPEDEF noncopyable  [16:1/331-16:47/377] TYPE: boost::noncopyable_::noncopyable TEXT=noncopyable_::noncopyable  [16:9/339-16:34/364] SCOPE: boost 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for boost (boost) 
+    infinite3.cc  [1:1/0-18:2/380]
+NAMESPACE boost (boost) 
+    TYPEDEF noncopyable  [16:1/331-16:47/377] TYPE: boost::noncopyable_::noncopyable TEXT=noncopyable_::noncopyable  [16:9/339-16:34/364] SCOPE: boost 
+    NAMESPACE DEFINITIONS for noncopyable_ (boost::noncopyable_) 
+        infinite3.cc  [3:1/19-14:2/329]
+    NAMESPACE noncopyable_ (boost::noncopyable_) 
+        CLASS noncopyable (boost::noncopyable_::noncopyable ) [5:3/81-13:4/326] lcurly=101 SCOPE: noncopyable_ 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION DEFINITION noncopyable  [8:7/123-8:23/139] ConstructorDDImpl SCOPE: noncopyable 
+                    SIGNATURE noncopyable()
+                    UNIQUE NAME f:boost::noncopyable_::noncopyable::noncopyable()
+                    DECLARATION: noncopyable  [8:7/123-8:23/139]
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                    STATEMENT COMPOUND  [8:21/137-8:23/139] SCOPE: noncopyable 
+                FUNCTION DEFINITION ~noncopyable  [9:7/146-9:24/163] DestructorDDImpl SCOPE: noncopyable 
+                    SIGNATURE ~noncopyable()
+                    UNIQUE NAME f:boost::noncopyable_::noncopyable::~noncopyable()
+                    DECLARATION: ~noncopyable  [9:7/146-9:24/163]
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                    STATEMENT COMPOUND  [9:22/161-9:24/163] SCOPE: ~noncopyable 
+                FUNCTION noncopyable [11:7/230-11:41/264] ConstructorImpl SCOPE: noncopyable 
+                    DEFINITION: null
+                    SIGNATURE noncopyable(const noncopyable&)
+                    UNIQUE NAME F:boost::noncopyable_::noncopyable::noncopyable(const noncopyable&)
+                    PARAMETERS:
+                         [11:20/243-11:38/261]  TYPE: const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [11:20/243-11:38/261]  INIT: null  SCOPE: noncopyable 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                FUNCTION operator = [12:7/271-12:58/322] MethodImpl SCOPE: noncopyable 
+                    DEFINITION: null
+                    SIGNATURE operator =(const noncopyable&)
+                    UNIQUE NAME F:boost::noncopyable_::noncopyable::operator =(const noncopyable&)
+                    PARAMETERS:
+                         [12:37/301-12:55/319]  TYPE: const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [12:37/301-12:55/319]  INIT: null  SCOPE: operator = 
+                    RETURNS const &boost::noncopyable_::noncopyable TEXT=const noncopyable&  [12:7/271-12:25/289]
+

@@ -1,0 +1,6 @@
+Macro references for macro_refs_headers_parse.h
+GUARD  [3:9/23-3:14/28] -> DECLARATION  [3:1/15-3:14/28] MacroUsagesTestCase/macro_refs_headers_parse.h
+MACRO_1  [5:13/42-5:20/49] -> DIRECT_USAGE  [2:1/1-2:16/16] MacroUsagesTestCase/macro_refs_parse_1.cc
+MACRO_2  [5:32/61-5:39/68] -> DIRECT_USAGE  [2:1/1-2:16/16] MacroUsagesTestCase/macro_refs_parse_2.cc
+MACRO  [6:9/77-6:14/82] -> DECLARATION  [6:1/69-6:14/82] MacroUsagesTestCase/macro_refs_headers_parse.h
+MACRO  [9:5/95-9:10/100] -> DIRECT_USAGE  [6:1/69-6:14/82] MacroUsagesTestCase/macro_refs_headers_parse.h

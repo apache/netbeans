@@ -1,0 +1,56 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE typedef_inside_func.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION aaa  [1:1/0-3:2/49] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE aaa()
+    UNIQUE NAME f:aaa()
+    DECLARATION: aaa  [1:1/0-3:2/49]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:12/11-3:2/49] SCOPE: aaa 
+        STATEMENT DECLARATION  [2:5/17-2:35/47] SCOPE: Stmt  [1:12/11-3:2/49]
+            ENUM E [2:5/17-2:31/43] SCOPE: null
+                Element
+            TYPEDEF tE  [2:32/44-2:34/46] TYPE: E TEXT=E  [2:5/17-2:35/47] SCOPE: typedef_inside_func.cc
+FUNCTION DEFINITION aa  [5:1/51-7:2/85] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE aa()
+    UNIQUE NAME f:aa()
+    DECLARATION: aa  [5:1/51-7:2/85]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/51-5:5/55]
+    STATEMENT COMPOUND  [5:11/61-7:2/85] SCOPE: aa 
+        STATEMENT DECLARATION  [6:5/67-6:21/83] SCOPE: Stmt  [5:11/61-7:2/85]
+            TYPEDEF Int  [6:5/67-6:21/83] TYPE: int TEXT=int  [6:13/75-6:16/78] SCOPE: Stmt  [5:11/61-7:2/85]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION aaa  [1:1/0-3:2/49] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE aaa()
+    UNIQUE NAME f:aaa()
+    DECLARATION: aaa  [1:1/0-3:2/49]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:12/11-3:2/49] SCOPE: aaa 
+        STATEMENT DECLARATION  [2:5/17-2:35/47] SCOPE: Stmt  [1:12/11-3:2/49]
+            ENUM E [2:5/17-2:31/43] SCOPE: null
+                Element
+            TYPEDEF tE  [2:32/44-2:34/46] TYPE: E TEXT=E  [2:5/17-2:35/47] SCOPE: typedef_inside_func.cc
+FUNCTION DEFINITION aa  [5:1/51-7:2/85] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE aa()
+    UNIQUE NAME f:aa()
+    DECLARATION: aa  [5:1/51-7:2/85]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/51-5:5/55]
+    STATEMENT COMPOUND  [5:11/61-7:2/85] SCOPE: aa 
+        STATEMENT DECLARATION  [6:5/67-6:21/83] SCOPE: Stmt  [5:11/61-7:2/85]
+            TYPEDEF Int  [6:5/67-6:21/83] TYPE: int TEXT=int  [6:13/75-6:16/78] SCOPE: Stmt  [5:11/61-7:2/85]
+

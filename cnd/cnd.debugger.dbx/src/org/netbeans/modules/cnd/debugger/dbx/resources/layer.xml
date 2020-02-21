@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Debug">
+            <!-- Array Browser - disable it for now
+            <file name="org-netbeans-modules-cnd-debugger-common2-debugger-dbx-actions-ArrayBrowserWindowAction.instance"/>
+            -->
+
+            <file name="org-netbeans-modules-cnd-debugger-dbx-actions-ConnectExistingAction.instance">
+                <!-- OLD
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.dbx.actions.ConnectExistingAction"/>
+                <attr name="instanceOf" stringvalue="org.openide.util.actions.CallableSystemAction"/>
+                <attr name="instanceOf" stringvalue="org.openide.util.actions.SystemAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                -->
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-KillAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createKillAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="AnnotationTypes">
+            <!--
+            For a description of how annotations work please refer to
+                    ../debugger/README.annotations
+            -->
+            <file name="RTC.xml" url="RTC.xml"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="RunProject">
+            <file name="org-netbeans-modules-cnd-debugger-common2-CaptureListenAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-CaptureListenAction.instance"/>
+                <attr name="position" intvalue="620"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <folder name="Debug">
+                <!-- Array Browser - disable it for now
+              <file name="org-netbeans-modules-cnd-debugger-common2-debugger-dbx-actions-ArrayBrowserWindowAction.shadow">
+                  <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-debugger-dbx-actions-ArrayBrowserWindowAction.instance"/>
+                  <attr name="position" intvalue="860"/>
+              </file>
+                -->
+                <!-- LATER GUIME
+                <file name="org-netbeans-modules-cnd-debugger-dbx-actions-ConnectExistingAction.shadow">
+                    <attr name="originalFile"
+                          stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-dbx-actions-ConnectExistingAction.instance"/>
+                    <attr name="position" intvalue="617"/>
+                </file>
+                -->
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <!-- Array Browser - disable it for now
+          <file name="ArrayBrowserWindow.settings"
+                url="ArrayBrowserWindow.settings" />
+            -->
+            <file name="RtcTopComponent.settings" url="RtcTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="output">
+                <file name="RtcTopComponent.wstcref" url="RtcTopComponentWstcref.xml">
+                    <attr name="position" intvalue="1307"/>
+                </file>
+            </folder>
+            <folder name="debugger">
+                <!-- Array Browser - disable it for now
+                <file name="ArrayBrowserWindow.wstcref" url="ArrayBrowserWindow.wstcref">
+                    <attr name="position" intvalue="250"/>
+                </file>
+                -->
+            </folder>
+        </folder>
+        <folder name="Groups">
+            <folder name="debugger">
+                <!-- Array Browser - disable it for now
+              <file name="ArrayBrowserWindow.wstcgrp" url="ArrayBrowserWindow.wstcgrp" />
+                -->
+                <file name="RtcTopComponent.wstcgrp"
+                      url="RtcTopComponent.wstcgrp" />
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-sun-rtc">
+                <folder name="Actions">
+
+                    <file name="ViewAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ViewAction.instance"/>
+                        <attr name="position" intvalue="10"/>
+                    </file>
+
+                    <file name="Separator0.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="20"/>
+                    </file>
+
+                    <file name="CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="30"/>
+                    </file>
+
+                    <file name="CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="40"/>
+                    </file>
+
+                    <file name="PasteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="50"/>
+                    </file>
+
+                    <file name="Separator1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="60"/>
+                    </file>
+
+                    <file name="DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="70"/>
+                    </file>
+
+                    <file name="RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="80"/>
+                    </file>
+
+                    <file name="Separator2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="90"/>
+                    </file>
+
+                    <file name="ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+
+                    <file name="PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="110"/>
+                    </file>
+
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

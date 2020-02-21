@@ -1,0 +1,3 @@
+s int	$	    t1.s
+GetI() int	$	    t1.GetI()
+foo() int	$	    t1.foo()

@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="test">
+        <in>test_pkg_client.c</in>
+        <in>test_rfs_filedata.c</in>
+      </df>
+      <in>rfs_controller.c</in>
+      <in>rfs_controller.h</in>
+      <in>rfs_filedata.c</in>
+      <in>rfs_filedata.h</in>
+      <in>rfs_preload.c</in>
+      <in>rfs_preload_socks.c</in>
+      <in>rfs_preload_socks.h</in>
+      <in>rfs_protocol.c</in>
+      <in>rfs_protocol.h</in>
+      <in>rfs_test_env.c</in>
+      <in>rfs_util.c</in>
+      <in>rfs_util.h</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   root=".">
+      <itemPath>Makefile</itemPath>
+      <itemPath>Makefile-tools.mk</itemPath>
+      <itemPath>../release</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject|build)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile-tools.mk</projectmakefile>
+  <confs>
+    <conf name="Debug-Linux-32" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC -std=c99 -m64"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} TRACE=1 DEBUG=-g all</buildCommand>
+          <cleanCommand>${MAKE}  clean</cleanCommand>
+          <executablePath>../release/bin/Linux-x86/rfs_controller</executablePath>
+          <cTool>
+            <preprocessorList>
+              <Elem>TRACE=1</Elem>
+              <Elem>_GNU_SOURCE</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <folder path="0/test">
+        <cTool>
+          <incDir>
+            <pElem>/usr/sfw/lib/gcc/i386-pc-solaris2.10/3.4.3/include</pElem>
+            <pElem>.</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>HANDSHAKING=1</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Debug-Linux-64" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC -std=c99 -m64"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} TRACE=1 DEBUG=-g 64BITS=1 all</buildCommand>
+          <cleanCommand>${MAKE}  64BITS=1 clean</cleanCommand>
+          <executablePath>../release/bin/Linux-x86_64/rfs_controller</executablePath>
+          <cTool>
+            <preprocessorList>
+              <Elem>TRACE=1</Elem>
+              <Elem>_GNU_SOURCE</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <folder path="0/test">
+        <cTool>
+          <incDir>
+            <pElem>/usr/sfw/lib/gcc/i386-pc-solaris2.10/3.4.3/include</pElem>
+            <pElem>.</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>HANDSHAKING=1</Elem>
+          </preprocessorList>
+        </cTool>
+      </folder>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Test_filedata_32" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} TRACE=1 DEBUG=-g  test_filedata_build</buildCommand>
+          <cleanCommand>${MAKE}  clean</cleanCommand>
+          <executablePath>build/SunOS-x86/test_rfs_filedata</executablePath>
+          <cTool>
+            <incDir>
+              <pElem>/usr/sfw/lib/gcc/i386-pc-solaris2.10/3.4.3/include</pElem>
+              <pElem>.</pElem>
+            </incDir>
+            <preprocessorList>
+              <Elem>HANDSHAKING=1</Elem>
+              <Elem>TRACE=1</Elem>
+              <Elem>_GNU_SOURCE</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_controller.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_filedata.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_preload_socks.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_protocol.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="rfs_util.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release-Solaris-x86-32" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio|OracleSolarisStudio</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Release-Solaris-x86-64" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio|OracleSolarisStudio</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake 64BITS=1 all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/SunOS-x86_64/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Release-Linux-x86-32" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC -std=c99"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} all</buildCommand>
+          <cleanCommand>${MAKE} clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/Linux-x86/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Release-Linux-x86-64" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC -std=c99"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} 64BITS=1 all</buildCommand>
+          <cleanCommand>${MAKE} clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/Linux-x86_64/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Release-Solaris-SPARC-32" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio|OracleSolarisStudio</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/SunOS-sparc/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="9">
+      </item>
+    </conf>
+    <conf name="Release-Solaris-SPARC-64" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio|OracleSolarisStudio</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake 64BITS=1 all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/SunOS-sparc_64/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="9">
+      </item>
+    </conf>
+    <conf name="Release-Linux-SPARC-64" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-g -fPIC -std=c99"/>
+        <element flagsID="1" commonFlags="-g -fPIC -std=c99 -m64"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} 64BITS=1 all</buildCommand>
+          <cleanCommand>${MAKE} clean</cleanCommand>
+          <executablePath>../../dlight.remote.impl/release/bin/Linux-sparc_64/fs_server</executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="1">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="9">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="9">
+      </item>
+    </conf>
+    <conf name="Previse_32" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio_12.5|OSS</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-xc99"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake PREVISE=1 all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+    <conf name="Previse_64" type="0">
+      <toolsSet>
+        <compilerSet>OracleSolarisStudio_12.5|OSS</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-xc99"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>gmake PREVISE=1 64BITS=1 all</buildCommand>
+          <cleanCommand>gmake clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="rfs_controller.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_filedata.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_preload_socks.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_protocol.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_test_env.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="rfs_util.c" ex="false" tool="0" flavor2="3">
+        <cTool flags="0">
+          <preprocessorList>
+            <Elem>TRACE=0</Elem>
+            <Elem>_GNU_SOURCE</Elem>
+          </preprocessorList>
+        </cTool>
+      </item>
+      <item path="test/test_pkg_client.c" ex="false" tool="0" flavor2="2">
+      </item>
+      <item path="test/test_rfs_filedata.c" ex="false" tool="0" flavor2="2">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

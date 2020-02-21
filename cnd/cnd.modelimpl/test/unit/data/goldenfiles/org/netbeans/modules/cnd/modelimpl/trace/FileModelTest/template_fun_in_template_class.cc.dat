@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_fun_in_template_class.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Object<class T1> (Object ) [1:1/0-6:2/165] lcurly=32 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION useT2Declaration [3:5/46-3:58/99] MethodImpl SCOPE: Object 
+            DEFINITION: null
+            SIGNATURE useT2Declaration<class>(T2)
+            UNIQUE NAME F:Object::useT2Declaration<class>(T2)
+            PARAMETERS:
+                o [3:52/93-3:56/97]  TYPE: Object::useT2Declaration::T2 TEXT=T2  [3:52/93-3:54/95]  INIT: null  SCOPE: useT2Declaration 
+            RETURNS Object TEXT=Object<T1>  [3:24/65-3:34/75]
+        FUNCTION DEFINITION useT3Definition  [4:5/104-5:6/163] MethodDDImpl SCOPE: Object 
+            SIGNATURE useT3Definition<class>(T3)
+            UNIQUE NAME f:Object::useT3Definition<class>(T3)
+            DECLARATION: useT3Definition  [4:5/104-5:6/163]
+            PARAMETERS:
+                o [4:51/150-4:55/154]  TYPE: Object::useT3Definition::T3 TEXT=T3  [4:51/150-4:53/152]  INIT: null  SCOPE: useT3Definition 
+            RETURNS Object TEXT=Object<T1>  [4:24/123-4:34/133]
+            STATEMENT COMPOUND  [4:57/156-5:6/163] SCOPE: useT3Definition 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Object<class T1> (Object ) [1:1/0-6:2/165] lcurly=32 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION useT2Declaration [3:5/46-3:58/99] MethodImpl SCOPE: Object 
+            DEFINITION: null
+            SIGNATURE useT2Declaration<class>(T2)
+            UNIQUE NAME F:Object::useT2Declaration<class>(T2)
+            PARAMETERS:
+                o [3:52/93-3:56/97]  TYPE: Object::useT2Declaration::T2 TEXT=T2  [3:52/93-3:54/95]  INIT: null  SCOPE: useT2Declaration 
+            RETURNS Object TEXT=Object<T1>  [3:24/65-3:34/75]
+        FUNCTION DEFINITION useT3Definition  [4:5/104-5:6/163] MethodDDImpl SCOPE: Object 
+            SIGNATURE useT3Definition<class>(T3)
+            UNIQUE NAME f:Object::useT3Definition<class>(T3)
+            DECLARATION: useT3Definition  [4:5/104-5:6/163]
+            PARAMETERS:
+                o [4:51/150-4:55/154]  TYPE: Object::useT3Definition::T3 TEXT=T3  [4:51/150-4:53/152]  INIT: null  SCOPE: useT3Definition 
+            RETURNS Object TEXT=Object<T1>  [4:24/123-4:34/133]
+            STATEMENT COMPOUND  [4:57/156-5:6/163] SCOPE: useT3Definition 
+

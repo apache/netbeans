@@ -1,0 +1,14 @@
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.ClassMethodBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.InfileBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.AccessBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.CondBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.ObjectBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.TimerBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.SignalBreakpointType
+#org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.ExceptionBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.FaultBreakpointType
+#org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.SysCallBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.LoadObjBreakpointType
+#org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.VariableBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.ProcessBreakpointType
+org.netbeans.modules.cnd.debugger.dbx.breakpoints.types.DebuggerBreakpointType

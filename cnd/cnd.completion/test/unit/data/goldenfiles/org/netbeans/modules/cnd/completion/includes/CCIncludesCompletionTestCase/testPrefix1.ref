@@ -1,0 +1,2 @@
+[F] "include1.h" : ./	$	#include "include1.h"
+[F] "include2.h" : ./	$	#include "include2.h"

@@ -1,0 +1,29 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 6):
+<U>#define '["A",<ID>,line=1,col=9],offset=8,file=null'=''
+<U>#define '["B",<ID>,line=2,col=10],offset=19,file=null'=''
+<U>#define '["C",<ID>,line=3,col=17],offset=37,file=null'='["8",<DECIMALINT>,line=3,col=19],offset=39,file=null'
+<U>#define '["D",<ID>,line=5,col=10],offset=51,file=null'=''
+<U>#define '["E",<ID>,line=6,col=11],offset=63,file=null'=''
+<U>#define '["F",<ID>,line=7,col=18],offset=82,file=null'='["7",<DECIMALINT>,line=7,col=20],offset=84,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_directives.cc
+Includes:
+    <no includes>
+Macros:
+#define 'A' [1:1/0-1:10/9]
+#define 'B' [2:1/10-2:11/20]
+#define 'C' [3:1/21-3:20/40]
+#define 'D' [5:1/42-5:11/52]
+#define 'E' [6:1/53-6:12/64]
+#define 'F' [7:1/65-7:21/85]
+VARIABLE a [10:5/109-10:15/119]  TYPE: int TEXT=int  [10:5/109-10:8/112]  INIT: text='5'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE a [10:5/109-10:15/119]  TYPE: int TEXT=int  [10:5/109-10:8/112]  INIT: text='5'  SCOPE: $Global$ 
+

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>Using the C or C++ Call Stack</title>
+</head>
+<body>
+<h2>Using the C or C++ Call Stack
+</h2>
+<p><small><a href="#seealso">See Also</a>&nbsp; </small>
+</p>
+<p>
+The call stack represents all currently active routines&#45;&#45;those that have
+been called but have not yet returned to their respective caller. In the
+stack, the functions and their arguments are listed in the order in which
+they were called.
+</p>
+<p>
+The initial function, <tt>main()</tt> for C and C++ programs, is at
+the bottom of the Call Stack window. The function executing when
+the program stopped is at the top of the Call Stack window. This function is
+known as the stopped-in function.
+</p>
+<p>The information given for each call in the stack includes the function
+name and the values of its parameters, followed by the file name and line number
+of the currently executing statement.
+</p>
+<p>
+You can open the Call Stack window at any time by choosing Window &gt;
+Debugging &gt; Call Stack (Alt-Shift-3).
+</p>
+<p><b>To browse the call stack, do any of the following:</b></p>
+<ul>
+<li>To move up the stack (toward <tt>main()</tt>), choose Debug &gt;
+Stack &gt; Make Caller Current (Ctrl-Alt-down arrow).
+</li>
+<li>To move down the stack, choose Debug &gt; Stack &gt; Make Callee
+Current (Ctrl-Alt-up arrow).
+</li>
+<li>To make a call current, double-click the call in the Call Stack window.
+</li>
+</ul>
+<p>When you browse the call stack the content of the other debugging windows
+is updated for the current frame.</p>
+<table summary="related topics">
+<tr valign="top">
+<th colspan=2 align=left><a name="seealso">See Also</a></th>
+</tr>
+<tr valign="top">
+<td width="23"></td>
+<td>
+<a href="PoppingCorC++Stack.html">Popping a Call From the Call Stack</a><br>
+<a href="SteppingThroughCorC++.html">Stepping Through Your C or C++
+Program</a>
+</td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

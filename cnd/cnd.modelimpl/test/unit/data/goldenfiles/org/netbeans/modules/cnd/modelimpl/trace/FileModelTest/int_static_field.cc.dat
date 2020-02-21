@@ -1,0 +1,30 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE int_static_field.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS A (A ) [1:1/0-9:2/125] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC static pub [3:5/22-3:20/37]  TYPE: int TEXT=int  [3:5/22-3:15/32]  INIT: null  SCOPE: A 
+        FIELD PUBLIC static pub_p [4:5/42-4:24/61]  TYPE: *int TEXT=int*  [4:5/42-4:17/54]  INIT: null  SCOPE: A 
+        FIELD PRIVATE static priv [6:5/75-6:21/91]  TYPE: int TEXT=int  [6:5/75-6:15/85]  INIT: null  SCOPE: A 
+        FIELD PROTECTED static prot [8:5/107-8:21/123]  TYPE: int TEXT=int  [8:5/107-8:15/117]  INIT: null  SCOPE: A 
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [1:1/0-9:2/125] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC static pub [3:5/22-3:20/37]  TYPE: int TEXT=int  [3:5/22-3:15/32]  INIT: null  SCOPE: A 
+        FIELD PUBLIC static pub_p [4:5/42-4:24/61]  TYPE: *int TEXT=int*  [4:5/42-4:17/54]  INIT: null  SCOPE: A 
+        FIELD PRIVATE static priv [6:5/75-6:21/91]  TYPE: int TEXT=int  [6:5/75-6:15/85]  INIT: null  SCOPE: A 
+        FIELD PROTECTED static prot [8:5/107-8:21/123]  TYPE: int TEXT=int  [8:5/107-8:15/117]  INIT: null  SCOPE: A 
+

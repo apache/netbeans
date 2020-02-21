@@ -1,0 +1,78 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.cnd.loaders;
+
+import java.util.ResourceBundle;
+import javax.swing.Action;
+
+import org.openide.loaders.DataNode;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.Children;
+import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
+import org.openide.util.actions.SystemAction;
+import org.openide.actions.OpenAction;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
+
+/**
+ *  A base class for CND binary nodes. The functionality from
+ *  this base class is the renaming of the PROP_name property to show an extension.
+ */
+public class CndDataNode extends DataNode {
+
+    /** The name property */
+    //private static final String PROP_NAME = "name"; // NOI18N
+
+    /** Cache the bundle */
+    private static final ResourceBundle bundle = NbBundle.getBundle(CndDataNode.class);
+
+    /** Primary File */
+    private final FileObject primary;
+
+
+    /** Constructor for this class */
+    public CndDataNode(DataObject obj, Children ch, Lookup lookup) {
+	super(obj, ch, lookup);
+	primary = getDataObject().getPrimaryFile();
+    }
+
+    /**
+     *  Overrides default action from DataNode.
+     *  Instantiate a template, if isTemplate() returns true.
+     *  Opens otherwise.
+     */
+    @Override
+    public Action getPreferredAction() {
+	Action result = super.getPreferredAction();
+	return result == null ? SystemAction.get(OpenAction.class) : result;
+    }
+
+    /** Getter for bundle strings */
+    protected static String getString(String prop) {
+	return bundle.getString(prop);
+    }
+
+    @Override
+    public HelpCtx getHelpCtx() {
+	return new HelpCtx("Welcome_cpp_home"); // NOI18N
+    }
+    
+}

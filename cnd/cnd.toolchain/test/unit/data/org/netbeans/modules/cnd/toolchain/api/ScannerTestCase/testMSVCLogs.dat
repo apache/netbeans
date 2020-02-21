@@ -1,0 +1,17 @@
+win-make.exe[2]: Nothing to be done for `all'.
+win-make.exe[1]: Nothing to be done for `all'.
+cl.exe  -nologo -I. -I../../../../../include -Gs -TP -W4 -wd4127 -Ot2b1
+-EHs-c- -MT    -Fohbver.obj -c ../../../hbver.c
+hbver.c
+../../../hbver.c(308) : error C2039: 'wProductType' : is not a member of '_OSVERSIONINFOEXA'
+        C:\Program Files\Microsoft Visual
+Studio\VC98\include\winbase.h(7998) : see declaration of '_OSVERSIONINFOEXA'
+../../../hbver.c(308) : error C2065: 'VER_NT_WORKSTATION' : undeclared identifier
+../../../hbver.c(315) : error C2039: 'wProductType' : is not a member of '_OSVERSIONINFOEXA'
+        C:\Program Files\Microsoft Visual
+Studio\VC98\include\winbase.h(7998) : see declaration of '_OSVERSIONINFOEXA'
+../../../hbver.c(315) : error C2065: 'VER_NT_WORKSTATION' : undeclared identifier
+win-make.exe[3]: *** [hbver.obj] Error 2
+win-make.exe[2]: *** [descend] Error 2
+win-make.exe[1]: *** [common] Error 2
+win-make.exe: *** [source] Error 2

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Find Usages Dialog Box</title>
+<link rel="StyleSheet" href="../ide.css" type="text/css">
+</head>
+<body>
+<h2>Find Usages Dialog Box</h2>
+<p><small> <a href="#seealso">See Also</a></small></p>
+<p>The Find Usages dialog box lets you specify search options for
+the Find Usages command. You can use the Find Usages command (Alt-F7) to
+display in the Usages window all of the places a class (structure),
+function, variable, macro, or file is used in your project's source code.
+</p>
+<p>To open the Find Usages dialog box,
+right-click a class, method, or field in the Source Editor,
+and choose Find Usages.
+</p>
+<p>The Find Usages dialog box displays the following option for all
+types of identifiers:</p>
+<ul>
+<li><b>Search in Comments.</b> If you select this option, occurrences of
+the identifier that appear in code comments are also displayed in
+the Usages window.
+</li>
+</ul>
+<p>For classes, the Find Usages dialog box displays the following
+additional options:</p>
+<ul>
+<li><b>Find Usages.</b> If selected, all usages of the
+class are displayed.
+</li>
+<li><b>Find All Subtypes.</b> If selected, usages of
+all subtypes, including subtypes of subtypes, are displayed. Usages
+of the class itself are not displayed.
+</li>
+<li><b>Find Direct Subtypes Only.</b> If selected,
+only usages of direct subtypes are displayed. Subtypes of those
+subtypes are ignored.
+</li>
+</ul>
+<p>For methods, the Find Usages dialog box displays the following additional
+options:</p>
+<ul>
+<li><b>Find Usages.</b> If selected, all usages of the
+method are displayed.
+</li>
+<li><b>Find Overriding Methods.</b> If selected, the Usages window shows
+    every usage of a method that overrides this method in your project.
+</li>
+<li><b>Search from Base Class [<i>classname</i>].</b>
+    This option is only relevant if the method for which you are finding usages
+    overrides another method. If selected, the Usages window shows every usage of
+    that base method.
+</li>
+</ul>
+<p>By default, the scope of the search is the current project. You can expand
+the search to all of your open projects by selecting Open Projects from
+the Scope drop-down list.
+</p>
+<table summary="related topics">
+<tr valign="top">
+<th colspan=2 align=left><a name="seealso">See Also</a></th>
+</tr>
+<tr valign="top">
+<td width="23"></td>
+<td>
+<a href="UsagesWindow.html">Usages Window</a>
+</td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

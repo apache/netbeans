@@ -1,0 +1,16 @@
+a A	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :a
+argc int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :argc
+argv char**	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :argv
+i int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :i
+pExtra void*	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :pExtra
+pointer int*	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :pointer
+value int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :value
+yyy int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :yyy
+A	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :A
+B	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :B
+C	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :C
+In_Macro	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :In_Macro
+globInt int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :globInt
+checkZero() void	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :checkZero()
+globFoo() void	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :globFoo()
+main(int argc, char** argv) int	$	        int yyy = argc>0 ? static_cast<int>(pExtra) :main()

@@ -1,0 +1,1169 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Loaders">
+	 <folder name="application">
+	     <folder name="x-executable+elf">
+		 <folder name="Actions">
+                     <file name="DebugCoreNodeAction.instance">
+                         <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DebugCoreNodeAction"/>
+                         <attr name="position" intvalue="120"/>
+                         <attr name="misplaced.action.allowed" boolvalue="true"/>
+                     </file>
+                     <!--file name="Separator0.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file-->
+		 </folder>
+	     </folder>
+	 </folder>
+        <folder name="text">
+            <folder name="x-cnd+sourcefile">
+                <folder name="Actions">
+<!--                    <file name="CompileDebugAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Build/org-netbeans-modules-cnd-debugger-common2-debugger-actions-CompileDebugAction.instance"/>
+                        <attr name="position" intvalue="970"/>
+                    </file>-->
+                </folder>
+            </folder>
+        </folder> <!-- text -->
+    </folder>
+
+	<folder name="Toolbars">
+	    <folder name="Build">
+		<!-- hide default [Start] 
+		<file name="org-netbeans-modules-project-ui-DebugMainProject.shadow_hidden"/>
+		<attr name="position" intvalue="XXX"/>
+		<file name="org-netbeans-modules-cnd-debugger-common2-DynamicStartAction.shadow">
+		<attr name="position" intvalue="XXX"/>
+		</file>
+		-->
+
+		<!-- From debuggercore
+		  DebugMainProjectAction @ 400
+		  -->
+
+		<!-- ConnectAction (aka Attach) is now a pulldown option of DebugMainProjectAction
+
+		<file name="org-netbeans-modules-debugger-ui-actions-ConnectAction.shadow">
+		    <attr name="position" intvalue="600"/>
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ConnectAction.instance"/>
+		</file>
+		--> 
+	    </folder>
+	    
+	    <folder name="Debug">
+		<!-- From debuggerjpda
+		  KillAction @ 100
+		  PauseAction @ 200
+		  ContinueAction @ 300
+		  StepOver @ 400
+		  StepOperation @ 500
+		  StepInto @ 600
+		  StepOut @ 700
+		  RunToCursor @ 800
+		  Fix @ 900
+		  -->
+		<!-- From debuggercore
+		  -->
+
+		<file name="org-netbeans-modules-debugger-ui-actions-KillAction.shadow">
+		    <attr name="position" intvalue="100"/>
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+		</file>
+		
+		<file name="org-netbeans-modules-cnd-debugger-common2-RerunAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RerunAction.instance"/>
+		    <attr name="position" intvalue="110"/>
+		</file>
+		
+		<file name="org-netbeans-modules-debugger-ui-actions-PauseAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PauseAction.instance"/>
+		    <attr name="position" intvalue="200"/>
+		</file>
+		
+		<file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+		    <attr name="position" intvalue="300"/>
+		</file>
+				
+		<file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+		    <attr name="position" intvalue="400"/>
+		</file>
+		
+		<file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+		    <attr name="position" intvalue="600"/>
+		</file>
+
+		<!-- LATER
+		<file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance"/>
+		    <attr name="position" intvalue="650"/>
+		</file>
+		-->
+
+		
+		<file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+		    <attr name="position" intvalue="700"/>
+		</file>
+		
+		<file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance"/>
+		    <attr name="position" intvalue="800"/>
+		</file>
+		
+		<!-- LATER
+		Use our own RunToFunctionAction because debuggercores
+		doesn't have an icon
+
+                <file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance"/>
+                    <attr name="position" intvalue="850"/>
+                </file>
+		-->
+
+		<file name="org-netbeans-modules-cnd-debugger-common2-RunToFunctionAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RunToFunctionAction.instance"/>
+		    <attr name="position" intvalue="855"/>
+		</file>
+
+		<file name="org-netbeans-modules-debugger-ui-actions-FixAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-FixAction.instance"/>
+		    <attr name="position" intvalue="900"/>
+		</file>
+<!--
+		<file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+		    <attr name="position" intvalue="920"/>
+		</file>
+-->
+
+	    </folder>	<!-- folder name="Debug" -->
+	</folder> <!-- folder name="Toolbars" -->
+		  
+    <folder name="Menu">
+	<folder name="Tools">
+	    <!-- Let's keep this at the end of the Run menu for now ...
+		 together with all the other "New" actions.
+	    <file name="org-netbeans-modules-cnd-debugger-common2-NewDbxButtonAction.shadow">
+		<attr name="position" intvalue="100"/>
+	    </file>
+	    -->
+	</folder>
+
+	<folder name="RunProject">
+	    <!-- From debuggercore
+	      DebugMainProjectAction @ 200
+	      RunOther @ 400
+		DebugFile
+		DebugtestFile
+	      -->
+
+	    <!-- From debuggerjpda
+	      ConnectAction @ 600
+	      Kill @ 700
+
+	      Separator @ 800
+
+	      Pause @ 900
+	      Continue @ 1000
+
+	      Separator @ 1100
+
+	      StepOver @ 1200
+	      StepOperation @ 1300
+	      StepInto @ 1400
+	      StepOut @ 1500
+	      RunToCursor @ 1600
+	      RunIntoMethod @ 1700
+
+	      Separator @ 1800
+
+	      Fix @ 1900
+
+	      Separator @ 2000
+
+	      Stack @ 2100
+		Callee @ 100
+		Caller @ 200
+		Separator @ 300
+		PopTopMostCall @ 400
+
+	      Separator @ 2200
+
+	      ToggleBreakpointAction @ 2300
+	      AddBreakpointAction @ 2400
+	      AddWatch @ 2500
+	      Evaluate @ 2600
+	      -->
+
+	    <!--
+	    <file name="org-netbeans-modules-project-ui-DebugMainProject.shadow_hidden"/>
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DynamicStartAction.shadow">
+		<attr name="position" intvalue="100"/>
+	    </file>
+	    -->
+	                
+	    <!-- debuggercore puts a RunOther @ 400 -->
+
+	    <!-- someone puts a Separator between 400 and 600 -->
+
+	    <!-- aka DebugExecutable -->
+	    <!-- OLD
+	    Moved to dbxtool facade
+            <file name="org-netbeans-modules-cnd-debugger-common2-DebugExecutableAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-DebugExecutableAction.instance"/>
+		<attr name="position" intvalue="590"/>
+            </file>            
+	    -->
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ConnectAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ConnectAction.instance"/>
+		<attr name="position" intvalue="600"/>
+            </file>            
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DebugCoreAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-DebugCoreAction.instance"/>
+		<attr name="position" intvalue="610"/>
+	    </file>
+
+            <file name="Separator620.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+		<attr name="position" intvalue="615"/>
+	    </file>
+
+	    <file name="org-netbeans-modules-debugger-ui-actions-KillAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+		<attr name="position" intvalue="700"/>
+	    </file>
+	    
+	    <file name="org-netbeans-modules-cnd-debugger-common2-TerminateProcessAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-TerminateProcessAction.instance"/>
+		<attr name="position" intvalue="720"/>
+	    </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DetachAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-DetachAction.instance"/>
+		<attr name="position" intvalue="730"/>
+	    </file>
+	    
+	    <!-- debuggerjpda puts a Separator @ 800 -->
+            <file name="Separator11.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+		<attr name="position" intvalue="800"/>
+            </file>            	    
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-RerunAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RerunAction.instance"/>
+		<attr name="position" intvalue="890"/>
+	    </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-PauseAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PauseAction.instance"/>
+		<attr name="position" intvalue="900"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+		<attr name="position" intvalue="1000"/>
+            </file>
+
+	    <!-- debuggerjpda puts a Separator @ 1100 -->
+            <file name="Separator2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+		<attr name="position" intvalue="1200"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+		<attr name="position" intvalue="1400"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+		<attr name="position" intvalue="1500"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance"/>
+		<attr name="position" intvalue="1600"/>
+            </file>
+
+	    <!-- LATER
+            <file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance"/>
+		<attr name="position" intvalue="1700"/>
+            </file>
+	    -->
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-RunToFunctionAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RunToFunctionAction.instance"/>
+		<attr name="position" intvalue="1710"/>
+            </file>
+
+	    <!-- debuggerjpda puts a Separator @ 1800 -->
+            <file name="Separator3.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            
+            <file name="org-netbeans-modules-debugger-ui-actions-FixAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-FixAction.instance"/>
+		<attr name="position" intvalue="1900"/>
+            </file>
+            
+	    <!-- debuggerjpda puts a Separator @ 2000 -->
+            <file name="Separator4.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            
+            <folder name="Stack">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.debugger.common2.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/debugger/resources/actions/Folder.gif"/>
+		<attr name="position" intvalue="2100"/>
+
+                <file name="org-netbeans-modules-debugger-ui-actions-MakeCalleeCurrentAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-MakeCalleeCurrentAction.instance"/>
+		    <attr name="position" intvalue="100"/>
+                </file>
+
+                <file name="org-netbeans-modules-debugger-ui-actions-MakeCallerCurrentAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-MakeCallerCurrentAction.instance"/>
+		    <attr name="position" intvalue="200"/>
+                </file>
+
+		<!-- identical to separator put by debuggerjpda: -->
+
+                <file name="Separator5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+
+                <file name="org-netbeans-modules-debugger-ui-actions-PopTopmostCallAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PopTopmostCallAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+
+                <file name="org-netbeans-modules-cnd-debugger-common2-PopToCurrentFrameAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-PopToCurrentFrameAction.instance"/>
+		    <attr name="position" intvalue="410"/>
+                </file>
+		
+                <file name="org-netbeans-modules-cnd-debugger-common2-PopLastDebuggerCallAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-PopLastDebuggerCallAction.instance"/>
+		    <attr name="position" intvalue="420"/>
+                </file>
+
+            </folder>
+            
+	    <!-- debuggerjpda puts a Separator @ 2200 -->
+            <file name="Separator6.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2200"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+		<attr name="position" intvalue="2300"/>
+            </file>
+            
+            <file name="org-netbeans-modules-debugger-ui-actions-AddBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddBreakpointAction.instance"/>
+		<attr name="position" intvalue="2400"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                <attr name="position" intvalue="2500"/>
+            </file>
+
+<!--	    <file name="org-netbeans-modules-cnd-debugger-common2-NewDbxButtonAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-NewDbxButtonAction.instance"/>
+		<attr name="position" intvalue="2600"/>
+	    </file>-->
+            
+        </folder> <!-- RunProject -->
+        
+	<folder name="Window">
+            <folder name="Debug">
+		<!-- from debuggercore
+		  LocalsView @ 100
+		  WatchesView @ 300
+		  CallStack @ 400
+		  Breakpoints @ 600
+		  Sessions @ 700
+		  Threads @ 800
+		  -->
+		<!-- from debuggerjpda
+		  SourcesView @ 900
+		  -->
+
+		<attr name="position" intvalue="1000"/>
+
+
+		<!-- after LocalsView and WatchesView -->
+		<!-- after Threads because after Watches just doesn't fit -->
+		<file name="org-netbeans-modules-cnd-debugger-common2-EvaluationWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluationWindowAction.instance"/>
+		    <attr name="position" intvalue="850"/>
+		</file>
+
+		<!-- separate out disassembly stuff -->
+
+		<file name="Separator910.instance">
+		    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+		    <attr name="position" intvalue="910"/>
+		</file>
+
+		<file name="org-netbeans-modules-cnd-debugger-common2-DisassemblerWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-DisassemblerWindowAction.instance"/>
+		    <attr name="position" intvalue="950"/>
+		</file>
+
+		<file name="org-netbeans-modules-cnd-debugger-common2-MemoryWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-MemoryWindowAction.instance"/>
+		    <attr name="position" intvalue="1100"/>
+		</file>
+
+		<file name="org-netbeans-modules-cnd-debugger-common2-RegistersWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RegistersWindowAction.instance"/>
+		    <attr name="position" intvalue="1200"/>
+		</file>
+
+		<file name="Separator1210.instance">
+		    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+		    <attr name="position" intvalue="1210"/>
+		</file>
+
+		<!-- separate out disassembly stuff -->
+
+<!--		<file name="PioAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-cnd-debugger-common2-debugger-io-PioAction.instance"/>
+		    <attr name="position" intvalue="1400"/>
+		</file>-->
+		<file name="ConsoleAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-cnd-debugger-common2-debugger-io-ConsoleAction.instance"/>
+		    <attr name="position" intvalue="1450"/>
+		</file>
+
+
+		<!-- OLD
+		<file name="org-netbeans-modules-cnd-debugger-common2-PioWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-PioWindowAction.instance"/>
+		    <attr name="position" intvalue="1400"/>
+		</file>
+
+		<file name="org-netbeans-modules-cnd-debugger-common2-ConsoleWindowAction.shadow">
+		    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-ConsoleWindowAction.instance"/>
+		    <attr name="position" intvalue="1500"/>
+		</file>
+		-->
+
+		<file name="Separator1590.instance">
+		    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+		    <attr name="position" intvalue="1590"/>
+		</file>
+
+	    </folder>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+	<folder name="AnnotationTypes">
+
+	    <!--
+	    For a description of how annotations work please refer to
+		    ../debugger/README.annotations
+	    -->
+
+	    <file name="Dbx_PC.xml" url="annotations/Dbx_PC.xml"/>
+
+	    <file name="Dbx_Bpt.xml" url="annotations/Dbx_Bpt.xml"/>
+	    <file name="Dbx_Bpt_broken.xml" url="annotations/Dbx_Bpt_broken.xml"/>
+	    <file name="Dbx_Bpt_broken_dis.xml" url="annotations/Dbx_Bpt_broken_dis.xml"/>
+	    <file name="Dbx_Bpt_dis.xml" url="annotations/Dbx_Bpt_dis.xml"/>
+
+	    <file name="Dbx_Bpt_cmpx.xml" url="annotations/Dbx_Bpt_cmpx.xml"/>
+	    <file name="Dbx_Bpt_cmpx_broken.xml" url="annotations/Dbx_Bpt_cmpx_broken.xml"/>
+	    <file name="Dbx_Bpt_cmpx_broken_dis.xml" url="annotations/Dbx_Bpt_cmpx_broken_dis.xml"/>
+	    <file name="Dbx_Bpt_cmpx_dis.xml" url="annotations/Dbx_Bpt_cmpx_dis.xml"/>
+
+	    <!-- intermediate invisible combinations -->
+
+	    <!-- order=2 -->
+	    <file name="Dbx_Bpt_diverse.xml" url="annotations/Dbx_Bpt_diverse.xml"/>
+
+	    <!-- order=3 -->
+	    <file name="Dbx_Bpt_multi.xml" url="annotations/Dbx_Bpt_multi.xml"/>
+	    <file name="Dbx_Bpt_multi_broken.xml" url="annotations/Dbx_Bpt_multi_broken.xml"/>
+	    <file name="Dbx_Bpt_multi_broken_dis.xml" url="annotations/Dbx_Bpt_multi_broken_dis.xml"/>
+	    <file name="Dbx_Bpt_multi_dis.xml" url="annotations/Dbx_Bpt_multi_dis.xml"/>
+
+	    <!-- end of intermediate invisible combinations -->
+
+	    <!-- multiple combinations -->
+	    <!-- order=4 -->
+	    <file name="Dbx_Bpt_compound.xml" url="annotations/Dbx_Bpt_compound.xml"/>
+
+	    <!-- order=5 -->
+	    <file name="Dbx_Bpt_compound_hit.xml" url="annotations/Dbx_Bpt_compound_hit.xml"/>
+
+	    <!-- combinations of single bpt and PC  -->
+	    <!-- order=6 -->
+	    <!-- try to match these last so mult_hit takes precedence -->
+	    <file name="Dbx_Bpt_hit.xml" url="annotations/Dbx_Bpt_hit.xml"/>
+	    <file name="Dbx_Bpt_hit_broken.xml" url="annotations/Dbx_Bpt_hit_broken.xml"/>
+	    <file name="Dbx_Bpt_hit_broken_dis.xml" url="annotations/Dbx_Bpt_hit_broken_dis.xml"/>
+	    <file name="Dbx_Bpt_hit_dis.xml" url="annotations/Dbx_Bpt_hit_dis.xml"/>
+
+	    <file name="Dbx_Bpt_cmpx_hit.xml" url="annotations/Dbx_Bpt_cmpx_hit.xml"/>
+	    <file name="Dbx_Bpt_cmpx_hit_broken.xml" url="annotations/Dbx_Bpt_cmpx_hit_broken.xml"/>
+	    <file name="Dbx_Bpt_cmpx_hit_broken_dis.xml" url="annotations/Dbx_Bpt_cmpx_hit_broken_dis.xml"/>
+	    <file name="Dbx_Bpt_cmpx_hit_dis.xml" url="annotations/Dbx_Bpt_cmpx_hit_dis.xml"/>
+	</folder>
+
+
+	<!-- somewhat based on
+	     ui/src/org/netbeans/modules/debugger/jpda/resources/mf-layer.xml
+	     For registering actions with the editors
+	-->
+
+	<folder name="text">
+	    <folder name="x-c++">
+		<folder name="Popup">
+
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-NewBreakpointAction.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+		    <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+			<attr name="position" intvalue="450"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-DisassemblerWindowAction.instance">
+                         <attr name="position" intvalue="500"/>
+                    </file>
+                     <file name="Separator0.instance">
+                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                         <attr name="position" intvalue="600"/>
+                     </file>
+
+		</folder>
+
+		<folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+
+		<folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+	    </folder>
+
+	    <folder name="x-yacc">
+		<folder name="Popup">
+
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-NewBreakpointAction.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+		    <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+			<attr name="position" intvalue="450"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-DisassemblerWindowAction.instance">
+                         <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="Separator0.instance">
+                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                         <attr name="position" intvalue="600"/>
+                    </file>
+
+		</folder>
+
+		<folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+
+		<folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+	    </folder>
+
+	    <folder name="x-fortran">
+		<folder name="Popup">
+
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-NewBreakpointAction.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+		    <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+			<attr name="position" intvalue="450"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-DisassemblerWindowAction.instance">
+                         <attr name="position" intvalue="500"/>
+                    </file>
+                     <file name="Separator0.instance">
+                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                         <attr name="position" intvalue="600"/>
+                     </file>
+
+		</folder>
+
+		<folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+
+		<folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+	    </folder>
+
+	    <folder name="x-h">
+		<folder name="Popup">
+
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-NewBreakpointAction.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+		    <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+			<attr name="position" intvalue="450"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-DisassemblerWindowAction.instance">
+                         <attr name="position" intvalue="500"/>
+                    </file>
+                     <file name="Separator0.instance">
+                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                         <attr name="position" intvalue="600"/>
+                     </file>
+
+		</folder>
+
+		<folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+
+		<folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+	    </folder>
+
+	    <folder name="x-c">
+		<folder name="Popup">
+
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-NewBreakpointAction.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+		    <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+			<attr name="position" intvalue="450"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-DisassemblerWindowAction.instance">
+                         <attr name="position" intvalue="500"/>
+                    </file>
+                     <file name="Separator0.instance">
+                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                         <attr name="position" intvalue="600"/>
+                     </file>
+
+		</folder>
+
+		<folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+
+		<folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+	    </folder>
+            <folder name="x-asm">
+                <folder name="SideBar">
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-assembly-DisInfoPanel$Factory.instance">
+                        <attr name="location" stringvalue="South"/>
+                        <attr name="scrollable" boolvalue="false"/>
+                        <attr name="position" intvalue="2500"/>
+                    </file>
+                </folder>
+                <folder name="GlyphGutterActions">
+		    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+		</folder>
+                <folder name="Popup">
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+			<attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-MemoryWindowAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-MemoryWindowAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-RegistersWindowAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-RegistersWindowAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-GoToSourceAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-GoToSourceAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+		    </file>
+                    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-ShowCurrentDisStatementAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-ShowCurrentDisStatementAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+		    </file>
+                    <file name="Separator800.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                </folder>
+                <folder name="ToolTips">
+		    <file name="org-netbeans-modules-cnd-debugger-common2-debugger-EvalAnnotation.instance"/>
+		</folder>
+            </folder>
+	</folder>
+    </folder>
+
+    <folder name="Actions">
+        <!--folder name="Build">
+            <file name="org-netbeans-modules-cnd-debugger-common2-debugger-actions-CompileDebugAction.instance"/>
+        </folder-->    
+	<folder name="Debug">
+	    <file name="org-netbeans-modules-debugger-ui-actions-KillAction.instance">
+	        <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+	        <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createKillAction"/>
+	        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+	    </file>
+	    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance">
+	        <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+	        <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createToggleBreakpointAction"/>
+	        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+	    </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createRunToCursorAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createRunIntoMethodAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-RunToFunctionAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.RunToFunctionAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createContinueAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createStepIntoAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createStepOutAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createStepOverAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>	    
+
+            <file name="org-netbeans-modules-debugger-ui-actions-PauseAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createPauseAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+	    <!-- LATER
+            <file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createRunIntoMethodAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+	    -->
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-PopLastDebuggerCallAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.PopLastDebuggerCallAction"/>
+            </file>
+
+
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ConnectAction.instance"/>
+            <file name="org-netbeans-modules-debugger-ui-actions-AddBreakpointAction.instance"/>
+            
+            <file name="org-netbeans-modules-debugger-ui-actions-FixAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.debugger.ui.actions.DebuggerAction.createFixAction"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+
+	    <!-- OLD
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DebugWindowsMenuAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DebugWindowsMenuAction"/>
+	    </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DebugProjectOnlyAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DebugProjectOnlyAction"/>
+	    </file>
+	    -->
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DebugCoreAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DebugCoreAction"/>
+            </file>
+
+	    <!-- OLD
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DynamicStartAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DynamicStartAction"/>
+            </file>
+	    -->
+
+	    <!--
+	    Moved to dbxtool fcade
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DebugExecutableAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DebugExecutableAction"/>
+            </file>
+
+	    -->
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-NewBreakpointAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.NewBreakpointAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-ClearAllBreakpointsAction.instance">
+		<attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointFilter$DeleteAllAction.getAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DisableAllBreakpointsAction.instance">
+		<attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointFilter$DisableAllAction.getAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-EnableAllBreakpointsAction.instance">
+		<attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointFilter$EnableAllAction.getAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-DetachAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DetachAction"/>
+            </file>
+	    
+	    <file name="org-netbeans-modules-cnd-debugger-common2-RerunAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.RerunAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-TerminateProcessAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.TerminateProcessAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-MemoryWindowAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.MemoryWindowAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-RegistersWindowAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.RegistersWindowAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.EvaluateAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-EvaluationWindowAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.EvaluationWindowAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-ContinueAtAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.ContinueAtAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-DisassemblerWindowAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.DisassemblerWindowAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-StepInstAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepInstAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-StepOverInstAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepOverInstAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-StepOutInstAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepOutInstAction"/>
+            </file>
+
+            <file name="org-netbeans-modules-cnd-debugger-common2-RunToCursorInstAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.RunToCursorInstAction"/>
+            </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-PopToCurrentFrameAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.PopToCurrentFrameAction"/>
+	    </file>
+
+
+	    <!--file name="org-netbeans-modules-cnd-debugger-common2-PioWindowAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.PioWindowAction"/>
+	    </file-->
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-ConsoleWindowAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.ConsoleWindowAction"/>
+	    </file>
+
+	    <file name="org-netbeans-modules-cnd-debugger-common2-CaptureListenAction.instance">
+		<attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.capture.CaptureListenAction"/>
+	    </file>
+            
+            <file name="org-netbeans-modules-cnd-debugger-common2-GoToSourceAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.GoToSourceAction"/>
+            </file>
+            
+            <file name="org-netbeans-modules-cnd-debugger-common2-ShowCurrentDisStatementAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.debugger.common2.debugger.actions.ShowCurrentDisStatementAction"/>
+            </file>
+
+	</folder>
+        <folder name="Window">
+            <file name="org-netbeans-modules-cnd-debugger-common2-debugger-io-ConsoleAction.instance">
+                <attr name="component" methodvalue="org.netbeans.modules.cnd.debugger.common2.debugger.io.ConsoleTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.cnd.debugger.common2.debugger.io.Bundle#CTL_ConsoleAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/cnd/debugger/common2/icons/debugger_console.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+            <!--file name="org-netbeans-modules-cnd-debugger-common2-debugger-io-PioAction.instance">
+                <attr name="component" methodvalue="org.netbeans.modules.cnd.debugger.common2.debugger.io.PioTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.cnd.debugger.common2.debugger.io.Bundle#CTL_PioAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/cnd/debugger/common2/icons/process_io.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file-->
+        </folder>
+    </folder>
+
+    <folder name="DbxGui">
+	<!--
+	    DO NOT DELETE! Various portions of dbxgui assume this folder exists and will
+	    throw exceptions if it does not.
+	-->
+    </folder>
+
+
+    <folder name="Windows2">
+	<folder name="Components">
+
+            <file name="ConsoleTopComponent.settings" url="components/ConsoleTopComponentSettings.xml"/>
+            <file name="EvaluationWindow.settings" url="components/EvaluationWindow.settings"/>
+            <file name="MemoryWindow.settings" url="components/MemoryWindow.settings"/>
+            <!--file name="PioTopComponent.settings" url="components/PioTopComponentSettings.xml"/-->
+            <file name="RegistersWindow.settings" url="components/RegistersWindow.settings"/>
+            <!--<file name="DisassemblerWindow.settings" url="components/DisassemblerWindow.settings"/>-->
+        </folder>
+
+	<folder name="Modes">
+	    <folder name="output">
+		<!-- use 014 to differentiate from positions in debuggercore -->
+		<file name="ConsoleTopComponent.wstcref" url="modes/output/ConsoleTopComponentWstcref.xml">
+                    <attr name="position" intvalue="114"/>
+                </file>
+                <!--file name="PioTopComponent.wstcref" url="modes/output/PioTopComponentWstcref.xml">
+                    <attr name="position" intvalue="214"/>
+                </file-->
+                <file name="watches.wstcref" url="modes/output/watches.wstcref">
+		    <attr name="position" intvalue="314"/>
+		</file>
+
+		<!-- svnversioning.wstcref is @ 700 -->
+		<file name="locals.wstcref" url="modes/output/locals.wstcref">
+		    <attr name="position" intvalue="714"/>
+		</file>
+
+		<file name="sessions.wstcref" url="modes/output/sessions.wstcref">
+		    <attr name="position" intvalue="1014"/>
+		</file>
+
+		<!-- find-usages.wstcref is @ 1100 -->
+		<file name="threads.wstcref" url="modes/output/threads.wstcref">
+		    <attr name="position" intvalue="1114"/>
+		</file>
+                
+		<!-- debuggercore puts watchesView.wstcref @ 300 -->
+		<file name="MemoryWindow.wstcref" url="modes/debugger/MemoryWindow.wstcref">
+		    <attr name="position" intvalue="1314"/>
+		</file>
+		<file name="RegistersWindow.wstcref" url="modes/debugger/RegistersWindow.wstcref">
+		    <attr name="position" intvalue="1414"/>
+		</file>
+
+		<file name="EvaluationWindow.wstcref" url="modes/debugger/EvaluationWindow.wstcref">
+		    <attr name="position" intvalue="514"/>
+		</file>
+
+	    </folder>
+
+	    <folder name="debugger">
+
+		<!-- OLD use 014 to differentiate from positions in debuggercore 
+
+                <file name="EvaluationWindow.wstcref" url="modes/debugger/EvaluationWindow.wstcref">
+		    <attr name="position" intvalue="214"/>
+		</file>
+
+		<file name="ConsoleWindow.wstcref"
+		      url="modes/output/ConsoleWindow.wstcref">
+		    <attr name="position" intvalue="514"/>
+		</file>
+		<file name="RegistersWindow.wstcref" url="modes/debugger/RegistersWindow.wstcref">
+		    <attr name="position" intvalue="414"/>
+		</file>
+		-->
+
+	    </folder>
+
+	    <folder name="editor">
+		<!--<file name="DisassemblerWindow.wstcref" url="modes/editor/DisassemblerWindow.wstcref"/>-->
+	    </folder>
+	    
+	</folder>
+
+	<folder name="Groups">
+            <folder name="debugger">
+		<!-- OLD
+		     Moved to dbxfacade.ide and dbxfacade.tool's layer
+                <file name="ConsoleWindow.wstcgrp"
+		      url="groups/debugger/ConsoleWindow.wstcgrp" />
+		      -->
+                <file name="MemoryWindow.wstcgrp" url="groups/debugger/MemoryWindow.wstcgrp"/>
+                <file name="EvaluationWindow.wstcgrp" url="groups/debugger/EvaluationWindow.wstcgrp"/>
+                <file name="RegistersWindow.wstcgrp" url="groups/debugger/RegistersWindow.wstcgrp"/>
+                <!--<file name="DisassemblerWindow.wstcgrp" url="groups/debugger/DisassemblerWindow.wstcgrp"/>-->
+
+            </folder>
+	</folder>
+    </folder>
+
+    <folder name="Shortcuts">
+	<!--
+        <file name="D-F9.shadow_hidden">
+            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-EvaluateAction.instance"/>
+        </file>
+	-->
+
+<!--        Disabled until # 191394 is fixed
+        <file name="D-F9.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-EvaluateAction.instance"/>
+        </file>-->
+
+	<!-- Array Browser - disable it for now
+        <file name="D-F9.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-cnd-debugger-common2-BrowseAction.instance"/>
+        </file>
+	  -->
+
+<!--	<file name="F6.shadow_hidden">
+            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunMainProject.instance"/>
+	</file>-->
+
+	<!--
+	  F5 defined in dbxfacade.ide's layer file.
+	  -->
+
+	<!--
+	<file name="F6.shadow_hidden">
+	    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+	</file>
+	-->
+
+<!--        Conflicts with projectui
+	<file name="S-F6.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+	</file>-->
+
+	<file name="DA-Pause.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PauseAction.instance"/>
+	</file>
+    </folder>
+</filesystem>

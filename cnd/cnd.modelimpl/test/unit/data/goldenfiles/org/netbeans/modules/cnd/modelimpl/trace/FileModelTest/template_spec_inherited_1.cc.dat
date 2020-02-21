@@ -1,0 +1,80 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_spec_inherited_1.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT TemplateAndSpecialization_1<typename T> (TemplateAndSpecialization_1 ) [2:1/1-4:2/77] lcurly=58 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC Param0 [3:5/64-3:16/75]  TYPE: int TEXT=int  [3:5/64-3:8/67]  INIT: null  SCOPE: TemplateAndSpecialization_1 
+STRUCT TemplateAndSpecialization_1<int> (TemplateAndSpecialization_1<int> ) [6:1/80-8:2/151] lcurly=132 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC Param1 [7:5/138-7:16/149]  TYPE: int TEXT=int  [7:5/138-7:8/141]  INIT: null  SCOPE: TemplateAndSpecialization_1 
+CLASS SpecializationDescendant_1 (SpecializationDescendant_1 ) [10:1/154-14:2/277] lcurly=230 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=TemplateAndSpecialization_1<int> VISIBILITY==PUBLIC virtual==false text='public TemplateAndSpecialization_1<int>'
+    MEMBERS:
+        FUNCTION DEFINITION foo  [11:5/236-13:6/275] MethodDDImpl SCOPE: SpecializationDescendant_1 
+            SIGNATURE foo()
+            UNIQUE NAME f:SpecializationDescendant_1::foo()
+            DECLARATION: foo  [11:5/236-13:6/275]
+            PARAMETERS:
+            RETURNS int TEXT=int  [11:5/236-11:8/239]
+            STATEMENT COMPOUND  [11:15/246-13:6/275] SCOPE: foo 
+                STATEMENT RETURN  [12:8/255-12:22/269] SCOPE: Stmt  [11:15/246-13:6/275] text: 'return Param1;'
+CLASS SpecializationDescendant_2 (SpecializationDescendant_2 ) [16:1/280-20:2/404] lcurly=357 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=TemplateAndSpecialization_1 VISIBILITY==PUBLIC virtual==false text='public TemplateAndSpecialization_1<char>'
+    MEMBERS:
+        FUNCTION DEFINITION foo  [17:5/363-19:6/402] MethodDDImpl SCOPE: SpecializationDescendant_2 
+            SIGNATURE foo()
+            UNIQUE NAME f:SpecializationDescendant_2::foo()
+            DECLARATION: foo  [17:5/363-19:6/402]
+            PARAMETERS:
+            RETURNS int TEXT=int  [17:5/363-17:8/366]
+            STATEMENT COMPOUND  [17:15/373-19:6/402] SCOPE: foo 
+                STATEMENT RETURN  [18:8/382-18:22/396] SCOPE: Stmt  [17:15/373-19:6/402] text: 'return Param0;'
+
+========== Dumping model of PROJECT DummyProject
+STRUCT TemplateAndSpecialization_1<typename T> (TemplateAndSpecialization_1 ) [2:1/1-4:2/77] lcurly=58 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC Param0 [3:5/64-3:16/75]  TYPE: int TEXT=int  [3:5/64-3:8/67]  INIT: null  SCOPE: TemplateAndSpecialization_1 
+STRUCT TemplateAndSpecialization_1<int> (TemplateAndSpecialization_1<int> ) [6:1/80-8:2/151] lcurly=132 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC Param1 [7:5/138-7:16/149]  TYPE: int TEXT=int  [7:5/138-7:8/141]  INIT: null  SCOPE: TemplateAndSpecialization_1 
+CLASS SpecializationDescendant_1 (SpecializationDescendant_1 ) [10:1/154-14:2/277] lcurly=230 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=TemplateAndSpecialization_1<int> VISIBILITY==PUBLIC virtual==false text='public TemplateAndSpecialization_1<int>'
+    MEMBERS:
+        FUNCTION DEFINITION foo  [11:5/236-13:6/275] MethodDDImpl SCOPE: SpecializationDescendant_1 
+            SIGNATURE foo()
+            UNIQUE NAME f:SpecializationDescendant_1::foo()
+            DECLARATION: foo  [11:5/236-13:6/275]
+            PARAMETERS:
+            RETURNS int TEXT=int  [11:5/236-11:8/239]
+            STATEMENT COMPOUND  [11:15/246-13:6/275] SCOPE: foo 
+                STATEMENT RETURN  [12:8/255-12:22/269] SCOPE: Stmt  [11:15/246-13:6/275] text: 'return Param1;'
+CLASS SpecializationDescendant_2 (SpecializationDescendant_2 ) [16:1/280-20:2/404] lcurly=357 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=TemplateAndSpecialization_1 VISIBILITY==PUBLIC virtual==false text='public TemplateAndSpecialization_1<char>'
+    MEMBERS:
+        FUNCTION DEFINITION foo  [17:5/363-19:6/402] MethodDDImpl SCOPE: SpecializationDescendant_2 
+            SIGNATURE foo()
+            UNIQUE NAME f:SpecializationDescendant_2::foo()
+            DECLARATION: foo  [17:5/363-19:6/402]
+            PARAMETERS:
+            RETURNS int TEXT=int  [17:5/363-17:8/366]
+            STATEMENT COMPOUND  [17:15/373-19:6/402] SCOPE: foo 
+                STATEMENT RETURN  [18:8/382-18:22/396] SCOPE: Stmt  [17:15/373-19:6/402] text: 'return Param0;'
+

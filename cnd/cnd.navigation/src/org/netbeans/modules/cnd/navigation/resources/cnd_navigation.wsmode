@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <!-- 
+    This mode is copy of CommonPallete mode, when you use some mode be sure it is in NetBeans Core UI,
+    otherwise please introduce your own mode and use it to avoid problems with modes when own product is used.
+    -->
+    <module name="org.netbeans.modules.cnd.navigation" spec="1.0"/>    
+    <name unique="cnd_navigation"/>
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="horizontal" number="60" weight="0.7" />
+        <path orientation="vertical" number="40" weight="0.7" />
+        <path orientation="horizontal" number="80" weight="0.3" />
+        <path orientation="vertical" number="40" weight="0.5" />
+    </constraints>
+    <relative-bounds x="75" y="24" width="15" height="32" />
+<!--    <active-tc id="CommonPalette" />-->
+    <empty-behavior permanent="true" />
+</mode>

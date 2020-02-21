@@ -1,0 +1,8 @@
+GetCategory() const char*	$	    switch (GetCategory()
+GetCategoryID() int	$	    switch (GetCategoryID()
+GetDescription() const char*	$	    switch (GetDescription()
+GetSupportMetric() int	$	    switch (GetSupportMetric()
+GetType() const char*	$	    switch (GetType()
+GetTypeID() int	$	    switch (GetTypeID()
+GetUnits() int	$	    switch (GetUnits()
+GetVendor() const char*	$	    switch (GetVendor()

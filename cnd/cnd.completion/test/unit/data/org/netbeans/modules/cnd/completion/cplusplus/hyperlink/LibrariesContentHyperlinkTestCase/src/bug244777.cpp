@@ -1,0 +1,38 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+#include <bug244777.h>
+
+namespace bug244777 {    
+    class TestStruct244777 {
+    private:
+        int foo();
+
+        friend struct std244777::hash244777<TestStruct244777>;
+    };
+    
+    namespace std244777 {
+        template <>
+        struct hash244777<TestStruct244777> {
+            int mtd(TestStruct244777 &param) {
+                return param.foo();
+            }
+        };
+    }
+}

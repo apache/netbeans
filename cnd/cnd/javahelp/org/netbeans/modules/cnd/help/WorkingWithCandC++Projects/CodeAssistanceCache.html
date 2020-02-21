@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="StyleSheet" href="../ide.css">
+    <meta name="generator" content="Helen">
+    <title>Relocating Code Assistance Cache For Version Controlled Projects</title>
+  </head>
+  <body>
+    <h2>
+       Relocating the Code Assistance Cache For Version Controlled Projects
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       When you create a project with existing sources the project is parsed to support the code
+      assistance features of the IDE. The parsing data is saved on disk in the code assistance
+      cache. Each time you open the project the IDE examines the cache and if necessary parses any
+      changed or new files to update the cache.
+    </p>
+    <p>
+       By default the IDE creates one code assistance cache for all your projects in your user
+      directory. The cache in your user directory cannot be copied or shared.
+    </p>
+    <p>
+       Parsing can be triggered when you update a project from a code repository in a version
+      control system such as Subversion or Mercurial. For large projects, it can take a long time.
+    </p>
+    <p>
+       A solution is for one developer using this version of the IDE to create a project-specific
+      cache and copy it to a shared location where other developers using this version of the IDE
+      can copy it to their computer. Then each developer can modify their project properties to
+      reference the copied cache. After this, the parsing when you open the project is much faster.
+    </p>
+    <p>
+       In order to use a code assistance cache copied from another computer, your computer must
+      meet the following requirements:
+    </p>
+    <ul>
+      <li>
+        operating system is identical to the operating system on the computer where the code was
+        parsed
+      </li>
+      <li>
+        tool collection used by the project is available at the same path on both computers
+      </li>
+    </ul>
+    <p>
+       Note that if your team uses several different versions of operating systems and tool
+      collections, you must create a different version of the cache for each combination of
+      operating systems and tool collections.
+    </p>
+    <p>
+       <b>To instruct the IDE to create the code assistance cache in a non-default location:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Files window (Window &gt; Files or Ctrl-2) and navigate to the <tt>nbproject</tt>
+        directory of your project.
+      </li>
+      <li>
+        Specify the new path for the cache by setting the cache.location property. For example, if
+        you want the cache to be located in <tt>nbproject/private/cache</tt>:
+        <p>
+           Add the line <tt>cache.location=nbproject/private/cache</tt> to one of the following
+          files:
+        </p>
+        <ul>
+          <li>
+            <tt>nbproject/project.properties</tt> - if you want this cache location setting
+            propagated to developer repositories
+          </li>
+          <li>
+            <tt>nbproject/private/private.properties</tt> - if you want to keep the cache location
+            setting out of version control and let developers set their own cache locations
+          </li>
+        </ul>
+      </li>
+      <li>
+        Save the properties file.
+      </li>
+      <li>
+        Close and reopen the project. 
+        <p>
+           The IDE parses the project and places the code assistance cache in
+          <tt>nbproject/private/cache</tt>. For very large projects this can take a long time.
+        </p>
+      </li>
+      <li>
+        When parsing is complete, close the project and exit the IDE.
+      </li>
+      <li>
+        Zip or tar the <tt>nbproject/private/cache</tt> to make it easier to move.
+      </li>
+      <li>
+        Copy the zip or tar file of your <tt>nbproject/private/cache</tt> in a shared location
+        where other developers can copy it. 
+        <p>
+           Note: It is important to exit the IDE before zipping or copying to ensure all data is
+          flushed to cache.
+        </p>
+      </li>
+      <li>
+        Push your changes to the repository if you have set the property in
+        <tt>nbproject/project.properties</tt>.
+      </li>
+    </ol>
+    <p>
+      <br>
+    </p>
+    <p>
+       <b>To use a pre-generated code assistance cache:</b>
+    </p>
+    <ol>
+      <li>
+        If your computer has the same operating system and tool collection, copy the archive of the
+        cache from the shared location and extract it to a location that is not in your IDE user
+        directory or managed by version control. Following the example, you should copy it to the
+        project's <tt>nbproject/private/cache</tt> directory.
+      </li>
+      <li>
+        Pull the project changes from the repository.
+      </li>
+      <li>
+        If you have decided to use the private properties, add the <tt>cache.location</tt> property
+        to the project's <tt>nbproject/private/private.properties</tt> file.<br>
+         Following the example, you should add the line:<br>
+         <tt>cache.location=nbproject/private/cache</tt>
+      </li>
+      <li>
+        Open the project in the IDE. 
+        <p>
+           The IDE uses the copied code assistance cache instead of reparsing the project. If there
+          are some newer files on the machine to which you copied the cache, only newer files are
+          parsed.
+        </p>
+      </li>
+    </ol>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="../WorkingWithCandC++Projects/ConfiguringParsingSettings.html">Configuring Code
+          Assistance Settings for C and C++ Projects</a><br>
+           <a href="../WorkingWithCandC++Projects/PublicPrivateProperties.html">Using Properties
+          Files for Version Controlled Projects</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm"><small>Copyright&nbsp;©&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</small></a>
+    </p>
+  </body>
+</html>

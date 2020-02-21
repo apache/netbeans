@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>Memory Requirements for Large Projects</title>
+</head>
+<body>
+<h2>Memory Requirements for Large Projects</h2>
+
+<p>﻿The IDE automatically determines the default limit for memory heap size for the JVM in
+which it is running, based on the amount of memory available on the system. The default heap size
+should be adequate if you are developing C/C++ applications with up to 5000 source files
+on a system with 2GB of RAM and a dual-core processor. If you are developing applications
+with more than 5000 source files, you need to increase the heap size or
+you might get out of memory exceptions from the IDE parser.
+</p>
+<p>
+The recommended heap sizes for working with
+large C/C++ applications are as follows:</p>
+<table  WIDTH=50% BORDER=0  CELLPADDING=4 CELLSPACING=0>
+    <thead>
+        <tr>
+            <th align="left">Size of project</th>
+            <th align="left">Heap size</th>
+        </tr>
+    </thead>
+    <tbody>
+                <tr>
+                    <td>
+                       1 to 5000 files</td>
+                    <td>
+                       Default</td></tr>
+                <tr>
+
+                    <td>
+                        5000 to 10000 files
+                    </td>
+                    <td>1.0 GB
+                    </td></tr>
+                <tr>
+
+                    <td>10000 or more files
+                    </td>
+                    <td>1.5 GB</td>
+                </tr>
+
+    </tbody>
+</table>
+
+<p>
+In the IDE configuration file, you can set the heap size for the JVM on which the IDE runs. </p>
+<ul class="note"><li>If you are using Oracle Developer Studio, see <a href="#oss">To change the heap size for Oracle Developer Studio.</a></li></ul>
+<a name="nb"> <p><b>To change the heap size for NetBeans IDE:</b></p></a>
+<ol>
+<li>Copy the <tt>netbeans.conf</tt> from the <tt>etc</tt> folder in the NetBeans
+installation directory
+into the <tt>etc</tt> directory in your NetBeans user directory (<tt>$HOME/.netbeans/8.1/etc</tt>).
+<br>
+You might need to create the <tt>$HOME/.netbeans/8.1/etc</tt> directory first.
+</li>
+<li>In the <tt>netbeans.conf</tt> file in your user
+directory, add the <tt>-J-Xmx</tt>
+command line Java startup switch (bolded below) in the <tt>netbeans.conf</tt> file.
+In this example, the heap is set to 2 Gb.
+<pre>
+# command line switches
+netbeans_default_options="-J-Xms32m <b>-J-Xmx2g</b> -J-XX:PermSize=32m
+-J-XX:MaxPermSize=96m -J-Xverify:none -J-Dapple.laf.useScreenMenuBar=true"
+</pre></li>
+<li>Restart the IDE.</li>
+</ol>
+<p>To insure that you do not run out of memory while the built-in parser is
+running, you can also add the garbage collector switches <tt>-J-XX:+UseConcMarkSweepGC</tt>
+(concurrent collector) and <tt>-J-XX:+UseParNewGC</tt> (parallel collector) to the
+<tt>netbeans.conf</tt> file.</p>
+
+<a name="oss"> <p><b>To change the heap size for Oracle Developer Studio IDE:</b></p></a>
+<ol>
+<li>In your <tt>$HOME/.developer/ide-<i>version-platform</i></tt> directory, create the <tt>etc</tt> directory.</li>
+<li>Copy the file <tt><i>devstudio-intall-dir</i>/lib/devstudio/etc/devstudio.conf</tt> to the <tt>$HOME/.oracledevstudio/ide-<i>version-platform</i>/etc</tt> directory.
+<br>
+For example:
+<pre>cp /opt/developerstudio12.5/lib/devstudio/etc/devstudio.conf $HOME/.oracledevstudio/ide-12.5-SunOS-sparc/etc</pre>
+</li>
+<li>In your copy of the <tt>devstudio.conf</tt> file, add the <tt>-J-Xmx</tt>
+command line Java startup switch (bolded below).
+In this example, the heap is set to 2 Gb.
+<pre>
+# command line switches
+default_options="--branding solstudio -J-XX:PermSize=64m -J-XX:MaxPermSize=400m 
+-J-Xms64m  <b>-J-Xmx2g</b> -J-Dnetbeans.openfile.197063=true"
+</pre></li>
+<li>Restart the IDE.</li>
+</ol>
+<p>To insure that you do not run out of memory while the built-in parser is
+running, you can also add the garbage collector switches <tt>-J-XX:+UseConcMarkSweepGC</tt>
+(concurrent collector) and <tt>-J-XX:+UseParNewGC</tt> (parallel collector) to the 
+ <tt>solstudio.conf</tt> file.</p>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

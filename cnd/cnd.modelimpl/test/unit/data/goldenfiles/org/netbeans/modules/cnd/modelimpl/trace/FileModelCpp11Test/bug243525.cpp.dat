@@ -1,0 +1,37 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243525.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE _a_243525 [1:1/0-1:33/32]  TYPE: int[] TEXT=int[]  [1:1/0-1:4/3]  INIT: text='{ 1, 2, 3 }'  SCOPE: $Global$ 
+VARIABLE _b_243525 [2:1/33-2:47/79]  TYPE: int TEXT=int  [2:1/33-2:4/36]  INIT: text='_a_243525<:::_a_243525<:0:>:'  SCOPE: $Global$ 
+VARIABLE _c_243525 [3:1/80-3:45/124]  TYPE: bool TEXT=bool  [3:1/80-3:5/84]  INIT: text='_a_243525<:0:><::_b_243525'  SCOPE: $Global$ 
+FUNCTION DEFINITION _f_243525  [5:1/126-5:37/162] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _f_243525<class>()
+    UNIQUE NAME f:_f_243525<class>()
+    DECLARATION: _f_243525  [5:1/126-5:37/162]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:18/143-5:22/147]
+    STATEMENT COMPOUND  [5:35/160-5:37/162] SCOPE: _f_243525 
+FUNCTION_INSTANTIATION _f_243525 [6:1/163-6:40/202]
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE _a_243525 [1:1/0-1:33/32]  TYPE: int[] TEXT=int[]  [1:1/0-1:4/3]  INIT: text='{ 1, 2, 3 }'  SCOPE: $Global$ 
+VARIABLE _b_243525 [2:1/33-2:47/79]  TYPE: int TEXT=int  [2:1/33-2:4/36]  INIT: text='_a_243525<:::_a_243525<:0:>:'  SCOPE: $Global$ 
+VARIABLE _c_243525 [3:1/80-3:45/124]  TYPE: bool TEXT=bool  [3:1/80-3:5/84]  INIT: text='_a_243525<:0:><::_b_243525'  SCOPE: $Global$ 
+FUNCTION DEFINITION _f_243525  [5:1/126-5:37/162] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _f_243525<class>()
+    UNIQUE NAME f:_f_243525<class>()
+    DECLARATION: _f_243525  [5:1/126-5:37/162]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:18/143-5:22/147]
+    STATEMENT COMPOUND  [5:35/160-5:37/162] SCOPE: _f_243525 
+

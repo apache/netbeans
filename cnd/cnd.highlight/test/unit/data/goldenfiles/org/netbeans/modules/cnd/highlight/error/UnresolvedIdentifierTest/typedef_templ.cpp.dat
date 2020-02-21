@@ -1,0 +1,3 @@
+WARNING typedef_templ.cpp [111-120]: Unable to resolve template based identifier char_type.
+WARNING typedef_templ.cpp [196-206]: Unable to resolve template based identifier inexistent.
+WARNING typedef_templ.cpp [229-239]: Unable to resolve template based identifier inexistent.

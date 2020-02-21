@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug252660.cpp
+Includes:
+"bug252660.h" [3:9/51-3:31/73]
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug252660 [1:1/0-6:2/103] SCOPE: bug252660.cpp
+    ENUM AAA252660 [2:5/26-5:6/100] SCOPE: bug252660 
+        last252660
+        aaa252660
+        bbb252660
+        ccc252660
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE bbb252660 [2:1/11-2:10/20]  TYPE: $unresolved$::aaa252660 TEXT=aaa252660  [1:1/0-1:10/9]  INIT: null  SCOPE: $Global$ 
+VARIABLE ccc252660 [3:1/22-3:10/31]  TYPE: $unresolved$::aaa252660 TEXT=aaa252660  [1:1/0-1:10/9]  INIT: null  SCOPE: $Global$ 
+NAMESPACE DEFINITIONS for bug252660 (bug252660) 
+    bug252660.cpp  [1:1/0-6:2/103]
+NAMESPACE bug252660 (bug252660) 
+    ENUM AAA252660 [2:5/26-5:6/100] SCOPE: bug252660 
+        last252660
+        aaa252660
+        bbb252660
+        ccc252660
+

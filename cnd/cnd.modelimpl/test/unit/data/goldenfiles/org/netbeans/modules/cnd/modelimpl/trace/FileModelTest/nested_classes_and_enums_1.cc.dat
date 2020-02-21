@@ -1,0 +1,44 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE nested_classes_and_enums_1.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Outer (Outer ) [1:1/0-7:2/84] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS NestedClass (Outer::NestedClass ) [2:5/18-3:6/43] lcurly=36 SCOPE: Outer 
+            BASE CLASSES:
+            MEMBERS:
+        ENUM NestedEnum [4:5/49-6:6/81] SCOPE: Outer 
+            A
+            B
+            C
+ENUM TopLevelEnum [9:1/87-11:2/120] SCOPE: $Global$ 
+    D
+    E
+    F
+
+========== Dumping model of PROJECT DummyProject
+CLASS Outer (Outer ) [1:1/0-7:2/84] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS NestedClass (Outer::NestedClass ) [2:5/18-3:6/43] lcurly=36 SCOPE: Outer 
+            BASE CLASSES:
+            MEMBERS:
+        ENUM NestedEnum [4:5/49-6:6/81] SCOPE: Outer 
+            A
+            B
+            C
+ENUM TopLevelEnum [9:1/87-11:2/120] SCOPE: $Global$ 
+    D
+    E
+    F
+

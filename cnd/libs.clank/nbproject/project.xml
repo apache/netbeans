@@ -52,10 +52,6 @@
                 <package>org.clang.driver</package>
                 <package>org.clang.driver.frontend</package>
                 <package>org.clang.edit</package>
-<<<<<<< HEAD
-                <package>org.clang.format</package>
-=======
->>>>>>> 0d82e68f15... Moving files to cluster directories.
                 <package>org.clang.frontend</package>
                 <package>org.clang.frontend.java</package>
                 <package>org.clang.frontend.llvm</package>
@@ -72,15 +68,8 @@
                 <package>org.clang.sema.java</package>
                 <package>org.clang.serialization</package>
                 <package>org.clang.staticanalyzer.core</package>
-<<<<<<< HEAD
-                <package>org.clang.tooling.core</package>
                 <package>org.clang.tools.driver</package>
                 <package>org.clang.tools.services</package>
-                <package>org.clang.tools.services.spi</package>
-=======
-                <package>org.clang.tools.driver</package>
-                <package>org.clang.tools.services</package>
->>>>>>> 0d82e68f15... Moving files to cluster directories.
                 <package>org.clang.tools.services.support</package>
                 <package>org.clank.java</package>
                 <package>org.clank.java.stdimpl</package>

@@ -44,19 +44,11 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-<<<<<<< HEAD
-                    <code-name-base>org.netbeans.libs.antlr.cnd</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-=======
                     <code-name-base>org.netbeans.modules.cnd.antlr</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>2.7.5</specification-version>
->>>>>>> 0d82e68f15... Moving files to cluster directories.
                     </run-dependency>
                 </dependency>
                 <dependency>

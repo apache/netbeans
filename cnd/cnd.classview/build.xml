@@ -27,10 +27,10 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.classview.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
     
-    <target name="cnd/do-test-build" depends="-build-cnd-tests,projectized-common.do-test-build">
+    <target name="do-test-build" depends="-build-cnd-tests,projectized-common.do-test-build">
     </target>
 
-    <target name="cnd/-build-cnd-tests">
+    <target name="-build-cnd-tests">
         <ant dir="../cnd" target="test-build" inheritall="false" />
         <ant dir="../cnd.modelimpl" target="test-build" inheritall="false" />
     </target>      

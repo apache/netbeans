@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="cnd.callgraph">
+<project basedir="." default="netbeans" name="cnd/cnd.callgraph">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.callgraph</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -41,14 +41,14 @@ Contributor(s):
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<project name="cnd.repository" default="netbeans" basedir=".">
+<project name="cnd/cnd.repository" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.repository.</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="do-test-build" depends="-build-cnd-tests,projectized-common.do-test-build">
+    <target name="cnd/do-test-build" depends="-build-cnd-tests,projectized-common.do-test-build">
     </target>
 
-    <target name="-build-cnd-tests">
+    <target name="cnd/-build-cnd-tests">
         <ant dir="../cnd.modelimpl" target="test-build" inheritall="false" />
     </target>
 </project>

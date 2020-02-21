@@ -23,10 +23,10 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.dlight.remote.impl</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <property name="dlight/binaries.dir" value="release/bin"/>
-    <property name="dlight/binaries.zip" value="external/fs_server-1.0.zip"/>
+    <property name="binaries.dir" value="release/bin"/>
+    <property name="binaries.zip" value="external/fs_server-1.0.zip"/>
 
-    <target name="dlight/-overwrite-binaries-zip" if="${zip.binaries.from.release.bin}">
+    <target name="-overwrite-binaries-zip" if="${zip.binaries.from.release.bin}">
         <echo message="######################################################################"></echo>
         <echo message="#  ATTENTION:"></echo>
         <echo message="#  Updating ${binaries.zip} with binaries ${binaries.dir}"></echo>
@@ -34,18 +34,18 @@
         <zip update="true" basedir="${binaries.dir}" destfile="${binaries.zip}"/>
     </target>
 
-    <target name="dlight/-dlight-remote-release.files" depends="projectized-common.-release.files,projectized.-define-downloadbinaries-task">
+    <target name="-dlight-remote-release.files" depends="projectized-common.-release.files,projectized.-define-downloadbinaries-task">
         <echo message="Overridden -release.files by dlight.remote.impl" />
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir=".">
                 <include name="dlight/external/binaries-list"/>
             </manifest>
         </downloadbinaries>
-        <taskdef name="dlight/releasefilesextra" classname="dlight/org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
+        <taskdef name="releasefilesextra" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
         <releasefilesextra property="release.files.extra"/>
     </target>
 
-    <target name="dlight/-release.files" depends="-dlight-remote-release.files,-overwrite-binaries-zip">
+    <target name="-release.files" depends="-dlight-remote-release.files,-overwrite-binaries-zip">
     </target>
 
 </project>

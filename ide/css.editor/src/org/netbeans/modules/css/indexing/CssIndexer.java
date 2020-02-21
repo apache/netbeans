@@ -21,9 +21,9 @@ package org.netbeans.modules.css.indexing;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -144,28 +144,20 @@ public class CssIndexer extends EmbeddingIndexer {
         if (!entries.isEmpty()) {
             
             //eliminate duplicated entries
-            Collection<String> entryStrings = new HashSet<>();
+            Set<String> entryStrings = new TreeSet<>();
             for(Entry entry : entries) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(entry.getName());
                 if(entry.isVirtual()) {
-                    sb.append(VIRTUAL_ELEMENT_MARKER);
-                }
-                entryStrings.add(sb.toString());
-            }
-            
-            StringBuilder sb = new StringBuilder();
-            Iterator<String> i = entryStrings.iterator();
-            while(i.hasNext()) {
-                sb.append(i.next());
-                if (i.hasNext()) {
-                    sb.append(','); //NOI18N
+                    entryStrings.add(entry.getName() + VIRTUAL_ELEMENT_MARKER);
+                } else {
+                    entryStrings.add(entry.getName());
                 }
             }
-            
-            sb.append(';'); //end of string
-            doc.addPair(key, sb.toString(), true, true);
-            return sb.toString().hashCode();
+
+            for(String e: entryStrings) {
+                doc.addPair(key, e, true, true);
+            }
+
+            return entryStrings.hashCode();
         }
         return 0;
     }
@@ -199,7 +191,7 @@ public class CssIndexer extends EmbeddingIndexer {
     public static class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "css"; //NOI18N
-        public static final int VERSION = 4;
+        public static final int VERSION = 5;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {

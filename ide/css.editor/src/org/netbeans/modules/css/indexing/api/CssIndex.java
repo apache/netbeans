@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +62,7 @@ public class CssIndex {
     private static final String SASS_EXT = "sass"; //NOI18N
     
     private static final Map<Project, CssIndex> INDEXES = new WeakHashMap<>();
+    private static final String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
     
      /**
      * Creates a new instance of {@link CssIndex}.
@@ -311,9 +311,8 @@ public class CssIndex {
                 String searchExpression = ".*("+encodeValueForRegexp(prefix)+").*"; //NOI18N
                 results = querySupport.query(keyName, searchExpression, QuerySupport.Kind.REGEXP, keyName);
             }
-            String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
             for (IndexResult result : results) {
-                Collection<String> elements = decodeListValue(result.getValue(keyName));
+                String[] elements = result.getValues(keyName);
                 for(String e : elements) {
                     if(e.startsWith(prefix)) {
                         if(e.endsWith(VIRTUAL_ELEMENT_MARKER_STR)) {
@@ -349,9 +348,9 @@ public class CssIndex {
         try {
             Collection<? extends IndexResult> results =
                     querySupport.query(keyName, "", QuerySupport.Kind.PREFIX, keyName);
-            String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
+            
             for (IndexResult result : filterDeletedFiles(results)) {
-                Collection<String> elements = decodeListValue(result.getValue(keyName));
+                String[] elements = result.getValues(keyName);
                 for (String e : elements) {
                     if(e.endsWith(VIRTUAL_ELEMENT_MARKER_STR)) {
                         if(includeVirtualElements) {
@@ -525,9 +524,8 @@ public class CssIndex {
         Map<FileObject, Collection<FileReference>> source2dests = new HashMap<>();
         Map<FileObject, Collection<FileReference>> dest2sources = new HashMap<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(CssIndexer.IMPORTS_KEY);
             FileObject file = result.getFile();
-            Collection<String> imports = decodeListValue(importsValue);
+            String[] imports = result.getValues(CssIndexer.IMPORTS_KEY);
             Collection<FileReference> imported = new HashSet<>();
             for (String importedFileName : imports) {
                 //resolve the file
@@ -679,18 +677,6 @@ public class CssIndex {
             }
         }
 
-    }
-
-
-    //each list value is terminated by semicolon
-    private Collection<String> decodeListValue(String value) {
-        assert value.charAt(value.length() - 1) == ';';
-        Collection<String> list = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(value.substring(0, value.length() - 1), ",");
-        while (st.hasMoreTokens()) {
-            list.add(st.nextToken());
-        }
-        return list;
     }
 
     //if an indexed file is delete and IndexerFactory.filesDeleted() hasn't removed

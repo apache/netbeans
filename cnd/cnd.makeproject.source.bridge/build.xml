@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="cnd.makeproject.source.bridge">
+<project basedir="." default="netbeans" name="cnd/cnd.makeproject.source.bridge">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.makeproject.source.bridge</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

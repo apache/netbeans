@@ -19,13 +19,7 @@
     under the License.
 
 -->
-<<<<<<< HEAD
 <project basedir="." default="netbeans" name="dlight/dlight.remote.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.dlight.remote.ui</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-=======
-<project basedir="." default="netbeans" name="dlight.remote.ui">
-    <description>Builds, tests, and runs the project org.netbeans.modules.dlight.remote.ui</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
->>>>>>> 0d82e68f15... Moving files to cluster directories.
 </project>

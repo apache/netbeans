@@ -23,7 +23,6 @@
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
-<<<<<<< HEAD
 <project name="cnd/cnd" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.</description>
     <property name="cnd/javahelp.base" value="org/netbeans/modules/cnd/help"/>
@@ -34,18 +33,6 @@
     </target>
 
     <target name="cnd/checkcddl">
-=======
-<project name="cnd" default="netbeans" basedir=".">
-    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.</description>
-    <property name="javahelp.base" value="org/netbeans/modules/cnd/help"/>
-    <import file="../nbbuild/templates/projectized.xml"/>
-
-    <target name="netbeans" depends="projectized.netbeans">
-	<fixcrlf srcdir="${cluster}/bin" includes="dorun.sh" eol="lf"/>
-    </target>
-
-    <target name="checkcddl">
->>>>>>> 0d82e68f15... Moving files to cluster directories.
 	<exec os="Linux SunOS Solaris" dir="." executable="sh">
 	    <arg value="checkcddl"/>
 	</exec>

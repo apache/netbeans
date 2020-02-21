@@ -19,13 +19,7 @@
     under the License.
 
 -->
-<<<<<<< HEAD
 <project basedir="." default="netbeans" name="cnd/cnd.analysis.impl">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.analysis.impl</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-=======
-<project basedir="." default="netbeans" name="cnd.analysis.impl">
-    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.analysis.impl</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
->>>>>>> 0d82e68f15... Moving files to cluster directories.
 </project>

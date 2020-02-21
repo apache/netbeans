@@ -19,20 +19,14 @@
     under the License.
 
 -->
-<<<<<<< HEAD
 <project basedir="." default="netbeans" name="cnd/cnd.remote">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.remote</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-=======
-<project basedir="." default="netbeans" name="cnd.remote">
-    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.remote</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
->>>>>>> 0d82e68f15... Moving files to cluster directories.
 
-    <property name="binaries.dir" value="release/bin"/>
-    <property name="binaries.zip" value="external/cnd-rfs-1.0.zip"/>
+    <property name="cnd/binaries.dir" value="release/bin"/>
+    <property name="cnd/binaries.zip" value="external/cnd-rfs-1.0.zip"/>
 
-    <target name="-overwrite-binaries-zip" if="${zip.binaries.from.release.bin}">
+    <target name="cnd/-overwrite-binaries-zip" if="${zip.binaries.from.release.bin}">
         <echo message="######################################################################"></echo>
         <echo message="#  ATTENTION:"></echo>
         <echo message="#  Updating ${binaries.zip} with binaries ${binaries.dir}"></echo>
@@ -40,18 +34,18 @@
         <zip update="true" basedir="${binaries.dir}" destfile="${binaries.zip}"/>
     </target>
 
-    <target name="-cnd-remote-release.files" depends="projectized-common.-release.files,projectized.-define-downloadbinaries-task">
+    <target name="cnd/-cnd-remote-release.files" depends="projectized-common.-release.files,projectized.-define-downloadbinaries-task">
         <echo message="Overridden -release.files by cnd.remote" />
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir=".">
-                <include name="external/binaries-list"/>
+                <include name="cnd/external/binaries-list"/>
             </manifest>
         </downloadbinaries>
-        <taskdef name="releasefilesextra" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
+        <taskdef name="cnd/releasefilesextra" classname="cnd/org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
         <releasefilesextra property="release.files.extra"/>
     </target>
 
-    <target name="-release.files" depends="-cnd-remote-release.files,-overwrite-binaries-zip">
+    <target name="cnd/-release.files" depends="-cnd-remote-release.files,-overwrite-binaries-zip">
     </target>
 
 </project>

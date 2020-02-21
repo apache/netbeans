@@ -52,6 +52,7 @@
                 <package>org.clang.driver</package>
                 <package>org.clang.driver.frontend</package>
                 <package>org.clang.edit</package>
+                <package>org.clang.format</package>
                 <package>org.clang.frontend</package>
                 <package>org.clang.frontend.java</package>
                 <package>org.clang.frontend.llvm</package>
@@ -68,8 +69,10 @@
                 <package>org.clang.sema.java</package>
                 <package>org.clang.serialization</package>
                 <package>org.clang.staticanalyzer.core</package>
+                <package>org.clang.tooling.core</package>
                 <package>org.clang.tools.driver</package>
                 <package>org.clang.tools.services</package>
+                <package>org.clang.tools.services.spi</package>
                 <package>org.clang.tools.services.support</package>
                 <package>org.clank.java</package>
                 <package>org.clank.java.stdimpl</package>

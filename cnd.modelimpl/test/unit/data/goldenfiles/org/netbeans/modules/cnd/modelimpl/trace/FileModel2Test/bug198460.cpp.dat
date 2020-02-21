@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug198460.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF __m128  [1:1/0-1:76/75] TYPE: float TEXT=float  [1:9/8-1:14/13] SCOPE: $Global$ 
+TYPEDEF __v4sf  [2:1/76-2:61/136] TYPE: float TEXT=float  [2:9/84-2:14/89] SCOPE: $Global$ 
+FUNCTION DEFINITION _mm_setzero_ps  [4:1/138-9:2/312] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _mm_setzero_ps()
+    UNIQUE NAME f:_mm_setzero_ps()
+    DECLARATION: _mm_setzero_ps  [4:1/138-9:2/312]
+    PARAMETERS:
+    RETURNS __m128 TEXT=__m128  [4:17/154-4:23/160]
+    STATEMENT COMPOUND  [7:1/250-9:2/312] SCOPE: _mm_setzero_ps 
+        STATEMENT RETURN  [8:3/254-8:59/310] SCOPE: Stmt  [7:1/250-9:2/312] text: 'return __extension__ (__m128){ 0.0f, 0.0f, 0.0f, 0.0f };'
+FUNCTION DEFINITION _mm_set1_ps  [11:1/314-15:2/494] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _mm_set1_ps(float)
+    UNIQUE NAME f:_mm_set1_ps(float)
+    DECLARATION: _mm_set1_ps  [11:1/314-15:2/494]
+    PARAMETERS:
+        __F [12:14/417-12:23/426]  TYPE: float TEXT=float  [12:14/417-12:19/422]  INIT: null  SCOPE: _mm_set1_ps 
+    RETURNS __m128 TEXT=__m128  [11:17/330-11:23/336]
+    STATEMENT COMPOUND  [13:1/428-15:2/494] SCOPE: _mm_set1_ps 
+        STATEMENT RETURN  [14:3/432-14:63/492] SCOPE: Stmt  [13:1/428-15:2/494] text: 'return __extension__ (__m128)(__v4sf){ __F, __F, __F, __F };'
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF __m128  [1:1/0-1:76/75] TYPE: float TEXT=float  [1:9/8-1:14/13] SCOPE: $Global$ 
+TYPEDEF __v4sf  [2:1/76-2:61/136] TYPE: float TEXT=float  [2:9/84-2:14/89] SCOPE: $Global$ 
+FUNCTION DEFINITION _mm_setzero_ps  [4:1/138-9:2/312] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _mm_setzero_ps()
+    UNIQUE NAME f:_mm_setzero_ps()
+    DECLARATION: _mm_setzero_ps  [4:1/138-9:2/312]
+    PARAMETERS:
+    RETURNS __m128 TEXT=__m128  [4:17/154-4:23/160]
+    STATEMENT COMPOUND  [7:1/250-9:2/312] SCOPE: _mm_setzero_ps 
+        STATEMENT RETURN  [8:3/254-8:59/310] SCOPE: Stmt  [7:1/250-9:2/312] text: 'return __extension__ (__m128){ 0.0f, 0.0f, 0.0f, 0.0f };'
+FUNCTION DEFINITION _mm_set1_ps  [11:1/314-15:2/494] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE _mm_set1_ps(float)
+    UNIQUE NAME f:_mm_set1_ps(float)
+    DECLARATION: _mm_set1_ps  [11:1/314-15:2/494]
+    PARAMETERS:
+        __F [12:14/417-12:23/426]  TYPE: float TEXT=float  [12:14/417-12:19/422]  INIT: null  SCOPE: _mm_set1_ps 
+    RETURNS __m128 TEXT=__m128  [11:17/330-11:23/336]
+    STATEMENT COMPOUND  [13:1/428-15:2/494] SCOPE: _mm_set1_ps 
+        STATEMENT RETURN  [14:3/432-14:63/492] SCOPE: Stmt  [13:1/428-15:2/494] text: 'return __extension__ (__m128)(__v4sf){ __F, __F, __F, __F };'
+

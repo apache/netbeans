@@ -1,0 +1,57 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 8):
+<U>#define '["LONG_VALUE",<ID>,line=10,col=9],offset=162,file=null'='["1",<DECIMALINT>,line=10,col=20],offset=173,file=null'
+<U>#define '["_PC_NAME_MAX",<ID>,line=4,col=9],offset=33,file=null'='["_PC_NAME_MAX",<ID>,line=4,col=41],offset=48,file=null'
+<U>#define '["_PC_PATH_MAX",<ID>,line=6,col=9],offset=101,file=null'='["_PC_PATH_MAX",<ID>,line=6,col=41],offset=116,file=null'
+<U>#define '["bcopy",<ID>,line=13,col=9],offset=192,file=null[["src",<ID>,line=13,col=15],offset=198,file=null, ["dst",<ID>,line=13,col=19],offset=202,file=null, ["len",<ID>,line=13,col=23],offset=206,file=null]'='["memcpy",<ID>,line=13,col=28],offset=211,file=null ["(",<LPAREN>,line=13,col=34],offset=217,file=null ["(",<LPAREN>,line=13,col=35],offset=218,file=null ["dst",<ID>,line=13,col=36],offset=219,file=null [")",<RPAREN>,line=13,col=39],offset=222,file=null [",",<COMMA>,line=13,col=40],offset=223,file=null ["(",<LPAREN>,line=13,col=41],offset=224,file=null ["src",<ID>,line=13,col=42],offset=225,file=null [")",<RPAREN>,line=13,col=45],offset=228,file=null [",",<COMMA>,line=13,col=46],offset=229,file=null ["(",<LPAREN>,line=13,col=47],offset=230,file=null ["len",<ID>,line=13,col=48],offset=231,file=null [")",<RPAREN>,line=13,col=51],offset=234,file=null [")",<RPAREN>,line=13,col=52],offset=235,file=null'
+<U>#define '["key1",<ID>,line=16,col=9],offset=300,file=null[["x",<ID>,line=16,col=14],offset=305,file=null]'='["key2",<ID>,line=16,col=17],offset=308,file=null ["(",<LPAREN>,line=16,col=21],offset=312,file=null ["(",<LPAREN>,line=16,col=22],offset=313,file=null ["x",<ID>,line=16,col=23],offset=314,file=null [")",<RPAREN>,line=16,col=24],offset=315,file=null [")",<RPAREN>,line=16,col=25],offset=316,file=null'
+<U>#define '["key2",<ID>,line=17,col=9],offset=326,file=null[["x",<ID>,line=17,col=14],offset=331,file=null]'='["key3",<ID>,line=17,col=17],offset=334,file=null ["(",<LPAREN>,line=17,col=21],offset=338,file=null ["(",<LPAREN>,line=17,col=22],offset=339,file=null ["x",<ID>,line=17,col=23],offset=340,file=null [")",<RPAREN>,line=17,col=24],offset=341,file=null [")",<RPAREN>,line=17,col=25],offset=342,file=null'
+<U>#define '["key3",<ID>,line=18,col=9],offset=352,file=null[["x",<ID>,line=18,col=14],offset=357,file=null]'='["key1",<ID>,line=18,col=17],offset=360,file=null ["(",<LPAREN>,line=18,col=21],offset=364,file=null ["(",<LPAREN>,line=18,col=22],offset=365,file=null ["x",<ID>,line=18,col=23],offset=366,file=null [")",<RPAREN>,line=18,col=24],offset=367,file=null [")",<RPAREN>,line=18,col=25],offset=368,file=null'
+<U>#define '["memcpy",<ID>,line=14,col=9],offset=245,file=null[["dst",<ID>,line=14,col=16],offset=252,file=null, ["src",<ID>,line=14,col=20],offset=256,file=null, ["len",<ID>,line=14,col=24],offset=260,file=null]'='["bcopy",<ID>,line=14,col=29],offset=265,file=null ["(",<LPAREN>,line=14,col=34],offset=270,file=null ["(",<LPAREN>,line=14,col=35],offset=271,file=null ["src",<ID>,line=14,col=36],offset=272,file=null [")",<RPAREN>,line=14,col=39],offset=275,file=null [",",<COMMA>,line=14,col=40],offset=276,file=null ["(",<LPAREN>,line=14,col=41],offset=277,file=null ["dst",<ID>,line=14,col=42],offset=278,file=null [")",<RPAREN>,line=14,col=45],offset=281,file=null [",",<COMMA>,line=14,col=46],offset=282,file=null ["(",<LPAREN>,line=14,col=47],offset=283,file=null ["len",<ID>,line=14,col=48],offset=284,file=null [")",<RPAREN>,line=14,col=51],offset=287,file=null [")",<RPAREN>,line=14,col=52],offset=288,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE recurse_define.h
+Includes:
+    <no includes>
+Macros:
+#define 'LONG_VALUE' [10:1/154-10:21/174]
+#define '_PC_NAME_MAX' [4:1/25-4:53/60]
+#define '_PC_PATH_MAX' [6:1/93-6:53/128]
+#define 'bcopy[src, dst, len]' [13:1/184-13:53/236]
+#define 'key1[x]' [16:1/292-16:26/317]
+#define 'key2[x]' [17:1/318-17:26/343]
+#define 'key3[x]' [18:1/344-18:26/369]
+#define 'memcpy[dst, src, len]' [14:1/237-14:54/290]
+ENUM  [1:1/0-7:2/130] SCOPE: $Global$ 
+    _PC_NAME_MAX
+    _PC_PATH_MAX
+FUNCTION DEFINITION foo  [20:1/371-23:2/459] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [20:1/371-23:2/459]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/371-20:5/375]
+    STATEMENT COMPOUND  [20:12/382-23:2/459] SCOPE: foo 
+        STATEMENT EXPRESSION  [21:5/388-21:28/411] SCOPE: Stmt  [20:12/382-23:2/459] text: 'memcpy(dst, buffer, 10)'
+        STATEMENT DECLARATION  [22:5/417-22:45/457] SCOPE: Stmt  [20:12/382-23:2/459]
+            VARIABLE i [22:5/417-22:45/457]  TYPE: int TEXT=int  [22:5/417-22:8/420]  INIT: text='key1(_PC_NAME_MAX) + LONG_VALUE'  SCOPE: Stmt  [20:12/382-23:2/459]
+
+========== Dumping model of PROJECT DummyProject
+ENUM  [1:1/0-7:2/130] SCOPE: $Global$ 
+    _PC_NAME_MAX
+    _PC_PATH_MAX
+FUNCTION DEFINITION foo  [20:1/371-23:2/459] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [20:1/371-23:2/459]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/371-20:5/375]
+    STATEMENT COMPOUND  [20:12/382-23:2/459] SCOPE: foo 
+        STATEMENT EXPRESSION  [21:5/388-21:28/411] SCOPE: Stmt  [20:12/382-23:2/459] text: 'memcpy(dst, buffer, 10)'
+        STATEMENT DECLARATION  [22:5/417-22:45/457] SCOPE: Stmt  [20:12/382-23:2/459]
+            VARIABLE i [22:5/417-22:45/457]  TYPE: int TEXT=int  [22:5/417-22:8/420]  INIT: text='key1(_PC_NAME_MAX) + LONG_VALUE'  SCOPE: Stmt  [20:12/382-23:2/459]
+

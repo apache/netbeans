@@ -1,0 +1,69 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["MACRO_FUN",<ID>,line=1,col=9],offset=8,file=null[["name",<ID>,line=1,col=19],offset=18,file=null]'='["name",<ID>,line=1,col=25],offset=24,file=null ["(",<LPAREN>,line=1,col=29],offset=28,file=null ["int",<ID>,line=1,col=30],offset=29,file=null ["a",<ID>,line=1,col=34],offset=33,file=null [",",<COMMA>,line=1,col=35],offset=34,file=null ["int",<ID>,line=1,col=37],offset=36,file=null ["b",<ID>,line=1,col=41],offset=40,file=null [")",<RPAREN>,line=1,col=42],offset=41,file=null ["{",<LCURLY>,line=1,col=44],offset=43,file=null ["int",<ID>,line=1,col=46],offset=45,file=null ["i",<ID>,line=1,col=50],offset=49,file=null ["=",<ASSIGNEQUAL>,line=1,col=52],offset=51,file=null ["a",<ID>,line=1,col=54],offset=53,file=null [";",<SEMICOLON>,line=1,col=55],offset=54,file=null ["int",<ID>,line=1,col=57],offset=56,file=null ["j",<ID>,line=1,col=61],offset=60,file=null ["=",<ASSIGNEQUAL>,line=1,col=63],offset=62,file=null ["b",<ID>,line=1,col=65],offset=64,file=null [";",<SEMICOLON>,line=1,col=66],offset=65,file=null ["}",<RCURLY>,line=1,col=68],offset=67,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz149525.cc
+Includes:
+    <no includes>
+Macros:
+#define 'MACRO_FUN[name]' [1:1/0-1:69/68]
+FUNCTION DEFINITION foo  [3:1/70-3:15/84] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int,int)
+    UNIQUE NAME f:foo(int,int)
+    DECLARATION: foo  [3:1/70-3:15/84]
+    PARAMETERS:
+        a [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: null  SCOPE: foo 
+        b [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [3:1/70-3:15/84] SCOPE: foo 
+        STATEMENT DECLARATION  [3:1/70-3:15/84] SCOPE: Stmt  [3:1/70-3:15/84]
+            VARIABLE i [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: text='MACRO_FUN(foo)'  SCOPE: Stmt  [3:1/70-3:15/84]
+        STATEMENT DECLARATION  [3:1/70-3:15/84] SCOPE: Stmt  [3:1/70-3:15/84]
+            VARIABLE j [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: text='MACRO_FUN(foo)'  SCOPE: Stmt  [3:1/70-3:15/84]
+FUNCTION DEFINITION boo  [4:1/85-4:15/99] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo(int,int)
+    UNIQUE NAME f:boo(int,int)
+    DECLARATION: boo  [4:1/85-4:15/99]
+    PARAMETERS:
+        a [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: null  SCOPE: boo 
+        b [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: null  SCOPE: boo 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [4:1/85-4:15/99] SCOPE: boo 
+        STATEMENT DECLARATION  [4:1/85-4:15/99] SCOPE: Stmt  [4:1/85-4:15/99]
+            VARIABLE i [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: text='MACRO_FUN(boo)'  SCOPE: Stmt  [4:1/85-4:15/99]
+        STATEMENT DECLARATION  [4:1/85-4:15/99] SCOPE: Stmt  [4:1/85-4:15/99]
+            VARIABLE j [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: text='MACRO_FUN(boo)'  SCOPE: Stmt  [4:1/85-4:15/99]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [3:1/70-3:15/84] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int,int)
+    UNIQUE NAME f:foo(int,int)
+    DECLARATION: foo  [3:1/70-3:15/84]
+    PARAMETERS:
+        a [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: null  SCOPE: foo 
+        b [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [3:1/70-3:15/84] SCOPE: foo 
+        STATEMENT DECLARATION  [3:1/70-3:15/84] SCOPE: Stmt  [3:1/70-3:15/84]
+            VARIABLE i [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: text='MACRO_FUN(foo)'  SCOPE: Stmt  [3:1/70-3:15/84]
+        STATEMENT DECLARATION  [3:1/70-3:15/84] SCOPE: Stmt  [3:1/70-3:15/84]
+            VARIABLE j [3:1/70-3:15/84]  TYPE: int TEXT=int  [3:1/70-3:15/84]  INIT: text='MACRO_FUN(foo)'  SCOPE: Stmt  [3:1/70-3:15/84]
+FUNCTION DEFINITION boo  [4:1/85-4:15/99] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo(int,int)
+    UNIQUE NAME f:boo(int,int)
+    DECLARATION: boo  [4:1/85-4:15/99]
+    PARAMETERS:
+        a [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: null  SCOPE: boo 
+        b [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: null  SCOPE: boo 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [4:1/85-4:15/99] SCOPE: boo 
+        STATEMENT DECLARATION  [4:1/85-4:15/99] SCOPE: Stmt  [4:1/85-4:15/99]
+            VARIABLE i [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: text='MACRO_FUN(boo)'  SCOPE: Stmt  [4:1/85-4:15/99]
+        STATEMENT DECLARATION  [4:1/85-4:15/99] SCOPE: Stmt  [4:1/85-4:15/99]
+            VARIABLE j [4:1/85-4:15/99]  TYPE: int TEXT=int  [4:1/85-4:15/99]  INIT: text='MACRO_FUN(boo)'  SCOPE: Stmt  [4:1/85-4:15/99]
+

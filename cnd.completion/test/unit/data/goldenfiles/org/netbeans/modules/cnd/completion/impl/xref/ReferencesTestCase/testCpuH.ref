@@ -1,0 +1,132 @@
+'CPU_H', tokenID=preprocessor_identifier, offset=2118 [42:14/2118-42:19/2123]
+--OWNER:
+    null
+--RESOLVED TO:
+    MACROS #define 'CPU_H' [43:1/2124-43:14/2137]
+==============================================================
+'CPU_H', tokenID=preprocessor_identifier, offset=2132 [43:9/2132-43:14/2137]
+--OWNER:
+    MACROS #define 'CPU_H' [43:1/2124-43:14/2137]
+--RESOLVED TO:
+    MACROS #define 'CPU_H' [43:1/2124-43:14/2137]
+==============================================================
+'include', tokenID=preprocessor_include, offset=2140 [45:2/2140-45:9/2147]
+--OWNER:
+    INCLUDE "module.h" [45:1/2139-45:20/2158]
+--RESOLVED TO:
+    INCLUDE "module.h" [45:1/2139-45:20/2158]
+==============================================================
+'"module.h"', tokenID=preprocessor_user_include, offset=2148 [45:10/2148-45:20/2158]
+--OWNER:
+    INCLUDE "module.h" [45:1/2139-45:20/2158]
+--RESOLVED TO:
+    FILE ReferencesTestCase/module.h
+==============================================================
+'Cpu', tokenID=identifier, offset=2166 [47:7/2166-47:10/2169]
+--OWNER:
+    CLASS Cpu [47:1/2160-59:2/2556] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    CLASS Cpu [47:1/2160-59:2/2556] ReferencesTestCase/cpu.h
+==============================================================
+'Module', tokenID=identifier, offset=2179 [47:20/2179-47:26/2185]
+--OWNER:
+     [47:13/2172-47:26/2185] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    CLASS Module [51:1/2205-92:2/3420] ReferencesTestCase/module.h
+==============================================================
+'CpuType', tokenID=identifier, offset=2213 [49:14/2213-49:21/2220]
+--OWNER:
+    ENUM Cpu::CpuType [49:9/2208-49:39/2238] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUM Cpu::CpuType [49:9/2208-49:39/2238] ReferencesTestCase/cpu.h
+==============================================================
+'MEDIUM', tokenID=identifier, offset=2223 [49:24/2223-49:30/2229]
+--OWNER:
+    ENUMERATOR Cpu::CpuType::MEDIUM [49:24/2223-49:30/2229] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuType::MEDIUM [49:24/2223-49:30/2229] ReferencesTestCase/cpu.h
+==============================================================
+'HIGH', tokenID=identifier, offset=2232 [49:33/2232-49:37/2236]
+--OWNER:
+    ENUMERATOR Cpu::CpuType::HIGH [49:33/2232-49:37/2236] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuType::HIGH [49:33/2232-49:37/2236] ReferencesTestCase/cpu.h
+==============================================================
+'CpuArch', tokenID=identifier, offset=2253 [50:14/2253-50:21/2260]
+--OWNER:
+    ENUM Cpu::CpuArch [50:9/2248-50:46/2285] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUM Cpu::CpuArch [50:9/2248-50:46/2285] ReferencesTestCase/cpu.h
+==============================================================
+'OPTERON', tokenID=identifier, offset=2263 [50:24/2263-50:31/2270]
+--OWNER:
+    ENUMERATOR Cpu::CpuArch::OPTERON [50:24/2263-50:31/2270] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuArch::OPTERON [50:24/2263-50:31/2270] ReferencesTestCase/cpu.h
+==============================================================
+'INTEL', tokenID=identifier, offset=2272 [50:33/2272-50:38/2277]
+--OWNER:
+    ENUMERATOR Cpu::CpuArch::INTEL [50:33/2272-50:38/2277] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuArch::INTEL [50:33/2272-50:38/2277] ReferencesTestCase/cpu.h
+==============================================================
+'SPARC', tokenID=identifier, offset=2279 [50:40/2279-50:45/2284]
+--OWNER:
+    ENUMERATOR Cpu::CpuArch::SPARC [50:40/2279-50:45/2284] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuArch::SPARC [50:40/2279-50:45/2284] ReferencesTestCase/cpu.h
+==============================================================
+'Cpu', tokenID=identifier, offset=2324 [52:9/2324-52:12/2327]
+--OWNER:
+    FUNCTION Cpu(int,int,int)  [52:9/2324-52:75/2390] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    FUNCTION Cpu(int,int,int)  [52:9/2324-52:75/2390] ReferencesTestCase/cpu.h
+==============================================================
+'type', tokenID=identifier, offset=2332 [52:17/2332-52:21/2336]
+--OWNER:
+    VARIABLE type [52:13/2328-52:30/2345] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:13/2328-52:16/2331]  INIT: text='MEDIUM'  SCOPE: Cpu 
+--RESOLVED TO:
+    VARIABLE type [52:13/2328-52:30/2345] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:13/2328-52:16/2331]  INIT: text='MEDIUM'  SCOPE: Cpu 
+==============================================================
+'MEDIUM', tokenID=identifier, offset=2339 [52:24/2339-52:30/2345]
+--OWNER:
+    VARIABLE type [52:13/2328-52:30/2345] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:13/2328-52:16/2331]  INIT: text='MEDIUM'  SCOPE: Cpu 
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuType::MEDIUM [49:24/2223-49:30/2229] ReferencesTestCase/cpu.h
+==============================================================
+'architecture', tokenID=identifier, offset=2351 [52:36/2351-52:48/2363]
+--OWNER:
+    VARIABLE architecture [52:32/2347-52:58/2373] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:32/2347-52:35/2350]  INIT: text='OPTERON'  SCOPE: Cpu 
+--RESOLVED TO:
+    VARIABLE architecture [52:32/2347-52:58/2373] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:32/2347-52:35/2350]  INIT: text='OPTERON'  SCOPE: Cpu 
+==============================================================
+'OPTERON', tokenID=identifier, offset=2366 [52:51/2366-52:58/2373]
+--OWNER:
+    VARIABLE architecture [52:32/2347-52:58/2373] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:32/2347-52:35/2350]  INIT: text='OPTERON'  SCOPE: Cpu 
+--RESOLVED TO:
+    ENUMERATOR Cpu::CpuArch::OPTERON [50:24/2263-50:31/2270] ReferencesTestCase/cpu.h
+==============================================================
+'units', tokenID=identifier, offset=2379 [52:64/2379-52:69/2384]
+--OWNER:
+    VARIABLE units [52:60/2375-52:73/2388] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:60/2375-52:63/2378]  INIT: text='1'  SCOPE: Cpu 
+--RESOLVED TO:
+    VARIABLE units [52:60/2375-52:73/2388] ReferencesTestCase/cpu.h  TYPE: int TEXT=int  [52:60/2375-52:63/2378]  INIT: text='1'  SCOPE: Cpu 
+==============================================================
+'GetType', tokenID=identifier, offset=2428 [54:29/2428-54:36/2435]
+--OWNER:
+    FUNCTION GetType() const  [54:9/2408-54:45/2444] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    FUNCTION GetType() const  [54:9/2408-54:45/2444] ReferencesTestCase/cpu.h
+==============================================================
+'GetCategory', tokenID=identifier, offset=2473 [55:29/2473-55:40/2484]
+--OWNER:
+    FUNCTION GetCategory() const  [55:9/2453-55:49/2493] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    FUNCTION GetCategory() const  [55:9/2453-55:49/2493] ReferencesTestCase/cpu.h
+==============================================================
+'ComputeSupportMetric', tokenID=identifier, offset=2531 [58:14/2531-58:34/2551]
+--OWNER:
+    FUNCTION ComputeSupportMetric()  [58:9/2526-58:37/2554] ReferencesTestCase/cpu.h
+--RESOLVED TO:
+    FUNCTION ComputeSupportMetric()  [58:9/2526-58:37/2554] ReferencesTestCase/cpu.h
+==============================================================

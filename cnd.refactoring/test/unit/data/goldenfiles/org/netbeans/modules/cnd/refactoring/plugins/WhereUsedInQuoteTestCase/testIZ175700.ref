@@ -1,0 +1,2 @@
+References in file quote_nosyshdr/quote.cc
+[171:25-171:30] MySystem.AddModule(&amp;<b>MyCpu</b>); // Add CPU Module to system specification

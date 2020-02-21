@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="55">
+  <projectmakefile>Makefile</projectmakefile>
+  <defaultConf>0</defaultConf>
+  <confs>
+    <conf name="Debug" type="4">
+      <toolsSet>
+        <developmentServer>X-HOST-UID-X</developmentServer>
+        <platform>X-PLATFORM-INDEX-X</platform>
+      </toolsSet>
+      <gdbdebugger version="2">
+        <gdb_command>gdb</gdb_command>
+        <array_repeat_threshold>10</array_repeat_threshold>
+      </gdbdebugger>
+      <runprofile version="5">
+        <args></args>
+        <rundir></rundir>
+        <buildfirst>true</buildfirst>
+        <console-type>2</console-type>
+        <terminal-type>0</terminal-type>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+    <conf name="Release" type="4">
+      <toolsSet>
+        <developmentServer>X-HOST-UID-X</developmentServer>
+        <platform>X-PLATFORM-INDEX-X</platform>
+      </toolsSet>
+      <gdbdebugger version="2">
+        <gdb_command>gdb</gdb_command>
+        <array_repeat_threshold>10</array_repeat_threshold>
+      </gdbdebugger>
+      <runprofile version="5">
+        <args></args>
+        <rundir></rundir>
+        <buildfirst>true</buildfirst>
+        <console-type>2</console-type>
+        <terminal-type>0</terminal-type>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

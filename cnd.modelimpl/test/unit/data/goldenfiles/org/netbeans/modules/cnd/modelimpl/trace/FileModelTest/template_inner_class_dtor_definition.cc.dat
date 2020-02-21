@@ -1,0 +1,66 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_inner_class_dtor_definition.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Outer2<class T> (Outer2 ) [1:1/0-7:2/81] lcurly=31 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Outer2::Inner ) [2:9/34-5:10/77] lcurly=47 SCOPE: Outer2 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION ~Inner [3:17/51-3:26/60] DestructorImpl SCOPE: Inner 
+                    DEFINITION: ~Inner  [9:1/84-10:2/132]
+                    SIGNATURE ~Inner()
+                    UNIQUE NAME F:Outer2::Inner::~Inner()
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                FUNCTION foo [4:17/63-4:28/74] MethodImpl SCOPE: Inner 
+                    DEFINITION: foo  [12:1/134-13:2/184]
+                    SIGNATURE foo()
+                    UNIQUE NAME F:Outer2::Inner::foo()
+                    PARAMETERS:
+                    RETURNS void TEXT=void  [4:17/63-4:21/67]
+FUNCTION DEFINITION ~Inner  [9:1/84-10:2/132] DestructorDefinitionImpl SCOPE: template_inner_class_dtor_definition.cc
+    SIGNATURE ~Inner()
+    UNIQUE NAME f:Outer2::Inner::~Inner()
+    DECLARATION: ~Inner  [3:17/51-3:26/60]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [9:46/129-10:2/132] SCOPE: ~Inner 
+FUNCTION DEFINITION foo  [12:1/134-13:2/184] FunctionDefinitionImpl SCOPE: template_inner_class_dtor_definition.cc
+    SIGNATURE foo()
+    UNIQUE NAME f:Outer2::Inner::foo()
+    DECLARATION: foo  [4:17/63-4:28/74]
+    PARAMETERS:
+    RETURNS void TEXT=void  [12:19/152-12:23/156]
+    STATEMENT COMPOUND  [12:48/181-13:2/184] SCOPE: foo 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Outer2<class T> (Outer2 ) [1:1/0-7:2/81] lcurly=31 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Outer2::Inner ) [2:9/34-5:10/77] lcurly=47 SCOPE: Outer2 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION ~Inner [3:17/51-3:26/60] DestructorImpl SCOPE: Inner 
+                    DEFINITION: ~Inner  [9:1/84-10:2/132]
+                    SIGNATURE ~Inner()
+                    UNIQUE NAME F:Outer2::Inner::~Inner()
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+                FUNCTION foo [4:17/63-4:28/74] MethodImpl SCOPE: Inner 
+                    DEFINITION: foo  [12:1/134-13:2/184]
+                    SIGNATURE foo()
+                    UNIQUE NAME F:Outer2::Inner::foo()
+                    PARAMETERS:
+                    RETURNS void TEXT=void  [4:17/63-4:21/67]
+

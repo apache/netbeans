@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE dummy.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE a [1:1/0-1:7/6]  TYPE: int TEXT=int  [1:1/0-1:4/3]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE a [1:1/0-1:7/6]  TYPE: int TEXT=int  [1:1/0-1:4/3]  INIT: null  SCOPE: $Global$ 
+

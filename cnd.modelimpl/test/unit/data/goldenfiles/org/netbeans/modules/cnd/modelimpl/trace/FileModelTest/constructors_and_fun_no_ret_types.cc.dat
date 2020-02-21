@@ -1,0 +1,90 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE constructors_and_fun_no_ret_types.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS B (B ) [1:1/0-7:2/80] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION B [3:9/26-3:13/30] ConstructorImpl SCOPE: B 
+            DEFINITION: B  [12:1/95-13:2/105]
+            SIGNATURE B()
+            UNIQUE NAME F:B::B()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A [4:9/39-4:13/43] MethodImpl SCOPE: B 
+            DEFINITION: A  [9:1/83-10:2/93]
+            SIGNATURE A()
+            UNIQUE NAME F:B::A()
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+        FUNCTION DEFINITION B  [5:9/52-5:20/63] ConstructorDDImpl SCOPE: B 
+            SIGNATURE B(int)
+            UNIQUE NAME f:B::B(int)
+            DECLARATION: B  [5:9/52-5:20/63]
+            PARAMETERS:
+                a [5:11/54-5:16/59]  TYPE: int TEXT=int  [5:11/54-5:14/57]  INIT: null  SCOPE: B 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:18/61-5:20/63] SCOPE: B 
+        FUNCTION DEFINITION C  [6:9/72-6:15/78] MethodDDImpl SCOPE: B 
+            SIGNATURE C()
+            UNIQUE NAME f:B::C()
+            DECLARATION: C  [6:9/72-6:15/78]
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+            STATEMENT COMPOUND  [6:13/76-6:15/78] SCOPE: C 
+FUNCTION DEFINITION A  [9:1/83-10:2/93] FunctionDefinitionImpl SCOPE: constructors_and_fun_no_ret_types.cc
+    SIGNATURE A()
+    UNIQUE NAME f:B::A()
+    DECLARATION: A  [4:9/39-4:13/43]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [9:8/90-10:2/93] SCOPE: A 
+FUNCTION DEFINITION B  [12:1/95-13:2/105] ConstructorDefinitionImpl SCOPE: constructors_and_fun_no_ret_types.cc
+    SIGNATURE B()
+    UNIQUE NAME f:B::B()
+    DECLARATION: B  [3:9/26-3:13/30]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [12:8/102-13:2/105] SCOPE: B 
+
+========== Dumping model of PROJECT DummyProject
+CLASS B (B ) [1:1/0-7:2/80] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION B [3:9/26-3:13/30] ConstructorImpl SCOPE: B 
+            DEFINITION: B  [12:1/95-13:2/105]
+            SIGNATURE B()
+            UNIQUE NAME F:B::B()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A [4:9/39-4:13/43] MethodImpl SCOPE: B 
+            DEFINITION: A  [9:1/83-10:2/93]
+            SIGNATURE A()
+            UNIQUE NAME F:B::A()
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+        FUNCTION DEFINITION B  [5:9/52-5:20/63] ConstructorDDImpl SCOPE: B 
+            SIGNATURE B(int)
+            UNIQUE NAME f:B::B(int)
+            DECLARATION: B  [5:9/52-5:20/63]
+            PARAMETERS:
+                a [5:11/54-5:16/59]  TYPE: int TEXT=int  [5:11/54-5:14/57]  INIT: null  SCOPE: B 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:18/61-5:20/63] SCOPE: B 
+        FUNCTION DEFINITION C  [6:9/72-6:15/78] MethodDDImpl SCOPE: B 
+            SIGNATURE C()
+            UNIQUE NAME f:B::C()
+            DECLARATION: C  [6:9/72-6:15/78]
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+            STATEMENT COMPOUND  [6:13/76-6:15/78] SCOPE: C 
+

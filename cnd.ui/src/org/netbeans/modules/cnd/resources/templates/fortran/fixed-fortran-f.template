@@ -1,0 +1,14 @@
+<#assign licenseFirst = "C">
+<#assign licensePrefix = "C ">
+<#assign licenseLast = "C">
+<#include "${project.licensePath}">
+
+C
+C File:   ${NAME}.${EXTENSION}
+C Author: ${user}
+C
+C Created on ${DATE}, ${TIME}
+C
+
+      PRINT*,'Hello World'
+      END

@@ -1,0 +1,25 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE cross_inclusionB.h
+Includes:
+"cross_inclusionA.h" <RECURSIVE inclusion> [1:1/0-1:30/29]
+Macros:
+#define 'A' [3:1/31-3:22/52]
+CLASS ClassBfromA (ClassBfromA ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassBfromA (ClassBfromA ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

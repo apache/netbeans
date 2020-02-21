@@ -1,0 +1,51 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/* 
+ * File:   ${nameAndExt}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#include <stdlib.h>
+#include <iostream>
+<#if testIncludes?? && testIncludes != "">${testIncludes}</#if>
+/*
+ * Simple C++ Test Suite
+ */
+<#if testFunctions?? && testFunctions != "">
+
+${testFunctions}<#else>
+void test1() {
+    std::cout << "${name} test 1" << std::endl;
+}
+
+void test2() {
+    std::cout << "${name} test 2" << std::endl;
+    std::cout << "%TEST_FAILED% time=0 testname=test2 (${name}) message=error message sample" << std::endl;
+}
+
+</#if>
+int main(int argc, char** argv) {
+    std::cout << "%SUITE_STARTING% ${name}" << std::endl;
+    std::cout << "%SUITE_STARTED%" << std::endl;
+<#if testCalls?? && testCalls != "">
+
+${testCalls}<#else>
+    std::cout << "%TEST_STARTED% test1 (${name})" << std::endl;
+    test1();
+    std::cout << "%TEST_FINISHED% time=0 test1 (${name})" << std::endl;
+
+    std::cout << "%TEST_STARTED% test2 (${name})\n" << std::endl;
+    test2();
+    std::cout << "%TEST_FINISHED% time=0 test2 (${name})" << std::endl;
+
+    </#if>
+    std::cout << "%SUITE_FINISHED% time=0" << std::endl;
+
+    return (EXIT_SUCCESS);
+}
+

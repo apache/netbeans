@@ -1,0 +1,206 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz190710.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION iz_190710_main  [1:1/0-49:2/6228] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz_190710_main(int,char**)
+    UNIQUE NAME f:iz_190710_main(int,char**)
+    DECLARATION: iz_190710_main  [1:1/0-49:2/6228]
+    PARAMETERS:
+        argc [1:20/19-1:28/27]  TYPE: int TEXT=int  [1:20/19-1:23/22]  INIT: null  SCOPE: iz_190710_main 
+        argv [1:30/29-1:40/39]  TYPE: **char TEXT=char**  [1:30/29-1:36/35]  INIT: null  SCOPE: iz_190710_main 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:42/41-49:2/6228] SCOPE: iz_190710_main 
+        STATEMENT DECLARATION  [2:5/47-2:11/53] SCOPE: Stmt  [1:42/41-49:2/6228]
+            VARIABLE i [2:5/47-2:11/53]  TYPE: int TEXT=int  [2:5/47-2:8/50]  INIT: null  SCOPE: Stmt  [1:42/41-49:2/6228]
+        STATEMENT EXPRESSION  [5:5/83-5:27/105] SCOPE: Stmt  [1:42/41-49:2/6228] text: 'printf("Arguments:\n")'
+        STATEMENT FOR  [6:5/111-8:6/185] SCOPE: Stmt  [1:42/41-49:2/6228]
+            INIT:
+                STATEMENT EXPRESSION  [6:10/116-6:16/122] SCOPE: Stmt  [6:5/111-8:6/185] text: 'i = 0;'
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < argc'
+            BODY:
+                STATEMENT COMPOUND  [6:32/138-8:6/185] SCOPE: Stmt  [6:5/111-8:6/185]
+                    STATEMENT EXPRESSION  [7:9/148-7:39/178] SCOPE: Stmt  [6:32/138-8:6/185] text: 'printf("%i: %s\n", i, argv[i])'
+        STATEMENT COMPOUND  [9:5/190-47:6/6212] SCOPE: Stmt  [1:42/41-49:2/6228]
+            STATEMENT DECLARATION  [10:9/200-10:42/233] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE bp [10:16/207-10:18/209]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE the_entry [10:21/212-10:30/221]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE entry_bp [10:33/224-10:41/232]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT DECLARATION  [11:9/242-11:28/261] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE cnode [11:9/242-11:28/261]  TYPE: *$unresolved$::IPA_ROUTINE TEXT=IPA_ROUTINE*  [11:9/242-11:22/255]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT DECLARATION  [12:9/270-12:18/279] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE lp [12:9/270-12:18/279]  TYPE: *$unresolved$::LIST TEXT=LIST*  [12:9/270-12:15/276]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT IF  [13:9/288-15:10/2339] SCOPE: Stmt  [9:5/190-47:6/6212]
+                CONDITION EXPRESSION text='!((clone_phases [ IPA_CLONE ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on)) && !((clone_phases [ IPA_FUNCP_CLONE ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on))'
+                THEN: 
+                    STATEMENT COMPOUND  [13:2029/2308-15:10/2339] SCOPE: Stmt  [13:9/288-15:10/2339]
+                        STATEMENT RETURN  [14:13/2322-14:20/2329] SCOPE: Stmt  [13:2029/2308-15:10/2339] text: 'return;'
+                ELSE: 
+                    STATEMENT is null
+            STATEMENT COMPOUND  [16:9/2348-21:10/3725] SCOPE: Stmt  [9:5/190-47:6/6212]
+                STATEMENT IF  [17:13/2362-20:14/3715] SCOPE: Stmt  [16:9/2348-21:10/3725]
+                    CONDITION EXPRESSION text='debugflag [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] && proc_is_under_debug()'
+                    THEN: 
+                        STATEMENT COMPOUND  [17:671/3020-20:14/3715] SCOPE: Stmt  [17:13/2362-20:14/3715]
+                            STATEMENT EXPRESSION  [18:17/3038-18:643/3664] SCOPE: Stmt  [17:671/3020-20:14/3715] text: 'dump_cooked(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1))'
+                            STATEMENT EXPRESSION  [19:17/3682-19:35/3700] SCOPE: Stmt  [17:671/3020-20:14/3715] text: 'dump_sblock_proc()'
+                    ELSE: 
+                        STATEMENT is null
+            STATEMENT EXPRESSION  [22:9/3735-22:43/3769] SCOPE: Stmt  [9:5/190-47:6/6212] text: 'entry_bp = get_entry_block(header)'
+            STATEMENT IF  [23:9/3779-40:10/4807] SCOPE: Stmt  [9:5/190-47:6/6212]
+                CONDITION EXPRESSION text='get_multientries(header)'
+                THEN: 
+                    STATEMENT COMPOUND  [23:39/3809-32:10/4392] SCOPE: Stmt  [23:9/3779-40:10/4807]
+                        STATEMENT FOR  [24:13/3823-31:14/4382] SCOPE: Stmt  [23:39/3809-32:10/4392]
+                            INIT:
+                                STATEMENT EXPRESSION  [24:18/3828-24:44/3854] SCOPE: Stmt  [24:13/3823-31:14/4382] text: '(lp) = (entry_bp -> succ);'
+                            ITERATION: text='((lp) = ((lp) -> next == (entry_bp -> succ) ? ((LIST *) 0) : (lp) -> next))'
+                            CONDITION: EXPRESSION text='(lp)'
+                            BODY:
+                                STATEMENT COMPOUND  [24:128/3938-31:14/4382] SCOPE: Stmt  [24:13/3823-31:14/4382]
+                                    STATEMENT EXPRESSION  [25:17/3956-25:56/3995] SCOPE: Stmt  [24:128/3938-31:14/4382] text: 'the_entry = ((BLOCK *) ((lp) -> datap))'
+                                    STATEMENT EXPRESSION  [26:17/4013-26:117/4113] SCOPE: Stmt  [24:128/3938-31:14/4382] text: '(void) ((the_entry -> entryname != 0) || (__assert("the_entry->entryname!=NULL", __FILE__, 710), 0))'
+                                    STATEMENT EXPRESSION  [27:17/4131-27:82/4196] SCOPE: Stmt  [24:128/3938-31:14/4382] text: 'cnode = ipa_lookup_routine(cur_file_desc, the_entry -> entryname)'
+                                    STATEMENT IF  [28:17/4214-30:18/4368] SCOPE: Stmt  [24:128/3938-31:14/4382]
+                                        CONDITION EXPRESSION text='cnode != 0'
+                                        THEN: 
+                                            STATEMENT COMPOUND  [28:33/4230-30:18/4368] SCOPE: Stmt  [28:17/4214-30:18/4368]
+                                                STATEMENT EXPRESSION  [29:21/4252-29:118/4349] SCOPE: Stmt  [28:33/4230-30:18/4368] text: 'visit_blocks_cf_2(the_entry, block_visit_triples_2, (void *) replace_callToClone, (void *) cnode)'
+                                        ELSE: 
+                                            STATEMENT is null
+                ELSE: 
+                    STATEMENT COMPOUND  [32:16/4398-40:10/4807] SCOPE: Stmt  [23:9/3779-40:10/4807]
+                        STATEMENT EXPRESSION  [33:13/4412-33:111/4510] SCOPE: Stmt  [32:16/4398-40:10/4807] text: '(void) ((entry_bp -> entryname != 0) || (__assert("entry_bp->entryname!=NULL", __FILE__, 721), 0))'
+                        STATEMENT EXPRESSION  [34:13/4524-34:77/4588] SCOPE: Stmt  [32:16/4398-40:10/4807] text: 'cnode = ipa_lookup_routine(cur_file_desc, entry_bp -> entryname)'
+                        STATEMENT IF  [35:13/4602-39:14/4797] SCOPE: Stmt  [32:16/4398-40:10/4807]
+                            CONDITION EXPRESSION text='cnode != 0'
+                            THEN: 
+                                STATEMENT COMPOUND  [35:29/4618-39:14/4797] SCOPE: Stmt  [35:13/4602-39:14/4797]
+                                    STATEMENT FOR  [36:17/4636-38:18/4783] SCOPE: Stmt  [35:29/4618-39:14/4797]
+                                        INIT:
+                                            STATEMENT EXPRESSION  [36:22/4641-36:36/4655] SCOPE: Stmt  [36:17/4636-38:18/4783] text: 'bp = entry_bp;'
+                                        ITERATION: text='bp = bp->next'
+                                        CONDITION: EXPRESSION text='bp != 0'
+                                        BODY:
+                                            STATEMENT COMPOUND  [36:61/4680-38:18/4783] SCOPE: Stmt  [36:17/4636-38:18/4783]
+                                                STATEMENT EXPRESSION  [37:21/4702-37:83/4764] SCOPE: Stmt  [36:61/4680-38:18/4783] text: 'block_visit_triples_1(bp, replace_callToClone, (void *) cnode)'
+                            ELSE: 
+                                STATEMENT is null
+            STATEMENT COMPOUND  [41:9/4816-46:10/6205] SCOPE: Stmt  [9:5/190-47:6/6212]
+                STATEMENT IF  [42:13/4830-45:14/6195] SCOPE: Stmt  [41:9/4816-46:10/6205]
+                    CONDITION EXPRESSION text='debugflag [ (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] && proc_is_under_debug()'
+                    THEN: 
+                        STATEMENT COMPOUND  [42:677/5494-45:14/6195] SCOPE: Stmt  [42:13/4830-45:14/6195]
+                            STATEMENT EXPRESSION  [43:17/5512-43:649/6144] SCOPE: Stmt  [42:677/5494-45:14/6195] text: 'dump_cooked((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1))'
+                            STATEMENT EXPRESSION  [44:17/6162-44:35/6180] SCOPE: Stmt  [42:677/5494-45:14/6195] text: 'dump_sblock_proc()'
+                    ELSE: 
+                        STATEMENT is null
+        STATEMENT RETURN  [48:5/6217-48:14/6226] SCOPE: Stmt  [1:42/41-49:2/6228] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION iz_190710_main  [1:1/0-49:2/6228] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz_190710_main(int,char**)
+    UNIQUE NAME f:iz_190710_main(int,char**)
+    DECLARATION: iz_190710_main  [1:1/0-49:2/6228]
+    PARAMETERS:
+        argc [1:20/19-1:28/27]  TYPE: int TEXT=int  [1:20/19-1:23/22]  INIT: null  SCOPE: iz_190710_main 
+        argv [1:30/29-1:40/39]  TYPE: **char TEXT=char**  [1:30/29-1:36/35]  INIT: null  SCOPE: iz_190710_main 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:42/41-49:2/6228] SCOPE: iz_190710_main 
+        STATEMENT DECLARATION  [2:5/47-2:11/53] SCOPE: Stmt  [1:42/41-49:2/6228]
+            VARIABLE i [2:5/47-2:11/53]  TYPE: int TEXT=int  [2:5/47-2:8/50]  INIT: null  SCOPE: Stmt  [1:42/41-49:2/6228]
+        STATEMENT EXPRESSION  [5:5/83-5:27/105] SCOPE: Stmt  [1:42/41-49:2/6228] text: 'printf("Arguments:\n")'
+        STATEMENT FOR  [6:5/111-8:6/185] SCOPE: Stmt  [1:42/41-49:2/6228]
+            INIT:
+                STATEMENT EXPRESSION  [6:10/116-6:16/122] SCOPE: Stmt  [6:5/111-8:6/185] text: 'i = 0;'
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < argc'
+            BODY:
+                STATEMENT COMPOUND  [6:32/138-8:6/185] SCOPE: Stmt  [6:5/111-8:6/185]
+                    STATEMENT EXPRESSION  [7:9/148-7:39/178] SCOPE: Stmt  [6:32/138-8:6/185] text: 'printf("%i: %s\n", i, argv[i])'
+        STATEMENT COMPOUND  [9:5/190-47:6/6212] SCOPE: Stmt  [1:42/41-49:2/6228]
+            STATEMENT DECLARATION  [10:9/200-10:42/233] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE bp [10:16/207-10:18/209]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE the_entry [10:21/212-10:30/221]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE entry_bp [10:33/224-10:41/232]  TYPE: *$unresolved$::BLOCK TEXT=BLOCK*  [10:9/200-10:16/207]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT DECLARATION  [11:9/242-11:28/261] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE cnode [11:9/242-11:28/261]  TYPE: *$unresolved$::IPA_ROUTINE TEXT=IPA_ROUTINE*  [11:9/242-11:22/255]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT DECLARATION  [12:9/270-12:18/279] SCOPE: Stmt  [9:5/190-47:6/6212]
+                VARIABLE lp [12:9/270-12:18/279]  TYPE: *$unresolved$::LIST TEXT=LIST*  [12:9/270-12:15/276]  INIT: null  SCOPE: Stmt  [9:5/190-47:6/6212]
+            STATEMENT IF  [13:9/288-15:10/2339] SCOPE: Stmt  [9:5/190-47:6/6212]
+                CONDITION EXPRESSION text='!((clone_phases [ IPA_CLONE ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on)) && !((clone_phases [ IPA_FUNCP_CLONE ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on && phase_table [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] . phase_on))'
+                THEN: 
+                    STATEMENT COMPOUND  [13:2029/2308-15:10/2339] SCOPE: Stmt  [13:9/288-15:10/2339]
+                        STATEMENT RETURN  [14:13/2322-14:20/2329] SCOPE: Stmt  [13:2029/2308-15:10/2339] text: 'return;'
+                ELSE: 
+                    STATEMENT is null
+            STATEMENT COMPOUND  [16:9/2348-21:10/3725] SCOPE: Stmt  [9:5/190-47:6/6212]
+                STATEMENT IF  [17:13/2362-20:14/3715] SCOPE: Stmt  [16:9/2348-21:10/3725]
+                    CONDITION EXPRESSION text='debugflag [ ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] && proc_is_under_debug()'
+                    THEN: 
+                        STATEMENT COMPOUND  [17:671/3020-20:14/3715] SCOPE: Stmt  [17:13/2362-20:14/3715]
+                            STATEMENT EXPRESSION  [18:17/3038-18:643/3664] SCOPE: Stmt  [17:671/3020-20:14/3715] text: 'dump_cooked(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1))'
+                            STATEMENT EXPRESSION  [19:17/3682-19:35/3700] SCOPE: Stmt  [17:671/3020-20:14/3715] text: 'dump_sblock_proc()'
+                    ELSE: 
+                        STATEMENT is null
+            STATEMENT EXPRESSION  [22:9/3735-22:43/3769] SCOPE: Stmt  [9:5/190-47:6/6212] text: 'entry_bp = get_entry_block(header)'
+            STATEMENT IF  [23:9/3779-40:10/4807] SCOPE: Stmt  [9:5/190-47:6/6212]
+                CONDITION EXPRESSION text='get_multientries(header)'
+                THEN: 
+                    STATEMENT COMPOUND  [23:39/3809-32:10/4392] SCOPE: Stmt  [23:9/3779-40:10/4807]
+                        STATEMENT FOR  [24:13/3823-31:14/4382] SCOPE: Stmt  [23:39/3809-32:10/4392]
+                            INIT:
+                                STATEMENT EXPRESSION  [24:18/3828-24:44/3854] SCOPE: Stmt  [24:13/3823-31:14/4382] text: '(lp) = (entry_bp -> succ);'
+                            ITERATION: text='((lp) = ((lp) -> next == (entry_bp -> succ) ? ((LIST *) 0) : (lp) -> next))'
+                            CONDITION: EXPRESSION text='(lp)'
+                            BODY:
+                                STATEMENT COMPOUND  [24:128/3938-31:14/4382] SCOPE: Stmt  [24:13/3823-31:14/4382]
+                                    STATEMENT EXPRESSION  [25:17/3956-25:56/3995] SCOPE: Stmt  [24:128/3938-31:14/4382] text: 'the_entry = ((BLOCK *) ((lp) -> datap))'
+                                    STATEMENT EXPRESSION  [26:17/4013-26:117/4113] SCOPE: Stmt  [24:128/3938-31:14/4382] text: '(void) ((the_entry -> entryname != 0) || (__assert("the_entry->entryname!=NULL", __FILE__, 710), 0))'
+                                    STATEMENT EXPRESSION  [27:17/4131-27:82/4196] SCOPE: Stmt  [24:128/3938-31:14/4382] text: 'cnode = ipa_lookup_routine(cur_file_desc, the_entry -> entryname)'
+                                    STATEMENT IF  [28:17/4214-30:18/4368] SCOPE: Stmt  [24:128/3938-31:14/4382]
+                                        CONDITION EXPRESSION text='cnode != 0'
+                                        THEN: 
+                                            STATEMENT COMPOUND  [28:33/4230-30:18/4368] SCOPE: Stmt  [28:17/4214-30:18/4368]
+                                                STATEMENT EXPRESSION  [29:21/4252-29:118/4349] SCOPE: Stmt  [28:33/4230-30:18/4368] text: 'visit_blocks_cf_2(the_entry, block_visit_triples_2, (void *) replace_callToClone, (void *) cnode)'
+                                        ELSE: 
+                                            STATEMENT is null
+                ELSE: 
+                    STATEMENT COMPOUND  [32:16/4398-40:10/4807] SCOPE: Stmt  [23:9/3779-40:10/4807]
+                        STATEMENT EXPRESSION  [33:13/4412-33:111/4510] SCOPE: Stmt  [32:16/4398-40:10/4807] text: '(void) ((entry_bp -> entryname != 0) || (__assert("entry_bp->entryname!=NULL", __FILE__, 721), 0))'
+                        STATEMENT EXPRESSION  [34:13/4524-34:77/4588] SCOPE: Stmt  [32:16/4398-40:10/4807] text: 'cnode = ipa_lookup_routine(cur_file_desc, entry_bp -> entryname)'
+                        STATEMENT IF  [35:13/4602-39:14/4797] SCOPE: Stmt  [32:16/4398-40:10/4807]
+                            CONDITION EXPRESSION text='cnode != 0'
+                            THEN: 
+                                STATEMENT COMPOUND  [35:29/4618-39:14/4797] SCOPE: Stmt  [35:13/4602-39:14/4797]
+                                    STATEMENT FOR  [36:17/4636-38:18/4783] SCOPE: Stmt  [35:29/4618-39:14/4797]
+                                        INIT:
+                                            STATEMENT EXPRESSION  [36:22/4641-36:36/4655] SCOPE: Stmt  [36:17/4636-38:18/4783] text: 'bp = entry_bp;'
+                                        ITERATION: text='bp = bp->next'
+                                        CONDITION: EXPRESSION text='bp != 0'
+                                        BODY:
+                                            STATEMENT COMPOUND  [36:61/4680-38:18/4783] SCOPE: Stmt  [36:17/4636-38:18/4783]
+                                                STATEMENT EXPRESSION  [37:21/4702-37:83/4764] SCOPE: Stmt  [36:61/4680-38:18/4783] text: 'block_visit_triples_1(bp, replace_callToClone, (void *) cnode)'
+                            ELSE: 
+                                STATEMENT is null
+            STATEMENT COMPOUND  [41:9/4816-46:10/6205] SCOPE: Stmt  [9:5/190-47:6/6212]
+                STATEMENT IF  [42:13/4830-45:14/6195] SCOPE: Stmt  [41:9/4816-46:10/6205]
+                    CONDITION EXPRESSION text='debugflag [ (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) ] && proc_is_under_debug()'
+                    THEN: 
+                        STATEMENT COMPOUND  [42:677/5494-45:14/6195] SCOPE: Stmt  [42:13/4830-45:14/6195]
+                            STATEMENT EXPRESSION  [43:17/5512-43:649/6144] SCOPE: Stmt  [42:677/5494-45:14/6195] text: 'dump_cooked((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((0 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1))'
+                            STATEMENT EXPRESSION  [44:17/6162-44:35/6180] SCOPE: Stmt  [42:677/5494-45:14/6195] text: 'dump_sblock_proc()'
+                    ELSE: 
+                        STATEMENT is null
+        STATEMENT RETURN  [48:5/6217-48:14/6226] SCOPE: Stmt  [1:42/41-49:2/6228] text: 'return 0;'
+

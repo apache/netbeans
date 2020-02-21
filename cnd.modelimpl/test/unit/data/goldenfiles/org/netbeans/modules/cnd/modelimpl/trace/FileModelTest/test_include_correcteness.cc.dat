@@ -1,0 +1,19 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["_X_",<ID>,line=2,col=9],offset=20,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE test_include_correcteness.cc
+Includes:
+"test_include_correcteness_deleg1.h" [1:1/0-1:46/45]
+"test_include_correcteness_deleg2.h" [2:1/46-2:46/91]
+Macros:
+    <no macros>
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE i [3:1/24-3:7/30]  TYPE: int TEXT=int  [3:1/24-3:4/27]  INIT: null  SCOPE: $Global$ 
+

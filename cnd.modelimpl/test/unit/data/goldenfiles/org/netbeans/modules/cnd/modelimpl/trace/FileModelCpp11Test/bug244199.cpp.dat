@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug244199.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug244199 [1:1/0-4:2/132] SCOPE: bug244199.cpp
+    FUNCTION fun244199 [2:5/26-2:40/61] FunctionImpl SCOPE: bug244199 
+        DEFINITION: null
+        SIGNATURE fun244199()
+        UNIQUE NAME F:bug244199::fun244199()
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+    VARIABLE e1_244199 [3:21/84-3:67/130]  TYPE: int TEXT=int  [3:21/84-3:24/87]  INIT: null  SCOPE: bug244199 
+    VARIABLE e2_244199 [3:36/99-3:66/129]  TYPE: int TEXT=int  [3:21/84-3:24/87]  INIT: null  SCOPE: bug244199 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug244199 (bug244199) 
+    bug244199.cpp  [1:1/0-4:2/132]
+NAMESPACE bug244199 (bug244199) 
+    FUNCTION fun244199 [2:5/26-2:40/61] FunctionImpl SCOPE: bug244199 
+        DEFINITION: null
+        SIGNATURE fun244199()
+        UNIQUE NAME F:bug244199::fun244199()
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+    VARIABLE e1_244199 [3:21/84-3:67/130]  TYPE: int TEXT=int  [3:21/84-3:24/87]  INIT: null  SCOPE: bug244199 
+    VARIABLE e2_244199 [3:36/99-3:66/129]  TYPE: int TEXT=int  [3:21/84-3:24/87]  INIT: null  SCOPE: bug244199 
+

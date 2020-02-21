@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE sharp_pp_directives.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION main  [4:1/15-7:2/78] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [4:1/15-7:2/78]
+    PARAMETERS:
+        argc [4:10/24-4:18/32]  TYPE: int TEXT=int  [4:10/24-4:13/27]  INIT: null  SCOPE: main 
+        argv [4:20/34-4:31/45]  TYPE: **char TEXT=char**  [4:20/34-4:26/40]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [4:1/15-4:4/18]
+    STATEMENT COMPOUND  [4:33/47-7:2/78] SCOPE: main 
+        STATEMENT RETURN  [6:5/67-6:14/76] SCOPE: Stmt  [4:33/47-7:2/78] text: 'return 0;'
+FUNCTION DEFINITION boo  [12:1/95-15:2/124] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo()
+    UNIQUE NAME f:boo()
+    DECLARATION: boo  [12:1/95-15:2/124]
+    PARAMETERS:
+    RETURNS int TEXT=int  [12:1/95-12:4/98]
+    STATEMENT COMPOUND  [12:11/105-15:2/124] SCOPE: boo 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [4:1/15-7:2/78] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [4:1/15-7:2/78]
+    PARAMETERS:
+        argc [4:10/24-4:18/32]  TYPE: int TEXT=int  [4:10/24-4:13/27]  INIT: null  SCOPE: main 
+        argv [4:20/34-4:31/45]  TYPE: **char TEXT=char**  [4:20/34-4:26/40]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [4:1/15-4:4/18]
+    STATEMENT COMPOUND  [4:33/47-7:2/78] SCOPE: main 
+        STATEMENT RETURN  [6:5/67-6:14/76] SCOPE: Stmt  [4:33/47-7:2/78] text: 'return 0;'
+FUNCTION DEFINITION boo  [12:1/95-15:2/124] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo()
+    UNIQUE NAME f:boo()
+    DECLARATION: boo  [12:1/95-15:2/124]
+    PARAMETERS:
+    RETURNS int TEXT=int  [12:1/95-12:4/98]
+    STATEMENT COMPOUND  [12:11/105-15:2/124] SCOPE: boo 
+

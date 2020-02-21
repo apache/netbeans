@@ -1,0 +1,8 @@
+i int	$	    new F()->i
+j int	$	    new F()->j
+k int	$	    new F()->k
+l int	$	    new F()->l
+m int	$	    new F()->m
+n int	$	    new F()->n
+o int	$	    new F()->o
+p	$	    new F()->p

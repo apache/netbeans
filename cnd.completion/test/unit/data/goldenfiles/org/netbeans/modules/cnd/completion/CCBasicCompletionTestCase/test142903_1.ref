@@ -1,0 +1,15 @@
+a A	$	    for (int i = 0; i < 10; i++) {a
+argc int	$	    for (int i = 0; i < 10; i++) {argc
+argv char**	$	    for (int i = 0; i < 10; i++) {argv
+i int	$	    for (int i = 0; i < 10; i++) {i
+pExtra void*	$	    for (int i = 0; i < 10; i++) {pExtra
+pointer int*	$	    for (int i = 0; i < 10; i++) {pointer
+value int	$	    for (int i = 0; i < 10; i++) {value
+A	$	    for (int i = 0; i < 10; i++) {A
+B	$	    for (int i = 0; i < 10; i++) {B
+C	$	    for (int i = 0; i < 10; i++) {C
+In_Macro	$	    for (int i = 0; i < 10; i++) {In_Macro
+globInt int	$	    for (int i = 0; i < 10; i++) {globInt
+checkZero() void	$	    for (int i = 0; i < 10; i++) {checkZero()
+globFoo() void	$	    for (int i = 0; i < 10; i++) {globFoo()
+main(int argc, char** argv) int	$	    for (int i = 0; i < 10; i++) {main()

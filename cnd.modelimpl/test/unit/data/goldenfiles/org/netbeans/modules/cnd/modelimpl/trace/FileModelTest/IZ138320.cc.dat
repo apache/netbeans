@@ -1,0 +1,28 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ138320.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS V (V ) [1:1/0-1:11/10] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT input_iterator_helper<class T=const long*,class V=char*const,class D=int const*,class P=V const*,class R=V const&> (input_iterator_helper ) [3:1/13-9:3/207] lcurly=205 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+CLASS V (V ) [1:1/0-1:11/10] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT input_iterator_helper<class T=const long*,class V=char*const,class D=int const*,class P=V const*,class R=V const&> (input_iterator_helper ) [3:1/13-9:3/207] lcurly=205 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

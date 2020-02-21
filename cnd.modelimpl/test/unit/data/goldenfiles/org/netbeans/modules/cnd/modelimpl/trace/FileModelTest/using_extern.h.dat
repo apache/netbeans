@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE using_extern.h
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN NSWithExtern [2:1/1-5:2/73] SCOPE: using_extern.h
+    EXTERN VARIABLE extVar [3:5/30-3:23/48]  TYPE: int TEXT=int  [3:5/30-3:15/40]  INIT: null  SCOPE: NSWithExtern 
+    EXTERN VARIABLE outVar [4:5/53-4:23/71]  TYPE: int TEXT=int  [4:5/53-4:15/63]  INIT: null  SCOPE: NSWithExtern 
+USING DECL. NSWithExtern::extVar  [7:1/75-7:27/101]; REF DECL: NSWithExtern::extVar  [10:5/133-10:16/144] SCOPE: $Global$ 
+NAMESPACE DEFINITOIN NSWithExtern [9:1/104-11:2/146] SCOPE: using_extern.h
+    VARIABLE extVar [10:5/133-10:16/144]  TYPE: int TEXT=int  [10:5/133-10:8/136]  INIT: null  SCOPE: NSWithExtern 
+USING DECL. NSWithExtern::outVar  [13:1/148-13:27/174]; REF DECL: NSWithExtern::outVar  [4:5/53-4:23/71] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+USING DECL. NSWithExtern::extVar  [7:1/75-7:27/101]; REF DECL: NSWithExtern::extVar  [10:5/133-10:16/144] SCOPE: $Global$ 
+USING DECL. NSWithExtern::outVar  [13:1/148-13:27/174]; REF DECL: NSWithExtern::outVar  [4:5/53-4:23/71] SCOPE: $Global$ 
+NAMESPACE DEFINITIONS for NSWithExtern (NSWithExtern) 
+    using_extern.h  [2:1/1-5:2/73]
+    using_extern.h  [9:1/104-11:2/146]
+NAMESPACE NSWithExtern (NSWithExtern) 
+    EXTERN VARIABLE extVar [3:5/30-3:23/48]  TYPE: int TEXT=int  [3:5/30-3:15/40]  INIT: null  SCOPE: NSWithExtern 
+    EXTERN VARIABLE outVar [4:5/53-4:23/71]  TYPE: int TEXT=int  [4:5/53-4:15/63]  INIT: null  SCOPE: NSWithExtern 
+    VARIABLE extVar [10:5/133-10:16/144]  TYPE: int TEXT=int  [10:5/133-10:8/136]  INIT: null  SCOPE: NSWithExtern 
+

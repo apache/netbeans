@@ -1,0 +1,14 @@
+References in file quote_nosyshdr/cpu.cc
+[73:1-73:34] const char* Cpu::GetType() const {
+References in file quote_nosyshdr/cpu.h
+[54:9-54:45] virtual const char* GetType() const;
+References in file quote_nosyshdr/disk.cc
+[66:1-66:35] const char* Disk::GetType() const {
+References in file quote_nosyshdr/disk.h
+[52:5-52:41] virtual const char* GetType() const;
+References in file quote_nosyshdr/memory.cc
+[73:1-73:37] const char* Memory::GetType() const {
+References in file quote_nosyshdr/memory.h
+[52:5-52:41] virtual const char* GetType() const;
+References in file quote_nosyshdr/module.h
+[68:5-68:45] virtual const char* GetType() const = 0;

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.cnd.diagnostics.clank
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/diagnostics/clank/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/diagnostics/clank/resources/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0.1
+

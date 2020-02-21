@@ -1,0 +1,58 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz148014.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS A (A ) [1:1/0-6:2/115] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION b [3:5/22-3:37/54] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE b()
+            UNIQUE NAME F:A::b()
+            PARAMETERS:
+            RETURNS void TEXT=void  [3:13/30-3:17/34]
+        FUNCTION c [4:5/59-4:26/80] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE c()
+            UNIQUE NAME F:A::c()
+            PARAMETERS:
+            RETURNS void TEXT=void  [4:13/67-4:17/71]
+        FUNCTION d [5:5/85-5:33/113] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE d()
+            UNIQUE NAME F:A::d()
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:13/93-5:17/97]
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [1:1/0-6:2/115] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION b [3:5/22-3:37/54] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE b()
+            UNIQUE NAME F:A::b()
+            PARAMETERS:
+            RETURNS void TEXT=void  [3:13/30-3:17/34]
+        FUNCTION c [4:5/59-4:26/80] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE c()
+            UNIQUE NAME F:A::c()
+            PARAMETERS:
+            RETURNS void TEXT=void  [4:13/67-4:17/71]
+        FUNCTION d [5:5/85-5:33/113] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE d()
+            UNIQUE NAME F:A::d()
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:13/93-5:17/97]
+

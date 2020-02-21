@@ -1,0 +1,38 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug254133.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug254133 [1:1/0-12:2/784] SCOPE: bug254133.cpp
+    ENUM LogLevel254133 [2:5/26-11:6/781] SCOPE: bug254133 
+        LogLevel_Emergency
+        LogLevel_Alert
+        LogLevel_Critical
+        LogLevel_Error
+        LogLevel_Warning
+        LogLevel_Notice
+        LogLevel_Info
+        LogLevel_Debug
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug254133 (bug254133) 
+    bug254133.cpp  [1:1/0-12:2/784]
+NAMESPACE bug254133 (bug254133) 
+    ENUM LogLevel254133 [2:5/26-11:6/781] SCOPE: bug254133 
+        LogLevel_Emergency
+        LogLevel_Alert
+        LogLevel_Critical
+        LogLevel_Error
+        LogLevel_Warning
+        LogLevel_Notice
+        LogLevel_Info
+        LogLevel_Debug
+

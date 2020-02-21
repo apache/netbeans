@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug208927.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION test2  [1:1/0-15:4/239] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:test2
+    DECLARATION: test2  [1:1/0-15:4/239]
+    PARAMETERS:
+        NN [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        r [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        s [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION test2  [1:1/0-15:4/239] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:test2
+    DECLARATION: test2  [1:1/0-15:4/239]
+    PARAMETERS:
+        NN [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        r [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        s [1:1/0-15:4/239]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

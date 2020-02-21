@@ -1,0 +1,216 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE friend.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION moo2 [1:1/0-1:15/14] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: moo2  [13:5/221-13:39/255]
+    SIGNATURE moo2(int)
+    UNIQUE NAME F:moo2(int)
+    PARAMETERS:
+         [1:10/9-1:13/12]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: moo2 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+FUNCTION DEFINITION moo  [2:1/15-2:24/38] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE moo(int)
+    UNIQUE NAME f:moo(int)
+    DECLARATION: moo  [14:5/261-14:25/281]
+    PARAMETERS:
+         [2:9/23-2:12/26]  TYPE: int TEXT=int  [2:9/23-2:12/26]  INIT: null  SCOPE: moo 
+    RETURNS int TEXT=int  [2:1/15-2:4/18]
+    STATEMENT COMPOUND  [2:13/27-2:24/38] SCOPE: moo 
+        STATEMENT RETURN  [2:14/28-2:23/37] SCOPE: Stmt  [2:13/27-2:24/38] text: 'return 0;'
+STRUCT S2 (S2 ) [3:1/39-5:28/94] lcurly=49 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION soo [4:5/56-4:15/66] MethodImpl SCOPE: S2 
+            DEFINITION: soo  [15:5/286-15:38/319]
+            SIGNATURE soo()
+            UNIQUE NAME F:S2::soo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [4:5/56-4:8/59]
+        FUNCTION DEFINITION soo2  [5:5/71-5:26/92] MethodDDImpl SCOPE: S2 
+            SIGNATURE soo2()
+            UNIQUE NAME f:S2::soo2()
+            DECLARATION: soo2  [5:5/71-5:26/92]
+            PARAMETERS:
+            RETURNS int TEXT=int  [5:5/71-5:8/74]
+            STATEMENT COMPOUND  [5:15/81-5:26/92] SCOPE: soo2 
+                STATEMENT RETURN  [5:16/82-5:25/91] SCOPE: Stmt  [5:15/81-5:26/92] text: 'return 0;'
+CLASS A2 (A2 ) [6:1/96-7:17/122] lcurly=104 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [7:5/110-7:15/120] MethodImpl SCOPE: A2 
+            DEFINITION: foo  [8:1/124-8:27/150]
+            SIGNATURE foo()
+            UNIQUE NAME F:A2::foo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [7:5/110-7:8/113]
+FUNCTION DEFINITION foo  [8:1/124-8:27/150] FunctionDefinitionImpl SCOPE: friend.cc
+    SIGNATURE foo()
+    UNIQUE NAME f:A2::foo()
+    DECLARATION: foo  [7:5/110-7:15/120]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/124-8:4/127]
+    STATEMENT COMPOUND  [8:14/137-8:27/150] SCOPE: foo 
+        STATEMENT RETURN  [8:16/139-8:25/148] SCOPE: Stmt  [8:14/137-8:27/150] text: 'return 0;'
+CLASS B (B ) [9:1/151-16:28/347] lcurly=158 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF xxx  [10:5/164-10:21/180] TYPE: int TEXT=int  [10:13/172-10:16/175] SCOPE: B 
+        FUNCTION boo [12:5/206-12:15/216] MethodImpl SCOPE: B 
+            DEFINITION: null
+            SIGNATURE boo()
+            UNIQUE NAME F:B::boo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [12:5/206-12:8/209]
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION A2 [11:5/185-11:21/201] FriendClassImpl
+            REFERENCED CLASS: C:A2
+        FUNCTION DEFINITION moo2  [13:5/221-13:39/255] FriendFunctionDDImpl SCOPE: $Global$ 
+            SIGNATURE moo2(int)
+            UNIQUE NAME d:moo2(int)
+            DECLARATION: moo2  [1:1/0-1:15/14]
+            PARAMETERS:
+                 [13:21/237-13:24/240]  TYPE: int TEXT=int  [13:21/237-13:24/240]  INIT: null  SCOPE: moo2 
+            RETURNS int TEXT=int  [13:12/228-13:15/231]
+            STATEMENT COMPOUND  [13:26/242-13:39/255] SCOPE: moo2 
+                STATEMENT RETURN  [13:28/244-13:37/253] SCOPE: Stmt  [13:26/242-13:39/255] text: 'return 0;'
+        FUNCTION moo [14:5/261-14:25/281] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: moo  [2:1/15-2:24/38]
+            SIGNATURE moo(int)
+            UNIQUE NAME D:moo(int)
+            REFERENCED FRIEND FUNCTION: moo  [2:1/15-2:24/38]
+            PARAMETERS:
+                 [14:20/276-14:23/279]  TYPE: int TEXT=int  [14:20/276-14:23/279]  INIT: null  SCOPE: moo 
+            RETURNS int TEXT=int  [14:12/268-14:15/271]
+        FUNCTION DEFINITION soo  [15:5/286-15:38/319] FriendFunctionDefinitionImpl SCOPE: friend.cc
+            SIGNATURE soo()
+            UNIQUE NAME d:S2::soo()
+            DECLARATION: soo  [4:5/56-4:15/66]
+            PARAMETERS:
+            RETURNS int TEXT=int  [15:12/293-15:15/296]
+            STATEMENT COMPOUND  [15:25/306-15:38/319] SCOPE: soo 
+                STATEMENT RETURN  [15:27/308-15:36/317] SCOPE: Stmt  [15:25/306-15:38/319] text: 'return 0;'
+        FUNCTION soo2 [16:5/324-16:27/346] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: soo2  [5:5/71-5:26/92]
+            SIGNATURE soo2()
+            UNIQUE NAME D:S2::soo2()
+            REFERENCED FRIEND FUNCTION: soo2  [5:5/71-5:26/92]
+            PARAMETERS:
+            RETURNS int TEXT=int  [16:12/331-16:15/334]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION moo2 [1:1/0-1:15/14] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: moo2  [13:5/221-13:39/255]
+    SIGNATURE moo2(int)
+    UNIQUE NAME F:moo2(int)
+    PARAMETERS:
+         [1:10/9-1:13/12]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: moo2 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+FUNCTION DEFINITION moo  [2:1/15-2:24/38] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE moo(int)
+    UNIQUE NAME f:moo(int)
+    DECLARATION: moo  [14:5/261-14:25/281]
+    PARAMETERS:
+         [2:9/23-2:12/26]  TYPE: int TEXT=int  [2:9/23-2:12/26]  INIT: null  SCOPE: moo 
+    RETURNS int TEXT=int  [2:1/15-2:4/18]
+    STATEMENT COMPOUND  [2:13/27-2:24/38] SCOPE: moo 
+        STATEMENT RETURN  [2:14/28-2:23/37] SCOPE: Stmt  [2:13/27-2:24/38] text: 'return 0;'
+STRUCT S2 (S2 ) [3:1/39-5:28/94] lcurly=49 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION soo [4:5/56-4:15/66] MethodImpl SCOPE: S2 
+            DEFINITION: soo  [15:5/286-15:38/319]
+            SIGNATURE soo()
+            UNIQUE NAME F:S2::soo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [4:5/56-4:8/59]
+        FUNCTION DEFINITION soo2  [5:5/71-5:26/92] MethodDDImpl SCOPE: S2 
+            SIGNATURE soo2()
+            UNIQUE NAME f:S2::soo2()
+            DECLARATION: soo2  [5:5/71-5:26/92]
+            PARAMETERS:
+            RETURNS int TEXT=int  [5:5/71-5:8/74]
+            STATEMENT COMPOUND  [5:15/81-5:26/92] SCOPE: soo2 
+                STATEMENT RETURN  [5:16/82-5:25/91] SCOPE: Stmt  [5:15/81-5:26/92] text: 'return 0;'
+CLASS A2 (A2 ) [6:1/96-7:17/122] lcurly=104 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [7:5/110-7:15/120] MethodImpl SCOPE: A2 
+            DEFINITION: foo  [8:1/124-8:27/150]
+            SIGNATURE foo()
+            UNIQUE NAME F:A2::foo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [7:5/110-7:8/113]
+CLASS B (B ) [9:1/151-16:28/347] lcurly=158 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF xxx  [10:5/164-10:21/180] TYPE: int TEXT=int  [10:13/172-10:16/175] SCOPE: B 
+        FUNCTION boo [12:5/206-12:15/216] MethodImpl SCOPE: B 
+            DEFINITION: null
+            SIGNATURE boo()
+            UNIQUE NAME F:B::boo()
+            PARAMETERS:
+            RETURNS int TEXT=int  [12:5/206-12:8/209]
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION A2 [11:5/185-11:21/201] FriendClassImpl
+            REFERENCED CLASS: C:A2
+        FUNCTION DEFINITION moo2  [13:5/221-13:39/255] FriendFunctionDDImpl SCOPE: $Global$ 
+            SIGNATURE moo2(int)
+            UNIQUE NAME d:moo2(int)
+            DECLARATION: moo2  [1:1/0-1:15/14]
+            PARAMETERS:
+                 [13:21/237-13:24/240]  TYPE: int TEXT=int  [13:21/237-13:24/240]  INIT: null  SCOPE: moo2 
+            RETURNS int TEXT=int  [13:12/228-13:15/231]
+            STATEMENT COMPOUND  [13:26/242-13:39/255] SCOPE: moo2 
+                STATEMENT RETURN  [13:28/244-13:37/253] SCOPE: Stmt  [13:26/242-13:39/255] text: 'return 0;'
+        FUNCTION moo [14:5/261-14:25/281] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: moo  [2:1/15-2:24/38]
+            SIGNATURE moo(int)
+            UNIQUE NAME D:moo(int)
+            REFERENCED FRIEND FUNCTION: moo  [2:1/15-2:24/38]
+            PARAMETERS:
+                 [14:20/276-14:23/279]  TYPE: int TEXT=int  [14:20/276-14:23/279]  INIT: null  SCOPE: moo 
+            RETURNS int TEXT=int  [14:12/268-14:15/271]
+        FUNCTION DEFINITION soo  [15:5/286-15:38/319] FriendFunctionDefinitionImpl SCOPE: friend.cc
+            SIGNATURE soo()
+            UNIQUE NAME d:S2::soo()
+            DECLARATION: soo  [4:5/56-4:15/66]
+            PARAMETERS:
+            RETURNS int TEXT=int  [15:12/293-15:15/296]
+            STATEMENT COMPOUND  [15:25/306-15:38/319] SCOPE: soo 
+                STATEMENT RETURN  [15:27/308-15:36/317] SCOPE: Stmt  [15:25/306-15:38/319] text: 'return 0;'
+        FUNCTION soo2 [16:5/324-16:27/346] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: soo2  [5:5/71-5:26/92]
+            SIGNATURE soo2()
+            UNIQUE NAME D:S2::soo2()
+            REFERENCED FRIEND FUNCTION: soo2  [5:5/71-5:26/92]
+            PARAMETERS:
+            RETURNS int TEXT=int  [16:12/331-16:15/334]
+CLASS_FORWARD_DECLARATION A2 [11:5/185-11:21/201]
+FUNCTION DEFINITION moo2  [13:5/221-13:39/255] FriendFunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE moo2(int)
+    UNIQUE NAME d:moo2(int)
+    DECLARATION: moo2  [1:1/0-1:15/14]
+    PARAMETERS:
+         [13:21/237-13:24/240]  TYPE: int TEXT=int  [13:21/237-13:24/240]  INIT: null  SCOPE: moo2 
+    RETURNS int TEXT=int  [13:12/228-13:15/231]
+    STATEMENT COMPOUND  [13:26/242-13:39/255] SCOPE: moo2 
+        STATEMENT RETURN  [13:28/244-13:37/253] SCOPE: Stmt  [13:26/242-13:39/255] text: 'return 0;'
+FUNCTION moo [14:5/261-14:25/281] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: moo  [2:1/15-2:24/38]
+    SIGNATURE moo(int)
+    UNIQUE NAME D:moo(int)
+    REFERENCED FRIEND FUNCTION: moo  [2:1/15-2:24/38]
+    PARAMETERS:
+         [14:20/276-14:23/279]  TYPE: int TEXT=int  [14:20/276-14:23/279]  INIT: null  SCOPE: moo 
+    RETURNS int TEXT=int  [14:12/268-14:15/271]
+

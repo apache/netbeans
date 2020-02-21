@@ -1,0 +1,58 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE constructorInitializerListScope.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT AAA (AAA ) [1:1/0-9:2/111] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF category  [3:5/26-3:26/47] TYPE: int TEXT=int  [3:13/34-3:16/37] SCOPE: AAA 
+        FIELD PUBLIC field1 [5:5/57-5:21/73]  TYPE: AAA::category TEXT=category  [5:5/57-5:13/65]  INIT: null  SCOPE: AAA 
+        FIELD PUBLIC field2 [5:5/57-5:29/81]  TYPE: AAA::category TEXT=category  [5:5/57-5:13/65]  INIT: null  SCOPE: AAA 
+        FUNCTION AAA [7:5/87-7:18/100] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [11:1/114-11:74/187]
+            SIGNATURE AAA(int)
+            UNIQUE NAME F:AAA::AAA(int)
+            PARAMETERS:
+                cat [7:9/91-7:16/98]  TYPE: int TEXT=int  [7:9/91-7:12/94]  INIT: null  SCOPE: AAA 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION AAA  [11:1/114-11:74/187] ConstructorDefinitionImpl SCOPE: constructorInitializerListScope.cpp
+    SIGNATURE AAA(int)
+    UNIQUE NAME f:AAA::AAA(int)
+    DECLARATION: AAA  [7:5/87-7:18/100]
+    PARAMETERS:
+        cat [11:10/123-11:17/130]  TYPE: int TEXT=int  [11:10/123-11:13/126]  INIT: null  SCOPE: AAA 
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [11:72/185-11:74/187] SCOPE: AAA 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT AAA (AAA ) [1:1/0-9:2/111] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF category  [3:5/26-3:26/47] TYPE: int TEXT=int  [3:13/34-3:16/37] SCOPE: AAA 
+        FIELD PUBLIC field1 [5:5/57-5:21/73]  TYPE: AAA::category TEXT=category  [5:5/57-5:13/65]  INIT: null  SCOPE: AAA 
+        FIELD PUBLIC field2 [5:5/57-5:29/81]  TYPE: AAA::category TEXT=category  [5:5/57-5:13/65]  INIT: null  SCOPE: AAA 
+        FUNCTION AAA [7:5/87-7:18/100] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [11:1/114-11:74/187]
+            SIGNATURE AAA(int)
+            UNIQUE NAME F:AAA::AAA(int)
+            PARAMETERS:
+                cat [7:9/91-7:16/98]  TYPE: int TEXT=int  [7:9/91-7:12/94]  INIT: null  SCOPE: AAA 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION AAA  [11:1/114-11:74/187] ConstructorDefinitionImpl SCOPE: constructorInitializerListScope.cpp
+    SIGNATURE AAA(int)
+    UNIQUE NAME f:AAA::AAA(int)
+    DECLARATION: AAA  [7:5/87-7:18/100]
+    PARAMETERS:
+        cat [11:10/123-11:17/130]  TYPE: int TEXT=int  [11:10/123-11:13/126]  INIT: null  SCOPE: AAA 
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [11:72/185-11:74/187] SCOPE: AAA 
+

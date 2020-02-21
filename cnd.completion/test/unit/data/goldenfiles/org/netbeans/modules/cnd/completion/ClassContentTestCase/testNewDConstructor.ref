@@ -1,0 +1,9 @@
+argc int	$	    new D(argc
+argv char**	$	    new D(argv
+d D	$	    new D(d
+f F	$	    new D(f
+pD D*	$	    new D(pD
+D	$	    new D(D
+E	$	    new D(E
+F	$	    new D(F
+main(int argc, char** argv) int	$	    new D(main()

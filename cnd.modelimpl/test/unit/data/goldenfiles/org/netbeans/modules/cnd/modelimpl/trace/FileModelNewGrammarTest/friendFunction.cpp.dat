@@ -1,0 +1,59 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE friendFunction.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS AAA (AAA ) [1:1/0-3:2/36] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION foo [2:5/16-2:23/34] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: foo  [5:1/39-6:2/53]
+            SIGNATURE foo()
+            UNIQUE NAME D:foo()
+            REFERENCED FRIEND FUNCTION: foo  [5:1/39-6:2/53]
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:12/23-2:16/27]
+FUNCTION DEFINITION foo  [5:1/39-6:2/53] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:5/16-2:23/34]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/39-5:5/43]
+    STATEMENT COMPOUND  [5:12/50-6:2/53] SCOPE: foo 
+
+========== Dumping model of PROJECT DummyProject
+CLASS AAA (AAA ) [1:1/0-3:2/36] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION foo [2:5/16-2:23/34] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: foo  [5:1/39-6:2/53]
+            SIGNATURE foo()
+            UNIQUE NAME D:foo()
+            REFERENCED FRIEND FUNCTION: foo  [5:1/39-6:2/53]
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:12/23-2:16/27]
+FUNCTION foo [2:5/16-2:23/34] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: foo  [5:1/39-6:2/53]
+    SIGNATURE foo()
+    UNIQUE NAME D:foo()
+    REFERENCED FRIEND FUNCTION: foo  [5:1/39-6:2/53]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:12/23-2:16/27]
+FUNCTION DEFINITION foo  [5:1/39-6:2/53] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:5/16-2:23/34]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/39-5:5/43]
+    STATEMENT COMPOUND  [5:12/50-6:2/53] SCOPE: foo 
+

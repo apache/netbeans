@@ -1,0 +1,38 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE classForwardScope.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT AAA (AAA ) [2:1/1-5:2/49] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF category  [4:5/21-4:26/42] TYPE: int TEXT=int  [4:13/29-4:16/32] SCOPE: AAA 
+STRUCT BBB (BBB ) [7:1/52-11:2/116] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC var [10:5/96-10:23/114]  TYPE: AAA::category TEXT=AAA::category  [10:5/96-10:18/109]  INIT: null  SCOPE: BBB 
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION AAA [8:5/69-8:21/85] FriendClassImpl
+            REFERENCED CLASS: S:AAA
+
+========== Dumping model of PROJECT DummyProject
+STRUCT AAA (AAA ) [2:1/1-5:2/49] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF category  [4:5/21-4:26/42] TYPE: int TEXT=int  [4:13/29-4:16/32] SCOPE: AAA 
+STRUCT BBB (BBB ) [7:1/52-11:2/116] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC var [10:5/96-10:23/114]  TYPE: AAA::category TEXT=AAA::category  [10:5/96-10:18/109]  INIT: null  SCOPE: BBB 
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION AAA [8:5/69-8:21/85] FriendClassImpl
+            REFERENCED CLASS: S:AAA
+

@@ -1,0 +1,73 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 5):
+<U>#define '["M1",<ID>,line=14,col=9],offset=350,file=null'='["hi",<ID>,line=14,col=12],offset=353,file=null'
+<U>#define '["M2",<ID>,line=9,col=9],offset=277,file=null'='["heh",<ID>,line=9,col=12],offset=280,file=null'
+<U>#define '["M3",<ID>,line=21,col=9],offset=460,file=null'='["heh2",<ID>,line=21,col=12],offset=463,file=null'
+<U>#define '["YY_PROTO",<ID>,line=1,col=9],offset=8,file=null[["proto",<ID>,line=1,col=18],offset=17,file=null]'='["proto",<ID>,line=1,col=25],offset=24,file=null'
+<U>#define '["_HI_",<ID>,line=7,col=9],offset=217,file=null'='["7",<DECIMALINT>,line=7,col=14],offset=222,file=null ["+",<PLUS>,line=7,col=15],offset=223,file=null ["5",<DECIMALINT>,line=7,col=16],offset=224,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE ppExpression.cpp
+Includes:
+    <no includes>
+Macros:
+#define 'M1' [14:1/342-14:14/355]
+#define 'M2' [9:1/269-9:15/283]
+#define 'M3' [21:1/452-21:16/467]
+#define 'YY_PROTO[proto]' [1:1/0-1:30/29]
+#define '_HI_' [7:1/209-7:17/225]
+FUNCTION yyrestart [2:1/30-2:47/76] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE yyrestart(FILE*)
+    UNIQUE NAME F:yyrestart(FILE*)
+    PARAMETERS:
+        input_file [2:16/45-2:46/75]  TYPE: *$unresolved$::FILE TEXT=FILE*  [2:16/45-2:46/75]  INIT: null  SCOPE: yyrestart 
+    RETURNS void TEXT=void  [2:1/30-2:5/34]
+FUNCTION yy_create_buffer [3:1/77-3:69/145] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE yy_create_buffer(FILE*,int)
+    UNIQUE NAME F:yy_create_buffer(FILE*,int)
+    PARAMETERS:
+        file [3:34/110-3:68/144]  TYPE: *$unresolved$::FILE TEXT=FILE*  [3:34/110-3:68/144]  INIT: null  SCOPE: yy_create_buffer 
+        size [3:34/110-3:68/144]  TYPE: int TEXT=int  [3:34/110-3:68/144]  INIT: null  SCOPE: yy_create_buffer 
+    RETURNS $unresolved$::YY_BUFFER_STATE TEXT=YY_BUFFER_STATE  [3:1/77-3:16/92]
+FUNCTION DEFINITION hi  [26:1/478-29:2/507] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hi()
+    UNIQUE NAME f:hi()
+    DECLARATION: hi  [26:1/478-29:2/507]
+    PARAMETERS:
+    RETURNS void TEXT=void  [26:1/478-26:5/482]
+    STATEMENT COMPOUND  [26:11/488-29:2/507] SCOPE: hi 
+        STATEMENT EXPRESSION  [27:5/494-27:7/496] SCOPE: Stmt  [26:11/488-29:2/507] text: 'M2'
+        STATEMENT EXPRESSION  [28:5/502-28:7/504] SCOPE: Stmt  [26:11/488-29:2/507] text: 'M3'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION yyrestart [2:1/30-2:47/76] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE yyrestart(FILE*)
+    UNIQUE NAME F:yyrestart(FILE*)
+    PARAMETERS:
+        input_file [2:16/45-2:46/75]  TYPE: *$unresolved$::FILE TEXT=FILE*  [2:16/45-2:46/75]  INIT: null  SCOPE: yyrestart 
+    RETURNS void TEXT=void  [2:1/30-2:5/34]
+FUNCTION yy_create_buffer [3:1/77-3:69/145] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE yy_create_buffer(FILE*,int)
+    UNIQUE NAME F:yy_create_buffer(FILE*,int)
+    PARAMETERS:
+        file [3:34/110-3:68/144]  TYPE: *$unresolved$::FILE TEXT=FILE*  [3:34/110-3:68/144]  INIT: null  SCOPE: yy_create_buffer 
+        size [3:34/110-3:68/144]  TYPE: int TEXT=int  [3:34/110-3:68/144]  INIT: null  SCOPE: yy_create_buffer 
+    RETURNS $unresolved$::YY_BUFFER_STATE TEXT=YY_BUFFER_STATE  [3:1/77-3:16/92]
+FUNCTION DEFINITION hi  [26:1/478-29:2/507] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hi()
+    UNIQUE NAME f:hi()
+    DECLARATION: hi  [26:1/478-29:2/507]
+    PARAMETERS:
+    RETURNS void TEXT=void  [26:1/478-26:5/482]
+    STATEMENT COMPOUND  [26:11/488-29:2/507] SCOPE: hi 
+        STATEMENT EXPRESSION  [27:5/494-27:7/496] SCOPE: Stmt  [26:11/488-29:2/507] text: 'M2'
+        STATEMENT EXPRESSION  [28:5/502-28:7/504] SCOPE: Stmt  [26:11/488-29:2/507] text: 'M3'
+

@@ -1,0 +1,13 @@
+Declaration function1 is not visible
+    Include directive is #include "header1.h"
+Declaration c is not visible
+    Include directive is #include "header1.h"
+Declaration externVar is not visible
+    Include directive is #include "header2.h"
+Declaration a is not visible
+    Include directive is #include "header2.h"
+Declaration localVar is visible
+Declaration externVar is visible
+Declaration function is visible
+Declaration main is not visible
+    Include directive was not found

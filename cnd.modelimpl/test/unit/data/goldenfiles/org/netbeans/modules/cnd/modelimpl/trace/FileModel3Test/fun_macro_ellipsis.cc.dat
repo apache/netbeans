@@ -1,0 +1,28 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 5):
+<U>#define '["MACRO1",<ID>,line=14,col=9],offset=344,file=null[["x",<ID>,line=14,col=16],offset=351,file=null, ["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["x",<ID>,line=14,col=25],offset=360,file=null ["->",<POINTERTO>,line=14,col=27],offset=362,file=null ["__VA_ARGS__",<ID>,line=14,col=30],offset=365,file=null'
+<U>#define '["MACRO2",<ID>,line=15,col=9],offset=385,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["__VA_ARGS__",<ID>,line=15,col=25],offset=401,file=null'
+<U>#define '["STR",<ID>,line=27,col=9],offset=641,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["#",<SHARP>,line=27,col=18],offset=650,file=null ["__VA_ARGS__",<ID>,line=27,col=19],offset=651,file=null'
+<U>#define '["__glibcxx_function_requires1",<ID>,line=1,col=9],offset=8,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'=''
+<U>#define '["__glibcxx_function_requires2",<ID>,line=3,col=9],offset=51,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["__gnu_cxx",<ID>,line=4,col=13],offset=131,file=null ["::",<SCOPE>,line=4,col=22],offset=140,file=null ["__function_requires",<ID>,line=4,col=24],offset=142,file=null ["<",<LESSTHAN>,line=4,col=43],offset=161,file=null ["__gnu_cxx",<ID>,line=4,col=45],offset=163,file=null ["::",<SCOPE>,line=4,col=54],offset=172,file=null ["__VA_ARGS__",<ID>,line=4,col=56],offset=174,file=null [">",<GREATERTHAN>,line=4,col=68],offset=186,file=null ["(",<LPAREN>,line=4,col=69],offset=187,file=null [")",<RPAREN>,line=4,col=70],offset=188,file=null [";",<SEMICOLON>,line=4,col=71],offset=189,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE fun_macro_ellipsis.cc
+Includes:
+    <no includes>
+Macros:
+#define 'MACRO1[x, __VA_ARGS__]' [14:1/336-14:41/376]
+#define 'MACRO2[__VA_ARGS__]' [15:1/377-15:36/412]
+#define 'STR[__VA_ARGS__]' [16:1/413-16:37/449]
+#define 'STR[__VA_ARGS__]' [27:1/633-27:30/662]
+#define '__glibcxx_function_requires1[__VA_ARGS__]' [1:1/0-1:37/36]
+#define '__glibcxx_function_requires2[__VA_ARGS__]' [3:1/43-4:72/190]
+VARIABLE i [6:1/192-6:47/238]  TYPE: int TEXT=int  [6:1/192-6:4/195]  INIT: text='__glibcxx_function_requires2(A::B::C)'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE i [6:1/192-6:47/238]  TYPE: int TEXT=int  [6:1/192-6:4/195]  INIT: text='__glibcxx_function_requires2(A::B::C)'  SCOPE: $Global$ 
+

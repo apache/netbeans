@@ -1,0 +1,6 @@
+${origin}/incomplete_string.cc:14:11: warning: missing terminating ' character
+ char c = 'asdfasdf
+          ^
+${origin}/incomplete_string.cc:14:11: warning: missing terminating ' character
+ char c = 'asdfasdf
+          ^

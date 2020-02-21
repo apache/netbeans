@@ -1,0 +1,66 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug241017.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug241017 [1:1/0-11:2/195] SCOPE: bug241017.cpp
+    STRUCT A241017 (bug241017::A241017 ) [2:5/26-4:6/74] lcurly=41 SCOPE: bug241017 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION A241017  [3:9/51-3:26/68] ConstructorDDImpl SCOPE: A241017 
+                SIGNATURE A241017(int)
+                UNIQUE NAME f:bug241017::A241017::A241017(int)
+                DECLARATION: A241017  [3:9/51-3:26/68]
+                PARAMETERS:
+                    x [3:17/59-3:22/64]  TYPE: int TEXT=int  [3:17/59-3:20/62]  INIT: null  SCOPE: A241017 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:24/66-3:26/68] SCOPE: A241017 
+    FUNCTION DEFINITION main241017  [6:5/81-10:6/193] FunctionDDImpl SCOPE: bug241017 
+        SIGNATURE main241017()
+        UNIQUE NAME f:bug241017::main241017()
+        DECLARATION: main241017  [6:5/81-10:6/193]
+        PARAMETERS:
+        RETURNS int TEXT=int  [6:5/81-6:8/84]
+        STATEMENT COMPOUND  [6:22/98-10:6/193] SCOPE: main241017 
+            STATEMENT DECLARATION  [7:9/108-7:19/118] SCOPE: Stmt  [6:22/98-10:6/193]
+                VARIABLE a [7:9/108-7:19/118]  TYPE: int TEXT=int  [7:9/108-7:12/111]  INIT: text='1'  SCOPE: Stmt  [6:22/98-10:6/193]
+            STATEMENT DECLARATION  [8:9/127-8:50/168] SCOPE: Stmt  [6:22/98-10:6/193]
+                VARIABLE ap [8:9/127-8:50/168]  TYPE: *bug241017::A241017 TEXT=A241017*  [8:9/127-8:17/135]  INIT: text='new A241017[4]{a, a, a, a}'  SCOPE: Stmt  [6:22/98-10:6/193]
+            STATEMENT RETURN  [9:9/178-9:18/187] SCOPE: Stmt  [6:22/98-10:6/193] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug241017 (bug241017) 
+    bug241017.cpp  [1:1/0-11:2/195]
+NAMESPACE bug241017 (bug241017) 
+    STRUCT A241017 (bug241017::A241017 ) [2:5/26-4:6/74] lcurly=41 SCOPE: bug241017 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION A241017  [3:9/51-3:26/68] ConstructorDDImpl SCOPE: A241017 
+                SIGNATURE A241017(int)
+                UNIQUE NAME f:bug241017::A241017::A241017(int)
+                DECLARATION: A241017  [3:9/51-3:26/68]
+                PARAMETERS:
+                    x [3:17/59-3:22/64]  TYPE: int TEXT=int  [3:17/59-3:20/62]  INIT: null  SCOPE: A241017 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:24/66-3:26/68] SCOPE: A241017 
+    FUNCTION DEFINITION main241017  [6:5/81-10:6/193] FunctionDDImpl SCOPE: bug241017 
+        SIGNATURE main241017()
+        UNIQUE NAME f:bug241017::main241017()
+        DECLARATION: main241017  [6:5/81-10:6/193]
+        PARAMETERS:
+        RETURNS int TEXT=int  [6:5/81-6:8/84]
+        STATEMENT COMPOUND  [6:22/98-10:6/193] SCOPE: main241017 
+            STATEMENT DECLARATION  [7:9/108-7:19/118] SCOPE: Stmt  [6:22/98-10:6/193]
+                VARIABLE a [7:9/108-7:19/118]  TYPE: int TEXT=int  [7:9/108-7:12/111]  INIT: text='1'  SCOPE: Stmt  [6:22/98-10:6/193]
+            STATEMENT DECLARATION  [8:9/127-8:50/168] SCOPE: Stmt  [6:22/98-10:6/193]
+                VARIABLE ap [8:9/127-8:50/168]  TYPE: *bug241017::A241017 TEXT=A241017*  [8:9/127-8:17/135]  INIT: text='new A241017[4]{a, a, a, a}'  SCOPE: Stmt  [6:22/98-10:6/193]
+            STATEMENT RETURN  [9:9/178-9:18/187] SCOPE: Stmt  [6:22/98-10:6/193] text: 'return 0;'
+

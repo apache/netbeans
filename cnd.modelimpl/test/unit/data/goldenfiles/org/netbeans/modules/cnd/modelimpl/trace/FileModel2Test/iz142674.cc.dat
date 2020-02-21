@@ -1,0 +1,130 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz142674.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION iz142674_foo  [2:1/1-8:2/88] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz142674_foo()
+    UNIQUE NAME f:iz142674_foo()
+    DECLARATION: iz142674_foo  [2:1/1-8:2/88]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:21/21-8:2/88] SCOPE: iz142674_foo 
+        STATEMENT TRY_CATCH  [2:21/21-8:2/88] SCOPE: Stmt  [2:21/21-8:2/88]
+            TRY:
+            STATEMENT COMPOUND  [2:25/25-6:2/61] SCOPE: Stmt  [2:21/21-8:2/88]
+                STATEMENT DECLARATION  [3:5/31-3:11/37] SCOPE: Stmt  [2:25/25-6:2/61]
+                    VARIABLE k [3:5/31-3:11/37]  TYPE: int TEXT=int  [3:5/31-3:8/34]  INIT: null  SCOPE: Stmt  [2:25/25-6:2/61]
+                STATEMENT EXPRESSION  [4:5/42-4:8/45] SCOPE: Stmt  [2:25/25-6:2/61] text: 'k++'
+                STATEMENT EXPRESSION  [5:5/51-5:12/58] SCOPE: Stmt  [2:25/25-6:2/61] text: 'throw 1'
+            HANDLERS:
+            STATEMENT CATCH  [6:3/62-8:2/88] SCOPE: Stmt  [2:21/21-8:2/88]
+                PARAMETER: i [6:10/69-6:15/74]  TYPE: int TEXT=int  [6:10/69-6:13/72]  INIT: null  SCOPE: Stmt  [6:3/62-8:2/88]
+                STATEMENT EXPRESSION  [7:5/82-7:8/85] SCOPE: Stmt  [6:3/62-8:2/88] text: 'i++'
+STRUCT iz142674_C (iz142674_C ) [10:1/90-26:2/337] lcurly=108 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION iz142674_C  [11:5/114-17:6/218] ConstructorDDImpl SCOPE: iz142674_C 
+            SIGNATURE iz142674_C()
+            UNIQUE NAME f:iz142674_C::iz142674_C()
+            DECLARATION: iz142674_C  [11:5/114-17:6/218]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [11:18/127-17:6/218] SCOPE: iz142674_C 
+                STATEMENT TRY_CATCH  [11:18/127-17:6/218] SCOPE: Stmt  [11:18/127-17:6/218]
+                    TRY:
+                    STATEMENT COMPOUND  [11:22/131-15:6/183] SCOPE: Stmt  [11:18/127-17:6/218]
+                        STATEMENT DECLARATION  [12:9/141-12:15/147] SCOPE: Stmt  [11:22/131-15:6/183]
+                            VARIABLE k [12:9/141-12:15/147]  TYPE: int TEXT=int  [12:9/141-12:12/144]  INIT: null  SCOPE: Stmt  [11:22/131-15:6/183]
+                        STATEMENT EXPRESSION  [13:9/156-13:12/159] SCOPE: Stmt  [11:22/131-15:6/183] text: 'k++'
+                        STATEMENT EXPRESSION  [14:9/169-14:16/176] SCOPE: Stmt  [11:22/131-15:6/183] text: 'throw 1'
+                    HANDLERS:
+                    STATEMENT CATCH  [15:7/184-17:6/218] SCOPE: Stmt  [11:18/127-17:6/218]
+                        PARAMETER: i [15:14/191-15:19/196]  TYPE: int TEXT=int  [15:14/191-15:17/194]  INIT: null  SCOPE: Stmt  [15:7/184-17:6/218]
+                        STATEMENT EXPRESSION  [16:9/208-16:12/211] SCOPE: Stmt  [15:7/184-17:6/218] text: 'i++'
+        FUNCTION DEFINITION iz142674_foo  [19:5/224-25:6/335] MethodDDImpl SCOPE: iz142674_C 
+            SIGNATURE iz142674_foo()
+            UNIQUE NAME f:iz142674_C::iz142674_foo()
+            DECLARATION: iz142674_foo  [19:5/224-25:6/335]
+            PARAMETERS:
+            RETURNS void TEXT=void  [19:5/224-19:9/228]
+            STATEMENT COMPOUND  [19:25/244-25:6/335] SCOPE: iz142674_foo 
+                STATEMENT TRY_CATCH  [19:25/244-25:6/335] SCOPE: Stmt  [19:25/244-25:6/335]
+                    TRY:
+                    STATEMENT COMPOUND  [19:29/248-23:6/300] SCOPE: Stmt  [19:25/244-25:6/335]
+                        STATEMENT DECLARATION  [20:9/258-20:15/264] SCOPE: Stmt  [19:29/248-23:6/300]
+                            VARIABLE k [20:9/258-20:15/264]  TYPE: int TEXT=int  [20:9/258-20:12/261]  INIT: null  SCOPE: Stmt  [19:29/248-23:6/300]
+                        STATEMENT EXPRESSION  [21:9/273-21:12/276] SCOPE: Stmt  [19:29/248-23:6/300] text: 'k++'
+                        STATEMENT EXPRESSION  [22:9/286-22:16/293] SCOPE: Stmt  [19:29/248-23:6/300] text: 'throw 1'
+                    HANDLERS:
+                    STATEMENT CATCH  [23:7/301-25:6/335] SCOPE: Stmt  [19:25/244-25:6/335]
+                        PARAMETER: i [23:14/308-23:19/313]  TYPE: int TEXT=int  [23:14/308-23:17/311]  INIT: null  SCOPE: Stmt  [23:7/301-25:6/335]
+                        STATEMENT EXPRESSION  [24:9/325-24:12/328] SCOPE: Stmt  [23:7/301-25:6/335] text: 'i++'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION iz142674_foo  [2:1/1-8:2/88] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz142674_foo()
+    UNIQUE NAME f:iz142674_foo()
+    DECLARATION: iz142674_foo  [2:1/1-8:2/88]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:21/21-8:2/88] SCOPE: iz142674_foo 
+        STATEMENT TRY_CATCH  [2:21/21-8:2/88] SCOPE: Stmt  [2:21/21-8:2/88]
+            TRY:
+            STATEMENT COMPOUND  [2:25/25-6:2/61] SCOPE: Stmt  [2:21/21-8:2/88]
+                STATEMENT DECLARATION  [3:5/31-3:11/37] SCOPE: Stmt  [2:25/25-6:2/61]
+                    VARIABLE k [3:5/31-3:11/37]  TYPE: int TEXT=int  [3:5/31-3:8/34]  INIT: null  SCOPE: Stmt  [2:25/25-6:2/61]
+                STATEMENT EXPRESSION  [4:5/42-4:8/45] SCOPE: Stmt  [2:25/25-6:2/61] text: 'k++'
+                STATEMENT EXPRESSION  [5:5/51-5:12/58] SCOPE: Stmt  [2:25/25-6:2/61] text: 'throw 1'
+            HANDLERS:
+            STATEMENT CATCH  [6:3/62-8:2/88] SCOPE: Stmt  [2:21/21-8:2/88]
+                PARAMETER: i [6:10/69-6:15/74]  TYPE: int TEXT=int  [6:10/69-6:13/72]  INIT: null  SCOPE: Stmt  [6:3/62-8:2/88]
+                STATEMENT EXPRESSION  [7:5/82-7:8/85] SCOPE: Stmt  [6:3/62-8:2/88] text: 'i++'
+STRUCT iz142674_C (iz142674_C ) [10:1/90-26:2/337] lcurly=108 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION iz142674_C  [11:5/114-17:6/218] ConstructorDDImpl SCOPE: iz142674_C 
+            SIGNATURE iz142674_C()
+            UNIQUE NAME f:iz142674_C::iz142674_C()
+            DECLARATION: iz142674_C  [11:5/114-17:6/218]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [11:18/127-17:6/218] SCOPE: iz142674_C 
+                STATEMENT TRY_CATCH  [11:18/127-17:6/218] SCOPE: Stmt  [11:18/127-17:6/218]
+                    TRY:
+                    STATEMENT COMPOUND  [11:22/131-15:6/183] SCOPE: Stmt  [11:18/127-17:6/218]
+                        STATEMENT DECLARATION  [12:9/141-12:15/147] SCOPE: Stmt  [11:22/131-15:6/183]
+                            VARIABLE k [12:9/141-12:15/147]  TYPE: int TEXT=int  [12:9/141-12:12/144]  INIT: null  SCOPE: Stmt  [11:22/131-15:6/183]
+                        STATEMENT EXPRESSION  [13:9/156-13:12/159] SCOPE: Stmt  [11:22/131-15:6/183] text: 'k++'
+                        STATEMENT EXPRESSION  [14:9/169-14:16/176] SCOPE: Stmt  [11:22/131-15:6/183] text: 'throw 1'
+                    HANDLERS:
+                    STATEMENT CATCH  [15:7/184-17:6/218] SCOPE: Stmt  [11:18/127-17:6/218]
+                        PARAMETER: i [15:14/191-15:19/196]  TYPE: int TEXT=int  [15:14/191-15:17/194]  INIT: null  SCOPE: Stmt  [15:7/184-17:6/218]
+                        STATEMENT EXPRESSION  [16:9/208-16:12/211] SCOPE: Stmt  [15:7/184-17:6/218] text: 'i++'
+        FUNCTION DEFINITION iz142674_foo  [19:5/224-25:6/335] MethodDDImpl SCOPE: iz142674_C 
+            SIGNATURE iz142674_foo()
+            UNIQUE NAME f:iz142674_C::iz142674_foo()
+            DECLARATION: iz142674_foo  [19:5/224-25:6/335]
+            PARAMETERS:
+            RETURNS void TEXT=void  [19:5/224-19:9/228]
+            STATEMENT COMPOUND  [19:25/244-25:6/335] SCOPE: iz142674_foo 
+                STATEMENT TRY_CATCH  [19:25/244-25:6/335] SCOPE: Stmt  [19:25/244-25:6/335]
+                    TRY:
+                    STATEMENT COMPOUND  [19:29/248-23:6/300] SCOPE: Stmt  [19:25/244-25:6/335]
+                        STATEMENT DECLARATION  [20:9/258-20:15/264] SCOPE: Stmt  [19:29/248-23:6/300]
+                            VARIABLE k [20:9/258-20:15/264]  TYPE: int TEXT=int  [20:9/258-20:12/261]  INIT: null  SCOPE: Stmt  [19:29/248-23:6/300]
+                        STATEMENT EXPRESSION  [21:9/273-21:12/276] SCOPE: Stmt  [19:29/248-23:6/300] text: 'k++'
+                        STATEMENT EXPRESSION  [22:9/286-22:16/293] SCOPE: Stmt  [19:29/248-23:6/300] text: 'throw 1'
+                    HANDLERS:
+                    STATEMENT CATCH  [23:7/301-25:6/335] SCOPE: Stmt  [19:25/244-25:6/335]
+                        PARAMETER: i [23:14/308-23:19/313]  TYPE: int TEXT=int  [23:14/308-23:17/311]  INIT: null  SCOPE: Stmt  [23:7/301-25:6/335]
+                        STATEMENT EXPRESSION  [24:9/325-24:12/328] SCOPE: Stmt  [23:7/301-25:6/335] text: 'i++'
+

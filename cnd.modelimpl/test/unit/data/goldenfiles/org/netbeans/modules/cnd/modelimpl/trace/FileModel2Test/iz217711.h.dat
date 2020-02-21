@@ -1,0 +1,25 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '[""org/netbeans/modules/cnd/modelimpl/trace/FileModel2Test/iz217711.h"",<STRING_LITERAL>,line=1,col=9],offset=8,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz217711.h
+Includes:
+"iz217711.h" [8:1/68-8:22/89]
+Macros:
+    <no macros>
+CLASS A217711 (A217711 ) [3:1/14-6:2/65] lcurly=27 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC tratatatata217711 [5:5/41-5:27/63]  TYPE: int TEXT=int  [5:5/41-5:8/44]  INIT: null  SCOPE: A217711 
+
+========== Dumping model of PROJECT DummyProject
+CLASS A217711 (A217711 ) [3:1/14-6:2/65] lcurly=27 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC tratatatata217711 [5:5/41-5:27/63]  TYPE: int TEXT=int  [5:5/41-5:8/44]  INIT: null  SCOPE: A217711 
+

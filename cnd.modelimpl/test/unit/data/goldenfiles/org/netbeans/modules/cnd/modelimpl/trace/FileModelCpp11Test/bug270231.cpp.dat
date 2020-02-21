@@ -1,0 +1,204 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug270231.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug270231 [1:1/0-44:2/918] SCOPE: bug270231.cpp
+    STRUCT AAA270231 (bug270231::AAA270231 ) [2:5/26-7:6/172] lcurly=43 SCOPE: bug270231 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA270231 [3:9/53-3:21/65] ConstructorImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE AAA270231()
+                UNIQUE NAME F:bug270231::AAA270231::AAA270231()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION AAA270231 [4:9/74-4:28/93] ConstructorImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE AAA270231(int)
+                UNIQUE NAME F:bug270231::AAA270231::AAA270231(int)
+                PARAMETERS:
+                    var [4:19/84-4:26/91]  TYPE: int TEXT=int  [4:19/84-4:22/87]  INIT: null  SCOPE: AAA270231 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION operator + [5:9/102-5:53/146] MethodImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE operator +(const AAA270231&)
+                UNIQUE NAME F:bug270231::AAA270231::operator +(const AAA270231&)
+                PARAMETERS:
+                    other [5:29/122-5:51/144]  TYPE: const &bug270231::AAA270231 TEXT=const AAA270231&  [5:29/122-5:46/139]  INIT: null  SCOPE: operator + 
+                RETURNS bug270231::AAA270231 TEXT=AAA270231  [5:9/102-5:18/111]
+            FUNCTION foo [6:9/155-6:20/166] MethodImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug270231::AAA270231::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [6:9/155-6:13/159]
+    FUNCTION DEFINITION check___typeof__  [9:5/179-19:6/430] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check___typeof__()
+        UNIQUE NAME f:bug270231::check___typeof__()
+        DECLARATION: check___typeof__  [9:5/179-19:6/430]
+        PARAMETERS:
+        RETURNS void TEXT=void  [9:5/179-9:9/183]
+        STATEMENT COMPOUND  [9:29/203-19:6/430] SCOPE: check___typeof__ 
+            STATEMENT DECLARATION  [10:9/214-10:21/226] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE a [10:9/214-10:21/226]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [10:9/214-10:18/223]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [11:9/235-11:25/251] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE c [11:9/235-11:25/251]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [11:9/235-11:22/248]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [12:9/261-12:33/285] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE d [12:9/261-12:33/285]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [12:9/261-12:30/282]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [13:9/294-13:35/320] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE e [13:9/294-13:35/320]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [13:9/294-13:32/317]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [14:9/330-14:29/350] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE g [14:9/330-14:29/350]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [14:9/330-14:26/347]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT EXPRESSION  [15:9/361-15:16/368] SCOPE: Stmt  [9:29/203-19:6/430] text: 'c.foo()'
+            STATEMENT EXPRESSION  [16:9/378-16:16/385] SCOPE: Stmt  [9:29/203-19:6/430] text: 'd.foo()'
+            STATEMENT EXPRESSION  [17:9/397-17:16/404] SCOPE: Stmt  [9:29/203-19:6/430] text: 'e.foo()'
+            STATEMENT EXPRESSION  [18:9/416-18:16/423] SCOPE: Stmt  [9:29/203-19:6/430] text: 'g.foo()'
+    FUNCTION DEFINITION check___typeof  [21:5/438-31:6/679] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check___typeof()
+        UNIQUE NAME f:bug270231::check___typeof()
+        DECLARATION: check___typeof  [21:5/438-31:6/679]
+        PARAMETERS:
+        RETURNS void TEXT=void  [21:5/438-21:9/442]
+        STATEMENT COMPOUND  [21:27/460-31:6/679] SCOPE: check___typeof 
+            STATEMENT DECLARATION  [22:9/471-22:21/483] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE a [22:9/471-22:21/483]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [22:9/471-22:18/480]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [23:9/492-23:23/506] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE c [23:9/492-23:23/506]  TYPE: bug270231::AAA270231 TEXT=__typeof  [23:9/492-23:20/503]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [24:9/516-24:31/538] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE d [24:9/516-24:31/538]  TYPE: bug270231::AAA270231 TEXT=__typeof  [24:9/516-24:28/535]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [25:9/547-25:33/571] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE e [25:9/547-25:33/571]  TYPE: bug270231::AAA270231 TEXT=__typeof  [25:9/547-25:30/568]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [26:9/581-26:27/599] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE g [26:9/581-26:27/599]  TYPE: bug270231::AAA270231 TEXT=__typeof  [26:9/581-26:24/596]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT EXPRESSION  [27:9/610-27:16/617] SCOPE: Stmt  [21:27/460-31:6/679] text: 'c.foo()'
+            STATEMENT EXPRESSION  [28:9/627-28:16/634] SCOPE: Stmt  [21:27/460-31:6/679] text: 'd.foo()'
+            STATEMENT EXPRESSION  [29:9/646-29:16/653] SCOPE: Stmt  [21:27/460-31:6/679] text: 'e.foo()'
+            STATEMENT EXPRESSION  [30:9/665-30:16/672] SCOPE: Stmt  [21:27/460-31:6/679] text: 'g.foo()'
+    FUNCTION DEFINITION check_typeof  [33:5/685-43:6/916] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check_typeof()
+        UNIQUE NAME f:bug270231::check_typeof()
+        DECLARATION: check_typeof  [33:5/685-43:6/916]
+        PARAMETERS:
+        RETURNS void TEXT=void  [33:5/685-33:9/689]
+        STATEMENT COMPOUND  [33:25/705-43:6/916] SCOPE: check_typeof 
+            STATEMENT DECLARATION  [34:9/716-34:21/728] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE a [34:9/716-34:21/728]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [34:9/716-34:18/725]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [35:9/737-35:21/749] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE c [35:9/737-35:21/749]  TYPE: bug270231::AAA270231 TEXT=typeof  [35:9/737-35:18/746]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [36:9/759-36:29/779] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE d [36:9/759-36:29/779]  TYPE: bug270231::AAA270231 TEXT=typeof  [36:9/759-36:26/776]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [37:9/788-37:31/810] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE e [37:9/788-37:31/810]  TYPE: bug270231::AAA270231 TEXT=typeof  [37:9/788-37:28/807]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [38:9/820-38:25/836] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE g [38:9/820-38:25/836]  TYPE: bug270231::AAA270231 TEXT=typeof  [38:9/820-38:22/833]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT EXPRESSION  [39:9/847-39:16/854] SCOPE: Stmt  [33:25/705-43:6/916] text: 'c.foo()'
+            STATEMENT EXPRESSION  [40:9/864-40:16/871] SCOPE: Stmt  [33:25/705-43:6/916] text: 'd.foo()'
+            STATEMENT EXPRESSION  [41:9/883-41:16/890] SCOPE: Stmt  [33:25/705-43:6/916] text: 'e.foo()'
+            STATEMENT EXPRESSION  [42:9/902-42:16/909] SCOPE: Stmt  [33:25/705-43:6/916] text: 'g.foo()'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug270231 (bug270231) 
+    bug270231.cpp  [1:1/0-44:2/918]
+NAMESPACE bug270231 (bug270231) 
+    STRUCT AAA270231 (bug270231::AAA270231 ) [2:5/26-7:6/172] lcurly=43 SCOPE: bug270231 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA270231 [3:9/53-3:21/65] ConstructorImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE AAA270231()
+                UNIQUE NAME F:bug270231::AAA270231::AAA270231()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION AAA270231 [4:9/74-4:28/93] ConstructorImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE AAA270231(int)
+                UNIQUE NAME F:bug270231::AAA270231::AAA270231(int)
+                PARAMETERS:
+                    var [4:19/84-4:26/91]  TYPE: int TEXT=int  [4:19/84-4:22/87]  INIT: null  SCOPE: AAA270231 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION operator + [5:9/102-5:53/146] MethodImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE operator +(const AAA270231&)
+                UNIQUE NAME F:bug270231::AAA270231::operator +(const AAA270231&)
+                PARAMETERS:
+                    other [5:29/122-5:51/144]  TYPE: const &bug270231::AAA270231 TEXT=const AAA270231&  [5:29/122-5:46/139]  INIT: null  SCOPE: operator + 
+                RETURNS bug270231::AAA270231 TEXT=AAA270231  [5:9/102-5:18/111]
+            FUNCTION foo [6:9/155-6:20/166] MethodImpl SCOPE: AAA270231 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug270231::AAA270231::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [6:9/155-6:13/159]
+    FUNCTION DEFINITION check___typeof__  [9:5/179-19:6/430] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check___typeof__()
+        UNIQUE NAME f:bug270231::check___typeof__()
+        DECLARATION: check___typeof__  [9:5/179-19:6/430]
+        PARAMETERS:
+        RETURNS void TEXT=void  [9:5/179-9:9/183]
+        STATEMENT COMPOUND  [9:29/203-19:6/430] SCOPE: check___typeof__ 
+            STATEMENT DECLARATION  [10:9/214-10:21/226] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE a [10:9/214-10:21/226]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [10:9/214-10:18/223]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [11:9/235-11:25/251] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE c [11:9/235-11:25/251]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [11:9/235-11:22/248]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [12:9/261-12:33/285] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE d [12:9/261-12:33/285]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [12:9/261-12:30/282]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [13:9/294-13:35/320] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE e [13:9/294-13:35/320]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [13:9/294-13:32/317]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT DECLARATION  [14:9/330-14:29/350] SCOPE: Stmt  [9:29/203-19:6/430]
+                VARIABLE g [14:9/330-14:29/350]  TYPE: bug270231::AAA270231 TEXT=__typeof__  [14:9/330-14:26/347]  INIT: null  SCOPE: Stmt  [9:29/203-19:6/430]
+            STATEMENT EXPRESSION  [15:9/361-15:16/368] SCOPE: Stmt  [9:29/203-19:6/430] text: 'c.foo()'
+            STATEMENT EXPRESSION  [16:9/378-16:16/385] SCOPE: Stmt  [9:29/203-19:6/430] text: 'd.foo()'
+            STATEMENT EXPRESSION  [17:9/397-17:16/404] SCOPE: Stmt  [9:29/203-19:6/430] text: 'e.foo()'
+            STATEMENT EXPRESSION  [18:9/416-18:16/423] SCOPE: Stmt  [9:29/203-19:6/430] text: 'g.foo()'
+    FUNCTION DEFINITION check___typeof  [21:5/438-31:6/679] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check___typeof()
+        UNIQUE NAME f:bug270231::check___typeof()
+        DECLARATION: check___typeof  [21:5/438-31:6/679]
+        PARAMETERS:
+        RETURNS void TEXT=void  [21:5/438-21:9/442]
+        STATEMENT COMPOUND  [21:27/460-31:6/679] SCOPE: check___typeof 
+            STATEMENT DECLARATION  [22:9/471-22:21/483] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE a [22:9/471-22:21/483]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [22:9/471-22:18/480]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [23:9/492-23:23/506] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE c [23:9/492-23:23/506]  TYPE: bug270231::AAA270231 TEXT=__typeof  [23:9/492-23:20/503]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [24:9/516-24:31/538] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE d [24:9/516-24:31/538]  TYPE: bug270231::AAA270231 TEXT=__typeof  [24:9/516-24:28/535]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [25:9/547-25:33/571] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE e [25:9/547-25:33/571]  TYPE: bug270231::AAA270231 TEXT=__typeof  [25:9/547-25:30/568]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT DECLARATION  [26:9/581-26:27/599] SCOPE: Stmt  [21:27/460-31:6/679]
+                VARIABLE g [26:9/581-26:27/599]  TYPE: bug270231::AAA270231 TEXT=__typeof  [26:9/581-26:24/596]  INIT: null  SCOPE: Stmt  [21:27/460-31:6/679]
+            STATEMENT EXPRESSION  [27:9/610-27:16/617] SCOPE: Stmt  [21:27/460-31:6/679] text: 'c.foo()'
+            STATEMENT EXPRESSION  [28:9/627-28:16/634] SCOPE: Stmt  [21:27/460-31:6/679] text: 'd.foo()'
+            STATEMENT EXPRESSION  [29:9/646-29:16/653] SCOPE: Stmt  [21:27/460-31:6/679] text: 'e.foo()'
+            STATEMENT EXPRESSION  [30:9/665-30:16/672] SCOPE: Stmt  [21:27/460-31:6/679] text: 'g.foo()'
+    FUNCTION DEFINITION check_typeof  [33:5/685-43:6/916] FunctionDDImpl SCOPE: bug270231 
+        SIGNATURE check_typeof()
+        UNIQUE NAME f:bug270231::check_typeof()
+        DECLARATION: check_typeof  [33:5/685-43:6/916]
+        PARAMETERS:
+        RETURNS void TEXT=void  [33:5/685-33:9/689]
+        STATEMENT COMPOUND  [33:25/705-43:6/916] SCOPE: check_typeof 
+            STATEMENT DECLARATION  [34:9/716-34:21/728] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE a [34:9/716-34:21/728]  TYPE: bug270231::AAA270231 TEXT=AAA270231  [34:9/716-34:18/725]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [35:9/737-35:21/749] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE c [35:9/737-35:21/749]  TYPE: bug270231::AAA270231 TEXT=typeof  [35:9/737-35:18/746]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [36:9/759-36:29/779] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE d [36:9/759-36:29/779]  TYPE: bug270231::AAA270231 TEXT=typeof  [36:9/759-36:26/776]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [37:9/788-37:31/810] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE e [37:9/788-37:31/810]  TYPE: bug270231::AAA270231 TEXT=typeof  [37:9/788-37:28/807]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT DECLARATION  [38:9/820-38:25/836] SCOPE: Stmt  [33:25/705-43:6/916]
+                VARIABLE g [38:9/820-38:25/836]  TYPE: bug270231::AAA270231 TEXT=typeof  [38:9/820-38:22/833]  INIT: null  SCOPE: Stmt  [33:25/705-43:6/916]
+            STATEMENT EXPRESSION  [39:9/847-39:16/854] SCOPE: Stmt  [33:25/705-43:6/916] text: 'c.foo()'
+            STATEMENT EXPRESSION  [40:9/864-40:16/871] SCOPE: Stmt  [33:25/705-43:6/916] text: 'd.foo()'
+            STATEMENT EXPRESSION  [41:9/883-41:16/890] SCOPE: Stmt  [33:25/705-43:6/916] text: 'e.foo()'
+            STATEMENT EXPRESSION  [42:9/902-42:16/909] SCOPE: Stmt  [33:25/705-43:6/916] text: 'g.foo()'
+

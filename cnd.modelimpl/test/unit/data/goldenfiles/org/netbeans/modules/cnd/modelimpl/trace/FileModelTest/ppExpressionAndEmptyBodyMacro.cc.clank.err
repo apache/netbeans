@@ -1,0 +1,3 @@
+${origin}/ppExpressionAndEmptyBodyMacro.cc:4:9: error: invalid token at start of a preprocessor expression
+#if !(A || B || C)
+        ^

@@ -1,0 +1,28 @@
+${origin}/iz201806.cc:4:6: warning: extra tokens at end of #else directive
+#else;
+     ^
+     //
+${origin}/iz201806.cc:6:7: warning: extra tokens at end of #endif directive
+#endif.
+      ^
+      //
+${origin}/iz201806.cc:8:19: error: macro name must be an identifier
+#define/*comment*/.
+                  ^
+${origin}/iz201806.cc:10:7: error: macro name must be an identifier
+#undef,//comment
+      ^
+${origin}/iz201806.cc:12:18: error: macro name must be an identifier
+#ifdef/*comment*/?
+                 ^
+${origin}/iz201806.cc:16:7: warning: extra tokens at end of #endif directive
+#endif:
+      ^
+      //
+${origin}/iz201806.cc:18:19: error: macro name must be an identifier
+#ifndef/*comment*/-
+                  ^
+${origin}/iz201806.cc:20:7: warning: extra tokens at end of #endif directive
+#endif+
+      ^
+      //

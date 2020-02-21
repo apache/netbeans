@@ -1,0 +1,4 @@
+bPub int	$	    d.bPub
+dPub int	$	    d.dPub
+bPubFun() void	$	    d.bPubFun()
+dPubFun() void	$	    d.dPubFun()

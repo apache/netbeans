@@ -1,0 +1,9 @@
+4 enterDirectory { depth: 1; dir: /cygdrive/c/Documents and Settings/tichy.UC/Dokumenty/NetBeansProjects/ticketman }
+5 changeDirectory { dir: C\:/cvshome/ifpappsw/aplikace/ticketman/make/linux }
+6 enterDirectory { depth: 2; dir: /cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux }
+7 enterDirectory { depth: 3; dir: /cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux }
+14 error { file: ../../src/ticketman.cpp; line: 41 }
+15 error { file: ../../src/ticketman.cpp; line: 41 }
+18 leaveDirectory { depth: 3; dir: /cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux }
+20 leaveDirectory { depth: 2; dir: /cygdrive/c/cvshome/ifpappsw/aplikace/ticketman/make/linux }
+22 leaveDirectory { depth: 1; dir: /cygdrive/c/Documents and Settings/tichy.UC/Dokumenty/NetBeansProjects/ticketman }

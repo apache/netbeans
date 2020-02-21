@@ -1,0 +1,3 @@
+b251256(int smth) void	$	    ::b251256()
+b251256(char smth) void	$	    ::b251256()
+b251256(bool smth) void	$	    ::b251256()

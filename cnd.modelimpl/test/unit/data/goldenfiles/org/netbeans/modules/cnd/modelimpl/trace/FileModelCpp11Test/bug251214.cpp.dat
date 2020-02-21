@@ -1,0 +1,184 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug251214.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug251214 [1:1/0-36:2/872] SCOPE: bug251214.cpp
+    STRUCT AAA251214 (bug251214::AAA251214 ) [2:5/26-4:6/83] lcurly=43 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA251214 [3:9/53-3:33/77] ConstructorImpl SCOPE: AAA251214 
+                DEFINITION: null
+                SIGNATURE AAA251214(int,int)
+                UNIQUE NAME F:bug251214::AAA251214::AAA251214(int,int)
+                PARAMETERS:
+                    a [3:19/63-3:24/68]  TYPE: int TEXT=int  [3:19/63-3:22/66]  INIT: null  SCOPE: AAA251214 
+                    b [3:26/70-3:31/75]  TYPE: int TEXT=int  [3:26/70-3:29/73]  INIT: null  SCOPE: AAA251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT BBB251214 (bug251214::BBB251214 ) [6:5/90-8:6/153] lcurly=107 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION BBB251214 [7:9/117-7:39/147] ConstructorImpl SCOPE: BBB251214 
+                DEFINITION: null
+                SIGNATURE BBB251214(int,AAA251214)
+                UNIQUE NAME F:bug251214::BBB251214::BBB251214(int,AAA251214)
+                PARAMETERS:
+                    a [7:19/127-7:24/132]  TYPE: int TEXT=int  [7:19/127-7:22/130]  INIT: null  SCOPE: BBB251214 
+                    b [7:26/134-7:37/145]  TYPE: bug251214::AAA251214 TEXT=AAA251214  [7:26/134-7:35/143]  INIT: null  SCOPE: BBB251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT CCC251214 (bug251214::CCC251214 ) [10:5/160-12:6/230] lcurly=177 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION CCC251214 [11:9/187-11:46/224] ConstructorImpl SCOPE: CCC251214 
+                DEFINITION: null
+                SIGNATURE CCC251214(int,BBB251214,int)
+                UNIQUE NAME F:bug251214::CCC251214::CCC251214(int,BBB251214,int)
+                PARAMETERS:
+                    x [11:19/197-11:24/202]  TYPE: int TEXT=int  [11:19/197-11:22/200]  INIT: null  SCOPE: CCC251214 
+                    y [11:26/204-11:37/215]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [11:26/204-11:35/213]  INIT: null  SCOPE: CCC251214 
+                    z [11:39/217-11:44/222]  TYPE: int TEXT=int  [11:39/217-11:42/220]  INIT: null  SCOPE: CCC251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT DDD251214 (bug251214::DDD251214 ) [14:5/241-19:6/383] lcurly=270 SCOPE: bug251214 
+        BASE CLASSES:
+            CLASS=bug251214::CCC251214 VISIBILITY==PUBLIC virtual==false text='CCC251214'
+        MEMBERS:
+            FIELD PUBLIC xx [15:9/280-15:16/287]  TYPE: int TEXT=int  [15:9/280-15:12/283]  INIT: null  SCOPE: DDD251214 
+            FUNCTION DEFINITION DDD251214  [16:9/296-18:10/377] ConstructorDDImpl SCOPE: DDD251214 
+                SIGNATURE DDD251214()
+                UNIQUE NAME f:bug251214::DDD251214::DDD251214()
+                DECLARATION: DDD251214  [16:9/296-18:10/377]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [16:59/346-18:10/377] SCOPE: DDD251214 
+                    STATEMENT EXPRESSION  [17:13/360-17:19/366] SCOPE: Stmt  [16:59/346-18:10/377] text: 'xx = 5'
+    FUNCTION funA251214 [21:5/390-21:41/426] FunctionImpl SCOPE: bug251214 
+        DEFINITION: null
+        SIGNATURE funA251214(BBB251214,int)
+        UNIQUE NAME F:bug251214::funA251214(BBB251214,int)
+        PARAMETERS:
+            x [21:21/406-21:32/417]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [21:21/406-21:30/415]  INIT: null  SCOPE: funA251214 
+            y [21:34/419-21:39/424]  TYPE: int TEXT=int  [21:34/419-21:37/422]  INIT: null  SCOPE: funA251214 
+        RETURNS void TEXT=void  [21:5/390-21:9/394]
+    FUNCTION funB251214 [23:5/432-23:41/468] FunctionImpl SCOPE: bug251214 
+        DEFINITION: null
+        SIGNATURE funB251214(int,BBB251214)
+        UNIQUE NAME F:bug251214::funB251214(int,BBB251214)
+        PARAMETERS:
+            x [23:21/448-23:26/453]  TYPE: int TEXT=int  [23:21/448-23:24/451]  INIT: null  SCOPE: funB251214 
+            y [23:28/455-23:39/466]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [23:28/455-23:37/464]  INIT: null  SCOPE: funB251214 
+        RETURNS void TEXT=void  [23:5/432-23:9/436]
+    VARIABLE testvar251214 [25:5/474-25:40/509]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [25:5/474-25:14/483]  INIT: null  SCOPE: bug251214 
+    VARIABLE ptestvar251214 [26:5/514-26:58/567]  TYPE: *bug251214::BBB251214 TEXT=BBB251214*  [26:5/514-26:16/525]  INIT: text='new BBB251214(1, {2, 3})'  SCOPE: bug251214 
+    FUNCTION DEFINITION foo  [28:5/573-35:6/870] FunctionDDImpl SCOPE: bug251214 
+        SIGNATURE foo()
+        UNIQUE NAME f:bug251214::foo()
+        DECLARATION: foo  [28:5/573-35:6/870]
+        PARAMETERS:
+        RETURNS int TEXT=int  [28:5/573-28:8/576]
+        STATEMENT COMPOUND  [28:15/583-35:6/870] SCOPE: foo 
+            STATEMENT DECLARATION  [29:9/593-29:39/623] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE testvar1 [29:9/593-29:39/623]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [29:9/593-29:18/602]  INIT: null  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [30:9/632-30:57/680] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE ptestvar1 [30:9/632-30:57/680]  TYPE: *bug251214::BBB251214 TEXT=BBB251214*  [30:9/632-30:20/643]  INIT: text='new BBB251214(1, {2, 3})'  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [31:9/689-31:47/727] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE testvar2 [31:9/689-31:47/727]  TYPE: bug251214::CCC251214 TEXT=CCC251214  [31:9/689-31:18/698]  INIT: null  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [32:9/736-32:65/792] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE ptestvar2 [32:9/736-32:65/792]  TYPE: *bug251214::CCC251214 TEXT=CCC251214*  [32:9/736-32:20/747]  INIT: text='new CCC251214(1, {1, {1, 2}}, 2)'  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT EXPRESSION  [33:9/801-33:35/827] SCOPE: Stmt  [28:15/583-35:6/870] text: 'funA251214({1, {2, 3}}, 1)'
+            STATEMENT EXPRESSION  [34:9/837-34:35/863] SCOPE: Stmt  [28:15/583-35:6/870] text: 'funB251214(1, {1, {2, 3}})'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug251214 (bug251214) 
+    bug251214.cpp  [1:1/0-36:2/872]
+NAMESPACE bug251214 (bug251214) 
+    STRUCT AAA251214 (bug251214::AAA251214 ) [2:5/26-4:6/83] lcurly=43 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA251214 [3:9/53-3:33/77] ConstructorImpl SCOPE: AAA251214 
+                DEFINITION: null
+                SIGNATURE AAA251214(int,int)
+                UNIQUE NAME F:bug251214::AAA251214::AAA251214(int,int)
+                PARAMETERS:
+                    a [3:19/63-3:24/68]  TYPE: int TEXT=int  [3:19/63-3:22/66]  INIT: null  SCOPE: AAA251214 
+                    b [3:26/70-3:31/75]  TYPE: int TEXT=int  [3:26/70-3:29/73]  INIT: null  SCOPE: AAA251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT BBB251214 (bug251214::BBB251214 ) [6:5/90-8:6/153] lcurly=107 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION BBB251214 [7:9/117-7:39/147] ConstructorImpl SCOPE: BBB251214 
+                DEFINITION: null
+                SIGNATURE BBB251214(int,AAA251214)
+                UNIQUE NAME F:bug251214::BBB251214::BBB251214(int,AAA251214)
+                PARAMETERS:
+                    a [7:19/127-7:24/132]  TYPE: int TEXT=int  [7:19/127-7:22/130]  INIT: null  SCOPE: BBB251214 
+                    b [7:26/134-7:37/145]  TYPE: bug251214::AAA251214 TEXT=AAA251214  [7:26/134-7:35/143]  INIT: null  SCOPE: BBB251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT CCC251214 (bug251214::CCC251214 ) [10:5/160-12:6/230] lcurly=177 SCOPE: bug251214 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION CCC251214 [11:9/187-11:46/224] ConstructorImpl SCOPE: CCC251214 
+                DEFINITION: null
+                SIGNATURE CCC251214(int,BBB251214,int)
+                UNIQUE NAME F:bug251214::CCC251214::CCC251214(int,BBB251214,int)
+                PARAMETERS:
+                    x [11:19/197-11:24/202]  TYPE: int TEXT=int  [11:19/197-11:22/200]  INIT: null  SCOPE: CCC251214 
+                    y [11:26/204-11:37/215]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [11:26/204-11:35/213]  INIT: null  SCOPE: CCC251214 
+                    z [11:39/217-11:44/222]  TYPE: int TEXT=int  [11:39/217-11:42/220]  INIT: null  SCOPE: CCC251214 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    STRUCT DDD251214 (bug251214::DDD251214 ) [14:5/241-19:6/383] lcurly=270 SCOPE: bug251214 
+        BASE CLASSES:
+            CLASS=bug251214::CCC251214 VISIBILITY==PUBLIC virtual==false text='CCC251214'
+        MEMBERS:
+            FIELD PUBLIC xx [15:9/280-15:16/287]  TYPE: int TEXT=int  [15:9/280-15:12/283]  INIT: null  SCOPE: DDD251214 
+            FUNCTION DEFINITION DDD251214  [16:9/296-18:10/377] ConstructorDDImpl SCOPE: DDD251214 
+                SIGNATURE DDD251214()
+                UNIQUE NAME f:bug251214::DDD251214::DDD251214()
+                DECLARATION: DDD251214  [16:9/296-18:10/377]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [16:59/346-18:10/377] SCOPE: DDD251214 
+                    STATEMENT EXPRESSION  [17:13/360-17:19/366] SCOPE: Stmt  [16:59/346-18:10/377] text: 'xx = 5'
+    FUNCTION funA251214 [21:5/390-21:41/426] FunctionImpl SCOPE: bug251214 
+        DEFINITION: null
+        SIGNATURE funA251214(BBB251214,int)
+        UNIQUE NAME F:bug251214::funA251214(BBB251214,int)
+        PARAMETERS:
+            x [21:21/406-21:32/417]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [21:21/406-21:30/415]  INIT: null  SCOPE: funA251214 
+            y [21:34/419-21:39/424]  TYPE: int TEXT=int  [21:34/419-21:37/422]  INIT: null  SCOPE: funA251214 
+        RETURNS void TEXT=void  [21:5/390-21:9/394]
+    FUNCTION funB251214 [23:5/432-23:41/468] FunctionImpl SCOPE: bug251214 
+        DEFINITION: null
+        SIGNATURE funB251214(int,BBB251214)
+        UNIQUE NAME F:bug251214::funB251214(int,BBB251214)
+        PARAMETERS:
+            x [23:21/448-23:26/453]  TYPE: int TEXT=int  [23:21/448-23:24/451]  INIT: null  SCOPE: funB251214 
+            y [23:28/455-23:39/466]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [23:28/455-23:37/464]  INIT: null  SCOPE: funB251214 
+        RETURNS void TEXT=void  [23:5/432-23:9/436]
+    VARIABLE testvar251214 [25:5/474-25:40/509]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [25:5/474-25:14/483]  INIT: null  SCOPE: bug251214 
+    VARIABLE ptestvar251214 [26:5/514-26:58/567]  TYPE: *bug251214::BBB251214 TEXT=BBB251214*  [26:5/514-26:16/525]  INIT: text='new BBB251214(1, {2, 3})'  SCOPE: bug251214 
+    FUNCTION DEFINITION foo  [28:5/573-35:6/870] FunctionDDImpl SCOPE: bug251214 
+        SIGNATURE foo()
+        UNIQUE NAME f:bug251214::foo()
+        DECLARATION: foo  [28:5/573-35:6/870]
+        PARAMETERS:
+        RETURNS int TEXT=int  [28:5/573-28:8/576]
+        STATEMENT COMPOUND  [28:15/583-35:6/870] SCOPE: foo 
+            STATEMENT DECLARATION  [29:9/593-29:39/623] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE testvar1 [29:9/593-29:39/623]  TYPE: bug251214::BBB251214 TEXT=BBB251214  [29:9/593-29:18/602]  INIT: null  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [30:9/632-30:57/680] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE ptestvar1 [30:9/632-30:57/680]  TYPE: *bug251214::BBB251214 TEXT=BBB251214*  [30:9/632-30:20/643]  INIT: text='new BBB251214(1, {2, 3})'  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [31:9/689-31:47/727] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE testvar2 [31:9/689-31:47/727]  TYPE: bug251214::CCC251214 TEXT=CCC251214  [31:9/689-31:18/698]  INIT: null  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT DECLARATION  [32:9/736-32:65/792] SCOPE: Stmt  [28:15/583-35:6/870]
+                VARIABLE ptestvar2 [32:9/736-32:65/792]  TYPE: *bug251214::CCC251214 TEXT=CCC251214*  [32:9/736-32:20/747]  INIT: text='new CCC251214(1, {1, {1, 2}}, 2)'  SCOPE: Stmt  [28:15/583-35:6/870]
+            STATEMENT EXPRESSION  [33:9/801-33:35/827] SCOPE: Stmt  [28:15/583-35:6/870] text: 'funA251214({1, {2, 3}}, 1)'
+            STATEMENT EXPRESSION  [34:9/837-34:35/863] SCOPE: Stmt  [28:15/583-35:6/870] text: 'funB251214(1, {1, {2, 3}})'
+

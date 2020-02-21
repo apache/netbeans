@@ -1,0 +1,9 @@
+ERROR simple.cpp [61-63]: Unable to resolve identifier n2.
+ERROR simple.cpp [77-80]: Unable to resolve identifier foo.
+ERROR simple.cpp [130-133]: Unable to resolve identifier Aaa.
+ERROR simple.cpp [191-194]: Unable to resolve identifier foo.
+ERROR simple.cpp [208-211]: Unable to resolve identifier Ccc.
+ERROR simple.cpp [262-265]: Unable to resolve identifier foo.
+ERROR simple.cpp [292-295]: Unable to resolve identifier msg.
+ERROR simple.cpp [302-308]: Unable to resolve identifier result.
+ERROR simple.cpp [325-331]: Unable to resolve identifier result.

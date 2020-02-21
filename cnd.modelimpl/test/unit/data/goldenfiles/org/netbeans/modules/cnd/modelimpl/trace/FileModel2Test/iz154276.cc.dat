@@ -1,0 +1,26 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz154276.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE DEFINITION value [1:1/0-1:59/58]  TYPE: const bool TEXT=const bool  [1:27/26-1:37/36]  INIT: null  SCOPE: iz154276.cc
+    DECLARATION: null
+VARIABLE DEFINITION pool_ [2:1/59-2:65/123]  TYPE: $unresolved$::spinlock[] TEXT=spinlock[]  [2:19/77-2:27/85]  INIT: text='{}'  SCOPE: null
+    DECLARATION: null
+VARIABLE DEFINITION _S_timezones [4:1/144-4:66/209]  TYPE: const *char[] TEXT=const char*[]  [4:12/155-4:23/166]  INIT: null  SCOPE: iz154276.cc
+    DECLARATION: null
+VARIABLE DEFINITION _S_timezones [6:1/211-6:72/282]  TYPE: const *wchar_t[] TEXT=const wchar_t*[]  [6:12/222-6:26/236]  INIT: null  SCOPE: iz154276.cc
+    DECLARATION: null
+VARIABLE DEFINITION _S_timezones [9:1/296-9:85/380]  TYPE: const *$unresolved$::_CharT[] TEXT=const _CharT*[]  [9:27/322-9:40/335]  INIT: null  SCOPE: iz154276.cc
+    DECLARATION: null
+
+========== Dumping model of PROJECT DummyProject
+

@@ -1,0 +1,108 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_type_cast_operators.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS A<class T> (A ) [2:1/1-7:2/98] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator TT [5:5/42-5:38/75] MethodImpl SCOPE: A 
+            DEFINITION: operator TT  [9:1/101-13:2/184]
+            SIGNATURE operator TT<class>()
+            UNIQUE NAME F:A::operator TT<class>()
+            PARAMETERS:
+            RETURNS A::operator TT::TT TEXT=TT  [5:34/71-5:36/73]
+        FUNCTION operator int [6:5/81-6:19/95] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE operator int()
+            UNIQUE NAME F:A::operator int()
+            PARAMETERS:
+            RETURNS int TEXT=int  [6:14/90-6:17/93]
+FUNCTION DEFINITION operator TT  [9:1/101-13:2/184] FunctionDefinitionImpl SCOPE: template_type_cast_operators.cc
+    SIGNATURE operator TT<class>()
+    UNIQUE NAME f:A::operator TT<class>()
+    DECLARATION: operator TT  [5:5/42-5:38/75]
+    PARAMETERS:
+    RETURNS A::operator TT::T TEXT=T  [11:10/149-11:11/150]
+    STATEMENT COMPOUND  [11:28/167-13:2/184] SCOPE: operator TT 
+        STATEMENT RETURN  [12:5/173-12:14/182] SCOPE: Stmt  [11:28/167-13:2/184] text: 'return 0;'
+FUNCTION DEFINITION operator int  [15:1/186-18:2/250] FunctionDefinitionImpl SCOPE: template_type_cast_operators.cc
+    SIGNATURE operator int<class>()
+    UNIQUE NAME f:A::operator int<class>()
+    DECLARATION: operator int  [6:5/81-6:19/95]
+    PARAMETERS:
+    RETURNS A::operator int::T TEXT=T  [16:10/214-16:11/215]
+    STATEMENT COMPOUND  [16:29/233-18:2/250] SCOPE: operator int 
+        STATEMENT RETURN  [17:5/239-17:14/248] SCOPE: Stmt  [16:29/233-18:2/250] text: 'return 0;'
+CLASS B (B ) [20:1/252-24:2/330] lcurly=260 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator TT [22:5/274-22:38/307] MethodImpl SCOPE: B 
+            DEFINITION: operator TT  [26:1/333-29:2/394]
+            SIGNATURE operator TT<class>()
+            UNIQUE NAME F:B::operator TT<class>()
+            PARAMETERS:
+            RETURNS B::operator TT::TT TEXT=TT  [22:34/303-22:36/305]
+        FUNCTION operator int [23:5/313-23:19/327] MethodImpl SCOPE: B 
+            DEFINITION: operator int  [31:1/396-33:2/438]
+            SIGNATURE operator int()
+            UNIQUE NAME F:B::operator int()
+            PARAMETERS:
+            RETURNS int TEXT=int  [23:14/322-23:17/325]
+FUNCTION DEFINITION operator TT  [26:1/333-29:2/394] FunctionDefinitionImpl SCOPE: template_type_cast_operators.cc
+    SIGNATURE operator TT<class>()
+    UNIQUE NAME f:B::operator TT<class>()
+    DECLARATION: operator TT  [22:5/274-22:38/307]
+    PARAMETERS:
+    RETURNS B::operator TT::TT TEXT=TT  [27:20/372-27:22/374]
+    STATEMENT COMPOUND  [27:25/377-29:2/394] SCOPE: operator TT 
+        STATEMENT RETURN  [28:5/383-28:14/392] SCOPE: Stmt  [27:25/377-29:2/394] text: 'return 0;'
+FUNCTION DEFINITION operator int  [31:1/396-33:2/438] FunctionDefinitionImpl SCOPE: template_type_cast_operators.cc
+    SIGNATURE operator int()
+    UNIQUE NAME f:B::operator int()
+    DECLARATION: operator int  [23:5/313-23:19/327]
+    PARAMETERS:
+    RETURNS int TEXT=int  [31:20/415-31:23/418]
+    STATEMENT COMPOUND  [31:26/421-33:2/438] SCOPE: operator int 
+        STATEMENT RETURN  [32:5/427-32:14/436] SCOPE: Stmt  [31:26/421-33:2/438] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS A<class T> (A ) [2:1/1-7:2/98] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator TT [5:5/42-5:38/75] MethodImpl SCOPE: A 
+            DEFINITION: operator TT  [9:1/101-13:2/184]
+            SIGNATURE operator TT<class>()
+            UNIQUE NAME F:A::operator TT<class>()
+            PARAMETERS:
+            RETURNS A::operator TT::TT TEXT=TT  [5:34/71-5:36/73]
+        FUNCTION operator int [6:5/81-6:19/95] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE operator int()
+            UNIQUE NAME F:A::operator int()
+            PARAMETERS:
+            RETURNS int TEXT=int  [6:14/90-6:17/93]
+CLASS B (B ) [20:1/252-24:2/330] lcurly=260 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator TT [22:5/274-22:38/307] MethodImpl SCOPE: B 
+            DEFINITION: operator TT  [26:1/333-29:2/394]
+            SIGNATURE operator TT<class>()
+            UNIQUE NAME F:B::operator TT<class>()
+            PARAMETERS:
+            RETURNS B::operator TT::TT TEXT=TT  [22:34/303-22:36/305]
+        FUNCTION operator int [23:5/313-23:19/327] MethodImpl SCOPE: B 
+            DEFINITION: operator int  [31:1/396-33:2/438]
+            SIGNATURE operator int()
+            UNIQUE NAME F:B::operator int()
+            PARAMETERS:
+            RETURNS int TEXT=int  [23:14/322-23:17/325]
+

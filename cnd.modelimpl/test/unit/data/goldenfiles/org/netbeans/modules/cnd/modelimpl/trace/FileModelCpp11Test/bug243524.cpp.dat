@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243524.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243524 [1:1/0-9:2/245] SCOPE: bug243524.cpp
+    FUNCTION DEFINITION test_exception_spec_243524  [2:5/26-8:6/243] FunctionDDImpl SCOPE: bug243524 
+        SIGNATURE test_exception_spec_243524()
+        UNIQUE NAME f:bug243524::test_exception_spec_243524()
+        DECLARATION: test_exception_spec_243524  [2:5/26-8:6/243]
+        PARAMETERS:
+        RETURNS void TEXT=void  [2:5/26-2:9/30]
+        STATEMENT COMPOUND  [2:39/60-8:6/243] SCOPE: test_exception_spec_243524 
+            STATEMENT DECLARATION  [3:7/68-3:37/98] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE tl1 [3:7/68-3:37/98]  TYPE: auto TEXT=auto  [3:7/68-3:11/72]  INIT: text='[]() throw(int) {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [4:7/105-4:26/124] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE tl2 [4:7/105-4:26/124]  TYPE: auto TEXT=auto  [4:7/105-4:11/109]  INIT: text='[]() {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [5:7/131-5:35/159] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl1 [5:7/131-5:35/159]  TYPE: auto TEXT=auto  [5:7/131-5:11/135]  INIT: text='[]() throw() {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [6:7/166-6:42/201] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl2 [6:7/166-6:42/201]  TYPE: auto TEXT=auto  [6:7/166-6:11/170]  INIT: text='[]() noexcept(true) {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [7:7/208-7:36/237] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl3 [7:7/208-7:36/237]  TYPE: auto TEXT=auto  [7:7/208-7:11/212]  INIT: text='[]() noexcept {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243524 (bug243524) 
+    bug243524.cpp  [1:1/0-9:2/245]
+NAMESPACE bug243524 (bug243524) 
+    FUNCTION DEFINITION test_exception_spec_243524  [2:5/26-8:6/243] FunctionDDImpl SCOPE: bug243524 
+        SIGNATURE test_exception_spec_243524()
+        UNIQUE NAME f:bug243524::test_exception_spec_243524()
+        DECLARATION: test_exception_spec_243524  [2:5/26-8:6/243]
+        PARAMETERS:
+        RETURNS void TEXT=void  [2:5/26-2:9/30]
+        STATEMENT COMPOUND  [2:39/60-8:6/243] SCOPE: test_exception_spec_243524 
+            STATEMENT DECLARATION  [3:7/68-3:37/98] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE tl1 [3:7/68-3:37/98]  TYPE: auto TEXT=auto  [3:7/68-3:11/72]  INIT: text='[]() throw(int) {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [4:7/105-4:26/124] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE tl2 [4:7/105-4:26/124]  TYPE: auto TEXT=auto  [4:7/105-4:11/109]  INIT: text='[]() {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [5:7/131-5:35/159] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl1 [5:7/131-5:35/159]  TYPE: auto TEXT=auto  [5:7/131-5:11/135]  INIT: text='[]() throw() {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [6:7/166-6:42/201] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl2 [6:7/166-6:42/201]  TYPE: auto TEXT=auto  [6:7/166-6:11/170]  INIT: text='[]() noexcept(true) {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+            STATEMENT DECLARATION  [7:7/208-7:36/237] SCOPE: Stmt  [2:39/60-8:6/243]
+                VARIABLE ntl3 [7:7/208-7:36/237]  TYPE: auto TEXT=auto  [7:7/208-7:11/212]  INIT: text='[]() noexcept {}'  SCOPE: Stmt  [2:39/60-8:6/243]
+

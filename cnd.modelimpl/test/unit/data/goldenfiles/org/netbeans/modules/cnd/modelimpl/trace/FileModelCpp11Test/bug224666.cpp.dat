@@ -1,0 +1,58 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug224666.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN  [1:1/0-13:2/188] SCOPE: bug224666.cpp
+    STRUCT A (<unnamed>::A ) [3:5/21-6:6/69] lcurly=34 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo [5:9/44-5:28/63] MethodImpl SCOPE: A 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:<unnamed>::A::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [5:17/52-5:21/56]
+    STRUCT B (<unnamed>::B ) [8:5/76-11:6/180] lcurly=93 SCOPE:  
+        BASE CLASSES:
+            CLASS=<unnamed>::A VISIBILITY==PUBLIC virtual==false text='A'
+        MEMBERS:
+            FUNCTION foo [10:9/103-10:43/137] MethodImpl SCOPE: B 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:<unnamed>::B::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [10:17/111-10:21/115]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for  (<unnamed>) 
+    bug224666.cpp  [1:1/0-13:2/188]
+NAMESPACE  (<unnamed>) 
+    STRUCT A (<unnamed>::A ) [3:5/21-6:6/69] lcurly=34 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION foo [5:9/44-5:28/63] MethodImpl SCOPE: A 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:<unnamed>::A::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [5:17/52-5:21/56]
+    STRUCT B (<unnamed>::B ) [8:5/76-11:6/180] lcurly=93 SCOPE:  
+        BASE CLASSES:
+            CLASS=<unnamed>::A VISIBILITY==PUBLIC virtual==false text='A'
+        MEMBERS:
+            FUNCTION foo [10:9/103-10:43/137] MethodImpl SCOPE: B 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:<unnamed>::B::foo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [10:17/111-10:21/115]
+

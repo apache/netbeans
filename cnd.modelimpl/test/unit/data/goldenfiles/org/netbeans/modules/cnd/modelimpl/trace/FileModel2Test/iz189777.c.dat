@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz189777.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+ENUM enum189777 [1:1/0-1:27/26] SCOPE: $Global$ 
+    V1
+    V2
+STRUCT struct189777 (struct189777 ) [2:1/28-5:2/121] lcurly=48 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC e1 [3:5/54-3:28/77]  TYPE: enum189777 TEXT=enum189777  [3:10/59-3:20/69]  INIT: null  SCOPE: struct189777 
+        FIELD PUBLIC e2 [4:19/96-4:42/119]  TYPE: enum189777 TEXT=enum189777  [4:24/101-4:34/111]  INIT: null  SCOPE: struct189777 
+
+========== Dumping model of PROJECT DummyProject
+ENUM enum189777 [1:1/0-1:27/26] SCOPE: $Global$ 
+    V1
+    V2
+STRUCT struct189777 (struct189777 ) [2:1/28-5:2/121] lcurly=48 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC e1 [3:5/54-3:28/77]  TYPE: enum189777 TEXT=enum189777  [3:10/59-3:20/69]  INIT: null  SCOPE: struct189777 
+        FIELD PUBLIC e2 [4:19/96-4:42/119]  TYPE: enum189777 TEXT=enum189777  [4:24/101-4:34/111]  INIT: null  SCOPE: struct189777 
+

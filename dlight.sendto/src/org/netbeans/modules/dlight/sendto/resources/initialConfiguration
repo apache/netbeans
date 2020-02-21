@@ -1,0 +1,43 @@
+1_display_name=Count Selected Words
+1_script=echo "You have selected " `cat - | wc -w` " word(s)."\nexit 0
+1_script_executor=${SHELL}
+1_script_handler_id=SelectionScriptHandler
+2_display_name=Make File(s) ReadOnly
+2_script=rc=0\nfor f in $@; do\nprintf "$f ... " \n(chmod -w $f && echo "OK") || (echo "Failed"; rc =1)\ndone\nexit $rc
+2_script_executor=${SHELL}
+2_script_handler_id=default
+2_validation_script=for f in $@; do\ntest -w $f || exit 1\ndone\nexit 0
+2_validation_script_executor=${SHELL}
+3_display_name=Make Files(s) Writable
+3_script=rc=0\nfor f in $@; do\nprintf "$f ... " \n(chmod +w $f && echo "OK") || (echo "Failed"; rc =1)\ndone\nexit $rc
+3_script_executor=${SHELL}
+3_script_handler_id=default
+3_validation_script=for f in $@; do\ntest -w $f && exit 1\ndone\nexit 0
+3_validation_script_executor=${SHELL}
+4_display_name=Code Analyzer
+4_input_required=true
+4_script=rc=0\nfor f in $@; do\ncode-analyzer $f\ndone\nexit $rc
+4_script_executor=${SHELL}
+4_script_handler_id=default
+4_validation_script=for f in $@; do\ntest -d $f.analyze|| exit 1\ndone\nexit 0
+4_validation_script_executor=${SHELL}
+5_display_name=Performance Analyzer
+5_input_required=true
+5_script=rc=0\nfor f in $@; do\nanalyzer $f\ndone\nexit $rc
+5_script_executor=${SHELL}
+5_script_handler_id=default
+5_validation_script=for f in $@; do\ntest -d $f || exit 1;\ntest -e $f/map.xml -a -e $f/overview  -a $f/log.xml || exit 2\ndone\nexit 0\n
+5_validation_script_executor=${SHELL}
+6_display_name=Say Hello
+6_input_required=true
+6_script=printf "Enter your name: "\nread NAME\ntest -z "$NAME" && exit 1\necho\nME=`uname -a`\necho "Greetings $NAME!"\necho "I am $ME"\necho\necho You have selected following files:\nfor f in $@; do\necho $f\ndone\nexit 0
+6_script_executor=${SHELL}
+6_script_handler_id=default
+6_validation_script=
+6_validation_script_executor=
+7_display_name=bash here
+7_script=d=$1\nif [ -f $1 ]; then \nd=`dirname $1`\nfi\ncd $d && exec /bin/bash
+7_script_executor=${SHELL}
+7_script_handler_id=default
+7_validation_script=if [ $# -ne 1 ]; then exit 1; fi\nexit 0
+7_validation_script_executor=${SHELL}

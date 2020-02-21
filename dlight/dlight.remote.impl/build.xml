@@ -19,9 +19,15 @@
     under the License.
 
 -->
+<<<<<<< HEAD
 <project basedir="." default="netbeans" name="dlight/dlight.remote.impl">
     <description>Builds, tests, and runs the project org.netbeans.modules.dlight.remote.impl</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+=======
+<project basedir="." default="netbeans" name="dlight.remote.impl">
+    <description>Builds, tests, and runs the project org.netbeans.modules.dlight.remote.impl</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
 
     <property name="binaries.dir" value="release/bin"/>
     <property name="binaries.zip" value="external/fs_server-1.0.zip"/>
@@ -38,7 +44,11 @@
         <echo message="Overridden -release.files by dlight.remote.impl" />
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir=".">
+<<<<<<< HEAD
                 <include name="dlight/external/binaries-list"/>
+=======
+                <include name="external/binaries-list"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
             </manifest>
         </downloadbinaries>
         <taskdef name="releasefilesextra" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>

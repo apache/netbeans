@@ -1,4 +1,0 @@
-class AAA {
-    AAA();
-    ~AAA();
-};

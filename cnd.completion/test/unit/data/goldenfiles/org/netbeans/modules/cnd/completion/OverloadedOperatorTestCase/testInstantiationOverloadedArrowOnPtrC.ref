@@ -1,3 +1,0 @@
-operator ->() C*	$	    pC->operator ->()
-operator [](int ind) C	$	    pC->operator []()
-taoo() void	$	    pC->taoo()

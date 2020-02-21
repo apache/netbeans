@@ -1,8 +1,0 @@
-#changeset:   315175:1197667808c9
-#branch:      release82
-#tag:         tip
-#user:        
-#date:        Wed Apr 05 23:49:00 2017 +0300
-#summary:     fixing #270307 - Regression after recent fixes in fs_server --   sources
-00784557F614BE02268C50C1BA692A6B19F0EE27 fs_server-1.0.zip
-

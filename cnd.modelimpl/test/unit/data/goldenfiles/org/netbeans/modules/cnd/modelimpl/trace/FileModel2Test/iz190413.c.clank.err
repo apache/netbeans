@@ -1,7 +1,0 @@
-${origin}/iz190413.c:19:7: warning: extra tokens at end of #else directive
-#else if HOST_CHARSET == HOST_CHARSET_EBCDIC
-      ^
-      //
-${origin}/iz190413.c:21:2: error: #else after #else
-#else 
- ^

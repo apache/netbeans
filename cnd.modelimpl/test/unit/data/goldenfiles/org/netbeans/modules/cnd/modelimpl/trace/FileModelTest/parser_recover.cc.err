@@ -1,7 +1,0 @@
-parser_recover.cc:1:1: unexpected token: a
-parser_recover.cc:1:3: unexpected token: #
-parser_recover.cc:1:7: unexpected token: {
-parser_recover.cc:1:7: unexpected token: {
-parser_recover.cc:1:8: unexpected token: }
-parser_recover.cc:3:5: expecting LSQUARE, found 'int'
-parser_recover.cc:4:1: unexpected token: ]

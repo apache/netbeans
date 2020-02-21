@@ -1,3 +1,0 @@
-References in file WhereUsedFiltersTestCase/testRWFilters2.cpp
-[1:17-1:20] struct ABC {int <b>aaa</b>; };
-[7:17-7:20] int i = abc.<b>aaa</b>; // read

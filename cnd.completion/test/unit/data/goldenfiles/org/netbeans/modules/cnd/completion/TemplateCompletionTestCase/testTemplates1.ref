@@ -1,9 +1,0 @@
-t1 T1<1>	$	    t1
-DataSource<class T>	$	    DataSource<>
-Person	$	    Person
-T1<int i>	$	    T1<>
-T2<class C>	$	    T2<>
-T3<int k,class C>	$	    T3<>
-T4<class T>	$	    T4<>
-main() int	$	    main()
-select<class T>() DataSource<T>	$	    select()

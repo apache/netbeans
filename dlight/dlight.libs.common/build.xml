@@ -19,7 +19,13 @@
     under the License.
 
 -->
+<<<<<<< HEAD
 <project name="dlight/dlight.libs.common" default="netbeans" basedir=".">
 	<description>Builds, tests, and runs the project org.netbeans.modules.dlight.libs.common.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+=======
+<project name="dlight.libs.common" default="netbeans" basedir=".">
+	<description>Builds, tests, and runs the project org.netbeans.modules.dlight.libs.common.</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
 </project>

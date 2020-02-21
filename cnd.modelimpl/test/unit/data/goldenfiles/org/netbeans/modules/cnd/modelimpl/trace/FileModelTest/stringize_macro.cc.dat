@@ -1,5 +1,0 @@
-
-Testing APT: stringize_macro.cc
- char msg [ ] = "\"message\\n\"" ;
-
-

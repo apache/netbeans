@@ -19,7 +19,13 @@
     under the License.
 
 -->
+<<<<<<< HEAD
 <project basedir="." default="netbeans" name="dlight/git.remote">
     <description>Builds, tests, and runs the project org.netbeans.modules.git.remote</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+=======
+<project basedir="." default="netbeans" name="git.remote">
+    <description>Builds, tests, and runs the project org.netbeans.modules.git.remote</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
 </project>

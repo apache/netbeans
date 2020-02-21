@@ -24,10 +24,17 @@
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
 
+<<<<<<< HEAD
 <project name="cnd/cnd.asm" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.asm.</description>
 
     <import file="../../nbbuild/templates/projectized.xml"/>
+=======
+<project name="cnd.asm" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.asm.</description>
+
+    <import file="../nbbuild/templates/projectized.xml"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
 
     <target name="compile" depends="antlr,projectized-common.compile">
     </target>
@@ -35,7 +42,11 @@
     <target name="init-antlr">
         <property name="asm.output.dir" location="src/org/netbeans/modules/cnd/asm/base/generated"/>
         <property name="asm.base.dir" location="src/org/netbeans/modules/cnd/asm/base"/>
+<<<<<<< HEAD
         <property name="antlr.jar" location="${cluster}/modules/ext/org-netbeans-modules-cnd-antlr.jar"/>
+=======
+        <property name="antlr.jar" location="${cluster}/modules/org-netbeans-modules-cnd-antlr.jar"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
         <property name="d_antlr.jar" location="../../antlr/build/org-netbeans-modules-cnd-antlr.jar"/>
         <property name="asm.grammar.dir.att" location="src/org/netbeans/modules/cnd/asm/base/att"/>
         <property name="asm.grammar.dir.dis" location="src/org/netbeans/modules/cnd/asm/base/dis"/>

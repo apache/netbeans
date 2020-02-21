@@ -1,2 +1,0 @@
-class string;
-class ostream;

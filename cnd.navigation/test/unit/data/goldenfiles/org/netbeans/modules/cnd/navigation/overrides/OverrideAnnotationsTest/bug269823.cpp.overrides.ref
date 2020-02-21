@@ -1,2 +1,0 @@
-7:OVERRIDDEN BBB::foo bug269823.cpp:11
-11:OVERRIDES AAA::inner::foo bug269823.cpp:7

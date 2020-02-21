@@ -1,3 +1,0 @@
-Color	$	    int bgColor = EGOL::Colors::Color
-Red	$	    int bgColor = EGOL::Colors::Red
-White	$	    int bgColor = EGOL::Colors::White

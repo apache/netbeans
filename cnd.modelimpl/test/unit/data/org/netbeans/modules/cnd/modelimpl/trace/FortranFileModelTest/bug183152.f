@@ -1,3 +1,0 @@
-      subroutine A
-      pause
-      end

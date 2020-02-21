@@ -1,1 +1,0 @@
-#define MCI_ANIM_WINDOW_DEFAULT 0xL

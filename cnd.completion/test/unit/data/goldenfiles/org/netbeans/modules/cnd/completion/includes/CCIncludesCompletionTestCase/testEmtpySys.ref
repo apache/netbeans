@@ -1,4 +1,0 @@
-[F] "include1.h" : ./	$	#include "include1.h"
-[F] "include2.h" : ./	$	#include "include2.h"
-[D] <..> : ./	$	#include "../"
-[D] "usr_incl" : ./	$	#include "usr_incl/"

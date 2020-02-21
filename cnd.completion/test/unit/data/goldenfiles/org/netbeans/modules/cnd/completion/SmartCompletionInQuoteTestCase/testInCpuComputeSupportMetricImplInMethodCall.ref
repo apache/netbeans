@@ -1,6 +1,0 @@
-SetCategory(int category) void	$	    SetCategory()
-SetDescription(const char* description) void	$	    SetDescription()
-SetSupportMetric(int m) void	$	    SetSupportMetric()
-SetType(int type) void	$	    SetType()
-SetUnits(int u) void	$	    SetUnits()
-SetVendor(const char* v) void	$	    SetVendor()

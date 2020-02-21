@@ -41,6 +41,7 @@ Contributor(s):
 <!-- You may freely edit this file. See harness/README in the NetBeans platform -->
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
+<<<<<<< HEAD
 <project name="cnd/cnd.gotodeclaration" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.gotodeclaration.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
@@ -51,14 +52,33 @@ Contributor(s):
         <copy todir="${build.test.unit.dir}/data">
             <fileset dir="../cnd.modelimpl/test/unit/data">
                 <include name="cnd/common/**"/>
+=======
+<project name="cnd.gotodeclaration" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.gotodeclaration.</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+
+    <!-- CppSymbolBaseTestCase wants Quote sources -->
+
+    <target name="do-unit-test-build" depends="projectized.do-unit-test-build">
+        <copy todir="${build.test.unit.dir}/data">
+            <fileset dir="../cnd.modelimpl/test/unit/data">
+                <include name="common/**"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
             </fileset>
         </copy>
     </target>
 
+<<<<<<< HEAD
     <target name="cnd/test-unit-build-datajar" depends="projectized.test-unit-build-datajar">
         <zip destfile="${test.unit.out.folder}/data.zip" update="true">
             <fileset dir="../cnd.modelimpl/test/unit/data">
                 <include name="cnd/common/**"/>
+=======
+    <target name="test-unit-build-datajar" depends="projectized.test-unit-build-datajar">
+        <zip destfile="${test.unit.out.folder}/data.zip" update="true">
+            <fileset dir="../cnd.modelimpl/test/unit/data">
+                <include name="common/**"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
             </fileset>
         </zip>
     </target>

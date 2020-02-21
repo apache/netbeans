@@ -19,8 +19,13 @@
     under the License.
 
 -->
+<<<<<<< HEAD
 <project name="cnd/libs.clank" default="netbeans" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
+=======
+<project name="libs.clank" default="netbeans" basedir=".">
+    <import file="../nbbuild/templates/projectized.xml"/>
+>>>>>>> 0d82e68f15... Moving files to cluster directories.
 
     <property name="clank.dest.zip" value="${basedir}/external/clank_0.3.9.zip"/>
 

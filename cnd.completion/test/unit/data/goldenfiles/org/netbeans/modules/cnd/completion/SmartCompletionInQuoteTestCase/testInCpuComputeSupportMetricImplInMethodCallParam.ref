@@ -1,7 +1,0 @@
-metric int	$	    SetSupportMetric(metric
-MEDIUM	$	    SetSupportMetric(MEDIUM
-Module()	$	    SetSupportMetric(Module()
-Module(const char* description, const char* vendor, int type, int category, int units)	$	    SetSupportMetric(Module()
-Module(const Module& obj)	$	    SetSupportMetric(Module()
-Memory	$	    SetSupportMetric(Memory
-Module	$	    SetSupportMetric(Module

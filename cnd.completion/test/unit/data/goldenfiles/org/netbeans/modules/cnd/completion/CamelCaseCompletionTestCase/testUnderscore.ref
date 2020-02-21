@@ -1,3 +1,0 @@
-add_simple(int a, int b) int	$	   add_simple()
-add_simple_long(int a, int b) long	$	   add_simple_long()
-add_somethingToSomething(int a, int b) void	$	   add_somethingToSomething()

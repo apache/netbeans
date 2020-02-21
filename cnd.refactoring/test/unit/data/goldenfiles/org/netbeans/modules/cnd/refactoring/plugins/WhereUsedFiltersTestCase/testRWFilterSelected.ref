@@ -1,5 +1,0 @@
-References in file WhereUsedFiltersTestCase/testRWFilters.cpp
-[3:5-3:6] <b>i</b>++;
-[4:7-4:8] --<b>i</b>;
-[6:7-6:8] ++<b>i</b> = i--+i;
-[6:11-6:12] ++i = <b>i</b>--+i;

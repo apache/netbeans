@@ -4,4 +4,8 @@
 #user:        
 #date:        Wed Nov 30 19:00:21 2016 +0300
 #summary:     fixing #269068 - [newcodemodel] AssertionError: Invalid index!
+<<<<<<< HEAD
 BBEBAEE8729CCF165E2080A915542C6875208F97 clank_0.3.9.zip
+=======
+F3A74CD526DF05DFBFF96D0072BB71A334B52AD9 clank_0.3.9.zip
+>>>>>>> 0d82e68f15... Moving files to cluster directories.

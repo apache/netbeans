@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="dlight.kit">
+<project basedir="." default="netbeans" name="dlight/dlight.kit">
     <description>Builds, tests, and runs the project dlight.kit</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

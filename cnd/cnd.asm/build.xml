@@ -24,47 +24,47 @@
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
 
-<project name="cnd.asm" default="netbeans" basedir=".">
+<project name="cnd/cnd.asm" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.asm.</description>
 
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <target name="compile" depends="antlr,projectized-common.compile">
+    <target name="cnd/compile" depends="antlr,projectized-common.compile">
     </target>
 
-    <target name="init-antlr">
-        <property name="asm.output.dir" location="src/org/netbeans/modules/cnd/asm/base/generated"/>
-        <property name="asm.base.dir" location="src/org/netbeans/modules/cnd/asm/base"/>
-        <property name="antlr.jar" location="${cluster}/modules/org-netbeans-modules-cnd-antlr.jar"/>
-        <property name="d_antlr.jar" location="../../antlr/build/org-netbeans-modules-cnd-antlr.jar"/>
-        <property name="asm.grammar.dir.att" location="src/org/netbeans/modules/cnd/asm/base/att"/>
-        <property name="asm.grammar.dir.dis" location="src/org/netbeans/modules/cnd/asm/base/dis"/>
-        <property name="asm.grammar.dir.ident" location="src/org/netbeans/modules/cnd/asm/base/ident"/>
+    <target name="cnd/init-antlr">
+        <property name="cnd/asm.output.dir" location="src/org/netbeans/modules/cnd/asm/base/generated"/>
+        <property name="cnd/asm.base.dir" location="src/org/netbeans/modules/cnd/asm/base"/>
+        <property name="cnd/antlr.jar" location="${cluster}/modules/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="cnd/d_antlr.jar" location="../../antlr/build/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="cnd/asm.grammar.dir.att" location="src/org/netbeans/modules/cnd/asm/base/att"/>
+        <property name="cnd/asm.grammar.dir.dis" location="src/org/netbeans/modules/cnd/asm/base/dis"/>
+        <property name="cnd/asm.grammar.dir.ident" location="src/org/netbeans/modules/cnd/asm/base/ident"/>
     </target>
     
-    <target name="clean-antlr" depends="projectized-common.clean, init-antlr">
+    <target name="cnd/clean-antlr" depends="projectized-common.clean, init-antlr">
         <delete dir="${asm.grammar.dir.att}"/>           
         <delete dir="${asm.grammar.dir.dis}"/> 
     </target>
     
-    <target name="antlr" depends="init-antlr" unless="up-to-date">
+    <target name="cnd/antlr" depends="init-antlr" unless="up-to-date">
         <mkdir dir="${asm.output.dir}"/>   
         <copy file="${asm.base.dir}/AntlrTokenTypes.txt" 
               tofile="${asm.output.dir}/AntlrTokenTypes.txt"
               overwrite="true"/>
-        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+        <java classname="cnd/org.netbeans.modules.cnd.antlr.Tool" fork="true">
             <arg value="-o"/>
             <arg value="${asm.output.dir}"/>
             <arg value="${asm.grammar.dir.att}/ATTScanner.g"/>
             <classpath path="${antlr.jar}"/>
         </java> 
-        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+        <java classname="cnd/org.netbeans.modules.cnd.antlr.Tool" fork="true">
             <arg value="-o"/>
             <arg value="${asm.output.dir}"/>
             <arg value="${asm.grammar.dir.dis}/DisScanner.g"/>
             <classpath path="${antlr.jar}"/>
         </java> 
-        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+        <java classname="cnd/org.netbeans.modules.cnd.antlr.Tool" fork="true">
             <arg value="-o"/>
             <arg value="${asm.output.dir}"/>
             <arg value="${asm.grammar.dir.ident}/IdentScanner.g"/>

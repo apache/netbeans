@@ -1,0 +1,17 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["MCI_ANIM_WINDOW_DEFAULT",<ID>,line=1,col=9],offset=8,file=null'='["0x",<HEXADECIMALINT>,line=1,col=33],offset=32,file=null ["L",<ID>,line=1,col=35],offset=34,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE empty_long_hex.c
+Includes:
+    <no includes>
+Macros:
+#define 'MCI_ANIM_WINDOW_DEFAULT' [1:1/0-1:36/35]
+
+========== Dumping model of PROJECT DummyProject
+

@@ -1,0 +1,10 @@
+f1 int
+meth_1() void
+meth_2() void
+ONClass
+o_n_var int
+o_var int
+o_n_foo_1() void
+o_n_foo_2() void
+netbeans
+org

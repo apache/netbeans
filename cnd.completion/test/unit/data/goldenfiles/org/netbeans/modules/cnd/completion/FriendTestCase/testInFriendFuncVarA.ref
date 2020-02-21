@@ -1,0 +1,4 @@
+aPub int	$	    a.aPub
+aPubSt int	$	    a.aPubSt
+aPubFun() void	$	    a.aPubFun()
+aPubFunSt() void	$	    a.aPubFunSt()

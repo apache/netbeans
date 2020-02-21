@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.cnd.lexer/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/lexer/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/lexer/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

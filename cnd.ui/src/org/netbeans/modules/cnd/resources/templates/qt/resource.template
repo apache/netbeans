@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RCC version="1.0">
+    <qresource>
+<!--
+        List files that you want to include into resources like this:
+        <file>images/copy.png</file>
+-->
+    </qresource>
+</RCC>

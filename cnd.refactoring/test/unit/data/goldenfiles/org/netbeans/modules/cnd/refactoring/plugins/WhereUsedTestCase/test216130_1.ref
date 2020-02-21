@@ -1,0 +1,4 @@
+References in file WhereUsedTestCase/iz216130_1.c
+[12:12-12:28] return <b>g_MyGlobal216130</b> + g_MyGlobal216130_2 + g_MyGlobal216130_3 + g_MyGlobal216130_4;
+References in file WhereUsedTestCase/iz216130_2.c
+[15:12-15:28] return <b>g_MyGlobal216130</b> + g_MyGlobal216130_2 + g_MyGlobal216130_3 + g_MyGlobal216130_4 + foo216130();

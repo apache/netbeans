@@ -1,0 +1,115 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["M195560_1",<ID>,line=1,col=9],offset=8,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["f195560_1",<ID>,line=1,col=27],offset=26,file=null ["(",<LPAREN>,line=1,col=36],offset=35,file=null ["int",<ID>,line=1,col=37],offset=36,file=null ["i",<ID>,line=1,col=41],offset=40,file=null [",",<COMMA>,line=1,col=42],offset=41,file=null ["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null [")",<RPAREN>,line=1,col=47],offset=46,file=null'
+<U>#define '["M195560_2",<ID>,line=4,col=9],offset=80,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["f195560_2",<ID>,line=4,col=27],offset=98,file=null ["(",<LPAREN>,line=4,col=36],offset=107,file=null ["double",<ID>,line=4,col=37],offset=108,file=null ["i",<ID>,line=4,col=44],offset=115,file=null [",",<COMMA>,line=4,col=45],offset=116,file=null ["##",<DBL_SHARP>,line=4,col=47],offset=118,file=null ["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null [",",<COMMA>,line=4,col=52],offset=123,file=null ["int",<ID>,line=4,col=54],offset=125,file=null ["kkkk",<ID>,line=4,col=58],offset=129,file=null [")",<RPAREN>,line=4,col=62],offset=133,file=null'
+<U>#define '["M195560_3",<ID>,line=5,col=9],offset=143,file=null[["i1",<ID>,line=5,col=19],offset=153,file=null, ["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["f195560_3",<ID>,line=5,col=31],offset=165,file=null ["(",<LPAREN>,line=5,col=40],offset=174,file=null ["float",<ID>,line=5,col=41],offset=175,file=null ["i",<ID>,line=5,col=47],offset=181,file=null [",",<COMMA>,line=5,col=48],offset=182,file=null ["i1",<ID>,line=5,col=50],offset=184,file=null [",",<COMMA>,line=5,col=52],offset=186,file=null ["##",<DBL_SHARP>,line=5,col=54],offset=188,file=null ["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null [")",<RPAREN>,line=5,col=59],offset=193,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz195560.cc
+Includes:
+    <no includes>
+Macros:
+#define 'M195560_1[__VA_ARGS__]' [1:1/0-1:48/47]
+#define 'M195560_2[__VA_ARGS__]' [4:1/72-4:63/134]
+#define 'M195560_3[i1, __VA_ARGS__]' [5:1/135-5:60/194]
+FUNCTION DEFINITION f195560_1  [2:1/48-2:23/70] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_1(int,double)
+    UNIQUE NAME f:f195560_1(int,double)
+    DECLARATION: f195560_1  [2:1/48-2:23/70]
+    PARAMETERS:
+        i [2:1/48-2:20/67]  TYPE: int TEXT=int  [2:1/48-2:20/67]  INIT: null  SCOPE: f195560_1 
+        k [2:1/48-2:20/67]  TYPE: double TEXT=double  [2:1/48-2:20/67]  INIT: null  SCOPE: f195560_1 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [2:21/68-2:23/70] SCOPE: f195560_1 
+FUNCTION DEFINITION f195560_2  [6:1/195-6:20/214] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_2(double,int,int)
+    UNIQUE NAME f:f195560_2(double,int,int)
+    DECLARATION: f195560_2  [6:1/195-6:20/214]
+    PARAMETERS:
+        i [6:1/195-6:17/211]  TYPE: double TEXT=double  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+        k [6:1/195-6:17/211]  TYPE: int TEXT=int  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+        kkkk [6:1/195-6:17/211]  TYPE: int TEXT=int  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [6:18/212-6:20/214] SCOPE: f195560_2 
+FUNCTION DEFINITION f195560_2  [7:1/215-7:15/229] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_2(double,int)
+    UNIQUE NAME f:f195560_2(double,int)
+    DECLARATION: f195560_2  [7:1/215-7:15/229]
+    PARAMETERS:
+        i [7:1/215-7:12/226]  TYPE: double TEXT=double  [7:1/215-7:12/226]  INIT: null  SCOPE: f195560_2 
+        kkkk [7:1/215-7:12/226]  TYPE: int TEXT=int  [7:1/215-7:12/226]  INIT: null  SCOPE: f195560_2 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [7:13/227-7:15/229] SCOPE: f195560_2 
+FUNCTION DEFINITION f195560_3  [9:1/231-9:27/257] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_3(float,int,int)
+    UNIQUE NAME f:f195560_3(float,int,int)
+    DECLARATION: f195560_3  [9:1/231-9:27/257]
+    PARAMETERS:
+        i [9:1/231-9:24/254]  TYPE: float TEXT=float  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+        k [9:1/231-9:24/254]  TYPE: int TEXT=int  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+        j [9:1/231-9:24/254]  TYPE: int TEXT=int  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [9:25/255-9:27/257] SCOPE: f195560_3 
+FUNCTION DEFINITION f195560_3  [10:1/258-10:20/277] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_3(float,int)
+    UNIQUE NAME f:f195560_3(float,int)
+    DECLARATION: f195560_3  [10:1/258-10:20/277]
+    PARAMETERS:
+        i [10:1/258-10:17/274]  TYPE: float TEXT=float  [10:1/258-10:17/274]  INIT: null  SCOPE: f195560_3 
+        k [10:1/258-10:17/274]  TYPE: int TEXT=int  [10:1/258-10:17/274]  INIT: null  SCOPE: f195560_3 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [10:18/275-10:20/277] SCOPE: f195560_3 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION f195560_1  [2:1/48-2:23/70] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_1(int,double)
+    UNIQUE NAME f:f195560_1(int,double)
+    DECLARATION: f195560_1  [2:1/48-2:23/70]
+    PARAMETERS:
+        i [2:1/48-2:20/67]  TYPE: int TEXT=int  [2:1/48-2:20/67]  INIT: null  SCOPE: f195560_1 
+        k [2:1/48-2:20/67]  TYPE: double TEXT=double  [2:1/48-2:20/67]  INIT: null  SCOPE: f195560_1 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [2:21/68-2:23/70] SCOPE: f195560_1 
+FUNCTION DEFINITION f195560_2  [6:1/195-6:20/214] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_2(double,int,int)
+    UNIQUE NAME f:f195560_2(double,int,int)
+    DECLARATION: f195560_2  [6:1/195-6:20/214]
+    PARAMETERS:
+        i [6:1/195-6:17/211]  TYPE: double TEXT=double  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+        k [6:1/195-6:17/211]  TYPE: int TEXT=int  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+        kkkk [6:1/195-6:17/211]  TYPE: int TEXT=int  [6:1/195-6:17/211]  INIT: null  SCOPE: f195560_2 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [6:18/212-6:20/214] SCOPE: f195560_2 
+FUNCTION DEFINITION f195560_2  [7:1/215-7:15/229] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_2(double,int)
+    UNIQUE NAME f:f195560_2(double,int)
+    DECLARATION: f195560_2  [7:1/215-7:15/229]
+    PARAMETERS:
+        i [7:1/215-7:12/226]  TYPE: double TEXT=double  [7:1/215-7:12/226]  INIT: null  SCOPE: f195560_2 
+        kkkk [7:1/215-7:12/226]  TYPE: int TEXT=int  [7:1/215-7:12/226]  INIT: null  SCOPE: f195560_2 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [7:13/227-7:15/229] SCOPE: f195560_2 
+FUNCTION DEFINITION f195560_3  [9:1/231-9:27/257] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_3(float,int,int)
+    UNIQUE NAME f:f195560_3(float,int,int)
+    DECLARATION: f195560_3  [9:1/231-9:27/257]
+    PARAMETERS:
+        i [9:1/231-9:24/254]  TYPE: float TEXT=float  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+        k [9:1/231-9:24/254]  TYPE: int TEXT=int  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+        j [9:1/231-9:24/254]  TYPE: int TEXT=int  [9:1/231-9:24/254]  INIT: null  SCOPE: f195560_3 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [9:25/255-9:27/257] SCOPE: f195560_3 
+FUNCTION DEFINITION f195560_3  [10:1/258-10:20/277] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f195560_3(float,int)
+    UNIQUE NAME f:f195560_3(float,int)
+    DECLARATION: f195560_3  [10:1/258-10:20/277]
+    PARAMETERS:
+        i [10:1/258-10:17/274]  TYPE: float TEXT=float  [10:1/258-10:17/274]  INIT: null  SCOPE: f195560_3 
+        k [10:1/258-10:17/274]  TYPE: int TEXT=int  [10:1/258-10:17/274]  INIT: null  SCOPE: f195560_3 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [10:18/275-10:20/277] SCOPE: f195560_3 
+

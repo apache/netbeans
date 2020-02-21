@@ -1,0 +1,3 @@
+References in file WhereUsedFiltersTestCase/testFUFilters.c
+[18:13-18:14] #define ABC <b>a</b>
+[25:3-25:4] <b>a</b> = f;

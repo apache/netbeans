@@ -1,0 +1,2 @@
+FileModelTest/preproc_defined_keyword.cc, line 11: extra tokens after defined at end of #ifdef directive
+FileModelTest/preproc_defined_keyword.cc, line 16: extra tokens after defined at end of #ifdef directive

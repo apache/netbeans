@@ -1,0 +1,12 @@
+argc int	$	    pointer = &argc
+argv char**	$	    pointer = &argv
+pointer int*	$	    pointer = &pointer
+value int	$	    pointer = &value
+A	$	    pointer = &A
+B	$	    pointer = &B
+C	$	    pointer = &C
+In_Macro	$	    pointer = &In_Macro
+globInt int	$	    pointer = &globInt
+checkZero() void	$	    pointer = &checkZero()
+globFoo() void	$	    pointer = &globFoo()
+main(int argc, char** argv) int	$	    pointer = &main()

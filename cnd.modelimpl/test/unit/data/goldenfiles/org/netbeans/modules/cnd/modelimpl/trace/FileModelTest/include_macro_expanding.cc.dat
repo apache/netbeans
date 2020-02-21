@@ -1,0 +1,21 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["_MULTIARCH_HEADER",<ID>,line=7,col=9],offset=76,file=null'='["wx",<ID>,line=7,col=27],offset=94,file=null ["-",<MINUS>,line=7,col=29],offset=96,file=null ["2.8",<FLOATONE>,line=7,col=30],offset=97,file=null ["/",<DIVIDE>,line=7,col=33],offset=100,file=null ["wx",<ID>,line=7,col=34],offset=101,file=null ["/",<DIVIDE>,line=7,col=36],offset=103,file=null ["defs",<ID>,line=7,col=37],offset=104,file=null [".",<DOT>,line=7,col=41],offset=108,file=null ["h",<ID>,line=7,col=42],offset=109,file=null'
+<U>#define '["_MULTIARCH_MAKE_HEADER",<ID>,line=9,col=9],offset=147,file=null[["arch",<ID>,line=9,col=32],offset=170,file=null, ["header",<ID>,line=9,col=37],offset=175,file=null]'='["<",<LESSTHAN>,line=9,col=45],offset=183,file=null ["multiarch",<ID>,line=9,col=46],offset=184,file=null ["-",<MINUS>,line=9,col=55],offset=193,file=null ["arch",<ID>,line=9,col=56],offset=194,file=null ["-",<MINUS>,line=9,col=60],offset=198,file=null ["_MULTIARCH_OS",<ID>,line=9,col=61],offset=199,file=null ["/",<DIVIDE>,line=9,col=74],offset=212,file=null ["header",<ID>,line=9,col=75],offset=213,file=null [">",<GREATERTHAN>,line=9,col=81],offset=219,file=null'
+<U>#define '["_MULTIARCH_OS",<ID>,line=8,col=9],offset=119,file=null'='["linux",<ID>,line=8,col=23],offset=133,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE include_macro_expanding.cc
+Includes:
+<multiarch-i386-linux/wx-2.8/wx/defs.h> <FAILED inclusion> [11:1/222-11:56/277]
+Macros:
+#define '_MULTIARCH_HEADER' [7:1/68-7:43/110]
+#define '_MULTIARCH_MAKE_HEADER[arch, header]' [9:1/139-9:82/220]
+#define '_MULTIARCH_OS' [8:1/111-8:28/138]
+
+========== Dumping model of PROJECT DummyProject
+

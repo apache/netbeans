@@ -1,0 +1,5 @@
+foo() int	$	            (*pA).foo()
+pPtr() PClass97120	$	            (*pA).pPtr()
+ppPtr() PPClass97120	$	            (*pA).ppPtr()
+pppPtr() PPPClass97120	$	            (*pA).pppPtr()
+ptr() Class97120*	$	            (*pA).ptr()

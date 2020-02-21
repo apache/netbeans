@@ -1,0 +1,170 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE resolver_typedef_s_e_c_u.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+ENUM _boolean [1:1/0-1:30/29] SCOPE: $Global$ 
+    TRUE
+    FALSE
+UNION _U (_U ) [2:1/31-2:28/58] lcurly=40 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [2:12/42-2:18/48]  TYPE: int TEXT=int  [2:12/42-2:15/45]  INIT: null  SCOPE: _U 
+        FIELD PUBLIC l [2:19/49-2:26/56]  TYPE: long TEXT=long  [2:19/49-2:23/53]  INIT: null  SCOPE: _U 
+CLASS _C (_C ) [3:1/60-3:12/71] lcurly=69 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT _S (_S ) [4:1/73-4:13/85] lcurly=83 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS_FORWARD_DECLARATION _boolean [6:1/88-6:23/110]
+TYPEDEF aboolean  [6:1/88-6:67/154] TYPE: _boolean[] TEXT=_boolean[]  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF boolean  [6:1/88-6:67/154] TYPE: _boolean TEXT=_boolean  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF pboolean  [6:1/88-6:67/154] TYPE: *_boolean TEXT=_boolean*  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF ppboolean  [6:1/88-6:67/154] TYPE: *_boolean TEXT=_boolean*  [6:15/102-6:23/110] SCOPE: $Global$ 
+VARIABLE v1 [8:1/156-8:12/167]  TYPE: boolean TEXT=boolean  [8:1/156-8:8/163]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv1 [9:1/168-9:14/181]  TYPE: pboolean TEXT=pboolean  [9:1/168-9:9/176]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv1 [10:1/182-10:16/197]  TYPE: ppboolean TEXT=ppboolean  [10:1/182-10:10/191]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [11:1/198-11:22/219] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(aboolean)
+    UNIQUE NAME F:foo(aboolean)
+    PARAMETERS:
+        p [11:10/207-11:20/217]  TYPE: aboolean TEXT=aboolean  [11:10/207-11:18/215]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [11:1/198-11:5/202]
+TYPEDEF AU  [13:1/221-13:38/258] TYPE: _U[] TEXT=_U[]  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF PPU  [13:1/221-13:38/258] TYPE: **_U TEXT=_U**  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF PU  [13:1/221-13:38/258] TYPE: *_U TEXT=_U*  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF U  [13:1/221-13:38/258] TYPE: _U TEXT=_U  [13:15/235-13:17/237] SCOPE: $Global$ 
+CLASS_FORWARD_DECLARATION _U [13:9/229-13:17/237]
+VARIABLE v2 [15:1/260-15:6/265]  TYPE: U TEXT=U  [15:1/260-15:2/261]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv2 [16:1/266-16:8/273]  TYPE: PU TEXT=PU  [16:1/266-16:3/268]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv2 [17:1/274-17:10/283]  TYPE: PPU TEXT=PPU  [17:1/274-17:4/277]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [18:1/284-18:16/299] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AU)
+    UNIQUE NAME F:foo(AU)
+    PARAMETERS:
+        p [18:10/293-18:14/297]  TYPE: AU TEXT=AU  [18:10/293-18:12/295]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [18:1/284-18:5/288]
+TYPEDEF AC  [20:1/301-20:38/338] TYPE: _C[] TEXT=_C[]  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF C  [20:1/301-20:38/338] TYPE: _C TEXT=_C  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF PC  [20:1/301-20:38/338] TYPE: *_C TEXT=_C*  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF PPC  [20:1/301-20:38/338] TYPE: **_C TEXT=_C**  [20:15/315-20:17/317] SCOPE: $Global$ 
+CLASS_FORWARD_DECLARATION _C [20:9/309-20:17/317]
+VARIABLE v3 [22:1/340-22:6/345]  TYPE: C TEXT=C  [22:1/340-22:2/341]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv3 [23:1/346-23:8/353]  TYPE: PC TEXT=PC  [23:1/346-23:3/348]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv3 [24:1/354-24:10/363]  TYPE: PPC TEXT=PPC  [24:1/354-24:4/357]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [25:1/364-25:16/379] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AC)
+    UNIQUE NAME F:foo(AC)
+    PARAMETERS:
+        p [25:10/373-25:14/377]  TYPE: AC TEXT=AC  [25:10/373-25:12/375]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [25:1/364-25:5/368]
+TYPEDEF AS  [27:1/381-27:39/419] TYPE: _S[] TEXT=_S[]  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF PPS  [27:1/381-27:39/419] TYPE: **_S TEXT=_S**  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF PS  [27:1/381-27:39/419] TYPE: *_S TEXT=_S*  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF S  [27:1/381-27:39/419] TYPE: _S TEXT=_S  [27:16/396-27:18/398] SCOPE: $Global$ 
+CLASS_FORWARD_DECLARATION _S [27:9/389-27:18/398]
+VARIABLE v4 [29:1/421-29:6/426]  TYPE: S TEXT=S  [29:1/421-29:2/422]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv4 [30:1/427-30:8/434]  TYPE: PS TEXT=PS  [30:1/427-30:3/429]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv4 [31:1/435-31:10/444]  TYPE: PPS TEXT=PPS  [31:1/435-31:4/438]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [32:1/445-32:16/460] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AS)
+    UNIQUE NAME F:foo(AS)
+    PARAMETERS:
+        p [32:10/454-32:14/458]  TYPE: AS TEXT=AS  [32:10/454-32:12/456]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [32:1/445-32:5/449]
+ENUM  [34:1/462-34:33/494] SCOPE: $Global$ 
+    B_FALSE
+    B_TRUE
+TYPEDEF boolean_t  [34:34/495-34:43/504] TYPE:  TEXT=typedef enum { B_FALSE B_TRUE } boolean_t ;  [34:1/462-34:44/505] SCOPE: $Global$ 
+VARIABLE tt [35:1/506-35:14/519]  TYPE: boolean_t TEXT=boolean_t  [35:1/506-35:10/515]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+ENUM _boolean [1:1/0-1:30/29] SCOPE: $Global$ 
+    TRUE
+    FALSE
+UNION _U (_U ) [2:1/31-2:28/58] lcurly=40 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [2:12/42-2:18/48]  TYPE: int TEXT=int  [2:12/42-2:15/45]  INIT: null  SCOPE: _U 
+        FIELD PUBLIC l [2:19/49-2:26/56]  TYPE: long TEXT=long  [2:19/49-2:23/53]  INIT: null  SCOPE: _U 
+CLASS _C (_C ) [3:1/60-3:12/71] lcurly=69 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT _S (_S ) [4:1/73-4:13/85] lcurly=83 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+TYPEDEF aboolean  [6:1/88-6:67/154] TYPE: _boolean[] TEXT=_boolean[]  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF boolean  [6:1/88-6:67/154] TYPE: _boolean TEXT=_boolean  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF pboolean  [6:1/88-6:67/154] TYPE: *_boolean TEXT=_boolean*  [6:15/102-6:23/110] SCOPE: $Global$ 
+TYPEDEF ppboolean  [6:1/88-6:67/154] TYPE: *_boolean TEXT=_boolean*  [6:15/102-6:23/110] SCOPE: $Global$ 
+VARIABLE v1 [8:1/156-8:12/167]  TYPE: boolean TEXT=boolean  [8:1/156-8:8/163]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv1 [9:1/168-9:14/181]  TYPE: pboolean TEXT=pboolean  [9:1/168-9:9/176]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv1 [10:1/182-10:16/197]  TYPE: ppboolean TEXT=ppboolean  [10:1/182-10:10/191]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [11:1/198-11:22/219] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(aboolean)
+    UNIQUE NAME F:foo(aboolean)
+    PARAMETERS:
+        p [11:10/207-11:20/217]  TYPE: aboolean TEXT=aboolean  [11:10/207-11:18/215]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [11:1/198-11:5/202]
+TYPEDEF AU  [13:1/221-13:38/258] TYPE: _U[] TEXT=_U[]  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF PPU  [13:1/221-13:38/258] TYPE: **_U TEXT=_U**  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF PU  [13:1/221-13:38/258] TYPE: *_U TEXT=_U*  [13:15/235-13:17/237] SCOPE: $Global$ 
+TYPEDEF U  [13:1/221-13:38/258] TYPE: _U TEXT=_U  [13:15/235-13:17/237] SCOPE: $Global$ 
+VARIABLE v2 [15:1/260-15:6/265]  TYPE: U TEXT=U  [15:1/260-15:2/261]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv2 [16:1/266-16:8/273]  TYPE: PU TEXT=PU  [16:1/266-16:3/268]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv2 [17:1/274-17:10/283]  TYPE: PPU TEXT=PPU  [17:1/274-17:4/277]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [18:1/284-18:16/299] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AU)
+    UNIQUE NAME F:foo(AU)
+    PARAMETERS:
+        p [18:10/293-18:14/297]  TYPE: AU TEXT=AU  [18:10/293-18:12/295]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [18:1/284-18:5/288]
+TYPEDEF AC  [20:1/301-20:38/338] TYPE: _C[] TEXT=_C[]  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF C  [20:1/301-20:38/338] TYPE: _C TEXT=_C  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF PC  [20:1/301-20:38/338] TYPE: *_C TEXT=_C*  [20:15/315-20:17/317] SCOPE: $Global$ 
+TYPEDEF PPC  [20:1/301-20:38/338] TYPE: **_C TEXT=_C**  [20:15/315-20:17/317] SCOPE: $Global$ 
+VARIABLE v3 [22:1/340-22:6/345]  TYPE: C TEXT=C  [22:1/340-22:2/341]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv3 [23:1/346-23:8/353]  TYPE: PC TEXT=PC  [23:1/346-23:3/348]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv3 [24:1/354-24:10/363]  TYPE: PPC TEXT=PPC  [24:1/354-24:4/357]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [25:1/364-25:16/379] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AC)
+    UNIQUE NAME F:foo(AC)
+    PARAMETERS:
+        p [25:10/373-25:14/377]  TYPE: AC TEXT=AC  [25:10/373-25:12/375]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [25:1/364-25:5/368]
+TYPEDEF AS  [27:1/381-27:39/419] TYPE: _S[] TEXT=_S[]  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF PPS  [27:1/381-27:39/419] TYPE: **_S TEXT=_S**  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF PS  [27:1/381-27:39/419] TYPE: *_S TEXT=_S*  [27:16/396-27:18/398] SCOPE: $Global$ 
+TYPEDEF S  [27:1/381-27:39/419] TYPE: _S TEXT=_S  [27:16/396-27:18/398] SCOPE: $Global$ 
+VARIABLE v4 [29:1/421-29:6/426]  TYPE: S TEXT=S  [29:1/421-29:2/422]  INIT: null  SCOPE: $Global$ 
+VARIABLE pv4 [30:1/427-30:8/434]  TYPE: PS TEXT=PS  [30:1/427-30:3/429]  INIT: null  SCOPE: $Global$ 
+VARIABLE ppv4 [31:1/435-31:10/444]  TYPE: PPS TEXT=PPS  [31:1/435-31:4/438]  INIT: null  SCOPE: $Global$ 
+FUNCTION foo [32:1/445-32:16/460] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(AS)
+    UNIQUE NAME F:foo(AS)
+    PARAMETERS:
+        p [32:10/454-32:14/458]  TYPE: AS TEXT=AS  [32:10/454-32:12/456]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [32:1/445-32:5/449]
+ENUM  [34:1/462-34:33/494] SCOPE: $Global$ 
+    B_FALSE
+    B_TRUE
+TYPEDEF boolean_t  [34:34/495-34:43/504] TYPE:  TEXT=typedef enum { B_FALSE B_TRUE } boolean_t ;  [34:1/462-34:44/505] SCOPE: $Global$ 
+VARIABLE tt [35:1/506-35:14/519]  TYPE: boolean_t TEXT=boolean_t  [35:1/506-35:10/515]  INIT: null  SCOPE: $Global$ 
+

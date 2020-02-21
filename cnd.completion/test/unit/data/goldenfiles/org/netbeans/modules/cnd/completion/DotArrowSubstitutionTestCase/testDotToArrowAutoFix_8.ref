@@ -1,0 +1,1 @@
+Test() void	$	        (*myDeref<my_vector<MyClass*> >())->Test()

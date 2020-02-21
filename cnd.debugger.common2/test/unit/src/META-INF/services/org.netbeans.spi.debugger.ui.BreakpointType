@@ -1,0 +1,3 @@
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.types.LineBreakpointType
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.types.FunctionBreakpointType
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.types.InstructionBreakpointType

@@ -1,0 +1,128 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz143977_0.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN iz143977_0 [2:1/21-26:2/756] SCOPE: iz143977_0.cc
+    CLASS Object (iz143977_0::Object ) [3:5/48-7:6/148] lcurly=61 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION toString [5:9/83-5:38/112] MethodImpl SCOPE: Object 
+                DEFINITION: null
+                SIGNATURE toString() const
+                UNIQUE NAME F:iz143977_0::Object::toString() const
+                PARAMETERS:
+                RETURNS const *char TEXT=const char*  [5:9/83-5:20/94]
+            FUNCTION hashCode [6:9/121-6:30/142] MethodImpl SCOPE: Object 
+                DEFINITION: null
+                SIGNATURE hashCode() const
+                UNIQUE NAME F:iz143977_0::Object::hashCode() const
+                PARAMETERS:
+                RETURNS int TEXT=int  [6:9/121-6:12/124]
+    STRUCT Pair<class K,class V=K> (iz143977_0::Pair ) [8:5/154-11:6/239] lcurly=197 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC first [9:9/207-9:17/215]  TYPE: iz143977_0::Pair::K TEXT=K  [9:9/207-9:10/208]  INIT: null  SCOPE: Pair 
+            FIELD PUBLIC second [10:9/224-10:18/233]  TYPE: iz143977_0::Pair::V TEXT=V  [10:9/224-10:10/225]  INIT: null  SCOPE: Pair 
+    FUNCTION DEFINITION hash  [12:5/245-17:6/488] FunctionDDImpl SCOPE: iz143977_0 
+        SIGNATURE hash(Pair<Object>)
+        UNIQUE NAME f:iz143977_0::hash(Pair<Object>)
+        DECLARATION: hash  [12:5/245-17:6/488]
+        PARAMETERS:
+            pair [12:14/254-12:31/271]  TYPE: iz143977_0::Pair TEXT=Pair<Object>  [12:14/254-12:26/266]  INIT: null  SCOPE: hash 
+        RETURNS int TEXT=int  [12:5/245-12:8/248]
+        STATEMENT COMPOUND  [12:33/273-17:6/488] SCOPE: hash 
+            STATEMENT DECLARATION  [13:9/283-13:22/296] SCOPE: Stmt  [12:33/273-17:6/488]
+                VARIABLE hash [13:9/283-13:22/296]  TYPE: int TEXT=int  [13:9/283-13:12/286]  INIT: text='7'  SCOPE: Stmt  [12:33/273-17:6/488]
+            STATEMENT EXPRESSION  [14:9/305-14:49/345] SCOPE: Stmt  [12:33/273-17:6/488] text: 'hash = 79 * hash + pair.first.hashCode()'
+            STATEMENT EXPRESSION  [15:9/387-15:50/428] SCOPE: Stmt  [12:33/273-17:6/488] text: 'hash = 79 * hash + pair.second.hashCode()'
+            STATEMENT RETURN  [16:9/470-16:21/482] SCOPE: Stmt  [12:33/273-17:6/488] text: 'return hash;'
+    CLASS Map<class K,class V=Object> (iz143977_0::Map ) [18:5/493-21:6/591] lcurly=539 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator [] [20:9/561-20:33/585] MethodImpl SCOPE: Map 
+                DEFINITION: null
+                SIGNATURE operator [](K&)
+                UNIQUE NAME F:iz143977_0::Map::operator [](K&)
+                PARAMETERS:
+                    key [20:25/577-20:31/583]  TYPE: &iz143977_0::Map::K TEXT=K&  [20:25/577-20:27/579]  INIT: null  SCOPE: operator [] 
+                RETURNS &iz143977_0::Map::V TEXT=V&  [20:9/561-20:11/563]
+    FUNCTION DEFINITION printValue  [22:5/597-25:6/754] FunctionDDImpl SCOPE: iz143977_0 
+        SIGNATURE printValue(Map<Object>,Object)
+        UNIQUE NAME f:iz143977_0::printValue(Map<Object>,Object)
+        DECLARATION: printValue  [22:5/597-25:6/754]
+        PARAMETERS:
+            m [22:23/615-22:36/628]  TYPE: iz143977_0::Map TEXT=Map<Object>  [22:23/615-22:34/626]  INIT: null  SCOPE: printValue 
+            key [22:38/630-22:48/640]  TYPE: iz143977_0::Object TEXT=Object  [22:38/630-22:44/636]  INIT: null  SCOPE: printValue 
+        RETURNS iz143977_0::Object TEXT=Object  [22:5/597-22:11/603]
+        STATEMENT COMPOUND  [22:50/642-25:6/754] SCOPE: printValue 
+            STATEMENT EXPRESSION  [23:9/652-23:50/693] SCOPE: Stmt  [22:50/642-25:6/754] text: 'printf("value = %s\n", m[key].toString())'
+            STATEMENT RETURN  [24:9/734-24:23/748] SCOPE: Stmt  [22:50/642-25:6/754] text: 'return m[key];'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for iz143977_0 (iz143977_0) 
+    iz143977_0.cc  [2:1/21-26:2/756]
+NAMESPACE iz143977_0 (iz143977_0) 
+    CLASS Object (iz143977_0::Object ) [3:5/48-7:6/148] lcurly=61 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION toString [5:9/83-5:38/112] MethodImpl SCOPE: Object 
+                DEFINITION: null
+                SIGNATURE toString() const
+                UNIQUE NAME F:iz143977_0::Object::toString() const
+                PARAMETERS:
+                RETURNS const *char TEXT=const char*  [5:9/83-5:20/94]
+            FUNCTION hashCode [6:9/121-6:30/142] MethodImpl SCOPE: Object 
+                DEFINITION: null
+                SIGNATURE hashCode() const
+                UNIQUE NAME F:iz143977_0::Object::hashCode() const
+                PARAMETERS:
+                RETURNS int TEXT=int  [6:9/121-6:12/124]
+    STRUCT Pair<class K,class V=K> (iz143977_0::Pair ) [8:5/154-11:6/239] lcurly=197 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC first [9:9/207-9:17/215]  TYPE: iz143977_0::Pair::K TEXT=K  [9:9/207-9:10/208]  INIT: null  SCOPE: Pair 
+            FIELD PUBLIC second [10:9/224-10:18/233]  TYPE: iz143977_0::Pair::V TEXT=V  [10:9/224-10:10/225]  INIT: null  SCOPE: Pair 
+    FUNCTION DEFINITION hash  [12:5/245-17:6/488] FunctionDDImpl SCOPE: iz143977_0 
+        SIGNATURE hash(Pair<Object>)
+        UNIQUE NAME f:iz143977_0::hash(Pair<Object>)
+        DECLARATION: hash  [12:5/245-17:6/488]
+        PARAMETERS:
+            pair [12:14/254-12:31/271]  TYPE: iz143977_0::Pair TEXT=Pair<Object>  [12:14/254-12:26/266]  INIT: null  SCOPE: hash 
+        RETURNS int TEXT=int  [12:5/245-12:8/248]
+        STATEMENT COMPOUND  [12:33/273-17:6/488] SCOPE: hash 
+            STATEMENT DECLARATION  [13:9/283-13:22/296] SCOPE: Stmt  [12:33/273-17:6/488]
+                VARIABLE hash [13:9/283-13:22/296]  TYPE: int TEXT=int  [13:9/283-13:12/286]  INIT: text='7'  SCOPE: Stmt  [12:33/273-17:6/488]
+            STATEMENT EXPRESSION  [14:9/305-14:49/345] SCOPE: Stmt  [12:33/273-17:6/488] text: 'hash = 79 * hash + pair.first.hashCode()'
+            STATEMENT EXPRESSION  [15:9/387-15:50/428] SCOPE: Stmt  [12:33/273-17:6/488] text: 'hash = 79 * hash + pair.second.hashCode()'
+            STATEMENT RETURN  [16:9/470-16:21/482] SCOPE: Stmt  [12:33/273-17:6/488] text: 'return hash;'
+    CLASS Map<class K,class V=Object> (iz143977_0::Map ) [18:5/493-21:6/591] lcurly=539 SCOPE: iz143977_0 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator [] [20:9/561-20:33/585] MethodImpl SCOPE: Map 
+                DEFINITION: null
+                SIGNATURE operator [](K&)
+                UNIQUE NAME F:iz143977_0::Map::operator [](K&)
+                PARAMETERS:
+                    key [20:25/577-20:31/583]  TYPE: &iz143977_0::Map::K TEXT=K&  [20:25/577-20:27/579]  INIT: null  SCOPE: operator [] 
+                RETURNS &iz143977_0::Map::V TEXT=V&  [20:9/561-20:11/563]
+    FUNCTION DEFINITION printValue  [22:5/597-25:6/754] FunctionDDImpl SCOPE: iz143977_0 
+        SIGNATURE printValue(Map<Object>,Object)
+        UNIQUE NAME f:iz143977_0::printValue(Map<Object>,Object)
+        DECLARATION: printValue  [22:5/597-25:6/754]
+        PARAMETERS:
+            m [22:23/615-22:36/628]  TYPE: iz143977_0::Map TEXT=Map<Object>  [22:23/615-22:34/626]  INIT: null  SCOPE: printValue 
+            key [22:38/630-22:48/640]  TYPE: iz143977_0::Object TEXT=Object  [22:38/630-22:44/636]  INIT: null  SCOPE: printValue 
+        RETURNS iz143977_0::Object TEXT=Object  [22:5/597-22:11/603]
+        STATEMENT COMPOUND  [22:50/642-25:6/754] SCOPE: printValue 
+            STATEMENT EXPRESSION  [23:9/652-23:50/693] SCOPE: Stmt  [22:50/642-25:6/754] text: 'printf("value = %s\n", m[key].toString())'
+            STATEMENT RETURN  [24:9/734-24:23/748] SCOPE: Stmt  [22:50/642-25:6/754] text: 'return m[key];'
+

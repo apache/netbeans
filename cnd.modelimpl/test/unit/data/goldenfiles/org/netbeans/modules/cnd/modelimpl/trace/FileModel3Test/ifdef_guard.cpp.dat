@@ -1,0 +1,20 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["ALREADY_WAS_INCLUSION",<ID>,line=5,col=9],offset=84,file=null'=''
+<U>#define '["_FEATURES_H",<ID>,line=1,col=9],offset=8,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE ifdef_guard.cpp
+Includes:
+"ifdef_guard.h" [2:1/20-2:25/44]
+"ifdef_guard.cpp" [6:1/106-6:27/132]
+Macros:
+#define 'ALREADY_WAS_INCLUSION' [5:1/76-5:30/105]
+#define '_FEATURES_H' [1:1/0-1:20/19]
+
+========== Dumping model of PROJECT DummyProject
+

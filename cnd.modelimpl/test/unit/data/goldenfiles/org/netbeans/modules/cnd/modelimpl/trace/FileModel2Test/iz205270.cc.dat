@@ -1,0 +1,98 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz205270.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN std [1:1/0-32:3/704] SCOPE: iz205270.cc
+    CLASS basic_ostream<class _Elem,class _Traits> (std::basic_ostream ) [2:1/16-22:6/463] lcurly=136 SCOPE: std 
+        BASE CLASSES:
+            CLASS=$unresolved$::basic_ios VISIBILITY==PUBLIC virtual==true text='virtual public basic_ios<_Elem, _Traits>'
+        MEMBERS:
+            FUNCTION DEFINITION basic_ostream  [10:6/199-12:10/280] ConstructorDDImpl SCOPE: basic_ostream 
+                SIGNATURE basic_ostream(_Myt&&)
+                UNIQUE NAME f:std::basic_ostream::basic_ostream(_Myt&&)
+                DECLARATION: basic_ostream  [10:6/199-12:10/280]
+                PARAMETERS:
+                    _Right [10:20/213-10:33/226]  TYPE: &$unresolved$::_Myt TEXT=_Myt&&  [10:20/213-10:26/219]  INIT: null  SCOPE: basic_ostream 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [11:9/236-12:10/280] SCOPE: basic_ostream 
+            FUNCTION DEFINITION operator =  [14:5/286-17:10/384] MethodDDImpl SCOPE: basic_ostream 
+                SIGNATURE operator =(_Myt&&)
+                UNIQUE NAME f:std::basic_ostream::operator =(_Myt&&)
+                DECLARATION: operator =  [14:5/286-17:10/384]
+                PARAMETERS:
+                    _Right [14:22/303-14:35/316]  TYPE: &$unresolved$::_Myt TEXT=_Myt&&  [14:22/303-14:28/309]  INIT: null  SCOPE: operator = 
+                RETURNS &$unresolved$::_Myt TEXT=_Myt&  [14:5/286-14:10/291]
+                STATEMENT COMPOUND  [15:9/326-17:10/384] SCOPE: operator = 
+                    STATEMENT RETURN  [16:9/359-16:24/374] SCOPE: Stmt  [15:9/326-17:10/384] text: 'return (*this);'
+            FUNCTION DEFINITION swap  [19:5/390-21:10/457] MethodDDImpl SCOPE: basic_ostream 
+                SIGNATURE swap(_Myt&)
+                UNIQUE NAME f:std::basic_ostream::swap(_Myt&)
+                DECLARATION: swap  [19:5/390-21:10/457]
+                PARAMETERS:
+                    _Right [19:16/401-19:28/413]  TYPE: &$unresolved$::_Myt TEXT=_Myt&  [19:16/401-19:21/406]  INIT: null  SCOPE: swap 
+                RETURNS void TEXT=void  [19:5/390-19:9/394]
+                STATEMENT COMPOUND  [20:9/423-21:10/457] SCOPE: swap 
+    FUNCTION DEFINITION operator <<  [24:1/466-31:6/701] FunctionDDImpl SCOPE: std 
+        SIGNATURE operator <<<class,class,class>(basic_ostream<class,class>&&,_Ty)
+        UNIQUE NAME f:std::operator <<<class,class,class>(basic_ostream<class,class>&&,_Ty)
+        DECLARATION: operator <<  [24:1/466-31:6/701]
+        PARAMETERS:
+            _Ostr [28:20/583-28:57/620]  TYPE: &std::basic_ostream TEXT=basic_ostream<_Elem,_Traits>&&  [28:20/583-28:51/614]  INIT: null  SCOPE: operator << 
+            _Val [28:59/622-28:67/630]  TYPE: std::operator <<::_Ty TEXT=_Ty  [28:59/622-28:62/625]  INIT: null  SCOPE: operator << 
+        RETURNS &std::basic_ostream TEXT=basic_ostream<_Elem,_Traits>&  [27:5/533-27:35/563]
+        STATEMENT COMPOUND  [29:5/636-31:6/701] SCOPE: operator << 
+            STATEMENT RETURN  [30:5/672-30:28/695] SCOPE: Stmt  [29:5/636-31:6/701] text: 'return (_Ostr << _Val);'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for std (std) 
+    iz205270.cc  [1:1/0-32:3/704]
+NAMESPACE std (std) 
+    CLASS basic_ostream<class _Elem,class _Traits> (std::basic_ostream ) [2:1/16-22:6/463] lcurly=136 SCOPE: std 
+        BASE CLASSES:
+            CLASS=$unresolved$::basic_ios VISIBILITY==PUBLIC virtual==true text='virtual public basic_ios<_Elem, _Traits>'
+        MEMBERS:
+            FUNCTION DEFINITION basic_ostream  [10:6/199-12:10/280] ConstructorDDImpl SCOPE: basic_ostream 
+                SIGNATURE basic_ostream(_Myt&&)
+                UNIQUE NAME f:std::basic_ostream::basic_ostream(_Myt&&)
+                DECLARATION: basic_ostream  [10:6/199-12:10/280]
+                PARAMETERS:
+                    _Right [10:20/213-10:33/226]  TYPE: &$unresolved$::_Myt TEXT=_Myt&&  [10:20/213-10:26/219]  INIT: null  SCOPE: basic_ostream 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [11:9/236-12:10/280] SCOPE: basic_ostream 
+            FUNCTION DEFINITION operator =  [14:5/286-17:10/384] MethodDDImpl SCOPE: basic_ostream 
+                SIGNATURE operator =(_Myt&&)
+                UNIQUE NAME f:std::basic_ostream::operator =(_Myt&&)
+                DECLARATION: operator =  [14:5/286-17:10/384]
+                PARAMETERS:
+                    _Right [14:22/303-14:35/316]  TYPE: &$unresolved$::_Myt TEXT=_Myt&&  [14:22/303-14:28/309]  INIT: null  SCOPE: operator = 
+                RETURNS &$unresolved$::_Myt TEXT=_Myt&  [14:5/286-14:10/291]
+                STATEMENT COMPOUND  [15:9/326-17:10/384] SCOPE: operator = 
+                    STATEMENT RETURN  [16:9/359-16:24/374] SCOPE: Stmt  [15:9/326-17:10/384] text: 'return (*this);'
+            FUNCTION DEFINITION swap  [19:5/390-21:10/457] MethodDDImpl SCOPE: basic_ostream 
+                SIGNATURE swap(_Myt&)
+                UNIQUE NAME f:std::basic_ostream::swap(_Myt&)
+                DECLARATION: swap  [19:5/390-21:10/457]
+                PARAMETERS:
+                    _Right [19:16/401-19:28/413]  TYPE: &$unresolved$::_Myt TEXT=_Myt&  [19:16/401-19:21/406]  INIT: null  SCOPE: swap 
+                RETURNS void TEXT=void  [19:5/390-19:9/394]
+                STATEMENT COMPOUND  [20:9/423-21:10/457] SCOPE: swap 
+    FUNCTION DEFINITION operator <<  [24:1/466-31:6/701] FunctionDDImpl SCOPE: std 
+        SIGNATURE operator <<<class,class,class>(basic_ostream<class,class>&&,_Ty)
+        UNIQUE NAME f:std::operator <<<class,class,class>(basic_ostream<class,class>&&,_Ty)
+        DECLARATION: operator <<  [24:1/466-31:6/701]
+        PARAMETERS:
+            _Ostr [28:20/583-28:57/620]  TYPE: &std::basic_ostream TEXT=basic_ostream<_Elem,_Traits>&&  [28:20/583-28:51/614]  INIT: null  SCOPE: operator << 
+            _Val [28:59/622-28:67/630]  TYPE: std::operator <<::_Ty TEXT=_Ty  [28:59/622-28:62/625]  INIT: null  SCOPE: operator << 
+        RETURNS &std::basic_ostream TEXT=basic_ostream<_Elem,_Traits>&  [27:5/533-27:35/563]
+        STATEMENT COMPOUND  [29:5/636-31:6/701] SCOPE: operator << 
+            STATEMENT RETURN  [30:5/672-30:28/695] SCOPE: Stmt  [29:5/636-31:6/701] text: 'return (_Ostr << _Val);'
+

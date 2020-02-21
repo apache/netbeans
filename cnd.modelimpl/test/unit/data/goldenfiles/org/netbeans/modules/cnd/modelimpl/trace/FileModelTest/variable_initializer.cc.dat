@@ -1,0 +1,38 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE variable_initializer.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION foo  [2:1/1-5:2/51] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-5:2/51]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:12/12-5:2/51] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/18-3:15/28] SCOPE: Stmt  [2:12/12-5:2/51]
+            VARIABLE i [3:5/18-3:15/28]  TYPE: int TEXT=int  [3:5/18-3:8/21]  INIT: text='0'  SCOPE: Stmt  [2:12/12-5:2/51]
+        STATEMENT DECLARATION  [4:5/37-4:17/49] SCOPE: Stmt  [2:12/12-5:2/51]
+            VARIABLE j [4:5/37-4:17/49]  TYPE: int TEXT=int  [4:5/37-4:8/40]  INIT: text='(i)'  SCOPE: Stmt  [2:12/12-5:2/51]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [2:1/1-5:2/51] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-5:2/51]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:12/12-5:2/51] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/18-3:15/28] SCOPE: Stmt  [2:12/12-5:2/51]
+            VARIABLE i [3:5/18-3:15/28]  TYPE: int TEXT=int  [3:5/18-3:8/21]  INIT: text='0'  SCOPE: Stmt  [2:12/12-5:2/51]
+        STATEMENT DECLARATION  [4:5/37-4:17/49] SCOPE: Stmt  [2:12/12-5:2/51]
+            VARIABLE j [4:5/37-4:17/49]  TYPE: int TEXT=int  [4:5/37-4:8/40]  INIT: text='(i)'  SCOPE: Stmt  [2:12/12-5:2/51]
+

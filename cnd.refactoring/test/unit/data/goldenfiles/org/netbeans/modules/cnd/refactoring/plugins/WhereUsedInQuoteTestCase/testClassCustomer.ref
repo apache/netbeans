@@ -1,0 +1,13 @@
+References in file quote_nosyshdr/customer.cc
+[57:45-57:53] ostream&amp; operator &lt;&lt;(ostream&amp; output, const <b>Customer</b>&amp; customer) {
+References in file quote_nosyshdr/customer.h
+[59:53-59:61] friend ostream&amp; operator&lt;&lt; (ostream&amp;, const <b>Customer</b>&amp;);
+References in file quote_nosyshdr/quote.cc
+[53:10-53:18] list&lt;<b>Customer</b>&gt; customers;
+[59:18-59:26] for(list&lt;<b>Customer</b>&gt;::iterator it = customers.begin(); it != customers.end(); ++it) {
+[70:29-70:37] customers.push_back(<b>Customer</b>("John", 10));
+[71:29-71:37] customers.push_back(<b>Customer</b>("Mike", 0));
+[72:29-72:37] customers.push_back(<b>Customer</b>("Peter", 13));
+[73:29-73:37] customers.push_back(<b>Customer</b>("Ann", 11));
+[74:29-74:37] customers.push_back(<b>Customer</b>("Tom", 9));
+[78:18-78:26] for(list&lt;<b>Customer</b>&gt;::iterator it = customers.begin(); it != customers.end(); ++it) {

@@ -1,0 +1,88 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug260774.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug260774 [1:1/0-12:2/288] SCOPE: bug260774.cpp
+    STRUCT LogCallback260774 (bug260774::LogCallback260774 ) [2:5/26-4:6/105] lcurly=51 SCOPE: bug260774 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION sendLog [3:9/61-3:47/99] MethodImpl SCOPE: LogCallback260774 
+                DEFINITION: null
+                SIGNATURE sendLog(const char*)
+                UNIQUE NAME F:bug260774::LogCallback260774::sendLog(const char*)
+                PARAMETERS:
+                    log [3:30/82-3:45/97]  TYPE: const *char TEXT=const char*  [3:30/82-3:41/93]  INIT: null  SCOPE: sendLog 
+                RETURNS void TEXT=void  [3:17/69-3:21/73]
+    FUNCTION DEFINITION main260774  [6:5/112-11:6/286] FunctionDDImpl SCOPE: bug260774 
+        SIGNATURE main260774(int,char**)
+        UNIQUE NAME f:bug260774::main260774(int,char**)
+        DECLARATION: main260774  [6:5/112-11:6/286]
+        PARAMETERS:
+            argc [6:20/127-6:28/135]  TYPE: int TEXT=int  [6:20/127-6:23/130]  INIT: null  SCOPE: main260774 
+            argv [6:30/137-6:41/148]  TYPE: **char TEXT=char**  [6:30/137-6:36/143]  INIT: null  SCOPE: main260774 
+        RETURNS int TEXT=int  [6:5/112-6:8/115]
+        STATEMENT COMPOUND  [6:43/150-11:6/286] SCOPE: main260774 
+            STATEMENT DECLARATION  [7:9/160-9:15/262] SCOPE: Stmt  [6:43/150-11:6/286]
+                CLASS  ( ) [7:9/160-9:10/257] lcurly=193 SCOPE: null
+                    BASE CLASSES:
+                        CLASS=bug260774::LogCallback260774 VISIBILITY==PUBLIC virtual==false text='public LogCallback260774'
+                    MEMBERS:
+                        FUNCTION DEFINITION sendLog  [8:13/207-8:53/247] MethodDDImpl SCOPE:  
+                            SIGNATURE sendLog(const char*)
+                            UNIQUE NAME f:sendLog(const char*)
+                            DECLARATION: sendLog  [8:13/207-8:53/247]
+                            PARAMETERS:
+                                log [8:34/228-8:49/243]  TYPE: const *char TEXT=const char*  [8:34/228-8:45/239]  INIT: null  SCOPE: sendLog 
+                            RETURNS void TEXT=void  [8:21/215-8:25/219]
+                            STATEMENT COMPOUND  [8:51/245-8:53/247] SCOPE: sendLog 
+                VARIABLE err [9:11/258-9:14/261]  TYPE:  TEXT=err  [7:9/160-9:10/257]  INIT: null  SCOPE: Stmt  [6:43/150-11:6/286]
+            STATEMENT RETURN  [10:9/271-10:18/280] SCOPE: Stmt  [6:43/150-11:6/286] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug260774 (bug260774) 
+    bug260774.cpp  [1:1/0-12:2/288]
+NAMESPACE bug260774 (bug260774) 
+    STRUCT LogCallback260774 (bug260774::LogCallback260774 ) [2:5/26-4:6/105] lcurly=51 SCOPE: bug260774 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION sendLog [3:9/61-3:47/99] MethodImpl SCOPE: LogCallback260774 
+                DEFINITION: null
+                SIGNATURE sendLog(const char*)
+                UNIQUE NAME F:bug260774::LogCallback260774::sendLog(const char*)
+                PARAMETERS:
+                    log [3:30/82-3:45/97]  TYPE: const *char TEXT=const char*  [3:30/82-3:41/93]  INIT: null  SCOPE: sendLog 
+                RETURNS void TEXT=void  [3:17/69-3:21/73]
+    FUNCTION DEFINITION main260774  [6:5/112-11:6/286] FunctionDDImpl SCOPE: bug260774 
+        SIGNATURE main260774(int,char**)
+        UNIQUE NAME f:bug260774::main260774(int,char**)
+        DECLARATION: main260774  [6:5/112-11:6/286]
+        PARAMETERS:
+            argc [6:20/127-6:28/135]  TYPE: int TEXT=int  [6:20/127-6:23/130]  INIT: null  SCOPE: main260774 
+            argv [6:30/137-6:41/148]  TYPE: **char TEXT=char**  [6:30/137-6:36/143]  INIT: null  SCOPE: main260774 
+        RETURNS int TEXT=int  [6:5/112-6:8/115]
+        STATEMENT COMPOUND  [6:43/150-11:6/286] SCOPE: main260774 
+            STATEMENT DECLARATION  [7:9/160-9:15/262] SCOPE: Stmt  [6:43/150-11:6/286]
+                CLASS  ( ) [7:9/160-9:10/257] lcurly=193 SCOPE: null
+                    BASE CLASSES:
+                        CLASS=bug260774::LogCallback260774 VISIBILITY==PUBLIC virtual==false text='public LogCallback260774'
+                    MEMBERS:
+                        FUNCTION DEFINITION sendLog  [8:13/207-8:53/247] MethodDDImpl SCOPE:  
+                            SIGNATURE sendLog(const char*)
+                            UNIQUE NAME f:sendLog(const char*)
+                            DECLARATION: sendLog  [8:13/207-8:53/247]
+                            PARAMETERS:
+                                log [8:34/228-8:49/243]  TYPE: const *char TEXT=const char*  [8:34/228-8:45/239]  INIT: null  SCOPE: sendLog 
+                            RETURNS void TEXT=void  [8:21/215-8:25/219]
+                            STATEMENT COMPOUND  [8:51/245-8:53/247] SCOPE: sendLog 
+                VARIABLE err [9:11/258-9:14/261]  TYPE:  TEXT=err  [7:9/160-9:10/257]  INIT: null  SCOPE: Stmt  [6:43/150-11:6/286]
+            STATEMENT RETURN  [10:9/271-10:18/280] SCOPE: Stmt  [6:43/150-11:6/286] text: 'return 0;'
+

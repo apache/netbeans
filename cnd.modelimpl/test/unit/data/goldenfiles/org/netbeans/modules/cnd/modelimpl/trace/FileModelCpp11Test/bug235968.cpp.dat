@@ -1,0 +1,74 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug235968.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug235968 [1:1/0-12:2/268] SCOPE: bug235968.cpp
+    CLASS AAA_235968 (bug235968::AAA_235968 ) [2:5/26-6:6/143] lcurly=43 SCOPE: bug235968 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA_235968 [4:9/65-4:31/87] ConstructorImpl SCOPE: AAA_235968 
+                DEFINITION: null
+                SIGNATURE AAA_235968()
+                UNIQUE NAME F:bug235968::AAA_235968::AAA_235968()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION DEFINITION ~AAA_235968  [5:9/96-5:49/136] DestructorDDImpl SCOPE: AAA_235968 
+                SIGNATURE ~AAA_235968()
+                UNIQUE NAME f:bug235968::AAA_235968::~AAA_235968()
+                DECLARATION: ~AAA_235968  [5:9/96-5:49/136]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [5:9/96-5:49/136] SCOPE: ~AAA_235968 
+    CLASS BBB_235968 (bug235968::BBB_235968 ) [8:5/150-11:6/265] lcurly=187 SCOPE: bug235968 
+        BASE CLASSES:
+            CLASS=bug235968::AAA_235968 VISIBILITY==PUBLIC virtual==false text='public AAA_235968'
+        MEMBERS:
+            FUNCTION DEFINITION ~BBB_235968  [10:9/209-10:58/258] DestructorDDImpl SCOPE: BBB_235968 
+                SIGNATURE ~BBB_235968()
+                UNIQUE NAME f:bug235968::BBB_235968::~BBB_235968()
+                DECLARATION: ~BBB_235968  [10:9/209-10:58/258]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [10:9/209-10:58/258] SCOPE: ~BBB_235968 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug235968 (bug235968) 
+    bug235968.cpp  [1:1/0-12:2/268]
+NAMESPACE bug235968 (bug235968) 
+    CLASS AAA_235968 (bug235968::AAA_235968 ) [2:5/26-6:6/143] lcurly=43 SCOPE: bug235968 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA_235968 [4:9/65-4:31/87] ConstructorImpl SCOPE: AAA_235968 
+                DEFINITION: null
+                SIGNATURE AAA_235968()
+                UNIQUE NAME F:bug235968::AAA_235968::AAA_235968()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION DEFINITION ~AAA_235968  [5:9/96-5:49/136] DestructorDDImpl SCOPE: AAA_235968 
+                SIGNATURE ~AAA_235968()
+                UNIQUE NAME f:bug235968::AAA_235968::~AAA_235968()
+                DECLARATION: ~AAA_235968  [5:9/96-5:49/136]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [5:9/96-5:49/136] SCOPE: ~AAA_235968 
+    CLASS BBB_235968 (bug235968::BBB_235968 ) [8:5/150-11:6/265] lcurly=187 SCOPE: bug235968 
+        BASE CLASSES:
+            CLASS=bug235968::AAA_235968 VISIBILITY==PUBLIC virtual==false text='public AAA_235968'
+        MEMBERS:
+            FUNCTION DEFINITION ~BBB_235968  [10:9/209-10:58/258] DestructorDDImpl SCOPE: BBB_235968 
+                SIGNATURE ~BBB_235968()
+                UNIQUE NAME f:bug235968::BBB_235968::~BBB_235968()
+                DECLARATION: ~BBB_235968  [10:9/209-10:58/258]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [10:9/209-10:58/258] SCOPE: ~BBB_235968 
+

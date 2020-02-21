@@ -1,0 +1,6 @@
+aPriv int	$	    ClassA::aPriv
+aProt int	$	    ClassA::aProt
+aPub int	$	    ClassA::aPub
+aPrivFun() void	$	    ClassA::aPrivFun()
+aProtFun() void	$	    ClassA::aProtFun()
+aPubFun() void	$	    ClassA::aPubFun()

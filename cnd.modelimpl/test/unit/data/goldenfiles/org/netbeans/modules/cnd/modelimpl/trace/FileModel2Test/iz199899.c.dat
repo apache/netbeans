@@ -1,0 +1,157 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz199899.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS_FORWARD_DECLARATION BinaryTree199899 [1:1/-1-1:1/-1]
+VARIABLE x199899 [1:1/0-1:26/25]  TYPE: int TEXT=int  [1:1/0-1:13/12]  INIT: text='4'  SCOPE: $Global$ 
+CLASS_FORWARD_DECLARATION BinaryTree199899 [2:1/26-2:25/50]
+VARIABLE node199899 [3:1/51-3:47/97]  TYPE: BinaryTree199899 TEXT=BinaryTree199899  [3:19/69-3:35/85]  INIT: null  SCOPE: $Global$ 
+VARIABLE node199899_2 [4:1/98-4:58/155]  TYPE: BinaryTree199899 TEXT=BinaryTree199899  [4:28/125-4:44/141]  INIT: null  SCOPE: $Global$ 
+VARIABLE lversion199899 [5:1/156-5:43/198]  TYPE: const float TEXT=const float  [5:1/156-5:21/176]  INIT: text='1.2'  SCOPE: $Global$ 
+VARIABLE taxrate199899 [6:1/199-6:30/228]  TYPE: int TEXT=int  [6:1/199-6:15/213]  INIT: null  SCOPE: $Global$ 
+STRUCT employee199899 (employee199899 ) [7:1/230-10:2/301] lcurly=261 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC empid199899 [8:2/264-8:18/280]  TYPE: int TEXT=int  [8:2/264-8:5/267]  INIT: null  SCOPE: employee199899 
+        FIELD PUBLIC name199899 [9:2/282-9:19/299]  TYPE: *char TEXT=char*  [9:2/282-9:8/288]  INIT: null  SCOPE: employee199899 
+VARIABLE Employee199899 [10:3/302-10:17/316]  TYPE: employee199899 TEXT=employee199899  [7:1/230-10:2/301]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION createemployee199899  [12:1/319-12:59/377] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE createemployee199899(int,char*)
+    UNIQUE NAME f:createemployee199899(int,char*)
+    DECLARATION: createemployee199899  [12:1/319-12:59/377]
+    PARAMETERS:
+        id [12:36/354-12:42/360]  TYPE: int TEXT=int  [12:36/354-12:39/357]  INIT: null  SCOPE: createemployee199899 
+        name [12:44/362-12:54/372]  TYPE: *char TEXT=char*  [12:44/362-12:50/368]  INIT: null  SCOPE: createemployee199899 
+    RETURNS void TEXT=void  [12:10/328-12:14/332]
+    STATEMENT COMPOUND  [12:56/374-12:59/377] SCOPE: createemployee199899 
+FUNCTION DEFINITION deleteemployee199899  [13:1/378-13:49/426] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE deleteemployee199899(int)
+    UNIQUE NAME f:deleteemployee199899(int)
+    DECLARATION: deleteemployee199899  [13:1/378-13:49/426]
+    PARAMETERS:
+        id [13:38/415-13:44/421]  TYPE: int TEXT=int  [13:38/415-13:41/418]  INIT: null  SCOPE: deleteemployee199899 
+    RETURNS void TEXT=void  [13:12/389-13:16/393]
+    STATEMENT COMPOUND  [13:46/423-13:49/426] SCOPE: deleteemployee199899 
+FUNCTION DEFINITION modifyemployee199899  [14:1/427-14:47/473] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE modifyemployee199899(int)
+    UNIQUE NAME f:modifyemployee199899(int)
+    DECLARATION: modifyemployee199899  [14:1/427-14:47/473]
+    PARAMETERS:
+        id [14:36/462-14:42/468]  TYPE: int TEXT=int  [14:36/462-14:39/465]  INIT: null  SCOPE: modifyemployee199899 
+    RETURNS void TEXT=void  [14:10/436-14:14/440]
+    STATEMENT COMPOUND  [14:44/470-14:47/473] SCOPE: modifyemployee199899 
+STRUCT A199899__global (A199899__global ) [16:1/475-19:2/583] lcurly=507 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION A199899__global [17:5/513-17:23/531] ConstructorImpl SCOPE: A199899__global 
+            DEFINITION: null
+            SIGNATURE A199899__global()
+            UNIQUE NAME F:A199899__global::A199899__global()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A199899__global [18:5/536-18:50/581] ConstructorImpl SCOPE: A199899__global 
+            DEFINITION: null
+            SIGNATURE A199899__global(const A199899__global&)
+            UNIQUE NAME F:A199899__global::A199899__global(const A199899__global&)
+            PARAMETERS:
+                orig [18:21/552-18:48/579]  TYPE: const &A199899__global TEXT=const A199899__global&  [18:21/552-18:43/574]  INIT: null  SCOPE: A199899__global 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+STRUCT A199899__hidden (A199899__hidden ) [21:1/586-24:2/694] lcurly=618 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION A199899__hidden [22:5/624-22:23/642] ConstructorImpl SCOPE: A199899__hidden 
+            DEFINITION: null
+            SIGNATURE A199899__hidden()
+            UNIQUE NAME F:A199899__hidden::A199899__hidden()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A199899__hidden [23:5/647-23:50/692] ConstructorImpl SCOPE: A199899__hidden 
+            DEFINITION: null
+            SIGNATURE A199899__hidden(const A199899__hidden&)
+            UNIQUE NAME F:A199899__hidden::A199899__hidden(const A199899__hidden&)
+            PARAMETERS:
+                orig [23:21/663-23:48/690]  TYPE: const &A199899__hidden TEXT=const A199899__hidden&  [23:21/663-23:43/685]  INIT: null  SCOPE: A199899__hidden 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE x199899 [1:1/0-1:26/25]  TYPE: int TEXT=int  [1:1/0-1:13/12]  INIT: text='4'  SCOPE: $Global$ 
+STRUCT BinaryTree199899 (BinaryTree199899 ) [2:1/26-2:25/50] lcurly=49 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE node199899 [3:1/51-3:47/97]  TYPE: BinaryTree199899 TEXT=BinaryTree199899  [3:19/69-3:35/85]  INIT: null  SCOPE: $Global$ 
+VARIABLE node199899_2 [4:1/98-4:58/155]  TYPE: BinaryTree199899 TEXT=BinaryTree199899  [4:28/125-4:44/141]  INIT: null  SCOPE: $Global$ 
+VARIABLE lversion199899 [5:1/156-5:43/198]  TYPE: const float TEXT=const float  [5:1/156-5:21/176]  INIT: text='1.2'  SCOPE: $Global$ 
+VARIABLE taxrate199899 [6:1/199-6:30/228]  TYPE: int TEXT=int  [6:1/199-6:15/213]  INIT: null  SCOPE: $Global$ 
+STRUCT employee199899 (employee199899 ) [7:1/230-10:2/301] lcurly=261 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC empid199899 [8:2/264-8:18/280]  TYPE: int TEXT=int  [8:2/264-8:5/267]  INIT: null  SCOPE: employee199899 
+        FIELD PUBLIC name199899 [9:2/282-9:19/299]  TYPE: *char TEXT=char*  [9:2/282-9:8/288]  INIT: null  SCOPE: employee199899 
+VARIABLE Employee199899 [10:3/302-10:17/316]  TYPE: employee199899 TEXT=employee199899  [7:1/230-10:2/301]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION createemployee199899  [12:1/319-12:59/377] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE createemployee199899(int,char*)
+    UNIQUE NAME f:createemployee199899(int,char*)
+    DECLARATION: createemployee199899  [12:1/319-12:59/377]
+    PARAMETERS:
+        id [12:36/354-12:42/360]  TYPE: int TEXT=int  [12:36/354-12:39/357]  INIT: null  SCOPE: createemployee199899 
+        name [12:44/362-12:54/372]  TYPE: *char TEXT=char*  [12:44/362-12:50/368]  INIT: null  SCOPE: createemployee199899 
+    RETURNS void TEXT=void  [12:10/328-12:14/332]
+    STATEMENT COMPOUND  [12:56/374-12:59/377] SCOPE: createemployee199899 
+FUNCTION DEFINITION deleteemployee199899  [13:1/378-13:49/426] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE deleteemployee199899(int)
+    UNIQUE NAME f:deleteemployee199899(int)
+    DECLARATION: deleteemployee199899  [13:1/378-13:49/426]
+    PARAMETERS:
+        id [13:38/415-13:44/421]  TYPE: int TEXT=int  [13:38/415-13:41/418]  INIT: null  SCOPE: deleteemployee199899 
+    RETURNS void TEXT=void  [13:12/389-13:16/393]
+    STATEMENT COMPOUND  [13:46/423-13:49/426] SCOPE: deleteemployee199899 
+FUNCTION DEFINITION modifyemployee199899  [14:1/427-14:47/473] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE modifyemployee199899(int)
+    UNIQUE NAME f:modifyemployee199899(int)
+    DECLARATION: modifyemployee199899  [14:1/427-14:47/473]
+    PARAMETERS:
+        id [14:36/462-14:42/468]  TYPE: int TEXT=int  [14:36/462-14:39/465]  INIT: null  SCOPE: modifyemployee199899 
+    RETURNS void TEXT=void  [14:10/436-14:14/440]
+    STATEMENT COMPOUND  [14:44/470-14:47/473] SCOPE: modifyemployee199899 
+STRUCT A199899__global (A199899__global ) [16:1/475-19:2/583] lcurly=507 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION A199899__global [17:5/513-17:23/531] ConstructorImpl SCOPE: A199899__global 
+            DEFINITION: null
+            SIGNATURE A199899__global()
+            UNIQUE NAME F:A199899__global::A199899__global()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A199899__global [18:5/536-18:50/581] ConstructorImpl SCOPE: A199899__global 
+            DEFINITION: null
+            SIGNATURE A199899__global(const A199899__global&)
+            UNIQUE NAME F:A199899__global::A199899__global(const A199899__global&)
+            PARAMETERS:
+                orig [18:21/552-18:48/579]  TYPE: const &A199899__global TEXT=const A199899__global&  [18:21/552-18:43/574]  INIT: null  SCOPE: A199899__global 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+STRUCT A199899__hidden (A199899__hidden ) [21:1/586-24:2/694] lcurly=618 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION A199899__hidden [22:5/624-22:23/642] ConstructorImpl SCOPE: A199899__hidden 
+            DEFINITION: null
+            SIGNATURE A199899__hidden()
+            UNIQUE NAME F:A199899__hidden::A199899__hidden()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION A199899__hidden [23:5/647-23:50/692] ConstructorImpl SCOPE: A199899__hidden 
+            DEFINITION: null
+            SIGNATURE A199899__hidden(const A199899__hidden&)
+            UNIQUE NAME F:A199899__hidden::A199899__hidden(const A199899__hidden&)
+            PARAMETERS:
+                orig [23:21/663-23:48/690]  TYPE: const &A199899__hidden TEXT=const A199899__hidden&  [23:21/663-23:43/685]  INIT: null  SCOPE: A199899__hidden 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+

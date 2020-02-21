@@ -1,0 +1,5 @@
+s2Struct	$	    AliasS2::s2Struct
+i2 int	$	    AliasS2::i2
+sss s2Struct	$	    AliasS2::sss
+f2() void	$	    AliasS2::f2()
+ssfoo() void	$	    AliasS2::ssfoo()

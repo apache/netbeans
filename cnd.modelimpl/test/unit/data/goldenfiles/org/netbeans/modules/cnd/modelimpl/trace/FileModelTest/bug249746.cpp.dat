@@ -1,0 +1,72 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug249746.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug249746 [1:1/0-11:2/182] SCOPE: bug249746.cpp
+    STRUCT AAA249746 (bug249746::AAA249746 ) [2:5/26-4:6/79] lcurly=43 SCOPE: bug249746 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA249746 [3:9/53-3:29/73] ConstructorImpl SCOPE: AAA249746 
+                DEFINITION: null
+                SIGNATURE AAA249746(int,int)
+                UNIQUE NAME F:bug249746::AAA249746::AAA249746(int,int)
+                PARAMETERS:
+                     [3:19/63-3:22/66]  TYPE: int TEXT=int  [3:19/63-3:22/66]  INIT: null  SCOPE: AAA249746 
+                     [3:24/68-3:27/71]  TYPE: int TEXT=int  [3:24/68-3:27/71]  INIT: null  SCOPE: AAA249746 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    FUNCTION foo249746 [6:5/86-6:21/102] FunctionImpl SCOPE: bug249746 
+        DEFINITION: null
+        SIGNATURE foo249746()
+        UNIQUE NAME F:bug249746::foo249746()
+        PARAMETERS:
+        RETURNS int TEXT=int  [6:5/86-6:8/89]
+    FUNCTION DEFINITION boo249746  [8:5/108-10:6/180] FunctionDDImpl SCOPE: bug249746 
+        SIGNATURE boo249746()
+        UNIQUE NAME f:bug249746::boo249746()
+        DECLARATION: boo249746  [8:5/108-10:6/180]
+        PARAMETERS:
+        RETURNS int TEXT=int  [8:5/108-8:8/111]
+        STATEMENT COMPOUND  [8:21/124-10:6/180] SCOPE: boo249746 
+            STATEMENT DECLARATION  [9:9/134-9:49/174] SCOPE: Stmt  [8:21/124-10:6/180]
+                VARIABLE a [9:9/134-9:49/174]  TYPE: bug249746::AAA249746 TEXT=AAA249746  [9:9/134-9:18/143]  INIT: null  SCOPE: Stmt  [8:21/124-10:6/180]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug249746 (bug249746) 
+    bug249746.cpp  [1:1/0-11:2/182]
+NAMESPACE bug249746 (bug249746) 
+    STRUCT AAA249746 (bug249746::AAA249746 ) [2:5/26-4:6/79] lcurly=43 SCOPE: bug249746 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA249746 [3:9/53-3:29/73] ConstructorImpl SCOPE: AAA249746 
+                DEFINITION: null
+                SIGNATURE AAA249746(int,int)
+                UNIQUE NAME F:bug249746::AAA249746::AAA249746(int,int)
+                PARAMETERS:
+                     [3:19/63-3:22/66]  TYPE: int TEXT=int  [3:19/63-3:22/66]  INIT: null  SCOPE: AAA249746 
+                     [3:24/68-3:27/71]  TYPE: int TEXT=int  [3:24/68-3:27/71]  INIT: null  SCOPE: AAA249746 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    FUNCTION foo249746 [6:5/86-6:21/102] FunctionImpl SCOPE: bug249746 
+        DEFINITION: null
+        SIGNATURE foo249746()
+        UNIQUE NAME F:bug249746::foo249746()
+        PARAMETERS:
+        RETURNS int TEXT=int  [6:5/86-6:8/89]
+    FUNCTION DEFINITION boo249746  [8:5/108-10:6/180] FunctionDDImpl SCOPE: bug249746 
+        SIGNATURE boo249746()
+        UNIQUE NAME f:bug249746::boo249746()
+        DECLARATION: boo249746  [8:5/108-10:6/180]
+        PARAMETERS:
+        RETURNS int TEXT=int  [8:5/108-8:8/111]
+        STATEMENT COMPOUND  [8:21/124-10:6/180] SCOPE: boo249746 
+            STATEMENT DECLARATION  [9:9/134-9:49/174] SCOPE: Stmt  [8:21/124-10:6/180]
+                VARIABLE a [9:9/134-9:49/174]  TYPE: bug249746::AAA249746 TEXT=AAA249746  [9:9/134-9:18/143]  INIT: null  SCOPE: Stmt  [8:21/124-10:6/180]
+

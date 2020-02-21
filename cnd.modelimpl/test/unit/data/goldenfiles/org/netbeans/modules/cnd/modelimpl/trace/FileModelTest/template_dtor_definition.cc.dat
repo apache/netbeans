@@ -1,0 +1,121 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_dtor_definition.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Cls_1<class T> (Cls_1 ) [1:1/0-4:2/62] lcurly=30 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Cls_1 [2:9/33-2:17/41] ConstructorImpl SCOPE: Cls_1 
+            DEFINITION: null
+            SIGNATURE Cls_1()
+            UNIQUE NAME F:Cls_1::Cls_1()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Cls_1 [3:9/43-3:26/60] DestructorImpl SCOPE: Cls_1 
+            DEFINITION: ~Cls_1  [7:1/66-8:2/113]
+            SIGNATURE ~Cls_1()
+            UNIQUE NAME F:Cls_1::~Cls_1()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION ~Cls_1  [7:1/66-8:2/113] DestructorDefinitionImpl SCOPE: template_dtor_definition.cc
+    SIGNATURE ~Cls_1()
+    UNIQUE NAME f:Cls_1::~Cls_1()
+    DECLARATION: ~Cls_1  [3:9/43-3:26/60]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [7:45/110-8:2/113] SCOPE: ~Cls_1 
+CLASS Cls_2<class T> (Cls_2 ) [10:1/115-13:2/177] lcurly=145 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Cls_2 [11:9/148-11:17/156] ConstructorImpl SCOPE: Cls_2 
+            DEFINITION: null
+            SIGNATURE Cls_2()
+            UNIQUE NAME F:Cls_2::Cls_2()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Cls_2 [12:9/158-12:26/175] DestructorImpl SCOPE: Cls_2 
+            DEFINITION: ~Cls_2  [16:1/181-17:2/221]
+            SIGNATURE ~Cls_2()
+            UNIQUE NAME F:Cls_2::~Cls_2()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION ~Cls_2  [16:1/181-17:2/221] DestructorDefinitionImpl SCOPE: template_dtor_definition.cc
+    SIGNATURE ~Cls_2()
+    UNIQUE NAME f:Cls_2::~Cls_2()
+    DECLARATION: ~Cls_2  [12:9/158-12:26/175]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [16:38/218-17:2/221] SCOPE: ~Cls_2 
+CLASS Outer1<class T> (Outer1 ) [20:1/224-25:2/291] lcurly=255 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Outer1::Inner ) [21:9/258-23:10/287] lcurly=271 SCOPE: Outer1 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION ~Inner [22:17/275-22:26/284] DestructorImpl SCOPE: Inner 
+                    DEFINITION: ~Inner  [27:1/294-28:2/343]
+                    SIGNATURE ~Inner()
+                    UNIQUE NAME F:Outer1::Inner::~Inner()
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION ~Inner  [27:1/294-28:2/343] DestructorDefinitionImpl SCOPE: template_dtor_definition.cc
+    SIGNATURE ~Inner()
+    UNIQUE NAME f:Outer1::Inner::~Inner()
+    DECLARATION: ~Inner  [22:17/275-22:26/284]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [27:46/339-28:2/343] SCOPE: ~Inner 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Cls_1<class T> (Cls_1 ) [1:1/0-4:2/62] lcurly=30 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Cls_1 [2:9/33-2:17/41] ConstructorImpl SCOPE: Cls_1 
+            DEFINITION: null
+            SIGNATURE Cls_1()
+            UNIQUE NAME F:Cls_1::Cls_1()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Cls_1 [3:9/43-3:26/60] DestructorImpl SCOPE: Cls_1 
+            DEFINITION: ~Cls_1  [7:1/66-8:2/113]
+            SIGNATURE ~Cls_1()
+            UNIQUE NAME F:Cls_1::~Cls_1()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+CLASS Cls_2<class T> (Cls_2 ) [10:1/115-13:2/177] lcurly=145 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Cls_2 [11:9/148-11:17/156] ConstructorImpl SCOPE: Cls_2 
+            DEFINITION: null
+            SIGNATURE Cls_2()
+            UNIQUE NAME F:Cls_2::Cls_2()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Cls_2 [12:9/158-12:26/175] DestructorImpl SCOPE: Cls_2 
+            DEFINITION: ~Cls_2  [16:1/181-17:2/221]
+            SIGNATURE ~Cls_2()
+            UNIQUE NAME F:Cls_2::~Cls_2()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+CLASS Outer1<class T> (Outer1 ) [20:1/224-25:2/291] lcurly=255 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Outer1::Inner ) [21:9/258-23:10/287] lcurly=271 SCOPE: Outer1 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION ~Inner [22:17/275-22:26/284] DestructorImpl SCOPE: Inner 
+                    DEFINITION: ~Inner  [27:1/294-28:2/343]
+                    SIGNATURE ~Inner()
+                    UNIQUE NAME F:Outer1::Inner::~Inner()
+                    PARAMETERS:
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+

@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_pointer_as_param_type.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION f  [1:1/0-2:2/49] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,void(*)(int,int),char)
+    UNIQUE NAME f:f(int,void(*)(int,int),char)
+    DECLARATION: f  [1:1/0-2:2/49]
+    PARAMETERS:
+        y [1:8/7-1:13/12]  TYPE: int TEXT=int  [1:8/7-1:11/10]  INIT: null  SCOPE: f 
+        pf [1:14/13-1:38/37]  TYPE: void(int,int) TEXT=void(*)(int,int)  [1:14/13-1:38/37]  INIT: null  SCOPE: f 
+        x [1:39/38-1:45/44]  TYPE: char TEXT=char  [1:39/38-1:43/42]  INIT: null  SCOPE: f 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:47/46-2:2/49] SCOPE: f 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION f  [1:1/0-2:2/49] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,void(*)(int,int),char)
+    UNIQUE NAME f:f(int,void(*)(int,int),char)
+    DECLARATION: f  [1:1/0-2:2/49]
+    PARAMETERS:
+        y [1:8/7-1:13/12]  TYPE: int TEXT=int  [1:8/7-1:11/10]  INIT: null  SCOPE: f 
+        pf [1:14/13-1:38/37]  TYPE: void(int,int) TEXT=void(*)(int,int)  [1:14/13-1:38/37]  INIT: null  SCOPE: f 
+        x [1:39/38-1:45/44]  TYPE: char TEXT=char  [1:39/38-1:43/42]  INIT: null  SCOPE: f 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:47/46-2:2/49] SCOPE: f 
+

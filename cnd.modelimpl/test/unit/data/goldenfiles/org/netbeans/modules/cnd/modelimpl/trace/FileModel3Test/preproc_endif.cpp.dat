@@ -1,0 +1,35 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["__FDS_BITS",<ID>,line=17,col=10],offset=337,file=null[["set",<ID>,line=17,col=21],offset=348,file=null]'='["(",<LPAREN>,line=17,col=26],offset=353,file=null ["(",<LPAREN>,line=17,col=27],offset=354,file=null ["set",<ID>,line=17,col=28],offset=355,file=null [")",<RPAREN>,line=17,col=31],offset=358,file=null ["->",<POINTERTO>,line=17,col=32],offset=359,file=null ["__fb",<ID>,line=17,col=34],offset=361,file=null [")",<RPAREN>,line=17,col=38],offset=365,file=null'
+<U>#define '["__FD_SETSIZE",<ID>,line=7,col=9],offset=120,file=null'='["16",<DECIMALINT>,line=7,col=22],offset=133,file=null'
+<U>#define '["__NFDBITS",<ID>,line=6,col=9],offset=78,file=null'='["(",<LPAREN>,line=6,col=25],offset=94,file=null ["8",<DECIMALINT>,line=6,col=26],offset=95,file=null ["*",<STAR>,line=6,col=28],offset=97,file=null ["sizeof",<ID>,line=6,col=30],offset=99,file=null ["(",<LPAREN>,line=6,col=37],offset=106,file=null ["fm",<ID>,line=6,col=38],offset=107,file=null [")",<RPAREN>,line=6,col=40],offset=109,file=null [")",<RPAREN>,line=6,col=41],offset=110,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_endif.cpp
+Includes:
+    <no includes>
+Macros:
+#define '__FDS_BITS[set]' [17:1/328-17:39/366]
+#define '__FD_SETSIZE' [7:1/112-7:24/135]
+#define '__NFDBITS' [6:1/70-6:42/111]
+CLASS fm (fm ) [5:1/57-5:12/68] lcurly=66 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE fb1 [8:1/136-8:34/169]  TYPE: fm[] TEXT=fm[]  [8:1/136-8:3/138]  INIT: null  SCOPE: $Global$ 
+STRUCT  ( ) [10:1/171-19:4/377] lcurly=188 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC __fb [16:5/293-16:39/327]  TYPE: fm[] TEXT=fm[]  [16:5/293-16:7/295]  INIT: null  SCOPE:  
+TYPEDEF fd_set  [19:5/378-19:11/384] TYPE:  TEXT=typedef struct { fm __fb [ 16 / ( 8 * sizeof ( fm ) ) ] ; } fd_set ;  [10:1/171-19:12/385] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+CLASS fm (fm ) [5:1/57-5:12/68] lcurly=66 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE fb1 [8:1/136-8:34/169]  TYPE: fm[] TEXT=fm[]  [8:1/136-8:3/138]  INIT: null  SCOPE: $Global$ 
+TYPEDEF fd_set  [19:5/378-19:11/384] TYPE:  TEXT=typedef struct { fm __fb [ 16 / ( 8 * sizeof ( fm ) ) ] ; } fd_set ;  [10:1/171-19:12/385] SCOPE: $Global$ 
+

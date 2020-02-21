@@ -1,0 +1,30 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug183152.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION A  [1:7/6-3:10/40] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:A
+    DECLARATION: A  [1:7/6-3:10/40]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION A  [1:7/6-3:10/40] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:A
+    DECLARATION: A  [1:7/6-3:10/40]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

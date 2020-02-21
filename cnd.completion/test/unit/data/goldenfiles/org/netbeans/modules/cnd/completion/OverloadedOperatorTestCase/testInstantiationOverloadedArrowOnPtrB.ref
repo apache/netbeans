@@ -1,0 +1,3 @@
+operator ->() B*	$	    pB->operator ->()
+operator [](int ind) B	$	    pB->operator []()
+taoo() void	$	    pB->taoo()

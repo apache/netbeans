@@ -1,0 +1,63 @@
+<ui version="4.0" >
+ <class>HelloForm</class>
+ <widget class="QDialog" name="HelloForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>142</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Hello Qt World</string>
+  </property>
+  <widget class="QLineEdit" name="nameEdit" >
+   <property name="geometry" >
+    <rect>
+     <x>22</x>
+     <y>47</y>
+     <width>361</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>361</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Enter your name below</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="helloEdit" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="geometry" >
+    <rect>
+     <x>22</x>
+     <y>90</y>
+     <width>361</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="frame" >
+    <bool>false</bool>
+   </property>
+   <property name="readOnly" >
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

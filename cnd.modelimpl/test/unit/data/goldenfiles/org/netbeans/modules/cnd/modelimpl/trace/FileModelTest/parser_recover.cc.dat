@@ -1,0 +1,42 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE parser_recover.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE x [3:5/15-3:11/21]  TYPE: int TEXT=int  [3:5/15-3:8/18]  INIT: null  SCOPE: $Global$ 
+VARIABLE y [5:1/24-5:7/30]  TYPE: int TEXT=int  [5:1/24-5:4/27]  INIT: null  SCOPE: $Global$ 
+VARIABLE ints [7:1/32-10:3/80]  TYPE: const int[] TEXT=const int[]  [7:1/32-7:10/41]  INIT: text='{ \
+   foo(1,2)
+   A(1,3),
+}'  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [12:1/82-13:2/96] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [12:1/82-13:2/96]
+    PARAMETERS:
+    RETURNS int TEXT=int  [12:1/82-12:4/85]
+    STATEMENT COMPOUND  [12:12/93-13:2/96] SCOPE: main 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE x [3:5/15-3:11/21]  TYPE: int TEXT=int  [3:5/15-3:8/18]  INIT: null  SCOPE: $Global$ 
+VARIABLE y [5:1/24-5:7/30]  TYPE: int TEXT=int  [5:1/24-5:4/27]  INIT: null  SCOPE: $Global$ 
+VARIABLE ints [7:1/32-10:3/80]  TYPE: const int[] TEXT=const int[]  [7:1/32-7:10/41]  INIT: text='{ \
+   foo(1,2)
+   A(1,3),
+}'  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [12:1/82-13:2/96] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [12:1/82-13:2/96]
+    PARAMETERS:
+    RETURNS int TEXT=int  [12:1/82-12:4/85]
+    STATEMENT COMPOUND  [12:12/93-13:2/96] SCOPE: main 
+

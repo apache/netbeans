@@ -1,0 +1,70 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE classMemberFwdEnum.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN one [1:1/0-28:2/764] SCOPE: classMemberFwdEnum.cpp
+    STRUCT S (one::S ) [3:5/20-13:6/194] lcurly=33 SCOPE: one 
+        BASE CLASSES:
+        MEMBERS:
+            ENUM  [5:9/43-5:30/64] SCOPE: S 
+                A
+                B
+            STRUCT T (one::S::T ) [6:9/74-12:10/187] lcurly=91 SCOPE: S 
+                BASE CLASSES:
+                MEMBERS:
+                    ENUM  [8:13/105-8:29/121] SCOPE: T 
+                        B
+                    ENUM_FORWARD_DECLARATION PUBLIC E1 [10:13/136-10:27/150] ClassImpl$EnumMemberForwardDeclaration
+                        STRONGLY TYPED ENUM S::T::E1 [15:5/201-15:47/243] SCOPE: T 
+                            A1
+                            B1
+                            C1
+                    ENUM_FORWARD_DECLARATION PUBLIC E2 [11:13/163-11:27/177] ClassImpl$EnumMemberForwardDeclaration
+                        ENUM S::T::E2 [16:5/249-16:47/291] SCOPE: T 
+                            A1
+                            B1
+                            C1
+    STRONGLY TYPED ENUM S::T::E1 [15:5/201-15:47/243] SCOPE: T 
+        A1
+        B1
+        C1
+    ENUM S::T::E2 [16:5/249-16:47/291] SCOPE: T 
+        A1
+        B1
+        C1
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for one (one) 
+    classMemberFwdEnum.cpp  [1:1/0-28:2/764]
+NAMESPACE one (one) 
+    STRUCT S (one::S ) [3:5/20-13:6/194] lcurly=33 SCOPE: one 
+        BASE CLASSES:
+        MEMBERS:
+            ENUM  [5:9/43-5:30/64] SCOPE: S 
+                A
+                B
+            STRUCT T (one::S::T ) [6:9/74-12:10/187] lcurly=91 SCOPE: S 
+                BASE CLASSES:
+                MEMBERS:
+                    ENUM  [8:13/105-8:29/121] SCOPE: T 
+                        B
+                    ENUM_FORWARD_DECLARATION PUBLIC E1 [10:13/136-10:27/150] ClassImpl$EnumMemberForwardDeclaration
+                        STRONGLY TYPED ENUM S::T::E1 [15:5/201-15:47/243] SCOPE: T 
+                            A1
+                            B1
+                            C1
+                    ENUM_FORWARD_DECLARATION PUBLIC E2 [11:13/163-11:27/177] ClassImpl$EnumMemberForwardDeclaration
+                        ENUM S::T::E2 [16:5/249-16:47/291] SCOPE: T 
+                            A1
+                            B1
+                            C1
+

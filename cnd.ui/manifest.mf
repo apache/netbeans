@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.cnd.ui
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/ui/resources/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/resources/mf-layer.xml
+OpenIDE-Module-Specification-Version: 1.4.1
+

@@ -1,0 +1,4 @@
+clearmake[1]: Entering directory `/var/tmp//src'
+
+../coComd.C:200: error: expected ";" before "}" token
+

@@ -1,0 +1,19 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug205292.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF _PHNDLR_m  [1:1/0-1:33/32] TYPE: void(int) TEXT=void(*)(int)  [1:9/8-1:32/31] SCOPE: $Global$ 
+VARIABLE __psignal_func [2:1/33-2:68/100]  TYPE: _PHNDLR_m[] TEXT=volatile _PHNDLR_m[]  [2:1/33-2:48/80]  INIT: null  SCOPE: bug205292.cpp
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF _PHNDLR_m  [1:1/0-1:33/32] TYPE: void(int) TEXT=void(*)(int)  [1:9/8-1:32/31] SCOPE: $Global$ 
+

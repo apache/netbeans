@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ144276.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF C  [1:1/0-1:16/15] TYPE: $unresolved$::C::C TEXT=C::C  [1:9/8-1:13/12] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF C  [1:1/0-1:16/15] TYPE: $unresolved$::C::C TEXT=C::C  [1:9/8-1:13/12] SCOPE: $Global$ 
+

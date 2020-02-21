@@ -1,0 +1,183 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2010, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<html>
+<body>
+Overview of MI package.
+<pre>
+This package provides facilities for sending MI commands to an MI
+engine and processing MI records returned from the engine.
+
+It is based on this
+<a href="http://sourceware.org/gdb/current/onlinedocs/gdb_25.html">
+MI specification</a>.
+
+<h2>Terms</h2>
+MI	Machine Interface
+engine	A process that receives MI commands via its stdin and sends MI
+	records via it's stdout.
+
+<h2>Goals</h2>
+R1 Engine independence.
+   While MI was specifically designed for interaction with gdb, this package
+   does not assume that and mostly works with the syntax of MI.
+   For example, the value of the prompt is not hard-coded and neither are
+   various variable names.
+   If you "grep -i gdb *.java" you should not find any hits other than in URLs.
+
+R2 Connection independence.
+   This package does not provide services for starting the engine nor
+   facilities for reading and writing IO.
+   o Formed MICommands are given to it and passed on via the
+     MICOmmandInjector interface.
+   o Raw lines are given to it and dispatched via abstract methods
+     in MIProxy and MICommand.
+
+R3 NetBeans independence.
+   This package does not import any netbeans APIs and constitutes a 
+   "library". Therefore it can be used in other applications.
+
+<h2>Command management</h2>
+[ TBF ]
+
+<h2>Multi-threading considerations</h2>
+[ TBF ]
+
+<h2>Cookbook</h2>
+1. Run a gdb process and get it's i/o streams.
+   
+   This is the absolute minimum. A more sophisticated setup could use a
+   org.netbeans.lib.terminalemulator.Term and create a variation on
+   org.netbeans.lib.terminalemulator.LineDiscipline to intercept lines
+   coming from gdb and inject lines to gdb while echoing all (or some)
+   of it in the Term.
+
+2. Create a MICommandInjector to send commands to gdb:
+
+	class MyInjector implements MICommandInjector {
+		protected void inject(String line) {
+			gdbWriter.write(line);
+			gdbWriter.flush();
+		}
+	}
+
+	MICommandInjector injector = new MyInjector();
+
+3. Create a MIProxy:
+	class MyMIProxy extends MIProxy {
+		public MyMIProxy(MICommandInjector injector) {
+			super(injector, "(gdb)");
+		}
+
+		// All the protected methods are optional.
+		// MIProxy will automatically dispatch 'result' and
+		// 'async' records via their MICommands.
+		//
+		// If you anticipate stream records you should override
+		// logStreamOutput(), consoleStreamOutput(), and
+		// targetStreamOutput(). For example:
+
+		protected void consoleStreamOutput(MIRecord record) {
+			String data = record.stream();
+			// send data to proper console
+		}
+	}
+
+	MIProxy myMIProxy = new MyMIProxy(injector);
+
+4. Start a thread to read gdb output and have it do this:
+	...
+	String line = gdbBufferedReader.readLine();
+	myMIProxy.processLine(line);
+
+	// processLine() will ultimately call back on specific MICommands
+	// submitted earlier.
+
+5. For each action being performed create an MICOmmand and send it via
+   the proxy:
+
+	public void stepInto() {
+		MICommand cmd = new MICommand("-exec-step") {
+			public void onDone(MIRecord record) {
+				finish();
+			}
+			public void onRunning(MIRecord record) {
+				// adjust running/stopped state.
+			}
+			public void onError(MIRecord record) {
+				// adjust running/stopped state.
+				// post error as needed
+				finish();
+			}
+			public void onRunning(MIRecord record) {
+				// adjust running/stopped state.
+				finish();
+			}
+			public void onExit(MIRecord record) {
+				// unexpected: post error as needed
+				finish();
+			}
+			public void onOther(MIRecord record) {
+				// unexpected: post error as needed
+				finish();
+			}
+		}
+
+		myMIProxy.send(cmd);
+	}
+
+  NOTE:
+	  It's unclear to me which class of record actually finishes a
+	  particular command.
+	  - It's concievable that one can receive multiple errors.
+	  - Also one can receive a 'running' followed by an 'error' and
+	    so the running state needs to be re-adjusted.
+	  - A step seems to get terminated by a 'stopped'; I've never seen 
+	    a 'done', so perhaps one should process onDone() as unexpected?
+
+	With time all of this will hopefully become clearer.
+
+<h2>TODO</h2>
+- c-string parser needs to accept octal and other less common escapes.
+- Provide a variable "intern"ing facility so variable matching can be done
+  using '==' instead of equals.
+
+</pre>
+</body>
+</html>

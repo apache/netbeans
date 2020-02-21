@@ -1,0 +1,19 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz151621.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE x_151621 [1:1/0-1:23/22]  TYPE: int TEXT=int  [1:1/0-1:13/12]  INIT: null  SCOPE: $Global$ 
+EXTERN VARIABLE y_151621 [2:1/23-2:40/62]  TYPE: double TEXT=double  [2:1/23-2:30/52]  INIT: null  SCOPE: iz151621.c
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE x_151621 [1:1/0-1:23/22]  TYPE: int TEXT=int  [1:1/0-1:13/12]  INIT: null  SCOPE: $Global$ 
+

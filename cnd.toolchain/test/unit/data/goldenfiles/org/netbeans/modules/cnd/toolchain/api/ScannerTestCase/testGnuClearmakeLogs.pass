@@ -1,0 +1,2 @@
+1 enterDirectory { depth: 1; dir: /var/tmp//src }
+3 error { file: ../coComd.C; line: 200 }

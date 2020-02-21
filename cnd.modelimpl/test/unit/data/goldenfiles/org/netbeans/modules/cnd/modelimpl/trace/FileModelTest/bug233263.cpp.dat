@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug233263.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN  [1:1/0-14:2/157] SCOPE: bug233263.cpp
+    CLASS Test (<unnamed>::Test ) [2:5/16-5:6/64] lcurly=31 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION test [4:9/41-4:26/58] MethodImpl SCOPE: Test 
+                DEFINITION: test  [7:5/71-13:6/155]
+                SIGNATURE test() const
+                UNIQUE NAME F:<unnamed>::Test::test() const
+                PARAMETERS:
+                RETURNS int TEXT=int  [4:9/41-4:12/44]
+    FUNCTION DEFINITION test  [7:5/71-13:6/155] FunctionDefinitionImpl SCOPE: bug233263.cpp
+        SIGNATURE test() const
+        UNIQUE NAME f:<unnamed>::Test::test() const
+        DECLARATION: test  [4:9/41-4:26/58]
+        PARAMETERS:
+        RETURNS int TEXT=int  [7:5/71-7:8/74]
+        STATEMENT COMPOUND  [7:28/94-13:6/155] SCOPE: test 
+            STATEMENT TRY_CATCH  [7:28/94-13:6/155] SCOPE: Stmt  [7:28/94-13:6/155]
+                TRY:
+                STATEMENT COMPOUND  [8:5/102-10:6/127] SCOPE: Stmt  [7:28/94-13:6/155]
+                    STATEMENT RETURN  [9:9/112-9:18/121] SCOPE: Stmt  [8:5/102-10:6/127] text: 'return 0;'
+                HANDLERS:
+                STATEMENT CATCH  [11:5/132-13:6/155] SCOPE: Stmt  [7:28/94-13:6/155]
+                    PARAMETER: ... [11:12/139-11:15/142]  TYPE: null   INIT: null  SCOPE: Stmt  [11:5/132-13:6/155]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for  (<unnamed>) 
+    bug233263.cpp  [1:1/0-14:2/157]
+NAMESPACE  (<unnamed>) 
+    CLASS Test (<unnamed>::Test ) [2:5/16-5:6/64] lcurly=31 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION test [4:9/41-4:26/58] MethodImpl SCOPE: Test 
+                DEFINITION: test  [7:5/71-13:6/155]
+                SIGNATURE test() const
+                UNIQUE NAME F:<unnamed>::Test::test() const
+                PARAMETERS:
+                RETURNS int TEXT=int  [4:9/41-4:12/44]
+

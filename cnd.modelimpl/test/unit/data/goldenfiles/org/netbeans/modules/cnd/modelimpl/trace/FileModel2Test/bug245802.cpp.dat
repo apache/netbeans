@@ -1,0 +1,49 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug245802.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug245802 [1:1/0-9:2/186] SCOPE: bug245802.cpp
+    STRUCT A245802 (bug245802::A245802 ) [2:5/26-4:6/98] lcurly=41 SCOPE: bug245802 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator < [3:9/51-3:50/92] MethodImpl SCOPE: A245802 
+                DEFINITION: operator <  [6:5/105-8:6/184]
+                SIGNATURE operator <(const A245802&) const
+                UNIQUE NAME F:bug245802::A245802::operator <(const A245802&) const
+                PARAMETERS:
+                    r [3:26/68-3:42/84]  TYPE: const &bug245802::A245802 TEXT=const A245802&  [3:26/68-3:40/82]  INIT: null  SCOPE: operator < 
+                RETURNS bool TEXT=bool  [3:9/51-3:13/55]
+    FUNCTION DEFINITION operator <  [6:5/105-8:6/184] FunctionDefinitionImpl SCOPE: bug245802.cpp
+        SIGNATURE operator <(const A245802&) const
+        UNIQUE NAME f:bug245802::A245802::operator <(const A245802&) const
+        DECLARATION: operator <  [3:9/51-3:50/92]
+        PARAMETERS:
+            r [6:31/131-6:47/147]  TYPE: const &bug245802::A245802 TEXT=const A245802&  [6:31/131-6:45/145]  INIT: null  SCOPE: operator < 
+        RETURNS bool TEXT=bool  [6:5/105-6:9/109]
+        STATEMENT COMPOUND  [6:55/155-8:6/184] SCOPE: operator < 
+            STATEMENT RETURN  [7:9/165-7:22/178] SCOPE: Stmt  [6:55/155-8:6/184] text: 'return false;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug245802 (bug245802) 
+    bug245802.cpp  [1:1/0-9:2/186]
+NAMESPACE bug245802 (bug245802) 
+    STRUCT A245802 (bug245802::A245802 ) [2:5/26-4:6/98] lcurly=41 SCOPE: bug245802 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator < [3:9/51-3:50/92] MethodImpl SCOPE: A245802 
+                DEFINITION: operator <  [6:5/105-8:6/184]
+                SIGNATURE operator <(const A245802&) const
+                UNIQUE NAME F:bug245802::A245802::operator <(const A245802&) const
+                PARAMETERS:
+                    r [3:26/68-3:42/84]  TYPE: const &bug245802::A245802 TEXT=const A245802&  [3:26/68-3:40/82]  INIT: null  SCOPE: operator < 
+                RETURNS bool TEXT=bool  [3:9/51-3:13/55]
+

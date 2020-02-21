@@ -1,0 +1,57 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE inline_dtor_definition_name.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS A (A ) [1:1/0-7:2/74] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION A  [3:5/22-3:18/35] ConstructorDDImpl SCOPE: A 
+            SIGNATURE A()
+            UNIQUE NAME f:A::A()
+            DECLARATION: A  [3:5/22-3:18/35]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [3:16/33-3:18/35] SCOPE: A 
+        FUNCTION ~A [4:5/40-4:17/52] DestructorImpl SCOPE: A 
+            DEFINITION: ~A  [9:1/77-10:2/95]
+            SIGNATURE ~A()
+            UNIQUE NAME F:A::~A()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PRIVATE a [6:5/66-6:11/72]  TYPE: int TEXT=int  [6:5/66-6:8/69]  INIT: null  SCOPE: A 
+FUNCTION DEFINITION ~A  [9:1/77-10:2/95] DestructorDefinitionImpl SCOPE: inline_dtor_definition_name.cc
+    SIGNATURE ~A()
+    UNIQUE NAME f:A::~A()
+    DECLARATION: ~A  [4:5/40-4:17/52]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [9:16/92-10:2/95] SCOPE: ~A 
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [1:1/0-7:2/74] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION A  [3:5/22-3:18/35] ConstructorDDImpl SCOPE: A 
+            SIGNATURE A()
+            UNIQUE NAME f:A::A()
+            DECLARATION: A  [3:5/22-3:18/35]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [3:16/33-3:18/35] SCOPE: A 
+        FUNCTION ~A [4:5/40-4:17/52] DestructorImpl SCOPE: A 
+            DEFINITION: ~A  [9:1/77-10:2/95]
+            SIGNATURE ~A()
+            UNIQUE NAME F:A::~A()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PRIVATE a [6:5/66-6:11/72]  TYPE: int TEXT=int  [6:5/66-6:8/69]  INIT: null  SCOPE: A 
+

@@ -1,0 +1,102 @@
+'_customer_H', tokenID=preprocessor_identifier, offset=2113 [42:9/2113-42:20/2124]
+--OWNER:
+    null
+--RESOLVED TO:
+    MACROS #define '_customer_H' [43:1/2125-43:20/2144]
+==============================================================
+'_customer_H', tokenID=preprocessor_identifier, offset=2133 [43:9/2133-43:20/2144]
+--OWNER:
+    MACROS #define '_customer_H' [43:1/2125-43:20/2144]
+--RESOLVED TO:
+    MACROS #define '_customer_H' [43:1/2125-43:20/2144]
+==============================================================
+'std', tokenID=identifier, offset=2185 [47:17/2185-47:20/2188]
+--OWNER:
+    USING_DIRECTIVE std [47:1/2169-47:20/2188] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'Customer', tokenID=identifier, offset=2197 [49:7/2197-49:15/2205]
+--OWNER:
+    CLASS Customer [49:1/2191-60:2/2475] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    CLASS Customer [49:1/2191-60:2/2475] ReferencesTestCase/customer.h
+==============================================================
+'Customer', tokenID=identifier, offset=2228 [51:9/2228-51:17/2236]
+--OWNER:
+    FUNCTION Customer(const string,int)  [51:9/2228-51:59/2278] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    FUNCTION Customer(const string,int)  [51:9/2228-51:59/2278] ReferencesTestCase/customer.h
+==============================================================
+'string', tokenID=identifier, offset=2243 [51:24/2243-51:30/2249]
+--OWNER:
+    TYPE const $unresolved$::string TEXT=const string  [51:18/2237-51:30/2249] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'initName', tokenID=identifier, offset=2250 [51:31/2250-51:39/2258]
+--OWNER:
+    VARIABLE initName [51:18/2237-51:39/2258] ReferencesTestCase/customer.h  TYPE: const $unresolved$::string TEXT=const string  [51:18/2237-51:30/2249]  INIT: null  SCOPE: Customer 
+--RESOLVED TO:
+    VARIABLE initName [51:18/2237-51:39/2258] ReferencesTestCase/customer.h  TYPE: const $unresolved$::string TEXT=const string  [51:18/2237-51:30/2249]  INIT: null  SCOPE: Customer 
+==============================================================
+'initDiscount', tokenID=identifier, offset=2264 [51:45/2264-51:57/2276]
+--OWNER:
+    VARIABLE initDiscount [51:41/2260-51:57/2276] ReferencesTestCase/customer.h  TYPE: int TEXT=int  [51:41/2260-51:44/2263]  INIT: null  SCOPE: Customer 
+--RESOLVED TO:
+    VARIABLE initDiscount [51:41/2260-51:57/2276] ReferencesTestCase/customer.h  TYPE: int TEXT=int  [51:41/2260-51:44/2263]  INIT: null  SCOPE: Customer 
+==============================================================
+'string', tokenID=identifier, offset=2287 [52:9/2287-52:15/2293]
+--OWNER:
+    TYPE $unresolved$::string TEXT=string  [52:9/2287-52:15/2293] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'GetName', tokenID=identifier, offset=2294 [52:16/2294-52:23/2301]
+--OWNER:
+    FUNCTION GetName() const  [52:9/2287-52:32/2310] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    FUNCTION GetName() const  [52:9/2287-52:32/2310] ReferencesTestCase/customer.h
+==============================================================
+'GetDiscount', tokenID=identifier, offset=2323 [53:13/2323-53:24/2334]
+--OWNER:
+    FUNCTION GetDiscount() const  [53:9/2319-53:33/2343] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    FUNCTION GetDiscount() const  [53:9/2319-53:33/2343] ReferencesTestCase/customer.h
+==============================================================
+'string', tokenID=identifier, offset=2374 [56:9/2374-56:15/2380]
+--OWNER:
+    TYPE $unresolved$::string TEXT=string  [56:9/2374-56:15/2380] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'name', tokenID=identifier, offset=2381 [56:16/2381-56:20/2385]
+--OWNER:
+    VARIABLE name [56:9/2374-56:21/2386] ReferencesTestCase/customer.h  TYPE: $unresolved$::string TEXT=string  [56:9/2374-56:15/2380]  INIT: null  SCOPE: Customer 
+--RESOLVED TO:
+    VARIABLE name [56:9/2374-56:21/2386] ReferencesTestCase/customer.h  TYPE: $unresolved$::string TEXT=string  [56:9/2374-56:15/2380]  INIT: null  SCOPE: Customer 
+==============================================================
+'discount', tokenID=identifier, offset=2399 [57:13/2399-57:21/2407]
+--OWNER:
+    VARIABLE discount [57:9/2395-57:22/2408] ReferencesTestCase/customer.h  TYPE: int TEXT=int  [57:9/2395-57:12/2398]  INIT: null  SCOPE: Customer 
+--RESOLVED TO:
+    VARIABLE discount [57:9/2395-57:22/2408] ReferencesTestCase/customer.h  TYPE: int TEXT=int  [57:9/2395-57:12/2398]  INIT: null  SCOPE: Customer 
+==============================================================
+'ostream', tokenID=identifier, offset=2425 [59:16/2425-59:23/2432]
+--OWNER:
+    TYPE &$unresolved$::ostream TEXT=ostream&  [59:16/2425-59:24/2433] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'ostream', tokenID=identifier, offset=2446 [59:37/2446-59:44/2453]
+--OWNER:
+    TYPE &$unresolved$::ostream TEXT=ostream&  [59:37/2446-59:45/2454] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    null
+==============================================================
+'Customer', tokenID=identifier, offset=2462 [59:53/2462-59:61/2470]
+--OWNER:
+    TYPE const &Customer TEXT=const Customer&  [59:47/2456-59:62/2471] ReferencesTestCase/customer.h
+--RESOLVED TO:
+    CLASS Customer [49:1/2191-60:2/2475] ReferencesTestCase/customer.h
+==============================================================

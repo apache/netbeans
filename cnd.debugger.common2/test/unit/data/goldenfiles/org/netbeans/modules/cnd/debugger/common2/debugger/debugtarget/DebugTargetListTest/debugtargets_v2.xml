@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<debugtargets version="2">
+  <debugtarget id="1 /bin/cat  [localhost] [dbx]">
+    <engine>dbx</engine>
+    <settings>
+      <exec>/bin/cat</exec>
+      <args></args>
+      <host>localhost</host>
+      <rundir>.</rundir>
+      <environment>
+      </environment>
+    </settings>
+    <dbxdebugger version="1">
+      <pathmaps>
+      </pathmaps>
+      <interceptlist>
+        <interceptoptions all="false" unhandled="true" unexpected="true"/>
+      </interceptlist>
+      <signals>
+      </signals>
+      <options>
+        <DebugOptions>
+        </DebugOptions>
+      </options>
+      <buildfirst buildfirst_overriden="false" buildfirst_old="false"/>
+    </dbxdebugger>
+    <dbx_gdbdebugger version="1">
+      <gdb_pathmaps>
+      </gdb_pathmaps>
+      <gdb_interceptlist>
+        <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+      </gdb_interceptlist>
+      <gdb_options>
+        <DebugOptions>
+        </DebugOptions>
+      </gdb_options>
+      <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+    </dbx_gdbdebugger>
+    <dbxrtc version="1">
+      <options>
+        <RtcOptions>
+          <option name="rtc_error_log_file_name" value="/dev/null"/>
+        </RtcOptions>
+      </options>
+      <loadobjs>
+        <lo name="/bin/cat" skip="false"/>
+        <lo name="/usr/lib/ld.so.1" skip="false"/>
+      </loadobjs>
+    </dbxrtc>
+  </debugtarget>
+  <debugtarget id="2 /bin/ls  [localhost] [dbx]">
+    <engine>dbx</engine>
+    <settings>
+      <exec>/bin/ls</exec>
+      <args></args>
+      <host>localhost</host>
+      <rundir>.</rundir>
+      <environment>
+      </environment>
+    </settings>
+    <dbxdebugger version="1">
+      <pathmaps>
+      </pathmaps>
+      <interceptlist>
+        <interceptoptions all="false" unhandled="true" unexpected="true"/>
+      </interceptlist>
+      <signals>
+      </signals>
+      <options>
+        <DebugOptions>
+          <option name="output_base" value="10"/>
+        </DebugOptions>
+      </options>
+      <buildfirst buildfirst_overriden="false" buildfirst_old="false"/>
+    </dbxdebugger>
+    <dbx_gdbdebugger version="1">
+      <gdb_pathmaps>
+      </gdb_pathmaps>
+      <gdb_interceptlist>
+        <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+      </gdb_interceptlist>
+      <gdb_options>
+        <DebugOptions>
+        </DebugOptions>
+      </gdb_options>
+      <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+    </dbx_gdbdebugger>
+    <dbxrtc version="1">
+      <options>
+        <RtcOptions>
+          <option name="rtc_error_log_file_name" value="/dev/null"/>
+        </RtcOptions>
+      </options>
+      <loadobjs>
+        <lo name="/bin/ls" skip="false"/>
+        <lo name="/usr/lib/ld.so.1" skip="false"/>
+        <lo name="/lib/libsec.so.1" skip="false"/>
+        <lo name="/lib/libavl.so.1" skip="false"/>
+      </loadobjs>
+    </dbxrtc>
+  </debugtarget>
+</debugtargets>

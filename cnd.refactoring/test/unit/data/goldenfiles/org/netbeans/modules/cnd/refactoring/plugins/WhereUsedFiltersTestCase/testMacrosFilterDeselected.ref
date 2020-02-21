@@ -1,0 +1,3 @@
+References in file WhereUsedFiltersTestCase/testFUFilters.c
+[16:5-16:6] int <b>a</b>;
+[25:3-25:4] <b>a</b> = f;

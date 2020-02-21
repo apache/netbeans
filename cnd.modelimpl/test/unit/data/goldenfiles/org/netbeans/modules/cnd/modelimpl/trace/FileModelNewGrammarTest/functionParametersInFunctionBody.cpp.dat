@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE functionParametersInFunctionBody.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF mask  [2:1/1-2:18/18] TYPE: int TEXT=int  [2:9/9-2:12/12] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [4:1/20-6:2/57] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(mask)
+    UNIQUE NAME f:foo(mask)
+    DECLARATION: foo  [4:1/20-6:2/57]
+    PARAMETERS:
+        mask [4:9/28-4:18/37]  TYPE: mask TEXT=mask  [4:9/28-4:13/32]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [4:1/20-4:4/23]
+    STATEMENT COMPOUND  [4:20/39-6:2/57] SCOPE: foo 
+        STATEMENT EXPRESSION  [5:5/45-5:15/55] SCOPE: Stmt  [4:20/39-6:2/57] text: 'mask += 1;'
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF mask  [2:1/1-2:18/18] TYPE: int TEXT=int  [2:9/9-2:12/12] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [4:1/20-6:2/57] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(mask)
+    UNIQUE NAME f:foo(mask)
+    DECLARATION: foo  [4:1/20-6:2/57]
+    PARAMETERS:
+        mask [4:9/28-4:18/37]  TYPE: mask TEXT=mask  [4:9/28-4:13/32]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [4:1/20-4:4/23]
+    STATEMENT COMPOUND  [4:20/39-6:2/57] SCOPE: foo 
+        STATEMENT EXPRESSION  [5:5/45-5:15/55] SCOPE: Stmt  [4:20/39-6:2/57] text: 'mask += 1;'
+

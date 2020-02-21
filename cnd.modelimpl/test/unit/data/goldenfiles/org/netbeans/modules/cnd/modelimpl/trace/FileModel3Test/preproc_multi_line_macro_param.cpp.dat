@@ -1,0 +1,85 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 5):
+<U>#define '["_ASSERT_VOID_CAST",<ID>,line=1,col=9],offset=8,file=null[["x",<ID>,line=1,col=27],offset=26,file=null]'='["(",<LPAREN>,line=1,col=30],offset=29,file=null ["void",<ID>,line=1,col=31],offset=30,file=null [")",<RPAREN>,line=1,col=35],offset=34,file=null ["(",<LPAREN>,line=1,col=36],offset=35,file=null ["x",<ID>,line=1,col=37],offset=36,file=null [")",<RPAREN>,line=1,col=38],offset=37,file=null'
+<U>#define '["_assert_fn",<ID>,line=10,col=9],offset=210,file=null'='["""",<STRING_LITERAL>,line=10,col=20],offset=221,file=null'
+<U>#define '["assert",<ID>,line=13,col=9],offset=234,file=null[["ex",<ID>,line=13,col=16],offset=241,file=null]'='["_ASSERT_VOID_CAST",<ID>,line=14,col=1],offset=247,file=null ["(",<LPAREN>,line=14,col=18],offset=264,file=null ["unlikely",<ID>,line=14,col=19],offset=265,file=null ["(",<LPAREN>,line=14,col=27],offset=273,file=null ["ex",<ID>,line=14,col=28],offset=274,file=null [")",<RPAREN>,line=14,col=30],offset=276,file=null ["?",<QUESTIONMARK>,line=14,col=32],offset=278,file=null ["0",<OCTALINT>,line=15,col=3],offset=284,file=null [":",<COLON>,line=15,col=5],offset=286,file=null ["(",<LPAREN>,line=16,col=3],offset=292,file=null ["ddd_assert_fail",<ID>,line=16,col=4],offset=293,file=null ["(",<LPAREN>,line=16,col=20],offset=309,file=null ["#",<SHARP>,line=16,col=21],offset=310,file=null ["ex",<ID>,line=16,col=22],offset=311,file=null [",",<COMMA>,line=16,col=24],offset=313,file=null ["__FILE__",<ID>,line=16,col=26],offset=315,file=null [",",<COMMA>,line=16,col=34],offset=323,file=null ["__LINE__",<ID>,line=16,col=36],offset=325,file=null [",",<COMMA>,line=16,col=44],offset=333,file=null ["_assert_fn",<ID>,line=16,col=46],offset=335,file=null [")",<RPAREN>,line=16,col=56],offset=345,file=null [",",<COMMA>,line=16,col=57],offset=346,file=null ["0",<OCTALINT>,line=16,col=59],offset=348,file=null [")",<RPAREN>,line=16,col=60],offset=349,file=null [")",<RPAREN>,line=17,col=3],offset=355,file=null'
+<U>#define '["likely",<ID>,line=3,col=9],offset=48,file=null[["x",<ID>,line=3,col=16],offset=55,file=null]'='["(",<LPAREN>,line=3,col=19],offset=58,file=null ["x",<ID>,line=3,col=20],offset=59,file=null [")",<RPAREN>,line=3,col=21],offset=60,file=null'
+<U>#define '["unlikely",<ID>,line=4,col=9],offset=70,file=null[["x",<ID>,line=4,col=18],offset=79,file=null]'='["(",<LPAREN>,line=4,col=21],offset=82,file=null ["x",<ID>,line=4,col=22],offset=83,file=null [")",<RPAREN>,line=4,col=23],offset=84,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_multi_line_macro_param.cpp
+Includes:
+    <no includes>
+Macros:
+#define '_ASSERT_VOID_CAST[x]' [1:1/0-1:39/38]
+#define '_assert_fn' [10:1/202-10:22/223]
+#define 'assert[ex]' [13:1/226-17:4/356]
+#define 'likely[x]' [3:1/40-3:22/61]
+#define 'unlikely[x]' [4:1/62-4:24/85]
+FUNCTION ddd_assert_fail [6:1/87-7:64/199] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE ddd_assert_fail(const char*,const char*,unsigned int,const char*)
+    UNIQUE NAME F:ddd_assert_fail(const char*,const char*,unsigned int,const char*)
+    PARAMETERS:
+        assertion [6:23/109-6:44/130]  TYPE: const *char TEXT=const char*  [6:23/109-6:35/121]  INIT: null  SCOPE: ddd_assert_fail 
+        file [6:46/132-6:62/148]  TYPE: const *char TEXT=const char*  [6:46/132-6:58/144]  INIT: null  SCOPE: ddd_assert_fail 
+        line [7:23/158-7:40/175]  TYPE: unsigned int TEXT=unsigned int  [7:23/158-7:35/170]  INIT: null  SCOPE: ddd_assert_fail 
+        function [7:42/177-7:62/197]  TYPE: const *char TEXT=const char*  [7:42/177-7:54/189]  INIT: null  SCOPE: ddd_assert_fail 
+    RETURNS void TEXT=void  [6:1/87-6:5/91]
+FUNCTION DEFINITION foo  [19:1/360-33:2/748] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [19:1/360-33:2/748]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/360-19:5/364]
+    STATEMENT COMPOUND  [19:12/371-33:2/748] SCOPE: foo 
+        STATEMENT EXPRESSION  [20:5/377-21:14/412] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert(1    ||              
+	   2)'
+        STATEMENT EXPRESSION  [22:9/415-23:18/441] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert(1 + 3 <=
+	       6)'
+        STATEMENT EXPRESSION  [24:5/451-27:39/590] SCOPE: Stmt  [19:12/371-33:2/748] text: 'ddd_assert_fail("1\"1a""2"  "3"             
+                        "4"
+                        "5"
+                         "6", 0, 0, 0)'
+        STATEMENT EXPRESSION  [28:5/596-28:26/617] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert ("1\"1a23456")'
+        STATEMENT EXPRESSION  [29:5/623-32:30/745] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert ("1\"1a""2"  "3"             
+                        "4"
+                        "5"
+                         "6")'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION ddd_assert_fail [6:1/87-7:64/199] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE ddd_assert_fail(const char*,const char*,unsigned int,const char*)
+    UNIQUE NAME F:ddd_assert_fail(const char*,const char*,unsigned int,const char*)
+    PARAMETERS:
+        assertion [6:23/109-6:44/130]  TYPE: const *char TEXT=const char*  [6:23/109-6:35/121]  INIT: null  SCOPE: ddd_assert_fail 
+        file [6:46/132-6:62/148]  TYPE: const *char TEXT=const char*  [6:46/132-6:58/144]  INIT: null  SCOPE: ddd_assert_fail 
+        line [7:23/158-7:40/175]  TYPE: unsigned int TEXT=unsigned int  [7:23/158-7:35/170]  INIT: null  SCOPE: ddd_assert_fail 
+        function [7:42/177-7:62/197]  TYPE: const *char TEXT=const char*  [7:42/177-7:54/189]  INIT: null  SCOPE: ddd_assert_fail 
+    RETURNS void TEXT=void  [6:1/87-6:5/91]
+FUNCTION DEFINITION foo  [19:1/360-33:2/748] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [19:1/360-33:2/748]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/360-19:5/364]
+    STATEMENT COMPOUND  [19:12/371-33:2/748] SCOPE: foo 
+        STATEMENT EXPRESSION  [20:5/377-21:14/412] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert(1    ||              
+	   2)'
+        STATEMENT EXPRESSION  [22:9/415-23:18/441] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert(1 + 3 <=
+	       6)'
+        STATEMENT EXPRESSION  [24:5/451-27:39/590] SCOPE: Stmt  [19:12/371-33:2/748] text: 'ddd_assert_fail("1\"1a""2"  "3"             
+                        "4"
+                        "5"
+                         "6", 0, 0, 0)'
+        STATEMENT EXPRESSION  [28:5/596-28:26/617] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert ("1\"1a23456")'
+        STATEMENT EXPRESSION  [29:5/623-32:30/745] SCOPE: Stmt  [19:12/371-33:2/748] text: 'assert ("1\"1a""2"  "3"             
+                        "4"
+                        "5"
+                         "6")'
+

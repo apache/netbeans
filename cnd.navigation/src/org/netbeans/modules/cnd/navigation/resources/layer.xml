@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2007, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="AnnotationTypes">
+            <file name="org-netbeans-modules-cnd-navigation-is_specialized.xml" url="overrides/is-specialized.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-specializes.xml" url="overrides/specializes.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-extended_is_specialized.xml" url="overrides/extended-is-specialized.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-extended_specializes.xml" url="overrides/extended-specializes.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-is_overridden.xml" url="overrides/is-overridden.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-is_overridden_pseudo.xml" url="overrides/is-overridden-pseudo.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-overrides.xml" url="overrides/overrides.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-overrides_pseudo.xml" url="overrides/overrides-pseudo.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-override_is_overriden.xml" url="overrides/override-is-overridden-combined.xml"/>
+            <file name="org-netbeans-modules-cnd-navigation-override_is_overriden_pseudo.xml" url="overrides/override-is-overridden-combined-pseudo.xml"/>
+        </folder>
+        <folder name="text">
+            <folder name="x-h">
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-cnd-navigation-overrides-OverrideAnnotationAction.instance">
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                </folder>
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="navigation-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-navigation-switchfiles-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction.getInstance"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <folder name="goto">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>                        
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-c++">
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-cnd-navigation-overrides-OverrideAnnotationAction.instance">
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                </folder>
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="navigation-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-navigation-switchfiles-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction.getInstance"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <folder name="goto">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-c">
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="19400"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="navigation-keybindings.xml" url="DefaultKeyBindings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-cnd-navigation-switchfiles-CppSwitchAction.instance">
+                        <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.navigation.switchfiles.CppSwitchAction.getInstance"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <folder name="goto">
+                        <file name="cpp-switch-header-source">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="SeparatorBeforeInspect.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="1000"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <!--Need to define modes first, components should be declared after the mode-->
+        <folder name="Modes">
+            <file name="cnd_navigation.wsmode" url="cnd_navigation.wsmode"/>
+            <!--folder name="commonpalette"--> 
+            <folder name="rightSlidingSide"> 
+                <file name="HierarchyTopComponent.wstcref" url="HierarchyTopComponentWstcref.xml">
+                    <attr name="position" intvalue="1100"/>
+                </file>
+            </folder>
+            <folder name="output">
+                <file name="MacroExpansionTopComponent.wstcref" url="MacroExpansionTopComponentWstcref.xml">
+                    <attr name="position" intvalue="1200"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="Groups">
+            <file name="cnd_navigation.wsgrp" url="cnd_navigation.wsgrp"/>
+        </folder>
+        <folder name="Components">
+            <file name="HierarchyTopComponent.settings" url="HierarchyTopComponentSettings.xml"/>
+            <file name="MacroExpansionTopComponent.settings" url="MacroExpansionTopComponentSettings.xml"/>
+        </folder>
+    </folder>
+</filesystem>

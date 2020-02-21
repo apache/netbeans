@@ -1,0 +1,18 @@
+#include "file1.h"
+
+int main() {
+    int i = 5;
+}
+
+
+int foo() {
+    // ...
+    
+    // ...
+}
+
+// ...
+
+// ...
+int var;
+

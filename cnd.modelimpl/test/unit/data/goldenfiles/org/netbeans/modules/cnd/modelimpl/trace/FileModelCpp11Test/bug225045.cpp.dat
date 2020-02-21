@@ -1,0 +1,65 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug225045.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug225045 [1:1/0-13:2/226] SCOPE: bug225045.cpp
+    STRUCT Base225045 (bug225045::Base225045 ) [2:5/26-4:6/81] lcurly=44 SCOPE: bug225045 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION final [3:9/54-3:30/75] MethodImpl SCOPE: Base225045 
+                DEFINITION: null
+                SIGNATURE final()
+                UNIQUE NAME F:bug225045::Base225045::final()
+                PARAMETERS:
+                RETURNS void TEXT=void  [3:17/62-3:21/66]
+    CLASS ReproduceBug225045 (bug225045::ReproduceBug225045 ) [6:5/89-9:6/174] lcurly=127 SCOPE: bug225045 
+        BASE CLASSES:
+            CLASS=bug225045::Base225045 VISIBILITY==PRIVATE virtual==false text='Base225045'
+        MEMBERS:
+            FUNCTION final [8:9/149-8:28/168] MethodImpl SCOPE: ReproduceBug225045 
+                DEFINITION: final  [11:5/181-12:6/221]
+                SIGNATURE final()
+                UNIQUE NAME F:bug225045::ReproduceBug225045::final()
+                PARAMETERS:
+                RETURNS void TEXT=void  [8:9/149-8:13/153]
+    FUNCTION DEFINITION final  [11:5/181-12:6/221] FunctionDefinitionImpl SCOPE: bug225045.cpp
+        SIGNATURE final()
+        UNIQUE NAME f:bug225045::ReproduceBug225045::final()
+        DECLARATION: final  [8:9/149-8:28/168]
+        PARAMETERS:
+        RETURNS void TEXT=void  [11:5/181-11:9/185]
+        STATEMENT COMPOUND  [11:38/214-12:6/221] SCOPE: final 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug225045 (bug225045) 
+    bug225045.cpp  [1:1/0-13:2/226]
+NAMESPACE bug225045 (bug225045) 
+    STRUCT Base225045 (bug225045::Base225045 ) [2:5/26-4:6/81] lcurly=44 SCOPE: bug225045 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION final [3:9/54-3:30/75] MethodImpl SCOPE: Base225045 
+                DEFINITION: null
+                SIGNATURE final()
+                UNIQUE NAME F:bug225045::Base225045::final()
+                PARAMETERS:
+                RETURNS void TEXT=void  [3:17/62-3:21/66]
+    CLASS ReproduceBug225045 (bug225045::ReproduceBug225045 ) [6:5/89-9:6/174] lcurly=127 SCOPE: bug225045 
+        BASE CLASSES:
+            CLASS=bug225045::Base225045 VISIBILITY==PRIVATE virtual==false text='Base225045'
+        MEMBERS:
+            FUNCTION final [8:9/149-8:28/168] MethodImpl SCOPE: ReproduceBug225045 
+                DEFINITION: final  [11:5/181-12:6/221]
+                SIGNATURE final()
+                UNIQUE NAME F:bug225045::ReproduceBug225045::final()
+                PARAMETERS:
+                RETURNS void TEXT=void  [8:9/149-8:13/153]
+

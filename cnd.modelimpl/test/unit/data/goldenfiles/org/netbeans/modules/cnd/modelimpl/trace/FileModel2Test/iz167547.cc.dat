@@ -1,0 +1,24 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz167547.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT select_switch<typename Find,typename T1,typename R1,typename T2=NilCase,typename R2=void,typename T3=NilCase,typename R3=void,typename T4=NilCase,typename R4=void,typename T5=NilCase,typename R5=void,typename T6=NilCase,typename R6=void,typename T7=NilCase,typename R7=void,typename T8=NilCase,typename R8=void,typename T9=NilCase,typename R9=void,typename T10=NilCase,typename R10=void,typename T11=NilCase,typename R11=void,typename T12=NilCase,typename R12=void,typename T13=NilCase,typename R13=void,typename T14=NilCase,typename R14=void,typename T15=NilCase,typename R15=void,typename T16=NilCase,typename R16=void,typename T17=NilCase,typename R17=void,typename T18=NilCase,typename R18=void,typename T19=NilCase,typename R19=void,typename T20=NilCase,typename R20=void,typename T21=NilCase,typename R21=void,typename T22=NilCase,typename R22=void,typename T23=NilCase,typename R23=void,typename T24=NilCase,typename R24=void,typename T25=NilCase,typename R25=void,typename T26=NilCase,typename R26=void,typename T27=NilCase,typename R27=void,typename T28=NilCase,typename R28=void,typename T29=NilCase,typename R29=void,typename T30=NilCase,typename R30=void,typename T31=NilCase,typename R31=void,typename T32=NilCase,typename R32=void,typename T33=NilCase,typename R33=void,typename T34=NilCase,typename R34=void,typename T35=NilCase,typename R35=void,typename T36=NilCase,typename R36=void,typename T37=NilCase,typename R37=void,typename T38=NilCase,typename R38=void,typename T39=NilCase,typename R39=void,typename T40=NilCase,typename R40=void> (select_switch ) [1:1/0-92:2/3594] lcurly=1861 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF result  [44:5/1867-91:47/3592] TYPE: $unresolved$::meta::select_case::match::result TEXT=meta::select_case::match<Find>::result  [45:11/1894-91:39/3584] SCOPE: select_switch 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT select_switch<typename Find,typename T1,typename R1,typename T2=NilCase,typename R2=void,typename T3=NilCase,typename R3=void,typename T4=NilCase,typename R4=void,typename T5=NilCase,typename R5=void,typename T6=NilCase,typename R6=void,typename T7=NilCase,typename R7=void,typename T8=NilCase,typename R8=void,typename T9=NilCase,typename R9=void,typename T10=NilCase,typename R10=void,typename T11=NilCase,typename R11=void,typename T12=NilCase,typename R12=void,typename T13=NilCase,typename R13=void,typename T14=NilCase,typename R14=void,typename T15=NilCase,typename R15=void,typename T16=NilCase,typename R16=void,typename T17=NilCase,typename R17=void,typename T18=NilCase,typename R18=void,typename T19=NilCase,typename R19=void,typename T20=NilCase,typename R20=void,typename T21=NilCase,typename R21=void,typename T22=NilCase,typename R22=void,typename T23=NilCase,typename R23=void,typename T24=NilCase,typename R24=void,typename T25=NilCase,typename R25=void,typename T26=NilCase,typename R26=void,typename T27=NilCase,typename R27=void,typename T28=NilCase,typename R28=void,typename T29=NilCase,typename R29=void,typename T30=NilCase,typename R30=void,typename T31=NilCase,typename R31=void,typename T32=NilCase,typename R32=void,typename T33=NilCase,typename R33=void,typename T34=NilCase,typename R34=void,typename T35=NilCase,typename R35=void,typename T36=NilCase,typename R36=void,typename T37=NilCase,typename R37=void,typename T38=NilCase,typename R38=void,typename T39=NilCase,typename R39=void,typename T40=NilCase,typename R40=void> (select_switch ) [1:1/0-92:2/3594] lcurly=1861 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF result  [44:5/1867-91:47/3592] TYPE: $unresolved$::meta::select_case::match::result TEXT=meta::select_case::match<Find>::result  [45:11/1894-91:39/3584] SCOPE: select_switch 
+

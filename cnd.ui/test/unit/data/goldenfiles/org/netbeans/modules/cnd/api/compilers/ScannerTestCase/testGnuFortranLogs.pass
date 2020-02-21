@@ -1,0 +1,5 @@
+2 enterDirectory { depth: 1; dir: /home/av202691/NetBeansProjects/Hello_1 }
+4 enterDirectory { depth: 2; dir: /home/av202691/NetBeansProjects/Hello_1 }
+7 error { file: foo.f; line: 30 }
+13 leaveDirectory { depth: 2; dir: /home/av202691/NetBeansProjects/Hello_1 }
+15 leaveDirectory { depth: 1; dir: /home/av202691/NetBeansProjects/Hello_1 }

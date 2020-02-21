@@ -1,0 +1,25 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["B",<ID>,line=9,col=9],offset=125,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE smart_headers_simple_1b.cc
+Includes:
+"smart_headers_simple_1.h" [10:1/127-10:36/162]
+"smart_headers_simple_1.h" [13:1/173-13:36/208]
+Macros:
+#define 'A' [8:1/107-8:10/116]
+#define 'B' [9:1/117-9:10/126]
+
+========== Dumping model of PROJECT DummyProject
+CLASS ClassA (ClassA ) [2:1/9-2:16/24] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassB (ClassB ) [6:1/43-6:16/58] lcurly=56 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

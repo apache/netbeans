@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug236535.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug236535 [1:1/0-8:2/127] SCOPE: bug236535.cpp
+    STRUCT AAA_236535 (bug236535::AAA_236535 ) [3:3/27-6:4/121] lcurly=45 SCOPE: bug236535 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION operator bool  [4:5/51-4:30/76] MethodDDImpl SCOPE: AAA_236535 
+                SIGNATURE operator bool()
+                UNIQUE NAME f:bug236535::AAA_236535::operator bool()
+                DECLARATION: operator bool  [4:5/51-4:30/76]
+                PARAMETERS:
+                RETURNS bool TEXT=bool  [4:14/60-4:18/64]
+                STATEMENT COMPOUND  [4:5/51-4:30/76] SCOPE: operator bool 
+            FUNCTION DEFINITION operator int  [5:5/82-5:35/112] MethodDDImpl SCOPE: AAA_236535 
+                SIGNATURE operator int()
+                UNIQUE NAME f:bug236535::AAA_236535::operator int()
+                DECLARATION: operator int  [5:5/82-5:35/112]
+                PARAMETERS:
+                RETURNS int TEXT=int  [5:14/91-5:17/94]
+                STATEMENT COMPOUND  [5:5/82-5:35/112] SCOPE: operator int 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug236535 (bug236535) 
+    bug236535.cpp  [1:1/0-8:2/127]
+NAMESPACE bug236535 (bug236535) 
+    STRUCT AAA_236535 (bug236535::AAA_236535 ) [3:3/27-6:4/121] lcurly=45 SCOPE: bug236535 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION operator bool  [4:5/51-4:30/76] MethodDDImpl SCOPE: AAA_236535 
+                SIGNATURE operator bool()
+                UNIQUE NAME f:bug236535::AAA_236535::operator bool()
+                DECLARATION: operator bool  [4:5/51-4:30/76]
+                PARAMETERS:
+                RETURNS bool TEXT=bool  [4:14/60-4:18/64]
+                STATEMENT COMPOUND  [4:5/51-4:30/76] SCOPE: operator bool 
+            FUNCTION DEFINITION operator int  [5:5/82-5:35/112] MethodDDImpl SCOPE: AAA_236535 
+                SIGNATURE operator int()
+                UNIQUE NAME f:bug236535::AAA_236535::operator int()
+                DECLARATION: operator int  [5:5/82-5:35/112]
+                PARAMETERS:
+                RETURNS int TEXT=int  [5:14/91-5:17/94]
+                STATEMENT COMPOUND  [5:5/82-5:35/112] SCOPE: operator int 
+

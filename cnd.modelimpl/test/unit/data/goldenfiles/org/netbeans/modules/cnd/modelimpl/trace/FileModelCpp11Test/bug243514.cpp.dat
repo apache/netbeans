@@ -1,0 +1,102 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243514.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243514 [1:1/0-14:2/326] SCOPE: bug243514.cpp
+    FUNCTION DEFINITION ff  [2:5/26-3:44/96] FunctionDDImpl SCOPE: bug243514 
+        SIGNATURE ff<class>()
+        UNIQUE NAME f:bug243514::ff<class>()
+        DECLARATION: ff  [2:5/26-3:44/96]
+        PARAMETERS:
+        RETURNS int TEXT=int  [3:18/70-3:21/73]
+        STATEMENT COMPOUND  [3:42/94-3:44/96] SCOPE: ff 
+    FUNCTION f1 [5:5/106-5:37/138] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f1()
+        UNIQUE NAME F:bug243514::f1()
+        PARAMETERS:
+        RETURNS void TEXT=void  [5:32/133-5:36/137]
+    FUNCTION f2 [7:5/148-7:36/179] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f2(int(*)(int))
+        UNIQUE NAME F:bug243514::f2(int(*)(int))
+        PARAMETERS:
+             [7:12/155-7:34/177]  TYPE: int(int) TEXT=int(*)(int)  [7:12/155-7:34/177]  INIT: null  SCOPE: f2 
+        RETURNS int TEXT=int  [7:5/148-7:8/151]
+    FUNCTION f3 [9:5/189-9:32/216] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f3(int)
+        UNIQUE NAME F:bug243514::f3(int)
+        PARAMETERS:
+            z [9:13/197-9:18/202]  TYPE: int TEXT=int  [9:13/197-9:16/200]  INIT: null  SCOPE: f3 
+        RETURNS int TEXT=int  [9:23/207-9:26/210]
+    FUNCTION f4 [11:5/226-11:45/266] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f4(int)
+        UNIQUE NAME F:bug243514::f4(int)
+        PARAMETERS:
+            z1 [11:13/234-11:19/240]  TYPE: int TEXT=int  [11:13/234-11:16/237]  INIT: null  SCOPE: f4 
+        RETURNS int TEXT=int  [11:41/262-11:44/265]
+    FUNCTION f5 [13:5/276-13:53/324] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f5(int)
+        UNIQUE NAME F:bug243514::f5(int)
+        PARAMETERS:
+            z2 [13:13/284-13:19/290]  TYPE: int TEXT=int  [13:13/284-13:16/287]  INIT: null  SCOPE: f5 
+        RETURNS int TEXT=int  [13:49/320-13:52/323]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243514 (bug243514) 
+    bug243514.cpp  [1:1/0-14:2/326]
+NAMESPACE bug243514 (bug243514) 
+    FUNCTION DEFINITION ff  [2:5/26-3:44/96] FunctionDDImpl SCOPE: bug243514 
+        SIGNATURE ff<class>()
+        UNIQUE NAME f:bug243514::ff<class>()
+        DECLARATION: ff  [2:5/26-3:44/96]
+        PARAMETERS:
+        RETURNS int TEXT=int  [3:18/70-3:21/73]
+        STATEMENT COMPOUND  [3:42/94-3:44/96] SCOPE: ff 
+    FUNCTION f1 [5:5/106-5:37/138] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f1()
+        UNIQUE NAME F:bug243514::f1()
+        PARAMETERS:
+        RETURNS void TEXT=void  [5:32/133-5:36/137]
+    FUNCTION f2 [7:5/148-7:36/179] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f2(int(*)(int))
+        UNIQUE NAME F:bug243514::f2(int(*)(int))
+        PARAMETERS:
+             [7:12/155-7:34/177]  TYPE: int(int) TEXT=int(*)(int)  [7:12/155-7:34/177]  INIT: null  SCOPE: f2 
+        RETURNS int TEXT=int  [7:5/148-7:8/151]
+    FUNCTION f3 [9:5/189-9:32/216] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f3(int)
+        UNIQUE NAME F:bug243514::f3(int)
+        PARAMETERS:
+            z [9:13/197-9:18/202]  TYPE: int TEXT=int  [9:13/197-9:16/200]  INIT: null  SCOPE: f3 
+        RETURNS int TEXT=int  [9:23/207-9:26/210]
+    FUNCTION f4 [11:5/226-11:45/266] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f4(int)
+        UNIQUE NAME F:bug243514::f4(int)
+        PARAMETERS:
+            z1 [11:13/234-11:19/240]  TYPE: int TEXT=int  [11:13/234-11:16/237]  INIT: null  SCOPE: f4 
+        RETURNS int TEXT=int  [11:41/262-11:44/265]
+    FUNCTION f5 [13:5/276-13:53/324] FunctionImpl SCOPE: bug243514 
+        DEFINITION: null
+        SIGNATURE f5(int)
+        UNIQUE NAME F:bug243514::f5(int)
+        PARAMETERS:
+            z2 [13:13/284-13:19/290]  TYPE: int TEXT=int  [13:13/284-13:16/287]  INIT: null  SCOPE: f5 
+        RETURNS int TEXT=int  [13:49/320-13:52/323]
+

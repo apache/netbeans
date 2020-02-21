@@ -1,0 +1,48 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz158615.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION iz158615_main  [1:1/0-8:2/111] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz158615_main()
+    UNIQUE NAME f:iz158615_main()
+    DECLARATION: iz158615_main  [1:1/0-8:2/111]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:21/20-8:2/111] SCOPE: iz158615_main 
+        STATEMENT DECLARATION  [2:5/26-2:11/32] SCOPE: Stmt  [1:21/20-8:2/111]
+            VARIABLE i [2:5/26-2:11/32]  TYPE: int TEXT=int  [2:5/26-2:8/29]  INIT: null  SCOPE: Stmt  [1:21/20-8:2/111]
+        STATEMENT SWITCH  [3:5/37-6:6/95] SCOPE: Stmt  [1:21/20-8:2/111]
+            CONDITION: EXPRESSION text='i'
+            BODY:
+                STATEMENT COMPOUND  [3:16/48-6:6/95] SCOPE: Stmt  [3:5/37-6:6/95]
+                    STATEMENT CASE  [4:14/63-4:21/70] SCOPE: Stmt  [3:16/48-6:6/95] EXPRESSION: text='1 ... 2'
+                    STATEMENT EXPRESSION  [5:13/85-5:16/88] SCOPE: Stmt  [3:16/48-6:6/95] text: 'i++'
+        STATEMENT RETURN  [7:5/100-7:14/109] SCOPE: Stmt  [1:21/20-8:2/111] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION iz158615_main  [1:1/0-8:2/111] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE iz158615_main()
+    UNIQUE NAME f:iz158615_main()
+    DECLARATION: iz158615_main  [1:1/0-8:2/111]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:21/20-8:2/111] SCOPE: iz158615_main 
+        STATEMENT DECLARATION  [2:5/26-2:11/32] SCOPE: Stmt  [1:21/20-8:2/111]
+            VARIABLE i [2:5/26-2:11/32]  TYPE: int TEXT=int  [2:5/26-2:8/29]  INIT: null  SCOPE: Stmt  [1:21/20-8:2/111]
+        STATEMENT SWITCH  [3:5/37-6:6/95] SCOPE: Stmt  [1:21/20-8:2/111]
+            CONDITION: EXPRESSION text='i'
+            BODY:
+                STATEMENT COMPOUND  [3:16/48-6:6/95] SCOPE: Stmt  [3:5/37-6:6/95]
+                    STATEMENT CASE  [4:14/63-4:21/70] SCOPE: Stmt  [3:16/48-6:6/95] EXPRESSION: text='1 ... 2'
+                    STATEMENT EXPRESSION  [5:13/85-5:16/88] SCOPE: Stmt  [3:16/48-6:6/95] text: 'i++'
+        STATEMENT RETURN  [7:5/100-7:14/109] SCOPE: Stmt  [1:21/20-8:2/111] text: 'return 0;'
+

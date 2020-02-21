@@ -1,0 +1,86 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug204497.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS bug204497_Expr1 (bug204497_Expr1 ) [1:1/0-7:2/96] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION bug204497_Expr1  [3:5/36-4:6/61] ConstructorDDImpl SCOPE: bug204497_Expr1 
+            SIGNATURE bug204497_Expr1()
+            UNIQUE NAME f:bug204497_Expr1::bug204497_Expr1()
+            DECLARATION: bug204497_Expr1  [3:5/36-4:6/61]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [3:23/54-4:6/61] SCOPE: bug204497_Expr1 
+        FUNCTION DEFINITION bug204497_foo  [5:5/66-6:6/94] MethodDDImpl SCOPE: bug204497_Expr1 
+            SIGNATURE bug204497_foo()
+            UNIQUE NAME f:bug204497_Expr1::bug204497_foo()
+            DECLARATION: bug204497_foo  [5:5/66-6:6/94]
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:5/66-5:9/70]
+            STATEMENT COMPOUND  [5:26/87-6:6/94] SCOPE: bug204497_foo 
+CLASS bug204497_ExprIterator (bug204497_ExprIterator ) [9:1/99-13:2/240] lcurly=128 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION bug204497_Expr1 [11:5/146-11:47/188] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: bug204497_Expr1  [3:5/36-4:6/61]
+            SIGNATURE bug204497_Expr1()
+            UNIQUE NAME D:bug204497_Expr1::bug204497_Expr1()
+            REFERENCED FRIEND FUNCTION: bug204497_Expr1  [3:5/36-4:6/61]
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+        FUNCTION bug204497_foo [12:5/193-12:50/238] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: bug204497_foo  [5:5/66-6:6/94]
+            SIGNATURE bug204497_foo()
+            UNIQUE NAME D:bug204497_Expr1::bug204497_foo()
+            REFERENCED FRIEND FUNCTION: bug204497_foo  [5:5/66-6:6/94]
+            PARAMETERS:
+            RETURNS void TEXT=void  [12:12/200-12:16/204]
+
+========== Dumping model of PROJECT DummyProject
+CLASS bug204497_Expr1 (bug204497_Expr1 ) [1:1/0-7:2/96] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION bug204497_Expr1  [3:5/36-4:6/61] ConstructorDDImpl SCOPE: bug204497_Expr1 
+            SIGNATURE bug204497_Expr1()
+            UNIQUE NAME f:bug204497_Expr1::bug204497_Expr1()
+            DECLARATION: bug204497_Expr1  [3:5/36-4:6/61]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [3:23/54-4:6/61] SCOPE: bug204497_Expr1 
+        FUNCTION DEFINITION bug204497_foo  [5:5/66-6:6/94] MethodDDImpl SCOPE: bug204497_Expr1 
+            SIGNATURE bug204497_foo()
+            UNIQUE NAME f:bug204497_Expr1::bug204497_foo()
+            DECLARATION: bug204497_foo  [5:5/66-6:6/94]
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:5/66-5:9/70]
+            STATEMENT COMPOUND  [5:26/87-6:6/94] SCOPE: bug204497_foo 
+CLASS bug204497_ExprIterator (bug204497_ExprIterator ) [9:1/99-13:2/240] lcurly=128 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION bug204497_Expr1 [11:5/146-11:47/188] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: bug204497_Expr1  [3:5/36-4:6/61]
+            SIGNATURE bug204497_Expr1()
+            UNIQUE NAME D:bug204497_Expr1::bug204497_Expr1()
+            REFERENCED FRIEND FUNCTION: bug204497_Expr1  [3:5/36-4:6/61]
+            PARAMETERS:
+            RETURNS int TEXT=int  [1:1/0-1:1/0]
+        FUNCTION bug204497_foo [12:5/193-12:50/238] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: bug204497_foo  [5:5/66-6:6/94]
+            SIGNATURE bug204497_foo()
+            UNIQUE NAME D:bug204497_Expr1::bug204497_foo()
+            REFERENCED FRIEND FUNCTION: bug204497_foo  [5:5/66-6:6/94]
+            PARAMETERS:
+            RETURNS void TEXT=void  [12:12/200-12:16/204]
+

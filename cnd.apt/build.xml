@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 2001-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="cnd.apt" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.apt.</description>
+    <import file="../nbbuild/templates/projectized.xml"/>
+    
+    <target name="compile" depends="antlr,projectized-common.compile">
+    </target>
+ 
+    <target name="init-antlr">
+        <property name="antlr.apt.output.dir" location="src/org/netbeans/modules/cnd/apt/impl/support/generated"/>
+        <property name="antlr.jar" location="${cluster}/modules/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="antlr.apt.grammar.dir" location="src/org/netbeans/modules/cnd/apt/impl/support"/>
+        <property name="antlr.apt.output.tokenTypes" location="src/org/netbeans/modules/cnd/apt/support/APTTokenTypes.java"/>
+    </target>
+    
+    <target name="clean" depends="projectized-common.clean, init-antlr">
+        <delete dir="${antlr.apt.output.dir}"/>   
+        <delete file="${antlr.apt.output.tokenTypes}"/>
+    </target>
+    
+    <target name="check-up-to-date">
+        <uptodate property="antlr.up-to-date" targetfile="${antlr.apt.output.dir}/APTGeneratedTokenTypes.txt">
+            <srcfiles dir="${antlr.apt.grammar.dir}" includes="*.g"/>
+        </uptodate>
+        <echo message="antlr checkUptodate result: ${antlr.up-to-date}"/>
+    </target>
+    
+    <target name="antlr" depends="init-antlr, check-up-to-date" unless="antlr.up-to-date">
+        <mkdir dir="${antlr.apt.output.dir}"/>
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptlexer.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>        
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptexpr.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptBigIntegerExpr.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>
+        <copy file="${antlr.apt.output.dir}/APTGeneratedTokenTypes.txt" 
+                tofile="${antlr.apt.output.dir}/APTTokenTypes.txt"
+                overwrite="true"/>
+
+        <copy file="${antlr.apt.output.dir}/APTGeneratedTokenTypes.java"
+            tofile="${antlr.apt.output.tokenTypes}"/>
+        <!-- change class name -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="APTGeneratedTokenTypes"/>
+            <substitution expression="APTTokenTypes"/>
+        </replaceregexp>
+        <!-- remove unnecessary import statements -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="import.*"/>
+            <substitution expression=""/>
+        </replaceregexp>        
+        <!-- change package name -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="package org.netbeans.modules.cnd.apt.impl.support.generated;"/>
+            <substitution expression="package org.netbeans.modules.cnd.apt.support;"/>
+        </replaceregexp>                
+    </target>    
+</project>

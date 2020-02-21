@@ -1,0 +1,24 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE error_directive.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE a [1:1/0-1:7/6]  TYPE: int TEXT=int  [1:1/0-1:4/3]  INIT: null  SCOPE: $Global$ 
+VARIABLE b [3:1/17-3:7/23]  TYPE: int TEXT=int  [3:1/17-3:4/20]  INIT: null  SCOPE: $Global$ 
+VARIABLE c [5:1/35-5:7/41]  TYPE: int TEXT=int  [5:1/35-5:4/38]  INIT: null  SCOPE: $Global$ 
+VARIABLE d [7:1/54-7:7/60]  TYPE: int TEXT=int  [7:1/54-7:4/57]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE a [1:1/0-1:7/6]  TYPE: int TEXT=int  [1:1/0-1:4/3]  INIT: null  SCOPE: $Global$ 
+VARIABLE b [3:1/17-3:7/23]  TYPE: int TEXT=int  [3:1/17-3:4/20]  INIT: null  SCOPE: $Global$ 
+VARIABLE c [5:1/35-5:7/41]  TYPE: int TEXT=int  [5:1/35-5:4/38]  INIT: null  SCOPE: $Global$ 
+VARIABLE d [7:1/54-7:7/60]  TYPE: int TEXT=int  [7:1/54-7:4/57]  INIT: null  SCOPE: $Global$ 
+

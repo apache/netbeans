@@ -1,0 +1,42 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE nestedClassScope.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS AAA (AAA ) [1:1/0-7:2/73] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS_FORWARD_DECLARATION PUBLIC BBB [3:5/25-3:14/34] ClassImpl$ClassMemberForwardDeclaration
+            CLASS AAA::BBB (AAA::BBB ) [9:1/76-13:2/124] lcurly=91 SCOPE: AAA 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PRIVATE field [11:5/102-11:20/117]  TYPE: AAA::category TEXT=category  [11:5/102-11:13/110]  INIT: null  SCOPE: AAA::BBB 
+        TYPEDEF category  [5:5/45-5:26/66] TYPE: int TEXT=int  [5:13/53-5:16/56] SCOPE: AAA 
+CLASS AAA::BBB (AAA::BBB ) [9:1/76-13:2/124] lcurly=91 SCOPE: AAA 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE field [11:5/102-11:20/117]  TYPE: AAA::category TEXT=category  [11:5/102-11:13/110]  INIT: null  SCOPE: AAA::BBB 
+
+========== Dumping model of PROJECT DummyProject
+CLASS AAA (AAA ) [1:1/0-7:2/73] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS_FORWARD_DECLARATION PUBLIC BBB [3:5/25-3:14/34] ClassImpl$ClassMemberForwardDeclaration
+            CLASS AAA::BBB (AAA::BBB ) [9:1/76-13:2/124] lcurly=91 SCOPE: AAA 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PRIVATE field [11:5/102-11:20/117]  TYPE: AAA::category TEXT=category  [11:5/102-11:13/110]  INIT: null  SCOPE: AAA::BBB 
+        TYPEDEF category  [5:5/45-5:26/66] TYPE: int TEXT=int  [5:13/53-5:16/56] SCOPE: AAA 
+CLASS AAA::BBB (AAA::BBB ) [9:1/76-13:2/124] lcurly=91 SCOPE: AAA 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE field [11:5/102-11:20/117]  TYPE: AAA::category TEXT=category  [11:5/102-11:13/110]  INIT: null  SCOPE: AAA::BBB 
+

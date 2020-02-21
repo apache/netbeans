@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="51">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="makeproj-with-links"
+                   displayName="makeproj-with-links"
+                   projectFiles="true">
+      <logicalFolder name="real_dir1" displayName="real_dir1" projectFiles="true">
+        <itemPath>../makeproj-with-links/real_dir1/file2.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="real_dir2" displayName="real_dir2" projectFiles="true">
+        <itemPath>../makeproj-with-links/real_dir2/file2.c</itemPath>
+      </logicalFolder>
+      <itemPath>../makeproj-with-links/makeproj-with-links-main.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>../makeproj-with-links/Makefile</itemPath>
+      <itemPath>makeproj-with-link-PRJ-65-Makefile.mk</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../makeproj-with-links</Elem>
+  </sourceRootList>
+  <projectmakefile>makeproj-with-link-PRJ-65-Makefile.mk</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>1</platform>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../makeproj-with-links</buildCommandWorkingDir>
+          <buildCommand>make -f Makefile</buildCommand>
+          <cleanCommand>make -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <requiredProjects>
+        </requiredProjects>
+      </makefileType>
+      <item path="../makeproj-with-links/makeproj-with-links-main.c">
+        <itemTool>0</itemTool>
+        <cCompilerTool>
+          <inheritIncValues>false</inheritIncValues>
+          <inheritPreValues>false</inheritPreValues>
+        </cCompilerTool>
+      </item>
+      <item path="../makeproj-with-links/real_dir1/file2.c">
+        <itemTool>0</itemTool>
+        <cCompilerTool>
+          <includeDirectories>
+            <directoryPath>../makeproj-with-links</directoryPath>
+          </includeDirectories>
+          <inheritIncValues>false</inheritIncValues>
+          <inheritPreValues>false</inheritPreValues>
+        </cCompilerTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

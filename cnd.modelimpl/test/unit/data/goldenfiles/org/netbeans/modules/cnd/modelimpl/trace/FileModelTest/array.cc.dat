@@ -1,0 +1,30 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE array.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+EXTERN VARIABLE a [2:1/1-2:23/23]  TYPE: const int[] TEXT=const int[]  [2:1/1-2:17/17]  INIT: null  SCOPE: $Global$ 
+VARIABLE b [4:1/25-4:16/40]  TYPE: const *int[] TEXT=const int*[]  [4:1/25-4:11/35]  INIT: null  SCOPE: $Global$ 
+CLASS ClassA (ClassA ) [6:1/42-6:16/57] lcurly=55 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE ar [7:1/59-7:26/84]  TYPE: const *ClassA[] TEXT=const ClassA* const[]  [7:1/59-7:20/78]  INIT: null  SCOPE: $Global$ 
+VARIABLE c [9:1/86-9:13/98]  TYPE: *int[] TEXT=int*[]  [9:1/86-9:6/91]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+EXTERN VARIABLE a [2:1/1-2:23/23]  TYPE: const int[] TEXT=const int[]  [2:1/1-2:17/17]  INIT: null  SCOPE: $Global$ 
+VARIABLE b [4:1/25-4:16/40]  TYPE: const *int[] TEXT=const int*[]  [4:1/25-4:11/35]  INIT: null  SCOPE: $Global$ 
+CLASS ClassA (ClassA ) [6:1/42-6:16/57] lcurly=55 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE ar [7:1/59-7:26/84]  TYPE: const *ClassA[] TEXT=const ClassA* const[]  [7:1/59-7:20/78]  INIT: null  SCOPE: $Global$ 
+VARIABLE c [9:1/86-9:13/98]  TYPE: *int[] TEXT=int*[]  [9:1/86-9:6/91]  INIT: null  SCOPE: $Global$ 
+

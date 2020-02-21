@@ -1,0 +1,12 @@
+${origin}/sharp_pp_directives.cc:5:2: warning: ssss
+#warning ssss
+ ^
+${origin}/sharp_pp_directives.cc:13:3: warning: ssss
+%:warning ssss
+  ^
+${origin}/sharp_pp_directives.cc:5:2: warning: ssss
+#warning ssss
+ ^
+${origin}/sharp_pp_directives.cc:13:3: warning: ssss
+%:warning ssss
+  ^

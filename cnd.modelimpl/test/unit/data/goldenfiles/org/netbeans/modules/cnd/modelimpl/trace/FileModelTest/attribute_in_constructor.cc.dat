@@ -1,0 +1,55 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["BOOST_USED",<ID>,line=2,col=9],offset=9,file=null'='["__attribute__",<ID>,line=2,col=21],offset=21,file=null ["(",<LPAREN>,line=2,col=35],offset=35,file=null ["(",<LPAREN>,line=2,col=36],offset=36,file=null ["used",<ID>,line=2,col=37],offset=37,file=null [")",<RPAREN>,line=2,col=41],offset=41,file=null [")",<RPAREN>,line=2,col=42],offset=42,file=null [";",<SEMICOLON>,line=2,col=43],offset=43,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE attribute_in_constructor.cc
+Includes:
+    <no includes>
+Macros:
+#define 'BOOST_USED' [2:1/1-2:44/44]
+CLASS pointer_oserializer<class T,class Archive> (pointer_oserializer ) [4:1/46-8:2/164] lcurly=105 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION pointer_oserializer [7:5/120-7:46/161] ConstructorImpl SCOPE: pointer_oserializer 
+            DEFINITION: null
+            SIGNATURE pointer_oserializer()
+            UNIQUE NAME F:pointer_oserializer::pointer_oserializer()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+CLASS object (object ) [10:1/167-13:2/288] lcurly=180 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION object  [12:45/234-12:65/254] ConstructorDDImpl SCOPE: object 
+            SIGNATURE object()
+            UNIQUE NAME f:object::object()
+            DECLARATION: object  [12:45/234-12:65/254]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [12:63/252-12:65/254] SCOPE: object 
+
+========== Dumping model of PROJECT DummyProject
+CLASS pointer_oserializer<class T,class Archive> (pointer_oserializer ) [4:1/46-8:2/164] lcurly=105 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION pointer_oserializer [7:5/120-7:46/161] ConstructorImpl SCOPE: pointer_oserializer 
+            DEFINITION: null
+            SIGNATURE pointer_oserializer()
+            UNIQUE NAME F:pointer_oserializer::pointer_oserializer()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+CLASS object (object ) [10:1/167-13:2/288] lcurly=180 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION object  [12:45/234-12:65/254] ConstructorDDImpl SCOPE: object 
+            SIGNATURE object()
+            UNIQUE NAME f:object::object()
+            DECLARATION: object  [12:45/234-12:65/254]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [12:63/252-12:65/254] SCOPE: object 
+

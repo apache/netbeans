@@ -1,0 +1,33 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["DEF",<ID>,line=1,col=9],offset=8,file=null'='["struct",<ID>,line=1,col=13],offset=12,file=null ["A256516c",<ID>,line=1,col=20],offset=19,file=null ["{",<LCURLY>,line=1,col=29],offset=28,file=null ["struct",<ID>,line=2,col=5],offset=36,file=null ["B256516c",<ID>,line=2,col=12],offset=43,file=null ["{",<LCURLY>,line=2,col=21],offset=52,file=null ["int",<ID>,line=2,col=22],offset=53,file=null ["b",<ID>,line=2,col=26],offset=57,file=null [";",<SEMICOLON>,line=2,col=27],offset=58,file=null ["}",<RCURLY>,line=2,col=28],offset=59,file=null [";",<SEMICOLON>,line=2,col=29],offset=60,file=null ["int",<ID>,line=3,col=5],offset=68,file=null ["a",<ID>,line=3,col=9],offset=72,file=null [";",<SEMICOLON>,line=3,col=10],offset=73,file=null ["}",<RCURLY>,line=4,col=1],offset=77,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug256516.c
+Includes:
+    <no includes>
+Macros:
+#define 'DEF' [1:1/0-4:2/78]
+STRUCT A256516c (A256516c ) [5:1/79-5:4/82] lcurly=79 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [5:1/79-5:4/82]  TYPE: int TEXT=int  [5:1/79-5:4/82]  INIT: null  SCOPE: A256516c 
+STRUCT B256516c (B256516c ) [5:1/79-5:4/82] lcurly=79 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC b [5:1/79-5:4/82]  TYPE: int TEXT=int  [5:1/79-5:4/82]  INIT: null  SCOPE: B256516c 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT A256516c (A256516c ) [5:1/79-5:4/82] lcurly=79 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [5:1/79-5:4/82]  TYPE: int TEXT=int  [5:1/79-5:4/82]  INIT: null  SCOPE: A256516c 
+STRUCT B256516c (B256516c ) [5:1/79-5:4/82] lcurly=79 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC b [5:1/79-5:4/82]  TYPE: int TEXT=int  [5:1/79-5:4/82]  INIT: null  SCOPE: B256516c 
+

@@ -1,0 +1,148 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["Q_DECL_IMPORT",<ID>,line=1,col=9],offset=8,file=null'='["__declspec",<ID>,line=1,col=23],offset=22,file=null ["(",<LPAREN>,line=1,col=33],offset=32,file=null ["dllimport",<ID>,line=1,col=34],offset=33,file=null [")",<RPAREN>,line=1,col=43],offset=42,file=null'
+<U>#define '["Q_GUI_EXPORT",<ID>,line=2,col=9],offset=52,file=null'='["Q_DECL_IMPORT",<ID>,line=2,col=22],offset=65,file=null'
+<U>#define '["__declspec",<ID>,line=24,col=9],offset=310,file=null[["x",<ID>,line=24,col=20],offset=321,file=null]'='["__attribute__",<ID>,line=24,col=23],offset=324,file=null ["(",<LPAREN>,line=24,col=36],offset=337,file=null ["(",<LPAREN>,line=24,col=37],offset=338,file=null ["x",<ID>,line=24,col=38],offset=339,file=null [")",<RPAREN>,line=24,col=39],offset=340,file=null [")",<RPAREN>,line=24,col=40],offset=341,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE declspec.cc
+Includes:
+    <no includes>
+Macros:
+#define 'Q_DECL_IMPORT' [1:1/0-1:44/43]
+#define 'Q_GUI_EXPORT' [2:1/44-2:35/78]
+#define '__declspec[x]' [24:1/302-24:41/342]
+CLASS A (A ) [4:1/80-7:2/146] lcurly=101 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION getA [6:4/114-6:34/144] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE getA()
+            UNIQUE NAME D:getA()
+            REFERENCED FRIEND FUNCTION: getA  [6:4/114-6:34/144]
+            PARAMETERS:
+            RETURNS *A TEXT=A*  [6:24/134-6:26/136]
+CLASS QWidgetData (QWidgetData ) [9:1/149-12:2/199] lcurly=167 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QWidgetData  [11:5/181-11:21/197] ConstructorDDImpl SCOPE: QWidgetData 
+            SIGNATURE QWidgetData()
+            UNIQUE NAME f:QWidgetData::QWidgetData()
+            DECLARATION: QWidgetData  [11:5/181-11:21/197]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [11:19/195-11:21/197] SCOPE: QWidgetData 
+CLASS QObject (QObject ) [14:1/202-17:2/244] lcurly=216 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QObject  [16:5/230-16:17/242] ConstructorDDImpl SCOPE: QObject 
+            SIGNATURE QObject()
+            UNIQUE NAME f:QObject::QObject()
+            DECLARATION: QObject  [16:5/230-16:17/242]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [16:15/240-16:17/242] SCOPE: QObject 
+CLASS QPaintDevice (QPaintDevice ) [19:1/247-22:2/299] lcurly=266 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QPaintDevice  [21:5/280-21:22/297] ConstructorDDImpl SCOPE: QPaintDevice 
+            SIGNATURE QPaintDevice()
+            UNIQUE NAME f:QPaintDevice::QPaintDevice()
+            DECLARATION: QPaintDevice  [21:5/280-21:22/297]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [21:20/295-21:22/297] SCOPE: QPaintDevice 
+CLASS QWidget (QWidget ) [26:1/344-30:2/502] lcurly=409 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=QObject VISIBILITY==PUBLIC virtual==false text='public QObject'
+        CLASS=QPaintDevice VISIBILITY==PUBLIC virtual==false text='public QPaintDevice'
+    MEMBERS:
+        FIELD PUBLIC i [28:5/423-28:11/429]  TYPE: int TEXT=int  [28:5/423-28:8/426]  INIT: null  SCOPE: QWidget 
+    FRIENDS:
+        FUNCTION qt_qwidget_data [29:5/434-29:71/500] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE qt_qwidget_data(QWidget*)
+            UNIQUE NAME D:qt_qwidget_data(QWidget*)
+            REFERENCED FRIEND FUNCTION: qt_qwidget_data  [29:5/434-29:71/500]
+            PARAMETERS:
+                widget [29:54/483-29:69/498]  TYPE: *QWidget TEXT=QWidget*  [29:54/483-29:63/492]  INIT: null  SCOPE: qt_qwidget_data 
+            RETURNS *QWidgetData TEXT=QWidgetData*  [29:25/454-29:38/467]
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [4:1/80-7:2/146] lcurly=101 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION getA [6:4/114-6:34/144] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE getA()
+            UNIQUE NAME D:getA()
+            REFERENCED FRIEND FUNCTION: getA  [6:4/114-6:34/144]
+            PARAMETERS:
+            RETURNS *A TEXT=A*  [6:24/134-6:26/136]
+FUNCTION getA [6:4/114-6:34/144] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE getA()
+    UNIQUE NAME D:getA()
+    REFERENCED FRIEND FUNCTION: getA  [6:4/114-6:34/144]
+    PARAMETERS:
+    RETURNS *A TEXT=A*  [6:24/134-6:26/136]
+CLASS QWidgetData (QWidgetData ) [9:1/149-12:2/199] lcurly=167 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QWidgetData  [11:5/181-11:21/197] ConstructorDDImpl SCOPE: QWidgetData 
+            SIGNATURE QWidgetData()
+            UNIQUE NAME f:QWidgetData::QWidgetData()
+            DECLARATION: QWidgetData  [11:5/181-11:21/197]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [11:19/195-11:21/197] SCOPE: QWidgetData 
+CLASS QObject (QObject ) [14:1/202-17:2/244] lcurly=216 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QObject  [16:5/230-16:17/242] ConstructorDDImpl SCOPE: QObject 
+            SIGNATURE QObject()
+            UNIQUE NAME f:QObject::QObject()
+            DECLARATION: QObject  [16:5/230-16:17/242]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [16:15/240-16:17/242] SCOPE: QObject 
+CLASS QPaintDevice (QPaintDevice ) [19:1/247-22:2/299] lcurly=266 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION QPaintDevice  [21:5/280-21:22/297] ConstructorDDImpl SCOPE: QPaintDevice 
+            SIGNATURE QPaintDevice()
+            UNIQUE NAME f:QPaintDevice::QPaintDevice()
+            DECLARATION: QPaintDevice  [21:5/280-21:22/297]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [21:20/295-21:22/297] SCOPE: QPaintDevice 
+CLASS QWidget (QWidget ) [26:1/344-30:2/502] lcurly=409 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=QObject VISIBILITY==PUBLIC virtual==false text='public QObject'
+        CLASS=QPaintDevice VISIBILITY==PUBLIC virtual==false text='public QPaintDevice'
+    MEMBERS:
+        FIELD PUBLIC i [28:5/423-28:11/429]  TYPE: int TEXT=int  [28:5/423-28:8/426]  INIT: null  SCOPE: QWidget 
+    FRIENDS:
+        FUNCTION qt_qwidget_data [29:5/434-29:71/500] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE qt_qwidget_data(QWidget*)
+            UNIQUE NAME D:qt_qwidget_data(QWidget*)
+            REFERENCED FRIEND FUNCTION: qt_qwidget_data  [29:5/434-29:71/500]
+            PARAMETERS:
+                widget [29:54/483-29:69/498]  TYPE: *QWidget TEXT=QWidget*  [29:54/483-29:63/492]  INIT: null  SCOPE: qt_qwidget_data 
+            RETURNS *QWidgetData TEXT=QWidgetData*  [29:25/454-29:38/467]
+FUNCTION qt_qwidget_data [29:5/434-29:71/500] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE qt_qwidget_data(QWidget*)
+    UNIQUE NAME D:qt_qwidget_data(QWidget*)
+    REFERENCED FRIEND FUNCTION: qt_qwidget_data  [29:5/434-29:71/500]
+    PARAMETERS:
+        widget [29:54/483-29:69/498]  TYPE: *QWidget TEXT=QWidget*  [29:54/483-29:63/492]  INIT: null  SCOPE: qt_qwidget_data 
+    RETURNS *QWidgetData TEXT=QWidgetData*  [29:25/454-29:38/467]
+

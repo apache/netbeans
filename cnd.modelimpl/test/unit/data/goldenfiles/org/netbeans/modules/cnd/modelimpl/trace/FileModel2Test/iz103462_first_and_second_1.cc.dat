@@ -1,0 +1,78 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz103462_first_and_second_1.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS R (R ) [1:1/0-4:2/36] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC r_field [3:5/22-3:17/34]  TYPE: int TEXT=int  [3:5/22-3:8/25]  INIT: null  SCOPE: R 
+CLASS B<class T> (B ) [5:1/38-11:2/122] lcurly=64 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE t [6:5/70-6:9/74]  TYPE: B::T TEXT=T  [6:5/70-6:6/71]  INIT: null  SCOPE: B 
+        FUNCTION DEFINITION foo  [8:5/87-10:6/120] MethodDDImpl SCOPE: B 
+            SIGNATURE foo()
+            UNIQUE NAME f:B::foo()
+            DECLARATION: foo  [8:5/87-10:6/120]
+            PARAMETERS:
+            RETURNS B::T TEXT=T  [8:5/87-8:6/88]
+            STATEMENT COMPOUND  [8:13/95-10:6/120] SCOPE: foo 
+                STATEMENT RETURN  [9:9/105-9:18/114] SCOPE: Stmt  [8:13/95-10:6/120] text: 'return t;'
+CLASS A<class T> (A ) [12:1/124-16:2/209] lcurly=151 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF Type  [14:5/165-14:20/180] TYPE: A::T TEXT=T  [14:13/173-14:14/174] SCOPE: A 
+        TYPEDEF Type2  [15:5/185-15:27/207] TYPE: B TEXT=B<Type>  [15:13/193-15:20/200] SCOPE: A 
+TYPEDEF MyA  [17:1/211-17:18/228] TYPE: A TEXT=A<R>  [17:9/219-17:13/223] SCOPE: $Global$ 
+VARIABLE x [18:1/229-18:14/242]  TYPE: A::Type2 TEXT=MyA::Type2  [18:1/229-18:11/239]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [20:1/244-22:2/303] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [20:1/244-22:2/303]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/244-20:5/248]
+    STATEMENT COMPOUND  [20:12/255-22:2/303] SCOPE: foo 
+        STATEMENT EXPRESSION  [21:5/261-21:20/276] SCOPE: Stmt  [20:12/255-22:2/303] text: 'x.foo().r_field'
+
+========== Dumping model of PROJECT DummyProject
+CLASS R (R ) [1:1/0-4:2/36] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC r_field [3:5/22-3:17/34]  TYPE: int TEXT=int  [3:5/22-3:8/25]  INIT: null  SCOPE: R 
+CLASS B<class T> (B ) [5:1/38-11:2/122] lcurly=64 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE t [6:5/70-6:9/74]  TYPE: B::T TEXT=T  [6:5/70-6:6/71]  INIT: null  SCOPE: B 
+        FUNCTION DEFINITION foo  [8:5/87-10:6/120] MethodDDImpl SCOPE: B 
+            SIGNATURE foo()
+            UNIQUE NAME f:B::foo()
+            DECLARATION: foo  [8:5/87-10:6/120]
+            PARAMETERS:
+            RETURNS B::T TEXT=T  [8:5/87-8:6/88]
+            STATEMENT COMPOUND  [8:13/95-10:6/120] SCOPE: foo 
+                STATEMENT RETURN  [9:9/105-9:18/114] SCOPE: Stmt  [8:13/95-10:6/120] text: 'return t;'
+CLASS A<class T> (A ) [12:1/124-16:2/209] lcurly=151 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF Type  [14:5/165-14:20/180] TYPE: A::T TEXT=T  [14:13/173-14:14/174] SCOPE: A 
+        TYPEDEF Type2  [15:5/185-15:27/207] TYPE: B TEXT=B<Type>  [15:13/193-15:20/200] SCOPE: A 
+TYPEDEF MyA  [17:1/211-17:18/228] TYPE: A TEXT=A<R>  [17:9/219-17:13/223] SCOPE: $Global$ 
+VARIABLE x [18:1/229-18:14/242]  TYPE: A::Type2 TEXT=MyA::Type2  [18:1/229-18:11/239]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [20:1/244-22:2/303] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [20:1/244-22:2/303]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/244-20:5/248]
+    STATEMENT COMPOUND  [20:12/255-22:2/303] SCOPE: foo 
+        STATEMENT EXPRESSION  [21:5/261-21:20/276] SCOPE: Stmt  [20:12/255-22:2/303] text: 'x.foo().r_field'
+

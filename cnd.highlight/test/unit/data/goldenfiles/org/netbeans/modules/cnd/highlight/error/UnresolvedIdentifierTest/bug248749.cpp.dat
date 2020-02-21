@@ -1,0 +1,2 @@
+WARNING bug248749.cpp [89-97]: Unable to resolve template based identifier iterator.
+WARNING bug248749.cpp [121-124]: Unable to resolve template based identifier boo.

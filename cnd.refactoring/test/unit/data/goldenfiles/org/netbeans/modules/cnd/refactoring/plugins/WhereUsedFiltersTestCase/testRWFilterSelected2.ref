@@ -1,0 +1,3 @@
+References in file WhereUsedFiltersTestCase/testRWFilters2.cpp
+[5:9-5:12] abc.<b>aaa</b>++; // read/write
+[6:11-6:14] ++abc.<b>aaa</b>; // read/write

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.remotefs.versioning
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/remotefs/versioning/Bundle.properties
+OpenIDE-Module-Provides: org.netbeans.modules.remotefs.versioning
+

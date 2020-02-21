@@ -1,0 +1,15 @@
+org.netbeans.modules.cnd.debugger.gdb2.actions.GdbStartActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.KillActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.ContinueActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepIntoActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepOverActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.StepOutActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.PauseActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.ToggleBreakpointActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.RunToCursorActionProvider
+# org.netbeans.modules.cnd.debugger.common2.debugger.actions.RunIntoMethodActionProvider
+# org.netbeans.modules.cnd.debugger.common2.debugger.actions.FixActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.MakeCalleeCurrentActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.MakeCallerCurrentActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.PopTopmostCallActionProvider
+org.netbeans.modules.cnd.debugger.common2.debugger.actions.AddWatchAction

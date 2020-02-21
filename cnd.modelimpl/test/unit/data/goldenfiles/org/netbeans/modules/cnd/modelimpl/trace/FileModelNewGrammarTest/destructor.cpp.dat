@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE destructor.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS AAA (AAA ) [1:1/0-4:2/36] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION AAA [2:5/16-2:11/22] ConstructorImpl SCOPE: AAA 
+            DEFINITION: null
+            SIGNATURE AAA()
+            UNIQUE NAME F:AAA::AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~AAA [3:5/27-3:12/34] DestructorImpl SCOPE: AAA 
+            DEFINITION: null
+            SIGNATURE ~AAA()
+            UNIQUE NAME F:AAA::~AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+
+========== Dumping model of PROJECT DummyProject
+CLASS AAA (AAA ) [1:1/0-4:2/36] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION AAA [2:5/16-2:11/22] ConstructorImpl SCOPE: AAA 
+            DEFINITION: null
+            SIGNATURE AAA()
+            UNIQUE NAME F:AAA::AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~AAA [3:5/27-3:12/34] DestructorImpl SCOPE: AAA 
+            DEFINITION: null
+            SIGNATURE ~AAA()
+            UNIQUE NAME F:AAA::~AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+

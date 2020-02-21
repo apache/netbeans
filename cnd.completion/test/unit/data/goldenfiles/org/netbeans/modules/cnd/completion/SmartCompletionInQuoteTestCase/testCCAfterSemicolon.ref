@@ -1,0 +1,10 @@
+argc int	$	    while (discount == -1);argc
+argv char**	$	    while (discount == -1);argv
+customerName string	$	    while (discount == -1);customerName
+discount int	$	    while (discount == -1);discount
+Cpu	$	    while (discount == -1);Cpu
+Customer	$	    while (discount == -1);Customer
+Disk	$	    while (discount == -1);Disk
+Memory	$	    while (discount == -1);Memory
+Module	$	    while (discount == -1);Module
+System	$	    while (discount == -1);System

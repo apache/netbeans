@@ -1,0 +1,10 @@
+# disable debuggercore defaults 
+org.netbeans.modules.debugger.ui.models.ColumnModels.createLocalsToStringColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createLocalsTypeColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createLocalsValueColumn()-hidden
+# install our columns
+org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$ValueColumn
+org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$TypeColumn
+#org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$DTypeColumn
+#org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$AddressColumn
+

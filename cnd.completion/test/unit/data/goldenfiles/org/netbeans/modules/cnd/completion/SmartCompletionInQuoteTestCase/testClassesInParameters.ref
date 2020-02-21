@@ -1,0 +1,6 @@
+Cpu	$	ostream& operator <<(ostream& output, const Cpu
+Customer	$	ostream& operator <<(ostream& output, const Customer
+Disk	$	ostream& operator <<(ostream& output, const Disk
+Memory	$	ostream& operator <<(ostream& output, const Memory
+Module	$	ostream& operator <<(ostream& output, const Module
+System	$	ostream& operator <<(ostream& output, const System

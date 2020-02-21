@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.odcs.cnd
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/odcs/cnd/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.2.76
+

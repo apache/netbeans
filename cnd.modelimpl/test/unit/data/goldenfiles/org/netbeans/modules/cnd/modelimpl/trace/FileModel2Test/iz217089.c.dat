@@ -1,0 +1,23 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["AAA",<ID>,line=2,col=9],offset=29,file=null'='["D1",<ID>,line=2,col=13],offset=33,file=null ["##",<DBL_SHARP>,line=2,col=16],offset=36,file=null ["0",<OCTALINT>,line=2,col=19],offset=39,file=null'
+<U>#define '["BBB",<ID>,line=3,col=9],offset=49,file=null'='["1",<DECIMALINT>,line=3,col=13],offset=53,file=null ["##",<DBL_SHARP>,line=3,col=15],offset=55,file=null ["0",<OCTALINT>,line=3,col=18],offset=58,file=null'
+<U>#define '["TYPE",<ID>,line=1,col=9],offset=8,file=null'='["i",<ID>,line=1,col=14],offset=13,file=null ["##",<DBL_SHARP>,line=1,col=15],offset=14,file=null ["n",<ID>,line=1,col=17],offset=16,file=null ["##",<DBL_SHARP>,line=1,col=18],offset=17,file=null ["t",<ID>,line=1,col=20],offset=19,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz217089.c
+Includes:
+    <no includes>
+Macros:
+#define 'AAA' [2:1/21-2:20/40]
+#define 'BBB' [3:1/41-3:19/59]
+#define 'TYPE' [1:1/0-1:21/20]
+VARIABLE D10 [6:1/75-6:10/84]  TYPE: int TEXT=int  [6:1/75-6:5/79]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE D10 [6:1/75-6:10/84]  TYPE: int TEXT=int  [6:1/75-6:5/79]  INIT: null  SCOPE: $Global$ 
+

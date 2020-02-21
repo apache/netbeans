@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2016 Sun Microsystems, Inc.
+ -->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link type="text/css" href="../ide.css" rel="StyleSheet">
+    <meta content="Helen" name="generator">
+    <title>Current Context in the Debugger</title>
+  </head>
+  <body>
+    <h2>
+       Current Context in the Debugger
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       The current context is the portion of your program on which the debugger is currently
+      focusing. When multiple sessions are running, only one session is current.
+      <!--Within the current session, the thread
+      from which the debugger regained control is the default current
+      thread. Inside the current thread, the most recent call is the
+      default current call.
+      -->
+    </p>
+    <p>
+       You can make any session or call current by right-clicking its node in the appropriate
+      debugger window and choosing Make Current.
+    </p>
+    <h3>
+       Debugger Windows and Context
+    </h3>
+    <p>
+       Most debugger windows depend on the current context. When you change the current context,
+      the contents of these windows are updated to reflect the new context.
+    </p>
+    <p>
+       For example, the Call Stack window shows the call stack for the current thread and the
+      Variables window shows the variables that are local to the current call.
+    </p>
+    <p>
+       The exceptions are the Breakpoints and Watches windows. These windows list all breakpoints
+      and watches set in the IDE. While the set of watches is shared by all sessions, an individual
+      watch expression is evaluated and displayed based on the current context.
+    </p>
+    <h3>
+       The Source Editor and Context
+    </h3>
+    <p>
+       When a variable is active in the current context, the Source Editor displays the value of
+      the variable when you move the pointer over it. In cases where a program includes different
+      variables with the same name, the Source Editor displays the value based on the current
+      context, and not on the instance of the variable in the source code.
+    </p>
+    <table summary="related topics">
+      <tr valign="top">
+        <th colspan="2" align="left">
+          <a name="seealso">See Also</a>
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="CandC++Breakpoints.html">C and C++ Breakpoints in the IDE</a><br>
+           <a href="UsingCorC++CallStack.html">Using the C or C++ Call Stack</a>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

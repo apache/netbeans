@@ -1,0 +1,13 @@
+p2 int*	$	    p2
+A	$	    A
+B	$	    B
+C	$	    C
+In_Macro	$	    In_Macro
+p1 int*	$	    p1
+p3 int*	$	    p3
+restrictTestFoo1(int* a) void	$	    restrictTestFoo1()
+restrictTestFoo2() void	$	    restrictTestFoo2()
+globInt int	$	    globInt
+checkZero() void	$	    checkZero()
+globFoo() void	$	    globFoo()
+main(int argc, char** argv) int	$	    main()

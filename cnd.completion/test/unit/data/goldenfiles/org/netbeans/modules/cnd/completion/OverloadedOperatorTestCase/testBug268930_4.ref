@@ -1,0 +1,2 @@
+_my_float(long double param) long double	$	        _my_float = 1.0_my_my_float()
+_my_float_raw(const char* param) long double	$	        _my_float = 1.0_my_my_float_raw()

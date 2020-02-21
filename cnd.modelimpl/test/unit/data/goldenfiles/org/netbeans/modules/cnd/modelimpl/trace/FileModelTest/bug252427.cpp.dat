@@ -1,0 +1,110 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug252427.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug252427 [1:1/0-36:2/1256] SCOPE: bug252427.cpp
+    TYPEDEF td_check252427  [2:5/26-2:32/53] TYPE: int TEXT=int  [2:13/34-2:16/37] SCOPE: bug252427 
+    TYPEDEF td_const_check252427  [3:5/58-3:44/97] TYPE: const int TEXT=const int  [3:13/66-3:22/75] SCOPE: bug252427 
+    TYPEDEF td_check_ptr252427  [4:5/102-4:38/135] TYPE: *int TEXT=int*  [4:13/110-4:18/115] SCOPE: bug252427 
+    TYPEDEF td_const_check_ptr252427  [5:5/140-5:50/185] TYPE: const *int TEXT=const int*  [5:13/148-5:24/159] SCOPE: bug252427 
+    TYPEALIAS alias_check252427  [6:5/190-6:35/220] TYPE: int TEXT=int  [6:31/216-6:35/220] SCOPE: bug252427 
+    TYPEALIAS alias_const_check252427  [7:5/225-7:47/267] TYPE: const int TEXT=const int  [7:37/257-7:47/267] SCOPE: bug252427 
+    TYPEALIAS alias_check_ptr252427  [8:5/272-8:41/308] TYPE: *int TEXT=int*  [8:35/302-8:41/308] SCOPE: bug252427 
+    TYPEALIAS alias_const_check_ptr252427  [9:5/313-9:53/361] TYPE: const *int TEXT=const int*  [9:41/349-9:53/361] SCOPE: bug252427 
+    STRUCT Container252427 (bug252427::Container252427 ) [11:5/367-20:6/773] lcurly=390 SCOPE: bug252427 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF td_check252427  [12:9/400-12:36/427] TYPE: int TEXT=int  [12:17/408-12:20/411] SCOPE: Container252427 
+            TYPEDEF td_const_check252427  [13:9/436-13:48/475] TYPE: const int TEXT=const int  [13:17/444-13:26/453] SCOPE: Container252427 
+            TYPEDEF td_check_ptr252427  [14:9/484-14:42/517] TYPE: *int TEXT=int*  [14:17/492-14:22/497] SCOPE: Container252427 
+            TYPEDEF td_const_check_ptr252427  [15:9/526-15:54/571] TYPE: const *int TEXT=const int*  [15:17/534-15:28/545] SCOPE: Container252427 
+            TYPEALIAS alias_check252427  [16:9/580-16:39/610] TYPE: int TEXT=int  [16:35/606-16:39/610] SCOPE: Container252427 
+            TYPEALIAS alias_const_check252427  [17:9/619-17:51/661] TYPE: const int TEXT=const int  [17:41/651-17:51/661] SCOPE: Container252427 
+            TYPEALIAS alias_check_ptr252427  [18:9/670-18:45/706] TYPE: *int TEXT=int*  [18:39/700-18:45/706] SCOPE: Container252427 
+            TYPEALIAS alias_const_check_ptr252427  [19:9/715-19:57/763] TYPE: const *int TEXT=const int*  [19:45/751-19:57/763] SCOPE: Container252427 
+    FUNCTION DEFINITION fun252427  [22:5/780-31:6/1175] FunctionDDImpl SCOPE: bug252427 
+        SIGNATURE fun252427()
+        UNIQUE NAME f:bug252427::fun252427()
+        DECLARATION: fun252427  [22:5/780-31:6/1175]
+        PARAMETERS:
+        RETURNS int TEXT=int  [22:5/780-22:8/783]
+        STATEMENT COMPOUND  [22:21/796-31:6/1175] SCOPE: fun252427 
+            STATEMENT DECLARATION  [23:9/806-23:36/833] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_check252427  [23:9/806-23:36/833] TYPE: int TEXT=int  [23:17/814-23:20/817] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [24:9/842-24:48/881] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_const_check252427  [24:9/842-24:48/881] TYPE: const int TEXT=const int  [24:17/850-24:26/859] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [25:9/890-25:42/923] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_check_ptr252427  [25:9/890-25:42/923] TYPE: *int TEXT=int*  [25:17/898-25:22/903] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [26:9/932-26:54/977] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_const_check_ptr252427  [26:9/932-26:54/977] TYPE: const *int TEXT=const int*  [26:17/940-26:28/951] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [27:9/986-27:39/1016] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_check252427  [27:9/986-27:39/1016] TYPE: int TEXT=int  [27:35/1012-27:39/1016] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [28:9/1025-28:51/1067] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_const_check252427  [28:9/1025-28:51/1067] TYPE: const int TEXT=const int  [28:41/1057-28:51/1067] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [29:9/1076-29:45/1112] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_check_ptr252427  [29:9/1076-29:45/1112] TYPE: *int TEXT=int*  [29:39/1106-29:45/1112] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [30:9/1121-30:57/1169] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_const_check_ptr252427  [30:9/1121-30:57/1169] TYPE: const *int TEXT=const int*  [30:45/1157-30:57/1169] SCOPE: Stmt  [22:21/796-31:6/1175]
+    TYPEALIAS alias_definition252427  [33:5/1181-35:9/1254] TYPE: *bug252427:: TEXT=*  [33:36/1212-35:6/1251] SCOPE: bug252427 
+    STRUCT  (bug252427:: ) [33:36/1212-35:6/1251] lcurly=1219 SCOPE: bug252427 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC dummy252427 [34:9/1229-34:25/1245]  TYPE: int TEXT=int  [34:9/1229-34:12/1232]  INIT: null  SCOPE:  
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug252427 (bug252427) 
+    bug252427.cpp  [1:1/0-36:2/1256]
+NAMESPACE bug252427 (bug252427) 
+    TYPEDEF td_check252427  [2:5/26-2:32/53] TYPE: int TEXT=int  [2:13/34-2:16/37] SCOPE: bug252427 
+    TYPEDEF td_const_check252427  [3:5/58-3:44/97] TYPE: const int TEXT=const int  [3:13/66-3:22/75] SCOPE: bug252427 
+    TYPEDEF td_check_ptr252427  [4:5/102-4:38/135] TYPE: *int TEXT=int*  [4:13/110-4:18/115] SCOPE: bug252427 
+    TYPEDEF td_const_check_ptr252427  [5:5/140-5:50/185] TYPE: const *int TEXT=const int*  [5:13/148-5:24/159] SCOPE: bug252427 
+    TYPEALIAS alias_check252427  [6:5/190-6:35/220] TYPE: int TEXT=int  [6:31/216-6:35/220] SCOPE: bug252427 
+    TYPEALIAS alias_const_check252427  [7:5/225-7:47/267] TYPE: const int TEXT=const int  [7:37/257-7:47/267] SCOPE: bug252427 
+    TYPEALIAS alias_check_ptr252427  [8:5/272-8:41/308] TYPE: *int TEXT=int*  [8:35/302-8:41/308] SCOPE: bug252427 
+    TYPEALIAS alias_const_check_ptr252427  [9:5/313-9:53/361] TYPE: const *int TEXT=const int*  [9:41/349-9:53/361] SCOPE: bug252427 
+    STRUCT Container252427 (bug252427::Container252427 ) [11:5/367-20:6/773] lcurly=390 SCOPE: bug252427 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF td_check252427  [12:9/400-12:36/427] TYPE: int TEXT=int  [12:17/408-12:20/411] SCOPE: Container252427 
+            TYPEDEF td_const_check252427  [13:9/436-13:48/475] TYPE: const int TEXT=const int  [13:17/444-13:26/453] SCOPE: Container252427 
+            TYPEDEF td_check_ptr252427  [14:9/484-14:42/517] TYPE: *int TEXT=int*  [14:17/492-14:22/497] SCOPE: Container252427 
+            TYPEDEF td_const_check_ptr252427  [15:9/526-15:54/571] TYPE: const *int TEXT=const int*  [15:17/534-15:28/545] SCOPE: Container252427 
+            TYPEALIAS alias_check252427  [16:9/580-16:39/610] TYPE: int TEXT=int  [16:35/606-16:39/610] SCOPE: Container252427 
+            TYPEALIAS alias_const_check252427  [17:9/619-17:51/661] TYPE: const int TEXT=const int  [17:41/651-17:51/661] SCOPE: Container252427 
+            TYPEALIAS alias_check_ptr252427  [18:9/670-18:45/706] TYPE: *int TEXT=int*  [18:39/700-18:45/706] SCOPE: Container252427 
+            TYPEALIAS alias_const_check_ptr252427  [19:9/715-19:57/763] TYPE: const *int TEXT=const int*  [19:45/751-19:57/763] SCOPE: Container252427 
+    FUNCTION DEFINITION fun252427  [22:5/780-31:6/1175] FunctionDDImpl SCOPE: bug252427 
+        SIGNATURE fun252427()
+        UNIQUE NAME f:bug252427::fun252427()
+        DECLARATION: fun252427  [22:5/780-31:6/1175]
+        PARAMETERS:
+        RETURNS int TEXT=int  [22:5/780-22:8/783]
+        STATEMENT COMPOUND  [22:21/796-31:6/1175] SCOPE: fun252427 
+            STATEMENT DECLARATION  [23:9/806-23:36/833] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_check252427  [23:9/806-23:36/833] TYPE: int TEXT=int  [23:17/814-23:20/817] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [24:9/842-24:48/881] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_const_check252427  [24:9/842-24:48/881] TYPE: const int TEXT=const int  [24:17/850-24:26/859] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [25:9/890-25:42/923] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_check_ptr252427  [25:9/890-25:42/923] TYPE: *int TEXT=int*  [25:17/898-25:22/903] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [26:9/932-26:54/977] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEDEF td_const_check_ptr252427  [26:9/932-26:54/977] TYPE: const *int TEXT=const int*  [26:17/940-26:28/951] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [27:9/986-27:39/1016] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_check252427  [27:9/986-27:39/1016] TYPE: int TEXT=int  [27:35/1012-27:39/1016] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [28:9/1025-28:51/1067] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_const_check252427  [28:9/1025-28:51/1067] TYPE: const int TEXT=const int  [28:41/1057-28:51/1067] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [29:9/1076-29:45/1112] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_check_ptr252427  [29:9/1076-29:45/1112] TYPE: *int TEXT=int*  [29:39/1106-29:45/1112] SCOPE: Stmt  [22:21/796-31:6/1175]
+            STATEMENT DECLARATION  [30:9/1121-30:57/1169] SCOPE: Stmt  [22:21/796-31:6/1175]
+                TYPEALIAS alias_const_check_ptr252427  [30:9/1121-30:57/1169] TYPE: const *int TEXT=const int*  [30:45/1157-30:57/1169] SCOPE: Stmt  [22:21/796-31:6/1175]
+    TYPEALIAS alias_definition252427  [33:5/1181-35:9/1254] TYPE: *bug252427:: TEXT=*  [33:36/1212-35:6/1251] SCOPE: bug252427 
+

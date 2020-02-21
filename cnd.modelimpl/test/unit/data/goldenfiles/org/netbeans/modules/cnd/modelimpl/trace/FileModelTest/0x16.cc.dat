@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE 0x16.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION main  [1:1/0-13:2/317] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [1:1/0-13:2/317]
+    PARAMETERS:
+        argc [1:10/9-1:18/17]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: main 
+        argv [1:20/19-1:30/29]  TYPE: **char TEXT=char**  [1:20/19-1:26/25]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:32/31-13:2/317] SCOPE: main 
+        STATEMENT EXPRESSION  [3:4/97-3:34/127] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout <<"?????????? ??? 1  :\n"'
+        STATEMENT EXPRESSION  [4:4/132-4:31/159] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout << "????????????????1"'
+        STATEMENT EXPRESSION  [6:4/196-6:30/222] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout <<"????????????...\n"'
+        STATEMENT SWITCH  [8:4/228-11:5/302] SCOPE: Stmt  [1:32/31-13:2/317]
+            CONDITION: EXPRESSION text='(char)argc'
+            BODY:
+                STATEMENT COMPOUND  [8:24/248-11:5/302] SCOPE: Stmt  [8:4/228-11:5/302]
+                    STATEMENT CASE  [9:14/263-9:18/267] SCOPE: Stmt  [8:24/248-11:5/302] EXPRESSION: text=''\e''
+                    STATEMENT BREAK  [10:9/291-10:15/297] SCOPE: Stmt  [8:24/248-11:5/302]
+        STATEMENT RETURN  [12:4/306-12:13/315] SCOPE: Stmt  [1:32/31-13:2/317] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [1:1/0-13:2/317] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [1:1/0-13:2/317]
+    PARAMETERS:
+        argc [1:10/9-1:18/17]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: main 
+        argv [1:20/19-1:30/29]  TYPE: **char TEXT=char**  [1:20/19-1:26/25]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:32/31-13:2/317] SCOPE: main 
+        STATEMENT EXPRESSION  [3:4/97-3:34/127] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout <<"?????????? ??? 1  :\n"'
+        STATEMENT EXPRESSION  [4:4/132-4:31/159] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout << "????????????????1"'
+        STATEMENT EXPRESSION  [6:4/196-6:30/222] SCOPE: Stmt  [1:32/31-13:2/317] text: 'cout <<"????????????...\n"'
+        STATEMENT SWITCH  [8:4/228-11:5/302] SCOPE: Stmt  [1:32/31-13:2/317]
+            CONDITION: EXPRESSION text='(char)argc'
+            BODY:
+                STATEMENT COMPOUND  [8:24/248-11:5/302] SCOPE: Stmt  [8:4/228-11:5/302]
+                    STATEMENT CASE  [9:14/263-9:18/267] SCOPE: Stmt  [8:24/248-11:5/302] EXPRESSION: text=''\e''
+                    STATEMENT BREAK  [10:9/291-10:15/297] SCOPE: Stmt  [8:24/248-11:5/302]
+        STATEMENT RETURN  [12:4/306-12:13/315] SCOPE: Stmt  [1:32/31-13:2/317] text: 'return 0;'
+

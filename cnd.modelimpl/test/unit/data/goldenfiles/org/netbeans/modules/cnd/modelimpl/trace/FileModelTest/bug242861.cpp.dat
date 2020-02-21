@@ -1,0 +1,41 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug242861.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug242861 [1:1/0-8:2/144] SCOPE: bug242861.cpp
+    STRUCT AAA_242861 (bug242861::AAA_242861 ) [2:5/26-5:6/108] lcurly=44 SCOPE: bug242861 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC a_242861 [4:9/89-4:22/102]  TYPE: int TEXT=int  [4:9/89-4:12/92]  INIT: null  SCOPE: AAA_242861 
+        FRIENDS:
+            CLASS_FRIEND_DECLARATION BBB_242861 [3:9/54-3:34/79] FriendClassImpl
+                REFERENCED CLASS: S:bug242861::BBB_242861
+    STRUCT BBB_242861 (bug242861::BBB_242861 ) [7:5/121-7:25/141] lcurly=139 SCOPE: bug242861 
+        BASE CLASSES:
+        MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug242861 (bug242861) 
+    bug242861.cpp  [1:1/0-8:2/144]
+NAMESPACE bug242861 (bug242861) 
+    STRUCT AAA_242861 (bug242861::AAA_242861 ) [2:5/26-5:6/108] lcurly=44 SCOPE: bug242861 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC a_242861 [4:9/89-4:22/102]  TYPE: int TEXT=int  [4:9/89-4:12/92]  INIT: null  SCOPE: AAA_242861 
+        FRIENDS:
+            CLASS_FRIEND_DECLARATION BBB_242861 [3:9/54-3:34/79] FriendClassImpl
+                REFERENCED CLASS: S:bug242861::BBB_242861
+    CLASS_FORWARD_DECLARATION BBB_242861 [3:9/54-3:34/79]
+    STRUCT BBB_242861 (bug242861::BBB_242861 ) [7:5/121-7:25/141] lcurly=139 SCOPE: bug242861 
+        BASE CLASSES:
+        MEMBERS:
+

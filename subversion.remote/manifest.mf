@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.subversion.remote
+OpenIDE-Module-Layer: org/netbeans/modules/subversion/remote/resources/svn-layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/subversion/remote/Bundle.properties
+

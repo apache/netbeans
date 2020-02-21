@@ -1,0 +1,102 @@
+Known issues
+============
+
+Unsorted
+--------
+
+- Add const where applicable
+- replace strerorr with err_to_string
+- when reporting error (say, in protocol) to stderr, respond error package to stdout, otherwise client will wait forever
+
+High
+----
+
+- non-ASCII file names
+
+- it seems access rights aren't passed properly. Check this.
+
+l 44 
+fs_server[5036]: unexpected numeric value: '/home/src/netbeans/pythia-platform/
+Segmentation fault (core dumped)
+
+fs_server[23925]: error opening /home/.netbeans/remotefs/dirtab for writing: File exists
+
+Medium
+------
+
+- refactor decode_decimal so it returns int and modifies pointer by reference,
+otherwise we can get an issue with different types of stat structure on different platforms
+
+- error processing: working with error messages on cline site
+
+- stress test
+
+- sync between refreshing and storing cache content
+
+- atomic file writes (use tmp file and rename)
+
+- 2-phase commit? what if
+    - content changed
+    - fs_server reported the change
+    - fs_server was asked for new content, answered and logged the answer on disk
+    - but IDE was shutting down at that moment, so it didn't process this
+
+- the cache is flat, so tons of directories an downgrade performance
+
+- 64-bit Linux issue
+
+- check for leaks
+
+- handshake 1-st message, version...
+
+- when reading dir, consider simultaneous adding/removing files to this dir
+
+- [client-side:] fs_server sends changes even for dirs that aren't instantiated in current IDE session at all.
+That's correct. But the processing should be smarter on client side (now it will instantiate and refresh directory)
+
+- what if two IDE instances are launched, one fs_server will fail to lock
+
+- decode_int/long/uint return NULL, which isn't checked after all calls
+
+- escape '\n' in file names
+
+- support stat
+
+Low
+---
+
+- ignore own storage? (disallow user surf the ~/.netbeans/remotefs)
+
+- it would be fine to be able to quit accurately (process all request first)?
+
+- consider anti-loop
+
+- perform maximum checks on startup, report - allow client report and/or switch to a different implementation
+
+- thorough error processing
+
+- test error processing
+
+- queue isn't effective in terms of memory: it uses alloc for each node...
+possible solution for requests queue is cyclic buffer
+(and in the case it is full, main() just waits
+
+- dirtab uses malloc for each element, which is probably not effective enough
+
+- support request cancellation
+
+- don't communicate via lines, use packages - otherwise you'll get issue with '\n' in file name.
+
+- write tests
+
+
+Checks
+------
+
+- check for files closure
+
+- check all malloc calls (abort if null?)
+
+- check assertions and replace with more gentle checks?
+
+- check that all mutexes are freed when exiting a function

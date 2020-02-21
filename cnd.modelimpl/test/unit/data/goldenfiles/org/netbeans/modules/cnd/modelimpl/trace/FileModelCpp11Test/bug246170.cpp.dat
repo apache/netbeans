@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug246170.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug246170 [1:1/0-8:2/340] SCOPE: bug246170.cpp
+    FUNCTION foo246170 [2:5/26-2:113/134] FunctionImpl SCOPE: bug246170 
+        DEFINITION: null
+        SIGNATURE foo246170(int)
+        UNIQUE NAME F:bug246170::foo246170(int)
+        PARAMETERS:
+            array [2:19/40-2:111/132]  TYPE: int TEXT=int  [2:19/40-2:26/47]  INIT: text='new int[2][2][2] {{{0, 1}, {0, 1}},{{0, 1}, {0, 1}},{{0, 1}, {0, 1}}}'  SCOPE: foo246170 
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+    FUNCTION DEFINITION boo246170  [4:5/140-7:6/333] FunctionDDImpl SCOPE: bug246170 
+        SIGNATURE boo246170()
+        UNIQUE NAME f:bug246170::boo246170()
+        DECLARATION: boo246170  [4:5/140-7:6/333]
+        PARAMETERS:
+        RETURNS void TEXT=void  [4:5/140-4:9/144]
+        STATEMENT COMPOUND  [4:22/157-7:6/333] SCOPE: boo246170 
+            STATEMENT DECLARATION  [5:9/167-5:54/212] SCOPE: Stmt  [4:22/157-7:6/333]
+                VARIABLE lambda [5:9/167-5:54/212]  TYPE: auto TEXT=auto  [5:9/167-5:13/171]  INIT: text='[]{ int res = 1; return res; }'  SCOPE: Stmt  [4:22/157-7:6/333]
+            STATEMENT EXPRESSION  [6:9/221-6:89/301] SCOPE: Stmt  [4:22/157-7:6/333] text: 'foo246170(new int[2][2][2] {{{2, 3}, {2, 3}},{{2, 3}, {2, 3}},{{2, 3}, {2, 3}}})'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug246170 (bug246170) 
+    bug246170.cpp  [1:1/0-8:2/340]
+NAMESPACE bug246170 (bug246170) 
+    FUNCTION foo246170 [2:5/26-2:113/134] FunctionImpl SCOPE: bug246170 
+        DEFINITION: null
+        SIGNATURE foo246170(int)
+        UNIQUE NAME F:bug246170::foo246170(int)
+        PARAMETERS:
+            array [2:19/40-2:111/132]  TYPE: int TEXT=int  [2:19/40-2:26/47]  INIT: text='new int[2][2][2] {{{0, 1}, {0, 1}},{{0, 1}, {0, 1}},{{0, 1}, {0, 1}}}'  SCOPE: foo246170 
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+    FUNCTION DEFINITION boo246170  [4:5/140-7:6/333] FunctionDDImpl SCOPE: bug246170 
+        SIGNATURE boo246170()
+        UNIQUE NAME f:bug246170::boo246170()
+        DECLARATION: boo246170  [4:5/140-7:6/333]
+        PARAMETERS:
+        RETURNS void TEXT=void  [4:5/140-4:9/144]
+        STATEMENT COMPOUND  [4:22/157-7:6/333] SCOPE: boo246170 
+            STATEMENT DECLARATION  [5:9/167-5:54/212] SCOPE: Stmt  [4:22/157-7:6/333]
+                VARIABLE lambda [5:9/167-5:54/212]  TYPE: auto TEXT=auto  [5:9/167-5:13/171]  INIT: text='[]{ int res = 1; return res; }'  SCOPE: Stmt  [4:22/157-7:6/333]
+            STATEMENT EXPRESSION  [6:9/221-6:89/301] SCOPE: Stmt  [4:22/157-7:6/333] text: 'foo246170(new int[2][2][2] {{{2, 3}, {2, 3}},{{2, 3}, {2, 3}},{{2, 3}, {2, 3}}})'
+

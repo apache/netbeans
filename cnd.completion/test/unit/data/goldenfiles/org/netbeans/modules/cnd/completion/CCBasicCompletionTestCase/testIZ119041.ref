@@ -1,0 +1,11 @@
+str char*	$	    str[str
+f() void	$	    str[f()
+f2() void	$	    str[f2()
+A	$	    str[A
+B	$	    str[B
+C	$	    str[C
+In_Macro	$	    str[In_Macro
+globInt int	$	    str[globInt
+checkZero() void	$	    str[checkZero()
+globFoo() void	$	    str[globFoo()
+main(int argc, char** argv) int	$	    str[main()

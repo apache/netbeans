@@ -1,0 +1,82 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE constructorImportSymbols.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN ololo [1:1/0-19:2/241] SCOPE: constructorImportSymbols.cpp
+    NAMESPACE DEFINITOIN trololo [3:5/27-13:6/167] SCOPE: constructorImportSymbols.cpp
+        CLASS AAA (ololo::trololo::AAA ) [5:9/56-11:10/152] lcurly=66 SCOPE: trololo 
+            BASE CLASSES:
+            MEMBERS:
+                TYPEDEF mytype  [7:13/93-7:32/112] TYPE: int TEXT=int  [7:21/101-7:24/104] SCOPE: AAA 
+                FUNCTION AAA [9:13/126-9:26/139] ConstructorImpl SCOPE: AAA 
+                    DEFINITION: AAA  [15:5/177-17:6/233]
+                    SIGNATURE AAA(int)
+                    UNIQUE NAME F:ololo::trololo::AAA::AAA(int)
+                    PARAMETERS:
+                        var [9:17/130-9:24/137]  TYPE: int TEXT=int  [9:17/130-9:20/133]  INIT: null  SCOPE: AAA 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+    FUNCTION DEFINITION AAA  [15:5/177-17:6/233] ConstructorDefinitionImpl SCOPE: constructorImportSymbols.cpp
+        SIGNATURE AAA(int)
+        UNIQUE NAME f:ololo::trololo::AAA::AAA(int)
+        DECLARATION: AAA  [9:13/126-9:26/139]
+        PARAMETERS:
+            var [15:23/195-15:30/202]  TYPE: int TEXT=int  [15:23/195-15:26/198]  INIT: null  SCOPE: AAA 
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [15:32/204-17:6/233] SCOPE: AAA 
+            STATEMENT DECLARATION  [16:9/218-16:18/227] SCOPE: Stmt  [15:32/204-17:6/233]
+                VARIABLE a [16:9/218-16:18/227]  TYPE: ololo::trololo::AAA::mytype TEXT=mytype  [16:9/218-16:15/224]  INIT: null  SCOPE: Stmt  [15:32/204-17:6/233]
+FUNCTION DEFINITION main  [21:1/243-23:2/272] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [21:1/243-23:2/272]
+    PARAMETERS:
+    RETURNS int TEXT=int  [21:1/243-21:4/246]
+    STATEMENT COMPOUND  [21:12/254-23:2/272] SCOPE: main 
+        STATEMENT RETURN  [22:5/261-22:14/270] SCOPE: Stmt  [21:12/254-23:2/272] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [21:1/243-23:2/272] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [21:1/243-23:2/272]
+    PARAMETERS:
+    RETURNS int TEXT=int  [21:1/243-21:4/246]
+    STATEMENT COMPOUND  [21:12/254-23:2/272] SCOPE: main 
+        STATEMENT RETURN  [22:5/261-22:14/270] SCOPE: Stmt  [21:12/254-23:2/272] text: 'return 0;'
+NAMESPACE DEFINITIONS for ololo (ololo) 
+    constructorImportSymbols.cpp  [1:1/0-19:2/241]
+NAMESPACE ololo (ololo) 
+    FUNCTION DEFINITION AAA  [15:5/177-17:6/233] ConstructorDefinitionImpl SCOPE: constructorImportSymbols.cpp
+        SIGNATURE AAA(int)
+        UNIQUE NAME f:ololo::trololo::AAA::AAA(int)
+        DECLARATION: AAA  [9:13/126-9:26/139]
+        PARAMETERS:
+            var [15:23/195-15:30/202]  TYPE: int TEXT=int  [15:23/195-15:26/198]  INIT: null  SCOPE: AAA 
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [15:32/204-17:6/233] SCOPE: AAA 
+            STATEMENT DECLARATION  [16:9/218-16:18/227] SCOPE: Stmt  [15:32/204-17:6/233]
+                VARIABLE a [16:9/218-16:18/227]  TYPE: ololo::trololo::AAA::mytype TEXT=mytype  [16:9/218-16:15/224]  INIT: null  SCOPE: Stmt  [15:32/204-17:6/233]
+    NAMESPACE DEFINITIONS for trololo (ololo::trololo) 
+        constructorImportSymbols.cpp  [3:5/27-13:6/167]
+    NAMESPACE trololo (ololo::trololo) 
+        CLASS AAA (ololo::trololo::AAA ) [5:9/56-11:10/152] lcurly=66 SCOPE: trololo 
+            BASE CLASSES:
+            MEMBERS:
+                TYPEDEF mytype  [7:13/93-7:32/112] TYPE: int TEXT=int  [7:21/101-7:24/104] SCOPE: AAA 
+                FUNCTION AAA [9:13/126-9:26/139] ConstructorImpl SCOPE: AAA 
+                    DEFINITION: AAA  [15:5/177-17:6/233]
+                    SIGNATURE AAA(int)
+                    UNIQUE NAME F:ololo::trololo::AAA::AAA(int)
+                    PARAMETERS:
+                        var [9:17/130-9:24/137]  TYPE: int TEXT=int  [9:17/130-9:20/133]  INIT: null  SCOPE: AAA 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+

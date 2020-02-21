@@ -1,0 +1,60 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243518.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243518 [1:1/0-7:2/434] SCOPE: bug243518.cpp
+    FUNCTION i1_243518 [4:3/200-4:73/270] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i1_243518()
+        UNIQUE NAME F:bug243518::i1_243518()
+        PARAMETERS:
+        RETURNS void(void) TEXT=void(*)(void)  [4:3/200-4:72/269]
+    FUNCTION i2_243518 [5:3/273-5:82/352] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i2_243518(void)
+        UNIQUE NAME F:bug243518::i2_243518(void)
+        PARAMETERS:
+             [5:39/309-5:64/334]  TYPE: void TEXT=void  [5:39/309-5:64/334]  INIT: null  SCOPE: i2_243518 
+        RETURNS void(void) TEXT=void(*)(void)  [5:3/273-5:81/351]
+    FUNCTION i3_243518 [6:3/355-6:78/430] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i3_243518(int) const &&
+        UNIQUE NAME F:bug243518::i3_243518(int) const &&
+        PARAMETERS:
+            xx [6:20/372-6:26/378]  TYPE: int TEXT=int  [6:20/372-6:23/375]  INIT: null  SCOPE: i3_243518 
+        RETURNS void(int) TEXT=void(*)(int)  [6:3/355-6:77/429]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243518 (bug243518) 
+    bug243518.cpp  [1:1/0-7:2/434]
+NAMESPACE bug243518 (bug243518) 
+    FUNCTION i1_243518 [4:3/200-4:73/270] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i1_243518()
+        UNIQUE NAME F:bug243518::i1_243518()
+        PARAMETERS:
+        RETURNS void(void) TEXT=void(*)(void)  [4:3/200-4:72/269]
+    FUNCTION i2_243518 [5:3/273-5:82/352] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i2_243518(void)
+        UNIQUE NAME F:bug243518::i2_243518(void)
+        PARAMETERS:
+             [5:39/309-5:64/334]  TYPE: void TEXT=void  [5:39/309-5:64/334]  INIT: null  SCOPE: i2_243518 
+        RETURNS void(void) TEXT=void(*)(void)  [5:3/273-5:81/351]
+    FUNCTION i3_243518 [6:3/355-6:78/430] FunctionImpl SCOPE: bug243518 
+        DEFINITION: null
+        SIGNATURE i3_243518(int) const &&
+        UNIQUE NAME F:bug243518::i3_243518(int) const &&
+        PARAMETERS:
+            xx [6:20/372-6:26/378]  TYPE: int TEXT=int  [6:20/372-6:23/375]  INIT: null  SCOPE: i3_243518 
+        RETURNS void(int) TEXT=void(*)(int)  [6:3/355-6:77/429]
+

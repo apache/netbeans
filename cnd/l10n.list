@@ -1,0 +1,4 @@
+# cnd/core
+read global
+${l10n-module}/src/**/*.png
+${l10n-module}/src/**/*.gif

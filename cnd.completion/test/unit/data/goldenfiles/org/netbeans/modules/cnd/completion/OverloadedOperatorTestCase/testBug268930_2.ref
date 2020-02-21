@@ -1,0 +1,1 @@
+_wchr(wchar_t v) wchar_t	$	        L'A'__wchr()

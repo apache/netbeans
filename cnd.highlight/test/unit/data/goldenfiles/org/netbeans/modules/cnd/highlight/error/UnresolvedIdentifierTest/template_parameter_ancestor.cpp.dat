@@ -1,0 +1,43 @@
+ERROR template_parameter_ancestor.cpp [289-304]: Unable to resolve identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [325-340]: Unable to resolve identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [363-378]: Unable to resolve identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [437-452]: Unable to resolve identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [522-537]: Unable to resolve identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [560-577]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [600-619]: Unable to resolve identifier inexistent_function.
+ERROR template_parameter_ancestor.cpp [650-664]: Unable to resolve identifier inexistent_var.
+ERROR template_parameter_ancestor.cpp [695-712]: Unable to resolve identifier inexistent_method.
+WARNING template_parameter_ancestor.cpp [988-1006]: Unable to resolve template based identifier ancestor_member111.
+WARNING template_parameter_ancestor.cpp [1029-1044]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1069-1084]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1153-1168]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1248-1263]: Unable to resolve template based identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [1288-1305]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [1328-1347]: Unable to resolve identifier inexistent_function.
+ERROR template_parameter_ancestor.cpp [1378-1392]: Unable to resolve identifier inexistent_var.
+ERROR template_parameter_ancestor.cpp [1423-1440]: Unable to resolve identifier inexistent_method.
+WARNING template_parameter_ancestor.cpp [1641-1656]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1675-1690]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1711-1726]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1791-1806]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [1878-1893]: Unable to resolve template based identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [1914-1931]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [1950-1969]: Unable to resolve identifier inexistent_function.
+ERROR template_parameter_ancestor.cpp [1996-2010]: Unable to resolve identifier inexistent_var.
+ERROR template_parameter_ancestor.cpp [2037-2054]: Unable to resolve identifier inexistent_method.
+WARNING template_parameter_ancestor.cpp [2264-2279]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [2304-2319]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [2382-2397]: Unable to resolve template based identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [2422-2439]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [2462-2481]: Unable to resolve identifier inexistent_function.
+ERROR template_parameter_ancestor.cpp [2512-2526]: Unable to resolve identifier inexistent_var.
+ERROR template_parameter_ancestor.cpp [2557-2574]: Unable to resolve identifier inexistent_method.
+WARNING template_parameter_ancestor.cpp [2774-2789]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [2814-2829]: Unable to resolve template based identifier ancestor_member.
+WARNING template_parameter_ancestor.cpp [2892-2907]: Unable to resolve template based identifier ancestor_member.
+ERROR template_parameter_ancestor.cpp [2932-2949]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [2972-2991]: Unable to resolve identifier inexistent_function.
+ERROR template_parameter_ancestor.cpp [3022-3036]: Unable to resolve identifier inexistent_var.
+ERROR template_parameter_ancestor.cpp [3067-3084]: Unable to resolve identifier inexistent_method.
+ERROR template_parameter_ancestor.cpp [3316-3333]: Unable to resolve identifier inexistent_method.
+WARNING template_parameter_ancestor.cpp [3396-3411]: Unable to resolve template based identifier ancestor_member.

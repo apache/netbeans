@@ -1,0 +1,161 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE resolver_ns_using_declaration.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN rnud [1:1/0-10:2/129] SCOPE: resolver_ns_using_declaration.cc
+    NAMESPACE DEFINITOIN A [2:5/21-9:6/127] SCOPE: resolver_ns_using_declaration.cc
+        CLASS B (rnud::A::B ) [3:9/43-8:10/120] lcurly=51 SCOPE: A 
+            BASE CLASSES:
+            MEMBERS:
+                CLASS C (rnud::A::B::C ) [5:13/85-7:14/109] lcurly=93 SCOPE: B 
+                    BASE CLASSES:
+                    MEMBERS:
+NAMESPACE DEFINITOIN rnud_2 [12:1/131-34:2/524] SCOPE: resolver_ns_using_declaration.cc
+    USING DECL. rnud::A::B  [13:5/154-13:21/170]; REF DECL: rnud::A::B  [3:9/43-8:10/120] SCOPE: rnud_2 
+    NAMESPACE DEFINITOIN A [14:5/176-18:6/237] SCOPE: resolver_ns_using_declaration.cc
+        CLASS AA (rnud_2::A::AA ) [16:9/199-17:10/230] lcurly=219 SCOPE: A 
+            BASE CLASSES:
+                CLASS=rnud::A::B VISIBILITY==PUBLIC virtual==false text='public B'
+            MEMBERS:
+    NAMESPACE DEFINITOIN C [19:5/242-31:6/504] SCOPE: resolver_ns_using_declaration.cc
+        VARIABLE c [20:9/264-20:32/287]  TYPE: const int TEXT=const int  [20:9/264-20:25/280]  INIT: text='5'  SCOPE: C 
+        STRUCT CC (rnud_2::C::CC ) [21:9/296-29:10/496] lcurly=306 SCOPE: C 
+            BASE CLASSES:
+            MEMBERS:
+                CLASS CCC (rnud_2::C::CC::CCC ) [23:13/321-26:14/435] lcurly=345 SCOPE: CC 
+                    BASE CLASSES:
+                        CLASS=rnud::A::B::C VISIBILITY==PUBLIC virtual==false text='public B::C'
+                    MEMBERS:
+                        FIELD PRIVATE static b [24:17/363-24:40/386]  TYPE: const int TEXT=const int  [24:17/363-24:33/379]  INIT: text='5'  SCOPE: CCC 
+                        FUNCTION boo [25:25/411-25:35/421] MethodImpl SCOPE: CCC 
+                            DEFINITION: boo  [45:1/620-48:2/657]
+                            SIGNATURE boo()
+                            UNIQUE NAME F:rnud_2::C::CC::CCC::boo()
+                            PARAMETERS:
+                            RETURNS int TEXT=int  [25:25/411-25:28/414]
+                FIELD PUBLIC cc [27:13/449-27:27/463]  TYPE: rnud_2::C::CC::CCC TEXT=C::CC::CCC  [27:13/449-27:23/459]  INIT: null  SCOPE: CC 
+                FUNCTION foo [28:13/476-28:23/486] MethodImpl SCOPE: CC 
+                    DEFINITION: foo  [38:5/550-40:6/589]
+                    SIGNATURE foo()
+                    UNIQUE NAME F:rnud_2::C::CC::foo()
+                    PARAMETERS:
+                    RETURNS int TEXT=int  [28:13/476-28:16/479]
+    USING DECL. C::CC  [33:5/510-33:16/521]; REF DECL: rnud_2::C::CC  [21:9/296-29:10/496] SCOPE: rnud_2 
+NAMESPACE DEFINITOIN rnud_2 [37:1/527-41:2/591] SCOPE: resolver_ns_using_declaration.cc
+    FUNCTION DEFINITION foo  [38:5/550-40:6/589] FunctionDefinitionImpl SCOPE: resolver_ns_using_declaration.cc
+        SIGNATURE foo()
+        UNIQUE NAME f:rnud_2::C::CC::foo()
+        DECLARATION: foo  [28:13/476-28:23/486]
+        PARAMETERS:
+        RETURNS int TEXT=int  [38:5/550-38:8/553]
+        STATEMENT COMPOUND  [38:19/564-40:6/589] SCOPE: foo 
+            STATEMENT RETURN  [39:9/574-39:18/583] SCOPE: Stmt  [38:19/564-40:6/589] text: 'return c;'
+USING NAMESPACE. ::rnud_2  [43:1/593-43:25/617]; REF NS: rnud_2 SCOPE: null
+FUNCTION DEFINITION boo  [45:1/620-48:2/657] FunctionDefinitionImpl SCOPE: resolver_ns_using_declaration.cc
+    SIGNATURE boo()
+    UNIQUE NAME f:rnud_2::C::CC::CCC::boo()
+    DECLARATION: boo  [25:25/411-25:35/421]
+    PARAMETERS:
+    RETURNS int TEXT=int  [45:1/620-45:4/623]
+    STATEMENT COMPOUND  [45:20/639-48:2/657] SCOPE: boo 
+        STATEMENT RETURN  [47:5/646-47:14/655] SCOPE: Stmt  [45:20/639-48:2/657] text: 'return b;'
+USING DECL. rnud::A::B  [50:1/659-50:17/675]; REF DECL: rnud::A::B  [3:9/43-8:10/120] SCOPE: $Global$ 
+FUNCTION DEFINITION main  [52:1/678-59:2/800] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [52:1/678-59:2/800]
+    PARAMETERS:
+    RETURNS int TEXT=int  [52:1/678-52:4/681]
+    STATEMENT COMPOUND  [52:13/690-59:2/800] SCOPE: main 
+        STATEMENT DECLARATION  [53:5/696-53:9/700] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE b [53:5/696-53:9/700]  TYPE: rnud::A::B TEXT=B  [53:5/696-53:6/697]  INIT: null  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [54:5/705-54:13/713] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE cc [54:5/705-54:13/713]  TYPE: rnud::A::B::C TEXT=B::C  [54:5/705-54:9/709]  INIT: null  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [55:5/718-55:24/737] SCOPE: Stmt  [52:13/690-59:2/800]
+            USING DECL. rnud_2::A::AA  [55:5/718-55:24/737]; REF DECL: rnud_2::A::AA  [16:9/199-17:10/230] SCOPE: null
+        STATEMENT DECLARATION  [56:5/743-56:22/760] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE bb [56:5/743-56:22/760]  TYPE: *rnud::A::B TEXT=B*  [56:5/743-56:7/745]  INIT: text='new AA()'  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [57:5/765-57:23/783] SCOPE: Stmt  [52:13/690-59:2/800]
+            USING DECL. rnud_2::C::c  [57:5/765-57:23/783]; REF DECL: null  SCOPE: null
+        STATEMENT RETURN  [58:5/789-58:14/798] SCOPE: Stmt  [52:13/690-59:2/800] text: 'return c;'
+
+========== Dumping model of PROJECT DummyProject
+USING NAMESPACE. ::rnud_2  [43:1/593-43:25/617]; REF NS: rnud_2 SCOPE: null
+USING DECL. rnud::A::B  [50:1/659-50:17/675]; REF DECL: rnud::A::B  [3:9/43-8:10/120] SCOPE: $Global$ 
+FUNCTION DEFINITION main  [52:1/678-59:2/800] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [52:1/678-59:2/800]
+    PARAMETERS:
+    RETURNS int TEXT=int  [52:1/678-52:4/681]
+    STATEMENT COMPOUND  [52:13/690-59:2/800] SCOPE: main 
+        STATEMENT DECLARATION  [53:5/696-53:9/700] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE b [53:5/696-53:9/700]  TYPE: rnud::A::B TEXT=B  [53:5/696-53:6/697]  INIT: null  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [54:5/705-54:13/713] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE cc [54:5/705-54:13/713]  TYPE: rnud::A::B::C TEXT=B::C  [54:5/705-54:9/709]  INIT: null  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [55:5/718-55:24/737] SCOPE: Stmt  [52:13/690-59:2/800]
+            USING DECL. rnud_2::A::AA  [55:5/718-55:24/737]; REF DECL: rnud_2::A::AA  [16:9/199-17:10/230] SCOPE: null
+        STATEMENT DECLARATION  [56:5/743-56:22/760] SCOPE: Stmt  [52:13/690-59:2/800]
+            VARIABLE bb [56:5/743-56:22/760]  TYPE: *rnud::A::B TEXT=B*  [56:5/743-56:7/745]  INIT: text='new AA()'  SCOPE: Stmt  [52:13/690-59:2/800]
+        STATEMENT DECLARATION  [57:5/765-57:23/783] SCOPE: Stmt  [52:13/690-59:2/800]
+            USING DECL. rnud_2::C::c  [57:5/765-57:23/783]; REF DECL: null  SCOPE: null
+        STATEMENT RETURN  [58:5/789-58:14/798] SCOPE: Stmt  [52:13/690-59:2/800] text: 'return c;'
+NAMESPACE DEFINITIONS for rnud (rnud) 
+    resolver_ns_using_declaration.cc  [1:1/0-10:2/129]
+NAMESPACE rnud (rnud) 
+    NAMESPACE DEFINITIONS for A (rnud::A) 
+        resolver_ns_using_declaration.cc  [2:5/21-9:6/127]
+    NAMESPACE A (rnud::A) 
+        CLASS B (rnud::A::B ) [3:9/43-8:10/120] lcurly=51 SCOPE: A 
+            BASE CLASSES:
+            MEMBERS:
+                CLASS C (rnud::A::B::C ) [5:13/85-7:14/109] lcurly=93 SCOPE: B 
+                    BASE CLASSES:
+                    MEMBERS:
+NAMESPACE DEFINITIONS for rnud_2 (rnud_2) 
+    resolver_ns_using_declaration.cc  [12:1/131-34:2/524]
+    resolver_ns_using_declaration.cc  [37:1/527-41:2/591]
+NAMESPACE rnud_2 (rnud_2) 
+    USING DECL. rnud::A::B  [13:5/154-13:21/170]; REF DECL: rnud::A::B  [3:9/43-8:10/120] SCOPE: rnud_2 
+    USING DECL. C::CC  [33:5/510-33:16/521]; REF DECL: rnud_2::C::CC  [21:9/296-29:10/496] SCOPE: rnud_2 
+    NAMESPACE DEFINITIONS for A (rnud_2::A) 
+        resolver_ns_using_declaration.cc  [14:5/176-18:6/237]
+    NAMESPACE A (rnud_2::A) 
+        CLASS AA (rnud_2::A::AA ) [16:9/199-17:10/230] lcurly=219 SCOPE: A 
+            BASE CLASSES:
+                CLASS=rnud::A::B VISIBILITY==PUBLIC virtual==false text='public B'
+            MEMBERS:
+    NAMESPACE DEFINITIONS for C (rnud_2::C) 
+        resolver_ns_using_declaration.cc  [19:5/242-31:6/504]
+    NAMESPACE C (rnud_2::C) 
+        STRUCT CC (rnud_2::C::CC ) [21:9/296-29:10/496] lcurly=306 SCOPE: C 
+            BASE CLASSES:
+            MEMBERS:
+                CLASS CCC (rnud_2::C::CC::CCC ) [23:13/321-26:14/435] lcurly=345 SCOPE: CC 
+                    BASE CLASSES:
+                        CLASS=rnud::A::B::C VISIBILITY==PUBLIC virtual==false text='public B::C'
+                    MEMBERS:
+                        FIELD PRIVATE static b [24:17/363-24:40/386]  TYPE: const int TEXT=const int  [24:17/363-24:33/379]  INIT: text='5'  SCOPE: CCC 
+                        FUNCTION boo [25:25/411-25:35/421] MethodImpl SCOPE: CCC 
+                            DEFINITION: boo  [45:1/620-48:2/657]
+                            SIGNATURE boo()
+                            UNIQUE NAME F:rnud_2::C::CC::CCC::boo()
+                            PARAMETERS:
+                            RETURNS int TEXT=int  [25:25/411-25:28/414]
+                FIELD PUBLIC cc [27:13/449-27:27/463]  TYPE: rnud_2::C::CC::CCC TEXT=C::CC::CCC  [27:13/449-27:23/459]  INIT: null  SCOPE: CC 
+                FUNCTION foo [28:13/476-28:23/486] MethodImpl SCOPE: CC 
+                    DEFINITION: foo  [38:5/550-40:6/589]
+                    SIGNATURE foo()
+                    UNIQUE NAME F:rnud_2::C::CC::foo()
+                    PARAMETERS:
+                    RETURNS int TEXT=int  [28:13/476-28:16/479]
+

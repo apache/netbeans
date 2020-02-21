@@ -1,0 +1,30 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 5):
+<U>#define '["BOOST_REGEX_USER_CONFIG",<ID>,line=2,col=14],offset=47,file=null'='["<",<LESSTHAN>,line=2,col=38],offset=71,file=null ["preproc_test_include_with_macro_sys",<ID>,line=2,col=39],offset=72,file=null [".",<DOT>,line=2,col=74],offset=107,file=null ["h",<ID>,line=2,col=75],offset=108,file=null [">",<GREATERTHAN>,line=2,col=76],offset=109,file=null'
+<U>#define '["CONCAT",<ID>,line=13,col=9],offset=264,file=null[["x",<ID>,line=13,col=16],offset=271,file=null, ["y",<ID>,line=13,col=18],offset=273,file=null]'='["x",<ID>,line=13,col=21],offset=276,file=null ["##",<DBL_SHARP>,line=13,col=22],offset=277,file=null ["y",<ID>,line=13,col=24],offset=279,file=null'
+<U>#define '["INCLUDE",<ID>,line=9,col=9],offset=184,file=null[["x",<ID>,line=9,col=17],offset=192,file=null]'='["STR",<ID>,line=9,col=20],offset=195,file=null ["(",<LPAREN>,line=9,col=23],offset=198,file=null ["x",<ID>,line=9,col=24],offset=199,file=null [")",<RPAREN>,line=9,col=25],offset=200,file=null'
+<U>#define '["INCLUDE_VAR",<ID>,line=14,col=9],offset=289,file=null[["x",<ID>,line=14,col=21],offset=301,file=null]'='["INCLUDE",<ID>,line=14,col=24],offset=304,file=null ["(",<LPAREN>,line=14,col=31],offset=311,file=null ["CONCAT",<ID>,line=14,col=32],offset=312,file=null ["(",<LPAREN>,line=14,col=38],offset=318,file=null ["x",<ID>,line=14,col=39],offset=319,file=null [",",<COMMA>,line=14,col=40],offset=320,file=null ["2",<DECIMALINT>,line=14,col=41],offset=321,file=null [")",<RPAREN>,line=14,col=42],offset=322,file=null [")",<RPAREN>,line=14,col=43],offset=323,file=null'
+<U>#define '["STR",<ID>,line=7,col=9],offset=165,file=null[["x",<ID>,line=7,col=13],offset=169,file=null]'='["#",<SHARP>,line=7,col=16],offset=172,file=null ["x",<ID>,line=7,col=17],offset=173,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_include_with_macro.cpp
+Includes:
+<preproc_test_include_with_macro_sys.h> [5:1/121-5:35/155]
+"preproc_test_include_with_macro.h" [11:1/203-11:52/254]
+"preproc_test_include_with_macro2" [15:1/325-15:54/378]
+Macros:
+#define 'BOOST_REGEX_USER_CONFIG' [2:1/34-2:77/110]
+#define 'CONCAT[x, y]' [13:1/256-13:25/280]
+#define 'INCLUDE[x]' [9:1/176-9:26/201]
+#define 'INCLUDE_VAR[x]' [14:1/281-14:44/324]
+#define 'STR[x]' [7:1/157-7:18/174]
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE INCLUDE_WAS [2:1/15-2:21/35]  TYPE: int TEXT=int  [2:1/15-2:4/18]  INIT: text='1'  SCOPE: $Global$ 
+VARIABLE INCLUDE_VAR_WAS [2:1/19-2:25/43]  TYPE: int TEXT=int  [2:1/19-2:4/22]  INIT: text='1'  SCOPE: $Global$ 
+VARIABLE BOOST_REGEX_USER_CONFIG_VAL [2:1/31-2:37/67]  TYPE: int TEXT=int  [2:1/31-2:4/34]  INIT: text='1'  SCOPE: $Global$ 
+

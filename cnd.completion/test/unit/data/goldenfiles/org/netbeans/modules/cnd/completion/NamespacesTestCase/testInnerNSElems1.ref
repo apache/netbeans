@@ -1,0 +1,5 @@
+S4Class	$	    S3::S4::S4Class
+pPtrS4Class S4Class*	$	    S3::S4::pPtrS4Class
+s4Class S4Class	$	    S3::S4::s4Class
+S4Fun() S5::S5Class*	$	    S3::S4::S4Fun()
+S5	$	    S3::S4::S5

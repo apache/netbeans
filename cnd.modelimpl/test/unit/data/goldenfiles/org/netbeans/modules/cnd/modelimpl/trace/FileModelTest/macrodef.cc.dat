@@ -1,0 +1,47 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 4):
+<U>#define '["M1",<ID>,line=3,col=9],offset=31,file=null'='["hello",<ID>,line=3,col=12],offset=34,file=null'
+<U>#define '["MAX",<ID>,line=3,col=9],offset=58,file=null[["a",<ID>,line=3,col=13],offset=62,file=null, ["b",<ID>,line=3,col=16],offset=65,file=null]'='["(",<LPAREN>,line=3,col=19],offset=68,file=null ["(",<LPAREN>,line=3,col=20],offset=69,file=null ["a",<ID>,line=3,col=21],offset=70,file=null [")",<RPAREN>,line=3,col=22],offset=71,file=null ["<",<LESSTHAN>,line=3,col=24],offset=73,file=null ["(",<LPAREN>,line=3,col=26],offset=75,file=null ["b",<ID>,line=3,col=27],offset=76,file=null [")",<RPAREN>,line=3,col=28],offset=77,file=null ["?",<QUESTIONMARK>,line=3,col=30],offset=79,file=null ["(",<LPAREN>,line=3,col=32],offset=81,file=null ["b",<ID>,line=3,col=33],offset=82,file=null [")",<RPAREN>,line=3,col=34],offset=83,file=null [":",<COLON>,line=3,col=36],offset=85,file=null ["(",<LPAREN>,line=3,col=38],offset=87,file=null ["a",<ID>,line=3,col=39],offset=88,file=null [")",<RPAREN>,line=3,col=40],offset=89,file=null [")",<RPAREN>,line=3,col=41],offset=90,file=null ["<comment text skipped>",<CPP_COMMENT>,line=3,col=43],offset=92,file=null'
+<U>#define '["TR",<ID>,line=5,col=9],offset=110,file=null[["t",<ID>,line=5,col=12],offset=113,file=null]'='["int",<ID>,line=5,col=15],offset=116,file=null ["<comment text skipped>",<COMMENT>,line=5,col=19],offset=120,file=null ["t",<ID>,line=5,col=41],offset=142,file=null [";",<SEMICOLON>,line=5,col=42],offset=143,file=null'
+<U>#define '["TR1",<ID>,line=7,col=9],offset=154,file=null[["t",<ID>,line=7,col=13],offset=158,file=null]'='["int",<ID>,line=7,col=16],offset=161,file=null ["<comment text skipped>",<COMMENT>,line=7,col=19],offset=164,file=null ["t",<ID>,line=7,col=33],offset=178,file=null [";",<SEMICOLON>,line=7,col=34],offset=179,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE macrodef.cc
+Includes:
+"macrodef.h" [1:1/0-1:22/21]
+"macrodef.h" [4:1/40-4:22/61]
+Macros:
+#define 'M1' [3:1/23-3:17/39]
+FUNCTION DEFINITION hello  [6:1/63-9:2/102] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hello()
+    UNIQUE NAME f:hello()
+    DECLARATION: hello  [6:1/63-9:2/102]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/63-6:5/67]
+    STATEMENT COMPOUND  [6:11/73-9:2/102] SCOPE: hello 
+        STATEMENT EXPRESSION  [7:5/79-7:14/88] SCOPE: Stmt  [6:11/73-9:2/102] text: 'MAX(7, 9)'
+        STATEMENT DECLARATION  [8:5/94-8:10/99] SCOPE: Stmt  [6:11/73-9:2/102]
+            VARIABLE a [8:5/94-8:10/99]  TYPE: int TEXT=int  [8:5/94-8:10/99]  INIT: null  SCOPE: Stmt  [6:11/73-9:2/102]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION hello  [6:1/63-9:2/102] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE hello()
+    UNIQUE NAME f:hello()
+    DECLARATION: hello  [6:1/63-9:2/102]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/63-6:5/67]
+    STATEMENT COMPOUND  [6:11/73-9:2/102] SCOPE: hello 
+        STATEMENT EXPRESSION  [7:5/79-7:14/88] SCOPE: Stmt  [6:11/73-9:2/102] text: 'MAX(7, 9)'
+        STATEMENT DECLARATION  [8:5/94-8:10/99] SCOPE: Stmt  [6:11/73-9:2/102]
+            VARIABLE a [8:5/94-8:10/99]  TYPE: int TEXT=int  [8:5/94-8:10/99]  INIT: null  SCOPE: Stmt  [6:11/73-9:2/102]
+CLASS MyClassWithM1 (MyClassWithM1 ) [10:1/192-11:2/215] lcurly=212 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS MyClassNoM1 (MyClassNoM1 ) [13:1/223-14:2/244] lcurly=241 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

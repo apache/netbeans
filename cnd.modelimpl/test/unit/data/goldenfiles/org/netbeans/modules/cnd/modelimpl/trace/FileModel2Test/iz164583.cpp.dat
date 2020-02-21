@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz164583.cpp
+Includes:
+"iz164583.h" [2:1/1-2:22/22]
+Macros:
+    <no macros>
+CLASS IZ164583ClassBBB (IZ164583ClassBBB ) [4:1/24-6:2/99] lcurly=47 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION fooIZ164583 [5:5/53-5:49/97] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: fooIZ164583  [8:1/102-10:2/147]
+            SIGNATURE fooIZ164583()
+            UNIQUE NAME D:IZ164583ClassAAA::fooIZ164583()
+            REFERENCED FRIEND FUNCTION: fooIZ164583  [8:1/102-10:2/147]
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:12/60-5:16/64]
+FUNCTION DEFINITION fooIZ164583  [8:1/102-10:2/147] FunctionDefinitionImpl SCOPE: iz164583.cpp
+    SIGNATURE fooIZ164583()
+    UNIQUE NAME f:IZ164583ClassAAA::fooIZ164583()
+    DECLARATION: fooIZ164583  [4:5/38-4:24/57]
+    PARAMETERS:
+    RETURNS void TEXT=void  [8:1/102-8:5/106]
+    STATEMENT COMPOUND  [8:38/139-10:2/147] SCOPE: fooIZ164583 
+
+========== Dumping model of PROJECT DummyProject
+CLASS IZ164583ClassBBB (IZ164583ClassBBB ) [4:1/24-6:2/99] lcurly=47 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+    FRIENDS:
+        FUNCTION fooIZ164583 [5:5/53-5:49/97] FriendFunctionImplEx SCOPE: $Global$ 
+            DEFINITION: fooIZ164583  [8:1/102-10:2/147]
+            SIGNATURE fooIZ164583()
+            UNIQUE NAME D:IZ164583ClassAAA::fooIZ164583()
+            REFERENCED FRIEND FUNCTION: fooIZ164583  [8:1/102-10:2/147]
+            PARAMETERS:
+            RETURNS void TEXT=void  [5:12/60-5:16/64]
+CLASS IZ164583ClassAAA (IZ164583ClassAAA ) [2:1/1-5:2/59] lcurly=24 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION fooIZ164583 [4:5/38-4:24/57] MethodImpl SCOPE: IZ164583ClassAAA 
+            DEFINITION: fooIZ164583  [8:1/102-10:2/147]
+            SIGNATURE fooIZ164583()
+            UNIQUE NAME F:IZ164583ClassAAA::fooIZ164583()
+            PARAMETERS:
+            RETURNS void TEXT=void  [4:5/38-4:9/42]
+

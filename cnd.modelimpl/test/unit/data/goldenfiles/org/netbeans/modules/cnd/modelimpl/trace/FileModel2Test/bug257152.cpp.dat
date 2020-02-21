@@ -1,0 +1,169 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug257152.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bugbug257152 [1:1/0-43:2/874] SCOPE: bug257152.cpp
+    FUNCTION myboo257152 [2:5/29-2:48/72] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: myboo257152  [3:5/77-5:6/145]
+        SIGNATURE myboo257152()
+        UNIQUE NAME F:bugbug257152::myboo257152()
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/29-2:8/32]
+    FUNCTION DEFINITION myboo257152  [3:5/77-5:6/145] FunctionDDImpl SCOPE: bugbug257152 
+        SIGNATURE myboo257152()
+        UNIQUE NAME f:bugbug257152::myboo257152()
+        DECLARATION: myboo257152  [2:5/29-2:48/72]
+        PARAMETERS:
+        RETURNS int TEXT=int  [3:5/77-3:8/80]
+        STATEMENT COMPOUND  [3:48/120-5:6/145] SCOPE: myboo257152 
+            STATEMENT RETURN  [4:9/130-4:18/139] SCOPE: Stmt  [3:48/120-5:6/145] text: 'return 0;'
+    TYPEDEF uLong257152  [9:5/190-9:39/224] TYPE: unsigned long TEXT=unsigned long  [9:13/198-9:26/211] SCOPE: bugbug257152 
+    TYPEDEF uInt257152  [10:5/229-10:37/261] TYPE: unsigned int TEXT=unsigned int  [10:13/237-10:25/249] SCOPE: bugbug257152 
+    FUNCTION foo257152 [12:5/267-12:32/294] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: null
+        SIGNATURE foo257152()
+        UNIQUE NAME F:bugbug257152::foo257152()
+        PARAMETERS:
+        RETURNS void TEXT=void  [12:5/267-12:9/271]
+    FUNCTION roo257152 [14:5/300-14:26/321] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: null
+        SIGNATURE roo257152()
+        UNIQUE NAME F:bugbug257152::roo257152()
+        PARAMETERS:
+        RETURNS int TEXT=int  [14:5/300-14:8/303]
+    STRUCT AAA257152 (bugbug257152::AAA257152 ) [16:5/327-20:6/429] lcurly=344 SCOPE: bugbug257152 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA257152 [17:9/354-17:26/371] ConstructorImpl SCOPE: AAA257152 
+                DEFINITION: AAA257152  [22:5/439-24:6/501]
+                SIGNATURE AAA257152()
+                UNIQUE NAME F:bugbug257152::AAA257152::AAA257152()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION ~AAA257152 [18:9/380-18:27/398] DestructorImpl SCOPE: AAA257152 
+                DEFINITION: ~AAA257152  [26:5/507-28:6/570]
+                SIGNATURE ~AAA257152()
+                UNIQUE NAME F:bugbug257152::AAA257152::~AAA257152()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION doo [19:9/407-19:25/423] MethodImpl SCOPE: AAA257152 
+                DEFINITION: doo  [30:5/576-32:6/626]
+                SIGNATURE doo()
+                UNIQUE NAME F:bugbug257152::AAA257152::doo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [19:9/407-19:13/411]
+    FUNCTION DEFINITION AAA257152  [22:5/439-24:6/501] ConstructorDefinitionImpl SCOPE: bug257152.cpp
+        SIGNATURE AAA257152()
+        UNIQUE NAME f:bugbug257152::AAA257152::AAA257152()
+        DECLARATION: AAA257152  [17:9/354-17:26/371]
+        PARAMETERS:
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [22:33/467-24:6/501] SCOPE: AAA257152 
+    FUNCTION DEFINITION ~AAA257152  [26:5/507-28:6/570] DestructorDefinitionImpl SCOPE: bug257152.cpp
+        SIGNATURE ~AAA257152()
+        UNIQUE NAME f:bugbug257152::AAA257152::~AAA257152()
+        DECLARATION: ~AAA257152  [18:9/380-18:27/398]
+        PARAMETERS:
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [26:34/536-28:6/570] SCOPE: ~AAA257152 
+    FUNCTION DEFINITION doo  [30:5/576-32:6/626] FunctionDefinitionImpl SCOPE: bug257152.cpp
+        SIGNATURE doo()
+        UNIQUE NAME f:bugbug257152::AAA257152::doo()
+        DECLARATION: doo  [19:9/407-19:25/423]
+        PARAMETERS:
+        RETURNS void TEXT=void  [30:5/576-30:9/580]
+        STATEMENT COMPOUND  [30:32/603-32:6/626] SCOPE: doo 
+    FUNCTION DEFINITION kerniganAndRichi  [34:5/632-42:6/871] FunctionDDImpl SCOPE: bugbug257152 
+        SIGNATURE kerniganAndRichi(uLong257152,const Bytef*,uInt)
+        UNIQUE NAME f:bugbug257152::kerniganAndRichi(uLong257152,const Bytef*,uInt)
+        DECLARATION: kerniganAndRichi  [34:5/632-42:6/871]
+        PARAMETERS:
+            adler [35:9/679-35:27/697]  TYPE: bugbug257152::uLong257152 TEXT=uLong257152  [35:9/679-35:20/690]  INIT: null  SCOPE: kerniganAndRichi 
+            buf [36:9/706-36:26/723]  TYPE: const *$unresolved$::Bytef TEXT=const Bytef*  [36:9/706-36:22/719]  INIT: null  SCOPE: kerniganAndRichi 
+            len [37:9/732-37:18/741]  TYPE: $unresolved$::uInt TEXT=uInt  [37:9/732-37:13/736]  INIT: null  SCOPE: kerniganAndRichi 
+        RETURNS int TEXT=int  [34:5/632-34:8/635]
+        STATEMENT COMPOUND  [38:5/746-42:6/871] SCOPE: kerniganAndRichi 
+            STATEMENT DECLARATION  [39:9/756-39:43/790] SCOPE: Stmt  [38:5/746-42:6/871]
+                VARIABLE s1 [39:9/756-39:43/790]  TYPE: unsigned long TEXT=unsigned long  [39:9/756-39:22/769]  INIT: text='adler & 0xffff'  SCOPE: Stmt  [38:5/746-42:6/871]
+            STATEMENT DECLARATION  [40:9/799-40:51/841] SCOPE: Stmt  [38:5/746-42:6/871]
+                VARIABLE s2 [40:9/799-40:51/841]  TYPE: unsigned long TEXT=unsigned long  [40:9/799-40:22/812]  INIT: text='(adler >> 16) & 0xffff'  SCOPE: Stmt  [38:5/746-42:6/871]
+            STATEMENT RETURN  [41:9/850-41:24/865] SCOPE: Stmt  [38:5/746-42:6/871] text: 'return s2 + s1;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bugbug257152 (bugbug257152) 
+    bug257152.cpp  [1:1/0-43:2/874]
+NAMESPACE bugbug257152 (bugbug257152) 
+    FUNCTION myboo257152 [2:5/29-2:48/72] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: myboo257152  [3:5/77-5:6/145]
+        SIGNATURE myboo257152()
+        UNIQUE NAME F:bugbug257152::myboo257152()
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/29-2:8/32]
+    FUNCTION DEFINITION myboo257152  [3:5/77-5:6/145] FunctionDDImpl SCOPE: bugbug257152 
+        SIGNATURE myboo257152()
+        UNIQUE NAME f:bugbug257152::myboo257152()
+        DECLARATION: myboo257152  [2:5/29-2:48/72]
+        PARAMETERS:
+        RETURNS int TEXT=int  [3:5/77-3:8/80]
+        STATEMENT COMPOUND  [3:48/120-5:6/145] SCOPE: myboo257152 
+            STATEMENT RETURN  [4:9/130-4:18/139] SCOPE: Stmt  [3:48/120-5:6/145] text: 'return 0;'
+    TYPEDEF uLong257152  [9:5/190-9:39/224] TYPE: unsigned long TEXT=unsigned long  [9:13/198-9:26/211] SCOPE: bugbug257152 
+    TYPEDEF uInt257152  [10:5/229-10:37/261] TYPE: unsigned int TEXT=unsigned int  [10:13/237-10:25/249] SCOPE: bugbug257152 
+    FUNCTION foo257152 [12:5/267-12:32/294] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: null
+        SIGNATURE foo257152()
+        UNIQUE NAME F:bugbug257152::foo257152()
+        PARAMETERS:
+        RETURNS void TEXT=void  [12:5/267-12:9/271]
+    FUNCTION roo257152 [14:5/300-14:26/321] FunctionImpl SCOPE: bugbug257152 
+        DEFINITION: null
+        SIGNATURE roo257152()
+        UNIQUE NAME F:bugbug257152::roo257152()
+        PARAMETERS:
+        RETURNS int TEXT=int  [14:5/300-14:8/303]
+    STRUCT AAA257152 (bugbug257152::AAA257152 ) [16:5/327-20:6/429] lcurly=344 SCOPE: bugbug257152 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION AAA257152 [17:9/354-17:26/371] ConstructorImpl SCOPE: AAA257152 
+                DEFINITION: AAA257152  [22:5/439-24:6/501]
+                SIGNATURE AAA257152()
+                UNIQUE NAME F:bugbug257152::AAA257152::AAA257152()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION ~AAA257152 [18:9/380-18:27/398] DestructorImpl SCOPE: AAA257152 
+                DEFINITION: ~AAA257152  [26:5/507-28:6/570]
+                SIGNATURE ~AAA257152()
+                UNIQUE NAME F:bugbug257152::AAA257152::~AAA257152()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION doo [19:9/407-19:25/423] MethodImpl SCOPE: AAA257152 
+                DEFINITION: doo  [30:5/576-32:6/626]
+                SIGNATURE doo()
+                UNIQUE NAME F:bugbug257152::AAA257152::doo()
+                PARAMETERS:
+                RETURNS void TEXT=void  [19:9/407-19:13/411]
+    FUNCTION DEFINITION kerniganAndRichi  [34:5/632-42:6/871] FunctionDDImpl SCOPE: bugbug257152 
+        SIGNATURE kerniganAndRichi(uLong257152,const Bytef*,uInt)
+        UNIQUE NAME f:bugbug257152::kerniganAndRichi(uLong257152,const Bytef*,uInt)
+        DECLARATION: kerniganAndRichi  [34:5/632-42:6/871]
+        PARAMETERS:
+            adler [35:9/679-35:27/697]  TYPE: bugbug257152::uLong257152 TEXT=uLong257152  [35:9/679-35:20/690]  INIT: null  SCOPE: kerniganAndRichi 
+            buf [36:9/706-36:26/723]  TYPE: const *$unresolved$::Bytef TEXT=const Bytef*  [36:9/706-36:22/719]  INIT: null  SCOPE: kerniganAndRichi 
+            len [37:9/732-37:18/741]  TYPE: $unresolved$::uInt TEXT=uInt  [37:9/732-37:13/736]  INIT: null  SCOPE: kerniganAndRichi 
+        RETURNS int TEXT=int  [34:5/632-34:8/635]
+        STATEMENT COMPOUND  [38:5/746-42:6/871] SCOPE: kerniganAndRichi 
+            STATEMENT DECLARATION  [39:9/756-39:43/790] SCOPE: Stmt  [38:5/746-42:6/871]
+                VARIABLE s1 [39:9/756-39:43/790]  TYPE: unsigned long TEXT=unsigned long  [39:9/756-39:22/769]  INIT: text='adler & 0xffff'  SCOPE: Stmt  [38:5/746-42:6/871]
+            STATEMENT DECLARATION  [40:9/799-40:51/841] SCOPE: Stmt  [38:5/746-42:6/871]
+                VARIABLE s2 [40:9/799-40:51/841]  TYPE: unsigned long TEXT=unsigned long  [40:9/799-40:22/812]  INIT: text='(adler >> 16) & 0xffff'  SCOPE: Stmt  [38:5/746-42:6/871]
+            STATEMENT RETURN  [41:9/850-41:24/865] SCOPE: Stmt  [38:5/746-42:6/871] text: 'return s2 + s1;'
+

@@ -1,0 +1,17 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["_X_",<ID>,line=1,col=9],offset=8,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE define_macro.cc
+Includes:
+    <no includes>
+Macros:
+#define '_X_' [1:1/0-1:12/11]
+
+========== Dumping model of PROJECT DummyProject
+

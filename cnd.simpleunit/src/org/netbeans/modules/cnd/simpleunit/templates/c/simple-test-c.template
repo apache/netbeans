@@ -1,0 +1,44 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/* 
+ * File:   ${NAME}.${EXTENSION}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+ * Simple C Test Suite
+ */
+
+void test1() {
+    printf("${NAME} test 1\n");
+}
+
+void test2() {
+    printf("${NAME} test 2\n");
+    printf("%%TEST_FAILED%% time=0 testname=test2 (${NAME}) message=error message sample\n");
+}
+
+int main(int argc, char** argv) {
+    printf("%%SUITE_STARTING%% ${NAME}\n");
+    printf("%%SUITE_STARTED%%\n");
+
+    printf("%%TEST_STARTED%% test1 (${NAME})\n");
+    test1();
+    printf("%%TEST_FINISHED%% time=0 test1 (${NAME}) \n");
+
+    printf("%%TEST_STARTED%% test2 (${NAME})\n");
+    test2();
+    printf("%%TEST_FINISHED%% time=0 test2 (${NAME}) \n");
+
+    printf("%%SUITE_FINISHED%% time=0\n");
+
+    return (EXIT_SUCCESS);
+}

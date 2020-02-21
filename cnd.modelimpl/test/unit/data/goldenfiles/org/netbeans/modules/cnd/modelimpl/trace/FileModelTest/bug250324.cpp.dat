@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug250324.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug250324 [2:1/36-14:2/345] SCOPE: bug250324.cpp
+    STRUCT AAA250324<typename A> (bug250324::AAA250324 ) [3:5/62-7:6/166] lcurly=105 SCOPE: bug250324 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION f250324 [5:9/115-6:24/160] MethodImpl SCOPE: AAA250324 
+                DEFINITION: null
+                SIGNATURE f250324<class>()
+                UNIQUE NAME F:bug250324::AAA250324::f250324<class>()
+                PARAMETERS:
+                RETURNS void TEXT=void  [6:9/145-6:13/149]
+    FUNCTION DEFINITION f250324  [10:5/256-13:6/342] FunctionDefinitionImpl SCOPE: bug250324.cpp
+        SIGNATURE f250324()
+        UNIQUE NAME f:bug250324::AAA250324::f250324()
+        DECLARATION: f250324  [5:9/115-6:24/160]
+        PARAMETERS:
+        RETURNS void TEXT=void  [11:5/283-11:9/287]
+        STATEMENT COMPOUND  [11:41/319-13:6/342] SCOPE: f250324 
+            STATEMENT RETURN  [12:9/329-12:16/336] SCOPE: Stmt  [11:41/319-13:6/342] text: 'return;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug250324 (bug250324) 
+    bug250324.cpp  [2:1/36-14:2/345]
+NAMESPACE bug250324 (bug250324) 
+    STRUCT AAA250324<typename A> (bug250324::AAA250324 ) [3:5/62-7:6/166] lcurly=105 SCOPE: bug250324 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION f250324 [5:9/115-6:24/160] MethodImpl SCOPE: AAA250324 
+                DEFINITION: null
+                SIGNATURE f250324<class>()
+                UNIQUE NAME F:bug250324::AAA250324::f250324<class>()
+                PARAMETERS:
+                RETURNS void TEXT=void  [6:9/145-6:13/149]
+

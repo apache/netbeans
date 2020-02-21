@@ -1,0 +1,4 @@
+funcion4() double	$	    funcion4()
+function1() void	$	    function1()
+function2(double d, int i) int	$	    function2()
+function3() int	$	    function3()

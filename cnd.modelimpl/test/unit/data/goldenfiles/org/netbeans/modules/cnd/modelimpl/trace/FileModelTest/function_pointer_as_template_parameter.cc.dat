@@ -1,0 +1,22 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_pointer_as_template_parameter.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS FunctionPointerAsTemplateParameter<void(*fun)()> (FunctionPointerAsTemplateParameter ) [1:1/0-3:2/69] lcurly=66 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+CLASS FunctionPointerAsTemplateParameter<void(*fun)()> (FunctionPointerAsTemplateParameter ) [1:1/0-3:2/69] lcurly=66 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

@@ -1,0 +1,61 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE static_struct.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT point0 (point0 ) [1:1/0-4:2/76] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC x [2:5/57-2:11/63]  TYPE: int TEXT=int  [2:5/57-2:8/60]  INIT: null  SCOPE: point0 
+        FIELD PUBLIC y [3:5/68-3:11/74]  TYPE: int TEXT=int  [3:5/68-3:8/71]  INIT: null  SCOPE: point0 
+VARIABLE p0 [4:3/77-4:5/79]  TYPE: point0 TEXT=point0  [1:1/0-4:2/76]  INIT: null  SCOPE: $Global$ 
+STRUCT point1 (point1 ) [6:1/82-9:2/128] lcurly=103 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC x [7:5/109-7:11/115]  TYPE: int TEXT=int  [7:5/109-7:8/112]  INIT: null  SCOPE: point1 
+        FIELD PUBLIC y [8:5/120-8:11/126]  TYPE: int TEXT=int  [8:5/120-8:8/123]  INIT: null  SCOPE: point1 
+VARIABLE p1 [9:3/129-9:5/131]  TYPE: point1 TEXT=point1  [6:1/82-9:2/128]  INIT: null  SCOPE: static_struct.cc
+CLASS point2 (point2 ) [11:1/134-14:2/179] lcurly=154 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE x [12:5/160-12:11/166]  TYPE: int TEXT=int  [12:5/160-12:8/163]  INIT: null  SCOPE: point2 
+        FIELD PRIVATE y [13:5/171-13:11/177]  TYPE: int TEXT=int  [13:5/171-13:8/174]  INIT: null  SCOPE: point2 
+VARIABLE p2 [14:3/180-14:5/182]  TYPE: point2 TEXT=point2  [11:1/134-14:2/179]  INIT: null  SCOPE: static_struct.cc
+UNION u (u ) [16:1/185-19:2/226] lcurly=200 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [17:5/206-17:11/212]  TYPE: int TEXT=int  [17:5/206-17:8/209]  INIT: null  SCOPE: u 
+        FIELD PUBLIC l [18:5/217-18:12/224]  TYPE: long TEXT=long  [18:5/217-18:9/221]  INIT: null  SCOPE: u 
+VARIABLE u3 [19:3/227-19:5/229]  TYPE: u TEXT=u  [16:1/185-19:2/226]  INIT: null  SCOPE: static_struct.cc
+
+========== Dumping model of PROJECT DummyProject
+STRUCT point0 (point0 ) [1:1/0-4:2/76] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC x [2:5/57-2:11/63]  TYPE: int TEXT=int  [2:5/57-2:8/60]  INIT: null  SCOPE: point0 
+        FIELD PUBLIC y [3:5/68-3:11/74]  TYPE: int TEXT=int  [3:5/68-3:8/71]  INIT: null  SCOPE: point0 
+VARIABLE p0 [4:3/77-4:5/79]  TYPE: point0 TEXT=point0  [1:1/0-4:2/76]  INIT: null  SCOPE: $Global$ 
+STRUCT point1 (point1 ) [6:1/82-9:2/128] lcurly=103 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC x [7:5/109-7:11/115]  TYPE: int TEXT=int  [7:5/109-7:8/112]  INIT: null  SCOPE: point1 
+        FIELD PUBLIC y [8:5/120-8:11/126]  TYPE: int TEXT=int  [8:5/120-8:8/123]  INIT: null  SCOPE: point1 
+CLASS point2 (point2 ) [11:1/134-14:2/179] lcurly=154 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE x [12:5/160-12:11/166]  TYPE: int TEXT=int  [12:5/160-12:8/163]  INIT: null  SCOPE: point2 
+        FIELD PRIVATE y [13:5/171-13:11/177]  TYPE: int TEXT=int  [13:5/171-13:8/174]  INIT: null  SCOPE: point2 
+UNION u (u ) [16:1/185-19:2/226] lcurly=200 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [17:5/206-17:11/212]  TYPE: int TEXT=int  [17:5/206-17:8/209]  INIT: null  SCOPE: u 
+        FIELD PUBLIC l [18:5/217-18:12/224]  TYPE: long TEXT=long  [18:5/217-18:9/221]  INIT: null  SCOPE: u 
+

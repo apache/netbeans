@@ -1,0 +1,3 @@
+fieldBA A*	$	    b->fieldBA
+boo() void	$	    b->boo()
+operator ->() A*	$	    b->operator ->()

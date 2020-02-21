@@ -1,0 +1,3 @@
+fieldBA A*	$	    (*pC).fieldCB->fieldBA
+boo() void	$	    (*pC).fieldCB->boo()
+operator ->() A*	$	    (*pC).fieldCB->operator ->()

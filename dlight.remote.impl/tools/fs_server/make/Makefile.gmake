@@ -1,0 +1,10 @@
+OBJS := $(SOURCES:$(ROOT_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJ_DIRS := $(SRC_DIRS:$(ROOT_DIR)/%=$(OBJ_DIR)/%)
+DEPS := $(OBJS:%.o=%.d)
+
+clean_deps:
+
+$(OBJS): $(OBJ_DIR)/%.o: $(ROOT_DIR)/%.c | $(OBJ_DIRS)
+	$(COMPILE.c) -o $@ $<
+
+-include $(DEPS)

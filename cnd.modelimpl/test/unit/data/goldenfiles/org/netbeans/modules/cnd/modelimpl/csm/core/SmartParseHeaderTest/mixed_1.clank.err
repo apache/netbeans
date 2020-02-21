@@ -1,0 +1,12 @@
+${origin}/mixed_cpp.cc:1:9: warning: '__cplusplus' macro redefined
+#define __cplusplus 1998 // in tests we have an issue with getting macros
+        ^
+<built-in>:4:9: note: previous definition is here
+#define __cplusplus 201103L
+        ^
+${origin}/mixed_cpp.cc:1:9: warning: '__cplusplus' macro redefined
+#define __cplusplus 1998 // in tests we have an issue with getting macros
+        ^
+<built-in>:4:9: note: previous definition is here
+#define __cplusplus 201103L
+        ^

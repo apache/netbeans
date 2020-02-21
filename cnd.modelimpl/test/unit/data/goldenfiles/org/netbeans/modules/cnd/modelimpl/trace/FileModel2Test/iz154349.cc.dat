@@ -1,0 +1,43 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz154349.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS aptr<class T> (aptr ) [4:1/85-8:2/175] lcurly=114 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION ~aptr  [5:5/120-7:6/173] DestructorDDImpl SCOPE: aptr 
+            SIGNATURE ~aptr()
+            UNIQUE NAME f:aptr::~aptr()
+            DECLARATION: ~aptr  [5:5/120-7:6/173]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:20/135-7:6/173] SCOPE: ~aptr 
+FUNCTION DEFINITION ~aptr  [10:1/178-12:2/247] DestructorDefinitionImpl SCOPE: iz154349.cc
+    SIGNATURE ~aptr()
+    UNIQUE NAME f:aptr<int>::~aptr()
+    DECLARATION: ~aptr  [5:5/120-7:6/173]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [10:31/208-12:2/247] SCOPE: ~aptr 
+
+========== Dumping model of PROJECT DummyProject
+CLASS aptr<class T> (aptr ) [4:1/85-8:2/175] lcurly=114 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION ~aptr  [5:5/120-7:6/173] DestructorDDImpl SCOPE: aptr 
+            SIGNATURE ~aptr()
+            UNIQUE NAME f:aptr::~aptr()
+            DECLARATION: ~aptr  [5:5/120-7:6/173]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:20/135-7:6/173] SCOPE: ~aptr 
+

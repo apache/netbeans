@@ -1,0 +1,11 @@
+WARNING forward_class_decl.cpp [30-33]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [48-51]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [87-90]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [106-109]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [188-191]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [271-274]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [359-362]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [395-398]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [401-404]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [441-444]: Unable to resolve forward declaration fwd.
+WARNING forward_class_decl.cpp [464-467]: Unable to resolve forward declaration fwd.

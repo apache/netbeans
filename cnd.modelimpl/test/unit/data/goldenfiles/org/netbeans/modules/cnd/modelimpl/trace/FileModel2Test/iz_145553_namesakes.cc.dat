@@ -1,0 +1,300 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz_145553_namesakes.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Class (Class ) [1:1/0-12:2/187] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Class::Inner ) [3:5/26-5:6/74] lcurly=39 SCOPE: Class 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION foo_inner_1 [4:9/49-4:28/68] MethodImpl SCOPE: Inner 
+                    DEFINITION: null
+                    SIGNATURE foo_inner_1()
+                    UNIQUE NAME F:Class::Inner::foo_inner_1()
+                    PARAMETERS:
+                    RETURNS void TEXT=void  [4:9/49-4:13/53]
+        STRUCT Inner1 (Class::Inner1 ) [6:5/80-7:6/101] lcurly=94 SCOPE: Class 
+            BASE CLASSES:
+            MEMBERS:
+        FUNCTION Class [8:5/107-8:13/115] ConstructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE Class()
+            UNIQUE NAME F:Class::Class()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION Class [9:5/120-9:30/145] ConstructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE Class(const Class&)
+            UNIQUE NAME F:Class::Class(const Class&)
+            PARAMETERS:
+                orig [9:11/126-9:28/143]  TYPE: const &Class TEXT=const Class&  [9:11/126-9:23/138]  INIT: null  SCOPE: Class 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Class [10:5/150-10:22/167] DestructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE ~Class()
+            UNIQUE NAME F:Class::~Class()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION foo_1 [11:5/172-11:18/185] MethodImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE foo_1()
+            UNIQUE NAME F:Class::foo_1()
+            PARAMETERS:
+            RETURNS void TEXT=void  [11:5/172-11:9/176]
+CLASS Derived (Derived ) [14:1/190-25:2/576] lcurly=219 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Class VISIBILITY==PUBLIC virtual==false text='public Class'
+    MEMBERS:
+        FIELD PRIVATE other [15:5/262-15:17/274]  TYPE: Class TEXT=Class  [15:5/262-15:10/267]  INIT: null  SCOPE: Derived 
+        FUNCTION DEFINITION Derived  [17:5/324-21:6/509] ConstructorDDImpl SCOPE: Derived 
+            SIGNATURE Derived()
+            UNIQUE NAME f:Derived::Derived()
+            DECLARATION: Derived  [17:5/324-21:6/509]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [17:15/334-21:6/509] SCOPE: Derived 
+                STATEMENT EXPRESSION  [18:9/344-18:22/357] SCOPE: Stmt  [17:15/334-21:6/509] text: 'other.foo_1()'
+                STATEMENT DECLARATION  [19:9/389-19:28/408] SCOPE: Stmt  [17:15/334-21:6/509]
+                    VARIABLE inner [19:9/389-19:28/408]  TYPE: Class::Inner TEXT=Class::Inner  [19:9/389-19:21/401]  INIT: null  SCOPE: Stmt  [17:15/334-21:6/509]
+                STATEMENT EXPRESSION  [20:9/461-20:28/480] SCOPE: Stmt  [17:15/334-21:6/509] text: 'inner.foo_inner_1()'
+        FUNCTION Derived [22:5/514-22:34/543] ConstructorImpl SCOPE: Derived 
+            DEFINITION: null
+            SIGNATURE Derived(const Derived&)
+            UNIQUE NAME F:Derived::Derived(const Derived&)
+            PARAMETERS:
+                orig [22:13/522-22:32/541]  TYPE: const &Derived TEXT=const Derived&  [22:13/522-22:27/536]  INIT: null  SCOPE: Derived 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION DEFINITION ~Derived  [23:5/548-24:6/574] DestructorDDImpl SCOPE: Derived 
+            SIGNATURE ~Derived()
+            UNIQUE NAME f:Derived::~Derived()
+            DECLARATION: ~Derived  [23:5/548-24:6/574]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [23:24/567-24:6/574] SCOPE: ~Derived 
+NAMESPACE DEFINITOIN AAA [27:1/579-53:2/1279] SCOPE: iz_145553_namesakes.cc
+    CLASS Class (AAA::Class ) [28:5/599-39:6/830] lcurly=611 SCOPE: AAA 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner (AAA::Class::Inner ) [30:9/633-32:10/689] lcurly=646 SCOPE: Class 
+                BASE CLASSES:
+                MEMBERS:
+                    FUNCTION foo_inner_2 [31:13/660-31:32/679] MethodImpl SCOPE: Inner 
+                        DEFINITION: null
+                        SIGNATURE foo_inner_2()
+                        UNIQUE NAME F:AAA::Class::Inner::foo_inner_2()
+                        PARAMETERS:
+                        RETURNS void TEXT=void  [31:13/660-31:17/664]
+            STRUCT Inner2 (AAA::Class::Inner2 ) [33:9/699-34:10/724] lcurly=713 SCOPE: Class 
+                BASE CLASSES:
+                MEMBERS:
+            FUNCTION Class [35:9/734-35:17/742] ConstructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE Class()
+                UNIQUE NAME F:AAA::Class::Class()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION Class [36:9/751-36:34/776] ConstructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE Class(const Class&)
+                UNIQUE NAME F:AAA::Class::Class(const Class&)
+                PARAMETERS:
+                    orig [36:15/757-36:32/774]  TYPE: const &AAA::Class TEXT=const Class&  [36:15/757-36:27/769]  INIT: null  SCOPE: Class 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION ~Class [37:9/785-37:26/802] DestructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE ~Class()
+                UNIQUE NAME F:AAA::Class::~Class()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION foo_2 [38:9/811-38:22/824] MethodImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE foo_2()
+                UNIQUE NAME F:AAA::Class::foo_2()
+                PARAMETERS:
+                RETURNS void TEXT=void  [38:9/811-38:13/815]
+    CLASS Derived (AAA::Derived ) [41:5/837-52:6/1276] lcurly=866 SCOPE: AAA 
+        BASE CLASSES:
+            CLASS=AAA::Class VISIBILITY==PUBLIC virtual==false text='public Class'
+        MEMBERS:
+            FIELD PRIVATE other [42:9/916-42:21/928]  TYPE: AAA::Class TEXT=Class  [42:9/916-42:14/921]  INIT: null  SCOPE: Derived 
+            FUNCTION DEFINITION Derived  [44:9/989-48:10/1193] ConstructorDDImpl SCOPE: Derived 
+                SIGNATURE Derived()
+                UNIQUE NAME f:AAA::Derived::Derived()
+                DECLARATION: Derived  [44:9/989-48:10/1193]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [44:19/999-48:10/1193] SCOPE: Derived 
+                    STATEMENT EXPRESSION  [45:13/1013-45:26/1026] SCOPE: Stmt  [44:19/999-48:10/1193] text: 'other.foo_2()'
+                    STATEMENT DECLARATION  [46:13/1062-46:32/1081] SCOPE: Stmt  [44:19/999-48:10/1193]
+                        VARIABLE inner [46:13/1062-46:32/1081]  TYPE: AAA::Class::Inner TEXT=Class::Inner  [46:13/1062-46:25/1074]  INIT: null  SCOPE: Stmt  [44:19/999-48:10/1193]
+                    STATEMENT EXPRESSION  [47:13/1141-47:32/1160] SCOPE: Stmt  [44:19/999-48:10/1193] text: 'inner.foo_inner_2()'
+            FUNCTION Derived [49:9/1202-49:38/1231] ConstructorImpl SCOPE: Derived 
+                DEFINITION: null
+                SIGNATURE Derived(const Derived&)
+                UNIQUE NAME F:AAA::Derived::Derived(const Derived&)
+                PARAMETERS:
+                    orig [49:17/1210-49:36/1229]  TYPE: const &AAA::Derived TEXT=const Derived&  [49:17/1210-49:31/1224]  INIT: null  SCOPE: Derived 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION DEFINITION ~Derived  [50:9/1240-51:10/1270] DestructorDDImpl SCOPE: Derived 
+                SIGNATURE ~Derived()
+                UNIQUE NAME f:AAA::Derived::~Derived()
+                DECLARATION: ~Derived  [50:9/1240-51:10/1270]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [50:28/1259-51:10/1270] SCOPE: ~Derived 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Class (Class ) [1:1/0-12:2/187] lcurly=12 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        STRUCT Inner (Class::Inner ) [3:5/26-5:6/74] lcurly=39 SCOPE: Class 
+            BASE CLASSES:
+            MEMBERS:
+                FUNCTION foo_inner_1 [4:9/49-4:28/68] MethodImpl SCOPE: Inner 
+                    DEFINITION: null
+                    SIGNATURE foo_inner_1()
+                    UNIQUE NAME F:Class::Inner::foo_inner_1()
+                    PARAMETERS:
+                    RETURNS void TEXT=void  [4:9/49-4:13/53]
+        STRUCT Inner1 (Class::Inner1 ) [6:5/80-7:6/101] lcurly=94 SCOPE: Class 
+            BASE CLASSES:
+            MEMBERS:
+        FUNCTION Class [8:5/107-8:13/115] ConstructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE Class()
+            UNIQUE NAME F:Class::Class()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION Class [9:5/120-9:30/145] ConstructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE Class(const Class&)
+            UNIQUE NAME F:Class::Class(const Class&)
+            PARAMETERS:
+                orig [9:11/126-9:28/143]  TYPE: const &Class TEXT=const Class&  [9:11/126-9:23/138]  INIT: null  SCOPE: Class 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION ~Class [10:5/150-10:22/167] DestructorImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE ~Class()
+            UNIQUE NAME F:Class::~Class()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION foo_1 [11:5/172-11:18/185] MethodImpl SCOPE: Class 
+            DEFINITION: null
+            SIGNATURE foo_1()
+            UNIQUE NAME F:Class::foo_1()
+            PARAMETERS:
+            RETURNS void TEXT=void  [11:5/172-11:9/176]
+CLASS Derived (Derived ) [14:1/190-25:2/576] lcurly=219 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Class VISIBILITY==PUBLIC virtual==false text='public Class'
+    MEMBERS:
+        FIELD PRIVATE other [15:5/262-15:17/274]  TYPE: Class TEXT=Class  [15:5/262-15:10/267]  INIT: null  SCOPE: Derived 
+        FUNCTION DEFINITION Derived  [17:5/324-21:6/509] ConstructorDDImpl SCOPE: Derived 
+            SIGNATURE Derived()
+            UNIQUE NAME f:Derived::Derived()
+            DECLARATION: Derived  [17:5/324-21:6/509]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [17:15/334-21:6/509] SCOPE: Derived 
+                STATEMENT EXPRESSION  [18:9/344-18:22/357] SCOPE: Stmt  [17:15/334-21:6/509] text: 'other.foo_1()'
+                STATEMENT DECLARATION  [19:9/389-19:28/408] SCOPE: Stmt  [17:15/334-21:6/509]
+                    VARIABLE inner [19:9/389-19:28/408]  TYPE: Class::Inner TEXT=Class::Inner  [19:9/389-19:21/401]  INIT: null  SCOPE: Stmt  [17:15/334-21:6/509]
+                STATEMENT EXPRESSION  [20:9/461-20:28/480] SCOPE: Stmt  [17:15/334-21:6/509] text: 'inner.foo_inner_1()'
+        FUNCTION Derived [22:5/514-22:34/543] ConstructorImpl SCOPE: Derived 
+            DEFINITION: null
+            SIGNATURE Derived(const Derived&)
+            UNIQUE NAME F:Derived::Derived(const Derived&)
+            PARAMETERS:
+                orig [22:13/522-22:32/541]  TYPE: const &Derived TEXT=const Derived&  [22:13/522-22:27/536]  INIT: null  SCOPE: Derived 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION DEFINITION ~Derived  [23:5/548-24:6/574] DestructorDDImpl SCOPE: Derived 
+            SIGNATURE ~Derived()
+            UNIQUE NAME f:Derived::~Derived()
+            DECLARATION: ~Derived  [23:5/548-24:6/574]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [23:24/567-24:6/574] SCOPE: ~Derived 
+NAMESPACE DEFINITIONS for AAA (AAA) 
+    iz_145553_namesakes.cc  [27:1/579-53:2/1279]
+NAMESPACE AAA (AAA) 
+    CLASS Class (AAA::Class ) [28:5/599-39:6/830] lcurly=611 SCOPE: AAA 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner (AAA::Class::Inner ) [30:9/633-32:10/689] lcurly=646 SCOPE: Class 
+                BASE CLASSES:
+                MEMBERS:
+                    FUNCTION foo_inner_2 [31:13/660-31:32/679] MethodImpl SCOPE: Inner 
+                        DEFINITION: null
+                        SIGNATURE foo_inner_2()
+                        UNIQUE NAME F:AAA::Class::Inner::foo_inner_2()
+                        PARAMETERS:
+                        RETURNS void TEXT=void  [31:13/660-31:17/664]
+            STRUCT Inner2 (AAA::Class::Inner2 ) [33:9/699-34:10/724] lcurly=713 SCOPE: Class 
+                BASE CLASSES:
+                MEMBERS:
+            FUNCTION Class [35:9/734-35:17/742] ConstructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE Class()
+                UNIQUE NAME F:AAA::Class::Class()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION Class [36:9/751-36:34/776] ConstructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE Class(const Class&)
+                UNIQUE NAME F:AAA::Class::Class(const Class&)
+                PARAMETERS:
+                    orig [36:15/757-36:32/774]  TYPE: const &AAA::Class TEXT=const Class&  [36:15/757-36:27/769]  INIT: null  SCOPE: Class 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION ~Class [37:9/785-37:26/802] DestructorImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE ~Class()
+                UNIQUE NAME F:AAA::Class::~Class()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION foo_2 [38:9/811-38:22/824] MethodImpl SCOPE: Class 
+                DEFINITION: null
+                SIGNATURE foo_2()
+                UNIQUE NAME F:AAA::Class::foo_2()
+                PARAMETERS:
+                RETURNS void TEXT=void  [38:9/811-38:13/815]
+    CLASS Derived (AAA::Derived ) [41:5/837-52:6/1276] lcurly=866 SCOPE: AAA 
+        BASE CLASSES:
+            CLASS=AAA::Class VISIBILITY==PUBLIC virtual==false text='public Class'
+        MEMBERS:
+            FIELD PRIVATE other [42:9/916-42:21/928]  TYPE: AAA::Class TEXT=Class  [42:9/916-42:14/921]  INIT: null  SCOPE: Derived 
+            FUNCTION DEFINITION Derived  [44:9/989-48:10/1193] ConstructorDDImpl SCOPE: Derived 
+                SIGNATURE Derived()
+                UNIQUE NAME f:AAA::Derived::Derived()
+                DECLARATION: Derived  [44:9/989-48:10/1193]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [44:19/999-48:10/1193] SCOPE: Derived 
+                    STATEMENT EXPRESSION  [45:13/1013-45:26/1026] SCOPE: Stmt  [44:19/999-48:10/1193] text: 'other.foo_2()'
+                    STATEMENT DECLARATION  [46:13/1062-46:32/1081] SCOPE: Stmt  [44:19/999-48:10/1193]
+                        VARIABLE inner [46:13/1062-46:32/1081]  TYPE: AAA::Class::Inner TEXT=Class::Inner  [46:13/1062-46:25/1074]  INIT: null  SCOPE: Stmt  [44:19/999-48:10/1193]
+                    STATEMENT EXPRESSION  [47:13/1141-47:32/1160] SCOPE: Stmt  [44:19/999-48:10/1193] text: 'inner.foo_inner_2()'
+            FUNCTION Derived [49:9/1202-49:38/1231] ConstructorImpl SCOPE: Derived 
+                DEFINITION: null
+                SIGNATURE Derived(const Derived&)
+                UNIQUE NAME F:AAA::Derived::Derived(const Derived&)
+                PARAMETERS:
+                    orig [49:17/1210-49:36/1229]  TYPE: const &AAA::Derived TEXT=const Derived&  [49:17/1210-49:31/1224]  INIT: null  SCOPE: Derived 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION DEFINITION ~Derived  [50:9/1240-51:10/1270] DestructorDDImpl SCOPE: Derived 
+                SIGNATURE ~Derived()
+                UNIQUE NAME f:AAA::Derived::~Derived()
+                DECLARATION: ~Derived  [50:9/1240-51:10/1270]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [50:28/1259-51:10/1270] SCOPE: ~Derived 
+

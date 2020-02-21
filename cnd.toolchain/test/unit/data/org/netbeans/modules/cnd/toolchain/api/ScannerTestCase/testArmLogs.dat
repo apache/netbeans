@@ -1,0 +1,14 @@
+make: Leaving directory `/tools/taiga/tools-com/projects/ojwc/build/jmee'
+"D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c", line 19: Warning:  #520-D: initialization with "{...}" expected for aggregate object
+  -        { 0,
+  ^
+"D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c", line 19: Error:  #29: expected an expression
+  -        { 0,
+           ^
+"D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c", line 28: Warning:  #12-D: parsing restarts here after previous syntax error
+  -          L""};
+                 ^
+"D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c", line 87: Warning:  #177-D: variable "ipaddr" was declared but never referenced
+      javacall_uint8* ipaddr;
+                      ^
+D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c: 3 warnings, 1 error

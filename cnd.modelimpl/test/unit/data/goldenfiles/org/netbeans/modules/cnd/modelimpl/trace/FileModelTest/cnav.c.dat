@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE cnav.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION cNav [2:1/1-2:12/12] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: cNav  [4:1/14-4:27/40]
+    SIGNATURE cNav()
+    UNIQUE NAME F:cNav()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+FUNCTION DEFINITION cNav  [4:1/14-4:27/40] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE cNav(int)
+    UNIQUE NAME f:cNav(int)
+    DECLARATION: cNav  [2:1/1-2:12/12]
+    PARAMETERS:
+         [4:10/23-4:13/26]  TYPE: int TEXT=int  [4:10/23-4:13/26]  INIT: null  SCOPE: cNav 
+    RETURNS int TEXT=int  [4:1/14-4:4/17]
+    STATEMENT COMPOUND  [4:14/27-4:27/40] SCOPE: cNav 
+        STATEMENT RETURN  [4:16/29-4:25/38] SCOPE: Stmt  [4:14/27-4:27/40] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION cNav [2:1/1-2:12/12] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: cNav  [4:1/14-4:27/40]
+    SIGNATURE cNav()
+    UNIQUE NAME F:cNav()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+FUNCTION DEFINITION cNav  [4:1/14-4:27/40] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE cNav(int)
+    UNIQUE NAME f:cNav(int)
+    DECLARATION: cNav  [2:1/1-2:12/12]
+    PARAMETERS:
+         [4:10/23-4:13/26]  TYPE: int TEXT=int  [4:10/23-4:13/26]  INIT: null  SCOPE: cNav 
+    RETURNS int TEXT=int  [4:1/14-4:4/17]
+    STATEMENT COMPOUND  [4:14/27-4:27/40] SCOPE: cNav 
+        STATEMENT RETURN  [4:16/29-4:25/38] SCOPE: Stmt  [4:14/27-4:27/40] text: 'return 0;'
+

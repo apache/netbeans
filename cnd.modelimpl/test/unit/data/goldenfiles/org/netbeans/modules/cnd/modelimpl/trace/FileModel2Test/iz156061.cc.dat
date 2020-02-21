@@ -1,0 +1,22 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz156061.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT  ( ) [1:1/0-4:2/42] lcurly=24 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC field [3:5/30-3:15/40]  TYPE: int TEXT=int  [3:5/30-3:8/33]  INIT: null  SCOPE:  
+TYPEDEF TstControlReg  [4:3/43-4:16/56] TYPE:  TEXT=typedef volatile struct { int field ; } TstControlReg ;  [1:1/0-4:17/57] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF TstControlReg  [4:3/43-4:16/56] TYPE:  TEXT=typedef volatile struct { int field ; } TstControlReg ;  [1:1/0-4:17/57] SCOPE: $Global$ 
+

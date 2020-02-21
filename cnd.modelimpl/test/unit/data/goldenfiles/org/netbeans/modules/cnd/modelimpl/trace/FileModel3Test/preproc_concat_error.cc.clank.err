@@ -1,0 +1,3 @@
+${origin}/preproc_concat_error.cc:2:20: error: '#' is not followed by a macro parameter
+#define FUNC(a)  # b
+                   ^

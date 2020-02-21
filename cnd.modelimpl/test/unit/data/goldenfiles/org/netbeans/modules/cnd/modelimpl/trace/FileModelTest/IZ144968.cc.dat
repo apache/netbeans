@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["BOOST_REGEX_CHAR_T",<ID>,line=7,col=9],offset=74,file=null'='["char",<ID>,line=7,col=28],offset=93,file=null'
+<U>#define '["BOOST_REGEX_DECL",<ID>,line=1,col=9],offset=8,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ144968.cc
+Includes:
+    <no includes>
+Macros:
+#define 'BOOST_REGEX_CHAR_T' [7:1/66-7:32/97]
+#define 'BOOST_REGEX_DECL' [1:1/0-1:25/24]
+#define 'template' [14:1/202-14:47/248]
+NAMESPACE DEFINITOIN std [3:1/26-5:2/64] SCOPE: IZ144968.cc
+    CLASS locale (std::locale ) [4:5/46-4:20/61] lcurly=59 SCOPE: std 
+        BASE CLASSES:
+        MEMBERS:
+STRUCT cpp_regex_traits_base<class charT> (cpp_regex_traits_base ) [9:1/99-12:2/199] lcurly=151 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION imbue [11:5/157-11:45/197] MethodImpl SCOPE: cpp_regex_traits_base 
+            DEFINITION: null
+            SIGNATURE imbue(const std::locale&)
+            UNIQUE NAME F:cpp_regex_traits_base::imbue(const std::locale&)
+            PARAMETERS:
+                l [11:23/175-11:43/195]  TYPE: const &std::locale TEXT=const std::locale&  [11:23/175-11:41/193]  INIT: null  SCOPE: imbue 
+            RETURNS std::locale TEXT=std::locale  [11:5/157-11:16/168]
+NAMESPACE DEFINITOIN re_detail [16:1/250-21:2/390] SCOPE: IZ144968.cc
+
+========== Dumping model of PROJECT DummyProject
+STRUCT cpp_regex_traits_base<class charT> (cpp_regex_traits_base ) [9:1/99-12:2/199] lcurly=151 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION imbue [11:5/157-11:45/197] MethodImpl SCOPE: cpp_regex_traits_base 
+            DEFINITION: null
+            SIGNATURE imbue(const std::locale&)
+            UNIQUE NAME F:cpp_regex_traits_base::imbue(const std::locale&)
+            PARAMETERS:
+                l [11:23/175-11:43/195]  TYPE: const &std::locale TEXT=const std::locale&  [11:23/175-11:41/193]  INIT: null  SCOPE: imbue 
+            RETURNS std::locale TEXT=std::locale  [11:5/157-11:16/168]
+NAMESPACE DEFINITIONS for re_detail (re_detail) 
+    IZ144968.cc  [16:1/250-21:2/390]
+NAMESPACE re_detail (re_detail) 
+NAMESPACE DEFINITIONS for std (std) 
+    IZ144968.cc  [3:1/26-5:2/64]
+NAMESPACE std (std) 
+    CLASS locale (std::locale ) [4:5/46-4:20/61] lcurly=59 SCOPE: std 
+        BASE CLASSES:
+        MEMBERS:
+

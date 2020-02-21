@@ -1,0 +1,60 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243522.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243522 [1:1/0-11:2/373] SCOPE: bug243522.cpp
+    STRUCT OK_243522 (bug243522::OK_243522 ) [2:5/26-5:6/126] lcurly=43 SCOPE: bug243522 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION OK_243522  [3:7/51-3:31/75] ConstructorDDImpl SCOPE: OK_243522 
+                SIGNATURE OK_243522()
+                UNIQUE NAME f:bug243522::OK_243522::OK_243522()
+                DECLARATION: OK_243522  [3:7/51-3:31/75]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:29/73-3:31/75] SCOPE: OK_243522 
+            FUNCTION DEFINITION operator int  [4:7/82-4:45/120] MethodDDImpl SCOPE: OK_243522 
+                SIGNATURE operator int()
+                UNIQUE NAME f:bug243522::OK_243522::operator int()
+                DECLARATION: operator int  [4:7/82-4:45/120]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+                STATEMENT COMPOUND  [4:32/107-4:45/120] SCOPE: operator int 
+                    STATEMENT RETURN  [4:34/109-4:43/118] SCOPE: Stmt  [4:32/107-4:45/120] text: 'return 8;'
+    VARIABLE ok_243522 [5:17/137-5:26/146]  TYPE: bug243522::OK_243522 TEXT=OK_243522  [2:5/26-5:6/126]  INIT: null  SCOPE: bug243522 
+    VARIABLE alignas1_243522 [10:5/332-10:44/371]  TYPE: int TEXT=int  [10:5/332-10:8/335]  INIT: null  SCOPE: bug243522 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243522 (bug243522) 
+    bug243522.cpp  [1:1/0-11:2/373]
+NAMESPACE bug243522 (bug243522) 
+    STRUCT OK_243522 (bug243522::OK_243522 ) [2:5/26-5:6/126] lcurly=43 SCOPE: bug243522 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION OK_243522  [3:7/51-3:31/75] ConstructorDDImpl SCOPE: OK_243522 
+                SIGNATURE OK_243522()
+                UNIQUE NAME f:bug243522::OK_243522::OK_243522()
+                DECLARATION: OK_243522  [3:7/51-3:31/75]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:29/73-3:31/75] SCOPE: OK_243522 
+            FUNCTION DEFINITION operator int  [4:7/82-4:45/120] MethodDDImpl SCOPE: OK_243522 
+                SIGNATURE operator int()
+                UNIQUE NAME f:bug243522::OK_243522::operator int()
+                DECLARATION: operator int  [4:7/82-4:45/120]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+                STATEMENT COMPOUND  [4:32/107-4:45/120] SCOPE: operator int 
+                    STATEMENT RETURN  [4:34/109-4:43/118] SCOPE: Stmt  [4:32/107-4:45/120] text: 'return 8;'
+    VARIABLE ok_243522 [5:17/137-5:26/146]  TYPE: bug243522::OK_243522 TEXT=OK_243522  [2:5/26-5:6/126]  INIT: null  SCOPE: bug243522 
+    VARIABLE alignas1_243522 [10:5/332-10:44/371]  TYPE: int TEXT=int  [10:5/332-10:8/335]  INIT: null  SCOPE: bug243522 
+

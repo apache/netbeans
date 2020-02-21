@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>Hudson test report</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+* { font-family: "Verdana", sans-serif; }
+h1 { font-size: 14pt; }
+h2 { font-size: 14pt; }
+h3 { font-size: 12pt; }
+p, ul, li { font-size: 12pt; }
+pre { font-family: "Courier New", monospace; font-size: 10pt; }
+.changeset { font-size: 9pt; }
+.SUCCESS { color: green; }
+.UNSTABLE { color: orange; }
+.FAILURE { color: red; }
+</style>
+</head>
+<body>
+
+<%
+def rootUrl = hudson.model.Hudson.instance.rootUrl
+// get upstream build
+def upProjectName = build.actions[0].causes[0].upstreamProject
+def upBuildNo = build.actions[0].causes[0].upstreamBuild
+def upBuild = hudson.model.Hudson.instance.itemMap.get(upProjectName).getBuildByNumber(upBuildNo)
+//def upBuildNo = 2112
+//def upBuild = hudson.model.Hudson.instance.itemMap.get("cnd-build").getBuildByNumber(upBuildNo)
+
+def prevBuild = upBuild.previousNotFailedBuild
+
+def buildsSincePrev = []
+def changesSincePrev = []
+
+if (prevBuild) {
+    def it = prevBuild
+    while (it != upBuild) {
+        buildsSincePrev << it
+        it = it.nextBuild
+        changesSincePrev += it.changeSet.items as List
+    }
+} else {
+    def it = upBuild
+    while (it) {
+        buildsSincePrev << it
+        changesSincePrev += it.changeSet.items.reverse() as List
+        it = it.prevBuild
+    }
+    buildsSincePrev = buildsSincePrev.reverse()
+    changesSincePrev = changesSincePrev.reverse()
+}
+%>
+
+<h1>Cnd-build#<a href="${rootUrl}${upBuild.url}">${upBuildNo}</a> test report (total time ${upBuild.timestampString})</h1>
+<table border=1><tr><th>Host</th><th>Total</th><th>Failing</th><th>Failing test</th><th>Age</th></tr>
+
+<%
+// do for each downstream build
+upBuild.downstreamBuilds.each {
+  if (!it.key.displayName.startsWith('cnd-test')) {
+    return
+  }
+  if (it.value.ranges.isEmpty()) {
+    %><tr><td><a href="${rootUrl}${it.key.url}">${it.key.displayName}</a></td><td colspan=4>NO DATA</td></tr><%
+    return
+  }
+  def currBuild = it.key.getBuildByNumber(it.value.ranges[0].start)
+  def pbIter = prevBuild.getDownstreamBuilds(currBuild.project).iterator()
+  def currPrevBuild
+  if (pbIter.hasNext()) {
+    currPrevBuild = pbIter.next()
+  }
+
+  // obtain test results
+  def currTestResult = currBuild.testResultAction
+  if (currTestResult) {
+    def currFailedTests = currTestResult.failedTests.collect {
+        [displayName: "${it.className}.${it.displayName}",
+            url: "${rootUrl}${currBuild.url}${currTestResult.urlName}${it.url}",
+            age: it.age]
+    }
+    currFailedTests = currFailedTests.sort { String.format("%06d-", it.age) + it.displayName }
+
+   // construct total and failed strings
+   def currTotal = currTestResult.totalCount
+   def currFail = currTestResult.failCount
+   if (currPrevBuild) {
+       def prevTestResult = currPrevBuild.testResultAction
+       if (prevTestResult) {
+         def totalDelta = currTotal - prevTestResult.totalCount
+         if (totalDelta > 0) {
+           totalDelta = '<font color=green>+' + totalDelta + '</font>'
+         } else if (totalDelta < 0) {
+           totalDelta = '<font color=red>' + totalDelta + '</font>'
+         }
+         def failDelta = currFail - prevTestResult.failCount
+         if (failDelta > 0) {
+           failDelta = '<font color=red>+' + failDelta + '</font>'
+         } else if (failDelta < 0) {
+           failDelta = '<font color=green>' + failDelta + '</font>'
+         }
+         currTotal += '(' + totalDelta + ')'
+         currFail += '(' + failDelta + ')'
+       }
+   }
+
+    if (currFailedTests.size > 10) {
+       %><tr><td><a href="${rootUrl}${currBuild.url}">${it.key.displayName}</a></td><td>${currTotal}</td><td>${currFail}</td><td><a class="FAILURE" href="${rootUrl}${currBuild.url}${currTestResult.urlName}">MORE THAN 10!!!</a></td><td></td><%
+    } else {
+      %><tr><td rowspan=${currFailedTests.size}><a href="${rootUrl}${currBuild.url}">${it.key.displayName}</a></td><td rowspan=${currFailedTests.size}>${currTotal}</td><td rowspan=${currFailedTests.size}>${currFail}</td><%
+    if (currFailedTests) {
+      def first = true
+      currFailedTests.each {
+          if (first) {
+              first = false
+          } else {
+             %><tr><%
+          }
+          def testName = it.displayName
+          if (it.age > 10) {
+             testName = '<blink>' + testName + '</blink>'
+          }
+      %><td><a href="${it.url}" class="FAILURE">${testName}</a></td><td>${it.age}</td></tr><%
+     }
+    } else {
+      %><td>&nbsp;</td><td>&nbsp;</td></tr><%
+    }
+   }
+  }
+}
+%>
+</table>
+
+<% if (changesSincePrev) { %>
+<h2>Changes since last successful build (${changesSincePrev.size()})</h2>
+<ul>
+<% changesSincePrev.each { change -> %>
+<li>
+<p><a href="http://hg.netbeans.org/releases/rev/${change.shortNode}">${change.shortNode}</a> by ${change.author}</p>
+<pre>${change.msg}</pre>
+</li>
+<% } %>
+</ul>
+<% } %>
+
+</body>
+</html>

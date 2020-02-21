@@ -1,0 +1,7 @@
+Cc	$	    ns::Cc
+Ee	$	    ns::Ee
+buf char*	$	    ns::buf
+number double&	$	    ns::number
+AA	$	    ns::AA
+BB	$	    ns::BB
+func() int	$	    ns::func()

@@ -1,0 +1,24 @@
+${origin}/elif_else_simple.cc:4:9: warning: 'mode' macro redefined
+#define mode 101
+        ^
+${origin}/elif_else_simple.cc:1:9: note: previous definition is here
+#define mode 1
+        ^
+${origin}/elif_else_simple.cc:7:9: warning: 'mode' macro redefined
+#define mode 1001
+        ^
+${origin}/elif_else_simple.cc:4:9: note: previous definition is here
+#define mode 101
+        ^
+${origin}/elif_else_simple.cc:10:9: warning: 'mode' macro redefined
+#define mode 10001
+        ^
+${origin}/elif_else_simple.cc:7:9: note: previous definition is here
+#define mode 1001
+        ^
+${origin}/elif_else_simple.cc:13:9: warning: 'mode' macro redefined
+#define mode 100001
+        ^
+${origin}/elif_else_simple.cc:10:9: note: previous definition is here
+#define mode 10001
+        ^

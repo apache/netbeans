@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_pointer_to_method.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION assert_arg [2:1/1-5:7/147] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE assert_arg<class>(void(*)(Pred),assert_arg_pred<Pred>::type)
+    UNIQUE NAME F:assert_arg<class>(void(*)(Pred),assert_arg_pred<Pred>::type)
+    PARAMETERS:
+         [4:19/86-4:33/100]  TYPE: void(Pred) TEXT=void(*)(Pred)  [4:19/86-4:33/100]  INIT: null  SCOPE: assert_arg 
+         [4:35/102-4:71/138]  TYPE: $unresolved$::assert_arg_pred::type TEXT=assert_arg_pred<Pred>::type  [4:35/102-4:71/138]  INIT: null  SCOPE: assert_arg 
+    RETURNS ************$unresolved$::failed TEXT=failed************  [3:1/27-3:40/66]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION assert_arg [2:1/1-5:7/147] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE assert_arg<class>(void(*)(Pred),assert_arg_pred<Pred>::type)
+    UNIQUE NAME F:assert_arg<class>(void(*)(Pred),assert_arg_pred<Pred>::type)
+    PARAMETERS:
+         [4:19/86-4:33/100]  TYPE: void(Pred) TEXT=void(*)(Pred)  [4:19/86-4:33/100]  INIT: null  SCOPE: assert_arg 
+         [4:35/102-4:71/138]  TYPE: $unresolved$::assert_arg_pred::type TEXT=assert_arg_pred<Pred>::type  [4:35/102-4:71/138]  INIT: null  SCOPE: assert_arg 
+    RETURNS ************$unresolved$::failed TEXT=failed************  [3:1/27-3:40/66]
+
